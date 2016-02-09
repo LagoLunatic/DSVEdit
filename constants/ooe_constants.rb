@@ -1,0 +1,179 @@
+
+GAME = "ooe"
+LONG_GAME_NAME = "Order of Ecclesia"
+
+MAJOR_AREA_LIST_START_OFFSET = 0x0F0DDC
+
+GET_LIST_OF_MAJOR_AREAS = Proc.new do |rom, converter|
+  i = 0
+  major_areas = []
+  while true
+    major_area_pointer = rom[0x0F0DDC+i*4, 4].unpack("V*").first
+    break if major_area_pointer == 0
+    major_areas << converter.ram_to_rom(major_area_pointer) # - 0x21FFFC0 + 0x14A400 # 02222180 -> 16C5C0
+    i += 1
+  end
+  major_areas
+end
+
+EXTRACT_EXTRA_ROOM_INFO = Proc.new do |last_4_bytes_of_room_metadata|
+  number_of_doors    = (last_4_bytes_of_room_metadata & 0b00000000_00000000_00000000_01111111)
+  room_xpos_on_map   = (last_4_bytes_of_room_metadata & 0b00000000_00000000_00111111_10000000) >> 7
+  room_ypos_on_map   = (last_4_bytes_of_room_metadata & 0b00000000_00011111_11000000_00000000) >> 14
+  palette_page_index = (last_4_bytes_of_room_metadata & 0b00001111_10000000_00000000_00000000) >> 23
+  [number_of_doors, room_xpos_on_map, room_ypos_on_map, palette_page_index]
+end
+
+# Overlays 40 to 85.
+AREA_INDEX_TO_OVERLAY_INDEX = {
+  0 => {
+    0 => 65,
+    1 => 66,
+    2 => 68,
+    3 => 69,
+    4 => 70,
+    5 => 71,
+    6 => 72,
+    7 => 73,
+    8 => 76,
+    9 => 77,
+    10 => 74,
+    11 => 75,
+    12 => 67,
+  },
+  1 => {
+    0 => 40,
+    1 => 41,
+  },
+  2 => {
+    0 => 42,
+  },
+  3 => {
+    0 => 43,
+  },
+  4 => {
+    0 => 44,
+  },
+  5 => {
+    0 => 45,
+  },
+  6 => {
+    0 => 46,
+    1 => 47,
+  },
+  7 => {
+    0 => 48,
+    1 => 49,
+  },
+  8 => {
+    0 => 50,
+    1 => 51,
+    2 => 52,
+  },
+  9 => {
+    0 => 53,
+  },
+  10 => {
+    0 => 54,
+    1 => 55,
+  },
+  11 => {
+    0 => 56,
+    1 => 57,
+  },
+  12 => {
+    0 => 58,
+  },
+  13 => {
+    0 => 59,
+  },
+  14 => {
+    0 => 60,
+  },
+  15 => {
+    0 => 61,
+  },
+  16 => {
+    0 => 62,
+    1 => 63,
+  },
+  17 => {
+    0 => 64,
+  },
+  18 => {
+    0 => 78,
+    1 => 79,
+  },
+  19 => {
+    0 => 80,
+    1 => 81,
+    2 => 82,
+    3 => 83,
+    4 => 84,
+    5 => 85,
+  }
+}
+
+AREA_INDEX_TO_AREA_NAME = {
+  0 => {
+     0 => "17 - Castle Entrance",
+     1 => "17 - Castle Entrance",
+     2 => "19 - Underground Labyrinth",
+     3 => "18 - Library",
+     4 => "18 - Library",
+     5 => "22 - Barracks",
+     6 => "24 - Mechanical Tower",
+     7 => "24 - Mechanical Tower",
+     8 => "23 - Arms Depot",
+     9 => "25 - Forsaken Cloister",
+    10 => "26 - Final Approach",
+    11 => "26 - Final Approach",
+    12 => "17 - Castle Entrance",
+  },
+   1 => "03 - Wygol Village",
+   2 => "01 - Ecclesia",
+   3 => "20 - Training Chamber",
+   4 => "04 - Ruvas Forest",
+   5 => "15 - Argila Swamp",
+   6 => "05 - Kalidus Channel",
+   7 => "11 - Somnus Reef",
+   8 => "06 - Minera Prison Island",
+   9 => "07 - Lighthouse",
+  10 => "08 - Tymeo Mountains",
+  11 => "13 - Tristis Pass",
+  12 => "21 - Large Cavern",
+  13 => "12 - Giant's Dwelling",
+  14 => "16 - Mystery Manor",
+  15 => "09 - Misty Forest Road",
+  16 => "14 - Oblivion Ridge",
+  17 => "10 - Skeleton Cave",
+  18 => "02 - Monastery",
+  19 => "27 - Epilogue & Boss Rush Mode & Practice Mode"
+}
+
+CONSTANT_OVERLAYS = [19, 22]
+
+INVALID_ROOMS = []
+
+MAP_TILE_METADATA_LIST_START_OFFSET = 0x020ECE84
+MAP_TILE_LINE_DATA_LIST_START_OFFSET = 0x020ECED8
+MAP_LENGTH_DATA_START_OFFSET = 0x020B61C0
+
+MAP_FILL_COLOR = [160, 64, 128, 255]
+MAP_SAVE_FILL_COLOR = [248, 0, 0, 255]
+MAP_WARP_FILL_COLOR = [0, 0, 248, 255]
+MAP_ENTRANCE_FILL_COLOR = [248, 128, 0, 255]
+MAP_LINE_COLOR = [248, 248, 248, 255]
+MAP_DOOR_COLOR = [216, 216, 216, 255]
+
+RAM_START_FOR_ROOM_OVERLAYS = 0x022C1FE0
+RAM_END_FOR_ROOM_OVERLAYS = 0x022C1FE0 + 168384
+ARM9_LENGTH = 1_044_004
+FILENAMES_IN_BC_FOLDER_START_OFFSET = 0x580092
+FILES_IN_BC_FOLDER_ROM_OFFSETS_LIST_START = 0x5882B0
+BC_FOLDER_START_OFFSET = 0xDCCEC
+BC_FOLDER_END_OFFSET = 0xE354B
+BC_FOLDER_FILE_LENGTH = 32
+
+OVERLAY_RAM_INFO_START_OFFSET = 0x103000
+OVERLAY_ROM_INFO_START_OFFSET = 0x588000
