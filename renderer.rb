@@ -53,8 +53,11 @@ class Renderer
     
     tileset_filename = "#{folder}/#{room.area_name}/Tilesets/#{layer.tileset_filename}.png"
     #tileset = get_tileset(layer.pointer_to_tileset_for_layer, room.palette_offset, room.graphic_tilesets_for_room, layer.colors_per_palette, tileset_filename)
-    tileset = ChunkyPNG::Image.from_file(tileset_filename)
-    #tileset = render_tileset(layer.pointer_to_tileset_for_layer, room.palette_offset, room.graphic_tilesets_for_room, layer.colors_per_palette, tileset_filename)
+    if File.exist?(tileset_filename)
+      tileset = ChunkyPNG::Image.from_file(tileset_filename)
+    else
+      tileset = render_tileset(layer.pointer_to_tileset_for_layer, room.palette_offset, room.graphic_tilesets_for_room, layer.colors_per_palette, tileset_filename)
+    end
     
     layer.level_blocks.each_with_index do |block, index_on_level|
       horizontal_flip  = (block & 0b0100000000000000) != 0 # second highest bit controls h. flipping
@@ -159,8 +162,6 @@ class Renderer
   end
   
   def render_tileset(tileset_offset, palette_offset, graphic_tilesets_for_room, colors_per_palette, output_filename)
-    return rendered_tilesets[output_filename] if rendered_tilesets[output_filename]
-    
     tileset_width_in_blocks = 16
     tileset_height_in_blocks = 64
     rendered_tileset = ChunkyPNG::Image.new(tileset_width_in_blocks*16, tileset_height_in_blocks*16, ChunkyPNG::Color::TRANSPARENT)
@@ -269,7 +270,6 @@ class Renderer
     FileUtils::mkdir_p(File.dirname(output_filename))
     rendered_tileset.save(output_filename, :fast_rgba)
     puts "Wrote #{output_filename}"
-    rendered_tilesets[output_filename] = true
     return rendered_tileset
   end
   
