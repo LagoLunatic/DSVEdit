@@ -1,6 +1,5 @@
 
-require 'rmagick'
-include Magick
+require 'chunky_png'
 
 class Renderer
   attr_accessor :rom, :rendered_tilesets_cache, :rendered_tileset_pages_cache, :rendered_tileset_tiles_cache, :rendered_tilesets
@@ -22,23 +21,21 @@ class Renderer
     
     # TODO: find a proper way of determining what the main collision layer is. just looking at the z-index doesn't seem sufficient.
 
-    #max_width = 0
-    #max_height = 0
-    #rendered_layers.each do |layer|
-    #  max_width = layer.columns if layer.columns > max_width
-    #  max_height = layer.rows if layer.rows > max_height
-    #end
-    max_width = room.z_ordered_layers.last.width * 16 * 16
-    max_height = room.z_ordered_layers.last.height * 12 * 16
+    # make the image encompass all the layers
+    max_width = 0
+    max_height = 0
+    rendered_layers.each do |layer|
+      max_width = layer.width if layer.width > max_width
+      max_height = layer.height if layer.height > max_height
+    end
     
-    tile_backgrounds = true
-    background_fill_color = "black" # black looks much better, but green is more useful for finding errors when debugging.
-    rendered_level = Image.new(max_width, max_height) { self.background_color = background_fill_color }
-    rendered_layers.each_with_index do |layer, i|
+    tile_backgrounds = false
+    rendered_level = ChunkyPNG::Image.new(max_width, max_height, ChunkyPNG::Color::BLACK)
+    rendered_layers.each do |layer|
       if tile_backgrounds
-        rendered_level.composite_tiled!(layer)
+        # TODO
       else
-        rendered_level.composite!(layer, 0, 0, OverCompositeOp)
+        rendered_level.compose!(layer)
       end
     end
     
@@ -47,16 +44,17 @@ class Renderer
     
     filename = "#{folder}/#{room.area_name}/Rendered Rooms/#{room.filename}.png"
     FileUtils::mkdir_p(File.dirname(filename))
-    rendered_level.write(filename)
+    rendered_level.save(filename)
     puts "Wrote #{filename}"
   end
   
   def render_layer(folder, layer, room)
-    rendered_layer = Image.new(layer.width*16*16, layer.height*16*12) { self.background_color = "none" }
+    rendered_layer = ChunkyPNG::Image.new(layer.width*16*16, layer.height*16*12, ChunkyPNG::Color::TRANSPARENT)
     
     tileset_filename = "#{folder}/#{room.area_name}/Tilesets/#{layer.tileset_filename}.png"
     #tileset = get_tileset(layer.pointer_to_tileset_for_layer, room.palette_offset, room.graphic_tilesets_for_room, layer.colors_per_palette, tileset_filename)
-    tileset = Image.read(tileset_filename).first
+    tileset = ChunkyPNG::Image.from_file(tileset_filename)
+    #tileset = render_tileset(layer.pointer_to_tileset_for_layer, room.palette_offset, room.graphic_tilesets_for_room, layer.colors_per_palette, tileset_filename)
     
     layer.level_blocks.each_with_index do |block, index_on_level|
       horizontal_flip  = (block & 0b0100000000000000) != 0 # second highest bit controls h. flipping
@@ -71,28 +69,26 @@ class Renderer
       x_on_level = index_on_level % (layer.width*16)
       y_on_level = index_on_level / (layer.width*16)
       
-      tile = tileset.export_pixels(x=x_on_tileset*16, y=y_on_tileset*16, columns=16, rows=16, map="RGBA")
+      #tile = tileset.export_pixels(x=x_on_tileset*16, y=y_on_tileset*16, columns=16, rows=16, map="RGBA")
+      tile = tileset.crop(x_on_tileset*16, y_on_tileset*16, 16, 16)
       
-      if horizontal_flip || vertical_flip
-        tile_image = Image.new(16,16).import_pixels(x=0, y=0, columns=16, rows=16, map="RGBA", tile, type=CharPixel)
-        if horizontal_flip
-          tile_image.flop!
-        end
-        if vertical_flip
-          tile_image.flip!
-        end
-        tile = tile_image.export_pixels(x=0, y=0, columns=16, rows=16, map="RGBA")
+      if horizontal_flip
+        tile.mirror!
+      end
+      if vertical_flip
+        tile.flip!
       end
       
-      rendered_layer.import_pixels(x=x_on_level*16, y=y_on_level*16, columns=16, rows=16, map="RGBA", tile, type=CharPixel)
+      rendered_layer.compose!(tile, x_on_level*16, y_on_level*16)
     end
     
-    layer_opacity_float = layer.opacity / 31.0
-    blank_canvas = Image.new(rendered_layer.columns, rendered_layer.rows) { self.background_color = "none" }
-    blank_canvas.opacity = Magick::QuantumRange - (Magick::QuantumRange * layer_opacity_float)
-    # In order for partial transparency to work correctly, this intermediate step with DstInCompositeOp is necessary.
-    rendered_layer_with_transparency = rendered_layer.composite(blank_canvas, Magick::NorthWestGravity, 0, 0, Magick::DstInCompositeOp)
-    return rendered_layer_with_transparency
+    # TODO: OPACITY
+    #layer_opacity_float = layer.opacity / 31.0
+    #blank_canvas = Image.new(rendered_layer.columns, rendered_layer.rows) { self.background_color = "none" }
+    #blank_canvas.opacity = Magick::QuantumRange - (Magick::QuantumRange * layer_opacity_float)
+    ## In order for partial transparency to work correctly, this intermediate step with DstInCompositeOp is necessary.
+    #rendered_layer_with_transparency = rendered_layer.composite(blank_canvas, Magick::NorthWestGravity, 0, 0, Magick::DstInCompositeOp)
+    return rendered_layer#_with_transparency
   end
 
   def get_tileset(tileset_offset, palette_offset, graphic_tilesets_for_room, colors_per_palette, output_filename)
@@ -109,7 +105,7 @@ class Renderer
   
   def generate_palettes(palette_data_start_offset, colors_per_palette)
     if palette_data_start_offset.nil?
-      palette = [{unknown: 0, blue: 0, red: 0, green: 0}] * colors_per_palette
+      palette = [ChunkyPNG::Color.rgba(0, 0, 0, 0)] * colors_per_palette
       palette_list = [palette] * 128 # 128 is the maximum number of palettes
       return palette_list
     end
@@ -125,7 +121,6 @@ class Renderer
       number_of_palettes = 0x40
       palette_data_start_offset -= 0x804
     end
-    puts "number_of_palettes: #{number_of_palettes}"
     
     #puts "graphic_tile_data_start_offset: %08X" % graphic_tile_data_start_offset
     palette_data_start_offset += 4 # Skip the first 4 bytes, as they contain the length of this palette page, not the palette data itself.
@@ -151,7 +146,11 @@ class Renderer
         #  red_bits = 0
         #end
         
-        {unknown: unknown_bit, blue: blue_bits, red: red_bits, green: green_bits}
+        red = (red_bits / 32.0 * 255).to_i
+        green = (green_bits / 32.0 * 255).to_i
+        blue = (blue_bits / 32.0 * 255).to_i
+        alpha = 255
+        ChunkyPNG::Color.rgba(red, green, blue, alpha)
       end
       palette_list << palette
     end
@@ -160,13 +159,11 @@ class Renderer
   end
   
   def render_tileset(tileset_offset, palette_offset, graphic_tilesets_for_room, colors_per_palette, output_filename)
-    return if rendered_tilesets[output_filename]
+    return rendered_tilesets[output_filename] if rendered_tilesets[output_filename]
     
     tileset_width_in_blocks = 16
     tileset_height_in_blocks = 64
-    rendered_tileset = Image.new(tileset_width_in_blocks*16, tileset_height_in_blocks*16) do
-      self.background_color = "none"
-    end
+    rendered_tileset = ChunkyPNG::Image.new(tileset_width_in_blocks*16, tileset_height_in_blocks*16, ChunkyPNG::Color::TRANSPARENT)
 
     length_of_tileset_in_bytes = tileset_width_in_blocks*tileset_height_in_blocks*4
     tileset = rom[tileset_offset,length_of_tileset_in_bytes-4]
@@ -175,15 +172,16 @@ class Renderer
     
     #puts "palette_offset: %08X" % (palette_offset || 0)
     palette_list = generate_palettes(palette_offset, colors_per_palette)
+    tileset_data = tileset.unpack("C*")
 
-    tileset.scan(/.{4}/m).each_with_index do |tile_data, i|
-      #print '.'
-      
-      next if tile_data.unpack("V*").first == 0 # if it's all 0s then it's a blank tile, don't render it at all.
-      
+    tileset_data.each_slice(4).each_with_index do |tile_data, i|
       #puts "tile_data: #{tile_data.each_byte.to_a.map{|x| "%02X" % x}}"
-      tile_index_on_page, tile_page, extra_bits, palette_index = tile_data.each_byte.to_a
+      tile_index_on_page, tile_page, extra_bits, palette_index = tile_data
       #puts "palette_index: #{palette_index}"
+      
+      if tile_index_on_page == 0 && tile_page == 0 && extra_bits == 0 && palette_index == 0
+        next # if it's all 0s then it's a blank tile, don't render it at all.
+      end
       
       # The bits below are always 00. The below code was ran on every room in the game with no exceptions raised.
       #unknown1 = tile_index_on_page & 0b11000000
@@ -256,45 +254,34 @@ class Renderer
         #graphic_tile = graphic_tile.export_pixels(x=0, y=0, columns=16, rows=16, map="RGBA")
       end
       
-      if horizontal_flip || vertical_flip
-        tile_image = Image.new(16,16).import_pixels(x=0, y=0, columns=16, rows=16, map="RGBA", graphic_tile, type=CharPixel)
-        if horizontal_flip
-          tile_image.flop!
-        end
-        if vertical_flip
-          tile_image.flip!
-        end
-        graphic_tile = tile_image.export_pixels(x=0, y=0, columns=16, rows=16, map="RGBA")
+      if horizontal_flip
+        graphic_tile.mirror!
+      end
+      if vertical_flip
+        graphic_tile.flip!
       end
       
       x_on_tileset = i % 16
       y_on_tileset = i / 16
-      rendered_tileset.import_pixels(x=x_on_tileset*16, y=y_on_tileset*16, columns=16, rows=16, map="RGBA", graphic_tile, type=CharPixel)
+      rendered_tileset.compose!(graphic_tile, x_on_tileset*16, y_on_tileset*16)
     end
     
     FileUtils::mkdir_p(File.dirname(output_filename))
-    rendered_tileset.write(output_filename)
+    rendered_tileset.save(output_filename, :fast_rgba)
     puts "Wrote #{output_filename}"
-    #return rendered_tileset
     rendered_tilesets[output_filename] = true
+    return rendered_tileset
   end
   
   def render_graphic_tile(graphic_tile_data_start_offset, palette, tile_index_on_page)
-    # between only rendering a single tile instead of the whole graphic page, and using import_pixels on a bunch of pixels at once instead of pixel_color on one at a time, the new method is 5.4 times faster than the old method.
-    
-    pixels_for_rmagick = []
+    graphic_tile = ChunkyPNG::Image.new(16, 16, ChunkyPNG::Color::TRANSPARENT)
     
     if graphic_tile_data_start_offset.nil?
       # This room has no graphics, so just return a black tile. Could be a save room, warp room, transition room, etc.
       # TODO: instead it would be better to use the debug squares for these rooms so you can see what's what.
       
-      (16*16).times do
-        pixels_for_rmagick << Magick::QuantumRange
-        pixels_for_rmagick << Magick::QuantumRange
-        pixels_for_rmagick << Magick::QuantumRange
-        pixels_for_rmagick << Magick::QuantumRange
-      end
-      return pixels_for_rmagick
+      graphic_tile = ChunkyPNG::Image.new(16, 16, ChunkyPNG::Color::WHITE)
+      return graphic_tile
     end
     
     x_block_on_tileset = tile_index_on_page % 8
@@ -348,23 +335,14 @@ class Renderer
         else
           alpha_percent = 1.0
         end
-        # Each of the three colors are 5 bits long, so their value can be between 0 and 31 (in hex that's 0x00 and 0x1F). You need to divide by 32 instead of 31 to get accurate colors.
-        red_percent   = pixel_color[:red]   / 32.0
-        green_percent = pixel_color[:green] / 32.0
-        blue_percent  = pixel_color[:blue]  / 32.0
-        #alpha_percent = pixel_color[:unknown].to_f / 32
 
-        # Using import_pixels on many pixels at once is much faster than using pixel_color on each individually.
-        pixels_for_rmagick << red_percent * Magick::QuantumRange
-        pixels_for_rmagick << green_percent * Magick::QuantumRange
-        pixels_for_rmagick << blue_percent * Magick::QuantumRange
-        pixels_for_rmagick << alpha_percent * Magick::QuantumRange
+        graphic_tile[x_pixel_on_tile,y_pixel_on_tile] = pixel_color unless alpha_percent == 0
       end
       
       i += 1
     end
     
-    return pixels_for_rmagick
+    return graphic_tile
   end
   
   def render_graphic_tile_page(graphic_tile_data_start_offset, palette)

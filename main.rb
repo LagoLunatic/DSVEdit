@@ -3,7 +3,7 @@ require 'fileutils'
 require 'optparse'
 require 'yaml'
 
-require_relative 'renderer2.rb'
+require_relative 'renderer.rb'
 require_relative 'tmx_interface.rb'
 require_relative 'major_area.rb'
 require_relative 'sub_area.rb'
