@@ -192,8 +192,7 @@ if %w(render_tileset render_room export_tmx import_tmx locate randomize).include
         when "render_tileset"
           room.layers.each do |layer|
             tileset_filename = "#{folder}/#{room.area_name}/Tilesets/#{layer.tileset_filename}.png"
-            
-            renderer.render_tileset(layer.pointer_to_tileset_for_layer, room.palette_offset, room.graphic_tilesets_for_room, layer.colors_per_palette, tileset_filename)
+            renderer.get_tileset(layer.pointer_to_tileset_for_layer, room.palette_offset, room.graphic_tilesets_for_room, layer.colors_per_palette, tileset_filename)
           end
         when "render_room"
           renderer.render_room(folder, room)
