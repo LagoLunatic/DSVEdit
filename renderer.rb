@@ -2,14 +2,10 @@
 require 'oily_png'
 
 class Renderer
-  attr_accessor :rom, :rendered_tilesets_cache, :rendered_tileset_pages_cache, :rendered_tileset_tiles_cache, :rendered_tilesets
+  attr_reader :rom
   
   def initialize(rom)
     @rom = rom
-    @rendered_tilesets_cache = {}
-    @rendered_tileset_pages_cache = {} # cache page/palette combinations already rendered so we don't waste time rendering them over and over for every tile.
-    @rendered_tileset_tiles_cache = {}
-    @rendered_tilesets = {}
   end
   
   def render_room(folder, room)
@@ -29,14 +25,9 @@ class Renderer
       max_height = layer.height if layer.height > max_height
     end
     
-    tile_backgrounds = false
     rendered_level = ChunkyPNG::Image.new(max_width, max_height, ChunkyPNG::Color::BLACK)
     rendered_layers.each do |layer|
-      if tile_backgrounds
-        # TODO
-      else
-        rendered_level.compose!(layer)
-      end
+      rendered_level.compose!(layer)
     end
     
     max_width_in_screens = max_width / SCREEN_WIDTH_IN_PIXELS
@@ -52,7 +43,6 @@ class Renderer
     rendered_layer = ChunkyPNG::Image.new(layer.width*16*16, layer.height*16*12, ChunkyPNG::Color::TRANSPARENT)
     
     tileset_filename = "#{folder}/#{room.area_name}/Tilesets/#{layer.tileset_filename}.png"
-    #tileset = get_tileset(layer.pointer_to_tileset_for_layer, room.palette_offset, room.graphic_tilesets_for_room, layer.colors_per_palette, tileset_filename)
     if File.exist?(tileset_filename)
       tileset = ChunkyPNG::Image.from_file(tileset_filename)
     else
@@ -72,7 +62,6 @@ class Renderer
       x_on_level = index_on_level % (layer.width*16)
       y_on_level = index_on_level / (layer.width*16)
       
-      #tile = tileset.export_pixels(x=x_on_tileset*16, y=y_on_tileset*16, columns=16, rows=16, map="RGBA")
       tile = tileset.crop(x_on_tileset*16, y_on_tileset*16, 16, 16)
       
       if horizontal_flip
@@ -86,24 +75,7 @@ class Renderer
     end
     
     # TODO: OPACITY
-    #layer_opacity_float = layer.opacity / 31.0
-    #blank_canvas = Image.new(rendered_layer.columns, rendered_layer.rows) { self.background_color = "none" }
-    #blank_canvas.opacity = Magick::QuantumRange - (Magick::QuantumRange * layer_opacity_float)
-    ## In order for partial transparency to work correctly, this intermediate step with DstInCompositeOp is necessary.
-    #rendered_layer_with_transparency = rendered_layer.composite(blank_canvas, Magick::NorthWestGravity, 0, 0, Magick::DstInCompositeOp)
-    return rendered_layer#_with_transparency
-  end
-
-  def get_tileset(tileset_offset, palette_offset, graphic_tilesets_for_room, colors_per_palette, output_filename)
-    puts "Getting tileset %08X" % tileset_offset
-    if rendered_tilesets_cache["#{tileset_offset}_#{palette_offset}_#{graphic_tilesets_for_room}_#{colors_per_palette}"]
-      puts "cached"
-      return rendered_tilesets_cache["#{tileset_offset}_#{palette_offset}_#{graphic_tilesets_for_room}_#{colors_per_palette}"]
-    else
-      rendered_tileset = render_tileset(tileset_offset, palette_offset, graphic_tilesets_for_room, colors_per_palette, output_filename)
-      @rendered_tilesets_cache["#{tileset_offset}_#{palette_offset}_#{graphic_tilesets_for_room}_#{colors_per_palette}"] = rendered_tileset
-      return rendered_tileset
-    end
+    return rendered_layer
   end
   
   def generate_palettes(palette_data_start_offset, colors_per_palette)
@@ -141,13 +113,6 @@ class Renderer
         blue_bits   = (color >> 10) & 0b0000_0000_0001_1111
         green_bits  = (color >> 5)  & 0b0000_0000_0001_1111
         red_bits    =  color        & 0b0000_0000_0001_1111
-        
-        #if palette_index == 255
-        #  unknown_bit = 0
-        #  blue_bits = 0
-        #  green_bits = 0
-        #  red_bits = 0
-        #end
         
         red = (red_bits / 32.0 * 255).to_i
         green = (green_bits / 32.0 * 255).to_i
@@ -228,32 +193,7 @@ class Renderer
         next # TODO: figure out why this sometimes happens.
       end
       
-      render_mode = :tile
-      if render_mode == :page # render the whole tileset page
-        cache_key = "#{graphic_tile_data_start_offset}_#{palette_offset}_#{palette.length}_#{palette_index}"
-        
-        if rendered_tileset_pages_cache[cache_key]
-          rendered_graphic_tile_page = rendered_tileset_pages_cache[cache_key]
-        else
-          rendered_graphic_tile_page = render_graphic_tile_page(graphic_tile_data_start_offset, palette)
-          rendered_tileset_pages_cache[cache_key] = rendered_graphic_tile_page
-        end
-        
-        x_block_on_tileset = tile_index_on_page % 8
-        y_block_on_tileset = tile_index_on_page / 8
-        graphic_tile = rendered_graphic_tile_page.export_pixels(x=x_block_on_tileset*16, y=y_block_on_tileset*16, columns=16, rows=16, map="RGBA")
-      else # render just the tile
-        #cache_key = "#{graphic_tile_data_start_offset}_#{palette_offset}_#{palette.length}_#{palette_index}_#{tile_index_on_page}"
-        
-        if false#rendered_tileset_tiles_cache[cache_key]
-          graphic_tile = rendered_tileset_tiles_cache[cache_key]
-        else
-          graphic_tile = render_graphic_tile(graphic_tile_data_start_offset, palette, tile_index_on_page)
-          #rendered_tileset_tiles_cache[cache_key] = graphic_tile
-        end
-        #graphic_tile = render_graphic_tile(graphic_tile_data_start_offset, palette, tile_index_on_page)
-        #graphic_tile = graphic_tile.export_pixels(x=0, y=0, columns=16, rows=16, map="RGBA")
-      end
+      graphic_tile = render_graphic_tile(graphic_tile_data_start_offset, palette, tile_index_on_page)
       
       if horizontal_flip
         graphic_tile.mirror!
@@ -336,60 +276,6 @@ class Renderer
     end
     
     return graphic_tile
-  end
-  
-  def render_graphic_tile_page(graphic_tile_data_start_offset, palette)
-    #puts "graphic_tile_data_start_offset: %08X" % graphic_tile_data_start_offset
-    page_of_graphic_tiles = rom[graphic_tile_data_start_offset, 1024*16] # row is 1024 bytes long, 16 rows in a page
-    rendered_page = Image.new(128,128) do
-      self.background_color = "rgba(0,0,0,0)" # transparent background
-    end
-    
-    pixels_for_rmagick = []
-    i = 0
-    page_of_graphic_tiles.each_byte do |byte|
-      if palette.length == 16
-        pixels = [byte & 0b00001111, byte >> 4] # get the low 4 bits, then the high 4 bits (it's reversed). each is one pixel, two pixels total inside this byte.
-      elsif palette.length == 256
-        pixels = [byte]
-      else
-        raise "Unknown palette length: #{palette.length}"
-      end
-      pixels.each do |pixel|
-        x_pixel_on_tileset = i % 128
-        y_pixel_on_tileset = i / 128
-        i += 1
-        
-        pixel = pixel % palette.length # REMOVEME, HACK, DON'T KNOW WHY THIS IS NECESSARY
-        if pixel >= palette.length
-          raise "Pixel value #{pixel} larger than palette length #{palette.length}"
-        end
-        pixel_color = palette[pixel]
-        if pixel == 0
-          alpha_percent = 0
-          #next
-        else
-          alpha_percent = 1.0#100
-        end
-        # each of the three colors are 5 bits long, so their value can be between 0 and 31 (in hex it's 0x00 and 0x1F).
-        #pixel_color[:unknown].to_f / 1 * 100
-        red_percent = pixel_color[:red].to_f / 31 #* 100
-        green_percent = pixel_color[:green].to_f / 31 #* 100
-        blue_percent = pixel_color[:blue].to_f / 31 #* 100
-
-        #rendered_page.pixel_color(x_pixel_on_tileset, y_pixel_on_tileset, "rgba(#{red_percent}%,#{green_percent}%,#{blue_percent}%,#{alpha_percent}%)")
-        pixels_for_rmagick << red_percent * Magick::QuantumRange
-        pixels_for_rmagick << green_percent * Magick::QuantumRange
-        pixels_for_rmagick << blue_percent * Magick::QuantumRange
-        pixels_for_rmagick << alpha_percent * Magick::QuantumRange
-      end
-    end
-    
-    #rendered_page.write("rendered_page_#{graphic_tile_data_start_offset}.png")
-    #FileUtils.mv("rendered_page_#{graphic_tile_data_start_offset}.png", "./Tilesets & Rendered Rooms/rendered_page_#{graphic_tile_data_start_offset}.png")
-    #puts "Wrote " + "rendered_page_#{graphic_tile_data_start_offset}.png"
-    rendered_page.import_pixels(x=0, y=0, columns=128, rows=128, map="RGBA", pixels_for_rmagick, type=CharPixel)
-    return rendered_page
   end
   
   def render_map(map, folder, area_index)
