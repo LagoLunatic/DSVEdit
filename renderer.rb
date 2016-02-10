@@ -1,5 +1,5 @@
 
-require 'chunky_png'
+require 'oily_png'
 
 class Renderer
   attr_accessor :rom, :rendered_tilesets_cache, :rendered_tileset_pages_cache, :rendered_tileset_tiles_cache, :rendered_tilesets
@@ -134,7 +134,7 @@ class Renderer
         # these two bytes hold the rgb data for the color in this format:
         # ?bbbbbgggggrrrrr
         # the ? is unknown.
-        unknown_bit = (color >> 15) & 0b0000_0000_0000_0001
+        #unknown_bit = (color >> 15) & 0b0000_0000_0000_0001
         blue_bits   = (color >> 10) & 0b0000_0000_0001_1111
         green_bits  = (color >> 5)  & 0b0000_0000_0001_1111
         red_bits    =  color        & 0b0000_0000_0001_1111
@@ -294,52 +294,45 @@ class Renderer
       raise "Unknown palette length: #{palette.length}"
     end
     size_of_row_in_bytes = 8 * size_of_block_in_bytes
-    row_of_graphic_tiles = rom[graphic_tile_data_start_offset + y_block_on_tileset*size_of_row_in_bytes, size_of_row_in_bytes]
     
     if palette.length == 16
-      x = 8
+      bytes_per_16_pixels = 8
     elsif palette.length == 256
-      x = 16
+      bytes_per_16_pixels = 16
     else
       raise "Unknown palette length: #{palette.length}"
     end
     
-    i = 0
-    j = 0
-    row_of_graphic_tiles.each_byte do |byte|
-      if ((i / x) % 8) != x_block_on_tileset
-        i += 1
-        next
-      end
+    offset = graphic_tile_data_start_offset + y_block_on_tileset*size_of_row_in_bytes + x_block_on_tileset*bytes_per_16_pixels
+    pixel_on_tile = 0
+    (0..15).each do |i|
+      pixels_for_chunky = []
       
-      if palette.length == 16
-        pixels = [byte & 0b00001111, byte >> 4] # get the low 4 bits, then the high 4 bits (it's reversed). each is one pixel, two pixels total inside this byte.
-      elsif palette.length == 256
-        pixels = [byte]
-      else
-        raise "Unknown palette length: #{palette.length}"
-      end
-      
-      pixels.each do |pixel|
-        x_pixel_on_tile = j % 16
-        y_pixel_on_tile = j / 16
-        j += 1
-        
-        pixel = pixel % palette.length # REMOVEME, HACK, DON'T KNOW WHY THIS IS NECESSARY
-        if pixel >= palette.length
-          raise "Pixel value #{pixel} larger than palette length #{palette.length}"
-        end
-        pixel_color = palette[pixel]
-        if pixel == 0
-          alpha_percent = 0
+      rom[offset,bytes_per_16_pixels].each_byte do |byte|
+        if palette.length == 16
+          pixels = [byte & 0b00001111, byte >> 4] # get the low 4 bits, then the high 4 bits (it's reversed). each is one pixel, two pixels total inside this byte.
+        elsif palette.length == 256
+          pixels = [byte]
         else
-          alpha_percent = 1.0
+          raise "Unknown palette length: #{palette.length}"
         end
-
-        graphic_tile[x_pixel_on_tile,y_pixel_on_tile] = pixel_color unless alpha_percent == 0
+        
+        pixels.each do |pixel|
+          x_pixel_on_tile = pixel_on_tile % 16
+          y_pixel_on_tile = pixel_on_tile / 16
+          pixel_on_tile += 1
+          
+          if pixel == 0 # transparent
+            pixels_for_chunky << ChunkyPNG::Color::TRANSPARENT
+          else
+            pixel_color = palette[pixel]
+            pixels_for_chunky << pixel_color
+          end
+        end
       end
       
-      i += 1
+      graphic_tile.replace_row!(i, pixels_for_chunky)
+      offset += 8 * bytes_per_16_pixels
     end
     
     return graphic_tile
