@@ -74,7 +74,7 @@ class Layer
   
   def colors_per_palette
     colors = 16
-    if render_type > 0
+    if render_type > 1
       colors = 256
     end
     
