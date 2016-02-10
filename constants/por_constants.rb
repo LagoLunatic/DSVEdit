@@ -103,34 +103,38 @@ AREA_INDEX_TO_OVERLAY_INDEX = {
 }
 
 AREA_INDEX_TO_AREA_NAME = {
-  0 => {
-     0 => "01 - Entrance",
-     1 => "01 - Entrance",
-     2 => "03 - Buried Chamber",
-     3 => "04 - Great Stairway",
-     4 => "04 - Great Stairway",
-     5 => "04 - Great Stairway",
-     6 => "04 - Great Stairway",
-     7 => "07 - Tower of Death",
-     8 => "07 - Tower of Death",
-     9 => "16 - The Throne Room",
-    10 => "09 - Master's Keep",
-    11 => "09 - Master's Keep",
-    12 => "09 - Master's Keep",
-  },
-  1 => "02 - City of Haze",
-  2 => "13 - 13th Street",
-  3 => "05 - Sandy Grave",
-  4 => "11 - Forgotten City",
-  5 => "06 - Nation of Fools",
-  6 => "12 - Burnt Paradise",
-  7 => "08 - Forest of Doom",
-  8 => "10 - Dark Academy",
-  9 => "14 - Nest of Evil",
-  10 => "15 - Boss Rush",
+   0 => "Dracula's Castle",
+   1 => "City of Haze",
+   2 => "13th Street",
+   3 => "Sandy Grave",
+   4 => "Forgotten City",
+   5 => "Nation of Fools",
+   6 => "Burnt Paradise",
+   7 => "Forest of Doom",
+   8 => "Dark Academy",
+   9 => "Nest of Evil",
+  10 => "Boss Rush",
   11 => "Lost Gallery",
   12 => "Epilogue",
   13 => "Unused Boss Rush",
+}
+
+SECTOR_INDEX_TO_SECTOR_NAME = {
+  0 => {
+     0 => "Entrance",
+     1 => "Entrance",
+     2 => "Buried Chamber",
+     3 => "Great Stairway",
+     4 => "Great Stairway",
+     5 => "Great Stairway",
+     6 => "Great Stairway",
+     7 => "Tower of Death",
+     8 => "Tower of Death",
+     9 => "The Throne Room",
+    10 => "Master's Keep",
+    11 => "Master's Keep",
+    12 => "Master's Keep",
+  },
 }
 
 CONSTANT_OVERLAYS = []

@@ -39,24 +39,28 @@ AREA_INDEX_TO_OVERLAY_INDEX = {
 }
 
 AREA_INDEX_TO_AREA_NAME = {
+   0 => "Dracula's Castle"
+}
+
+SECTOR_INDEX_TO_SECTOR_NAME = {
    0 => {
-     0 => "00 - The Lost Village",
-     1 => "01 - Demon Guest House",
-     2 => "02 - Wizardry Lab",
-     3 => "03 - Garden of Madness",
-     4 => "04 - The Dark Chapel",
-     5 => "05 - Condemned Tower & Mine of Judgment",
-     6 => "06 - Subterranean Hell",
-     7 => "07 - Silenced Ruins",
-     8 => "08 - Cursed Clock Tower",
-     9 => "09 - The Pinnacle",
-    10 => "10 - Menace",
-    11 => "11 - The Abyss",
-    12 => "12 - Prologue",
-    13 => "13 - Epilogue",
-    14 => "14 - Boss Rush",
-    15 => "15 - Enemy Set Mode",
-    16 => "16 - Throne Room",
+     0 => "The Lost Village",
+     1 => "Demon Guest House",
+     2 => "Wizardry Lab",
+     3 => "Garden of Madness",
+     4 => "The Dark Chapel",
+     5 => "Condemned Tower & Mine of Judgment",
+     6 => "Subterranean Hell",
+     7 => "Silenced Ruins",
+     8 => "Cursed Clock Tower",
+     9 => "The Pinnacle",
+    10 => "Menace",
+    11 => "The Abyss",
+    12 => "Prologue",
+    13 => "Epilogue",
+    14 => "Boss Rush",
+    15 => "Enemy Set Mode",
+    16 => "Throne Room",
   }
 }
 

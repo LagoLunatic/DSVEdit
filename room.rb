@@ -242,20 +242,10 @@ class Room
   end
   
   def area_name
-    #return ""
-    #return major_area_index.to_s
-    if AREA_INDEX_TO_AREA_NAME[major_area_index].class == Hash
-      if AREA_INDEX_TO_AREA_NAME[major_area_index][area_index]
-        AREA_INDEX_TO_AREA_NAME[major_area_index][area_index]
-      else
-        major_area_index
-      end
-    elsif AREA_INDEX_TO_AREA_NAME[major_area_index].class == String
-      AREA_INDEX_TO_AREA_NAME[major_area_index]
-    elsif AREA_INDEX_TO_AREA_NAME[major_area_index].nil?
-      major_area_index.to_s
+    if SECTOR_INDEX_TO_SECTOR_NAME[major_area_index]
+      return SECTOR_INDEX_TO_SECTOR_NAME[major_area_index][area_index]
     else
-      raise "Misformatted area name: #{AREA_INDEX_TO_AREA_NAME[major_area_index].inspect}"
+      return AREA_INDEX_TO_AREA_NAME[major_area_index]
     end
   end
 end
