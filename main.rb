@@ -13,6 +13,7 @@ require_relative 'entity.rb'
 require_relative 'address_converter.rb'
 require_relative 'map.rb'
 require_relative 'door.rb'
+require_relative 'randomizer.rb'
 
 require_relative 'constants/shared_constants.rb'
 
@@ -84,25 +85,6 @@ end
 
 raise "Must specify entity to locate" if options[:mode] == "locate" && options[:locate_type].nil?
 
-if options[:mode] == "randomize"
-  randomize_doors = false
-  only_randomize_transition_doors = true
-  randomize_doors_going_back = false
-  randomize_enemies = true
-  randomize_bosses = false
-  allow_randomization_between_items_skills_passives = true
-  seed = options[:seed]
-  log = File.open("./logs/random.txt", "a")
-  if seed
-    rng = Random.new(seed)
-    log.puts "Using seed: #{seed}"
-  else
-    rng = Random.new
-    log.puts "New random seed: #{rng.seed}"
-  end
-  log.close()
-end
-
 if File.exist?("settings.yml")
   settings = YAML::load_file("settings.yml")
 else
@@ -157,6 +139,9 @@ rom = File.open(input_rom_path, "rb") {|file| file.read}
 renderer = Renderer.new(rom)
 tiled = TMXInterface.new(rom)
 converter = AddressConverter.new(rom)
+if options[:mode] == "randomize"
+  randomizer = Randomizer.new(options[:seed])
+end
 
 CONSTANT_OVERLAYS.each do |overlay_index|
   converter.load_overlay(overlay_index)
@@ -201,71 +186,7 @@ if %w(render_tileset render_room export_tmx import_tmx locate randomize).include
         when "import_tmx"
           tiled.read("./#{folder}/#{room.area_name}/#{room.filename}.tmx", room)
         when "randomize"
-          # Randomize entities
-          
-          available_enemy_ids_for_room = COMMON_ENEMY_IDS.dup
-          #if room.entities.count{|entity| entity.is_enemy?} >= 4
-          #  available_enemy_ids_for_room -= VERY_LARGE_ENEMIES
-          #end
-          
-          room.entities.each do |entity|
-            case entity.type
-            when 0x01 # Enemy
-              next unless randomize_enemies
-              
-              available_enemy_ids_for_entity = nil
-              if entity.is_boss?
-                next unless randomize_bosses
-                available_enemy_ids_for_entity = BOSS_IDS
-              elsif entity.is_common_enemy?
-                available_enemy_ids_for_entity = available_enemy_ids_for_room
-                if !VERY_LARGE_ENEMIES.include?(entity.subtype)
-                  available_enemy_ids_for_entity -= VERY_LARGE_ENEMIES
-                end
-              else
-                puts "Enemy #{entity} isn't in either the enemy list or boss list. Todo: fix this"
-                next
-              end
-              
-              # Enemies are chosen weighted closer to the ID of what the original enemy was so that early game enemies are less likely to roll into endgame enemies.
-              # Method taken from: https://gist.github.com/O-I/3e0654509dd8057b539a
-              weights = available_enemy_ids_for_entity.map do |possible_enemy_id|
-                id_difference = (possible_enemy_id - entity.subtype)
-                weight = (available_enemy_ids_for_entity.length - id_difference).abs
-                weight = weight**2
-                weight
-              end
-              ps = weights.map{|w| w.to_f / weights.reduce(:+)}
-              weighted_enemy_ids = available_enemy_ids_for_entity.zip(ps).to_h
-              random_enemy_id = weighted_enemy_ids.max_by{|_, weight| rng.rand ** (1.0 / weight)}.first
-              
-              #random_enemy_id = available_enemy_ids_for_entity.sample(random: rng)
-              entity.subtype = random_enemy_id
-              
-            when 0x02
-              
-            when 0x04 # Pickup
-              if allow_randomization_between_items_skills_passives
-                if rng.rand(1..100) <= 80 # 80% chance to randomize into an item
-                  entity.subtype = ITEM_ID_RANGES.keys.sample(random: rng)
-                  entity.var_b = rng.rand(ITEM_ID_RANGES[entity.subtype])
-                elsif options[:game] == "dos"
-                  entity.type = 2 # special object
-                  entity.subtype = 1 # candle
-                  entity.var_a = 0 # glowing soul lamp
-                  entity.var_b = (ITEM_BYTE_11_RANGE_FOR_SKILLS.to_a + ITEM_BYTE_11_RANGE_FOR_PASSIVES.to_a).sample(random: rng)
-                else # 20% chance to randomize into a skill/passive
-                  entity.subtype = ITEM_BYTE_7_VALUE_FOR_SKILLS_AND_PASSIVES
-                  entity.var_b = (ITEM_BYTE_11_RANGE_FOR_SKILLS.to_a + ITEM_BYTE_11_RANGE_FOR_PASSIVES.to_a).sample(random: rng)
-                end
-                
-              else
-                
-              end
-            end
-            
-            entity.write_to_rom()
-          end
+          randomizer.randomize_room(room)
         when "locate"
           room.entities.each do |entity|
             if entity.type == options[:locate_type] && entity.subtype == options[:locate_subtype]
