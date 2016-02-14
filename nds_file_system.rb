@@ -67,17 +67,15 @@ class NDSFileSystem
       file_data = File.open(path, "rb") {|file| file.read}
       new_file_size = file_data.length
       
-      unless file[:name] =~ /\.bin$/ || file[:name] == "rom.nds"
+      new_end_offset = new_start_offset + new_file_size
+      if (new_start_offset..new_end_offset).include?(@arm7_rom_offset) || (new_start_offset..new_end_offset).include?(@banner_end_offset)
+        new_start_offset = @banner_end_offset
         new_end_offset = new_start_offset + new_file_size
-        if (new_start_offset..new_end_offset).include?(@arm7_rom_offset) || (new_start_offset..new_end_offset).include?(@banner_end_offset)
-          new_start_offset = @banner_end_offset
-          new_end_offset = new_start_offset + new_file_size
-        end
-        @rom[new_start_offset,new_file_size] = file_data
-        offset = file[:id]*8
-        @rom[@file_allocation_table_offset+offset, 8] = [new_start_offset, new_end_offset].pack("VV")
-        new_start_offset += new_file_size
       end
+      @rom[new_start_offset,new_file_size] = file_data
+      offset = file[:id]*8
+      @rom[@file_allocation_table_offset+offset, 8] = [new_start_offset, new_end_offset].pack("VV")
+      new_start_offset += new_file_size
       
       # Update the lengths of changed overlay files.
       if file[:overlay_id]
@@ -85,6 +83,16 @@ class NDSFileSystem
         @rom[@arm9_overlay_table_offset+offset+8, 4] = [new_file_size].pack("V")
       end
     end
+    
+    # Update arm9
+    file = @extra_files.find{|file| file[:name] == "arm9.bin"}
+    path = File.join(input_folder, file[:file_path])
+    file_data = File.open(path, "rb") {|file| file.read}
+    new_file_size = file_data.length
+    if @arm9_size != new_file_size
+      raise "ARM9 changed size"
+    end
+    @rom[file[:start_offset], file[:size]] = file_data
     
     File.open(output_rom_path, "wb") do |f|
       f.write(@rom)
@@ -107,19 +115,19 @@ class NDSFileSystem
   def load_overlay(overlay_id)
     overlay = @overlays[overlay_id] # @files.values.select{|file| file[:overlay_id] == overlay_id}.first
     load_file(overlay)
-    puts "Loaded overlay: #{overlay_id}"
+    #puts "Loaded overlay: #{overlay_id}"
   end
   
   def load_file(file)
     @currently_loaded_files[file[:ram_start_offset]] = file
   end
   
-  def read(ram_address, length=1)
+  def convert_ram_address_to_path_and_offset(ram_address)
     @currently_loaded_files.each do |ram_start_offset, file|
       ram_range = (file[:ram_start_offset]..file[:ram_start_offset]+file[:size])
       if ram_range.include?(ram_address)
         offset_in_file = ram_address - file[:ram_start_offset]
-        return read_by_file(file[:file_path], offset_in_file, length)
+        return [file[:file_path], offset_in_file]
       end
     end
     
@@ -133,14 +141,50 @@ class NDSFileSystem
     raise ConversionError.new("Failed to convert ram address to rom address: %08X." % ram_address)
   end
   
+  def read(ram_address, length=1)
+    file_path, offset_in_file = convert_ram_address_to_path_and_offset(ram_address)
+    return read_by_file(file_path, offset_in_file, length)
+  end
+  
   def read_by_file(file_path, offset_in_file, length)
-    if @opened_files_cache[file_path]
-      file = @opened_files_cache[file_path]
-    else
-      file = File.open("../temp_extracted/#{file_path}", "rb") {|file| file.read}
-      @opened_files_cache[file_path] = file
+    file_data = get_file_data_from_opened_files_cache(file_path)
+    return file_data[offset_in_file, length]
+  end
+  
+  def write(ram_address, new_data)
+    file_path, offset_in_file = convert_ram_address_to_path_and_offset(ram_address)
+    write_by_file(file_path, offset_in_file, new_data)
+  end
+  
+  def write_by_file(file_path, offset_in_file, new_data)
+    file_data = get_file_data_from_opened_files_cache(file_path)
+    file_data[offset_in_file, new_data.length] = new_data
+    File.open("../temp_extracted/#{file_path}", "rb+") do |f|
+      f.write(file_data)
     end
-    return file[offset_in_file, length]
+  end
+  
+  def get_file_data_from_opened_files_cache(file_path)
+    if @opened_files_cache[file_path]
+      file_data = @opened_files_cache[file_path]
+    else
+      file_data = File.open("../temp_extracted/#{file_path}", "rb") {|file| file.read}
+      @opened_files_cache[file_path] = file_data
+    end
+    
+    return file_data
+  end
+  
+  def expand_file_and_get_end_of_file_ram_address(ram_address, length_to_expand_by)
+    file_path, offset_in_file = convert_ram_address_to_path_and_offset(ram_address)
+    file = @currently_loaded_files.values.find{|file| file[:file_path] == file_path}
+    file[:size] += length_to_expand_by
+    
+    file_data = get_file_data_from_opened_files_cache(file_path)
+    local_end_of_file = file_data.length
+    offset_difference = local_end_of_file - offset_in_file
+    
+    return ram_address + offset_difference
   end
   
   def rom

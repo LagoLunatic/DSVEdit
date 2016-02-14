@@ -259,12 +259,10 @@ end
 
 if GAME == "ooe"
   # Change the starting room so you can skip Ecclesia's cutscenes.
-  code_address = converter.ram_to_rom(0x020AC15C)
-  rom[code_address] = [0x03].pack("C*") # 3rd room in Ecclesia is Ecclesia's entrance room, that leads onto the world map.
+  fs.write(0x020AC15C, [0x03].pack("C")) # 3rd room in Ecclesia is Ecclesia's entrance room, that leads onto the world map.
   
   # Make all areas on the world map accessible.
-  code_address = converter.ram_to_rom(0x020AA8E4)
-  rom[code_address,4] = [0xE3A00001].pack("V*")
+  fs.write(0x020AA8E4, [0xE3A00001].pack("V"))
 end
 
 puts "Time taken: #{Time.now-start_time}"

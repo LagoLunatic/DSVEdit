@@ -17,6 +17,8 @@ class TMXInterface
         raise "%08X could be too many possible layers (or not enough)" % layer_metadata_ram_pointer
       end
       game_layer = possible_layers.first
+      game_layer.width = tmx_layer.attr("width").to_i / 16
+      game_layer.height = tmx_layer.attr("height").to_i / 12
       game_layer.level_blocks = tile_data
       game_layer.write_to_rom()
     end
@@ -30,9 +32,9 @@ class TMXInterface
         props[name] = value
       end
       
-      entity = room.entities.select{|e| e.entity_pointer == props["entity_pointer"]}.first
+      entity = room.entities.select{|e| e.entity_ram_pointer == props["entity_ram_pointer"]}.first
       if entity.nil?
-        raise "Couldn't find entity at %08X" % tmx_entity.entity_pointer
+        raise "Couldn't find entity at %08X" % tmx_entity.entity_ram_pointer
       end
       
       entity.x_pos = tmx_entity["x"].to_i
@@ -43,7 +45,7 @@ class TMXInterface
       entity.byte_8 = props["08"]
       entity.var_a = props["var_a"]
       entity.var_b = props["var_b"]
-      entity.write_to_rom()
+      #entity.write_to_rom()
     end
     
     puts "Read tmx file #{filename} and saved to rom"
@@ -119,7 +121,7 @@ class TMXInterface
                        :x => entity.x_pos,
                        :y => entity.y_pos) {
               xml.properties {
-                xml.property(:name => "entity_pointer", :value => "%08X" % entity.entity_ram_pointer)
+                xml.property(:name => "entity_ram_pointer", :value => "%08X" % entity.entity_ram_pointer)
                 xml.property(:name => "05", :value => "%02X" % entity.byte_5)
                 xml.property(:name => "06 (type)", :value => "%02X" % entity.type)
                 xml.property(:name => "07 (subtype)", :value => "%02X" % entity.subtype)
@@ -168,6 +170,7 @@ class TMXInterface
     tile_data = tile_data_string.scan(/\d+/).map{|str| str.to_i}
     
     tile_data = tile_data.map do |block|
+      block = 1 if block == 0
       horizontal_flip  = (block & 0x80000000) != 0
       vertical_flip    = (block & 0x40000000) != 0
       index_on_tileset = (block & ~(0x80000000 | 0x40000000 | 0x20000000))

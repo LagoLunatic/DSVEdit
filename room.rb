@@ -32,7 +32,7 @@ class Room
     initialize_tileset_offsets_by_filename_by_tileset_wrapper_B_pointer()
     
     #room_metadata_pointer = converter.ram_to_rom(room_metadata_ram_pointer)
-    puts "room_metadata_ram_pointer: %08X" % room_metadata_ram_pointer
+    #puts "room_metadata_ram_pointer: %08X" % room_metadata_ram_pointer
     #puts "room_metadata_pointer: %08X" % room_metadata_pointer
     
     room_metadata = fs.read(room_metadata_ram_pointer, 32).unpack("V*")
