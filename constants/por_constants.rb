@@ -2,21 +2,7 @@
 GAME = "por"
 LONG_GAME_NAME = "Portrait of Ruin"
 
-#AREA_LIST_START_OFFSET = 0x0E7A5C
-
-MAJOR_AREA_LIST_START_OFFSET = 0x0E336C
-
-GET_LIST_OF_MAJOR_AREAS = Proc.new do |rom, converter|
-  i = 0
-  major_areas = []
-  while true
-    major_area_pointer = rom[0x0E336C+i*4, 4].unpack("V*").first
-    break if major_area_pointer == 0
-    major_areas << converter.ram_to_rom(major_area_pointer) #- 0x2000000 + 0x4000
-    i += 1
-  end
-  major_areas
-end
+AREA_LIST_START_OFFSET = 0x0E336C
 
 EXTRACT_EXTRA_ROOM_INFO = Proc.new do |last_4_bytes_of_room_metadata|
   number_of_doors    = (last_4_bytes_of_room_metadata & 0b00000000_00000000_00000000_01111111)
@@ -166,6 +152,8 @@ OVERLAY_ROM_INFO_START_OFFSET = 0x67FE00
 
 ENTITY_BLOCK_START_OFFSET = 0x3798D8
 ENTITY_BLOCK_END_OFFSET   = 0x6344D1 # guess
+
+ENTITY_TYPE_FOR_PICKUPS = 0x04
 
 ENEMY_IDS = (0x00..0x80).to_a
 BOSS_IDS = (0x81..0x9A).to_a

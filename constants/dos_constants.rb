@@ -2,9 +2,7 @@
 GAME = "dos"
 LONG_GAME_NAME = "Dawn of Sorrow"
 
-MAJOR_AREA_LIST_START_OFFSET = 0x00AFC4 # Technically not a list, this points to code that has the the major area hard coded, since DoS only has one major area.
-
-#AREA_LIST_START_OFFSET = 0x08ED44
+AREA_LIST_START_OFFSET = 0x00AFC4 # Technically not a list, this points to code that has the the area hard coded, since DoS only has one area.
 
 EXTRACT_EXTRA_ROOM_INFO = Proc.new do |last_4_bytes_of_room_metadata|
   number_of_doors    = (last_4_bytes_of_room_metadata & 0b00000000_00000000_11111111_11111111)
@@ -64,7 +62,7 @@ SECTOR_INDEX_TO_SECTOR_NAME = {
   }
 }
 
-CONSTANT_OVERLAYS = []
+CONSTANT_OVERLAYS = [0, 1]
 
 INVALID_ROOMS = []
 
@@ -97,7 +95,13 @@ ENTITY_BLOCK_START_OFFSET = 0x0A4B9C
 ENTITY_BLOCK_END_OFFSET   = 0x0C3D9C
 
 ENEMY_DNA_START_OFFSET = 0x07CCAC
+ENEMY_DNA_RAM_START_OFFSET = 0x02078CAC
+ENEMY_NAME_LIST_RAM_POINTER = 0x0222F9A0
+ENEMY_DESCRIPTION_LIST_RAM_POINTER = 0x0222FB78
 
+ENTITY_TYPE_FOR_PICKUPS = 0x04
+
+ENEMY_IDS = (0x00..0x75)
 COMMON_ENEMY_IDS = (0x00..0x64).to_a
 BOSS_IDS = (0x65..0x73).to_a # regular game bosses end at 0x73 (menace), 0x74 is soma that you fight in julius mode (and 0x75 is his second form, dracula).
 VERY_LARGE_ENEMIES = [0x64, 0x60, 0x25, 0x5D, 0x63, 0x0E, 0x61, 0x5B, 0x2F, 0x22] # iron golem, stolas, great armor, arc demon, alastor, golem, final guard, flame demon, devil, treant

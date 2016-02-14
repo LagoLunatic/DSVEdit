@@ -5,8 +5,8 @@ require 'yaml'
 
 require_relative 'renderer.rb'
 require_relative 'tmx_interface.rb'
-require_relative 'major_area.rb'
-require_relative 'sub_area.rb'
+require_relative 'area.rb'
+require_relative 'sector.rb'
 require_relative 'room.rb'
 require_relative 'layer.rb'
 require_relative 'entity.rb'
@@ -39,13 +39,13 @@ OptionParser.new do |opts|
     options[:rooms] = rooms
   end
   
-  opts.on("-a", "--areas 0,2", Array, "Only execute for rooms in these major areas (area IDs)") do |areas|
+  opts.on("-a", "--areas 0,2", Array, "Only execute for rooms in these areas (area IDs)") do |areas|
     areas.map! do |area|
       area = area.to_i
       raise "Invalid area: #{area}" unless AREA_INDEX_TO_OVERLAY_INDEX.keys.include?(area)
       area
     end
-    options[:major_areas] = areas
+    options[:areas] = areas
   end
   
   #opts.on("-re", "--regions 0,2", Array, "Only execute for rooms in these sub-areas (area IDs)") do |areas|
@@ -167,21 +167,21 @@ located_rooms = []
 output_folder = "../Exported #{options[:game]}"
 
 if %w(render_tileset render_room export_tmx import_tmx locate randomize).include?(options[:mode])
-  AREA_INDEX_TO_OVERLAY_INDEX.each do |major_area_index, list_of_sub_areas|
-    if options[:major_areas] && !options[:major_areas].include?(major_area_index)
+  AREA_INDEX_TO_OVERLAY_INDEX.each do |area_index, list_of_sub_areas|
+    if options[:areas] && !options[:areas].include?(area_index)
       next
     end
     
-    major_area = MajorArea.new(major_area_index, rom, converter)
+    area = Area.new(area_index, rom, converter)
     
-    major_area.sub_areas.each do |sub_area|
-      if options[:sub_areas] && !options[:sub_areas].include?(sub_area.sub_area_index)
+    area.sectors.each do |sector|
+      if options[:sectors] && !options[:sectors].include?(sector.sector_index)
         next
       end
-      #puts "major_area_index: #{major_area_index}"
-      #puts "sub_area_index: #{sub_area.sub_area_index}"
+      #puts "area_index: #{area_index}"
+      #puts "sector_index: #{sector.sector_index}"
       
-      sub_area.rooms.each do |room|
+      sector.rooms.each do |room|
         if !options[:rooms].nil? && !options[:rooms].include?(room.room_metadata_ram_pointer)
           next
         end

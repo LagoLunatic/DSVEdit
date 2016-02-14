@@ -96,7 +96,7 @@ class Renderer
     #puts "graphic_tile_data_start_offset: %08X" % graphic_tile_data_start_offset
     palette_data_start_offset += 4 # Skip the first 4 bytes, as they contain the length of this palette page, not the palette data itself.
 
-    puts "palette_data_start_offset: %08X" % palette_data_start_offset
+    #puts "palette_data_start_offset: %08X" % palette_data_start_offset
     palette_list = []
     (0..number_of_palettes*2).each do |palette_index| # todo: cache palettes
       palette_data = rom[palette_data_start_offset + 32*palette_index,colors_per_palette*2]

@@ -14,29 +14,25 @@ class Room
               :tileset_offsets_by_filename_by_tileset_wrapper_B_pointer,
               :rom,
               #:overlay_offset,
-              :major_area_index,
               :area_index,
+              :sector_index,
               :room_index,
               :converter
   attr_accessor :room_xpos_on_map, :room_ypos_on_map
 
-  def initialize(room_metadata_ram_pointer, rom, major_area_index, area_index, room_index, converter)
+  def initialize(room_metadata_ram_pointer, rom, area_index, sector_index, room_index, converter)
     @room_metadata_ram_pointer = room_metadata_ram_pointer
     @rom = rom
-    @major_area_index = major_area_index
     @area_index = area_index
+    @sector_index = sector_index
     @room_index = room_index
     @converter = converter
     read_from_rom()
   end
   
   def read_from_rom
-    #overlay_index = AREA_INDEX_TO_OVERLAY_INDEX[major_area_index][area_index]
-    #@overlay_offset = ALL_OVERLAYS[overlay_index][:rom].begin
     initialize_tileset_offsets_by_filename_by_tileset_wrapper_B_pointer()
     
-    #room_metadata_pointer = room_metadata_ram_pointer - 0x02000000 + 0x4000
-    #room_metadata_pointer = ram_to_rom(room_metadata_ram_pointer, overlay_offset)
     room_metadata_pointer = converter.ram_to_rom(room_metadata_ram_pointer)
     #puts "room_metadata_ram_pointer: %08X" % room_metadata_ram_pointer
     #puts "room_metadata_pointer: %08X" % room_metadata_pointer
@@ -238,14 +234,15 @@ class Room
   end
   
   def filename
-    "room_a#{major_area_index}-#{area_index}-#{room_index}_%08X_x#{room_xpos_on_map}_y#{room_ypos_on_map}_w#{z_ordered_layers.last.width}_h#{z_ordered_layers.last.height}" % room_metadata_ram_pointer
+    "room_a#{area_index}-#{sector_index}-#{room_index}_%08X_x#{room_xpos_on_map}_y#{room_ypos_on_map}_w#{z_ordered_layers.last.width}_h#{z_ordered_layers.last.height}" % room_metadata_ram_pointer
   end
   
   def area_name
-    if SECTOR_INDEX_TO_SECTOR_NAME[major_area_index]
-      return SECTOR_INDEX_TO_SECTOR_NAME[major_area_index][area_index]
+    return ""
+    if SECTOR_INDEX_TO_SECTOR_NAME[area_index]
+      return SECTOR_INDEX_TO_SECTOR_NAME[area_index][sector_index]
     else
-      return AREA_INDEX_TO_AREA_NAME[major_area_index]
+      return AREA_INDEX_TO_AREA_NAME[area_index]
     end
   end
 end

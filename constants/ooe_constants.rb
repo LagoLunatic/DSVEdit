@@ -2,19 +2,7 @@
 GAME = "ooe"
 LONG_GAME_NAME = "Order of Ecclesia"
 
-MAJOR_AREA_LIST_START_OFFSET = 0x0F0DDC
-
-GET_LIST_OF_MAJOR_AREAS = Proc.new do |rom, converter|
-  i = 0
-  major_areas = []
-  while true
-    major_area_pointer = rom[0x0F0DDC+i*4, 4].unpack("V*").first
-    break if major_area_pointer == 0
-    major_areas << converter.ram_to_rom(major_area_pointer) # - 0x21FFFC0 + 0x14A400 # 02222180 -> 16C5C0
-    i += 1
-  end
-  major_areas
-end
+AREA_LIST_START_OFFSET = 0x0F0DDC
 
 EXTRACT_EXTRA_ROOM_INFO = Proc.new do |last_4_bytes_of_room_metadata|
   number_of_doors    = (last_4_bytes_of_room_metadata & 0b00000000_00000000_00000000_01111111)
@@ -181,3 +169,10 @@ BC_FOLDER_FILE_LENGTH = 32
 
 OVERLAY_RAM_INFO_START_OFFSET = 0x103000
 OVERLAY_ROM_INFO_START_OFFSET = 0x588000
+
+ENEMY_IDS = (0x00..0x78)
+COMMON_ENEMY_IDS = (0x00..0x6A).to_a
+BOSS_IDS = (0x6B..0x78).to_a
+VERY_LARGE_ENEMIES = []
+
+ENTITY_TYPE_FOR_PICKUPS = 0x02
