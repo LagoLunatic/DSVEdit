@@ -14,6 +14,7 @@ require_relative 'address_converter.rb'
 require_relative 'map.rb'
 require_relative 'door.rb'
 require_relative 'randomizer.rb'
+require_relative 'enemy_dna.rb'
 
 require_relative 'constants/shared_constants.rb'
 
