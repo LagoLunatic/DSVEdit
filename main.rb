@@ -3,20 +3,7 @@ require 'fileutils'
 require 'optparse'
 require 'yaml'
 
-require_relative 'renderer.rb'
-require_relative 'tmx_interface.rb'
-require_relative 'area.rb'
-require_relative 'sector.rb'
-require_relative 'room.rb'
-require_relative 'layer.rb'
-require_relative 'entity.rb'
-require_relative 'address_converter.rb'
-require_relative 'map.rb'
-require_relative 'door.rb'
-require_relative 'randomizer.rb'
-require_relative 'enemy_dna.rb'
-
-require_relative 'constants/shared_constants.rb'
+require_relative 'dsve'
 
 options = {}
 OptionParser.new do |opts|
