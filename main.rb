@@ -123,16 +123,20 @@ end
 
 input_rom_path = settings[:input_rom_paths][options[:game]]
 rom = File.open(input_rom_path, "rb") {|file| file.read}
+fs = NDSFileSystem.new
+fs.read_from_rom(rom)
+print "Extracting files from ROM... "
+fs.extract("../temp_extracted")
+puts "Done."
 
-renderer = Renderer.new(rom)
-tiled = TMXInterface.new(rom)
-converter = AddressConverter.new(rom)
+renderer = Renderer.new(fs)
+tiled = TMXInterface.new()
 if options[:mode] == "randomize"
   randomizer = Randomizer.new(options[:seed])
 end
 
 CONSTANT_OVERLAYS.each do |overlay_index|
-  converter.load_overlay(overlay_index)
+  fs.load_overlay(overlay_index)
 end
 
 start_time = Time.now
@@ -145,7 +149,7 @@ if %w(render_tileset render_room export_tmx import_tmx locate randomize).include
       next
     end
     
-    area = Area.new(area_index, rom, converter)
+    area = Area.new(area_index, fs)
     
     area.sectors.each do |sector|
       if options[:sectors] && !options[:sectors].include?(sector.sector_index)
@@ -247,6 +251,12 @@ if options[:game] == "dos" && options[:mode] == "randomize"
   #rom[0x33B90] = [0x01].pack("C*")
 end
 
+if options[:game] == "dos"
+  # Change the starting room to skip the tutorial.
+  rom[0x33B84] = [0x00].pack("C*")
+  rom[0x33B90] = [0x01].pack("C*")
+end
+
 if GAME == "ooe"
   # Change the starting room so you can skip Ecclesia's cutscenes.
   code_address = converter.ram_to_rom(0x020AC15C)
@@ -264,6 +274,4 @@ if options[:mode] == "locate"
 end
 
 output_rom_path = settings[:output_rom_paths][options[:game]]
-File.open(output_rom_path, "wb") do |f|
-  f.write(rom)
-end
+fs.write_to_rom(output_rom_path, "../temp_extracted")

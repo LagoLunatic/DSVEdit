@@ -2,12 +2,6 @@
 require 'nokogiri'
 
 class TMXInterface
-  attr_reader :rom
-  
-  def initialize(rom)
-    @rom = rom
-  end
-  
   def read(filename, room)
     match = File.basename(filename).match(/^room_a\d+-\d+-\d+_(\h+)_x\d+_y\d+_w\d+_h\d+\.tmx$/)
     room_metadata_ram_pointer = match[1].to_i(16)
@@ -24,7 +18,7 @@ class TMXInterface
       end
       game_layer = possible_layers.first
       game_layer.level_blocks = tile_data
-      #game_layer.write_to_rom()
+      game_layer.write_to_rom()
     end
     
     tiled_entities = xml.css("objectgroup[name='Entities'] object")
@@ -125,7 +119,7 @@ class TMXInterface
                        :x => entity.x_pos,
                        :y => entity.y_pos) {
               xml.properties {
-                xml.property(:name => "entity_pointer", :value => "%08X" % entity.entity_pointer)
+                xml.property(:name => "entity_pointer", :value => "%08X" % entity.entity_ram_pointer)
                 xml.property(:name => "05", :value => "%02X" % entity.byte_5)
                 xml.property(:name => "06 (type)", :value => "%02X" % entity.type)
                 xml.property(:name => "07 (subtype)", :value => "%02X" % entity.subtype)

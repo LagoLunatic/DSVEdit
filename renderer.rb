@@ -2,10 +2,10 @@
 require 'oily_png'
 
 class Renderer
-  attr_reader :rom
+  attr_reader :fs
   
-  def initialize(rom)
-    @rom = rom
+  def initialize(fs)
+    @fs = fs
   end
   
   def render_room(folder, room)
@@ -43,7 +43,9 @@ class Renderer
     rendered_layer = ChunkyPNG::Image.new(layer.width*16*16, layer.height*16*12, ChunkyPNG::Color::TRANSPARENT)
     
     tileset_filename = "#{folder}/#{room.area_name}/Tilesets/#{layer.tileset_filename}.png"
-    tileset = get_tileset(layer.pointer_to_tileset_for_layer, room.palette_offset, room.graphic_tilesets_for_room, layer.colors_per_palette, tileset_filename)
+    #puts "#{room.area_index}-#{room.sector_index}-#{room.room_index}"
+    fs.load_overlay(AREA_INDEX_TO_OVERLAY_INDEX[room.area_index][room.sector_index])
+    tileset = get_tileset(layer.ram_pointer_to_tileset_for_layer, room.palette_offset, room.graphic_tilesets_for_room, layer.colors_per_palette, tileset_filename)
     
     layer.level_blocks.each_with_index do |block, index_on_level|
       horizontal_flip  = (block & 0b0100000000000000) != 0 # second highest bit controls h. flipping
@@ -81,7 +83,7 @@ class Renderer
       return palette_list
     end
     
-    number_of_palettes = rom[palette_data_start_offset+2,1].unpack("C*").first
+    number_of_palettes = fs.read(palette_data_start_offset+2,1).unpack("C*").first
     if number_of_palettes == 1
       # When this value is 1, it means this tileset has no palette of its own. Instead it simply leeches off the palette of whatever the previously loaded room was.
       # Since we can't know what room the player was in last, we can instead simply use the palette of whatever room this room's first door leads to.
@@ -97,9 +99,10 @@ class Renderer
     palette_data_start_offset += 4 # Skip the first 4 bytes, as they contain the length of this palette page, not the palette data itself.
 
     #puts "palette_data_start_offset: %08X" % palette_data_start_offset
+    #puts "number_of_palettes: %d" % number_of_palettes
     palette_list = []
-    (0..number_of_palettes*2).each do |palette_index| # todo: cache palettes
-      palette_data = rom[palette_data_start_offset + 32*palette_index,colors_per_palette*2]
+    (0..number_of_palettes).each do |palette_index| # todo: cache palettes
+      palette_data = fs.read(palette_data_start_offset + 32*palette_index, colors_per_palette*2)
       palette = palette_data.scan(/.{2}/m).map do |color|
         color = color.unpack("v*").first
         # these two bytes hold the rgb data for the color in this format:
@@ -136,7 +139,7 @@ class Renderer
     rendered_tileset = ChunkyPNG::Image.new(tileset_width_in_blocks*16, tileset_height_in_blocks*16, ChunkyPNG::Color::TRANSPARENT)
 
     length_of_tileset_in_bytes = tileset_width_in_blocks*tileset_height_in_blocks*4
-    tileset = rom[tileset_offset,length_of_tileset_in_bytes-4]
+    tileset = fs.read(tileset_offset, length_of_tileset_in_bytes-4)
     #puts "Tileset data starting at %08X" % tileset_offset
     tileset = "\x00\x00\x00\x00" + tileset
     
@@ -252,7 +255,8 @@ class Renderer
     (0..15).each do |i|
       pixels_for_chunky = []
       
-      rom[offset,bytes_per_16_pixels].each_byte do |byte|
+      #fs.read(offset,bytes_per_16_pixels).each_byte do |byte| #TODO
+      fs.rom[offset,bytes_per_16_pixels].each_byte do |byte|
         if palette.length == 16
           pixels = [byte & 0b00001111, byte >> 4] # get the low 4 bits, then the high 4 bits (it's reversed). each is one pixel, two pixels total inside this byte.
         elsif palette.length == 256

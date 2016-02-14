@@ -2,6 +2,10 @@
 require 'fileutils'
 
 class NDSFileSystem
+  class ConversionError < StandardError ; end
+  
+  attr_reader :overlays
+  
   def read_from_rom(rom)
     @rom = rom
     @game_name = @rom[0x00,12]
@@ -19,6 +23,10 @@ class NDSFileSystem
     @banner_end_offset = @banner_start_offset + 0x840 # ??
     
     @files = {}
+    @overlays = []
+    @currently_loaded_files = {}
+    @opened_files_cache = {}
+    
     get_file_name_table()
     get_overlay_table()
     get_file_allocation_table()
@@ -29,7 +37,7 @@ class NDSFileSystem
   def extract(output_folder)
     all_files.each do |file|
       next unless file[:type] == :file
-      #next unless file[:overlay_id]
+      #next unless (file[:overlay_id] || file[:name] == "arm9.bin" || file[:name] == "rom.nds")
       
       start_offset, end_offset, file_path = file[:start_offset], file[:end_offset], file[:file_path]
       file_data = @rom[start_offset..end_offset-1]
@@ -96,6 +104,56 @@ class NDSFileSystem
     end
   end
   
+  def load_overlay(overlay_id)
+    overlay = @overlays[overlay_id] # @files.values.select{|file| file[:overlay_id] == overlay_id}.first
+    load_file(overlay)
+    puts "Loaded overlay: #{overlay_id}"
+  end
+  
+  def load_file(file)
+    @currently_loaded_files[file[:ram_start_offset]] = file
+  end
+  
+  def read(ram_address, length=1)
+    @currently_loaded_files.each do |ram_start_offset, file|
+      ram_range = (file[:ram_start_offset]..file[:ram_start_offset]+file[:size])
+      if ram_range.include?(ram_address)
+        offset_in_file = ram_address - file[:ram_start_offset]
+        return read_by_file(file[:file_path], offset_in_file, length)
+      end
+    end
+    
+    @currently_loaded_files.each do |ram_start_offset, file|
+      if file[:overlay_id]
+        puts "overlay loaded: %02d" % file[:overlay_id]
+      end
+      puts "ram_range: %08X..%08X" % [file[:ram_start_offset], file[:ram_start_offset]+file[:size]]
+      puts "rom_start: %08X" % file[:start_offset]
+    end
+    raise ConversionError.new("Failed to convert ram address to rom address: %08X." % ram_address)
+  end
+  
+  def read_by_file(file_path, offset_in_file, length)
+    if @opened_files_cache[file_path]
+      file = @opened_files_cache[file_path]
+    else
+      file = File.open("../temp_extracted/#{file_path}", "rb") {|file| file.read}
+      @opened_files_cache[file_path] = file
+    end
+    return file[offset_in_file, length]
+  end
+  
+  def rom
+    file_path = "ftc/rom.nds"
+    if @opened_files_cache[file_path]
+      file = @opened_files_cache[file_path]
+    else
+      file = File.open("../temp_extracted/#{file_path}", "rb") {|file| file.read}
+      @opened_files_cache[file_path] = file
+    end
+    return file
+  end
+  
 private
   
   def get_file_name_table
@@ -159,7 +217,8 @@ private
     while offset < @arm9_overlay_table_size
       overlay_id, overlay_ram_address, overlay_size, _, _, _, file_id, _ = overlay_table_data[0x00+offset,32].unpack("V*")
       
-      @files[file_id] = {:name => "overlay9_#{overlay_id}", :type => :file, :id => file_id, :overlay_id => overlay_id}
+      @files[file_id] = {:name => "overlay9_#{overlay_id}", :type => :file, :id => file_id, :overlay_id => overlay_id, :ram_start_offset => overlay_ram_address, :size => overlay_size}
+      @overlays << @files[file_id]
       
       offset += 32
     end
@@ -181,7 +240,9 @@ private
   def get_extra_files
     @extra_files = []
     @extra_files << {:name => "ndsheader.bin", :type => :file, :start_offset => 0x0, :end_offset => 0x4000}
-    @extra_files << {:name => "arm9.bin", :type => :file, :start_offset => @arm9_rom_offset, :end_offset => @arm9_rom_offset + @arm9_size}
+    arm9_file = {:name => "arm9.bin", :type => :file, :start_offset => @arm9_rom_offset, :end_offset => @arm9_rom_offset + @arm9_size, :ram_start_offset => @arm9_ram_offset, :size => @arm9_size}
+    @extra_files << arm9_file
+    load_file(arm9_file)
     @extra_files << {:name => "arm7.bin", :type => :file, :start_offset => @arm7_rom_offset, :end_offset => @arm7_rom_offset + @arm7_size}
     @extra_files << {:name => "arm9_overlay_table.bin", :type => :file, :start_offset => @arm9_overlay_table_offset, :end_offset => @arm9_overlay_table_offset + @arm9_overlay_table_size}
     @extra_files << {:name => "arm7_overlay_table.bin", :type => :file, :start_offset => @arm7_overlay_table_offset, :end_offset => @arm7_overlay_table_offset + @arm7_overlay_table_size}

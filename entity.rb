@@ -1,8 +1,7 @@
 class Entity
   attr_reader :room,
-              :rom,
-              :converter,
-              :entity_pointer
+              :fs,
+              :entity_ram_pointer
   attr_accessor :x_pos,
                 :y_pos,
                 :byte_5,
@@ -12,22 +11,22 @@ class Entity
                 :var_a,
                 :var_b
   
-  def initialize(room, entity_pointer, rom, converter)
+  def initialize(room, entity_ram_pointer, fs)
     @room = room
-    @rom = rom
-    @converter = converter
-    @entity_pointer = entity_pointer
+    @fs = fs
+    @entity_ram_pointer = entity_ram_pointer
     
     read_from_rom()
   end
   
   def read_from_rom
-    @x_pos, @y_pos = rom[entity_pointer,4].unpack("v*")
-    @byte_5, @type, @subtype, @byte_8 = rom[entity_pointer+4,4].unpack("C*")
-    @var_a, @var_b = rom[entity_pointer+8,4].unpack("v*")
+    @x_pos, @y_pos = fs.read(entity_ram_pointer,4).unpack("v*")
+    @byte_5, @type, @subtype, @byte_8 = fs.read(entity_ram_pointer+4,4).unpack("C*")
+    @var_a, @var_b = fs.read(entity_ram_pointer+8,4).unpack("v*")
   end
   
   def write_to_rom
+    raise NotImplementedError
     rom[entity_pointer,4] = [x_pos, y_pos].pack("v*")
     rom[entity_pointer+4,4] = [byte_5, type, subtype, byte_8].pack("C*")
     rom[entity_pointer+8,4] = [var_a, var_b].pack("v*")

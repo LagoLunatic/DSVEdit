@@ -28,11 +28,27 @@ class AddressConverter
     raise ConversionError.new("Failed to convert ram address to rom address: %08X." % ram_address)
   end
   
+  def ram_to_filename_and_local_address(ram_address)
+    loaded_files.each do |ram_start, file|
+      if file[:ram_range].include?(ram_address)
+        local_address = ram_address - file[:ram_range].begin
+        return [file[:filename], local_address]
+      end
+    end
+    
+    loaded_files.each do |ram_start, file|
+      puts "ram_range: %08X..%08X" % [file[:ram_range].begin, file[:ram_range].end]
+      puts "rom_start: %08X" % file[:rom_start]
+    end
+    raise ConversionError.new("Failed to convert ram address to rom address: %08X." % ram_address)
+  end
+  
   def load_overlay(overlay_index)
     ram_start = all_overlays[overlay_index][:ram].begin
     rom_start = all_overlays[overlay_index][:rom].begin
     length = all_overlays[overlay_index][:rom].end - all_overlays[overlay_index][:rom].begin
     load_file(ram_start, rom_start, length+100)
+    @loaded_files[ram_start][:filename] = "overlay9_#{overlay_index}"
   end
   
   def load_file(ram_start, rom_start, length)

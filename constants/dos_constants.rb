@@ -2,7 +2,7 @@
 GAME = "dos"
 LONG_GAME_NAME = "Dawn of Sorrow"
 
-AREA_LIST_START_OFFSET = 0x00AFC4 # Technically not a list, this points to code that has the the area hard coded, since DoS only has one area.
+AREA_LIST_RAM_START_OFFSET = 0x02006FC4 # Technically not a list, this points to code that has the the area hard coded, since DoS only has one area.
 
 EXTRACT_EXTRA_ROOM_INFO = Proc.new do |last_4_bytes_of_room_metadata|
   number_of_doors    = (last_4_bytes_of_room_metadata & 0b00000000_00000000_11111111_11111111)

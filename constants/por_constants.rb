@@ -2,7 +2,7 @@
 GAME = "por"
 LONG_GAME_NAME = "Portrait of Ruin"
 
-AREA_LIST_START_OFFSET = 0x0E336C
+AREA_LIST_RAM_START_OFFSET = 0x020DF36C
 
 EXTRACT_EXTRA_ROOM_INFO = Proc.new do |last_4_bytes_of_room_metadata|
   number_of_doors    = (last_4_bytes_of_room_metadata & 0b00000000_00000000_00000000_01111111)
