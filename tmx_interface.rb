@@ -25,14 +25,9 @@ class TMXInterface
     
     tiled_entities = xml.css("objectgroup[name='Entities'] object")
     tiled_entities.each do |tmx_entity|
-      props = {}
-      tmx_entity.css("property").each do |prop_xml|
-        name = prop_xml["name"]
-        value = prop_xml["value"].to_i(16)
-        props[name] = value
-      end
+      props = extract_properties(tmx_entity)
       
-      entity = room.entities.select{|e| e.entity_ram_pointer == props["entity_ram_pointer"]}.first
+      entity = room.entities.find{|e| e.entity_ram_pointer == props["entity_ram_pointer"]}
       if entity.nil?
         raise "Couldn't find entity at %08X" % tmx_entity.entity_ram_pointer
       end
@@ -46,6 +41,29 @@ class TMXInterface
       entity.var_a = props["var_a"]
       entity.var_b = props["var_b"]
       #entity.write_to_rom()
+    end
+    
+    tiled_doors = xml.css("objectgroup[name='Doors'] object")
+    tiled_doors.each do |tiled_door|
+      props = extract_properties(tiled_door)
+      
+      door = room.doors.find{|d| d.door_ram_pointer == props["door_ram_pointer"]}
+      if door.nil?
+        raise "Couldn't find door at %08X" % door.door_ram_pointer
+      end
+      
+      x = tiled_door["x"].to_i / SCREEN_WIDTH_IN_PIXELS
+      y = tiled_door["y"].to_i / SCREEN_HEIGHT_IN_PIXELS
+      
+      x = 0xFF if x < 0
+      y = 0xFF if y < 0
+      
+      door.x_pos = x
+      door.y_pos = y
+      door.dest_x = props["dest_x"]
+      door.dest_y = props["dest_y"]
+      door.destination_room_metadata_ram_pointer = props["destination_room"]
+      door.write_to_rom()
     end
     
     puts "Read tmx file #{filename} and saved to rom"
@@ -106,7 +124,8 @@ class TMXInterface
                        :height => 16*12) {
               
               xml.properties {
-                xml.property(:name => "dest_room_pointer", :value => "%08X" % door.destination_room_metadata_ram_pointer)
+                xml.property(:name => "door_ram_pointer", :value => "%08X" % door.door_ram_pointer)
+                xml.property(:name => "destination_room", :value => "%08X" % door.destination_room_metadata_ram_pointer)
                 xml.property(:name => "dest_x", :value => door.dest_x)
                 xml.property(:name => "dest_y", :value => door.dest_y)
               }
@@ -182,5 +201,18 @@ class TMXInterface
     end
     
     tile_data
+  end
+  
+private
+  
+  def extract_properties(object_xml)
+    props = {}
+    object_xml.css("property").each do |prop_xml|
+      name = prop_xml["name"]
+      value = prop_xml["value"].to_i(16)
+      props[name] = value
+    end
+    
+    return props
   end
 end

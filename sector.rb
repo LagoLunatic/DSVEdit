@@ -16,8 +16,7 @@ class Sector
   end
   
   def read_from_rom
-    overlay_index = AREA_INDEX_TO_OVERLAY_INDEX[area.area_index][sector_index]
-    fs.load_overlay(overlay_index)
+    load_necessary_overlay()
     
     @rooms = []
     room_index = 0
@@ -36,5 +35,10 @@ class Sector
       
       room_index += 1
     end
+  end
+  
+  def load_necessary_overlay
+    overlay_id = AREA_INDEX_TO_OVERLAY_INDEX[area.area_index][sector_index]
+    fs.load_overlay(overlay_id)
   end
 end

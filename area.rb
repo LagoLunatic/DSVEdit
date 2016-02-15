@@ -24,7 +24,7 @@ class Area
       break if sector_ram_pointer == 0
       
       #sector_pointer = converter.ram_to_rom(sector_ram_pointer)
-      puts "sector_ram_pointer: %08X" % sector_ram_pointer
+      #puts "sector_ram_pointer: %08X" % sector_ram_pointer
       sector = Sector.new(self, sector_index, sector_ram_pointer, fs)
       @sectors << sector
       

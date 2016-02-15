@@ -158,6 +158,8 @@ if %w(render_tileset render_room export_tmx import_tmx locate randomize).include
       #puts "area_index: #{area_index}"
       #puts "sector_index: #{sector.sector_index}"
       
+      sector.load_necessary_overlay()
+      
       sector.rooms.each do |room|
         if !options[:rooms].nil? && !options[:rooms].include?(room.room_metadata_ram_pointer)
           next

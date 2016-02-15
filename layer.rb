@@ -64,9 +64,6 @@ class Layer
   end
   
   def write_to_rom
-    overlay_id = AREA_INDEX_TO_OVERLAY_INDEX[room.area_index][room.sector_index]
-    fs.load_overlay(overlay_id)
-    
     old_width, old_height = fs.read(layer_metadata_ram_pointer,2).unpack("C*")
     
     if (width*height) > (old_width*old_height)
