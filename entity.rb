@@ -26,10 +26,9 @@ class Entity
   end
   
   def write_to_rom
-    raise NotImplementedError
-    rom[entity_pointer,4] = [x_pos, y_pos].pack("v*")
-    rom[entity_pointer+4,4] = [byte_5, type, subtype, byte_8].pack("C*")
-    rom[entity_pointer+8,4] = [var_a, var_b].pack("v*")
+    fs.write(entity_ram_pointer, [x_pos, y_pos].pack("v*"))
+    fs.write(entity_ram_pointer+4, [byte_5, type, subtype, byte_8].pack("C*"))
+    fs.write(entity_ram_pointer+8, [var_a, var_b].pack("v*"))
   end
   
   def is_enemy?
