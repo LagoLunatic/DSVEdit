@@ -4,7 +4,7 @@ require 'fileutils'
 class NDSFileSystem
   class ConversionError < StandardError ; end
   
-  attr_reader :overlays
+  attr_reader :files, :overlays
   
   def read_from_rom(rom)
     @rom = rom
@@ -32,6 +32,7 @@ class NDSFileSystem
     get_file_allocation_table()
     get_extra_files()
     generate_file_paths()
+    get_file_ram_start_offsets()
   end
   
   def extract(output_folder)
@@ -56,6 +57,8 @@ class NDSFileSystem
   end
   
   def write_to_rom(output_rom_path, input_folder)
+    print "Writing files to #{output_rom_path}... "
+    
     new_start_offset = @files[0][:start_offset]
     
     @files.sort_by{|id, file| id}.each do |id, file|
@@ -101,7 +104,7 @@ class NDSFileSystem
     File.open(output_rom_path, "wb") do |f|
       f.write(@rom)
     end
-    puts "Wrote #{output_rom_path}"
+    puts "Done"
   end
   
   def all_files
@@ -272,6 +275,26 @@ private
     end
   end
   
+  def get_file_ram_start_offsets
+    offset = LIST_OF_FILE_RAM_LOCATIONS_START_OFFSET
+    while true
+      file_data = rom[offset, LIST_OF_FILE_RAM_LOCATIONS_ENTRY_LENGTH]
+      
+      ram_start_offset = file_data[0,4].unpack("V*").first
+      if ram_start_offset < 0x02000000 || ram_start_offset >= 0x03000000
+        # Not a pointer, so we know we passed the end of the list.
+        break
+      end
+      
+      file_path = file_data[6..-1]
+      file_path = file_path.delete("\x00") # Remove null bytes padding the end of the string
+      file = files.values.find{|file| file[:file_path] == file_path}
+      file[:ram_start_offset] = ram_start_offset
+      
+      offset += LIST_OF_FILE_RAM_LOCATIONS_ENTRY_LENGTH
+    end
+  end
+  
   def get_file_allocation_table
     file_allocation_table_data = @rom[@file_allocation_table_offset, @file_allocation_table_size]
     
@@ -305,9 +328,9 @@ private
       if file[:parent_id] == 0xF000
         file[:file_path] = file[:name]
       elsif file[:parent_id].nil?
-        file[:file_path] = File.join("ftc", file[:name])
+        file[:file_path] = File.join("/ftc", file[:name])
       else
-        file[:file_path] = File.join(@files[file[:parent_id]][:name], file[:name])
+        file[:file_path] = "/" + File.join(@files[file[:parent_id]][:name], file[:name])
       end
     end
   end

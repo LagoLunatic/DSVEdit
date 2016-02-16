@@ -6,13 +6,10 @@ class Room
               :layers,
               :number_of_doors,
               :graphic_tilesets_for_room,
-              #:palette_pointer,
               :palette_pages,
               :palette_page_index,
               :entities,
               :doors,
-              :tileset_offsets_by_filename_by_tileset_wrapper_B_pointer,
-              #:overlay_offset,
               :area_index,
               :sector_index,
               :room_index,
@@ -29,8 +26,6 @@ class Room
   end
   
   def read_from_rom
-    initialize_tileset_offsets_by_filename_by_tileset_wrapper_B_pointer()
-    
     #room_metadata_pointer = converter.ram_to_rom(room_metadata_ram_pointer)
     #puts "room_metadata_ram_pointer: %08X" % room_metadata_ram_pointer
     #puts "room_metadata_pointer: %08X" % room_metadata_pointer
@@ -103,11 +98,12 @@ class Room
         #unknown_data3 = rom[tileset_wrapper_B_pointer+4, 4].unpack("V*").first
         #puts "u%08X" % unknown_data2
         #puts "u%08X" % unknown_data3
-        if tileset_offsets_by_filename_by_tileset_wrapper_B_pointer[tileset_wrapper_B_ram_pointer].nil?
+        file = fs.files.values.find{|file| file[:ram_start_offset] == tileset_wrapper_B_ram_pointer}
+        if file.nil?
           puts "Couldn't find tileset. Possible transition room? wrapper B ram %08X. wrapper A ram: %08X" % [tileset_wrapper_B_ram_pointer, tileset_wrapper_A_ram_pointer]
           break
         end
-        graphic_tile_data_start_offset = tileset_offsets_by_filename_by_tileset_wrapper_B_pointer[tileset_wrapper_B_ram_pointer][:start_offset]
+        graphic_tile_data_start_offset = file[:start_offset]
         @graphic_tilesets_for_room << graphic_tile_data_start_offset
         i += 1
       end
@@ -195,39 +191,6 @@ class Room
     raise NotImplementedError
   end
   
-  def initialize_tileset_offsets_by_filename_by_tileset_wrapper_B_pointer
-    # TODO: HACK
-    filenames_in_bc_folder = []
-    offset = 0x00
-    while true
-      length = fs.rom[FILENAMES_IN_BC_FOLDER_START_OFFSET + offset, 1].unpack("C*").first
-      if length == 0
-        break
-      end
-      filename = fs.rom[FILENAMES_IN_BC_FOLDER_START_OFFSET + offset + 1, length]
-      filenames_in_bc_folder << filename
-      offset += 1 + length
-    end
-    
-    tileset_offsets_by_filename = {}
-    filenames_in_bc_folder.each_with_index do |filename, i|
-      file_start_offset, file_end_offset = fs.rom[FILES_IN_BC_FOLDER_ROM_OFFSETS_LIST_START + 8*i, 8].unpack("V*")
-      tileset_offsets_by_filename[filename] = {start_offset: file_start_offset, end_offset: file_end_offset}
-    end
-    
-    @tileset_offsets_by_filename_by_tileset_wrapper_B_pointer = {}
-    fs.rom[BC_FOLDER_START_OFFSET..BC_FOLDER_END_OFFSET].scan(/.{#{BC_FOLDER_FILE_LENGTH}}/m).each do |file_data|
-      tileset_wrapper_B_pointer = file_data[0,4].unpack("V*").first
-      filename = file_data[6..-1]
-      filename = filename.delete("\x00") # remove null bytes padding the end of the string
-      filename =~ /^\/bc\/(.+\.dat)$/
-      filename = $1
-      if tileset_offsets_by_filename[filename]
-        @tileset_offsets_by_filename_by_tileset_wrapper_B_pointer[tileset_wrapper_B_pointer] = tileset_offsets_by_filename[filename]
-      end
-    end
-  end
-  
   def z_ordered_layers
     layers.sort_by{|layer| -layer.z_index}
   end
@@ -243,5 +206,13 @@ class Room
     else
       return AREA_INDEX_TO_AREA_NAME[area_index]
     end
+  end
+  
+  def max_layer_width
+    layers.map(&:width).max
+  end
+  
+  def max_layer_height
+    layers.map(&:height).max
   end
 end
