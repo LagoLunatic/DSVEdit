@@ -125,9 +125,7 @@ input_rom_path = settings[:input_rom_paths][options[:game]]
 rom = File.open(input_rom_path, "rb") {|file| file.read}
 fs = NDSFileSystem.new
 fs.read_from_rom(rom)
-print "Extracting files from ROM... "
 fs.extract("../temp_extracted")
-puts "Done."
 
 renderer = Renderer.new(fs)
 tiled = TMXInterface.new()

@@ -35,6 +35,8 @@ class NDSFileSystem
   end
   
   def extract(output_folder)
+    print "Extracting files from ROM... "
+    
     all_files.each do |file|
       next unless file[:type] == :file
       #next unless (file[:overlay_id] || file[:name] == "arm9.bin" || file[:name] == "rom.nds")
@@ -49,6 +51,8 @@ class NDSFileSystem
         f.write(file_data)
       end
     end
+    
+    puts "Done."
   end
   
   def write_to_rom(output_rom_path, input_folder)
