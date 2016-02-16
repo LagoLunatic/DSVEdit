@@ -47,29 +47,22 @@ class Renderer
     fs.load_overlay(AREA_INDEX_TO_OVERLAY_INDEX[room.area_index][room.sector_index])
     tileset = get_tileset(layer.ram_pointer_to_tileset_for_layer, room.palette_offset, room.graphic_tilesets_for_room, layer.colors_per_palette, tileset_filename)
     
-    layer.level_blocks.each_with_index do |block, index_on_level|
-      horizontal_flip  = (block & 0b0100000000000000) != 0 # second highest bit controls h. flipping
-      vertical_flip    = (block & 0b1000000000000000) != 0
-      index_on_tileset = (block & 0b0011111111111111) # get rid of the horizontal/vertical flip bits
-      
-      # tileset is 16 blocks wide
-      tileset_length = 16*64
-      
-      x_on_tileset = index_on_tileset % 16
-      y_on_tileset = index_on_tileset / 16
+    layer.tiles.each_with_index do |tile, index_on_level|
+      x_on_tileset = tile.index_on_tileset % 16
+      y_on_tileset = tile.index_on_tileset / 16
       x_on_level = index_on_level % (layer.width*16)
       y_on_level = index_on_level / (layer.width*16)
       
-      tile = tileset.crop(x_on_tileset*16, y_on_tileset*16, 16, 16)
+      tile_gfx = tileset.crop(x_on_tileset*16, y_on_tileset*16, 16, 16)
       
-      if horizontal_flip
-        tile.mirror!
+      if tile.horizontal_flip
+        tile_gfx.mirror!
       end
-      if vertical_flip
-        tile.flip!
+      if tile.vertical_flip
+        tile_gfx.flip!
       end
       
-      rendered_layer.compose!(tile, x_on_level*16, y_on_level*16)
+      rendered_layer.compose!(tile_gfx, x_on_level*16, y_on_level*16)
     end
     
     # TODO: OPACITY

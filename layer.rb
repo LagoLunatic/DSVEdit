@@ -14,7 +14,7 @@ class Layer
               :layer_tiledata_ram_start_offset
   attr_accessor :width,
                 :height,
-                :level_blocks
+                :tiles
   
   def initialize(room, layer_list_entry_ram_pointer, fs)
     @room = room
@@ -59,8 +59,10 @@ class Layer
   end
   
   def read_from_layer_tiledata
-    level_data_string = fs.read(layer_tiledata_ram_start_offset, SIZE_OF_A_SCREEN_IN_BYTES*width*height)
-    @level_blocks = level_data_string.unpack("v*")
+    tile_data_string = fs.read(layer_tiledata_ram_start_offset, SIZE_OF_A_SCREEN_IN_BYTES*width*height)
+    @tiles = tile_data_string.unpack("v*").map do |tile_data|
+      Tile.new(tile_data)
+    end
   end
   
   def write_to_rom
@@ -78,7 +80,8 @@ class Layer
     end
     
     fs.write(layer_metadata_ram_pointer, [width, height].pack("CC"))
-    fs.write(layer_tiledata_ram_start_offset, level_blocks.pack("v*"))
+    tile_data = tiles.map(&:to_tile_data).pack("v*")
+    fs.write(layer_tiledata_ram_start_offset, tile_data)
   end
   
   def colors_per_palette
@@ -92,5 +95,23 @@ class Layer
   
   def tileset_filename
     "tileset_%08X_%08X_%d" % [ram_pointer_to_tileset_for_layer, room.palette_offset || 0, colors_per_palette]
+  end
+end
+
+class Tile
+  attr_accessor :index_on_tileset,
+                :horizontal_flip,
+                :vertical_flip
+  
+  def initialize(tile_data)
+    @index_on_tileset = (tile_data & 0b0011111111111111)
+    @horizontal_flip  = (tile_data & 0b0100000000000000) != 0
+    @vertical_flip    = (tile_data & 0b1000000000000000) != 0
+  end
+  
+  def to_tile_data
+    tile_data = index_on_tileset
+    tile_data |= 0b0100000000000000 if horizontal_flip
+    tile_data |= 0b1000000000000000 if vertical_flip
   end
 end
