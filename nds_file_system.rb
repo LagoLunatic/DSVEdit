@@ -4,59 +4,23 @@ require 'fileutils'
 class NDSFileSystem
   class ConversionError < StandardError ; end
   
-  attr_reader :files, :overlays
+  attr_reader :files, :overlays, :rom
   
-  def read_from_rom(rom)
-    @rom = rom
-    @game_name = @rom[0x00,12]
-    raise "Not a DSVania" unless %w(CASTLEVANIA1 CASTLEVANIA2 CASTLEVANIA3).include?(@game_name)
-    
-    @arm9_rom_offset, @arm9_entry_address, @arm9_ram_offset, @arm9_size = @rom[0x20,16].unpack("VVVV")
-    @arm7_rom_offset, @arm7_entry_address, @arm7_ram_offset, @arm7_size = @rom[0x30,16].unpack("VVVV")
-    
-    @file_name_table_offset, @file_name_table_size, @file_allocation_table_offset, @file_allocation_table_size = @rom[0x40,16].unpack("VVVV")
-    
-    @arm9_overlay_table_offset, @arm9_overlay_table_size = @rom[0x50,8].unpack("VV")
-    @arm7_overlay_table_offset, @arm7_overlay_table_size = @rom[0x58,8].unpack("VV")
-    
-    @banner_start_offset = @rom[0x68,4].unpack("V").first
-    @banner_end_offset = @banner_start_offset + 0x840 # ??
-    
-    @files = {}
-    @overlays = []
-    @currently_loaded_files = {}
-    @opened_files_cache = {}
-    
-    get_file_name_table()
-    get_overlay_table()
-    get_file_allocation_table()
-    get_extra_files()
-    generate_file_paths()
-    get_file_ram_start_offsets()
+  def open_directory(filesystem_directory)
+    @filesystem_directory = filesystem_directory
+    input_rom_path = "#{@filesystem_directory}/ftc/rom.nds"
+    @rom = File.open(input_rom_path, "rb") {|file| file.read}
+    read_from_rom()
   end
   
-  def extract(output_folder)
-    print "Extracting files from ROM... "
-    
-    all_files.each do |file|
-      next unless file[:type] == :file
-      #next unless (file[:overlay_id] || file[:name] == "arm9.bin" || file[:name] == "rom.nds")
-      
-      start_offset, end_offset, file_path = file[:start_offset], file[:end_offset], file[:file_path]
-      file_data = @rom[start_offset..end_offset-1]
-      
-      output_path = File.join(output_folder, file_path)
-      output_dir = File.dirname(output_path)
-      FileUtils.mkdir_p(output_dir)
-      File.open(output_path, "wb") do |f|
-        f.write(file_data)
-      end
-    end
-    
-    puts "Done."
+  def open_and_extract_rom(input_rom_path, filesystem_directory)
+    @filesystem_directory = filesystem_directory
+    @rom = File.open(input_rom_path, "rb") {|file| file.read}
+    read_from_rom()
+    extract()
   end
   
-  def write_to_rom(output_rom_path, input_folder)
+  def write_to_rom(output_rom_path)
     print "Writing files to #{output_rom_path}... "
     
     new_start_offset = @files[0][:start_offset]
@@ -67,7 +31,7 @@ class NDSFileSystem
         next
       end
       
-      path = File.join(input_folder, file[:file_path])
+      path = File.join(@filesystem_directory, file[:file_path])
       next unless File.file?(path)
       raise "File not found: #{path}" unless File.exist?(path)
       
@@ -93,7 +57,7 @@ class NDSFileSystem
     
     # Update arm9
     file = @extra_files.find{|file| file[:name] == "arm9.bin"}
-    path = File.join(input_folder, file[:file_path])
+    path = File.join(@filesystem_directory, file[:file_path])
     file_data = File.open(path, "rb") {|file| file.read}
     new_file_size = file_data.length
     if @arm9_size != new_file_size
@@ -166,20 +130,10 @@ class NDSFileSystem
   def write_by_file(file_path, offset_in_file, new_data)
     file_data = get_file_data_from_opened_files_cache(file_path)
     file_data[offset_in_file, new_data.length] = new_data
-    File.open("../temp_extracted/#{file_path}", "rb+") do |f|
+    path = File.join(@filesystem_directory, file_path)
+    File.open(path, "rb+") do |f|
       f.write(file_data)
     end
-  end
-  
-  def get_file_data_from_opened_files_cache(file_path)
-    if @opened_files_cache[file_path]
-      file_data = @opened_files_cache[file_path]
-    else
-      file_data = File.open("../temp_extracted/#{file_path}", "rb") {|file| file.read}
-      @opened_files_cache[file_path] = file_data
-    end
-    
-    return file_data
   end
   
   def expand_file_and_get_end_of_file_ram_address(ram_address, length_to_expand_by)
@@ -194,18 +148,80 @@ class NDSFileSystem
     return ram_address + offset_difference
   end
   
-  def rom
-    file_path = "ftc/rom.nds"
-    if @opened_files_cache[file_path]
-      file = @opened_files_cache[file_path]
-    else
-      file = File.open("../temp_extracted/#{file_path}", "rb") {|file| file.read}
-      @opened_files_cache[file_path] = file
-    end
-    return file
-  end
+  #def rom
+  #  file_path = "ftc/rom.nds"
+  #  if @opened_files_cache[file_path]
+  #    file = @opened_files_cache[file_path]
+  #  else
+  #    path = File.join(@filesystem_directory, file_path)
+  #    file = File.open(path, "rb") {|file| file.read}
+  #    @opened_files_cache[file_path] = file
+  #  end
+  #  return file
+  #end
   
 private
+  
+  def read_from_rom
+    @game_name = @rom[0x00,12]
+    raise "Not a DSVania" unless %w(CASTLEVANIA1 CASTLEVANIA2 CASTLEVANIA3).include?(@game_name)
+    
+    @arm9_rom_offset, @arm9_entry_address, @arm9_ram_offset, @arm9_size = @rom[0x20,16].unpack("VVVV")
+    @arm7_rom_offset, @arm7_entry_address, @arm7_ram_offset, @arm7_size = @rom[0x30,16].unpack("VVVV")
+    
+    @file_name_table_offset, @file_name_table_size, @file_allocation_table_offset, @file_allocation_table_size = @rom[0x40,16].unpack("VVVV")
+    
+    @arm9_overlay_table_offset, @arm9_overlay_table_size = @rom[0x50,8].unpack("VV")
+    @arm7_overlay_table_offset, @arm7_overlay_table_size = @rom[0x58,8].unpack("VV")
+    
+    @banner_start_offset = @rom[0x68,4].unpack("V").first
+    @banner_end_offset = @banner_start_offset + 0x840 # ??
+    
+    @files = {}
+    @overlays = []
+    @currently_loaded_files = {}
+    @opened_files_cache = {}
+    
+    get_file_name_table()
+    get_overlay_table()
+    get_file_allocation_table()
+    get_extra_files()
+    generate_file_paths()
+    get_file_ram_start_offsets()
+  end
+  
+  def extract
+    print "Extracting files from ROM... "
+    
+    all_files.each do |file|
+      next unless file[:type] == :file
+      #next unless (file[:overlay_id] || file[:name] == "arm9.bin" || file[:name] == "rom.nds")
+      
+      start_offset, end_offset, file_path = file[:start_offset], file[:end_offset], file[:file_path]
+      file_data = @rom[start_offset..end_offset-1]
+      
+      output_path = File.join(@filesystem_directory, file_path)
+      output_dir = File.dirname(output_path)
+      FileUtils.mkdir_p(output_dir)
+      File.open(output_path, "wb") do |f|
+        f.write(file_data)
+      end
+    end
+    
+    puts "Done."
+  end
+  
+  def get_file_data_from_opened_files_cache(file_path)
+    if @opened_files_cache[file_path]
+      file_data = @opened_files_cache[file_path]
+    else
+      path = File.join(@filesystem_directory, file_path)
+      file_data = File.open(path, "rb") {|file| file.read}
+      @opened_files_cache[file_path] = file_data
+    end
+    
+    return file_data
+  end
   
   def get_file_name_table
     file_name_table_data = @rom[@file_name_table_offset, @file_name_table_size]

@@ -122,10 +122,9 @@ File.open("settings.yml", "w") do |f|
 end
 
 input_rom_path = settings[:input_rom_paths][options[:game]]
-rom = File.open(input_rom_path, "rb") {|file| file.read}
 fs = NDSFileSystem.new
-fs.read_from_rom(rom)
-fs.extract("../temp_extracted")
+folder = File.join("..", "#{GAME}_extracted_files")
+fs.open_and_extract_rom(input_rom_path, folder)
 
 renderer = Renderer.new(fs)
 tiled = TMXInterface.new()
@@ -278,4 +277,4 @@ if options[:mode] == "locate"
 end
 
 output_rom_path = settings[:output_rom_paths][options[:game]]
-fs.write_to_rom(output_rom_path, "../temp_extracted")
+fs.write_to_rom(output_rom_path)
