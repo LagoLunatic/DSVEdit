@@ -277,14 +277,10 @@ private
   
   def get_file_ram_start_offsets
     offset = LIST_OF_FILE_RAM_LOCATIONS_START_OFFSET
-    while true
-      file_data = rom[offset, LIST_OF_FILE_RAM_LOCATIONS_ENTRY_LENGTH]
+    while offset < LIST_OF_FILE_RAM_LOCATIONS_END_OFFSET
+      file_data = @rom[offset, LIST_OF_FILE_RAM_LOCATIONS_ENTRY_LENGTH]
       
       ram_start_offset = file_data[0,4].unpack("V*").first
-      if ram_start_offset < 0x02000000 || ram_start_offset >= 0x03000000
-        # Not a pointer, so we know we passed the end of the list.
-        break
-      end
       
       file_path = file_data[6..-1]
       file_path = file_path.delete("\x00") # Remove null bytes padding the end of the string
