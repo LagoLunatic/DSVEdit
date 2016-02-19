@@ -200,7 +200,6 @@ class Room
   end
   
   def area_name
-    return ""
     if SECTOR_INDEX_TO_SECTOR_NAME[area_index]
       return SECTOR_INDEX_TO_SECTOR_NAME[area_index][sector_index]
     else
