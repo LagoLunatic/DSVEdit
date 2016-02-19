@@ -213,6 +213,8 @@ else
   end
 end
 
+puts "Finished."
+
 # Randomize which soul bosses drop
 if options[:game] == "dos" && options[:mode] == "randomize"
   boss_soul_ids = BOSS_IDS.map do |id|
@@ -260,6 +262,10 @@ end
 if GAME == "ooe"
   # Change the starting room so you can skip Ecclesia's cutscenes.
   fs.write(0x020AC15C, [0x03].pack("C")) # 3rd room in Ecclesia is Ecclesia's entrance room, that leads onto the world map.
+  
+  # Make the top screen when you start a new game have a normal map right from the start, instead of a black screen.
+  fs.load_overlay(20)
+  fs.write(0x02214F68, [0x05].pack("C"))
   
   # Make all areas on the world map accessible.
   fs.write(0x020AA8E4, [0xE3A00001].pack("V"))
