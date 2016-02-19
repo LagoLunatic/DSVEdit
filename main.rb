@@ -123,7 +123,7 @@ end
 
 input_rom_path = settings[:input_rom_paths][options[:game]]
 fs = NDSFileSystem.new
-folder = File.join("..", "#{GAME}_extracted_files")
+folder = File.join("..", "extracted_files_#{GAME}")
 fs.open_and_extract_rom(input_rom_path, folder)
 
 renderer = Renderer.new(fs)
