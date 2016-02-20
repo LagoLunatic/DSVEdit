@@ -168,7 +168,6 @@ class DSVE < Qt::MainWindow
   
   def load_layers()
     scene = TileScene.new
-    scene.setSceneRect(0, 0, @room.max_layer_width * SCREEN_WIDTH_IN_PIXELS, @room.max_layer_height * SCREEN_HEIGHT_IN_PIXELS)
     @room.layers.each do |layer|
       tileset_filename = "../Exported #{GAME}/rooms/#{@room.area_name}/Tilesets/#{layer.tileset_filename}.png"
       unless File.exist?(tileset_filename)
@@ -204,6 +203,19 @@ class DSVE < Qt::MainWindow
         tile_gfx.setPos(x_on_level*16, y_on_level*16)
         tile_gfx.setParentItem(layer_item)
       end
+    end
+    
+    @room.doors.each_with_index do |door, i|
+      x = door.x_pos
+      y = door.y_pos
+      x = -1 if x == 0xFF
+      y = -1 if y == 0xFF
+      x *= SCREEN_WIDTH_IN_PIXELS
+      y *= SCREEN_HEIGHT_IN_PIXELS
+      
+      rect = Qt::GraphicsRectItem.new(x, y, 16*16, 12*16)
+      rect.setBrush(Qt::Brush.new(Qt::Color.new(200, 0, 200, 50)))
+      scene.addItem(rect)
     end
     
     @ui.graphicsView.setScene(scene)
