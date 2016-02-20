@@ -14,7 +14,7 @@
    <string>MainWindow</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <layout class="QHBoxLayout" name="horizontalLayout" stretch="1,8,1">
+   <layout class="QHBoxLayout" name="horizontalLayout" stretch="1,8">
     <item>
      <layout class="QVBoxLayout" name="verticalLayout">
       <item>
@@ -72,7 +72,7 @@
         <rect>
          <x>0</x>
          <y>0</y>
-         <width>425</width>
+         <width>567</width>
          <height>525</height>
         </rect>
        </property>
@@ -81,26 +81,6 @@
          <widget class="QGraphicsView" name="graphicsView"/>
         </item>
        </layout>
-      </widget>
-     </widget>
-    </item>
-    <item>
-     <widget class="QTabWidget" name="tileset_list">
-      <property name="sizePolicy">
-       <sizepolicy hsizetype="Fixed" vsizetype="Expanding">
-        <horstretch>0</horstretch>
-        <verstretch>0</verstretch>
-       </sizepolicy>
-      </property>
-      <widget class="QWidget" name="tab">
-       <attribute name="title">
-        <string>Tab 1</string>
-       </attribute>
-      </widget>
-      <widget class="QWidget" name="tab_2">
-       <attribute name="title">
-        <string>Tab 2</string>
-       </attribute>
       </widget>
      </widget>
     </item>

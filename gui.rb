@@ -21,7 +21,7 @@ class DSVE < Qt::MainWindow
     @ui = Ui_MainWindow.new
     @ui.setup_ui(self)
     @ui.graphicsView.scale(2, 2)
-    @ui.graphicsView.setDragMode(Qt::GraphicsView::RubberBandDrag)
+    @ui.graphicsView.setDragMode(Qt::GraphicsView::ScrollHandDrag)
     self.setStyleSheet("QGraphicsView { background-color: transparent; }");
     
     connect(@ui.actionOpen, SIGNAL("activated()"), self, SLOT("open_rom_dialog()"))
@@ -31,8 +31,8 @@ class DSVE < Qt::MainWindow
     connect(@ui.sector, SIGNAL("activated(int)"), self, SLOT("sector_index_changed(int)"))
     connect(@ui.room, SIGNAL("activated(int)"), self, SLOT("room_index_changed(int)"))
     
-    #settings = YAML::load_file("settings.yml")
-    #open_rom(settings[:input_rom_paths]["dos"])
+    load_settings()
+    open_folder(@settings[:last_used_folder])
     
     self.setWindowState(Qt::WindowMaximized)
     self.show()
@@ -163,34 +163,19 @@ class DSVE < Qt::MainWindow
     @room_index = new_room_index
     @room = @sector.rooms[@room_index]
     
-    load_tilesets()
     load_layers()
-  end
-  
-  def load_tilesets
-    @renderer.render_room("../Exported #{GAME}/rooms", @room)
-    
-    @ui.tileset_list.clear()
-    @room.layers.map(&:tileset_filename).uniq.each do |tileset_filename|
-      tileset_scrollarea = PannableScrollArea.new
-      tileset_scrollarea.setWidgetResizable(true)
-      tileset_scrollarea.setFrameShape(Qt::Frame::NoFrame)
-      tileset_label = Qt::Label.new(self)
-      tileset_label.setAlignment(Qt::AlignLeft)
-      tileset_scrollarea.setMinimumWidth(512 + 21)
-      tileset_scrollarea.setWidget(tileset_label)
-      @ui.tileset_list.addTab(tileset_scrollarea, "1")
-      
-      pixmap = Qt::Pixmap.new("../Exported #{GAME}/rooms/#{@room.area_name}/Tilesets/#{tileset_filename}.png")
-      tileset_label.pixmap = pixmap.scaled(pixmap.width()*2, pixmap.height*2)
-    end
   end
   
   def load_layers()
     scene = TileScene.new
     scene.setSceneRect(0, 0, @room.max_layer_width * SCREEN_WIDTH_IN_PIXELS, @room.max_layer_height * SCREEN_HEIGHT_IN_PIXELS)
     @room.layers.each do |layer|
-      tileset = Qt::Image.new("../Exported #{GAME}/rooms/#{@room.area_name}/Tilesets/#{layer.tileset_filename}.png")
+      tileset_filename = "../Exported #{GAME}/rooms/#{@room.area_name}/Tilesets/#{layer.tileset_filename}.png"
+      unless File.exist?(tileset_filename)
+        fs.load_overlay(AREA_INDEX_TO_OVERLAY_INDEX[@room.area_index][@room.sector_index])
+        @renderer.render_tileset(layer.ram_pointer_to_tileset_for_layer, @room.palette_offset, @room.graphic_tilesets_for_room, layer.colors_per_palette, tileset_filename)
+      end
+      tileset = Qt::Image.new(tileset_filename)
       layer_group = scene.createItemGroup([])
       layer_item = Qt::GraphicsRectItem.new
       layer_item.setZValue(-layer.z_index)
@@ -228,15 +213,18 @@ class DSVE < Qt::MainWindow
     @enemy_dialog = EnemyEditDialog.new(fs)
   end
   
-  def keyPressEvent(event)
-    if event.key() == Qt::Key_Space && !event.isAutoRepeat()
-      @ui.graphicsView.setDragMode(Qt::GraphicsView::ScrollHandDrag)
+  def load_settings
+    @settings_path = "settings.yml"
+    if File.exist?(@settings_path)
+      @settings = YAML::load_file(@settings_path)
+    else
+      @settings = {}
     end
   end
   
-  def keyReleaseEvent(event)
-    if event.key() == Qt::Key_Space && !event.isAutoRepeat()
-      @ui.graphicsView.setDragMode(Qt::GraphicsView::RubberBandDrag)
+  def closeEvent(event)
+    File.open(@settings_path, "w") do |f|
+      f.write(@settings.to_yaml)
     end
   end
 end
