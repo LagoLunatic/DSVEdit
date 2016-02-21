@@ -1,6 +1,7 @@
 
 require_relative 'nds_file_system'
 
+require_relative 'game'
 require_relative 'area'
 require_relative 'sector'
 require_relative 'room'
