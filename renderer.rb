@@ -118,6 +118,17 @@ class Renderer
     palette_list
   end
   
+  def ensure_tilesets_exist(folder, room)
+    room.layers.each do |layer|
+      tileset_filename = "#{folder}/#{room.area_name}/Tilesets/#{layer.tileset_filename}.png"
+      if File.exist?(tileset_filename)
+        next
+      else
+        render_tileset(layer.ram_pointer_to_tileset_for_layer, room.palette_offset, room.graphic_tilesets_for_room, layer.colors_per_palette, tileset_filename)
+      end
+    end
+  end
+  
   def get_tileset(pointer_to_tileset_for_layer, palette_offset, graphic_tilesets_for_room, colors_per_palette, tileset_filename)
     if File.exist?(tileset_filename)
       ChunkyPNG::Image.from_file(tileset_filename)

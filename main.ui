@@ -48,6 +48,20 @@
        </widget>
       </item>
       <item>
+       <widget class="QPushButton" name="tiled_export">
+        <property name="text">
+         <string>Open in Tiled</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="tiled_import">
+        <property name="text">
+         <string>Import from Tiled</string>
+        </property>
+       </widget>
+      </item>
+      <item>
        <spacer name="verticalSpacer">
         <property name="orientation">
          <enum>Qt::Vertical</enum>

@@ -15,6 +15,8 @@ class DSVE < Qt::MainWindow
   slots "sector_index_changed(int)"
   slots "room_index_changed(int)"
   slots "open_enemy_dna_dialog()"
+  slots "open_in_tiled()"
+  slots "import_from_tiled()"
   
   def initialize
     super()
@@ -24,12 +26,16 @@ class DSVE < Qt::MainWindow
     @ui.graphicsView.setDragMode(Qt::GraphicsView::ScrollHandDrag)
     self.setStyleSheet("QGraphicsView { background-color: transparent; }");
     
+    @tiled = TMXInterface.new
+    
     connect(@ui.actionOpen, SIGNAL("activated()"), self, SLOT("open_rom_dialog()"))
     connect(@ui.actionOpen_Folder, SIGNAL("activated()"), self, SLOT("open_folder_dialog()"))
     connect(@ui.actionEnemy_Editor, SIGNAL("activated()"), self, SLOT("open_enemy_dna_dialog()"))
     connect(@ui.area, SIGNAL("activated(int)"), self, SLOT("area_index_changed(int)"))
     connect(@ui.sector, SIGNAL("activated(int)"), self, SLOT("sector_index_changed(int)"))
     connect(@ui.room, SIGNAL("activated(int)"), self, SLOT("room_index_changed(int)"))
+    connect(@ui.tiled_export, SIGNAL("released()"), self, SLOT("open_in_tiled()"))
+    connect(@ui.tiled_import, SIGNAL("released()"), self, SLOT("import_from_tiled()"))
     
     load_settings()
     open_folder(@settings[:last_used_folder])
@@ -238,6 +244,31 @@ class DSVE < Qt::MainWindow
     File.open(@settings_path, "w") do |f|
       f.write(@settings.to_yaml)
     end
+  end
+  
+  def open_in_tiled
+    if @settings[:tiled_path].nil? || !File.exist?(@settings[:tiled_path]) || !File.file?(@settings[:tiled_path])
+      Qt::MessageBox.warning(self, "Can't find Tiled", "You must specify where Tiled is installed.")
+      return
+    end
+    folder = "../Exported #{GAME}/rooms"
+    tmx_path = "#{folder}/#{@room.area_name}/#{@room.filename}.tmx"
+    
+    @renderer.ensure_tilesets_exist(folder, @room)
+    @tiled.create(tmx_path, @room)
+    system("start \"#{@settings[:tiled_path]}\" \"#{tmx_path}\"")
+  end
+  
+  def import_from_tiled
+    folder = "../Exported #{GAME}/rooms"
+    tmx_path = "#{folder}/#{@room.area_name}/#{@room.filename}.tmx"
+    if !File.exist?(tmx_path) || !File.file?(tmx_path)
+      Qt::MessageBox.warning(self, "TMX file doesn't exist", "Can't find the TMX file. You must export to tiled first.")
+      return
+    end
+    
+    @tiled.read(tmx_path, @room)
+    load_layers()
   end
 end
 
