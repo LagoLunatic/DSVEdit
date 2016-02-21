@@ -11,7 +11,6 @@ class TMXInterface
     tiled_layers = xml.css("layer")
     tiled_layers.each do |tmx_layer|
       layer_metadata_ram_pointer = tmx_layer.attr("name").match(/^layer (\h+)$/)[1].to_i(16)
-      tile_data = from_tmx_level_data(tmx_layer.css("data").text)
       possible_layers = room.layers.select{|layer| layer.layer_metadata_ram_pointer == layer_metadata_ram_pointer}
       if possible_layers.length != 1
         raise "%08X could be too many possible layers (or not enough)" % layer_metadata_ram_pointer
@@ -19,7 +18,7 @@ class TMXInterface
       game_layer = possible_layers.first
       game_layer.width = tmx_layer.attr("width").to_i / 16
       game_layer.height = tmx_layer.attr("height").to_i / 12
-      game_layer.level_blocks = tile_data
+      from_tmx_level_data(tmx_layer.css("data").text, game_layer.tiles)
       game_layer.write_to_rom()
     end
     
@@ -103,7 +102,7 @@ class TMXInterface
                     :opacity => layer.opacity/31.0,
                     :z_index => layer.z_index,
                     :colors_per_palette => layer.colors_per_palette) {
-            xml.data(to_tmx_level_data(layer.level_blocks, layer.width, get_block_offset_for_tileset(layer.tileset_filename, all_tilesets_for_room)), :encoding => "csv")
+            xml.data(to_tmx_level_data(layer.tiles, layer.width, get_block_offset_for_tileset(layer.tileset_filename, all_tilesets_for_room)), :encoding => "csv")
           }
         end
         
@@ -160,15 +159,11 @@ class TMXInterface
     end
   end
   
-  def to_tmx_level_data(level_blocks, layer_width, block_offset)
-    tmx_level_data = level_blocks.map do |block|
-      horizontal_flip  = (block & 0b0100000000000000) != 0 # second highest bit controls h. flipping
-      vertical_flip    = (block & 0b1000000000000000) != 0
-      index_on_tileset = (block & 0b0011111111111111) # get rid of the horizontal/vertical flip bits
-      
-      tmx_tile_number = index_on_tileset + block_offset
-      tmx_tile_number |= 0x80000000 if horizontal_flip
-      tmx_tile_number |= 0x40000000 if vertical_flip
+  def to_tmx_level_data(tiles, layer_width, block_offset)
+    tmx_level_data = tiles.map do |tile|
+      tmx_tile_number = tile.index_on_tileset + block_offset
+      tmx_tile_number |= 0x80000000 if tile.horizontal_flip
+      tmx_tile_number |= 0x40000000 if tile.vertical_flip
       tmx_tile_number
     end
     
@@ -185,22 +180,22 @@ class TMXInterface
     block_offset
   end
   
-  def from_tmx_level_data(tile_data_string)
+  def from_tmx_level_data(tile_data_string, game_tiles)
     tile_data = tile_data_string.scan(/\d+/).map{|str| str.to_i}
     
+    i = 0
     tile_data = tile_data.map do |block|
       block = 1 if block == 0
       horizontal_flip  = (block & 0x80000000) != 0
       vertical_flip    = (block & 0x40000000) != 0
       index_on_tileset = (block & ~(0x80000000 | 0x40000000 | 0x20000000))
       
-      tile_number = index_on_tileset - 1
-      tile_number |= 0b0100000000000000 if horizontal_flip
-      tile_number |= 0b1000000000000000 if vertical_flip
-      tile_number
+      game_tiles[i].index_on_tileset = index_on_tileset - 1
+      game_tiles[i].horizontal_flip = horizontal_flip
+      game_tiles[i].vertical_flip = vertical_flip
+      
+      i += 1
     end
-    
-    tile_data
   end
   
 private

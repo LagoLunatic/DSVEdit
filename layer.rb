@@ -113,5 +113,6 @@ class Tile
     tile_data = index_on_tileset
     tile_data |= 0b0100000000000000 if horizontal_flip
     tile_data |= 0b1000000000000000 if vertical_flip
+    tile_data
   end
 end
