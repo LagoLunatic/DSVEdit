@@ -1,2 +1,5 @@
+ui_*.rb
+*.yml
 /logs
-settings.yml
+/docs
+/lua scripts
