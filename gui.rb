@@ -132,7 +132,6 @@ class DSVE < Qt::MainWindow
   end
   
   def area_index_changed(new_area_index)
-    puts "area_index_changed"
     if @ui.area.findText("Select Area", flags=Qt::MatchExactly) >= 0
       # Remove the placeholder Select Area text.
       @ui.area.removeItem(0)
@@ -140,7 +139,6 @@ class DSVE < Qt::MainWindow
       return
     end
     @area_index = new_area_index
-    puts new_area_index.inspect
     @area = Area.new(@area_index, fs)
     sector_index_changed(0, force=true)
     @ui.sector.clear()
@@ -158,7 +156,6 @@ class DSVE < Qt::MainWindow
     if new_sector_index == @sector_index && !force
       return
     end
-    puts new_sector_index.inspect
     @sector_index = new_sector_index
     @sector = @area.sectors[@sector_index]
     room_index_changed(0, force=true)
@@ -179,7 +176,7 @@ class DSVE < Qt::MainWindow
   end
   
   def load_layers()
-    scene = TileScene.new
+    scene = Qt::GraphicsScene.new
     @room.layers.each do |layer|
       tileset_filename = "../Exported #{GAME}/rooms/#{@room.area_name}/Tilesets/#{layer.tileset_filename}.png"
       unless File.exist?(tileset_filename)
@@ -192,7 +189,6 @@ class DSVE < Qt::MainWindow
       layer_item.setZValue(-layer.z_index)
       layer_item.setOpacity(layer.opacity/31.0)
       scene.addItem(layer_item)
-      #layer_item.setVisible(false)
       
       layer.tiles.each_with_index do |tile, index_on_level|
         x_on_tileset = tile.index_on_tileset % 16
@@ -302,36 +298,6 @@ class DSVE < Qt::MainWindow
   end
 end
 
-class TileScene < Qt::GraphicsScene
-  def mousePressEvent(event)
-    #puts event
-  end
-  def mouseMoveEvent(event)
-    #puts event
-    #raise selectedItems().inspect
-  end
-  def hoverMoveEvent(event)
-    #puts event
-  end
-  def mouseReleaseEvent(event)
-    #puts event
-  end
-end
-
-class PannableScrollArea < Qt::ScrollArea
-  def mousePressEvent(event)
-    @drag_start_x, @drag_start_y = event.x(), event.y()
-    @start_x, @start_y = widget().x(), widget().y()
-  end
-  
-  def mouseMoveEvent(event)
-    x, y = event.x(), event.y()
-    diff_x, diff_y = @drag_start_x - x, @drag_start_y - y
-    horizontalScrollBar().setValue(diff_x - @start_x)
-    verticalScrollBar().setValue(diff_y - @start_y)
-  end
-end
-
 class EnemyEditDialog < Qt::Dialog
   slots "enemy_changed(int)"
   slots "weakness_button_pressed()"
@@ -358,7 +324,6 @@ class EnemyEditDialog < Qt::Dialog
   end
   
   def enemy_changed(enemy_id)
-    puts "enemy_changed"
     enemy = @enemies[enemy_id]
     
     @ui.name.setText(enemy.name.to_s)
