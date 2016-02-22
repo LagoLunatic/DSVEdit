@@ -12,14 +12,15 @@ class DSVE < Qt::MainWindow
   slots "open_rom_dialog()"
   slots "open_folder_dialog()"
   slots "save_files()"
+  slots "open_enemy_dna_dialog()"
+  slots "write_to_rom()"
+  slots "build_and_run()"
+  
   slots "area_index_changed(int)"
   slots "sector_index_changed(int)"
   slots "room_index_changed(int)"
-  slots "open_enemy_dna_dialog()"
   slots "open_in_tiled()"
   slots "import_from_tiled()"
-  slots "write_to_rom()"
-  slots "build_and_run()"
   
   def initialize
     super()
@@ -37,6 +38,7 @@ class DSVE < Qt::MainWindow
     connect(@ui.actionEnemy_Editor, SIGNAL("activated()"), self, SLOT("open_enemy_dna_dialog()"))
     connect(@ui.actionBuild, SIGNAL("activated()"), self, SLOT("write_to_rom()"))
     connect(@ui.actionBuild_and_Run, SIGNAL("activated()"), self, SLOT("build_and_run()"))
+    
     connect(@ui.area, SIGNAL("activated(int)"), self, SLOT("area_index_changed(int)"))
     connect(@ui.sector, SIGNAL("activated(int)"), self, SLOT("sector_index_changed(int)"))
     connect(@ui.room, SIGNAL("activated(int)"), self, SLOT("room_index_changed(int)"))
