@@ -30,6 +30,8 @@ class Door
   end
   
   def write_to_rom
+    room.sector.load_necessary_overlay()
+    
     fs.write(door_ram_pointer, [destination_room_metadata_ram_pointer].pack("V"))
     fs.write(door_ram_pointer+4, [x_pos, y_pos].pack("C*"))
     fs.write(door_ram_pointer+6, [dest_x_unused, dest_y_unused, dest_x, dest_y].pack("v*"))

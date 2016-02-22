@@ -30,7 +30,7 @@ class Sector
         next # unused, mispointed rooms
       end
       
-      room = Room.new(room_metadata_ram_pointer, area.area_index, sector_index, room_index, fs)
+      room = Room.new(self, room_metadata_ram_pointer, area.area_index, sector_index, room_index, fs)
       @rooms << room
       
       room_index += 1

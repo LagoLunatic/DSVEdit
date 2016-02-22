@@ -39,7 +39,7 @@ class TMXInterface
       entity.byte_8 = props["08"]
       entity.var_a = props["var_a"]
       entity.var_b = props["var_b"]
-      #entity.write_to_rom()
+      entity.write_to_rom()
     end
     
     tiled_doors = xml.css("objectgroup[name='Doors'] object")
@@ -125,8 +125,8 @@ class TMXInterface
               xml.properties {
                 xml.property(:name => "door_ram_pointer", :value => "%08X" % door.door_ram_pointer)
                 xml.property(:name => "destination_room", :value => "%08X" % door.destination_room_metadata_ram_pointer)
-                xml.property(:name => "dest_x", :value => door.dest_x)
-                xml.property(:name => "dest_y", :value => door.dest_y)
+                xml.property(:name => "dest_x", :value => "%04X" % door.dest_x)
+                xml.property(:name => "dest_y", :value => "%04X" % door.dest_y)
               }
               
             }

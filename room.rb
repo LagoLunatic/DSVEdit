@@ -3,6 +3,7 @@ class Room
   class RoomReadError < StandardError ; end
   
   attr_reader :room_metadata_ram_pointer,
+              :sector,
               :layers,
               :number_of_doors,
               :graphic_tilesets_for_room,
@@ -16,8 +17,9 @@ class Room
               :fs
   attr_accessor :room_xpos_on_map, :room_ypos_on_map
 
-  def initialize(room_metadata_ram_pointer, area_index, sector_index, room_index, fs)
+  def initialize(sector, room_metadata_ram_pointer, area_index, sector_index, room_index, fs)
     @room_metadata_ram_pointer = room_metadata_ram_pointer
+    @sector = sector
     @area_index = area_index
     @sector_index = sector_index
     @room_index = room_index
@@ -188,6 +190,8 @@ class Room
   end
   
   def write_to_rom
+    sector.load_necessary_overlay()
+    
     raise NotImplementedError
   end
   
