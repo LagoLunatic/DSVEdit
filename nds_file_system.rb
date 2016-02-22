@@ -130,10 +130,25 @@ class NDSFileSystem
   def write_by_file(file_path, offset_in_file, new_data)
     file_data = get_file_data_from_opened_files_cache(file_path)
     file_data[offset_in_file, new_data.length] = new_data
-    path = File.join(@filesystem_directory, file_path)
-    File.open(path, "rb+") do |f|
-      f.write(file_data)
+    @uncommitted_files[file_path] = file_data
+  end
+  
+  def commit_file_changes
+    print "Committing changes to filesystem... "
+    
+    @uncommitted_files.each do |file_path, file_data|
+      path = File.join(@filesystem_directory, file_path)
+      File.open(path, "rb+") do |f|
+        f.write(file_data)
+      end
     end
+    @uncommitted_files = {}
+    
+    puts "Done."
+  end
+  
+  def has_uncommitted_files?
+    !@uncommitted_files.empty?
   end
   
   def expand_file_and_get_end_of_file_ram_address(ram_address, length_to_expand_by)
@@ -181,6 +196,7 @@ private
     @overlays = []
     @currently_loaded_files = {}
     @opened_files_cache = {}
+    @uncommitted_files = {}
     
     get_file_name_table()
     get_overlay_table()

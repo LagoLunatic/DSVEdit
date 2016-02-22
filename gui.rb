@@ -11,6 +11,7 @@ class DSVE < Qt::MainWindow
   
   slots "open_rom_dialog()"
   slots "open_folder_dialog()"
+  slots "save_files()"
   slots "area_index_changed(int)"
   slots "sector_index_changed(int)"
   slots "room_index_changed(int)"
@@ -32,6 +33,7 @@ class DSVE < Qt::MainWindow
     
     connect(@ui.actionOpen, SIGNAL("activated()"), self, SLOT("open_rom_dialog()"))
     connect(@ui.actionOpen_Folder, SIGNAL("activated()"), self, SLOT("open_folder_dialog()"))
+    connect(@ui.actionSave, SIGNAL("activated()"), self, SLOT("save_files()"))
     connect(@ui.actionEnemy_Editor, SIGNAL("activated()"), self, SLOT("open_enemy_dna_dialog()"))
     connect(@ui.actionBuild, SIGNAL("activated()"), self, SLOT("write_to_rom()"))
     connect(@ui.actionBuild_and_Run, SIGNAL("activated()"), self, SLOT("build_and_run()"))
@@ -274,13 +276,29 @@ class DSVE < Qt::MainWindow
     load_layers()
   end
   
-  def write_to_rom
-    @fs.write_to_rom("../#{GAME} hack.nds")
+  def save_files
+    fs.commit_file_changes()
+  end
+  
+  def write_to_rom(launch_emulator = false)
+    if fs.has_uncommitted_files?
+      answer = Qt::MessageBox.question(self, "Unsaved changes", "Save changed files before building?", Qt::MessageBox::Yes, Qt::MessageBox::No, Qt::MessageBox::Cancel)
+      if answer == Qt::MessageBox::Yes
+        save_files()
+      elsif answer == Qt::MessageBox::Cancel
+        return
+      end
+    end
+    
+    fs.write_to_rom("../#{GAME} hack.nds")
+    
+    if launch_emulator
+      system("start \"#{@settings[:emulator_path]}\" \"../#{GAME} hack.nds\"")
+    end
   end
   
   def build_and_run
-    write_to_rom()
-    system("start \"#{@settings[:emulator_path]}\" \"../#{GAME} hack.nds\"")
+    write_to_rom(launch_emulator = true)
   end
 end
 
