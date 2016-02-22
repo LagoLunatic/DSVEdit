@@ -209,7 +209,6 @@ class DSVE < Qt::MainWindow
         
         tile_gfx = Qt::Pixmap.from_image(tile_gfx)
         tile_gfx = Qt::GraphicsPixmapItem.new(tile_gfx)
-        tile_gfx.setFlag(Qt::GraphicsItem::ItemIsSelectable)
         tile_gfx.setPos(x_on_level*16, y_on_level*16)
         tile_gfx.setParentItem(layer_item)
       end
