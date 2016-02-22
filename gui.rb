@@ -213,18 +213,18 @@ class DSVE < Qt::MainWindow
       end
     end
     
-    @room.doors.each_with_index do |door, i|
-      x = door.x_pos
-      y = door.y_pos
-      x = -1 if x == 0xFF
-      y = -1 if y == 0xFF
-      x *= SCREEN_WIDTH_IN_PIXELS
-      y *= SCREEN_HEIGHT_IN_PIXELS
-      
-      rect = Qt::GraphicsRectItem.new(x, y, 16*16, 12*16)
-      rect.setBrush(Qt::Brush.new(Qt::Color.new(200, 0, 200, 50)))
-      scene.addItem(rect)
-    end
+    #@room.doors.each_with_index do |door, i|
+    #  x = door.x_pos
+    #  y = door.y_pos
+    #  x = -1 if x == 0xFF
+    #  y = -1 if y == 0xFF
+    #  x *= SCREEN_WIDTH_IN_PIXELS
+    #  y *= SCREEN_HEIGHT_IN_PIXELS
+    #  
+    #  rect = Qt::GraphicsRectItem.new(x, y, 16*16, 12*16)
+    #  rect.setBrush(Qt::Brush.new(Qt::Color.new(200, 0, 200, 50)))
+    #  scene.addItem(rect)
+    #end
     
     @ui.graphicsView.setScene(scene)
   end
