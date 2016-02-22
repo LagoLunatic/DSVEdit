@@ -26,7 +26,6 @@ class DSVE < Qt::MainWindow
     super()
     @ui = Ui_MainWindow.new
     @ui.setup_ui(self)
-    @ui.graphicsView.scale(2, 2)
     @ui.graphicsView.setDragMode(Qt::GraphicsView::ScrollHandDrag)
     self.setStyleSheet("QGraphicsView { background-color: transparent; }");
     
