@@ -17,6 +17,8 @@ class DSVE < Qt::MainWindow
   slots "open_enemy_dna_dialog()"
   slots "open_in_tiled()"
   slots "import_from_tiled()"
+  slots "write_to_rom()"
+  slots "build_and_run()"
   
   def initialize
     super()
@@ -31,6 +33,8 @@ class DSVE < Qt::MainWindow
     connect(@ui.actionOpen, SIGNAL("activated()"), self, SLOT("open_rom_dialog()"))
     connect(@ui.actionOpen_Folder, SIGNAL("activated()"), self, SLOT("open_folder_dialog()"))
     connect(@ui.actionEnemy_Editor, SIGNAL("activated()"), self, SLOT("open_enemy_dna_dialog()"))
+    connect(@ui.actionBuild, SIGNAL("activated()"), self, SLOT("write_to_rom()"))
+    connect(@ui.actionBuild_and_Run, SIGNAL("activated()"), self, SLOT("build_and_run()"))
     connect(@ui.area, SIGNAL("activated(int)"), self, SLOT("area_index_changed(int)"))
     connect(@ui.sector, SIGNAL("activated(int)"), self, SLOT("sector_index_changed(int)"))
     connect(@ui.room, SIGNAL("activated(int)"), self, SLOT("room_index_changed(int)"))
@@ -269,6 +273,15 @@ class DSVE < Qt::MainWindow
     
     @tiled.read(tmx_path, @room)
     load_layers()
+  end
+  
+  def write_to_rom
+    @fs.write_to_rom("../#{GAME} hack.nds")
+  end
+  
+  def build_and_run
+    write_to_rom()
+    system("start \"#{@settings[:emulator_path]}\" \"../#{GAME} hack.nds\"")
   end
 end
 

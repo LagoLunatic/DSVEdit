@@ -125,7 +125,7 @@
     <addaction name="actionEnemy_Editor"/>
     <addaction name="actionSettings"/>
     <addaction name="actionBuild"/>
-    <addaction name="actionBuild_Run"/>
+    <addaction name="actionBuild_and_Run"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuTools"/>
@@ -165,7 +165,7 @@
     <string>F5</string>
    </property>
   </action>
-  <action name="actionBuild_Run">
+  <action name="actionBuild_and_Run">
    <property name="text">
     <string>Build and Run</string>
    </property>
