@@ -293,123 +293,85 @@ class Renderer
   def render_map(map, folder, area_index)
     map_width_in_blocks = 64
     map_height_in_blocks = 48
-    fill_img = Image.new(map_width_in_blocks*4, map_height_in_blocks*4) { self.background_color = "none" }
-    lines_img = Image.new(map_width_in_blocks*4, map_height_in_blocks*4) { self.background_color = "none" }
+    map_image_width = map_width_in_blocks*4 + 1
+    map_image_height = map_height_in_blocks*4 + 1
+    fill_img = ChunkyPNG::Image.new(map_image_width, map_image_height, ChunkyPNG::Color::TRANSPARENT)
+    lines_img = ChunkyPNG::Image.new(map_image_width, map_image_height, ChunkyPNG::Color::TRANSPARENT)
     
-    fill_color          = MAP_FILL_COLOR         .map{|v| v / 255.0 * Magick::QuantumRange}
-    save_fill_color     = MAP_SAVE_FILL_COLOR    .map{|v| v / 255.0 * Magick::QuantumRange}
-    warp_fill_color     = MAP_WARP_FILL_COLOR    .map{|v| v / 255.0 * Magick::QuantumRange}
-    entrance_fill_color = MAP_ENTRANCE_FILL_COLOR.map{|v| v / 255.0 * Magick::QuantumRange}
-    line_color          = MAP_LINE_COLOR         .map{|v| v / 255.0 * Magick::QuantumRange}
-    door_color          = MAP_DOOR_COLOR         .map{|v| v / 255.0 * Magick::QuantumRange}
-    
-    # 25 pixels per tile. though they overlap, so the left and top of a tile overlaps the right and bottom of other tiles.
+    fill_color          = ChunkyPNG::Color.rgba(*MAP_FILL_COLOR)
+    save_fill_color     = ChunkyPNG::Color.rgba(*MAP_SAVE_FILL_COLOR)
+    warp_fill_color     = ChunkyPNG::Color.rgba(*MAP_WARP_FILL_COLOR)
+    secret_fill_color   = ChunkyPNG::Color.rgba(*MAP_SECRET_FILL_COLOR)
+    entrance_fill_color = ChunkyPNG::Color.rgba(*MAP_ENTRANCE_FILL_COLOR)
+    line_color          = ChunkyPNG::Color.rgba(*MAP_LINE_COLOR)
+    door_color          = ChunkyPNG::Color.rgba(*MAP_DOOR_COLOR)
+    door_center_color   = ChunkyPNG::Color.rgba(*MAP_DOOR_CENTER_PIXEL_COLOR)
+  
+    wall_pixels = [line_color]*5
+    door_pixels = [line_color, door_color, door_center_color, door_color, line_color]
+  
+    # 25 pixels per tile. But they overlap, so the left and top of a tile overlaps the right and bottom of other tiles.
     i = 0
     map.tiles.each do |tile|
-      if tile[:is_blank] && !tile[:left_door] && !tile[:left_wall] && !tile[:top_door] && !tile[:top_wall] && !tile[:right_door] && !tile[:right_wall] && !tile[:bottom_door] && !tile[:bottom_wall]
+      if tile.is_blank && !tile.left_door && !tile.left_wall && !tile.top_door && !tile.top_wall && !tile.right_door && !tile.right_wall && !tile.bottom_door && !tile.bottom_wall
         i += 1
         next
       end
       
-      if tile[:is_blank]
-        fill_pixels = [[0,0,0,0]]*25
-      elsif tile[:is_entrance]
-        fill_pixels = [entrance_fill_color]*25
-      elsif tile[:is_warp]
-        fill_pixels = [warp_fill_color]*25
-      elsif tile[:is_save]
-        fill_pixels = [save_fill_color]*25
+      color = if tile.is_blank
+        ChunkyPNG::Color::TRANSPARENT
+      elsif tile.is_entrance
+        entrance_fill_color
+      elsif tile.is_warp
+        warp_fill_color
+      elsif tile.is_secret
+        secret_fill_color
+      elsif tile.is_save
+        save_fill_color
       else
-        fill_pixels = [fill_color]*25
+        fill_color
       end
       
-      line_pixels = [[0,0,0,0]]*25
+      fill_tile = ChunkyPNG::Image.new(5, 5, color)
+      lines_tile = ChunkyPNG::Image.new(5, 5, ChunkyPNG::Color::TRANSPARENT)
       
-      if GAME == "dos"
-        if tile[:left_door]
-          line_pixels[0] = line_color
-          (5..19).step(5) do |i|
-            line_pixels[i] = door_color
-          end
-          line_pixels[20] = line_color
-        elsif tile[:left_wall]
-          (0..24).step(5) do |i|
-            line_pixels[i] = line_color
-          end
-        end
-        
-        if tile[:top_door]
-          line_pixels[0] = line_color
-          (1..3).each do |i|
-            line_pixels[i] = door_color
-          end
-          line_pixels[4] = line_color
-        elsif tile[:top_wall]
-          (0..4).each do |i|
-            line_pixels[i] = line_color
-          end
-        end
-        
-      elsif GAME == "por" || GAME == "ooe"
-        if tile[:left_door]
-          (0..24).step(5) do |i|
-            next if i == 10
-            line_pixels[i] = door_color
-          end
-        elsif tile[:left_wall]
-          (0..24).step(5) do |i|
-            line_pixels[i] = line_color
-          end
-        end
-        
-        if tile[:right_door] # Never used in game because it would always get overwritten by the tile to the right.
-          (4..24).step(5) do |i|
-            next if i == 14
-            line_pixels[i] = door_color
-          end
-        elsif tile[:right_wall]
-          (4..24).step(5) do |i|
-            line_pixels[i] = line_color
-          end
-        end
-        
-        if tile[:top_door]
-          (0..4).each do |i|
-            next if i == 2
-            line_pixels[i] = door_color
-          end
-        elsif tile[:top_wall]
-          (0..4).each do |i|
-            line_pixels[i] = line_color
-          end
-        end
-        
-        if tile[:bottom_door] # Never used in game because it would always get overwritten by the tile below.
-          (20..24).each do |i|
-            next if i == 22
-            line_pixels[i] = door_color
-          end
-        elsif tile[:bottom_wall]
-          (20..24).each do |i|
-            line_pixels[i] = line_color
-          end
-        end
+      if tile.left_door
+        lines_tile.replace_column!(0, door_pixels)
+      elsif tile.left_wall
+        lines_tile.replace_column!(0, wall_pixels)
       end
       
-      fill_img.import_pixels(x=tile[:x_pos]*4, y=tile[:y_pos]*4, columns=5, rows=5, map="RGBA", fill_pixels.flatten, type=CharPixel)
-      drawn_tile = Image.new(5,5) { self.background_color = "none" }
-      drawn_tile.import_pixels(0, 0, columns=5, rows=5, map="RGBA", line_pixels.flatten, type=CharPixel)
-      lines_img.composite!(drawn_tile, tile[:x_pos]*4, tile[:y_pos]*4, OverCompositeOp)
+      if tile.right_door # Never used in game because it would always get overwritten by the tile to the right.
+        lines_tile.replace_column!(4, door_pixels)
+      elsif tile.right_wall
+        lines_tile.replace_column!(4, wall_pixels)
+      end
+      
+      if tile.top_door
+        lines_tile.replace_row!(0, door_pixels)
+      elsif tile.top_wall
+        lines_tile.replace_row!(0, wall_pixels)
+      end
+      
+      if tile.bottom_door # Never used in game because it would always get overwritten by the tile below.
+        lines_tile.replace_row!(4, door_pixels)
+      elsif tile.bottom_wall
+        lines_tile.replace_row!(4, wall_pixels)
+      end
+      
+      fill_img.compose!(fill_tile, tile.x_pos*4, tile.y_pos*4)
+      lines_img.compose!(lines_tile, tile.x_pos*4, tile.y_pos*4)
       
       i += 1
     end
     
-    img = Image.new(map_width_in_blocks*4, map_height_in_blocks*4) { self.background_color = "none" }
-    img.composite!(fill_img, 0, 0, OverCompositeOp)
-    img.composite!(lines_img, 0, 0, OverCompositeOp)
-    img.resize!(map_width_in_blocks*4*3, map_height_in_blocks*4*3, filter=PointFilter)
+    img = ChunkyPNG::Image.new(map_image_width, map_image_height, ChunkyPNG::Color::TRANSPARENT)
+    img.compose!(fill_img, 0, 0)
+    img.compose!(lines_img, 0, 0)
+    scale = 3
+    img.resample_nearest_neighbor!(map_image_width*scale, map_image_height*scale)
     
     FileUtils::mkdir_p(folder)
-    img.write("#{folder}/map-#{area_index}.png")
+    img.save("#{folder}/map-#{area_index}.png")
   end
 end
