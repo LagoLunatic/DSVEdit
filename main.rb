@@ -239,8 +239,8 @@ end
 
 if options[:game] == "dos"
   # Change the starting room to skip the tutorial.
-  rom[0x33B84] = [0x00].pack("C*")
-  rom[0x33B90] = [0x01].pack("C*")
+  fs.write(0x0202FB84, [0x00].pack("C*"))
+  fs.write(0x0202FB90, [0x01].pack("C*"))
 end
 
 if GAME == "ooe"
