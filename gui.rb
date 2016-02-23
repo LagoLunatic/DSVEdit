@@ -112,6 +112,8 @@ class DSVE < Qt::MainWindow
     @renderer = Renderer.new(fs)
     
     initialize_dropdowns()
+    
+    @settings[:last_used_folder] = folder_path
   end
   
   def verify_game_and_load_constants(header_path)
