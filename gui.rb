@@ -249,9 +249,11 @@ class DSVE < Qt::MainWindow
   def load_map()
     @map_graphics_scene.clear()
     
-    map_image_path = "../Exported #{GAME}/maps/map-#{@area.area_index}.png"
-    @renderer.render_map(@area.map, map_image_path)
-    map_pixmap_item = Qt::GraphicsPixmapItem.new(Qt::Pixmap.new(map_image_path))
+    chunky_png_img = @renderer.render_map(@area.map)
+    pixmap = Qt::Pixmap.new
+    blob = chunky_png_img.to_blob
+    pixmap.loadFromData(blob, blob.length)
+    map_pixmap_item = Qt::GraphicsPixmapItem.new(pixmap)
     @map_graphics_scene.addItem(map_pixmap_item)
     
     @area.map.tiles.each do |tile|

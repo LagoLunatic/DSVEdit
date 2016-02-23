@@ -150,7 +150,10 @@ when "map"
     map = area.map
     
     output_map_path = "#{folder}/map-#{area.area_index}.png"
-    renderer.render_map(map, output_map_path)
+    img = renderer.render_map(map)
+    
+    FileUtils::mkdir_p(File.dirname(output_map_path))
+    img.save(output_map_path)
   end
 else
   folder = "#{output_folder}/rooms"
