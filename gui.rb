@@ -19,6 +19,7 @@ class DSVE < Qt::MainWindow
   slots "area_index_changed(int)"
   slots "sector_index_changed(int)"
   slots "room_index_changed(int)"
+  slots "sector_and_room_indexes_changed(int, int)"
   slots "open_in_tiled()"
   slots "import_from_tiled()"
   
@@ -31,6 +32,11 @@ class DSVE < Qt::MainWindow
     @ui.room_graphics_view.setScene(@room_graphics_scene)
     @ui.room_graphics_view.setDragMode(Qt::GraphicsView::ScrollHandDrag)
     self.setStyleSheet("QGraphicsView { background-color: transparent; }");
+    
+    @map_graphics_scene = Qt::GraphicsScene.new
+    @map_graphics_scene.setSceneRect(0, 0, 64*4+1, 48*4+1)
+    @ui.map_graphics_view.scale(2, 2)
+    @ui.map_graphics_view.setScene(@map_graphics_scene)
     
     @tiled = TMXInterface.new
     
@@ -154,6 +160,8 @@ class DSVE < Qt::MainWindow
         @ui.sector.addItem("%02d" % sector_index)
       end
     end
+    
+    load_map()
   end
   
   def sector_index_changed(new_sector_index, force=false)
@@ -177,6 +185,14 @@ class DSVE < Qt::MainWindow
     @room = @sector.rooms[@room_index]
     
     load_layers()
+  end
+  
+  def sector_and_room_indexes_changed(new_sector_index, new_room_index)
+    puts "sector_and_room_indexes_changed: #{new_sector_index}, #{new_room_index}"
+    @ui.sector.setCurrentIndex(new_sector_index)
+    sector_index_changed(new_sector_index)
+    @ui.room.setCurrentIndex(new_room_index)
+    room_index_changed(new_room_index)
   end
   
   def load_layers()
@@ -228,7 +244,16 @@ class DSVE < Qt::MainWindow
     #  rect.setBrush(Qt::Brush.new(Qt::Color.new(200, 0, 200, 50)))
     #  scene.addItem(rect)
     #end
+  end
+  
+  def load_map()
+    @map_graphics_scene.clear()
     
+    @area.map.tiles.each do |tile|
+      item = GraphicsMapTileItem.new(tile)
+      connect(item, SIGNAL("room_clicked(int, int)"), self, SLOT("sector_and_room_indexes_changed(int, int)"))
+      @map_graphics_scene.addItem(item)
+    end
   end
   
   def open_enemy_dna_dialog
@@ -298,6 +323,105 @@ class DSVE < Qt::MainWindow
   
   def build_and_run
     write_to_rom(launch_emulator = true)
+  end
+end
+
+class GraphicsMapTileItem < Qt::GraphicsObject
+  attr_reader :map_tile
+  
+  signals "room_clicked(int, int)"
+  
+  def initialize(map_tile)
+    super(nil)
+    
+    @map_tile = map_tile
+    
+    @normal_fill_brush   = Qt::Brush.new(Qt::Color.new(*MAP_FILL_COLOR))
+    @save_fill_brush     = Qt::Brush.new(Qt::Color.new(*MAP_SAVE_FILL_COLOR))
+    @warp_fill_brush     = Qt::Brush.new(Qt::Color.new(*MAP_WARP_FILL_COLOR))
+    @entrance_fill_brush = Qt::Brush.new(Qt::Color.new(*MAP_ENTRANCE_FILL_COLOR))
+    @line_color          = Qt::Color.new(*MAP_LINE_COLOR)
+    @door_color          = Qt::Color.new(*MAP_DOOR_COLOR)
+    @door_center_color   = Qt::Color.new(*MAP_DOOR_CENTER_PIXEL_COLOR)
+  end
+  
+  def pixel_x
+    map_tile.x_pos*4
+  end
+  
+  def pixel_y
+    map_tile.y_pos*4
+  end
+  
+  def boundingRect()
+    return Qt::RectF.new(pixel_x, pixel_y, 5, 5)
+  end
+  
+  def paint(painter, option, widget)
+    painter.setPen(@line_color)
+    x = pixel_x
+    y = pixel_y
+    
+    if map_tile.is_blank
+      # do nothing
+    elsif map_tile.is_entrance
+      painter.fillRect(x, y, 5, 5, @entrance_fill_brush)
+    elsif map_tile.is_warp
+      painter.fillRect(x, y, 5, 5, @warp_fill_brush)
+    elsif map_tile.is_save
+      painter.fillRect(x, y, 5, 5, @save_fill_brush)
+    else
+      painter.fillRect(x, y, 5, 5, @normal_fill_brush)
+    end
+    
+    if map_tile.left_door
+      painter.setPen(@door_color)
+      painter.drawLine(x, y, x, y+1)
+      painter.drawLine(x, y+3, x, y+4)
+      painter.setPen(@door_center_color)
+      painter.drawLine(x, y+2, x, y+2)
+      painter.setPen(@line_color)
+    elsif map_tile.left_wall
+      painter.drawLine(x, y, x, y+4)
+    end
+    
+    if map_tile.right_door # Never used in game because it would always get overwritten by the tile to the right.
+      painter.setPen(@door_color)
+      painter.drawLine(x+4, y, x+4, y+1)
+      painter.drawLine(x+4, y+3, x+4, y+4)
+      painter.setPen(@door_center_color)
+      painter.drawLine(x+4, y+2, x+4, y+2)
+      painter.setPen(@line_color)
+    elsif map_tile.right_wall
+      painter.drawLine(x+4, y, x+4, y+4)
+    end
+    
+    if map_tile.top_door
+      painter.setPen(@door_color)
+      painter.drawLine(x, y, x+1, y)
+      painter.drawLine(x+3, y, x+4, y)
+      painter.setPen(@door_center_color)
+      painter.drawLine(x+2, y, x+2, y)
+      painter.setPen(@line_color)
+    elsif map_tile.top_wall
+      painter.drawLine(x, y, x+4, y)
+    end
+    
+    if map_tile.bottom_door # Never used in game because it would always get overwritten by the tile below.
+      painter.setPen(@door_color)
+      painter.drawLine(x, y+4, x+1, y+4)
+      painter.drawLine(x+3, y+4, x+4, y+4)
+      painter.setPen(@door_center_color)
+      painter.drawLine(x+2, y+4, x+2, y+4)
+      painter.setPen(@line_color)
+    elsif map_tile.bottom_wall
+      painter.drawLine(x, y+4, x+4, y+4)
+    end
+  end
+  
+  def mousePressEvent(event)
+    return if map_tile.is_blank
+    emit room_clicked(map_tile.sector_index, map_tile.room_index)
   end
 end
 
