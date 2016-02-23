@@ -26,7 +26,10 @@ class DSVE < Qt::MainWindow
     super()
     @ui = Ui_MainWindow.new
     @ui.setup_ui(self)
-    @ui.graphicsView.setDragMode(Qt::GraphicsView::ScrollHandDrag)
+    
+    @room_graphics_scene = Qt::GraphicsScene.new
+    @ui.room_graphics_view.setScene(@room_graphics_scene)
+    @ui.room_graphics_view.setDragMode(Qt::GraphicsView::ScrollHandDrag)
     self.setStyleSheet("QGraphicsView { background-color: transparent; }");
     
     @tiled = TMXInterface.new
@@ -177,7 +180,8 @@ class DSVE < Qt::MainWindow
   end
   
   def load_layers()
-    scene = Qt::GraphicsScene.new
+    @room_graphics_scene.clear()
+    
     @room.layers.each do |layer|
       tileset_filename = "../Exported #{GAME}/rooms/#{@room.area_name}/Tilesets/#{layer.tileset_filename}.png"
       unless File.exist?(tileset_filename)
@@ -185,11 +189,10 @@ class DSVE < Qt::MainWindow
         @renderer.render_tileset(layer.ram_pointer_to_tileset_for_layer, @room.palette_offset, @room.graphic_tilesets_for_room, layer.colors_per_palette, tileset_filename)
       end
       tileset = Qt::Image.new(tileset_filename)
-      layer_group = scene.createItemGroup([])
       layer_item = Qt::GraphicsRectItem.new
       layer_item.setZValue(-layer.z_index)
       layer_item.setOpacity(layer.opacity/31.0)
-      scene.addItem(layer_item)
+      @room_graphics_scene.addItem(layer_item)
       
       layer.tiles.each_with_index do |tile, index_on_level|
         x_on_tileset = tile.index_on_tileset % 16
@@ -226,7 +229,6 @@ class DSVE < Qt::MainWindow
     #  scene.addItem(rect)
     #end
     
-    @ui.graphicsView.setScene(scene)
   end
   
   def open_enemy_dna_dialog
