@@ -124,7 +124,11 @@ end
 input_rom_path = settings[:input_rom_paths][options[:game]]
 fs = NDSFileSystem.new
 folder = File.join("..", "extracted_files_#{GAME}")
-fs.open_and_extract_rom(input_rom_path, folder)
+if File.exist?(folder) && File.directory?(folder)
+  fs.open_directory(folder)
+else
+  fs.open_and_extract_rom(input_rom_path, folder)
+end
 
 renderer = Renderer.new(fs)
 tiled = TMXInterface.new()
@@ -193,22 +197,16 @@ if %w(render_tileset render_room export_tmx import_tmx locate randomize).include
   end
 else
   folder = "#{output_folder}/maps/"
-  if options[:game] == "dos"
-    map = DoSMap.new(MAP_TILE_METADATA_START_OFFSET, MAP_TILE_LINE_DATA_START_OFFSET, 3008, rom, converter)
-    renderer.render_map(map, folder, i)
-  else
-    i = 0
-    while true
-      map_tile_metadata_ram_pointer = rom[converter.ram_to_rom(MAP_TILE_METADATA_LIST_START_OFFSET+i*4), 4].unpack("V*").first
-      break if map_tile_metadata_ram_pointer == 0
-      map_tile_line_data_ram_pointer = rom[converter.ram_to_rom(MAP_TILE_LINE_DATA_LIST_START_OFFSET+i*4), 4].unpack("V*").first
-      number_of_tiles = rom[converter.ram_to_rom(MAP_LENGTH_DATA_START_OFFSET+i*2), 2].unpack("v*").first
-      
-      map = Map.new(map_tile_metadata_ram_pointer, map_tile_line_data_ram_pointer, number_of_tiles, rom, converter)
-      renderer.render_map(map, folder, i)
-      
-      i += 1
+  
+  AREA_INDEX_TO_OVERLAY_INDEX.each do |area_index, list_of_sub_areas|
+    if options[:areas] && !options[:areas].include?(area_index)
+      next
     end
+    
+    area = Area.new(area_index, fs)
+    map = area.map
+    
+    renderer.render_map(map, folder, area.area_index)
   end
 end
 
@@ -276,5 +274,6 @@ if options[:mode] == "locate"
   puts "Rooms containing specified entity: " + located_rooms.map{|x|"%08X" % x}.join(" ")
 end
 
+fs.commit_file_changes()
 output_rom_path = settings[:output_rom_paths][options[:game]]
 fs.write_to_rom(output_rom_path)
