@@ -37,14 +37,13 @@ OptionParser.new do |opts|
     options[:areas] = areas
   end
   
-  #opts.on("-re", "--regions 0,2", Array, "Only execute for rooms in these sub-areas (area IDs)") do |areas|
-  #  areas.map! do |area|
-  #    area = area.to_i
-  #    #raise "Invalid area: #{area}" unless AREA_INDEX_TO_OVERLAY_INDEX.keys.include?(area) # TODO: validate subareas
-  #    area
-  #  end
-  #  options[:sub_areas] = areas
-  #end
+  opts.on("--sectors 0,2", Array, "Only execute for rooms in these sectors (sector IDs)") do |sectors|
+    sectors.map! do |sector|
+      sector = sector.to_i
+      sector
+    end
+    options[:sectors] = sectors
+  end
   
   opts.on("-m", "--mode render_tileset/render_room/export_tmx/import_tmx/map/randomize/locate", "What action to execute") do |mode|
     raise "Invalid mode: #{mode}" unless %w(render_tileset render_room export_tmx import_tmx map randomize locate).include?(mode)
