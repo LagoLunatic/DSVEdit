@@ -290,7 +290,7 @@ class Renderer
     return graphic_tile
   end
   
-  def render_map(map, folder, area_index)
+  def render_map(map, output_path, scale = 1)
     map_width_in_blocks = 64
     map_height_in_blocks = 48
     map_image_width = map_width_in_blocks*4 + 1
@@ -368,10 +368,9 @@ class Renderer
     img = ChunkyPNG::Image.new(map_image_width, map_image_height, ChunkyPNG::Color::TRANSPARENT)
     img.compose!(fill_img, 0, 0)
     img.compose!(lines_img, 0, 0)
-    scale = 3
     img.resample_nearest_neighbor!(map_image_width*scale, map_image_height*scale)
     
-    FileUtils::mkdir_p(folder)
-    img.save("#{folder}/map-#{area_index}.png")
+    FileUtils::mkdir_p(File.dirname(output_path))
+    img.save(output_path)
   end
 end

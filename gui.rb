@@ -249,6 +249,11 @@ class DSVE < Qt::MainWindow
   def load_map()
     @map_graphics_scene.clear()
     
+    map_image_path = "../Exported #{GAME}/maps/map-#{@area.area_index}.png"
+    @renderer.render_map(@area.map, map_image_path)
+    map_pixmap_item = Qt::GraphicsPixmapItem.new(Qt::Pixmap.new(map_image_path))
+    @map_graphics_scene.addItem(map_pixmap_item)
+    
     @area.map.tiles.each do |tile|
       item = GraphicsMapTileItem.new(tile)
       connect(item, SIGNAL("room_clicked(int, int)"), self, SLOT("sector_and_room_indexes_changed(int, int)"))
@@ -335,14 +340,6 @@ class GraphicsMapTileItem < Qt::GraphicsObject
     super(nil)
     
     @map_tile = map_tile
-    
-    @normal_fill_brush   = Qt::Brush.new(Qt::Color.new(*MAP_FILL_COLOR))
-    @save_fill_brush     = Qt::Brush.new(Qt::Color.new(*MAP_SAVE_FILL_COLOR))
-    @warp_fill_brush     = Qt::Brush.new(Qt::Color.new(*MAP_WARP_FILL_COLOR))
-    @entrance_fill_brush = Qt::Brush.new(Qt::Color.new(*MAP_ENTRANCE_FILL_COLOR))
-    @line_color          = Qt::Color.new(*MAP_LINE_COLOR)
-    @door_color          = Qt::Color.new(*MAP_DOOR_COLOR)
-    @door_center_color   = Qt::Color.new(*MAP_DOOR_CENTER_PIXEL_COLOR)
   end
   
   def pixel_x
@@ -355,68 +352,6 @@ class GraphicsMapTileItem < Qt::GraphicsObject
   
   def boundingRect()
     return Qt::RectF.new(pixel_x, pixel_y, 5, 5)
-  end
-  
-  def paint(painter, option, widget)
-    painter.setPen(@line_color)
-    x = pixel_x
-    y = pixel_y
-    
-    if map_tile.is_blank
-      # do nothing
-    elsif map_tile.is_entrance
-      painter.fillRect(x, y, 5, 5, @entrance_fill_brush)
-    elsif map_tile.is_warp
-      painter.fillRect(x, y, 5, 5, @warp_fill_brush)
-    elsif map_tile.is_save
-      painter.fillRect(x, y, 5, 5, @save_fill_brush)
-    else
-      painter.fillRect(x, y, 5, 5, @normal_fill_brush)
-    end
-    
-    if map_tile.left_door
-      painter.setPen(@door_color)
-      painter.drawLine(x, y, x, y+1)
-      painter.drawLine(x, y+3, x, y+4)
-      painter.setPen(@door_center_color)
-      painter.drawLine(x, y+2, x, y+2)
-      painter.setPen(@line_color)
-    elsif map_tile.left_wall
-      painter.drawLine(x, y, x, y+4)
-    end
-    
-    if map_tile.right_door # Never used in game because it would always get overwritten by the tile to the right.
-      painter.setPen(@door_color)
-      painter.drawLine(x+4, y, x+4, y+1)
-      painter.drawLine(x+4, y+3, x+4, y+4)
-      painter.setPen(@door_center_color)
-      painter.drawLine(x+4, y+2, x+4, y+2)
-      painter.setPen(@line_color)
-    elsif map_tile.right_wall
-      painter.drawLine(x+4, y, x+4, y+4)
-    end
-    
-    if map_tile.top_door
-      painter.setPen(@door_color)
-      painter.drawLine(x, y, x+1, y)
-      painter.drawLine(x+3, y, x+4, y)
-      painter.setPen(@door_center_color)
-      painter.drawLine(x+2, y, x+2, y)
-      painter.setPen(@line_color)
-    elsif map_tile.top_wall
-      painter.drawLine(x, y, x+4, y)
-    end
-    
-    if map_tile.bottom_door # Never used in game because it would always get overwritten by the tile below.
-      painter.setPen(@door_color)
-      painter.drawLine(x, y+4, x+1, y+4)
-      painter.drawLine(x+3, y+4, x+4, y+4)
-      painter.setPen(@door_center_color)
-      painter.drawLine(x+2, y+4, x+2, y+4)
-      painter.setPen(@line_color)
-    elsif map_tile.bottom_wall
-      painter.drawLine(x, y+4, x+4, y+4)
-    end
   end
   
   def mousePressEvent(event)

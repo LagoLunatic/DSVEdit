@@ -148,7 +148,9 @@ when "map"
   
   game.areas.each do |area|
     map = area.map
-    renderer.render_map(map, folder, area.area_index)
+    
+    output_map_path = "#{folder}/map-#{area.area_index}.png"
+    renderer.render_map(map, output_map_path)
   end
 else
   folder = "#{output_folder}/rooms"
