@@ -197,6 +197,7 @@ class DSVE < Qt::MainWindow
   
   def load_layers()
     @room_graphics_scene.clear()
+    @room_graphics_scene.setSceneRect(0, 0, @room.max_layer_width*SCREEN_WIDTH_IN_PIXELS, @room.max_layer_height*SCREEN_HEIGHT_IN_PIXELS)
     
     @room.layers.each do |layer|
       tileset_filename = "../Exported #{GAME}/rooms/#{@room.area_name}/Tilesets/#{layer.tileset_filename}.png"
