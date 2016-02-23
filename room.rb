@@ -6,6 +6,7 @@ class Room
               :sector,
               :layers,
               :number_of_doors,
+              :tileset_wrapper_A_ram_pointer,
               :graphic_tilesets_for_room,
               :palette_pages,
               :palette_page_index,
@@ -34,7 +35,7 @@ class Room
     
     room_metadata = fs.read(room_metadata_ram_pointer, 32).unpack("V*")
     layer_list_ram_pointer = room_metadata[2]
-    tileset_wrapper_A_ram_pointer = room_metadata[3]
+    @tileset_wrapper_A_ram_pointer = room_metadata[3]
     palette_wrapper_ram_pointer = room_metadata[4]
     entity_list_ram_pointer = room_metadata[5]
     door_list_ram_pointer = room_metadata[6]

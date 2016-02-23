@@ -96,7 +96,7 @@ class Layer
   end
   
   def tileset_filename
-    "tileset_%08X_%08X_%d" % [ram_pointer_to_tileset_for_layer, room.palette_offset || 0, colors_per_palette]
+    "tileset_%08X_%08X_%08X_%d" % [ram_pointer_to_tileset_for_layer, room.palette_offset || 0, room.tileset_wrapper_A_ram_pointer, colors_per_palette]
   end
 end
 
