@@ -122,13 +122,15 @@ File.open("settings.yml", "w") do |f|
 end
 
 input_rom_path = settings[:input_rom_paths][options[:game]]
-fs = NDSFileSystem.new
+
+game = Game.new
 folder = File.join("..", "extracted_files_#{GAME}")
 if File.exist?(folder) && File.directory?(folder)
-  fs.open_directory(folder)
+  game.initialize_from_folder(folder)
 else
-  fs.open_and_extract_rom(input_rom_path, folder)
+  game.initialize_from_rom(input_rom_path)
 end
+fs = game.fs
 
 renderer = Renderer.new(fs)
 tiled = TMXInterface.new()
@@ -136,22 +138,22 @@ if options[:mode] == "randomize"
   randomizer = Randomizer.new(options[:seed])
 end
 
-CONSTANT_OVERLAYS.each do |overlay_index|
-  fs.load_overlay(overlay_index)
-end
-
 start_time = Time.now
 located_rooms = []
 output_folder = "../Exported #{options[:game]}"
 
-if %w(render_tileset render_room export_tmx import_tmx locate randomize).include?(options[:mode])
-  AREA_INDEX_TO_OVERLAY_INDEX.each do |area_index, list_of_sub_areas|
-    if options[:areas] && !options[:areas].include?(area_index)
-      next
-    end
-    
-    area = Area.new(area_index, fs)
-    
+case options[:mode]
+when "map"
+  folder = "#{output_folder}/maps/"
+  
+  game.areas.each do |area|
+    map = area.map
+    renderer.render_map(map, folder, area.area_index)
+  end
+else
+  folder = "#{output_folder}/rooms"
+  
+  game.areas.each do |area|
     area.sectors.each do |sector|
       if options[:sectors] && !options[:sectors].include?(sector.sector_index)
         next
@@ -165,8 +167,6 @@ if %w(render_tileset render_room export_tmx import_tmx locate randomize).include
         if !options[:rooms].nil? && !options[:rooms].include?(room.room_metadata_ram_pointer)
           next
         end
-        
-        folder = "#{output_folder}/rooms"
         
         case options[:mode]
         when "render_tileset"
@@ -194,19 +194,6 @@ if %w(render_tileset render_room export_tmx import_tmx locate randomize).include
         end
       end
     end
-  end
-else
-  folder = "#{output_folder}/maps/"
-  
-  AREA_INDEX_TO_OVERLAY_INDEX.each do |area_index, list_of_sub_areas|
-    if options[:areas] && !options[:areas].include?(area_index)
-      next
-    end
-    
-    area = Area.new(area_index, fs)
-    map = area.map
-    
-    renderer.render_map(map, folder, area.area_index)
   end
 end
 
