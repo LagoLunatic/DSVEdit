@@ -83,7 +83,7 @@ class Randomizer
       if rng.rand(1..100) <= 80 # 80% chance to randomize into an item
         pickup.subtype = ITEM_ID_RANGES.keys.sample(random: rng)
         pickup.var_b = rng.rand(ITEM_ID_RANGES[pickup.subtype])
-      elsif options[:game] == "dos"
+      elsif GAME == "dos"
         pickup.type = 2 # special object
         pickup.subtype = 1 # candle
         pickup.var_a = 0 # glowing soul lamp
@@ -114,5 +114,12 @@ class Randomizer
       pickup.var_a = 0x00
       pickup.var_b = rng.rand(0x00..0x50)
     end
+  end
+  
+  def randomize_starting_room(game)
+    area = game.areas.sample(random: rng)
+    sector = area.sectors.sample(random: rng)
+    room = sector.rooms.sample(random: rng)
+    game.set_starting_room(area.area_index, sector.sector_index, room.room_index)
   end
 end

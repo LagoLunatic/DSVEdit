@@ -59,24 +59,36 @@ class RandomizerWindow < Qt::Dialog
   end
   
   def randomize
-    if @settings[:seed] !~ /^\d+$/
+    if @settings[:seed] =~ /^\d+$/
+      seed = @settings[:seed].to_i
+    elsif @settings[:seed] =~ /^\s*$/
+      seed = nil
+    else
       Qt::MessageBox.warning(self, "Invalid seed", "Seed must be an integer.")
       return
     end
     
-    game = Game.new(@ui.clean_rom.text)
-    randomizer = Randomizer.new(@settings[:seed].to_i)
+    game = Game.new
+    #game.initialize_from_rom(@ui.clean_rom.text)
+    game.initialize_from_folder(File.join(File.dirname(@ui.clean_rom.text), "extracted_files_por"))
+    randomizer = Randomizer.new(seed)
     
     game.each_room do |room|
-      puts "%08X" % room.room_metadata_ram_pointer
+      #puts "%08X" % room.room_metadata_ram_pointer
       randomizer.randomize_room(room)
     end
     
     if @ui.open_world_map.checked()
-      game.open_world_map()
+      game.ooe_open_world_map()
+    end
+    
+    if @ui.randomize_starting_room.checked()
+      game.fix_top_screen_on_new_game()
+      randomizer.randomize_starting_room(game)
     end
     
     output_rom_path = File.join(@ui.output_folder.text, "#{GAME} hack.nds")
+    game.fs.commit_file_changes()
     game.fs.write_to_rom(output_rom_path)
 
     Qt::MessageBox.information(self, "Done", "Randomization complete.")
