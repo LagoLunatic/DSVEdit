@@ -155,7 +155,8 @@ ENTITY_BLOCK_END_OFFSET   = 0x6344D1 # guess
 
 ENTITY_TYPE_FOR_PICKUPS = 0x04
 
-ENEMY_IDS = (0x00..0x80).to_a
+ENEMY_IDS = (0x00..0x9A)
+COMMON_ENEMY_IDS = (0x00..0x80).to_a
 BOSS_IDS = (0x81..0x9A).to_a
 VERY_LARGE_ENEMIES = [0x64, 0x13, 0x79, 0x78, 0x45, 0x25, 0x21, 0x52, 0x2C, 0x7D, 0x7A, 0x22, 0x15] # alura une, andras, flame demon, iron golem, treant, dragon zombie, great armor, final guard, amphisbaena, alastor, demon, catoblepas, golem
 
@@ -174,3 +175,8 @@ ITEM_BYTE_7_VALUE_FOR_SKILLS_AND_PASSIVES = 0x08
 
 ITEM_BYTE_11_RANGE_FOR_SKILLS = (0x01..0x5B)
 ITEM_BYTE_11_RANGE_FOR_PASSIVES = (0x5C..0x6B) # aka relics in PoR.
+
+# Note: the below are not actually where the original game stores the indexes. All three of those are at 02051F88 (since all three are the same: 00). The three addresses below are free space reused for the purpose of allowing the three values to be different.
+NEW_GAME_STARTING_AREA_INDEX_OFFSET = 0x020BFC00
+NEW_GAME_STARTING_SECTOR_INDEX_OFFSET = 0x020BFC08
+NEW_GAME_STARTING_ROOM_INDEX_OFFSET = 0x020BFC0C
