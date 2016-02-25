@@ -205,7 +205,7 @@ class DSVE < Qt::MainWindow
       tileset_filename = "../Exported #{GAME}/rooms/#{@room.area_name}/Tilesets/#{layer.tileset_filename}.png"
       unless File.exist?(tileset_filename)
         fs.load_overlay(AREA_INDEX_TO_OVERLAY_INDEX[@room.area_index][@room.sector_index])
-        @renderer.render_tileset(layer.ram_pointer_to_tileset_for_layer, @room.palette_offset, @room.graphic_tilesets_for_room, layer.colors_per_palette, tileset_filename)
+        @renderer.render_tileset(layer.ram_pointer_to_tileset_for_layer, @room.palette_offset, @room.graphic_tilesets_for_room, layer.colors_per_palette, layer.collision_tileset_ram_pointer, tileset_filename)
       end
       tileset = Qt::Image.new(tileset_filename)
       layer_item = Qt::GraphicsRectItem.new

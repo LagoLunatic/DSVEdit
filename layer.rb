@@ -11,6 +11,7 @@ class Layer
               :z_index,
               :ram_pointer_to_tileset_for_layer,
               :fs,
+              :collision_tileset_ram_pointer,
               :layer_tiledata_ram_start_offset
   attr_accessor :width,
                 :height,
@@ -55,6 +56,7 @@ class Layer
     #@pointer_to_tileset_for_layer = converter.ram_to_rom(ram_pointer_to_tileset_for_layer)
     #puts "pointer_to_tileset_for_layer: %08X" % pointer_to_tileset_for_layer
     #@layer_tiledata_ram_start_offset = layer_metadata_ram_pointer + 0x10 # FIXME, HACK
+    @collision_tileset_ram_pointer = fs.read(layer_metadata_ram_pointer+8, 4).unpack("V").first
     @layer_tiledata_ram_start_offset = fs.read(layer_metadata_ram_pointer+12, 4).unpack("V").first
   end
   

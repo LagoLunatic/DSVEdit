@@ -45,7 +45,7 @@ class Renderer
     tileset_filename = "#{folder}/#{room.area_name}/Tilesets/#{layer.tileset_filename}.png"
     #puts "#{room.area_index}-#{room.sector_index}-#{room.room_index}"
     fs.load_overlay(AREA_INDEX_TO_OVERLAY_INDEX[room.area_index][room.sector_index])
-    tileset = get_tileset(layer.ram_pointer_to_tileset_for_layer, room.palette_offset, room.graphic_tilesets_for_room, layer.colors_per_palette, tileset_filename)
+    tileset = get_tileset(layer.ram_pointer_to_tileset_for_layer, room.palette_offset, room.graphic_tilesets_for_room, layer.colors_per_palette, layer.collision_tileset_ram_pointer, tileset_filename)
     
     layer.tiles.each_with_index do |tile, index_on_level|
       x_on_tileset = tile.index_on_tileset % 16
@@ -129,15 +129,15 @@ class Renderer
     end
   end
   
-  def get_tileset(pointer_to_tileset_for_layer, palette_offset, graphic_tilesets_for_room, colors_per_palette, tileset_filename)
+  def get_tileset(pointer_to_tileset_for_layer, palette_offset, graphic_tilesets_for_room, colors_per_palette, collision_tileset_offset, tileset_filename)
     if File.exist?(tileset_filename)
       ChunkyPNG::Image.from_file(tileset_filename)
     else
-      render_tileset(pointer_to_tileset_for_layer, palette_offset, graphic_tilesets_for_room, colors_per_palette, tileset_filename)
+      render_tileset(pointer_to_tileset_for_layer, palette_offset, graphic_tilesets_for_room, colors_per_palette, collision_tileset_offset, tileset_filename)
     end
   end
   
-  def render_tileset(tileset_offset, palette_offset, graphic_tilesets_for_room, colors_per_palette, output_filename)
+  def render_tileset(tileset_offset, palette_offset, graphic_tilesets_for_room, colors_per_palette, collision_tileset_offset, output_filename)
     tileset_width_in_blocks = 16
     tileset_height_in_blocks = 64
     rendered_tileset = ChunkyPNG::Image.new(tileset_width_in_blocks*16, tileset_height_in_blocks*16, ChunkyPNG::Color::TRANSPARENT)
@@ -150,6 +150,10 @@ class Renderer
     #puts "palette_offset: %08X" % (palette_offset || 0)
     palette_list = generate_palettes(palette_offset, colors_per_palette)
     tileset_data = tileset.unpack("C*")
+    
+    if graphic_tilesets_for_room.nil?
+      return render_collision_tileset(collision_tileset_offset, output_filename)
+    end
 
     tileset_data.each_slice(4).each_with_index do |tile_data, i|
       #puts "tile_data: #{tile_data.each_byte.to_a.map{|x| "%02X" % x}}"
@@ -211,6 +215,101 @@ class Renderer
       end
       if vertical_flip
         graphic_tile.flip!
+      end
+      
+      x_on_tileset = i % 16
+      y_on_tileset = i / 16
+      rendered_tileset.compose!(graphic_tile, x_on_tileset*16, y_on_tileset*16)
+    end
+    
+    FileUtils::mkdir_p(File.dirname(output_filename))
+    rendered_tileset.save(output_filename, :fast_rgba)
+    puts "Wrote #{output_filename}"
+    return rendered_tileset
+  end
+  
+  def render_collision_tileset(collision_tileset_offset, output_filename)
+    if File.exist?(output_filename)
+      return ChunkyPNG::Image.from_file(output_filename)
+    end
+    
+    tileset_width_in_blocks = 16
+    tileset_height_in_blocks = 64
+    rendered_tileset = ChunkyPNG::Image.new(tileset_width_in_blocks*16, tileset_height_in_blocks*16, ChunkyPNG::Color::TRANSPARENT)
+
+    length_of_tileset_in_bytes = tileset_width_in_blocks*tileset_height_in_blocks*4
+    collision_tileset = fs.read(collision_tileset_offset, length_of_tileset_in_bytes-4)
+    collision_tileset = "\x00\x00\x00\x00" + collision_tileset
+    collision_tileset_data = collision_tileset.unpack("C*")
+
+    collision_tileset_data.each_slice(4).each_with_index do |tile_collision_data, i|
+      collision_data, unk1, unk2, unk3 = tile_collision_data
+      
+      graphic_tile = ChunkyPNG::Image.new(16, 16, ChunkyPNG::Color::TRANSPARENT)
+      
+      is_slope = (collision_data & 0b11110000) > 0
+      
+      if is_slope
+        slope_extra_check   = (collision_data & 0b00000001) > 0
+        vertical_flip       = (collision_data & 0b00000010) > 0
+        horizontal_flip     = (collision_data & 0b00000100) > 0
+        is_gradual_slope    = (collision_data & 0b10000000) > 0
+        not_a_half_slope    = (collision_data & 0b01000000) > 0
+        slope_piece         = (collision_data & 0b00110000) >> 4
+        
+        if slope_extra_check && slope_piece > 0 && !is_gradual_slope
+          graphic_tile.rect(0, 0, 15, 4, stroke_color = ChunkyPNG::Color::BLACK, fill_color = ChunkyPNG::Color::BLACK)
+        elsif slope_extra_check
+          if is_gradual_slope && not_a_half_slope
+            x_offset = slope_piece*16
+            width = 16*4
+          elsif is_gradual_slope
+            x_offset = slope_piece/2*16
+            width = 16*2
+          else
+            if slope_piece > 0
+              # ???
+              x_offset = 0
+              width = 16
+            else
+              x_offset = 0
+              width = 16
+            end
+          end
+          if vertical_flip
+            x_end = width-1
+            y_end = 0
+          else
+            x_end = 0
+            y_end = 15
+          end
+          graphic_tile.polygon([0-x_offset, 0, width-1-x_offset, 15, x_end-x_offset, y_end], stroke_color = ChunkyPNG::Color::BLACK, fill_color = ChunkyPNG::Color::BLACK)
+        
+          if horizontal_flip
+            graphic_tile.mirror!
+          end
+        end
+      else
+        has_top              = (collision_data & 0b00000001) > 0
+        has_sides_and_bottom = (collision_data & 0b00000010) > 0
+        is_damage            = (collision_data & 0b00000100) > 0
+        is_water             = (collision_data & 0b00001000) > 0
+        
+        color = ChunkyPNG::Color::BLACK
+        if is_damage
+          color = ChunkyPNG::Color.rgba(255, 0, 0, 255)
+        end
+        if is_water
+          color = ChunkyPNG::Color.rgba(0, 0, 255, 255)
+        end
+        
+        if has_top && has_sides_and_bottom
+          graphic_tile.rect(0, 0, 15, 15, stroke_color = color, fill_color = color)
+        elsif has_top
+          graphic_tile.rect(0, 0, 4, 4, stroke_color = color, fill_color = color)
+        elsif has_sides_and_bottom
+          graphic_tile.polygon([0, 0, 7, 7, 15, 0, 15, 15, 0, 15], stroke_color = color, fill_color = color)
+        end
       end
       
       x_on_tileset = i % 16
