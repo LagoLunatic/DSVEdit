@@ -330,6 +330,7 @@ private
     offset = 0x00
     while offset < @file_allocation_table_size
       @files[id][:start_offset], @files[id][:end_offset] = file_allocation_table_data[offset,8].unpack("VV")
+      @files[id][:size] = @files[id][:end_offset] - @files[id][:start_offset]
       
       id += 1
       offset += 0x08

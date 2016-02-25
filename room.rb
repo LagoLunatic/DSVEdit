@@ -106,8 +106,7 @@ class Room
           puts "Couldn't find tileset. Possible transition room? wrapper B ram %08X. wrapper A ram: %08X" % [tileset_wrapper_B_ram_pointer, tileset_wrapper_A_ram_pointer]
           break
         end
-        graphic_tile_data_start_offset = file[:start_offset]
-        @graphic_tilesets_for_room << graphic_tile_data_start_offset
+        @graphic_tilesets_for_room << file
         i += 1
       end
     end

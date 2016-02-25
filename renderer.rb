@@ -186,29 +186,24 @@ class Renderer
       tile_page = tile_page | (most_significant_bit << 4)
       
       if graphic_tilesets_for_room.nil?
-        graphic_tile_data_start_offset = nil
+        graphic_tile_data_file = nil
       else
-        #puts graphic_tilesets_for_room.inspect
-        #puts tile_page.inspect
-        graphic_tile_data_start_offset = graphic_tilesets_for_room[tile_page]
-        if graphic_tile_data_start_offset.nil?
-          #puts "%08X" % (tileset_offset + i*4)
-          #puts "graphic_tile_data_start_offset is nil. tile_page: #{tile_page}. length: #{graphic_tilesets_for_room.length}. i: #{i}"
+        graphic_tile_data_file = graphic_tilesets_for_room[tile_page]
+        if graphic_tile_data_file.nil?
           next # TODO: figure out why this sometimes happens.
         end
       end
       
-      #puts "graphic_tile_data_start_offset: %08X" % graphic_tile_data_start_offset
       if palette_index == 0xFF # TODO. 255 seems to have some special meaning besides an actual palette index.
         palette_index = 0x00
       end
       palette = palette_list[palette_index]
       if palette.nil?
-        puts "Palette index #{palette_index} out of range"
+        puts "Palette index #{palette_index} out of range, tileset #{output_filename}"
         next # TODO: figure out why this sometimes happens.
       end
       
-      graphic_tile = render_graphic_tile(graphic_tile_data_start_offset, palette, tile_index_on_page)
+      graphic_tile = render_graphic_tile(graphic_tile_data_file, palette, tile_index_on_page)
       
       if horizontal_flip
         graphic_tile.mirror!
@@ -323,14 +318,14 @@ class Renderer
     return rendered_tileset
   end
   
-  def render_graphic_tile(graphic_tile_data_start_offset, palette, tile_index_on_page)
+  def render_graphic_tile(graphic_tile_data_file, palette, tile_index_on_page)
     graphic_tile = ChunkyPNG::Image.new(16, 16, ChunkyPNG::Color::TRANSPARENT)
     
-    if graphic_tile_data_start_offset.nil?
+    if graphic_tile_data_file.nil? || palette.nil?
       # This room has no graphics, so just return a black tile. Could be a save room, warp room, transition room, etc.
       # TODO: instead it would be better to use the debug squares for these rooms so you can see what's what.
       
-      graphic_tile = ChunkyPNG::Image.new(16, 16, ChunkyPNG::Color::WHITE)
+      graphic_tile = ChunkyPNG::Image.new(16, 16, ChunkyPNG::Color.rgba(255, 0, 0, 255))
       return graphic_tile
     end
     
@@ -353,13 +348,12 @@ class Renderer
       raise "Unknown palette length: #{palette.length}"
     end
     
-    offset = graphic_tile_data_start_offset + y_block_on_tileset*size_of_row_in_bytes + x_block_on_tileset*bytes_per_16_pixels
+    offset = y_block_on_tileset*size_of_row_in_bytes + x_block_on_tileset*bytes_per_16_pixels
     pixel_on_tile = 0
     (0..15).each do |i|
       pixels_for_chunky = []
       
-      #fs.read(offset,bytes_per_16_pixels).each_byte do |byte| #TODO
-      fs.rom[offset,bytes_per_16_pixels].each_byte do |byte|
+      fs.read_by_file(graphic_tile_data_file[:file_path], offset, bytes_per_16_pixels).each_byte do |byte|
         if palette.length == 16
           pixels = [byte & 0b00001111, byte >> 4] # get the low 4 bits, then the high 4 bits (it's reversed). each is one pixel, two pixels total inside this byte.
         elsif palette.length == 256
