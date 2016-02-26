@@ -519,11 +519,11 @@ class TextEditor < Qt::Dialog
         newline_index = string.index("\n")
         string = string[0, newline_index]
       end
-      if text.string.length > 24
-        string = string[0,24]
+      if text.string.length > 18
+        string = string[0,18]
       end
       string += "..." unless string == text.string
-      @ui.text_list.addItem("%03X %s" % [text_id, string])
+      @ui.text_list.addItem("%03X %08X %s" % [text_id, text.string_ram_pointer, string])
     end
     
     connect(@ui.text_list, SIGNAL("currentRowChanged(int)"), self, SLOT("string_changed(int)"))
