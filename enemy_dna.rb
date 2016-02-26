@@ -1,14 +1,15 @@
 
 class EnemyDNA
   attr_reader :enemy_id,
+              :enemy_dna_ram_pointer,
               :fs
   
   attr_accessor :name,
                 :description,
                 :init_ai_ram_pointer,
                 :running_ai_ram_pointer,
-                :item1,
-                :item2,
+                :item_1,
+                :item_2,
                 :unknown_1,
                 :unknown_2,
                 :max_hp,
@@ -54,8 +55,8 @@ class EnemyDNA
     end.pack("C*")
     @description = @description.gsub([0x106].pack("C*"), "\n")
     
-    enemy_dna_ram_pointer = ENEMY_DNA_RAM_START_OFFSET + 36*enemy_id
-      @init_ai_ram_pointer, @running_ai_ram_pointer, @item1, @item2,
+    @enemy_dna_ram_pointer = ENEMY_DNA_RAM_START_OFFSET + 36*enemy_id
+    @init_ai_ram_pointer, @running_ai_ram_pointer, @item_1, @item_2,
       @unknown_1, @unknown_2, @max_hp, @max_mp, @exp, 
       @soul_drop_chance, @attack, @defense, @item_drop_chance, 
       @unknown_3, @soul, @unknown_4, weaknesses,
@@ -65,11 +66,18 @@ class EnemyDNA
   end
   
   def write_to_rom
-    
+    new_data = [@init_ai_ram_pointer, @running_ai_ram_pointer, @item_1, @item_2,
+      @unknown_1, @unknown_2, @max_hp, @max_mp, @exp, 
+      @soul_drop_chance, @attack, @defense, @item_drop_chance, 
+      @unknown_3, @soul, @unknown_4, @weaknesses.value,
+      @unknown_5, @resistances.value, @unknown_6]
+    fs.write(enemy_dna_ram_pointer, new_data.pack("VVvvCCvvvCCCCvCCvvvv"))
   end
 end
 
 class VulnerabilityList
+  attr_reader :value
+  
   def initialize(value)
     @value = value
   end

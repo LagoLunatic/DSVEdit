@@ -139,12 +139,12 @@
              <item row="3" column="0">
               <widget class="QLabel" name="label_4">
                <property name="text">
-                <string>HP</string>
+                <string>Max HP</string>
                </property>
               </widget>
              </item>
              <item row="3" column="1">
-              <widget class="QLineEdit" name="hp">
+              <widget class="QLineEdit" name="max_hp">
                <property name="maximumSize">
                 <size>
                  <width>80</width>
@@ -195,7 +195,7 @@
               </widget>
              </item>
              <item row="6" column="1">
-              <widget class="QLineEdit" name="item_chance">
+              <widget class="QLineEdit" name="item_drop_chance">
                <property name="maximumSize">
                 <size>
                  <width>80</width>
@@ -289,12 +289,12 @@
              <item row="3" column="0">
               <widget class="QLabel" name="label_5">
                <property name="text">
-                <string>MP</string>
+                <string>Max MP</string>
                </property>
               </widget>
              </item>
              <item row="3" column="1">
-              <widget class="QLineEdit" name="mp">
+              <widget class="QLineEdit" name="max_mp">
                <property name="maximumSize">
                 <size>
                  <width>80</width>
@@ -345,7 +345,7 @@
               </widget>
              </item>
              <item row="4" column="1">
-              <widget class="QLineEdit" name="soul_chance">
+              <widget class="QLineEdit" name="soul_drop_chance">
                <property name="maximumSize">
                 <size>
                  <width>80</width>
