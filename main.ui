@@ -136,6 +136,7 @@
      <string>Tools</string>
     </property>
     <addaction name="actionEnemy_Editor"/>
+    <addaction name="actionText_Editor"/>
     <addaction name="actionSettings"/>
     <addaction name="actionBuild"/>
     <addaction name="actionBuild_and_Run"/>
@@ -197,6 +198,14 @@
   <action name="actionOpen_Folder">
    <property name="text">
     <string>Open Folder</string>
+   </property>
+  </action>
+  <action name="actionText_Editor">
+   <property name="text">
+    <string>Text Editor</string>
+   </property>
+   <property name="shortcut">
+    <string>T</string>
    </property>
   </action>
  </widget>

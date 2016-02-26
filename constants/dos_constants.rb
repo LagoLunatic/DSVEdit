@@ -99,6 +99,23 @@ ENEMY_DNA_RAM_START_OFFSET = 0x02078CAC
 ENEMY_NAME_LIST_RAM_POINTER = 0x0222F9A0
 ENEMY_DESCRIPTION_LIST_RAM_POINTER = 0x0222FB78
 
+STRING_RANGE = (0..0x50A)
+STRING_REGIONS = {
+  "Character Names" => (0..0xB),
+  "Item Names" => (0xC..0xD9),
+  "Item Descriptions" => (0xDA..0x1A7),
+  "Enemy Names" => (0x1A8..0x21D),
+  "Enemy Descriptions" => (0x21E..0x293),
+  "Soul Names" => (0x294..0x30E),
+  "Soul Descriptions" => (0x30F..0x389),
+  "Area Names" => (0x38A..0x395),
+  "Music Names" => (0x396..0x3B2),
+  "Misc" => (0x3B3..0x3D8),
+  "Menus" => (0x3D9..0x477),
+  "Library" => (0x478..0x4A5),
+  "Events" => (0x4A6..0x50A)
+}
+
 ENTITY_TYPE_FOR_PICKUPS = 0x04
 
 ENEMY_IDS = (0x00..0x75)

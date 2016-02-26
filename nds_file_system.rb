@@ -122,6 +122,14 @@ class NDSFileSystem
     return file_data[offset_in_file, length]
   end
   
+  def read_until_end_marker(ram_address, end_marker)
+    file_path, offset_in_file = convert_ram_address_to_path_and_offset(ram_address)
+    file_data = get_file_data_from_opened_files_cache(file_path)
+    substring = file_data[offset_in_file..-1]
+    end_index = substring.index([end_marker].pack("C*"))
+    return substring[0,end_index]
+  end
+  
   def write(ram_address, new_data)
     file_path, offset_in_file = convert_ram_address_to_path_and_offset(ram_address)
     write_by_file(file_path, offset_in_file, new_data)

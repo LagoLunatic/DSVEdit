@@ -5,6 +5,7 @@ require 'yaml'
 require_relative 'dsve'
 require_relative 'ui_main'
 require_relative 'ui_enemy'
+require_relative 'ui_text_editor'
 
 class DSVE < Qt::MainWindow
   attr_reader :fs
@@ -13,6 +14,7 @@ class DSVE < Qt::MainWindow
   slots "open_folder_dialog()"
   slots "save_files()"
   slots "open_enemy_dna_dialog()"
+  slots "open_text_editor()"
   slots "write_to_rom()"
   slots "build_and_run()"
   
@@ -44,6 +46,7 @@ class DSVE < Qt::MainWindow
     connect(@ui.actionOpen_Folder, SIGNAL("activated()"), self, SLOT("open_folder_dialog()"))
     connect(@ui.actionSave, SIGNAL("activated()"), self, SLOT("save_files()"))
     connect(@ui.actionEnemy_Editor, SIGNAL("activated()"), self, SLOT("open_enemy_dna_dialog()"))
+    connect(@ui.actionText_Editor, SIGNAL("activated()"), self, SLOT("open_text_editor()"))
     connect(@ui.actionBuild, SIGNAL("activated()"), self, SLOT("write_to_rom()"))
     connect(@ui.actionBuild_and_Run, SIGNAL("activated()"), self, SLOT("build_and_run()"))
     
@@ -270,6 +273,10 @@ class DSVE < Qt::MainWindow
     @enemy_dialog = EnemyEditDialog.new(fs)
   end
   
+  def open_text_editor
+    @text_editor = TextEditor.new(fs)
+  end
+  
   def load_settings
     @settings_path = "settings.yml"
     if File.exist?(@settings_path)
@@ -409,6 +416,47 @@ class EnemyEditDialog < Qt::Dialog
     #@ui.exp.setText(enemy.enemy_gfx_file[:file_path].to_s)
     @ui.init_ai.setText("%08X" % enemy.init_ai_ram_pointer)
     @ui.running_ai.setText("%08X" % enemy.running_ai_ram_pointer)
+  end
+end
+
+class TextEditor < Qt::Dialog
+  slots "string_changed(int)"
+  slots "save_button_pressed()"
+  
+  def initialize(fs)
+    super()
+    @ui = Ui_TextEditor.new
+    @ui.setup_ui(self)
+    
+    @fs = fs
+    
+    @text_list = []
+    STRING_RANGE.each do |text_id|
+      text = Text.new(text_id, fs)
+      @text_list << text
+      string = text.string
+      if string.include?("\n")
+        newline_index = string.index("\n")
+        string = string[0, newline_index]
+      end
+      if text.string.length > 24
+        string = string[0,24]
+      end
+      string += "..." unless string == text.string
+      @ui.text_list.addItem("%03X %s" % [text_id, string])
+    end
+    
+    connect(@ui.text_list, SIGNAL("currentRowChanged(int)"), self, SLOT("string_changed(int)"))
+    
+    self.setWindowFlags(Qt::MSWindowsFixedSizeDialogHint);
+    
+    self.show()
+  end
+  
+  def string_changed(text_id)
+    text = @text_list[text_id]
+    
+    @ui.textEdit.setText(text.string)
   end
 end
 
