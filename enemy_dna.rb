@@ -35,25 +35,8 @@ class EnemyDNA
   end
   
   def read_from_rom
-    name_wrapper_ram_pointer = ENEMY_NAME_LIST_RAM_POINTER + 4*enemy_id
-    name_ram_pointer = fs.read(name_wrapper_ram_pointer, 4).unpack("V").first
-    @name = fs.read(name_ram_pointer+2, 100)
-    name_end = @name.index([0xEA].pack("C*"))
-    @name = @name[0,name_end]
-    @name = @name.unpack("C*").map do |byte|
-      byte + 0x20
-    end.pack("C*")
-    @name = @name.gsub([0x106].pack("C*"), "\n")
-    
-    description_wrapper_ram_pointer = ENEMY_DESCRIPTION_LIST_RAM_POINTER + 4*enemy_id
-    description_ram_pointer = fs.read(description_wrapper_ram_pointer, 4).unpack("V").first
-    @description = fs.read(description_ram_pointer+2, 100)
-    description_end = @description.index([0xEA].pack("C*"))
-    @description = @description[0,description_end]
-    @description = @description.unpack("C*").map do |byte|
-      byte + 0x20
-    end.pack("C*")
-    @description = @description.gsub([0x106].pack("C*"), "\n")
+    @name = Text.new(STRING_REGIONS["Enemy Names"].begin + enemy_id, fs)
+    @description = Text.new(STRING_REGIONS["Enemy Descriptions"].begin + enemy_id, fs)
     
     @enemy_dna_ram_pointer = ENEMY_DNA_RAM_START_OFFSET + 36*enemy_id
     @init_ai_ram_pointer, @running_ai_ram_pointer, @item_1, @item_2,

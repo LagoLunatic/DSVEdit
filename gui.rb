@@ -389,7 +389,7 @@ class EnemyEditDialog < Qt::Dialog
     ENEMY_IDS.each do |enemy_id|
       enemy = EnemyDNA.new(enemy_id, fs)
       @enemies << enemy
-      @ui.enemy_list.addItem("%03d %s" % [enemy_id+1, enemy.name])
+      @ui.enemy_list.addItem("%03d %s" % [enemy_id+1, enemy.name.string])
     end
     connect(@ui.enemy_list, SIGNAL("currentRowChanged(int)"), self, SLOT("enemy_changed(int)"))
     
@@ -412,8 +412,8 @@ class EnemyEditDialog < Qt::Dialog
   def enemy_changed(enemy_id)
     enemy = @enemies[enemy_id]
     
-    @ui.name.setText(enemy.name.to_s)
-    @ui.desc.setPlainText(enemy.description.to_s)
+    @ui.name.setText(enemy.name.string)
+    @ui.desc.setPlainText(enemy.description.string)
     
     @ui.init_ai.setText("%08X" % enemy.init_ai_ram_pointer)
     @ui.running_ai.setText("%08X" % enemy.running_ai_ram_pointer)
