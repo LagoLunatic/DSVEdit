@@ -113,6 +113,7 @@ STRING_REGIONS = {
   "Library" => (0x478..0x4A5),
   "Events" => (0x4A6..0x50A)
 }
+STRING_REGIONS_OVERLAYS = {}
 
 ENTITY_TYPE_FOR_PICKUPS = 0x04
 

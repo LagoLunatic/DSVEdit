@@ -178,6 +178,29 @@ COMMON_ENEMY_IDS = (0x00..0x6A).to_a
 BOSS_IDS = (0x6B..0x78).to_a
 VERY_LARGE_ENEMIES = []
 
+STRING_LIST_START_OFFSET = 0x021FACC0
+STRING_RANGE = (0..0x764)
+STRING_REGIONS = {
+  "Character Names" => (0..0x15),
+  "Glyph & Item Names" => (0x16..0x177),
+  "Glyph & Item Descriptions" => (0x178..0x2D9),
+  "Enemy Names" => (0x2DA..0x352),
+  "Enemy Descriptions" => (0x353..0x3CB),
+  "Misc" => (0x3CC..0x407),
+  "Menus" => (0x408..0x65F),
+  "Events" => (0x660..0x764)
+}
+STRING_REGIONS_OVERLAYS = {
+  "Character Names" => 0,
+  "Glyph & Item Names" => 0,
+  "Glyph & Item Descriptions" => 0,
+  "Enemy Names" => 0,
+  "Enemy Descriptions" => 0,
+  "Misc" => 0,
+  "Menus" => 0,
+  "Events" => 0
+}
+
 ENTITY_TYPE_FOR_PICKUPS = 0x02
 
 NEW_GAME_STARTING_AREA_INDEX_OFFSET = 0x020AC14C

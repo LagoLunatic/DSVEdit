@@ -123,7 +123,7 @@ SECTOR_INDEX_TO_SECTOR_NAME = {
   },
 }
 
-CONSTANT_OVERLAYS = []
+CONSTANT_OVERLAYS = [0, 5, 6, 7, 8]
 
 INVALID_ROOMS = [0x020E5AD0, 0x020E62E0, 0x020E6300, 0x020E5BA0, 0x020E6320, 0x020E6610, 0x020E7388, 0x020E7780, 0x020E7850]
 
@@ -152,6 +152,39 @@ OVERLAY_ROM_INFO_START_OFFSET = 0x67FE00
 
 ENTITY_BLOCK_START_OFFSET = 0x3798D8
 ENTITY_BLOCK_END_OFFSET   = 0x6344D1 # guess
+
+STRING_LIST_START_OFFSET = 0x0221BA50
+STRING_RANGE = (0..0x748)
+STRING_REGIONS = {
+  "Character Names" => (0..0xB),
+  "Item Names" => (0xC..0x15B),
+  "Item Descriptions" => (0x15C..0x2AB),
+  "Enemy Names" => (0x2AC..0x348),
+  "Enemy Descriptions" => (0x349..0x3E5),
+  "Skill Names" => (0x3E6..0x451),
+  "Skill Descriptions" => (0x452..0x4BD),
+  "Area Names (Unused)" => (0x4BE..0x4C9),
+  "Music Names (Unused)" => (0x4CA..0x4E6),
+  "Misc" => (0x4E7..0x51F),
+  "Menus" => (0x520..0x6BD),
+  "Events" => (0x6BE..0x747),
+  "Debug" => (0x748..0x748)
+}
+STRING_REGIONS_OVERLAYS = {
+  "Character Names" => 2,
+  "Item Names" => 1,
+  "Item Descriptions" => 1,
+  "Enemy Names" => 1,
+  "Enemy Descriptions" => 1,
+  "Skill Names" => 1,
+  "Skill Descriptions" => 1,
+  "Area Names (Unused)" => 1,
+  "Music Names (Unused)" => 1,
+  "Misc" => 1,
+  "Menus" => 1,
+  "Events" => 2,
+  "Debug" => 1
+}
 
 ENTITY_TYPE_FOR_PICKUPS = 0x04
 
