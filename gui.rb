@@ -392,6 +392,16 @@ class EnemyEditDialog < Qt::Dialog
     end
     connect(@ui.enemy_list, SIGNAL("currentRowChanged(int)"), self, SLOT("enemy_changed(int)"))
     
+    (0..15).each do |i|
+      Qt::TreeWidgetItem.new(@ui.treeWidget)
+      element_item = @ui.treeWidget.topLevelItem(i)
+      
+      element_item.setText(0, WEAKNESS_LIST[i])
+      element_item.setText(1, RESISTANCE_LIST[i])
+    end
+    @ui.treeWidget.setColumnWidth(0, 150)
+    @ui.treeWidget.setColumnWidth(1, 150)
+    
     self.setWindowFlags(Qt::MSWindowsFixedSizeDialogHint);
     
     self.show()
@@ -403,19 +413,42 @@ class EnemyEditDialog < Qt::Dialog
     @ui.name.setText(enemy.name.to_s)
     @ui.desc.setPlainText(enemy.description.to_s)
     
-    @ui.item_1.setText(enemy.item1.to_s)
-    @ui.item_2.setText(enemy.item2.to_s)
-    @ui.hp.setText(enemy.max_hp.to_s)
-    @ui.mp.setText(enemy.max_mp.to_s)
-    @ui.attack.setText(enemy.attack.to_s)
-    @ui.defense.setText(enemy.defense.to_s)
-    @ui.soul.setText(enemy.soul.to_s)
-    @ui.soul_chance.setText(enemy.soul_drop_chance.to_s)
-    @ui.item_chance.setText(enemy.item_drop_chance.to_s)
-    @ui.exp.setText(enemy.exp.to_s)
-    #@ui.exp.setText(enemy.enemy_gfx_file[:file_path].to_s)
     @ui.init_ai.setText("%08X" % enemy.init_ai_ram_pointer)
     @ui.running_ai.setText("%08X" % enemy.running_ai_ram_pointer)
+    @ui.item_1.setText(enemy.item1.to_s)
+    @ui.item_2.setText(enemy.item2.to_s)
+    @ui.unknown_1.setText(enemy.unknown_1.to_s)
+    @ui.unknown_2.setText(enemy.unknown_2.to_s)
+    @ui.hp.setText(enemy.max_hp.to_s)
+    @ui.mp.setText(enemy.max_mp.to_s)
+    @ui.exp.setText(enemy.exp.to_s)
+    @ui.soul_chance.setText(enemy.soul_drop_chance.to_s)
+    @ui.attack.setText(enemy.attack.to_s)
+    @ui.defense.setText(enemy.defense.to_s)
+    @ui.item_chance.setText(enemy.item_drop_chance.to_s)
+    @ui.unknown_3.setText(enemy.unknown_3.to_s)
+    @ui.soul.setText(enemy.soul.to_s)
+    @ui.unknown_4.setText(enemy.unknown_4.to_s)
+    @ui.unknown_5.setText(enemy.unknown_5.to_s)
+    @ui.unknown_6.setText(enemy.unknown_6.to_s)
+    #@ui.exp.setText(enemy.enemy_gfx_file[:file_path].to_s)
+    
+    (0..15).each do |i|
+      element_item = @ui.treeWidget.topLevelItem(i)
+      
+      if enemy.weaknesses[i]
+        element_item.setCheckState(0, Qt::Checked)
+      else
+        element_item.setCheckState(0, Qt::Unchecked)
+      end
+      
+      if enemy.resistances[i]
+        element_item.setCheckState(1, Qt::Checked)
+      else
+        element_item.setCheckState(1, Qt::Unchecked)
+      end
+    end
+  end
   end
 end
 

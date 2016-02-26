@@ -139,3 +139,40 @@ ITEM_BYTE_11_RANGE_FOR_PASSIVES = (0x74..0x7A) # aka ability souls in DoS.
 NEW_GAME_STARTING_AREA_INDEX_OFFSET = nil
 NEW_GAME_STARTING_SECTOR_INDEX_OFFSET = 0x0202FB84
 NEW_GAME_STARTING_ROOM_INDEX_OFFSET = 0x0202FB90
+
+WEAKNESS_LIST = [
+  "Clubs",
+  "Spears",
+  "Swords",
+  "Fire",
+  "Water",
+  "Lightning",
+  "Dark",
+  "Holy",
+  "Poison",
+  "Curse",
+  "Earth",
+  "Weakness 12",
+  "Weakness 13",
+  "Weakness 14",
+  "Weakness 15",
+  "Weakness 16",
+]
+RESISTANCE_LIST = [
+  "Clubs",
+  "Spears",
+  "Swords",
+  "Fire",
+  "Water",
+  "Lightning",
+  "Dark",
+  "Holy",
+  "Poison",
+  "Curse",
+  "Earth",
+  "Resistance 12",
+  "Time Stop",
+  "Resistance 14",
+  "Resistance 15",
+  "Resistance 16",
+]

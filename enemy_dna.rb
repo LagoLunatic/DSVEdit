@@ -1,23 +1,30 @@
 
 class EnemyDNA
   attr_reader :enemy_id,
-              :fs,
-              :name,
-              :description,
-              :item1,
-              :item2,
-              :max_hp,
-              :max_mp,
-              :exp,
-              :soul_drop_chance,
-              :attack,
-              :defense,
-              :item_drop_chance,
-              :soul,
-              :weaknesses,
-              :resistances,
-              :init_ai_ram_pointer,
-              :running_ai_ram_pointer
+              :fs
+  
+  attr_accessor :name,
+                :description,
+                :init_ai_ram_pointer,
+                :running_ai_ram_pointer,
+                :item1,
+                :item2,
+                :unknown_1,
+                :unknown_2,
+                :max_hp,
+                :max_mp,
+                :exp,
+                :soul_drop_chance,
+                :attack,
+                :defense,
+                :item_drop_chance,
+                :unknown_3,
+                :soul,
+                :unknown_4,
+                :weaknesses,
+                :unknown_5,
+                :resistances,
+                :unknown_6
   
   def initialize(enemy_id, fs)
     @enemy_id = enemy_id
@@ -49,13 +56,33 @@ class EnemyDNA
     
     enemy_dna_ram_pointer = ENEMY_DNA_RAM_START_OFFSET + 36*enemy_id
       @init_ai_ram_pointer, @running_ai_ram_pointer, @item1, @item2,
-      _, @max_hp, @max_mp, @exp, 
+      @unknown_1, @unknown_2, @max_hp, @max_mp, @exp, 
       @soul_drop_chance, @attack, @defense, @item_drop_chance, 
-      _, @soul, _, @weaknesses,
-      _, @resistances, _ = fs.read(enemy_dna_ram_pointer, 36).unpack("VVvvvvvvCCCCvCCvvvv")
+      @unknown_3, @soul, @unknown_4, weaknesses,
+      @unknown_5, resistances, @unknown_6 = fs.read(enemy_dna_ram_pointer, 36).unpack("VVvvCCvvvCCCCvCCvvvv")
+    @weaknesses = VulnerabilityList.new(weaknesses)
+    @resistances = VulnerabilityList.new(resistances)
   end
   
   def write_to_rom
     
+  end
+end
+
+class VulnerabilityList
+  def initialize(value)
+    @value = value
+  end
+  
+  def [](index)
+    return ((@value >> index) & 0b1) > 0
+  end
+  
+  def []=(index, bool)
+    if bool
+      @value |= (1 << index)
+    else
+      @value &= ~(1 << index)
+    end
   end
 end
