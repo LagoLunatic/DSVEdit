@@ -11,6 +11,7 @@ require_relative 'door'
 require_relative 'map'
 require_relative 'enemy_dna'
 require_relative 'text'
+require_relative 'text_database'
 
 require_relative 'randomizer'
 

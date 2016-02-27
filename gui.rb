@@ -502,6 +502,7 @@ end
 class TextEditor < Qt::Dialog
   slots "string_changed(int)"
   slots "save_button_pressed()"
+  slots "button_pressed(QAbstractButton*)"
   
   def initialize(fs)
     super()
@@ -510,10 +511,9 @@ class TextEditor < Qt::Dialog
     
     @fs = fs
     
-    @text_list = []
-    STRING_RANGE.each do |text_id|
-      text = Text.new(text_id, fs)
-      @text_list << text
+    @text_database = TextDatabase.new(fs)
+    
+    @text_database.text_list.each do |text|
       string = text.string
       if string.include?("\n")
         newline_index = string.index("\n")
@@ -523,10 +523,11 @@ class TextEditor < Qt::Dialog
         string = string[0,18]
       end
       string += "..." unless string == text.string
-      @ui.text_list.addItem("%03X %08X %s" % [text_id, text.string_ram_pointer, string])
+      @ui.text_list.addItem("%03X %08X %s" % [text.text_id, text.string_ram_pointer, string])
     end
     
     connect(@ui.text_list, SIGNAL("currentRowChanged(int)"), self, SLOT("string_changed(int)"))
+    connect(@ui.buttonBox, SIGNAL("clicked(QAbstractButton*)"), self, SLOT("button_pressed(QAbstractButton*)"))
     
     self.setWindowFlags(Qt::MSWindowsFixedSizeDialogHint);
     
@@ -534,9 +535,24 @@ class TextEditor < Qt::Dialog
   end
   
   def string_changed(text_id)
-    text = @text_list[text_id]
+    text = @text_database.text_list[text_id]
     
-    @ui.textEdit.setText(text.string)
+    @ui.textEdit.setPlainText(text.string)
+  end
+  
+  def button_pressed(button)
+    if @ui.buttonBox.standardButton(button) == Qt::DialogButtonBox::Apply
+      save_current_text()
+    end
+  end
+  
+  def save_current_text
+    text = @text_database.text_list[@ui.text_list.currentRow]
+    
+    text.string = @ui.textEdit.toPlainText()
+    text.write_to_rom()
+    
+    #@text_database.write_to_rom()
   end
 end
 

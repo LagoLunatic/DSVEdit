@@ -1,9 +1,10 @@
 
 class Text
   attr_reader :text_id,
-              :string_ram_pointer,
-              :string,
+              :text_ram_pointer,
               :fs
+  attr_accessor :string_ram_pointer,
+                :string
   
   def initialize(text_id, fs)
     @text_id = text_id
@@ -18,15 +19,25 @@ class Text
       fs.load_overlay(STRING_REGIONS_OVERLAYS[region_name])
     end
     
-    @string_ram_pointer = fs.read(STRING_LIST_START_OFFSET + 4*text_id, 4).unpack("V").first
+    @text_ram_pointer = STRING_LIST_START_OFFSET + 4*text_id
+    @string_ram_pointer = fs.read(@text_ram_pointer, 4).unpack("V").first
     @string = fs.read_until_end_marker(string_ram_pointer+2, 0xEA) # Skip the first 2 bytes which are always 01 00.
     
     @string = decode_string(@string)
   end
   
+  def write_to_rom
+    fs.write(text_ram_pointer, [string_ram_pointer].pack("V"))
+    fs.write(string_ram_pointer, [1].pack("v"))
+    
+    encoded_string = encode_string(@string)
+    fs.write(string_ram_pointer+2, encoded_string)
+    fs.write(string_ram_pointer+2+encoded_string.length, [0xEA].pack("C"))
+  end
+  
   def decode_string(string)
     previous_byte = nil
-    string = string.each_char.map do |char|
+    decoded_string = string.each_char.map do |char|
       byte = char.unpack("C").first
       
       char = case previous_byte
@@ -76,6 +87,61 @@ class Text
       char
     end.join
     
-    return string
+    return decoded_string
+  end
+  
+  def encode_string(string)
+    encoded_string = string.scan(/\{[^\}]+\}|./m).map do |str|
+      if str.length > 1
+        str =~ /\{([A-Z]+)(?: (?:0x)?([^\}]+))?\}/
+        
+        case $1
+        when "RAW"
+          byte = $2.to_i(16)
+          [byte].pack("C")
+        when "BUTTON"
+          button_index = %w(L R A B X Y LEFT RIGHT UP DOWN).index($2)
+          [0xEB + button_index].pack("C")
+        when "PORTRAIT"
+          byte = $2.to_i(16)
+          [0xE3, byte].pack("C")
+        when "NEXTPAGE"
+          byte = case $2
+          when "SAMECHAR"
+            0xE4
+          when "NEWCHAR"
+            0xE9
+          else
+            $2.to_i(16)
+          end
+          [0xE5, byte].pack("C")
+        when "CHARACTER"
+          byte = $2.to_i(16)
+          [0xE7, byte].pack("C")
+        when "NEXTACTION"
+          [0xE2, 0x01].pack("C")
+        when "E2"
+          byte = $2.to_i(16)
+          [0xE2, byte].pack("C")
+        else
+          raise "Failed to encode: #{str.inspect}"
+        end
+      else
+        byte = str.unpack("C").first
+        
+        puts byte.to_s(16).inspect
+        char = case byte
+        when 0x20..0x7A # Ascii text
+          [byte - 0x20].pack("C")
+        when 0x0A # Newline
+          [0xE6].pack("C")
+        end
+        puts char.inspect
+        
+        char
+      end
+    end.join
+    
+    return encoded_string
   end
 end
