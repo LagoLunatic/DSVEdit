@@ -68,8 +68,7 @@ class DSVE < Qt::MainWindow
   def open_rom_dialog
     rom_path = Qt::FileDialog.getOpenFileName(self, "Select ROM", nil, "NDS ROM Files (*.nds)")
     return if rom_path.nil?
-    folder = Qt::FileDialog.getExistingDirectory(self, "Select folder to extract files to")
-    return if folder.nil?
+    folder = File.dirname(rom_path)
     open_rom(rom_path, folder)
   end
   
@@ -87,7 +86,8 @@ class DSVE < Qt::MainWindow
     verify_game_and_load_constants(rom_path)
     
     @fs = NDSFileSystem.new
-    folder = File.join(folder, "extracted_files_#{GAME}")
+    rom_name = File.basename(rom_path, ".*")
+    folder = File.join(folder, "Extracted files #{rom_name}")
     fs.open_and_extract_rom(rom_path, folder)
     CONSTANT_OVERLAYS.each do |overlay_index|
       fs.load_overlay(overlay_index)
@@ -95,6 +95,8 @@ class DSVE < Qt::MainWindow
     @renderer = Renderer.new(fs)
     
     initialize_dropdowns()
+    
+    @settings[:last_used_folder] = folder
   end
   
   def open_folder(folder_path)
