@@ -31,11 +31,7 @@ class NDSFileSystem
         next
       end
       
-      path = File.join(@filesystem_directory, file[:file_path])
-      next unless File.file?(path)
-      raise "File not found: #{path}" unless File.exist?(path)
-      
-      file_data = File.open(path, "rb") {|file| file.read}
+      file_data = get_file_data_from_opened_files_cache(file[:file_path])
       new_file_size = file_data.length
       
       new_end_offset = new_start_offset + new_file_size
@@ -57,8 +53,7 @@ class NDSFileSystem
     
     # Update arm9
     file = @extra_files.find{|file| file[:name] == "arm9.bin"}
-    path = File.join(@filesystem_directory, file[:file_path])
-    file_data = File.open(path, "rb") {|file| file.read}
+    file_data = get_file_data_from_opened_files_cache(file[:file_path])
     new_file_size = file_data.length
     if @arm9_size != new_file_size
       raise "ARM9 changed size"
@@ -141,19 +136,21 @@ class NDSFileSystem
   def write_by_file(file_path, offset_in_file, new_data)
     file_data = get_file_data_from_opened_files_cache(file_path)
     file_data[offset_in_file, new_data.length] = new_data
-    @uncommitted_files[file_path] = file_data
+    @opened_files_cache[file_path] = file_data
+    @uncommitted_files << file_path
   end
   
   def commit_file_changes
     print "Committing changes to filesystem... "
     
-    @uncommitted_files.each do |file_path, file_data|
-      path = File.join(@filesystem_directory, file_path)
+    @uncommitted_files.each do |file_path|
+      file_data = get_file_data_from_opened_files_cache(file_path)
+      full_path = File.join(@filesystem_directory, file_path)
       File.open(path, "rb+") do |f|
-        f.write(file_data)
+        f.write(full_path)
       end
     end
-    @uncommitted_files = {}
+    @uncommitted_files = []
     
     puts "Done."
   end
@@ -207,7 +204,7 @@ private
     @overlays = []
     @currently_loaded_files = {}
     @opened_files_cache = {}
-    @uncommitted_files = {}
+    @uncommitted_files = []
     
     get_file_name_table()
     get_overlay_table()
