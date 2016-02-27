@@ -57,7 +57,9 @@ class DSVE < Qt::MainWindow
     connect(@ui.tiled_import, SIGNAL("released()"), self, SLOT("import_from_tiled()"))
     
     load_settings()
-    open_folder(@settings[:last_used_folder])
+    if @settings[:last_used_folder] && File.directory?(@settings[:last_used_folder])
+      open_folder(@settings[:last_used_folder])
+    end
     
     self.setWindowState(Qt::WindowMaximized)
     self.show()
