@@ -146,8 +146,8 @@ class NDSFileSystem
     @uncommitted_files.each do |file_path|
       file_data = get_file_data_from_opened_files_cache(file_path)
       full_path = File.join(@filesystem_directory, file_path)
-      File.open(path, "rb+") do |f|
-        f.write(full_path)
+      File.open(full_path, "rb+") do |f|
+        f.write(file_data)
       end
     end
     @uncommitted_files = []
