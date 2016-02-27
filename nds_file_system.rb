@@ -119,6 +119,9 @@ class NDSFileSystem
   
   def read_by_file(file_path, offset_in_file, length)
     file_data = get_file_data_from_opened_files_cache(file_path)
+    if offset_in_file + length > file_data.length
+      raise "Offset is past end of file"
+    end
     return file_data[offset_in_file, length]
   end
   

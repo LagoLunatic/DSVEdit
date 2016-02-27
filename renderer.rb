@@ -353,7 +353,7 @@ class Renderer
     (0..15).each do |i|
       pixels_for_chunky = []
       
-      fs.read_by_file(graphic_tile_data_file[:file_path], offset, bytes_per_16_pixels).each_byte do |byte|
+      fs.rom[graphic_tile_data_file[:start_offset] + offset, bytes_per_16_pixels].each_byte do |byte|
         if palette.length == 16
           pixels = [byte & 0b00001111, byte >> 4] # get the low 4 bits, then the high 4 bits (it's reversed). each is one pixel, two pixels total inside this byte.
         elsif palette.length == 256
