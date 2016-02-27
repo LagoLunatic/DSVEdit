@@ -46,11 +46,11 @@ class Text
       when 0xE5
         case byte
         when 0xE4
-          "{NEXTPAGE SAMECHAR}\n"
+          "{NEXTPAGE NEWCHAR}"
         when 0xE9
-          "{NEXTPAGE NEWCHAR}\n"
+          "{NEXTPAGE SAMECHAR}"
         else
-          "{NEXTPAGE 0x%02X}\n" % byte
+          "{NEXTPAGE 0x%02X}" % byte
         end
       when 0xE7
         "{CHARACTER 0x%02X}" % byte
@@ -93,7 +93,7 @@ class Text
   def encode_string(string)
     encoded_string = string.scan(/\{[^\}]+\}|./m).map do |str|
       if str.length > 1
-        str =~ /\{([A-Z]+)(?: (?:0x)?([^\}]+))?\}/
+        str =~ /\{([A-Z0-9]+)(?: (?:0x)?([^\}]+))?\}/
         
         case $1
         when "RAW"
@@ -104,39 +104,37 @@ class Text
           [0xEB + button_index].pack("C")
         when "PORTRAIT"
           byte = $2.to_i(16)
-          [0xE3, byte].pack("C")
+          [0xE3, byte].pack("CC")
         when "NEXTPAGE"
           byte = case $2
-          when "SAMECHAR"
-            0xE4
           when "NEWCHAR"
+            0xE4
+          when "SAMECHAR"
             0xE9
           else
             $2.to_i(16)
           end
-          [0xE5, byte].pack("C")
+          [0xE5, byte].pack("CC")
         when "CHARACTER"
           byte = $2.to_i(16)
-          [0xE7, byte].pack("C")
+          [0xE7, byte].pack("CC")
         when "NEXTACTION"
-          [0xE2, 0x01].pack("C")
+          [0xE2, 0x01].pack("CC")
         when "E2"
           byte = $2.to_i(16)
-          [0xE2, byte].pack("C")
+          [0xE2, byte].pack("CC")
         else
           raise "Failed to encode: #{str.inspect}"
         end
       else
         byte = str.unpack("C").first
         
-        puts byte.to_s(16).inspect
         char = case byte
         when 0x20..0x7A # Ascii text
           [byte - 0x20].pack("C")
         when 0x0A # Newline
           [0xE6].pack("C")
         end
-        puts char.inspect
         
         char
       end
