@@ -9,6 +9,8 @@ class Randomizer
     @options = options
     @allow_randomization_between_items_skills_passives = true
     
+    @next_available_item_id = 0
+    
     @log = File.open("./logs/random.txt", "a")
     if seed
       @rng = Random.new(seed)
@@ -104,9 +106,13 @@ class Randomizer
     pickup.subtype = [0x15, 0x16, 0x02].sample(random: rng)
     case pickup.subtype
     when 0x15
+      pickup.var_a = rng.rand(0x00..0x0F)
+      pickup.var_b = 0
     when 0x16
       # Chest
-      pickup.var_a = rng.rand(0x00..0xFF)
+      pickup.var_a = rng.rand(0x0070..0x0162)
+      pickup.var_b = @next_available_item_id
+      @next_available_item_id += 1
     when 0x02
       # Glyph statue
       pickup.var_a = 0x00
