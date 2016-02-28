@@ -551,8 +551,11 @@ class TextEditor < Qt::Dialog
     
     text.decoded_string = @ui.textEdit.toPlainText()
     
-    text.write_to_rom()
-    #@text_database.write_to_rom()
+    if GAME == "dos"
+      @text_database.write_to_rom()
+    else
+      text.write_to_rom()
+    end
   end
 end
 
