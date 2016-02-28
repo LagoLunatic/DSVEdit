@@ -241,9 +241,9 @@ ENEMY_DNA_BITFIELD_ATTRIBUTES = {
   ],
 }
 
-STRING_LIST_START_OFFSET = 0x021FACC0
-STRING_RANGE = (0..0x764)
-STRING_REGIONS = {
+TEXT_LIST_START_OFFSET = 0x021FACC0
+TEXT_RANGE = (0..0x764)
+TEXT_REGIONS = {
   "Character Names" => (0..0x15),
   "Glyph & Item Names" => (0x16..0x177),
   "Glyph & Item Descriptions" => (0x178..0x2D9),
@@ -253,7 +253,7 @@ STRING_REGIONS = {
   "Menus" => (0x408..0x65F),
   "Events" => (0x660..0x764)
 }
-STRING_REGIONS_OVERLAYS = {
+TEXT_REGIONS_OVERLAYS = {
   "Character Names" => 0,
   "Glyph & Item Names" => 0,
   "Glyph & Item Descriptions" => 0,
