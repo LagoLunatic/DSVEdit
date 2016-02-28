@@ -514,15 +514,15 @@ class TextEditor < Qt::Dialog
     @text_database = TextDatabase.new(fs)
     
     @text_database.text_list.each do |text|
-      string = text.string
+      string = text.decoded_string
       if string.include?("\n")
         newline_index = string.index("\n")
         string = string[0, newline_index]
       end
-      if text.string.length > 18
+      if string.length > 18
         string = string[0,18]
       end
-      string += "..." unless string == text.string
+      string += "..." unless string == text.decoded_string
       @ui.text_list.addItem("%03X %08X %s" % [text.text_id, text.string_ram_pointer, string])
     end
     
@@ -537,7 +537,7 @@ class TextEditor < Qt::Dialog
   def string_changed(text_id)
     text = @text_database.text_list[text_id]
     
-    @ui.textEdit.setPlainText(text.string)
+    @ui.textEdit.setPlainText(text.decoded_string)
   end
   
   def button_pressed(button)
@@ -549,7 +549,7 @@ class TextEditor < Qt::Dialog
   def save_current_text
     text = @text_database.text_list[@ui.text_list.currentRow]
     
-    text.string = @ui.textEdit.toPlainText()
+    text.decoded_string = @ui.textEdit.toPlainText()
     
     text.write_to_rom()
     #@text_database.write_to_rom()

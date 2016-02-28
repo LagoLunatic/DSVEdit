@@ -4,7 +4,8 @@ class Text
               :text_ram_pointer,
               :fs
   attr_accessor :string_ram_pointer,
-                :string
+                :decoded_string,
+                :encoded_string
   
   def initialize(text_id, fs)
     @text_id = text_id
@@ -21,18 +22,27 @@ class Text
     
     @text_ram_pointer = STRING_LIST_START_OFFSET + 4*text_id
     @string_ram_pointer = fs.read(@text_ram_pointer, 4).unpack("V").first
-    @string = fs.read_until_end_marker(string_ram_pointer+2, 0xEA) # Skip the first 2 bytes which are always 01 00.
+    @encoded_string = fs.read_until_end_marker(string_ram_pointer+2, 0xEA) # Skip the first 2 bytes which are always 01 00.
     
-    @string = decode_string(@string)
+    @decoded_string = decode_string(@encoded_string)
   end
   
   def write_to_rom
     fs.write(text_ram_pointer, [string_ram_pointer].pack("V"))
     fs.write(string_ram_pointer, [1].pack("v"))
     
-    encoded_string = encode_string(@string)
     fs.write(string_ram_pointer+2, encoded_string)
     fs.write(string_ram_pointer+2+encoded_string.length, [0xEA].pack("C"))
+  end
+  
+  def decoded_string=(new_str)
+    @decoded_string = new_str
+    @encoded_string = encode_string(new_str)
+  end
+  
+  def encoded_string=(new_str)
+    @encoded_string = new_str
+    @decoded_string = decode_string(new_str)
   end
   
   def decode_string(string)
