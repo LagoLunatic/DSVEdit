@@ -69,9 +69,16 @@ class RandomizerWindow < Qt::Dialog
     end
     
     game = Game.new
-    #game.initialize_from_rom(@ui.clean_rom.text)
-    game.initialize_from_folder(File.join(File.dirname(@ui.clean_rom.text), "extracted_files_por"))
-    randomizer = Randomizer.new(seed)
+    rom_name = File.basename(@ui.clean_rom.text, ".*")
+    folder = File.dirname(@ui.clean_rom.text)
+    folder = File.join(folder, "Extracted files #{rom_name}")
+    if File.directory?(folder)
+      game.initialize_from_folder(folder)
+    else
+      game.initialize_from_rom(@ui.clean_rom.text)
+    end
+    
+    randomizer = Randomizer.new(seed, :randomize_enemies => @ui.randomize_enemies.checked())
     
     game.each_room do |room|
       #puts "%08X" % room.room_metadata_ram_pointer

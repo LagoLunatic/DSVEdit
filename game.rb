@@ -24,7 +24,8 @@ class Game
     verify_game_and_load_constants(input_rom_path)
     
     folder = File.dirname(input_rom_path)
-    folder = File.join(folder, "extracted_files_#{GAME}")
+    rom_name = File.basename(input_rom_path, ".*")
+    folder = File.join(folder, "Extracted files #{rom_name}")
     
     @fs = NDSFileSystem.new
     fs.open_and_extract_rom(input_rom_path, folder)

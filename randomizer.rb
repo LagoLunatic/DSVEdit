@@ -1,14 +1,12 @@
 
 class Randomizer
-  attr_reader :randomize_enemies,
-              :randomize_bosses,
+  attr_reader :options,
               :allow_randomization_between_items_skills_passives,
               :rng,
               :log
   
-  def initialize(seed)
-    @randomize_enemies = true
-    @randomize_bosses = false
+  def initialize(seed, options={})
+    @options = options
     @allow_randomization_between_items_skills_passives = true
     
     @log = File.open("./logs/random.txt", "a")
@@ -46,11 +44,11 @@ class Randomizer
   end
   
   def randomize_enemy(enemy)
-    return unless randomize_enemies
+    return unless options[:randomize_enemies]
     
     available_enemy_ids_for_entity = nil
     if enemy.is_boss?
-      return unless randomize_bosses
+      return unless options[:randomize_bosses]
       available_enemy_ids_for_entity = BOSS_IDS
     elsif enemy.is_common_enemy?
       available_enemy_ids_for_entity = COMMON_ENEMY_IDS.dup
