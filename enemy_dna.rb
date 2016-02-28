@@ -6,26 +6,8 @@ class EnemyDNA
   
   attr_accessor :name,
                 :description,
-                :init_ai_ram_pointer,
-                :running_ai_ram_pointer,
-                :item_1,
-                :item_2,
-                :unknown_1,
-                :unknown_2,
-                :max_hp,
-                :max_mp,
-                :exp,
-                :soul_drop_chance,
-                :attack,
-                :defense,
-                :item_drop_chance,
-                :unknown_3,
-                :soul,
-                :unknown_4,
-                :weaknesses,
-                :unknown_5,
-                :resistances,
-                :unknown_6
+                :dna_attributes,
+                :dna_attribute_bitfields
   
   def initialize(enemy_id, fs)
     @enemy_id = enemy_id
@@ -38,23 +20,49 @@ class EnemyDNA
     @name = Text.new(STRING_REGIONS["Enemy Names"].begin + enemy_id, fs)
     @description = Text.new(STRING_REGIONS["Enemy Descriptions"].begin + enemy_id, fs)
     
-    @enemy_dna_ram_pointer = ENEMY_DNA_RAM_START_OFFSET + 36*enemy_id
-    @init_ai_ram_pointer, @running_ai_ram_pointer, @item_1, @item_2,
-      @unknown_1, @unknown_2, @max_hp, @max_mp, @exp, 
-      @soul_drop_chance, @attack, @defense, @item_drop_chance, 
-      @unknown_3, @soul, @unknown_4, weaknesses,
-      @unknown_5, resistances, @unknown_6 = fs.read(enemy_dna_ram_pointer, 36).unpack("VVvvCCvvvCCCCvCCvvvv")
-    @weaknesses = VulnerabilityList.new(weaknesses)
-    @resistances = VulnerabilityList.new(resistances)
+    @enemy_dna_ram_pointer = ENEMY_DNA_RAM_START_OFFSET + ENEMY_DNA_LENGTH*enemy_id
+    
+    @dna_attributes = {}
+    @dna_attribute_bitfields = {}
+    attributes = fs.read(enemy_dna_ram_pointer, ENEMY_DNA_LENGTH).unpack(attribute_format_string)
+    ENEMY_DNA_FORMAT.each do |attribute_length, attribute_name, attribute_type|
+      case attribute_type
+      when :bitfield
+        @dna_attribute_bitfields[attribute_name] = VulnerabilityList.new(attributes.shift)
+      else
+        @dna_attributes[attribute_name] = attributes.shift
+      end
+    end
   end
   
   def write_to_rom
-    new_data = [@init_ai_ram_pointer, @running_ai_ram_pointer, @item_1, @item_2,
-      @unknown_1, @unknown_2, @max_hp, @max_mp, @exp, 
-      @soul_drop_chance, @attack, @defense, @item_drop_chance, 
-      @unknown_3, @soul, @unknown_4, @weaknesses.value,
-      @unknown_5, @resistances.value, @unknown_6]
-    fs.write(enemy_dna_ram_pointer, new_data.pack("VVvvCCvvvCCCCvCCvvvv"))
+    new_data = []
+    ENEMY_DNA_FORMAT.each do |attribute_length, attribute_name, attribute_type|
+      case attribute_type
+      when :bitfield
+        new_data << @dna_attribute_bitfields[attribute_name].value
+      else
+        new_data << @dna_attributes[attribute_name]
+      end
+    end
+    fs.write(enemy_dna_ram_pointer, new_data.pack(attribute_format_string))
+  end
+  
+private
+  
+  def attribute_format_string
+    ENEMY_DNA_FORMAT.map do |attribute_length, attribute_name, attribute_type|
+      case attribute_length
+      when 1
+        "C"
+      when 2
+        "v"
+      when 4
+        "V"
+      else
+        raise "Invalid enemy DNA format for #{GAME}"
+      end
+    end.join
   end
 end
 

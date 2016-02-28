@@ -153,6 +153,67 @@ OVERLAY_ROM_INFO_START_OFFSET = 0x67FE00
 ENTITY_BLOCK_START_OFFSET = 0x3798D8
 ENTITY_BLOCK_END_OFFSET   = 0x6344D1 # guess
 
+ENEMY_DNA_RAM_START_OFFSET = 0x020BE568
+ENEMY_DNA_LENGTH = 32
+ENEMY_DNA_FORMAT = [
+  [4, "Init AI"],
+  [4, "Running AI"],
+  [2, "Item 1"],
+  [2, "Item 2"],
+  [1, "Unknown 1"],
+  [1, "SP"],
+  [2, "HP"],
+  [2, "EXP"],
+  [1, "Unknown 2"],
+  [1, "Attack"],
+  [1, "Defense"],
+  [1, "Unknown 3"],
+  [1, "Item 1 Chance"],
+  [1, "Item 2 Chance"],
+  [2, "Weaknesses", :bitfield],
+  [2, "Unknown 4"],
+  [2, "Resistances", :bitfield],
+  [2, "Unknown 5"],
+]
+ENEMY_DNA_BITFIELD_ATTRIBUTES = {
+  "Weaknesses" => [
+    "Clubs",
+    "Spears",
+    "Swords",
+    "Fire",
+    "Water",
+    "Lightning",
+    "Dark",
+    "Holy",
+    "Poison",
+    "Curse",
+    "Earth",
+    "Weakness 12",
+    "Weakness 13",
+    "Weakness 14",
+    "Weakness 15",
+    "Weakness 16",
+  ],
+  "Resistances" => [
+    "Clubs",
+    "Spears",
+    "Swords",
+    "Fire",
+    "Water",
+    "Lightning",
+    "Dark",
+    "Holy",
+    "Poison",
+    "Curse",
+    "Earth",
+    "Resistance 12",
+    "Time Stop",
+    "Resistance 14",
+    "Resistance 15",
+    "Resistance 16",
+  ],
+}
+
 STRING_LIST_START_OFFSET = 0x0221BA50
 STRING_RANGE = (0..0x748)
 STRING_REGIONS = {

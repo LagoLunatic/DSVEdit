@@ -95,6 +95,67 @@ ENTITY_BLOCK_START_OFFSET = 0x0A4B9C
 ENTITY_BLOCK_END_OFFSET   = 0x0C3D9C
 
 ENEMY_DNA_RAM_START_OFFSET = 0x02078CAC
+ENEMY_DNA_LENGTH = 36
+ENEMY_DNA_FORMAT = [
+  [4, "Init AI"],
+  [4, "Running AI"],
+  [2, "Item 1"],
+  [2, "Item 2"],
+  [1, "Unknown 1"],
+  [1, "Unknown 2"],
+  [2, "HP"],
+  [2, "MP"],
+  [2, "EXP"],
+  [1, "Soul Chance"],
+  [1, "Attack"],
+  [1, "Defense"],
+  [1, "Item Chance"],
+  [2, "Unknown 3"],
+  [1, "Soul"],
+  [1, "Unknown 4"],
+  [2, "Weaknesses", :bitfield],
+  [2, "Unknown 5"],
+  [2, "Resistances", :bitfield],
+  [2, "Unknown 6"],
+]
+ENEMY_DNA_BITFIELD_ATTRIBUTES = {
+  "Weaknesses" => [
+    "Clubs",
+    "Spears",
+    "Swords",
+    "Fire",
+    "Water",
+    "Lightning",
+    "Dark",
+    "Holy",
+    "Poison",
+    "Curse",
+    "Earth",
+    "Weakness 12",
+    "Weakness 13",
+    "Weakness 14",
+    "Weakness 15",
+    "Weakness 16",
+  ],
+  "Resistances" => [
+    "Clubs",
+    "Spears",
+    "Swords",
+    "Fire",
+    "Water",
+    "Lightning",
+    "Dark",
+    "Holy",
+    "Poison",
+    "Curse",
+    "Earth",
+    "Resistance 12",
+    "Time Stop",
+    "Resistance 14",
+    "Resistance 15",
+    "Resistance 16",
+  ],
+}
 
 STRING_LIST_START_OFFSET = 0x0222F300
 STRING_RANGE = (0..0x50A)
@@ -138,40 +199,3 @@ ITEM_BYTE_11_RANGE_FOR_PASSIVES = (0x74..0x7A) # aka ability souls in DoS.
 NEW_GAME_STARTING_AREA_INDEX_OFFSET = nil
 NEW_GAME_STARTING_SECTOR_INDEX_OFFSET = 0x0202FB84
 NEW_GAME_STARTING_ROOM_INDEX_OFFSET = 0x0202FB90
-
-WEAKNESS_LIST = [
-  "Clubs",
-  "Spears",
-  "Swords",
-  "Fire",
-  "Water",
-  "Lightning",
-  "Dark",
-  "Holy",
-  "Poison",
-  "Curse",
-  "Earth",
-  "Weakness 12",
-  "Weakness 13",
-  "Weakness 14",
-  "Weakness 15",
-  "Weakness 16",
-]
-RESISTANCE_LIST = [
-  "Clubs",
-  "Spears",
-  "Swords",
-  "Fire",
-  "Water",
-  "Lightning",
-  "Dark",
-  "Holy",
-  "Poison",
-  "Curse",
-  "Earth",
-  "Resistance 12",
-  "Time Stop",
-  "Resistance 14",
-  "Resistance 15",
-  "Resistance 16",
-]

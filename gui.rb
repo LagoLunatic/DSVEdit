@@ -397,14 +397,38 @@ class EnemyEditDialog < Qt::Dialog
     end
     connect(@ui.enemy_list, SIGNAL("currentRowChanged(int)"), self, SLOT("enemy_changed(int)"))
     
-    (0..15).each do |i|
-      item = Qt::TreeWidgetItem.new(@ui.treeWidget)
+    @attribute_text_fields = {}
+    @enemies.first.dna_attributes.keys.each_with_index do |attribute_name, i|
+      if i.even?
+        form_layout = @ui.attribute_layout_left
+      else
+        form_layout = @ui.attribute_layout_right
+      end
       
-      item.setText(0, WEAKNESS_LIST[i])
-      item.setText(1, RESISTANCE_LIST[i])
+      label = Qt::Label.new(self)
+      label.text = ENEMY_DNA_FORMAT[i][1]
+      form_layout.setWidget(i/2, Qt::FormLayout::LabelRole, label)
+      
+      field = Qt::LineEdit.new(self)
+      field.setMaximumSize(80, 16777215)
+      form_layout.setWidget(i/2, Qt::FormLayout::FieldRole, field)
+      
+      @attribute_text_fields[attribute_name] = field
     end
-    @ui.treeWidget.setColumnWidth(0, 150)
-    @ui.treeWidget.setColumnWidth(1, 150)
+    
+    @enemies.first.dna_attribute_bitfields.keys.each_with_index do |attribute_name, col|
+      (0..15).each do |row|
+        item = @ui.treeWidget.topLevelItem(row)
+        if item.nil?
+          item = Qt::TreeWidgetItem.new(@ui.treeWidget)
+        end
+        
+        bitfield_attribute_names = ENEMY_DNA_BITFIELD_ATTRIBUTES[attribute_name]
+        
+        item.setText(col, bitfield_attribute_names[row])
+      end
+      @ui.treeWidget.setColumnWidth(col, 150)
+    end
     
     connect(@ui.buttonBox, SIGNAL("clicked(QAbstractButton*)"), self, SLOT("button_pressed(QAbstractButton*)"))
     
@@ -419,39 +443,29 @@ class EnemyEditDialog < Qt::Dialog
     @ui.name.setText(enemy.name.string)
     @ui.desc.setPlainText(enemy.description.string)
     
-    @ui.init_ai.setText("%08X" % enemy.init_ai_ram_pointer)
-    @ui.running_ai.setText("%08X" % enemy.running_ai_ram_pointer)
-    @ui.item_1.setText(enemy.item_1.to_s)
-    @ui.item_2.setText(enemy.item_2.to_s)
-    @ui.unknown_1.setText(enemy.unknown_1.to_s)
-    @ui.unknown_2.setText(enemy.unknown_2.to_s)
-    @ui.max_hp.setText(enemy.max_hp.to_s)
-    @ui.max_mp.setText(enemy.max_mp.to_s)
-    @ui.exp.setText(enemy.exp.to_s)
-    @ui.soul_drop_chance.setText(enemy.soul_drop_chance.to_s)
-    @ui.attack.setText(enemy.attack.to_s)
-    @ui.defense.setText(enemy.defense.to_s)
-    @ui.item_drop_chance.setText(enemy.item_drop_chance.to_s)
-    @ui.unknown_3.setText(enemy.unknown_3.to_s)
-    @ui.soul.setText(enemy.soul.to_s)
-    @ui.unknown_4.setText(enemy.unknown_4.to_s)
-    @ui.unknown_5.setText(enemy.unknown_5.to_s)
-    @ui.unknown_6.setText(enemy.unknown_6.to_s)
-    #@ui.exp.setText(enemy.enemy_gfx_file[:file_path].to_s)
-    
-    (0..15).each do |i|
-      item = @ui.treeWidget.topLevelItem(i)
-      
-      if enemy.weaknesses[i]
-        item.setCheckState(0, Qt::Checked)
+    enemy.dna_attributes.values.each_with_index do |value, i|
+      if i.even?
+        form_layout = @ui.attribute_layout_left
       else
-        item.setCheckState(0, Qt::Unchecked)
+        form_layout = @ui.attribute_layout_right
       end
       
-      if enemy.resistances[i]
-        item.setCheckState(1, Qt::Checked)
-      else
-        item.setCheckState(1, Qt::Unchecked)
+      attribute_length = ENEMY_DNA_FORMAT[i].first
+      string_length = attribute_length*2
+      
+      field = form_layout.itemAt(i/2, Qt::FormLayout::FieldRole).widget
+      field.text = "%0#{string_length}X" % value
+    end
+    
+    enemy.dna_attribute_bitfields.values.each_with_index do |value, col|
+      (0..15).each do |row|
+        item = @ui.treeWidget.topLevelItem(row)
+        
+        if value[row]
+          item.setCheckState(col, Qt::Checked)
+        else
+          item.setCheckState(col, Qt::Unchecked)
+        end
       end
     end
   end
@@ -465,37 +479,19 @@ class EnemyEditDialog < Qt::Dialog
   def save_current_enemy
     enemy = @enemies[@ui.enemy_list.currentRow]
     
-    enemy.init_ai_ram_pointer = @ui.init_ai.text.to_i(16)
-    enemy.running_ai_ram_pointer = @ui.running_ai.text.to_i(16)
-    enemy.item_1 = @ui.item_1.text.to_i
-    enemy.item_2 = @ui.item_2.text.to_i
-    enemy.unknown_1 = @ui.unknown_1.text.to_i
-    enemy.unknown_2 = @ui.unknown_2.text.to_i
-    enemy.max_hp = @ui.max_hp.text.to_i
-    enemy.max_mp = @ui.max_mp.text.to_i
-    enemy.exp = @ui.exp.text.to_i
-    enemy.soul_drop_chance = @ui.soul_drop_chance.text.to_i
-    enemy.attack = @ui.attack.text.to_i
-    enemy.defense = @ui.defense.text.to_i
-    enemy.item_drop_chance = @ui.item_drop_chance.text.to_i
-    enemy.soul = @ui.soul.text.to_i
-    enemy.unknown_4 = @ui.unknown_4.text.to_i
-    enemy.unknown_5 = @ui.unknown_5.text.to_i
-    enemy.unknown_6 = @ui.unknown_6.text.to_i
+    enemy.dna_attributes.each do |attribute_name, value|
+      enemy.dna_attributes[attribute_name] = @attribute_text_fields[attribute_name].text.to_i(16)
+    end
     
-    (0..15).each do |i|
-      item = @ui.treeWidget.topLevelItem(i)
-      
-      if item.checkState(0) == Qt::Checked
-        enemy.weaknesses[i] = true
-      else
-        enemy.weaknesses[i] = false
-      end
-      
-      if item.checkState(1) == Qt::Checked
-        enemy.resistances[i] = true
-      else
-        enemy.resistances[i] = false
+    enemy.dna_attribute_bitfields.keys.each_with_index do |attribute_name, col|
+      (0..15).each do |row|
+        item = @ui.treeWidget.topLevelItem(row)
+        
+        if item.checkState(col) == Qt::Checked
+          enemy.dna_attribute_bitfields[attribute_name][row] = true
+        else
+          enemy.dna_attribute_bitfields[attribute_name][row] = false
+        end
       end
     end
     
@@ -554,8 +550,8 @@ class TextEditor < Qt::Dialog
     text = @text_database.text_list[@ui.text_list.currentRow]
     
     text.string = @ui.textEdit.toPlainText()
-    text.write_to_rom()
     
+    text.write_to_rom()
     #@text_database.write_to_rom()
   end
 end

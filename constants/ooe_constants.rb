@@ -178,6 +178,69 @@ COMMON_ENEMY_IDS = (0x00..0x6A).to_a
 BOSS_IDS = (0x6B..0x78).to_a
 VERY_LARGE_ENEMIES = []
 
+ENEMY_DNA_RAM_START_OFFSET = 0x020B6364
+ENEMY_DNA_LENGTH = 36
+ENEMY_DNA_FORMAT = [
+  [4, "Init AI"],
+  [4, "Running AI"],
+  [2, "Item 1"],
+  [2, "Item 2"],
+  [1, "Unknown 1"],
+  [1, "Unknown 2"],
+  [2, "HP"],
+  [2, "EXP"],
+  [2, "Unknown 3"],
+  [2, "Glyph"],
+  [1, "Glyph Chance"],
+  [1, "Attack"],
+  [1, "Unknown 4"],
+  [1, "Unknown 5"],
+  [1, "Item 1 Chance"],
+  [1, "Item 2 Chance"],
+  [2, "Weaknesses", :bitfield],
+  [2, "Unknown 6"],
+  [2, "Resistances", :bitfield],
+  [2, "Unknown 7"],
+]
+ENEMY_DNA_BITFIELD_ATTRIBUTES = {
+  "Weaknesses" => [
+    "Strike",
+    "Slash",
+    "Fire",
+    "Ice",
+    "Lightning",
+    "Light",
+    "Dark",
+    "Poison",
+    "Curse",
+    "Stone",
+    "Weakness 11",
+    "Weakness 12",
+    "Weakness 13",
+    "Weakness 14",
+    "Weakness 15",
+    "Weakness 16",
+  ],
+  "Resistances" => [
+    "Strike",
+    "Slash",
+    "Fire",
+    "Ice",
+    "Lightning",
+    "Light",
+    "Dark",
+    "Poison",
+    "Curse",
+    "Stone",
+    "Resistance 11",
+    "Resistance 12",
+    "Resistance 13",
+    "Resistance 14",
+    "Resistance 15",
+    "Resistance 16",
+  ],
+}
+
 STRING_LIST_START_OFFSET = 0x021FACC0
 STRING_RANGE = (0..0x764)
 STRING_REGIONS = {
