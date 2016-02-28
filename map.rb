@@ -11,6 +11,7 @@ class Map
     @map_tile_line_data_ram_pointer = map_tile_line_data_ram_pointer
     @number_of_tiles = number_of_tiles
     @fs = fs
+  
     read_from_rom()
   end
   
@@ -77,20 +78,40 @@ class MapTile
 end
 
 class DoSMap < Map
+  attr_reader :is_abyss
+  
+  def initialize(map_tile_metadata_ram_pointer, map_tile_line_data_ram_pointer, number_of_tiles, fs, is_abyss = false)
+    @is_abyss = is_abyss
+    if is_abyss
+      @width = 18
+    else
+      @width = 64
+    end
+    
+    super(map_tile_metadata_ram_pointer, map_tile_line_data_ram_pointer, number_of_tiles, fs)
+  end
+  
   def read_from_rom
     @tiles = []
     i = 0
     while i < number_of_tiles
       2.times do
         tile_line_data = fs.read(map_tile_line_data_ram_pointer + i/2).unpack("C*").first
-        tile_metadata = fs.read(map_tile_metadata_ram_pointer + i*2, 2).unpack("v")
         if i.even?
           tile_line_data = tile_line_data >> 4
         else
           tile_line_data = tile_line_data & 0b00001111
         end
         
-        @tiles << DoSMapTile.new(tile_metadata, tile_line_data, i)
+        index_for_metadata = i
+        if is_abyss
+          # For some reason, the Abyss's tile metadata (but not line data) has an extra block at the end of each row.
+          # Here we skip that extra block so that the tile metadata and line data stay in sync.
+          index_for_metadata += i / @width
+        end
+        tile_metadata = fs.read(map_tile_metadata_ram_pointer + index_for_metadata*2, 2).unpack("v")
+        
+        @tiles << DoSMapTile.new(tile_metadata, tile_line_data, i, @width)
         
         i += 1
       end
@@ -100,7 +121,8 @@ end
 
 class DoSMapTile
   attr_reader :tile_metadata,
-              :tile_line_data
+              :tile_line_data,
+              :map_width
               
   attr_accessor :bottom_door,
                 :bottom_wall,
@@ -121,10 +143,12 @@ class DoSMapTile
                 :x_pos,
                 :is_blank
   
-  def initialize(tile_metadata, tile_line_data, tile_index)
+  def initialize(tile_metadata, tile_line_data, tile_index, map_width)
     @tile_metadata = tile_metadata
     @tile_line_data = tile_line_data
     @tile_index = tile_index
+    @map_width = map_width
+    
     read_from_rom()
   end
   
@@ -138,8 +162,9 @@ class DoSMapTile
     @is_warp        =  tile_metadata[0] & 0b01000000_00000000 > 0
     @sector_index   = (tile_metadata[0] & 0b00000011_11000000) >> 6
     @room_index     =  tile_metadata[0] & 0b00000000_00111111
-    @y_pos          = @tile_index / 64
-    @x_pos          = @tile_index % 64
+    
+    @y_pos          = @tile_index / map_width
+    @x_pos          = @tile_index % map_width
     
     @is_blank       = tile_metadata[0] == 0xFFFF
   end

@@ -6,7 +6,8 @@ class Area
               :fs,
               :area_ram_pointer,
               :sectors,
-              :map
+              :map,
+              :abyss_map
 
   def initialize(area_index, fs)
     @area_index = area_index
@@ -34,6 +35,7 @@ class Area
     
     if GAME == "dos"
       @map = DoSMap.new(MAP_TILE_METADATA_START_OFFSET, MAP_TILE_LINE_DATA_START_OFFSET, 3008, fs)
+      @abyss_map = DoSMap.new(ABYSS_MAP_TILE_METADATA_START_OFFSET, ABYSS_MAP_TILE_LINE_DATA_START_OFFSET, 448, fs, is_abyss = true)
     else
       map_tile_metadata_ram_pointer = fs.read(MAP_TILE_METADATA_LIST_START_OFFSET + area_index*4, 4).unpack("V*").first
       map_tile_line_data_ram_pointer = fs.read(MAP_TILE_LINE_DATA_LIST_START_OFFSET + area_index*4, 4).unpack("V*").first

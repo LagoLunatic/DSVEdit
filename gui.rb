@@ -177,12 +177,23 @@ class DSVE < Qt::MainWindow
     if new_sector_index == @sector_index && !force
       return
     end
+    
+    if GAME == "dos" && ([10, 11].include?(new_sector_index) || [10, 11].include?(@sector_index))
+      should_load_map = true
+    else
+      should_load_map = false
+    end
+    
     @sector_index = new_sector_index
     @sector = @area.sectors[@sector_index]
     room_index_changed(0, force=true)
     @ui.room.clear()
     @sector.rooms.each_with_index do |room, room_index|
       @ui.room.addItem("%02d %08X" % [room_index, room.room_metadata_ram_pointer])
+    end
+    
+    if should_load_map
+      load_map()
     end
   end
   
@@ -259,14 +270,19 @@ class DSVE < Qt::MainWindow
   def load_map()
     @map_graphics_scene.clear()
     
-    chunky_png_img = @renderer.render_map(@area.map)
+    if GAME == "dos" && [10, 11].include?(@sector_index)
+      map = @area.abyss_map
+    else
+      map = @area.map
+    end
+    chunky_png_img = @renderer.render_map(map)
     pixmap = Qt::Pixmap.new
     blob = chunky_png_img.to_blob
     pixmap.loadFromData(blob, blob.length)
     map_pixmap_item = Qt::GraphicsPixmapItem.new(pixmap)
     @map_graphics_scene.addItem(map_pixmap_item)
     
-    @area.map.tiles.each do |tile|
+    map.tiles.each do |tile|
       item = GraphicsMapTileItem.new(tile)
       connect(item, SIGNAL("room_clicked(int, int)"), self, SLOT("sector_and_room_indexes_changed(int, int)"))
       @map_graphics_scene.addItem(item)
