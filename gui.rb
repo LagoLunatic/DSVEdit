@@ -409,7 +409,7 @@ class EnemyEditDialog < Qt::Dialog
     ENEMY_IDS.each do |enemy_id|
       enemy = EnemyDNA.new(enemy_id, fs)
       @enemies << enemy
-      @ui.enemy_list.addItem("%03d %s" % [enemy_id+1, enemy.name.string])
+      @ui.enemy_list.addItem("%03d %s" % [enemy_id+1, enemy.name.decoded_string])
     end
     connect(@ui.enemy_list, SIGNAL("currentRowChanged(int)"), self, SLOT("enemy_changed(int)"))
     
@@ -456,8 +456,8 @@ class EnemyEditDialog < Qt::Dialog
   def enemy_changed(enemy_id)
     enemy = @enemies[enemy_id]
     
-    @ui.name.setText(enemy.name.string)
-    @ui.desc.setPlainText(enemy.description.string)
+    @ui.name.setText(enemy.name.decoded_string)
+    @ui.desc.setPlainText(enemy.description.decoded_string)
     
     enemy.dna_attributes.values.each_with_index do |value, i|
       if i.even?

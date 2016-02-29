@@ -17,8 +17,8 @@ class EnemyDNA
   end
   
   def read_from_rom
-    @name = Text.new(STRING_REGIONS["Enemy Names"].begin + enemy_id, fs)
-    @description = Text.new(STRING_REGIONS["Enemy Descriptions"].begin + enemy_id, fs)
+    @name = Text.new(TEXT_REGIONS["Enemy Names"].begin + enemy_id, fs)
+    @description = Text.new(TEXT_REGIONS["Enemy Descriptions"].begin + enemy_id, fs)
     
     @enemy_dna_ram_pointer = ENEMY_DNA_RAM_START_OFFSET + ENEMY_DNA_LENGTH*enemy_id
     
