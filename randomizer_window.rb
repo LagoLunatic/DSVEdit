@@ -95,7 +95,6 @@ class RandomizerWindow < Qt::Dialog
     end
     
     output_rom_path = File.join(@ui.output_folder.text, "#{GAME} hack.nds")
-    game.fs.commit_file_changes()
     game.fs.write_to_rom(output_rom_path)
 
     Qt::MessageBox.information(self, "Done", "Randomization complete.")
