@@ -34,8 +34,7 @@ class Randomizer
       randomize_enemy(entity)
     when ENTITY_TYPE_FOR_PICKUPS
       case GAME
-      when "dos"
-      when "por"
+      when "dos", "por"
         randomize_pickup_dos_por(entity)
       when "ooe"
         randomize_pickup_ooe(entity)
