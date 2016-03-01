@@ -2,6 +2,10 @@
 require 'oily_png'
 
 class Renderer
+  COLLISION_SOLID_COLOR = ChunkyPNG::Color::BLACK
+  COLLISION_DAMAGE_COLOR = ChunkyPNG::Color.rgba(255, 0, 0, 255)
+  COLLISION_WATER_COLOR = ChunkyPNG::Color.rgba(0, 0, 255, 255)
+  
   attr_reader :fs
   
   def initialize(fs)
@@ -259,63 +263,8 @@ class Renderer
     collision_tileset = CollisionTileset.new(collision_tileset_offset, fs)
     rendered_tileset = ChunkyPNG::Image.new(Tileset::TILESET_WIDTH_IN_BLOCKS*16, Tileset::TILESET_HEIGHT_IN_BLOCKS*16, ChunkyPNG::Color::TRANSPARENT)
     
-    solid_color = ChunkyPNG::Color::BLACK
-    damage_color = ChunkyPNG::Color.rgba(255, 0, 0, 255)
-    water_color = ChunkyPNG::Color.rgba(0, 0, 255, 255)
-    
     collision_tileset.tiles.each_with_index do |tile, index_on_tileset|
-      graphic_tile = ChunkyPNG::Image.new(16, 16, ChunkyPNG::Color::TRANSPARENT)
-      
-      if tile.is_slope
-        if tile.has_top && tile.slope_piece > 0 && !tile.is_gradual_slope
-          graphic_tile.rect(0, 0, 15, 4, stroke_color = solid_color, fill_color = solid_color)
-        elsif tile.has_top
-          if tile.is_gradual_slope && tile.not_a_half_slope
-            x_offset = tile.slope_piece*16
-            width = 16*4
-          elsif tile.is_gradual_slope
-            x_offset = tile.slope_piece/2*16
-            width = 16*2
-          else
-            if tile.slope_piece > 0
-              # ???
-              x_offset = 0
-              width = 16
-            else
-              x_offset = 0
-              width = 16
-            end
-          end
-          if tile.vertical_flip
-            x_end = width-1
-            y_end = 0
-          else
-            x_end = 0
-            y_end = 15
-          end
-          graphic_tile.polygon([0-x_offset, 0, width-1-x_offset, 15, x_end-x_offset, y_end], stroke_color = solid_color, fill_color = solid_color)
-        
-          if tile.horizontal_flip
-            graphic_tile.mirror!
-          end
-        end
-      else
-        color = solid_color
-        if tile.is_damage
-          color = damage_color
-        end
-        if tile.is_water
-          color = water_color
-        end
-        
-        if tile.has_top && tile.has_sides_and_bottom
-          graphic_tile.rect(0, 0, 15, 15, stroke_color = color, fill_color = color)
-        elsif tile.has_top
-          graphic_tile.rect(0, 0, 4, 4, stroke_color = color, fill_color = color)
-        elsif tile.has_sides_and_bottom
-          graphic_tile.polygon([0, 0, 7, 7, 15, 0, 15, 15, 0, 15], stroke_color = color, fill_color = color)
-        end
-      end
+      graphic_tile = render_collision_tile(tile)
       
       x_on_tileset = index_on_tileset % 16
       y_on_tileset = index_on_tileset / 16
@@ -326,6 +275,63 @@ class Renderer
     rendered_tileset.save(output_filename, :fast_rgba)
     puts "Wrote #{output_filename}"
     return rendered_tileset
+  end
+  
+  def render_collision_tile(tile)
+    graphic_tile = ChunkyPNG::Image.new(16, 16, ChunkyPNG::Color::TRANSPARENT)
+    
+    if tile.is_slope
+      if tile.has_top && tile.slope_piece > 0 && !tile.is_gradual_slope
+        graphic_tile.rect(0, 0, 15, 4, stroke_color = COLLISION_SOLID_COLOR, fill_color = COLLISION_SOLID_COLOR)
+      elsif tile.has_top
+        if tile.is_gradual_slope && tile.not_a_half_slope
+          x_offset = tile.slope_piece*16
+          width = 16*4
+        elsif tile.is_gradual_slope
+          x_offset = tile.slope_piece/2*16
+          width = 16*2
+        else
+          if tile.slope_piece > 0
+            # ???
+            x_offset = 0
+            width = 16
+          else
+            x_offset = 0
+            width = 16
+          end
+        end
+        if tile.vertical_flip
+          x_end = width-1
+          y_end = 0
+        else
+          x_end = 0
+          y_end = 15
+        end
+        graphic_tile.polygon([0-x_offset, 0, width-1-x_offset, 15, x_end-x_offset, y_end], stroke_color = COLLISION_SOLID_COLOR, fill_color = COLLISION_SOLID_COLOR)
+      
+        if tile.horizontal_flip
+          graphic_tile.mirror!
+        end
+      end
+    else
+      color = COLLISION_SOLID_COLOR
+      if tile.is_damage
+        color = COLLISION_DAMAGE_COLOR
+      end
+      if tile.is_water
+        color = COLLISION_WATER_COLOR
+      end
+      
+      if tile.has_top && tile.has_sides_and_bottom
+        graphic_tile.rect(0, 0, 15, 15, stroke_color = color, fill_color = color)
+      elsif tile.has_top
+        graphic_tile.rect(0, 0, 4, 4, stroke_color = color, fill_color = color)
+      elsif tile.has_sides_and_bottom
+        graphic_tile.polygon([0, 0, 7, 7, 15, 0, 15, 15, 0, 15], stroke_color = color, fill_color = color)
+      end
+    end
+    
+    return graphic_tile
   end
   
   def render_map(map, scale = 1)
