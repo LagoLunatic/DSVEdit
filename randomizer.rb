@@ -3,9 +3,12 @@ class Randomizer
   attr_reader :options,
               :allow_randomization_between_items_skills_passives,
               :rng,
-              :log
+              :log,
+              :game
   
-  def initialize(seed, options={})
+  def initialize(seed, game, options={})
+    @game = game
+    
     @options = options
     @allow_randomization_between_items_skills_passives = true
     
@@ -119,7 +122,7 @@ class Randomizer
     end
   end
   
-  def randomize_starting_room(game)
+  def randomize_starting_room
     area = game.areas.sample(random: rng)
     sector = area.sectors.sample(random: rng)
     room = sector.rooms.sample(random: rng)

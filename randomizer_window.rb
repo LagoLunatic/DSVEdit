@@ -97,7 +97,7 @@ class RandomizerWindow < Qt::Dialog
       game.initialize_from_rom(@ui.clean_rom.text)
     end
     
-    randomizer = Randomizer.new(seed, :randomize_enemies => @ui.randomize_enemies.checked())
+    randomizer = Randomizer.new(seed, game, :randomize_enemies => @ui.randomize_enemies.checked())
     
     game.each_room do |room|
       #puts "%08X" % room.room_metadata_ram_pointer
@@ -110,7 +110,7 @@ class RandomizerWindow < Qt::Dialog
     
     if @ui.randomize_starting_room.checked()
       game.fix_top_screen_on_new_game()
-      randomizer.randomize_starting_room(game)
+      randomizer.randomize_starting_room()
     end
     
     output_rom_path = File.join(@ui.output_folder.text, "#{GAME} hack.nds")
