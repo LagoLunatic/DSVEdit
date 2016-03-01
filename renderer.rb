@@ -138,82 +138,45 @@ class Renderer
   end
   
   def render_tileset(tileset_offset, palette_offset, graphic_tilesets_for_room, colors_per_palette, collision_tileset_offset, output_filename)
-    tileset_width_in_blocks = 16
-    tileset_height_in_blocks = 64
-    rendered_tileset = ChunkyPNG::Image.new(tileset_width_in_blocks*16, tileset_height_in_blocks*16, ChunkyPNG::Color::TRANSPARENT)
-
-    length_of_tileset_in_bytes = tileset_width_in_blocks*tileset_height_in_blocks*4
-    tileset = fs.read(tileset_offset, length_of_tileset_in_bytes-4)
-    #puts "Tileset data starting at %08X" % tileset_offset
-    tileset = "\x00\x00\x00\x00" + tileset
-    
-    #puts "palette_offset: %08X" % (palette_offset || 0)
-    palette_list = generate_palettes(palette_offset, colors_per_palette)
-    tileset_data = tileset.unpack("C*")
-    
     if graphic_tilesets_for_room.nil?
       return render_collision_tileset(collision_tileset_offset, output_filename)
     end
+    
+    tileset = Tileset.new(tileset_offset, fs)
+    rendered_tileset = ChunkyPNG::Image.new(Tileset::TILESET_WIDTH_IN_BLOCKS*16, Tileset::TILESET_HEIGHT_IN_BLOCKS*16+16, ChunkyPNG::Color::TRANSPARENT)
+    palette_list = generate_palettes(palette_offset, colors_per_palette)
 
-    tileset_data.each_slice(4).each_with_index do |tile_data, i|
-      #puts "tile_data: #{tile_data.each_byte.to_a.map{|x| "%02X" % x}}"
-      tile_index_on_page, tile_page, extra_bits, palette_index = tile_data
-      #puts "palette_index: #{palette_index}"
-      
-      if tile_index_on_page == 0 && tile_page == 0 && extra_bits == 0 && palette_index == 0
-        next # if it's all 0s then it's a blank tile, don't render it at all.
+    tileset.tiles.each_with_index do |tile, index_on_tileset|
+      if tile.is_blank
+        next
       end
       
-      # The bits below are always 00. The below code was ran on every room in the game with no exceptions raised.
-      #unknown1 = tile_index_on_page & 0b11000000
-      #unknown2 = tile_page & 0b00001111
-      #unknown3 = extra_bits & 0b11111000
-      #if unknown1 != 0
-      #  raise "unknown1: #{unknown1}"
-      #end
-      #if unknown2 != 0
-      #  raise "unknown2: #{unknown2}"
-      #end
-      #if unknown3 != 0
-      #  raise "unknown3: #{unknown3}"
-      #end
-      
-      tile_index_on_page = tile_index_on_page & 0b00111111 # get rid of top 2 bits. they're sometimes set, but they seem to be for something else besides the tile index. TODO: figure out what those 2 are for.
-      horizontal_flip = ((extra_bits >> 1) & 0b00000001) != 0
-      vertical_flip = ((extra_bits >> 2) & 0b00000001) != 0
-      most_significant_bit = extra_bits & 0b00000001
-      tile_page = tile_page >> 4
-      tile_page = tile_page | (most_significant_bit << 4)
-      
-      if graphic_tilesets_for_room.nil?
-        graphic_tile_data_file = nil
-      else
-        graphic_tile_data_file = graphic_tilesets_for_room[tile_page]
-        if graphic_tile_data_file.nil?
-          next # TODO: figure out why this sometimes happens.
-        end
-      end
-      
-      if palette_index == 0xFF # TODO. 255 seems to have some special meaning besides an actual palette index.
-        palette_index = 0x00
-      end
-      palette = palette_list[palette_index]
-      if palette.nil?
-        puts "Palette index #{palette_index} out of range, tileset #{output_filename}"
+      graphic_tile_data_file = graphic_tilesets_for_room[tile.tile_page]
+      if graphic_tile_data_file.nil?
         next # TODO: figure out why this sometimes happens.
       end
       
-      graphic_tile = render_graphic_tile(graphic_tile_data_file, palette, tile_index_on_page)
+      if tile.palette_index == 0xFF # TODO. 255 seems to have some special meaning besides an actual palette index.
+        puts "Palette index is 0xFF, tileset #{output_filename}"
+        next
+      end
+      palette = palette_list[tile.palette_index]
+      if palette.nil?
+        puts "Palette index #{tile.palette_index} out of range, tileset #{output_filename}"
+        next # TODO: figure out why this sometimes happens.
+      end
       
-      if horizontal_flip
+      graphic_tile = render_graphic_tile(graphic_tile_data_file, palette, tile.index_on_tile_page)
+      
+      if tile.horizontal_flip
         graphic_tile.mirror!
       end
-      if vertical_flip
+      if tile.vertical_flip
         graphic_tile.flip!
       end
       
-      x_on_tileset = i % 16
-      y_on_tileset = i / 16
+      x_on_tileset = index_on_tileset % 16
+      y_on_tileset = index_on_tileset / 16
       rendered_tileset.compose!(graphic_tile, x_on_tileset*16, y_on_tileset*16)
     end
     
