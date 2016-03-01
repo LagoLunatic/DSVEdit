@@ -25,9 +25,24 @@ class Randomizer
     @log.close()
   end
   
-  def randomize_room(room)
-    room.entities.each do |entity|
-      randomize_entity(entity)
+  def randomize
+    game.each_room do |room|
+      room.entities.each do |entity|
+        randomize_entity(entity)
+      end
+    end
+    
+    if options[:randomize_doors]
+      randomize_doors()
+    end
+    
+    if options[:randomize_enemy_drops]
+      randomize_enemy_drops()
+    end
+    
+    if options[:randomize_starting_room]
+      game.fix_top_screen_on_new_game()
+      randomize_starting_room()
     end
   end
   
@@ -48,13 +63,15 @@ class Randomizer
   end
   
   def randomize_enemy(enemy)
-    return unless options[:randomize_enemies]
-    
     available_enemy_ids_for_entity = nil
+    
     if enemy.is_boss?
       return unless options[:randomize_bosses]
+      
       available_enemy_ids_for_entity = BOSS_IDS
     elsif enemy.is_common_enemy?
+      return unless options[:randomize_enemies]
+      
       available_enemy_ids_for_entity = COMMON_ENEMY_IDS.dup
       if !VERY_LARGE_ENEMIES.include?(enemy.subtype)
         available_enemy_ids_for_entity -= VERY_LARGE_ENEMIES
@@ -122,10 +139,18 @@ class Randomizer
     end
   end
   
+  def randomize_enemy_drops
+    raise NotImplementedError
+  end
+  
   def randomize_starting_room
     area = game.areas.sample(random: rng)
     sector = area.sectors.sample(random: rng)
     room = sector.rooms.sample(random: rng)
     game.set_starting_room(area.area_index, sector.sector_index, room.room_index)
+  end
+  
+  def randomize_doors
+    raise NotImplementedError
   end
 end
