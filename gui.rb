@@ -8,7 +8,7 @@ require_relative 'ui_enemy'
 require_relative 'ui_text_editor'
 
 class DSVE < Qt::MainWindow
-  attr_reader :fs
+  attr_reader :game
   
   slots "open_rom_dialog()"
   slots "open_folder_dialog()"
@@ -85,14 +85,10 @@ class DSVE < Qt::MainWindow
     
     verify_game_and_load_constants(rom_path)
     
-    @fs = NDSFileSystem.new
-    rom_name = File.basename(rom_path, ".*")
-    folder = File.join(folder, "Extracted files #{rom_name}")
-    fs.open_and_extract_rom(rom_path, folder)
-    CONSTANT_OVERLAYS.each do |overlay_index|
-      fs.load_overlay(overlay_index)
-    end
-    @renderer = Renderer.new(fs)
+    @game = Game.new
+    game.initialize_from_rom(rom_path)
+    
+    @renderer = Renderer.new(game.fs)
     
     initialize_dropdowns()
     
@@ -111,12 +107,10 @@ class DSVE < Qt::MainWindow
     
     verify_game_and_load_constants(header_path)
     
-    @fs = NDSFileSystem.new
-    fs.open_directory(folder_path)
-    CONSTANT_OVERLAYS.each do |overlay_index|
-      fs.load_overlay(overlay_index)
-    end
-    @renderer = Renderer.new(fs)
+    @game = Game.new
+    game.initialize_from_folder(folder_path)
+    
+    @renderer = Renderer.new(game.fs)
     
     initialize_dropdowns()
     
@@ -158,7 +152,7 @@ class DSVE < Qt::MainWindow
       return
     end
     @area_index = new_area_index
-    @area = Area.new(@area_index, fs)
+    @area = Area.new(@area_index, game.fs)
     sector_index_changed(0, force=true)
     @ui.sector.clear()
     AREA_INDEX_TO_OVERLAY_INDEX[@area_index].keys.each do |sector_index|
@@ -222,7 +216,7 @@ class DSVE < Qt::MainWindow
     @room.layers.each do |layer|
       tileset_filename = "../Exported #{GAME}/rooms/#{@room.area_name}/Tilesets/#{layer.tileset_filename}.png"
       unless File.exist?(tileset_filename)
-        fs.load_overlay(AREA_INDEX_TO_OVERLAY_INDEX[@room.area_index][@room.sector_index])
+        game.fs.load_overlay(AREA_INDEX_TO_OVERLAY_INDEX[@room.area_index][@room.sector_index])
         @renderer.render_tileset(layer.ram_pointer_to_tileset_for_layer, @room.palette_offset, @room.graphic_tilesets_for_room, layer.colors_per_palette, layer.collision_tileset_ram_pointer, tileset_filename)
       end
       tileset = Qt::Image.new(tileset_filename)
@@ -290,11 +284,11 @@ class DSVE < Qt::MainWindow
   end
   
   def open_enemy_dna_dialog
-    @enemy_dialog = EnemyEditDialog.new(fs)
+    @enemy_dialog = EnemyEditDialog.new(game.fs)
   end
   
   def open_text_editor
-    @text_editor = TextEditor.new(fs)
+    @text_editor = TextEditor.new(game.fs)
   end
   
   def load_settings
@@ -338,11 +332,11 @@ class DSVE < Qt::MainWindow
   end
   
   def save_files
-    fs.commit_file_changes()
+    game.fs.commit_file_changes()
   end
   
   def write_to_rom(launch_emulator = false)
-    #if fs.has_uncommitted_files?
+    #if game.fs.has_uncommitted_files?
     #  answer = Qt::MessageBox.question(self, "Unsaved changes", "Save changed files before building?", Qt::MessageBox::Yes, Qt::MessageBox::No, Qt::MessageBox::Cancel)
     #  if answer == Qt::MessageBox::Yes
     #    save_files()
@@ -351,7 +345,7 @@ class DSVE < Qt::MainWindow
     #  end
     #end
     
-    fs.write_to_rom("../#{GAME} hack.nds")
+    game.fs.write_to_rom("../#{GAME} hack.nds")
     
     if launch_emulator
       system("start \"#{@settings[:emulator_path]}\" \"../#{GAME} hack.nds\"")
