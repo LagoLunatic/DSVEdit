@@ -187,11 +187,13 @@ COMMON_ENEMY_IDS = (0x00..0x64).to_a
 BOSS_IDS = (0x65..0x73).to_a # regular game bosses end at 0x73 (menace), 0x74 is soma that you fight in julius mode (and 0x75 is his second form, dracula).
 VERY_LARGE_ENEMIES = [0x64, 0x60, 0x25, 0x5D, 0x63, 0x0E, 0x61, 0x5B, 0x2F, 0x22] # iron golem, stolas, great armor, arc demon, alastor, golem, final guard, flame demon, devil, treant
 
-ITEM_ID_RANGES = {
+ITEM_LOCAL_ID_RANGES = {
   0x02 => (0x00..0x41), # consumable
   0x03 => (0x01..0x4E), # weapon
   0x04 => (0x00..0x3D), # body armor
 }
+ITEM_GLOBAL_ID_RANGE = (1..0xCE)
+SOUL_GLOBAL_ID_RANGE = (0..0x7A)
 
 ITEM_BYTE_7_RANGE_FOR_DEFENSIVE_EQUIPMENT = (0x04..0x04)
 

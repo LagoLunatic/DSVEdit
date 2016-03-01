@@ -254,7 +254,7 @@ COMMON_ENEMY_IDS = (0x00..0x80).to_a
 BOSS_IDS = (0x81..0x9A).to_a
 VERY_LARGE_ENEMIES = [0x64, 0x13, 0x79, 0x78, 0x45, 0x25, 0x21, 0x52, 0x2C, 0x7D, 0x7A, 0x22, 0x15] # alura une, andras, flame demon, iron golem, treant, dragon zombie, great armor, final guard, amphisbaena, alastor, demon, catoblepas, golem
 
-ITEM_ID_RANGES = {
+ITEM_LOCAL_ID_RANGES = {
   0x02 => (0x00..0x5F), # consumable
   0x03 => (0x01..0x48), # weapon
   0x04 => (0x01..0x39), # body
@@ -262,6 +262,7 @@ ITEM_ID_RANGES = {
   0x06 => (0x01..0x1C), # feet
   0x07 => (0x01..0x29), # misc
 }
+ITEM_GLOBAL_ID_RANGE = (1..0x1BB) # regular items end at 150. skills end at 1AB. 1BB is including relics.
 
 ITEM_BYTE_7_RANGE_FOR_DEFENSIVE_EQUIPMENT = (0x04..0x07)
 
