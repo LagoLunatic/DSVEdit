@@ -66,6 +66,13 @@
        </widget>
       </item>
       <item>
+       <widget class="QPushButton" name="set_as_starting_room">
+        <property name="text">
+         <string>Set as starting room</string>
+        </property>
+       </widget>
+      </item>
+      <item>
        <widget class="QGraphicsView" name="map_graphics_view"/>
       </item>
       <item>

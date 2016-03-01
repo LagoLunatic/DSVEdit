@@ -24,6 +24,7 @@ class DSVE < Qt::MainWindow
   slots "sector_and_room_indexes_changed(int, int)"
   slots "open_in_tiled()"
   slots "import_from_tiled()"
+  slots "set_current_room_as_starting_room()"
   
   def initialize
     super()
@@ -55,6 +56,7 @@ class DSVE < Qt::MainWindow
     connect(@ui.room, SIGNAL("activated(int)"), self, SLOT("room_index_changed(int)"))
     connect(@ui.tiled_export, SIGNAL("released()"), self, SLOT("open_in_tiled()"))
     connect(@ui.tiled_import, SIGNAL("released()"), self, SLOT("import_from_tiled()"))
+    connect(@ui.set_as_starting_room, SIGNAL("released()"), self, SLOT("set_current_room_as_starting_room()"))
     
     load_settings()
     if @settings[:last_used_folder] && File.directory?(@settings[:last_used_folder])
@@ -329,6 +331,10 @@ class DSVE < Qt::MainWindow
     
     @tiled.read(tmx_path, @room)
     load_layers()
+  end
+  
+  def set_current_room_as_starting_room
+    game.set_starting_room(@area_index, @sector_index, @room_index)
   end
   
   def save_files
