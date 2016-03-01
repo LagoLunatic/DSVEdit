@@ -143,7 +143,7 @@ class Renderer
     end
     
     tileset = Tileset.new(tileset_offset, fs)
-    rendered_tileset = ChunkyPNG::Image.new(Tileset::TILESET_WIDTH_IN_BLOCKS*16, Tileset::TILESET_HEIGHT_IN_BLOCKS*16+16, ChunkyPNG::Color::TRANSPARENT)
+    rendered_tileset = ChunkyPNG::Image.new(Tileset::TILESET_WIDTH_IN_BLOCKS*16, Tileset::TILESET_HEIGHT_IN_BLOCKS*16, ChunkyPNG::Color::TRANSPARENT)
     palette_list = generate_palettes(palette_offset, colors_per_palette)
 
     tileset.tiles.each_with_index do |tile, index_on_tileset|
