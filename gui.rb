@@ -22,6 +22,7 @@ class DSVE < Qt::MainWindow
   slots "sector_index_changed(int)"
   slots "room_index_changed(int)"
   slots "sector_and_room_indexes_changed(int, int)"
+  slots "change_room_by_metadata(int)"
   slots "open_in_tiled()"
   slots "import_from_tiled()"
   slots "set_current_room_as_starting_room()"
@@ -212,6 +213,17 @@ class DSVE < Qt::MainWindow
     room_index_changed(new_room_index)
   end
   
+  def change_room_by_metadata(room_metadata_ram_pointer)
+    game.each_room do |room|
+      if room_metadata_ram_pointer == room.room_metadata_ram_pointer
+        area_index_changed(room.area_index)
+        sector_index_changed(room.sector_index)
+        room_index_changed(room.room_index)
+        break
+      end
+    end
+  end
+  
   def load_layers()
     @room_graphics_scene.clear()
     @room_graphics_scene.setSceneRect(0, 0, @room.max_layer_width*SCREEN_WIDTH_IN_PIXELS, @room.max_layer_height*SCREEN_HEIGHT_IN_PIXELS)
@@ -250,18 +262,29 @@ class DSVE < Qt::MainWindow
       end
     end
     
-    #@room.doors.each_with_index do |door, i|
-    #  x = door.x_pos
-    #  y = door.y_pos
-    #  x = -1 if x == 0xFF
-    #  y = -1 if y == 0xFF
-    #  x *= SCREEN_WIDTH_IN_PIXELS
-    #  y *= SCREEN_HEIGHT_IN_PIXELS
-    #  
-    #  rect = Qt::GraphicsRectItem.new(x, y, 16*16, 12*16)
-    #  rect.setBrush(Qt::Brush.new(Qt::Color.new(200, 0, 200, 50)))
-    #  scene.addItem(rect)
-    #end
+    min_x = 0
+    min_y = 0
+    max_x = @room.max_layer_width*SCREEN_WIDTH_IN_PIXELS
+    max_y = @room.max_layer_height*SCREEN_HEIGHT_IN_PIXELS
+    @room.doors.each_with_index do |door, i|
+      x = door.x_pos
+      y = door.y_pos
+      x = -1 if x == 0xFF
+      y = -1 if y == 0xFF
+      x *= SCREEN_WIDTH_IN_PIXELS
+      y *= SCREEN_HEIGHT_IN_PIXELS
+      
+      min_x = x if x < min_x
+      min_y = y if y < min_y
+      door_right_x = x + 16*16
+      door_bottom_y = y + 12*16
+      max_x = door_right_x if door_right_x > max_x
+      max_y = door_bottom_y if door_bottom_y > max_y
+      
+      door_item = DoorItem.new(door, x, y, self)
+      @room_graphics_scene.addItem(door_item)
+    end
+    @room_graphics_scene.setSceneRect(min_x, min_y, max_x-min_x, max_y-min_y)
   end
   
   def load_map()
@@ -361,6 +384,26 @@ class DSVE < Qt::MainWindow
   
   def build_and_run
     write_to_rom(launch_emulator = true)
+  end
+end
+
+class DoorItem < Qt::GraphicsRectItem
+  BRUSH = Qt::Brush.new(Qt::Color.new(200, 0, 200, 50))
+  
+  def initialize(door, x, y, window)
+    super(x, y, 16*16, 12*16)
+    
+    self.setBrush(BRUSH)
+    @door = door
+    @window = window
+  end
+  
+  def mousePressEvent(event)
+    if event.button == Qt::RightButton
+      @window.change_room_by_metadata(@door.destination_room_metadata_ram_pointer)
+    else
+      super(event)
+    end
   end
 end
 
