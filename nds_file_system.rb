@@ -4,7 +4,10 @@ require 'fileutils'
 class NDSFileSystem
   class ConversionError < StandardError ; end
   
-  attr_reader :files, :overlays, :rom
+  attr_reader :files,
+              :files_by_path,
+              :overlays,
+              :rom
   
   def open_directory(filesystem_directory)
     @filesystem_directory = filesystem_directory
@@ -324,7 +327,8 @@ private
       
       file_path = file_data[6..-1]
       file_path = file_path.delete("\x00") # Remove null bytes padding the end of the string
-      file = files.values.find{|file| file[:file_path] == file_path}
+      file = files_by_path[file_path]
+      
       file[:ram_start_offset] = ram_start_offset
       
       offset += LIST_OF_FILE_RAM_LOCATIONS_ENTRY_LENGTH
@@ -361,6 +365,8 @@ private
   end
   
   def generate_file_paths
+    @files_by_path = {}
+    
     all_files.each do |file|
       if file[:parent_id] == 0xF000
         file[:file_path] = file[:name]
@@ -369,6 +375,8 @@ private
       else
         file[:file_path] = "/" + File.join(@files[file[:parent_id]][:name], file[:name])
       end
+      
+      @files_by_path[file[:file_path]] = file
     end
   end
 end
