@@ -12,13 +12,23 @@ class Sector
     @sector_ram_pointer = sector_ram_pointer
     @sector_index = sector_index
     @fs = fs
-    read_from_rom()
   end
   
-  def read_from_rom
+  def rooms
+    @rooms ||= read_rooms_from_rom()
+  end
+  
+  def load_necessary_overlay
+    overlay_id = AREA_INDEX_TO_OVERLAY_INDEX[area.area_index][sector_index]
+    fs.load_overlay(overlay_id)
+  end
+  
+private
+  
+  def read_rooms_from_rom
     load_necessary_overlay()
     
-    @rooms = []
+    rooms = []
     room_index = 0
     while true
       #puts "#{area.area_index}-#{sector_index}-#{room_index}"
@@ -31,14 +41,11 @@ class Sector
       end
       
       room = Room.new(self, room_metadata_ram_pointer, area.area_index, sector_index, room_index, fs)
-      @rooms << room
+      rooms << room
       
       room_index += 1
     end
-  end
-  
-  def load_necessary_overlay
-    overlay_id = AREA_INDEX_TO_OVERLAY_INDEX[area.area_index][sector_index]
-    fs.load_overlay(overlay_id)
+    
+    rooms
   end
 end
