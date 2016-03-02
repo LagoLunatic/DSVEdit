@@ -59,12 +59,13 @@ class DSVE < Qt::MainWindow
     connect(@ui.set_as_starting_room, SIGNAL("released()"), self, SLOT("set_current_room_as_starting_room()"))
     
     load_settings()
-    if @settings[:last_used_folder] && File.directory?(@settings[:last_used_folder])
-      open_folder(@settings[:last_used_folder])
-    end
     
     self.setWindowState(Qt::WindowMaximized)
     self.show()
+    
+    if @settings[:last_used_folder] && File.directory?(@settings[:last_used_folder])
+      open_folder(@settings[:last_used_folder])
+    end
   end
   
   def open_rom_dialog
