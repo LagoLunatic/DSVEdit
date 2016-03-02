@@ -20,3 +20,9 @@ require_relative 'constants/shared_constants'
 
 require_relative 'renderer'
 require_relative 'tmx_interface'
+
+if defined?(Ocra)
+  require_relative 'constants/dos_constants'
+  require_relative 'constants/por_constants'
+  require_relative 'constants/ooe_constants'
+end

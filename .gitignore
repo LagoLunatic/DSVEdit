@@ -3,3 +3,4 @@ ui_*.rb
 /logs
 /docs
 /lua scripts
+/build
