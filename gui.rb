@@ -366,15 +366,6 @@ class DSVE < Qt::MainWindow
   end
   
   def write_to_rom(launch_emulator = false)
-    #if game.fs.has_uncommitted_files?
-    #  answer = Qt::MessageBox.question(self, "Unsaved changes", "Save changed files before building?", Qt::MessageBox::Yes, Qt::MessageBox::No, Qt::MessageBox::Cancel)
-    #  if answer == Qt::MessageBox::Yes
-    #    save_files()
-    #  elsif answer == Qt::MessageBox::Cancel
-    #    return
-    #  end
-    #end
-    
     game.fs.write_to_rom("../#{GAME} hack.nds")
     
     if launch_emulator

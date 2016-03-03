@@ -46,6 +46,6 @@ class Entity
   end
   
   def is_pickup?
-    
+    raise NotImplementedError
   end
 end

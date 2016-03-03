@@ -31,7 +31,6 @@ private
     rooms = []
     room_index = 0
     while true
-      #puts "#{area.area_index}-#{sector_index}-#{room_index}"
       room_metadata_ram_pointer = fs.read(sector_ram_pointer + room_index*4, 4).unpack("V*").first
       
       break if room_metadata_ram_pointer == 0

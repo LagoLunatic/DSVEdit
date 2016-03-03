@@ -21,21 +21,10 @@ class Renderer
     
     # TODO: find a proper way of determining what the main collision layer is. just looking at the z-index doesn't seem sufficient.
 
-    # make the image encompass all the layers
-    max_width = 0
-    max_height = 0
-    rendered_layers.each do |layer|
-      max_width = layer.width if layer.width > max_width
-      max_height = layer.height if layer.height > max_height
-    end
-    
-    rendered_level = ChunkyPNG::Image.new(max_width, max_height, ChunkyPNG::Color::BLACK)
+    rendered_level = ChunkyPNG::Image.new(room.max_layer_width*SCREEN_WIDTH_IN_PIXELS, room.max_layer_height*SCREEN_HEIGHT_IN_PIXELS, ChunkyPNG::Color::BLACK)
     rendered_layers.each do |layer|
       rendered_level.compose!(layer)
     end
-    
-    max_width_in_screens = max_width / SCREEN_WIDTH_IN_PIXELS
-    max_height_in_screens = max_height / SCREEN_HEIGHT_IN_PIXELS
     
     filename = "#{folder}/#{room.area_name}/Rendered Rooms/#{room.filename}.png"
     FileUtils::mkdir_p(File.dirname(filename))
@@ -47,7 +36,6 @@ class Renderer
     rendered_layer = ChunkyPNG::Image.new(layer.width*16*16, layer.height*16*12, ChunkyPNG::Color::TRANSPARENT)
     
     tileset_filename = "#{folder}/#{room.area_name}/Tilesets/#{layer.tileset_filename}.png"
-    #puts "#{room.area_index}-#{room.sector_index}-#{room.room_index}"
     fs.load_overlay(AREA_INDEX_TO_OVERLAY_INDEX[room.area_index][room.sector_index])
     tileset = get_tileset(layer.ram_pointer_to_tileset_for_layer, room.palette_offset, room.graphic_tilesets_for_room, layer.colors_per_palette, layer.collision_tileset_ram_pointer, tileset_filename)
     
@@ -225,11 +213,8 @@ class Renderer
       palette_data_start_offset -= 0x804
     end
     
-    #puts "graphic_tile_data_start_offset: %08X" % graphic_tile_data_start_offset
     palette_data_start_offset += 4 # Skip the first 4 bytes, as they contain the length of this palette page, not the palette data itself.
 
-    #puts "palette_data_start_offset: %08X" % palette_data_start_offset
-    #puts "number_of_palettes: %d" % number_of_palettes
     palette_list = []
     (0..number_of_palettes).each do |palette_index| # todo: cache palettes
       palette_data = fs.read(palette_data_start_offset + 32*palette_index, colors_per_palette*2)

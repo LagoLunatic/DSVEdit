@@ -82,9 +82,8 @@ class NDSFileSystem
   end
   
   def load_overlay(overlay_id)
-    overlay = @overlays[overlay_id] # @files.values.select{|file| file[:overlay_id] == overlay_id}.first
+    overlay = @overlays[overlay_id]
     load_file(overlay)
-    #puts "Loaded overlay: #{overlay_id}"
   end
   
   def load_file(file)
@@ -173,18 +172,6 @@ class NDSFileSystem
     
     return ram_address + offset_difference
   end
-  
-  #def rom
-  #  file_path = "ftc/rom.nds"
-  #  if @opened_files_cache[file_path]
-  #    file = @opened_files_cache[file_path]
-  #  else
-  #    path = File.join(@filesystem_directory, file_path)
-  #    file = File.open(path, "rb") {|file| file.read}
-  #    @opened_files_cache[file_path] = file
-  #  end
-  #  return file
-  #end
   
 private
   

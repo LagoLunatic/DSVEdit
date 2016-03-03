@@ -162,8 +162,6 @@ else
       if options[:sectors] && !options[:sectors].include?(sector.sector_index)
         next
       end
-      #puts "area_index: #{area_index}"
-      #puts "sector_index: #{sector.sector_index}"
       
       sector.load_necessary_overlay()
       

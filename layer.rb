@@ -30,32 +30,24 @@ class Layer
   def read_from_layer_list_entry
     # todo: get anything else from the layer list that's useful
     @layer_metadata_ram_pointer = fs.read(layer_list_entry_ram_pointer + 12,4).unpack("V*").first
-    #puts "layer_metadata_ram_pointer: %08X" % layer_metadata_ram_pointer
     @render_type = fs.read(layer_list_entry_ram_pointer + 8,1).unpack("C*").first
     @opacity = fs.read(layer_list_entry_ram_pointer + 2,1).unpack("C*").first
-    @z_index = fs.read(layer_list_entry_ram_pointer,1).unpack("C*").first
+    @z_index = fs.read(layer_list_entry_ram_pointer, 1).unpack("C*").first
   end
   
   def read_from_layer_metadata
-    #layer_metadata_offset = ram_to_rom(layer_metadata_ram_pointer, room.overlay_offset)
-    #layer_metadata_offset = converter.ram_to_rom(layer_metadata_ram_pointer)
-
-    #puts "layer_metadata_offset: %08X" % layer_metadata_offset
     @width, @height = fs.read(layer_metadata_ram_pointer,2).unpack("C*")
     if width > 15 || height > 15
       raise LayerReadError.new("Invalid layer size: #{width}x#{height}")
     end
     @ram_pointer_to_tileset_for_layer = fs.read(layer_metadata_ram_pointer+4,4).unpack("V*").first
-    #puts "ram_pointer_to_tileset_for_layer: %08X" % ram_pointer_to_tileset_for_layer
+    
     is_a_pointer_check = fs.read(layer_metadata_ram_pointer + 7).unpack("C*").first
     if is_a_pointer_check != 0x02
       raise "Tileset pointer is invalid for room %08X" % room.room_metadata_ram_pointer # TODO: FIXME
       return
     end
-    #@pointer_to_tileset_for_layer = ram_to_rom(ram_pointer_to_tileset_for_layer, room.overlay_offset)
-    #@pointer_to_tileset_for_layer = converter.ram_to_rom(ram_pointer_to_tileset_for_layer)
-    #puts "pointer_to_tileset_for_layer: %08X" % pointer_to_tileset_for_layer
-    #@layer_tiledata_ram_start_offset = layer_metadata_ram_pointer + 0x10 # FIXME, HACK
+    
     @collision_tileset_ram_pointer = fs.read(layer_metadata_ram_pointer+8, 4).unpack("V").first
     @layer_tiledata_ram_start_offset = fs.read(layer_metadata_ram_pointer+12, 4).unpack("V").first
   end
