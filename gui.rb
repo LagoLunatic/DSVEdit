@@ -491,7 +491,7 @@ class EnemyEditDialog < Qt::Dialog
     
     connect(@ui.buttonBox, SIGNAL("clicked(QAbstractButton*)"), self, SLOT("button_pressed(QAbstractButton*)"))
     
-    self.setWindowFlags(Qt::MSWindowsFixedSizeDialogHint);
+    self.setWindowFlags(Qt::MSWindowsFixedSizeDialogHint)
     
     self.show()
   end
