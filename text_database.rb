@@ -25,7 +25,7 @@ class TextDatabase
     
     next_string_ram_pointer = STRING_DATABASE_START_OFFSET
     text_list.each do |text|
-      if next_string_ram_pointer + text.encoded_string.length + 3 >= STRING_DATABASE_END_OFFSET
+      if next_string_ram_pointer + text.encoded_string.length + 3 > STRING_DATABASE_END_OFFSET
         # Writing strings past this point would result in something being overwritten, so raise an error.
         raise StringDatabaseTooLargeError.new
       end
