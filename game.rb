@@ -86,14 +86,15 @@ class Game
     
     address = 0x0202E240 # Where the code for automatically equipping the first souls you get is.
     
-    # Take 5 lines of old code and shift them down a line to make room for a new line of code we're going to add.
-    # This does overwrite one line of code at the end, but that line only seems to be run for ability souls, so we don't want it anyway.
-    old_code = fs.read(address+4, 4*5)
-    fs.write(address+8, old_code)
-    
     code = [
       0xE3540003, # cmp r4,3h     ; Compares the type of soul Soma just got with 3, type 3 being ability souls.
       0x0A00002D, # beq 0202E300h ; If it's equal, we jump past all this code that equips the soul automatically.
+      0x908FF104, # The next 5 lines of code are just shifting the original code down by one line since we needed space for the above line of code.
+      0xEA000011,
+      0xEA000001,
+      0xEA000004,
+      0xEA000007,
+      # After shifting those 5 lines down, one line at the end got overwritten. But that line only seems to be run for ability souls, so we don't want it anyway.
     ]
     fs.write(address, code.pack("V*"))
   end
