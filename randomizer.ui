@@ -177,9 +177,12 @@
          </property>
          <layout class="QHBoxLayout" name="horizontalLayout_5">
           <item>
-           <widget class="QCheckBox" name="checkBox_6">
+           <widget class="QCheckBox" name="fix_first_ability_soul">
             <property name="text">
-             <string>CheckBox</string>
+             <string>Fix first ability soul</string>
+            </property>
+            <property name="checked">
+             <bool>true</bool>
             </property>
            </widget>
           </item>

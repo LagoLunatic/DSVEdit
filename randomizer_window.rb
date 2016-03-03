@@ -115,6 +115,10 @@ class RandomizerWindow < Qt::Dialog
     )
     randomizer.randomize()
     
+    if @ui.fix_first_ability_soul.checked()
+      game.dos_fix_first_ability_soul()
+    end
+    
     if @ui.open_world_map.checked()
       game.ooe_open_world_map()
     end
