@@ -184,6 +184,7 @@ class DSVE < Qt::MainWindow
     
     @sector_index = new_sector_index
     @sector = @area.sectors[@sector_index]
+    @ui.sector.setCurrentIndex(@sector_index)
     room_index_changed(0, force=true)
     @ui.room.clear()
     @sector.rooms.each_with_index do |room, room_index|
@@ -201,15 +202,14 @@ class DSVE < Qt::MainWindow
     end
     @room_index = new_room_index
     @room = @sector.rooms[@room_index]
+    @ui.room.setCurrentIndex(@room_index)
     
     load_layers()
   end
   
   def sector_and_room_indexes_changed(new_sector_index, new_room_index)
     puts "sector_and_room_indexes_changed: #{new_sector_index}, #{new_room_index}"
-    @ui.sector.setCurrentIndex(new_sector_index)
     sector_index_changed(new_sector_index)
-    @ui.room.setCurrentIndex(new_room_index)
     room_index_changed(new_room_index)
   end
   
