@@ -120,15 +120,16 @@ File.open("settings.yml", "w") do |f|
   f.write(settings.to_yaml)
 end
 
-input_rom_path = settings[:input_rom_paths][options[:game]]
-
 game = Game.new
-folder = File.join("..", "extracted_files_#{GAME}")
-if File.exist?(folder) && File.directory?(folder)
+
+folder = settings[:input_folder_paths][GAME]
+if File.directory?(folder)
   game.initialize_from_folder(folder)
 else
+  input_rom_path = settings[:input_rom_paths][options[:game]]
   game.initialize_from_rom(input_rom_path)
 end
+
 fs = game.fs
 
 renderer = Renderer.new(fs)
