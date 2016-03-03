@@ -2,7 +2,7 @@
 class Game
   class InvalidGameError < StandardError ; end
   
-  attr_reader :areas, :fs
+  attr_reader :areas, :fs, :folder
   
   def initialize_from_folder(input_folder_path)
     header_path = File.join(input_folder_path, "ftc", "ndsheader.bin")
@@ -23,9 +23,9 @@ class Game
   def initialize_from_rom(input_rom_path)
     verify_game_and_load_constants(input_rom_path)
     
-    folder = File.dirname(input_rom_path)
+    @folder = File.dirname(input_rom_path)
     rom_name = File.basename(input_rom_path, ".*")
-    folder = File.join(folder, "Extracted files #{rom_name}")
+    @folder = File.join(folder, "Extracted files #{rom_name}")
     
     @fs = NDSFileSystem.new
     fs.open_and_extract_rom(input_rom_path, folder)

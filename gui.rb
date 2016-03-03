@@ -73,7 +73,7 @@ class DSVE < Qt::MainWindow
     rom_path = Qt::FileDialog.getOpenFileName(self, "Select ROM", nil, "NDS ROM Files (*.nds)")
     return if rom_path.nil?
     folder = File.dirname(rom_path)
-    open_rom(rom_path, folder)
+    open_rom(rom_path)
   end
   
   def open_folder_dialog
@@ -82,7 +82,7 @@ class DSVE < Qt::MainWindow
     open_folder(folder)
   end
   
-  def open_rom(rom_path, folder)
+  def open_rom(rom_path)
     unless File.exist?(rom_path) && File.file?(rom_path)
       raise "Not a file"
     end
@@ -96,7 +96,7 @@ class DSVE < Qt::MainWindow
     
     initialize_dropdowns()
     
-    @settings[:last_used_folder] = folder
+    @settings[:last_used_folder] = game.folder
   end
   
   def open_folder(folder_path)
@@ -106,7 +106,7 @@ class DSVE < Qt::MainWindow
     
     header_path = File.join(folder_path, "ftc", "ndsheader.bin")
     unless File.exist?(header_path) && File.file?(header_path)
-      raise "Header file not present"
+      raise "Header file #{header_path} not present"
     end
     
     verify_game_and_load_constants(header_path)
