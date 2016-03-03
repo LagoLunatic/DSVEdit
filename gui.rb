@@ -200,8 +200,16 @@ class DSVE < Qt::MainWindow
     if new_room_index == @room_index && !force
       return
     end
+    
+    room = @sector.rooms[new_room_index]
+    if room.nil?
+      Qt::MessageBox.warning(self, "Can't find room", "Failed to find room with room index #{new_room_index} (area: #{@area_index}, sector: #{@sector_index})")
+      load_map() # TODO: hack. For some reason when the room index is wrong the map gets somehow messed up, and it needs to be reloaded to work correctly again.
+      return
+    end
+    
     @room_index = new_room_index
-    @room = @sector.rooms[@room_index]
+    @room = room
     @ui.room.setCurrentIndex(@room_index)
     
     load_layers()
