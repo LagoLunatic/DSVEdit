@@ -206,44 +206,6 @@ end
 
 puts "Finished."
 
-# Randomize which soul bosses drop
-if options[:game] == "dos" && options[:mode] == "randomize"
-  boss_soul_ids = BOSS_IDS.map do |id|
-    soul_id = rom[ENEMY_DNA_START_OFFSET + id*36 + 26].unpack("C*").first # 27th byte is the soul this enemy drops.
-    soul_id
-  end
-  #raise boss_soul_ids.map{|x| x.to_s(16)}.inspect
-  boss_soul_ids = boss_soul_ids.shuffle(random: rng)
-  important_boss_soul_ids = [0x35, 0x74, 0x75, 0x00, 0x01, 0x02, 0x36, 0x37, 0x77, 0x78] # maybe add succubus to this list?
-  unused_important_boss_soul_ids = important_boss_soul_ids.dup
-  
-  # TODO: make bosses sometimes drop a good item like a weapon in addition to the soul
-  
-  BOSS_IDS.shuffle.each_with_index do |id, i|
-    next if id == 0x66 # don't randomize balore's soul since you need it to get out.
-    #random_soul_id = boss_soul_ids.delete_at($rng.rand(boss_soul_ids.length)) # deletes the element from the array so it can't be chosen twice.
-    #random_soul_id = boss_soul_ids[i] # has been shuffled already so this is random
-    if unused_important_boss_soul_ids.length > 0
-      random_soul_id = unused_important_boss_soul_ids.sample(random: rng)
-      unused_important_boss_soul_ids.delete(random_soul_id)
-    else # Exhausted the important souls. Give the boss an unimportant boss soul instead.
-      random_soul_id = (boss_soul_ids - important_boss_soul_ids).sample(random: rng)
-    end
-    #puts "%08X" % (ENEMY_DNA_START_OFFSET + id*36 + 26)
-    #exit
-    rom[ENEMY_DNA_START_OFFSET + id*36 + 26] = [random_soul_id].pack("C*")
-    #rom[ENEMY_DNA_START_OFFSET + id*36 + 14] = [0].pack("C*") # set hp to 0 for debugging purposes
-    #rom[ENEMY_DNA_START_OFFSET + id*36 + 15] = [0].pack("C*")
-  end
-  
-  # The below line fixes a bug in the game. The bug works like this: The first time you get an ability soul, it activates the other ability souls whose binary bits are equal to the integer representation of the ability soul you just got. For example doppelganger is the 2nd ability soul (starting from 0 - not 1), which in binary is 00000010. This means it activates the 1st ability soul, which is malphas. Even if you don't have malphas yet. This bugged code runs the first time you get a soul of each type, but works fine for red, blue, and yellow souls. So only you first ability soul is affected. Normally this is balore, the 0th ability soul. So this bug isn't noticeable in a normal playthrough, because 0 doesn't activate any ability souls.
-  rom[0x32240,7*4] = [0xE3540003, 0x0A00002D, 0x908FF104, 0xEA000011, 0xEA000001, 0xEA000004, 0xEA000007].pack("V*")
-  
-  # Change the starting room to skip the tutorial.
-  #rom[0x33B84] = [0x00].pack("C*")
-  #rom[0x33B90] = [0x01].pack("C*")
-end
-
 if options[:game] == "dos"
   # Change the starting room to skip the tutorial.
   fs.write(0x0202FB84, [0x00].pack("C*"))

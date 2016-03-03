@@ -40,6 +40,10 @@ class Randomizer
       randomize_enemy_drops()
     end
     
+    if options[:randomize_boss_souls]
+      randomize_boss_souls()
+    end
+    
     if options[:randomize_starting_room]
       game.fix_top_screen_on_new_game()
       randomize_starting_room()
@@ -168,6 +172,48 @@ class Randomizer
       end
       
       enemy.write_to_rom()
+    end
+  end
+  
+  def randomize_boss_souls
+    return unless GAME == "dos"
+    
+    important_soul_ids = [
+      0x00, # puppet master
+      0x01, # zephyr
+      0x02, # paranoia
+      0x20, # succubus
+      0x2E, # alucard's bat form
+      0x35, # flying armor
+      0x36, # bat company
+      0x37, # black panther
+      0x74, # balore
+      0x75, # malphas
+      0x77, # rahab
+      0x78, # hippogryph
+    ]
+    
+    unused_important_soul_ids = important_soul_ids.dup
+    
+    bosses = []
+    BOSS_IDS.each do |enemy_id|
+      boss = EnemyDNA.new(enemy_id, game.fs)
+      bosses << boss
+    end
+    
+    bosses.each do |boss|
+      next if boss.name == "Balore" # Don't randomize Balore's soul since you need it to get out of the fight.
+      next if boss.name == "Menace"
+      
+      if unused_important_soul_ids.length > 0
+        random_soul_id = unused_important_soul_ids.sample(random: rng)
+        unused_important_soul_ids.delete(random_soul_id)
+      else # Exhausted the important souls. Give the boss a random soul instead.
+        random_soul_id = rng.rand(SOUL_GLOBAL_ID_RANGE)
+      end
+      
+      boss.dna_attributes["Soul"] = random_soul_id
+      boss.write_to_rom()
     end
   end
   
