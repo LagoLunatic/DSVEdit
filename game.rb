@@ -75,6 +75,29 @@ class Game
     fs.write(NEW_GAME_STARTING_TOP_SCREEN_TYPE_OFFSET, [0x05].pack("C"))
   end
   
+  def dos_fix_first_ability_soul
+    return unless GAME == "dos"
+    
+    # This fixes a bug in the original game that occurs when you get your first ability soul. It activates more ability souls than you actually possess.
+    
+    # The bug works like this: The first time you get an ability soul, the same function that equips the first bullet/guardian/enchant souls you get in the tutorial tries to run on the ability soul you get too. But this is a problem, because while your equipped bullet/guardian/enchant souls are stored as an integer representing the ID of the soul you have equipped, the ability souls you have equipped is stored as a bit field.
+    # For example, Doppelganger is the 2nd ability soul (counting from 0, not from 1). 2 in binary is 00000010. When it tries to store this in the bitfield representing the ability souls you have activated, it activates the 1st ability soul, Malphas. In other words, if your first ability soul is Doppelganger you gain both Doppelganger and Malphas. (Though Malphas doesn't show up in the list of ability souls you own, so you can't deactivate it.)
+    # This bug isn't noticeable in a normal playthrough because the first ability soul you get is always Balore. Balore is the 0th ability soul, and 0 in binary is still 0, so no extra souls get activated.
+    
+    address = 0x0202E240 # Where the code for automatically equipping the first souls you get is.
+    
+    # Take 5 lines of old code and shift them down a line to make room for a new line of code we're going to add.
+    # This does overwrite one line of code at the end, but that line only seems to be run for ability souls, so we don't want it anyway.
+    old_code = fs.read(address+4, 4*5)
+    fs.write(address+8, old_code)
+    
+    code = [
+      0xE3540003, # cmp r4,3h     ; Compares the type of soul Soma just got with 3, type 3 being ability souls.
+      0x0A00002D, # beq 0202E300h ; If it's equal, we jump past all this code that equips the soul automatically.
+    ]
+    fs.write(address, code.pack("V*"))
+  end
+  
   def ooe_open_world_map
     return unless GAME == "ooe"
     
