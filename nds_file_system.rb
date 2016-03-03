@@ -15,6 +15,12 @@ class NDSFileSystem
     input_rom_path = "#{@filesystem_directory}/ftc/rom.nds"
     @rom = File.open(input_rom_path, "rb") {|file| file.read}
     read_from_rom()
+    @files.each do |id, file|
+      next unless file[:type] == :file
+      
+      file[:size] = File.size(File.join(@filesystem_directory, file[:file_path]))
+      file[:end_offset] = file[:start_offset] + file[:size]
+    end
   end
   
   def open_and_extract_rom(input_rom_path, filesystem_directory)
