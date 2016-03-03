@@ -55,6 +55,19 @@ class Game
     end
   end
   
+  def enemy_dnas
+    @enemy_dnas ||= begin
+      enemy_dnas = []
+      
+      ENEMY_IDS.each do |enemy_id|
+        enemy_dna = EnemyDNA.new(enemy_id, fs)
+        enemy_dnas << enemy_dna
+      end
+      
+      enemy_dnas
+    end
+  end
+  
   def fix_top_screen_on_new_game
     return unless GAME == "ooe"
     

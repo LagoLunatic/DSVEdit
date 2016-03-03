@@ -44,6 +44,10 @@ class Randomizer
       game.fix_top_screen_on_new_game()
       randomize_starting_room()
     end
+    
+    if options[:randomize_enemy_ai]
+      randomize_enemy_ai()
+    end
   end
   
   def randomize_entity(entity)
@@ -176,5 +180,15 @@ class Randomizer
   
   def randomize_doors
     raise NotImplementedError
+  end
+  
+  def randomize_enemy_ai
+    common_enemy_dnas = game.enemy_dnas[0..COMMON_ENEMY_IDS.last]
+    available_ais = common_enemy_dnas.map{|dna| dna.dna_attributes["Running AI"]}
+    
+    common_enemy_dnas.each do |dna|
+      dna.dna_attributes["Running AI"] = available_ais.sample(random: rng)
+      dna.write_to_rom()
+    end
   end
 end

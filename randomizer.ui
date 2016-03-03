@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>400</width>
-    <height>332</height>
+    <height>361</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -147,6 +147,17 @@
           <widget class="QCheckBox" name="randomize_starting_room">
            <property name="text">
             <string>Starting Room</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <layout class="QHBoxLayout" name="horizontalLayout_8">
+         <item>
+          <widget class="QCheckBox" name="randomize_enemy_ai">
+           <property name="text">
+            <string>Enemy AI</string>
            </property>
           </widget>
          </item>
