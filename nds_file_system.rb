@@ -3,6 +3,7 @@ require 'fileutils'
 
 class NDSFileSystem
   class ConversionError < StandardError ; end
+  class OffsetPastEndOfFileError < StandardError ; end
   
   attr_reader :files,
               :files_by_path,
@@ -115,10 +116,12 @@ class NDSFileSystem
   end
   
   def read_by_file(file_path, offset_in_file, length)
-    file_data = get_file_data_from_opened_files_cache(file_path)
-    if offset_in_file + length > file_data.length
-      raise "Offset is past end of file"
+    file = files_by_path[file_path]
+    if offset_in_file + length > file[:size]
+      raise OffsetPastEndOfFileError.new("Offset %08X is past end of file #{file_path} (%08X bytes long)" % [offset_in_file, file[:size]])
     end
+    
+    file_data = get_file_data_from_opened_files_cache(file_path)
     return file_data[offset_in_file, length]
   end
   
@@ -136,6 +139,11 @@ class NDSFileSystem
   end
   
   def write_by_file(file_path, offset_in_file, new_data)
+    file = files_by_path[file_path]
+    if offset_in_file + new_data.length > file[:size]
+      raise OffsetPastEndOfFileError.new("Offset %08X is past end of file #{file_path} (%08X bytes long)" % [offset_in_file, file[:size]])
+    end
+    
     file_data = get_file_data_from_opened_files_cache(file_path)
     file_data[offset_in_file, new_data.length] = new_data
     @opened_files_cache[file_path] = file_data
