@@ -12,32 +12,47 @@ class Renderer
     @fs = fs
   end
   
-  def render_room(folder, room)
+  def render_room(folder, room, collision = false)
     rendered_layers = []
     
     room.z_ordered_layers.each do |layer|
-      rendered_layers << render_layer(folder, layer, room)
+      rendered_layers << render_layer(folder, layer, room, collision)
     end
     
     # TODO: find a proper way of determining what the main collision layer is. just looking at the z-index doesn't seem sufficient.
 
-    rendered_level = ChunkyPNG::Image.new(room.max_layer_width*SCREEN_WIDTH_IN_PIXELS, room.max_layer_height*SCREEN_HEIGHT_IN_PIXELS, ChunkyPNG::Color::BLACK)
+    if collision
+      bg_color = ChunkyPNG::Color::WHITE
+    else
+      bg_color = ChunkyPNG::Color::BLACK
+    end
+    
+    rendered_level = ChunkyPNG::Image.new(room.max_layer_width*SCREEN_WIDTH_IN_PIXELS, room.max_layer_height*SCREEN_HEIGHT_IN_PIXELS, bg_color)
     rendered_layers.each do |layer|
       rendered_level.compose!(layer)
     end
     
-    filename = "#{folder}/#{room.area_name}/Rendered Rooms/#{room.filename}.png"
+    if collision
+      filename = "#{folder}/#{room.area_name}/Rendered Rooms/#{room.filename}_collision.png"
+    else
+      filename = "#{folder}/#{room.area_name}/Rendered Rooms/#{room.filename}.png"
+    end
     FileUtils::mkdir_p(File.dirname(filename))
     rendered_level.save(filename)
     puts "Wrote #{filename}"
   end
   
-  def render_layer(folder, layer, room)
+  def render_layer(folder, layer, room, collision = false)
     rendered_layer = ChunkyPNG::Image.new(layer.width*16*16, layer.height*16*12, ChunkyPNG::Color::TRANSPARENT)
     
     tileset_filename = "#{folder}/#{room.area_name}/Tilesets/#{layer.tileset_filename}.png"
     fs.load_overlay(AREA_INDEX_TO_OVERLAY_INDEX[room.area_index][room.sector_index])
-    tileset = get_tileset(layer.ram_pointer_to_tileset_for_layer, room.palette_offset, room.graphic_tilesets_for_room, layer.colors_per_palette, layer.collision_tileset_ram_pointer, tileset_filename)
+    if collision
+      tileset_filename = "#{folder}/#{room.area_name}/Tilesets/#{layer.tileset_filename}_collision.png"
+      tileset = render_collision_tileset(layer.collision_tileset_ram_pointer, tileset_filename)
+    else
+      tileset = get_tileset(layer.ram_pointer_to_tileset_for_layer, room.palette_offset, room.graphic_tilesets_for_room, layer.colors_per_palette, layer.collision_tileset_ram_pointer, tileset_filename)
+    end
     
     layer.tiles.each_with_index do |tile, index_on_level|
       x_on_tileset = tile.index_on_tileset % 16

@@ -182,6 +182,7 @@ else
           end
         when "render_room"
           renderer.render_room(folder, room)
+          renderer.render_room(folder, room, collision = true)
         when "export_tmx"
           tiled.create("./#{folder}/#{room.area_name}/#{room.filename}.tmx", room)
         when "import_tmx"
