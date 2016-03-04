@@ -8,6 +8,7 @@ class Layer
               :layer_metadata_ram_pointer,
               :render_type,
               :opacity,
+              :scroll_mode,
               :z_index,
               :ram_pointer_to_tileset_for_layer,
               :fs,
@@ -32,6 +33,7 @@ class Layer
     @layer_metadata_ram_pointer = fs.read(layer_list_entry_ram_pointer + 12,4).unpack("V*").first
     @render_type = fs.read(layer_list_entry_ram_pointer + 8,1).unpack("C*").first
     @opacity = fs.read(layer_list_entry_ram_pointer + 2,1).unpack("C*").first
+    @scroll_mode = fs.read(layer_list_entry_ram_pointer + 1, 1).unpack("C*").first
     @z_index = fs.read(layer_list_entry_ram_pointer, 1).unpack("C*").first
   end
   
