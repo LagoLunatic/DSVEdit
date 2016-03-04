@@ -114,11 +114,14 @@ class Renderer
         next # TODO: figure out why this sometimes happens.
       end
       
-      if tile.palette_index == 0xFF # TODO. 255 seems to have some special meaning besides an actual palette index.
+      if tile.palette_index == 0xFF
+        # TODO. 255 seems to have some special meaning besides an actual palette index.
+        # This seems to be used for a lot of tiles in the abyss.
         puts "Palette index is 0xFF, tileset #{output_filename}"
-        next
+        palette = palette_list[0]
+      else
+        palette = palette_list[tile.palette_index]
       end
-      palette = palette_list[tile.palette_index]
       if palette.nil?
         puts "Palette index #{tile.palette_index} out of range, tileset #{output_filename}"
         next # TODO: figure out why this sometimes happens.
