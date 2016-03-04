@@ -181,4 +181,12 @@ class Room
   def max_layer_height
     layers.map(&:height).max
   end
+  
+  def main_layer_width
+    layers.select{|layer| layer.scroll_mode == 1}.map(&:width).max
+  end
+  
+  def main_layer_height
+    layers.select{|layer| layer.scroll_mode == 1}.map(&:height).max
+  end
 end
