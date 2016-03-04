@@ -35,6 +35,7 @@ class NDSFileSystem
     
     new_start_offset = @files[0][:start_offset]
     
+    files_written = 0
     @files.sort_by{|id, file| id}.each do |id, file|
       next unless file[:type] == :file
       if file[:name] =~ /\.bin$/ || file[:name] == "rom.nds"
@@ -58,6 +59,19 @@ class NDSFileSystem
       if file[:overlay_id]
         offset = file[:overlay_id] * 32
         @rom[@arm9_overlay_table_offset+offset+8, 4] = [new_file_size].pack("V")
+      end
+      
+      files_written += 1
+      if block_given?
+        should_cancel = yield(files_written)
+        if should_cancel
+          # Undo changes made to the ROM before cancelling.
+          rom_path = File.join(@filesystem_directory, "ftc/rom.nds")
+          @rom = File.open(rom_path, "rb") {|file| file.read}
+          
+          puts "Cancelled."
+          return
+        end
       end
     end
     

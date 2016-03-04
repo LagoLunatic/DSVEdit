@@ -374,7 +374,27 @@ class DSVE < Qt::MainWindow
   end
   
   def write_to_rom(launch_emulator = false)
-    game.fs.write_to_rom("../#{GAME} hack.nds")
+    progress_dialog = Qt::ProgressDialog.new
+    progress_dialog.windowTitle = "Building"
+    progress_dialog.labelText = "Writing files to ROM"
+    progress_dialog.maximum = game.fs.files.length
+    progress_dialog.windowModality = Qt::ApplicationModal
+    progress_dialog.windowFlags = Qt::CustomizeWindowHint | Qt::WindowTitleHint
+    progress_dialog.setFixedSize(progress_dialog.size);
+    
+    game.fs.write_to_rom("../#{GAME} hack.nds") do |files_written|
+      next unless files_written % 100 == 0 # Only update the UI every 100 files because updating too often is slow.
+      
+      progress_dialog.setValue(files_written)
+      
+      should_cancel = false
+      if progress_dialog.wasCanceled
+        progress_dialog.labelText = "Canceling"
+        should_cancel = true
+      end
+      should_cancel
+    end
+    progress_dialog.setValue(game.fs.files.length)
     
     if launch_emulator
       system("start \"#{@settings[:emulator_path]}\" \"../#{GAME} hack.nds\"")
