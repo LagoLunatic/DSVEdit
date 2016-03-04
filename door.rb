@@ -36,4 +36,18 @@ class Door
     fs.write(door_ram_pointer+4, [x_pos, y_pos].pack("C*"))
     fs.write(door_ram_pointer+6, [dest_x_unused, dest_y_unused, dest_x, dest_y].pack("v*"))
   end
+  
+  def direction
+    if x_pos == 0xFF
+      return :left
+    elsif y_pos == 0xFF
+      return :up
+    elsif x_pos == room.main_layer_width
+      return :right
+    elsif y_pos == room.main_layer_height
+      return :down
+    else
+      raise "Unknown direction"
+    end
+  end
 end
