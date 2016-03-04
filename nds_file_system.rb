@@ -51,6 +51,7 @@ class NDSFileSystem
         new_end_offset = new_start_offset + new_file_size
       end
       @rom[new_start_offset,new_file_size] = file_data
+      file[:start_offset] = new_start_offset
       offset = file[:id]*8
       @rom[@file_allocation_table_offset+offset, 8] = [new_start_offset, new_end_offset].pack("VV")
       new_start_offset += new_file_size
