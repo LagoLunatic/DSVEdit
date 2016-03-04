@@ -29,29 +29,20 @@ class Layer
   end
   
   def read_from_layer_list_entry
-    # todo: get anything else from the layer list that's useful
-    @layer_metadata_ram_pointer = fs.read(layer_list_entry_ram_pointer + 12,4).unpack("V*").first
-    @render_type = fs.read(layer_list_entry_ram_pointer + 8,1).unpack("C*").first
-    @opacity = fs.read(layer_list_entry_ram_pointer + 2,1).unpack("C*").first
-    @scroll_mode = fs.read(layer_list_entry_ram_pointer + 1, 1).unpack("C*").first
-    @z_index = fs.read(layer_list_entry_ram_pointer, 1).unpack("C*").first
+    @z_index, @scroll_mode, @opacity, _, _, 
+      @render_type, _, _, _,
+      @layer_metadata_ram_pointer = fs.read(layer_list_entry_ram_pointer, 16).unpack("CCCCVCCCCV")
   end
   
   def read_from_layer_metadata
-    @width, @height = fs.read(layer_metadata_ram_pointer,2).unpack("C*")
+    @width, @height, _,
+      @ram_pointer_to_tileset_for_layer,
+      @collision_tileset_ram_pointer,
+      @layer_tiledata_ram_start_offset = fs.read(layer_metadata_ram_pointer,16).unpack("CCvVVV")
+    
     if width > 15 || height > 15
       raise LayerReadError.new("Invalid layer size: #{width}x#{height}")
     end
-    @ram_pointer_to_tileset_for_layer = fs.read(layer_metadata_ram_pointer+4,4).unpack("V*").first
-    
-    is_a_pointer_check = fs.read(layer_metadata_ram_pointer + 7).unpack("C*").first
-    if is_a_pointer_check != 0x02
-      raise "Tileset pointer is invalid for room %08X" % room.room_metadata_ram_pointer # TODO: FIXME
-      return
-    end
-    
-    @collision_tileset_ram_pointer = fs.read(layer_metadata_ram_pointer+8, 4).unpack("V").first
-    @layer_tiledata_ram_start_offset = fs.read(layer_metadata_ram_pointer+12, 4).unpack("V").first
   end
   
   def read_from_layer_tiledata
