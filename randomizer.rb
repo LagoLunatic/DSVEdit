@@ -27,6 +27,8 @@ class Randomizer
   
   def randomize
     game.each_room do |room|
+      @enemy_pool_for_room = []
+      
       room.entities.each do |entity|
         randomize_entity(entity)
       end
@@ -87,7 +89,14 @@ class Randomizer
         available_enemy_ids_for_entity -= VERY_LARGE_ENEMIES
       end
     else
-      puts "Enemy #{enemy} isn't in either the enemy list or boss list. Todo: fix this"
+      puts "Enemy #{enemy.subtype} isn't in either the enemy list or boss list. Todo: fix this"
+      return
+    end
+    
+    if @enemy_pool_for_room.length >= 5
+      # We don't want the room to have too many different enemies as this would take up too much space in RAM and crash.
+      
+      enemy.subtype = @enemy_pool_for_room.sample(random: rng)
       return
     end
     
@@ -105,6 +114,7 @@ class Randomizer
     
     #random_enemy_id = available_enemy_ids_for_entity.sample(random: rng)
     enemy.subtype = random_enemy_id
+    @enemy_pool_for_room << random_enemy_id
   end
   
   def randomize_special_objects(entity)
