@@ -30,6 +30,10 @@ class RandomizerWindow < Qt::Dialog
     connect(@ui.randomize_starting_room, SIGNAL("stateChanged(int)"), self, SLOT("update_settings()"))
     connect(@ui.randomize_enemy_ai, SIGNAL("stateChanged(int)"), self, SLOT("update_settings()"))
     
+    connect(@ui.remove_events, SIGNAL("stateChanged(int)"), self, SLOT("update_settings()"))
+    connect(@ui.fix_first_ability_soul, SIGNAL("stateChanged(int)"), self, SLOT("update_settings()"))
+    connect(@ui.open_world_map, SIGNAL("stateChanged(int)"), self, SLOT("update_settings()"))
+    
     connect(@ui.submit, SIGNAL("clicked()"), self, SLOT("randomize()"))
     
     self.setWindowFlags(Qt::MSWindowsFixedSizeDialogHint)
@@ -58,6 +62,10 @@ class RandomizerWindow < Qt::Dialog
     @ui.randomize_doors.setChecked(@settings[:randomize_doors]) unless @settings[:randomize_doors].nil?
     @ui.randomize_starting_room.setChecked(@settings[:randomize_starting_room]) unless @settings[:randomize_starting_room].nil?
     @ui.randomize_enemy_ai.setChecked(@settings[:randomize_enemy_ai]) unless @settings[:randomize_enemy_ai].nil?
+    
+    @ui.remove_events.setChecked(@settings[:remove_events]) unless @settings[:remove_events].nil?
+    @ui.fix_first_ability_soul.setChecked(@settings[:fix_first_ability_soul]) unless @settings[:fix_first_ability_soul].nil?
+    @ui.open_world_map.setChecked(@settings[:open_world_map]) unless @settings[:open_world_map].nil?
   end
   
   def closeEvent(event)
@@ -80,6 +88,10 @@ class RandomizerWindow < Qt::Dialog
     @settings[:randomize_doors] = @ui.randomize_doors.checked
     @settings[:randomize_starting_room] = @ui.randomize_starting_room.checked
     @settings[:randomize_enemy_ai] = @ui.randomize_enemy_ai.checked
+    
+    @settings[:remove_events] = @ui.remove_events.checked
+    @settings[:fix_first_ability_soul] = @ui.fix_first_ability_soul.checked
+    @settings[:open_world_map] = @ui.open_world_map.checked
   end
   
   def randomize
@@ -111,7 +123,8 @@ class RandomizerWindow < Qt::Dialog
       :randomize_boss_souls => @ui.randomize_boss_souls.checked(),
       :randomize_doors => @ui.randomize_doors.checked(),
       :randomize_starting_room => @ui.randomize_starting_room.checked(),
-      :randomize_enemy_ai => @ui.randomize_enemy_ai.checked()
+      :randomize_enemy_ai => @ui.randomize_enemy_ai.checked(),
+      :remove_events => @ui.remove_events.checked()
     )
     randomizer.randomize()
     

@@ -58,6 +58,8 @@ class Randomizer
     case entity.type
     when 0x01 # Enemy
       randomize_enemy(entity)
+    when 0x02
+      randomize_special_objects(entity)
     when ENTITY_TYPE_FOR_PICKUPS
       case GAME
       when "dos", "por"
@@ -103,6 +105,26 @@ class Randomizer
     
     #random_enemy_id = available_enemy_ids_for_entity.sample(random: rng)
     enemy.subtype = random_enemy_id
+  end
+  
+  def randomize_special_objects(entity)
+    return unless GAME == "dos"
+    
+    if entity.subtype >= 0x5E && options[:remove_events]
+      if entity.subtype == 0x5F # event with yoko and julius going over the bridge
+        # Replace it with magic seal 1
+        entity.type = 4
+        entity.subtype = 2
+        entity.var_a = 0x01FF # unique id
+        entity.var_b = 0x3D # magic seal 1
+        entity.x_pos = 0x0080
+        entity.y_pos = 0x0140
+      else
+        # Remove it
+        entity.type = 0
+        entity.subtype = 0
+      end
+    end
   end
   
   def randomize_pickup_dos_por(pickup)

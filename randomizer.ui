@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>400</width>
-    <height>361</height>
+    <height>372</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -171,6 +171,25 @@
       </attribute>
       <layout class="QVBoxLayout" name="verticalLayout_4">
        <item>
+        <widget class="QGroupBox" name="groupBox_4">
+         <property name="title">
+          <string>All Games</string>
+         </property>
+         <layout class="QHBoxLayout" name="horizontalLayout_10">
+          <item>
+           <widget class="QCheckBox" name="remove_events">
+            <property name="text">
+             <string>Remove events</string>
+            </property>
+            <property name="checked">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item>
         <widget class="QGroupBox" name="groupBox">
          <property name="title">
           <string>Dawn of Sorrow</string>
@@ -228,6 +247,7 @@
       <zorder>groupBox_3</zorder>
       <zorder>groupBox</zorder>
       <zorder>groupBox_2</zorder>
+      <zorder>groupBox_4</zorder>
      </widget>
     </widget>
    </item>
