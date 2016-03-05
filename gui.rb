@@ -85,15 +85,8 @@ class DSVE < Qt::MainWindow
   end
   
   def open_rom(rom_path)
-    unless File.exist?(rom_path) && File.file?(rom_path)
-      raise "Not a file"
-    end
-    
-    verify_game_and_load_constants(rom_path)
-    
     @game = Game.new
     game.initialize_from_rom(rom_path)
-    
     @renderer = Renderer.new(game.fs)
     
     initialize_dropdowns()
@@ -102,39 +95,13 @@ class DSVE < Qt::MainWindow
   end
   
   def open_folder(folder_path)
-    unless File.exist?(folder_path) && File.directory?(folder_path)
-      raise "Not a directory"
-    end
-    
-    header_path = File.join(folder_path, "ftc", "ndsheader.bin")
-    unless File.exist?(header_path) && File.file?(header_path)
-      raise "Header file #{header_path} not present"
-    end
-    
-    verify_game_and_load_constants(header_path)
-    
     @game = Game.new
     game.initialize_from_folder(folder_path)
-    
     @renderer = Renderer.new(game.fs)
     
     initialize_dropdowns()
     
     @settings[:last_used_folder] = folder_path
-  end
-  
-  def verify_game_and_load_constants(header_path)
-    case File.read(header_path, 12)
-    when "CASTLEVANIA1"
-      require_relative './constants/dos_constants.rb'
-    when "CASTLEVANIA2"
-      require_relative './constants/por_constants.rb'
-    when "CASTLEVANIA3"
-      require_relative './constants/ooe_constants.rb'
-    else
-      Qt::MessageBox.warning(self, "Invalid folder", "Specified game is not a DSVania.")
-      return
-    end
   end
   
   def initialize_dropdowns
@@ -241,7 +208,7 @@ class DSVE < Qt::MainWindow
     @room.layers.each do |layer|
       tileset_filename = "../Exported #{GAME}/rooms/#{@room.area_name}/Tilesets/#{layer.tileset_filename}.png"
       unless File.exist?(tileset_filename)
-        game.fs.load_overlay(AREA_INDEX_TO_OVERLAY_INDEX[@room.area_index][@room.sector_index])
+    @room.sector.load_necessary_overlay()
         @renderer.render_tileset(layer.ram_pointer_to_tileset_for_layer, @room.palette_offset, @room.graphic_tilesets_for_room, layer.colors_per_palette, layer.collision_tileset_ram_pointer, tileset_filename)
       end
       tileset = Qt::Image.new(tileset_filename)
