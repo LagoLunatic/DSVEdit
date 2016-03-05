@@ -185,8 +185,9 @@ ENTITY_TYPE_FOR_PICKUPS = 0x04
 
 ENEMY_IDS = (0x00..0x75)
 COMMON_ENEMY_IDS = (0x00..0x64).to_a
-BOSS_IDS = (0x65..0x73).to_a # regular game bosses end at 0x73 (menace), 0x74 is soma that you fight in julius mode (and 0x75 is his second form, dracula).
-VERY_LARGE_ENEMIES = [0x64, 0x60, 0x25, 0x5D, 0x63, 0x0E, 0x61, 0x5B, 0x2F, 0x22] # iron golem, stolas, great armor, arc demon, alastor, golem, final guard, flame demon, devil, treant
+BOSS_IDS = (0x65..0x75).to_a
+RANDOMIZABLE_BOSS_IDS = BOSS_IDS - [0x73] # Remove Menace
+VERY_LARGE_ENEMIES = [0x64, 0x60, 0x25, 0x5D, 0x63, 0x0E, 0x61, 0x5B, 0x2F, 0x22, 0x12, 0x19, 0x4D, 0x51] # iron golem, stolas, great armor, arc demon, alastor, golem, final guard, flame demon, devil, treant, manticore, catoblepas, gorgon, mushussu
 
 ITEM_LOCAL_ID_RANGES = {
   0x02 => (0x00..0x41), # consumable
