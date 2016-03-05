@@ -73,6 +73,13 @@
        </widget>
       </item>
       <item>
+       <widget class="QPushButton" name="copy_room_pointer">
+        <property name="text">
+         <string>Copy room pointer to clipboard</string>
+        </property>
+       </widget>
+      </item>
+      <item>
        <widget class="QGraphicsView" name="map_graphics_view"/>
       </item>
       <item>

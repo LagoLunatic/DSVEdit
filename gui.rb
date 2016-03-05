@@ -26,6 +26,7 @@ class DSVE < Qt::MainWindow
   slots "open_in_tiled()"
   slots "import_from_tiled()"
   slots "set_current_room_as_starting_room()"
+  slots "copy_room_pointer_to_clipboad()"
   
   def initialize
     super()
@@ -58,6 +59,7 @@ class DSVE < Qt::MainWindow
     connect(@ui.tiled_export, SIGNAL("released()"), self, SLOT("open_in_tiled()"))
     connect(@ui.tiled_import, SIGNAL("released()"), self, SLOT("import_from_tiled()"))
     connect(@ui.set_as_starting_room, SIGNAL("released()"), self, SLOT("set_current_room_as_starting_room()"))
+    connect(@ui.copy_room_pointer, SIGNAL("released()"), self, SLOT("copy_room_pointer_to_clipboad()"))
     
     load_settings()
     
@@ -367,6 +369,10 @@ class DSVE < Qt::MainWindow
   
   def set_current_room_as_starting_room
     game.set_starting_room(@area_index, @sector_index, @room_index)
+  end
+  
+  def copy_room_pointer_to_clipboad
+    $qApp.clipboard.setText("%08X" % @room.room_metadata_ram_pointer)
   end
   
   def save_files
