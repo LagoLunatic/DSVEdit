@@ -205,10 +205,10 @@ class DSVE < Qt::MainWindow
     @room_graphics_scene.clear()
     @room_graphics_scene.setSceneRect(0, 0, @room.max_layer_width*SCREEN_WIDTH_IN_PIXELS, @room.max_layer_height*SCREEN_HEIGHT_IN_PIXELS)
     
+    @room.sector.load_necessary_overlay()
     @room.layers.each do |layer|
       tileset_filename = "../Exported #{GAME}/rooms/#{@room.area_name}/Tilesets/#{layer.tileset_filename}.png"
       unless File.exist?(tileset_filename)
-    @room.sector.load_necessary_overlay()
         @renderer.render_tileset(layer.ram_pointer_to_tileset_for_layer, @room.palette_offset, @room.graphic_tilesets_for_room, layer.colors_per_palette, layer.collision_tileset_ram_pointer, tileset_filename)
       end
       tileset = Qt::Image.new(tileset_filename)
