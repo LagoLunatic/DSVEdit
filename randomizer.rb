@@ -173,24 +173,24 @@ class Randomizer
     COMMON_ENEMY_IDS.each do |enemy_id|
       enemy = EnemyDNA.new(enemy_id, game.fs)
       
-      enemy.dna_attributes["Item 1"] = rng.rand(ITEM_GLOBAL_ID_RANGE)
-      enemy.dna_attributes["Item 2"] = rng.rand(ITEM_GLOBAL_ID_RANGE)
+      enemy["Item 1"] = rng.rand(ITEM_GLOBAL_ID_RANGE)
+      enemy["Item 2"] = rng.rand(ITEM_GLOBAL_ID_RANGE)
       
       case GAME
       when "dos"
-        enemy.dna_attributes["Item Chance"] = rng.rand(0x01..0x40)
+        enemy["Item Chance"] = rng.rand(0x01..0x40)
         
-        enemy.dna_attributes["Soul"] = rng.rand(SOUL_GLOBAL_ID_RANGE)
-        enemy.dna_attributes["Soul Chance"] = rng.rand(0x01..0x40)
+        enemy["Soul"] = rng.rand(SOUL_GLOBAL_ID_RANGE)
+        enemy["Soul Chance"] = rng.rand(0x01..0x40)
       when "por"
-        enemy.dna_attributes["Item 1 Chance"] = rng.rand(0x01..0x32)
-        enemy.dna_attributes["Item 2 Chance"] = rng.rand(0x01..0x32)
+        enemy["Item 1 Chance"] = rng.rand(0x01..0x32)
+        enemy["Item 2 Chance"] = rng.rand(0x01..0x32)
       when "ooe"
-        enemy.dna_attributes["Item 1 Chance"] = rng.rand(0x01..0x0F)
-        enemy.dna_attributes["Item 2 Chance"] = rng.rand(0x01..0x0F)
+        enemy["Item 1 Chance"] = rng.rand(0x01..0x0F)
+        enemy["Item 2 Chance"] = rng.rand(0x01..0x0F)
         
-        enemy.dna_attributes["Glyph"] = rng.rand(GLYPH_GLOBAL_ID_RANGE)
-        enemy.dna_attributes["Glyph Chance"] = rng.rand(0x01..0x0F)
+        enemy["Glyph"] = rng.rand(GLYPH_GLOBAL_ID_RANGE)
+        enemy["Glyph Chance"] = rng.rand(0x01..0x0F)
       end
       
       enemy.write_to_rom()
@@ -234,7 +234,7 @@ class Randomizer
         random_soul_id = rng.rand(SOUL_GLOBAL_ID_RANGE)
       end
       
-      boss.dna_attributes["Soul"] = random_soul_id
+      boss["Soul"] = random_soul_id
       boss.write_to_rom()
     end
   end
@@ -252,10 +252,10 @@ class Randomizer
   
   def randomize_enemy_ai
     common_enemy_dnas = game.enemy_dnas[0..COMMON_ENEMY_IDS.last]
-    available_ais = common_enemy_dnas.map{|dna| dna.dna_attributes["Running AI"]}
+    available_ais = common_enemy_dnas.map{|dna| dna["Running AI"]}
     
     common_enemy_dnas.each do |dna|
-      dna.dna_attributes["Running AI"] = available_ais.sample(random: rng)
+      dna["Running AI"] = available_ais.sample(random: rng)
       dna.write_to_rom()
     end
   end

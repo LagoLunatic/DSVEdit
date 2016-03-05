@@ -450,7 +450,7 @@ class EnemyEditDialog < Qt::Dialog
     connect(@ui.enemy_list, SIGNAL("currentRowChanged(int)"), self, SLOT("enemy_changed(int)"))
     
     @attribute_text_fields = {}
-    @enemies.first.dna_attributes.keys.each_with_index do |attribute_name, i|
+    @enemies.first.dna_attribute_integers.keys.each_with_index do |attribute_name, i|
       if i.even?
         form_layout = @ui.attribute_layout_left
       else
@@ -495,7 +495,7 @@ class EnemyEditDialog < Qt::Dialog
     @ui.name.setText(enemy.name.decoded_string)
     @ui.desc.setPlainText(enemy.description.decoded_string)
     
-    enemy.dna_attributes.values.each_with_index do |value, i|
+    enemy.dna_attribute_integers.values.each_with_index do |value, i|
       if i.even?
         form_layout = @ui.attribute_layout_left
       else
@@ -531,8 +531,8 @@ class EnemyEditDialog < Qt::Dialog
   def save_current_enemy
     enemy = @enemies[@ui.enemy_list.currentRow]
     
-    enemy.dna_attributes.each do |attribute_name, value|
-      enemy.dna_attributes[attribute_name] = @attribute_text_fields[attribute_name].text.to_i(16)
+    enemy.dna_attribute_integers.each do |attribute_name, value|
+      enemy[attribute_name] = @attribute_text_fields[attribute_name].text.to_i(16)
     end
     
     enemy.dna_attribute_bitfields.keys.each_with_index do |attribute_name, col|

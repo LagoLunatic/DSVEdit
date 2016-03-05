@@ -7,6 +7,7 @@ class EnemyDNA
   attr_accessor :name,
                 :description,
                 :dna_attributes,
+                :dna_attribute_integers,
                 :dna_attribute_bitfields
   
   def initialize(enemy_id, fs)
@@ -23,14 +24,19 @@ class EnemyDNA
     @enemy_dna_ram_pointer = ENEMY_DNA_RAM_START_OFFSET + ENEMY_DNA_LENGTH*enemy_id
     
     @dna_attributes = {}
+    @dna_attribute_integers = {}
     @dna_attribute_bitfields = {}
     attributes = fs.read(enemy_dna_ram_pointer, ENEMY_DNA_LENGTH).unpack(attribute_format_string)
     ENEMY_DNA_FORMAT.each do |attribute_length, attribute_name, attribute_type|
       case attribute_type
       when :bitfield
-        @dna_attribute_bitfields[attribute_name] = VulnerabilityList.new(attributes.shift)
+        val = VulnerabilityList.new(attributes.shift)
+        @dna_attribute_bitfields[attribute_name] = val
+        @dna_attributes[attribute_name] = val
       else
-        @dna_attributes[attribute_name] = attributes.shift
+        val = attributes.shift
+        @dna_attribute_integers[attribute_name] = val
+        @dna_attributes[attribute_name] = val
       end
     end
   end
@@ -40,12 +46,20 @@ class EnemyDNA
     ENEMY_DNA_FORMAT.each do |attribute_length, attribute_name, attribute_type|
       case attribute_type
       when :bitfield
-        new_data << @dna_attribute_bitfields[attribute_name].value
+        new_data << @dna_attributes[attribute_name].value
       else
         new_data << @dna_attributes[attribute_name]
       end
     end
     fs.write(enemy_dna_ram_pointer, new_data.pack(attribute_format_string))
+  end
+  
+  def [](attribute_name)
+    @dna_attributes[attribute_name]
+  end
+  
+  def []=(attribute_name, new_value)
+    @dna_attributes[attribute_name] = new_value
   end
   
 private
