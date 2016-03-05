@@ -123,6 +123,19 @@ class Randomizer
     #random_enemy_id = available_enemy_ids_for_entity.sample(random: rng)
     enemy.subtype = random_enemy_id
     @enemy_pool_for_room << random_enemy_id
+    
+    enemy_dna = game.enemy_dnas[random_enemy_id]
+    case enemy_dna.name.decoded_string
+    when "Bat"
+      # 50% chance to be a single bat, 50% chance to be a spawner.
+      if rng.rand <= 0.5
+        enemy.var_a = 0
+      else
+        enemy.var_a = 0x100
+      end
+    when "Fleaman"
+      enemy.var_a = rng.rand(1..10)
+    end
   end
   
   def randomize_bosses
