@@ -26,12 +26,17 @@ class Randomizer
   end
   
   def randomize
+    @boss_entities = []
     game.each_room do |room|
       @enemy_pool_for_room = []
       
       room.entities.each do |entity|
         randomize_entity(entity)
       end
+    end
+    
+    if options[:randomize_bosses]
+      randomize_bosses()
     end
     
     if options[:randomize_doors]
@@ -78,9 +83,12 @@ class Randomizer
     available_enemy_ids_for_entity = nil
     
     if enemy.is_boss?
-      return unless options[:randomize_bosses]
+      if RANDOMIZABLE_BOSS_IDS.include?(enemy.subtype)
+        # Will be randomized by a separate function.
+        @boss_entities << enemy
+      end
       
-      available_enemy_ids_for_entity = BOSS_IDS
+      return
     elsif enemy.is_common_enemy?
       return unless options[:randomize_enemies]
       
@@ -115,6 +123,92 @@ class Randomizer
     #random_enemy_id = available_enemy_ids_for_entity.sample(random: rng)
     enemy.subtype = random_enemy_id
     @enemy_pool_for_room << random_enemy_id
+  end
+  
+  def randomize_bosses
+    shuffled_boss_ids = RANDOMIZABLE_BOSS_IDS.shuffle(random: rng)
+    queued_dna_changes = Hash.new{|h, k| h[k] = {}}
+    
+    shuffled_boss_ids.each_with_index do |new_boss_id, i|
+      old_boss_id = RANDOMIZABLE_BOSS_IDS[i]
+      old_boss = game.enemy_dnas[old_boss_id]
+      
+      # Make the new boss have the stats of the old boss so it fits in at this point in the game.
+      queued_dna_changes[new_boss_id]["HP"]      = old_boss["HP"]
+      queued_dna_changes[new_boss_id]["MP"]      = old_boss["MP"]
+      queued_dna_changes[new_boss_id]["EXP"]     = old_boss["EXP"]
+      queued_dna_changes[new_boss_id]["Attack"]  = old_boss["Attack"]
+      queued_dna_changes[new_boss_id]["Defense"] = old_boss["Defense"]
+    end
+    
+    @boss_entities.each do |boss_entity|
+      old_boss_id = boss_entity.subtype
+      boss_index = RANDOMIZABLE_BOSS_IDS.index(old_boss_id)
+      new_boss_id = shuffled_boss_ids[boss_index]
+      old_boss = game.enemy_dnas[old_boss_id]
+      new_boss = game.enemy_dnas[new_boss_id]
+      
+      case old_boss.name.decoded_string
+      when "Balore"
+        if boss_entity.var_a == 2
+          # Not actually Balore, this is the wall of ice blocks right before Balore.
+          # We need to get rid of this because we don't want two bosses inside the room. Especially if they're different bosses, as that would take up too much RAM and crash the game.
+          boss_entity.type = 0
+          boss_entity.subtype = 0
+          boss_entity.write_to_rom()
+          next
+        end
+      when "Paranoia"
+        if boss_entity.var_a == 1
+          # Mini-paranoia.
+          next
+        end
+      end
+      
+      case new_boss.name.decoded_string
+      when "Balore"
+        boss_entity.x_pos = 16
+        boss_entity.y_pos = 176
+        
+        if old_boss.name.decoded_string == "Puppet Master"
+          boss_entity.x_pos += 144
+        end
+      when "Puppet Master"
+        boss_entity.x_pos = 328
+        boss_entity.y_pos = 64
+      when "Gergoth"
+        unless old_boss_id == new_boss_id
+          # Set Gergoth to boss rush mode, unless he's in his tower.
+          boss_entity.var_a = 0
+        end
+      when "Paranoia"
+        # If Paranoia spawns in Gergoth's tall tower, his position and the position of his mirrors can become disjointed.
+        # This combination of x and y seems to be one of the least buggy.
+        boss_entity.x_pos = 0x1F
+        boss_entity.y_pos = 0x80
+        
+        boss_entity.var_a = 2
+      when "Aguni"
+        boss_entity.var_a = 0
+        boss_entity.var_b = 0
+      else
+        boss_entity.var_a = 1
+      end
+      
+      boss_entity.subtype = new_boss_id
+      
+      boss_entity.write_to_rom()
+    end
+    
+    queued_dna_changes.each do |boss_id, changes|
+      boss = game.enemy_dnas[boss_id]
+      
+      changes.each do |attribute_name, new_value|
+        boss[attribute_name] = new_value
+      end
+      
+      boss.write_to_rom()
+    end
   end
   
   def randomize_special_objects(entity)
@@ -228,15 +322,12 @@ class Randomizer
     unused_important_soul_ids = important_soul_ids.dup
     
     bosses = []
-    BOSS_IDS.each do |enemy_id|
+    RANDOMIZABLE_BOSS_IDS.each do |enemy_id|
       boss = EnemyDNA.new(enemy_id, game.fs)
       bosses << boss
     end
     
     bosses.each do |boss|
-      next if boss.name == "Balore" # Don't randomize Balore's soul since you need it to get out of the fight.
-      next if boss.name == "Menace"
-      
       if unused_important_soul_ids.length > 0
         random_soul_id = unused_important_soul_ids.sample(random: rng)
         unused_important_soul_ids.delete(random_soul_id)
