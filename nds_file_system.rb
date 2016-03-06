@@ -27,7 +27,14 @@ class NDSFileSystem
     @filesystem_directory = filesystem_directory
     @rom = File.open(input_rom_path, "rb") {|file| file.read}
     read_from_rom()
-    extract()
+    extract_to_hard_drive()
+  end
+  
+  def open_rom(input_rom_path)
+    @filesystem_directory = nil
+    @rom = File.open(input_rom_path, "rb") {|file| file.read}
+    read_from_rom()
+    extract_to_memory()
   end
   
   def write_to_rom(output_rom_path)
@@ -233,7 +240,7 @@ private
     get_file_ram_start_offsets()
   end
   
-  def extract
+  def extract_to_hard_drive
     print "Extracting files from ROM... "
     
     all_files.each do |file|
@@ -249,6 +256,21 @@ private
       File.open(output_path, "wb") do |f|
         f.write(file_data)
       end
+    end
+    
+    puts "Done."
+  end
+  
+  def extract_to_memory
+    print "Extracting files from ROM to memory... "
+    
+    all_files.each do |file|
+      next unless file[:type] == :file
+      
+      start_offset, end_offset, file_path = file[:start_offset], file[:end_offset], file[:file_path]
+      file_data = @rom[start_offset..end_offset-1]
+      
+      @opened_files_cache[file_path] = file_data
     end
     
     puts "Done."

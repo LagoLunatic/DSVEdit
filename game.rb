@@ -21,19 +21,25 @@ class Game
     read_from_rom()
   end
   
-  def initialize_from_rom(input_rom_path)
+  def initialize_from_rom(input_rom_path, extract_to_hard_drive)
     unless File.file?(input_rom_path)
       raise "ROM file not present"
     end
     
     verify_game_and_load_constants(input_rom_path)
     
-    @folder = File.dirname(input_rom_path)
-    rom_name = File.basename(input_rom_path, ".*")
-    @folder = File.join(folder, "Extracted files #{rom_name}")
+    if extract_to_hard_drive
+      @folder = File.dirname(input_rom_path)
+      rom_name = File.basename(input_rom_path, ".*")
+      @folder = File.join(folder, "Extracted files #{rom_name}")
+      
+      @fs = NDSFileSystem.new
+      fs.open_and_extract_rom(input_rom_path, folder)
+    else
+      @fs = NDSFileSystem.new
+      fs.open_rom(input_rom_path)
+    end
     
-    @fs = NDSFileSystem.new
-    fs.open_and_extract_rom(input_rom_path, folder)
     CONSTANT_OVERLAYS.each do |overlay_index|
       fs.load_overlay(overlay_index)
     end

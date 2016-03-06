@@ -86,7 +86,7 @@ class DSVE < Qt::MainWindow
   
   def open_rom(rom_path)
     @game = Game.new
-    game.initialize_from_rom(rom_path)
+    game.initialize_from_rom(rom_path, extract_to_hard_drive = true)
     @renderer = Renderer.new(game.fs)
     
     initialize_dropdowns()

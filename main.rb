@@ -127,7 +127,7 @@ if File.directory?(folder)
   game.initialize_from_folder(folder)
 else
   input_rom_path = settings[:input_rom_paths][options[:game]]
-  game.initialize_from_rom(input_rom_path)
+  game.initialize_from_rom(input_rom_path, extract_to_hard_drive = true)
 end
 
 fs = game.fs
