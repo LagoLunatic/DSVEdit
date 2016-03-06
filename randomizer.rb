@@ -105,26 +105,25 @@ class Randomizer
       # We don't want the room to have too many different enemies as this would take up too much space in RAM and crash.
       
       enemy.subtype = @enemy_pool_for_room.sample(random: rng)
-      return
+    else
+      # Enemies are chosen weighted closer to the ID of what the original enemy was so that early game enemies are less likely to roll into endgame enemies.
+      # Method taken from: https://gist.github.com/O-I/3e0654509dd8057b539a
+      weights = available_enemy_ids_for_entity.map do |possible_enemy_id|
+        id_difference = (possible_enemy_id - enemy.subtype)
+        weight = (available_enemy_ids_for_entity.length - id_difference).abs
+        weight = weight**2
+        weight
+      end
+      ps = weights.map{|w| w.to_f / weights.reduce(:+)}
+      weighted_enemy_ids = available_enemy_ids_for_entity.zip(ps).to_h
+      random_enemy_id = weighted_enemy_ids.max_by{|_, weight| rng.rand ** (1.0 / weight)}.first
+      
+      #random_enemy_id = available_enemy_ids_for_entity.sample(random: rng)
+      enemy.subtype = random_enemy_id
+      @enemy_pool_for_room << random_enemy_id
     end
     
-    # Enemies are chosen weighted closer to the ID of what the original enemy was so that early game enemies are less likely to roll into endgame enemies.
-    # Method taken from: https://gist.github.com/O-I/3e0654509dd8057b539a
-    weights = available_enemy_ids_for_entity.map do |possible_enemy_id|
-      id_difference = (possible_enemy_id - enemy.subtype)
-      weight = (available_enemy_ids_for_entity.length - id_difference).abs
-      weight = weight**2
-      weight
-    end
-    ps = weights.map{|w| w.to_f / weights.reduce(:+)}
-    weighted_enemy_ids = available_enemy_ids_for_entity.zip(ps).to_h
-    random_enemy_id = weighted_enemy_ids.max_by{|_, weight| rng.rand ** (1.0 / weight)}.first
-    
-    #random_enemy_id = available_enemy_ids_for_entity.sample(random: rng)
-    enemy.subtype = random_enemy_id
-    @enemy_pool_for_room << random_enemy_id
-    
-    enemy_dna = game.enemy_dnas[random_enemy_id]
+    enemy_dna = game.enemy_dnas[enemy.subtype]
     case enemy_dna.name.decoded_string
     when "Bat"
       # 50% chance to be a single bat, 50% chance to be a spawner.
