@@ -6,6 +6,7 @@ require_relative 'dsve'
 require_relative 'ui_main'
 require_relative 'ui_enemy'
 require_relative 'ui_text_editor'
+require_relative 'ui_settings'
 
 class DSVE < Qt::MainWindow
   attr_reader :game
@@ -15,6 +16,7 @@ class DSVE < Qt::MainWindow
   slots "save_files()"
   slots "open_enemy_dna_dialog()"
   slots "open_text_editor()"
+  slots "open_settings()"
   slots "write_to_rom()"
   slots "build_and_run()"
   
@@ -50,6 +52,7 @@ class DSVE < Qt::MainWindow
     connect(@ui.actionSave, SIGNAL("activated()"), self, SLOT("save_files()"))
     connect(@ui.actionEnemy_Editor, SIGNAL("activated()"), self, SLOT("open_enemy_dna_dialog()"))
     connect(@ui.actionText_Editor, SIGNAL("activated()"), self, SLOT("open_text_editor()"))
+    connect(@ui.actionSettings, SIGNAL("activated()"), self, SLOT("open_settings()"))
     connect(@ui.actionBuild, SIGNAL("activated()"), self, SLOT("write_to_rom()"))
     connect(@ui.actionBuild_and_Run, SIGNAL("activated()"), self, SLOT("build_and_run()"))
     
@@ -294,6 +297,10 @@ class DSVE < Qt::MainWindow
     @text_editor = TextEditor.new(game.fs)
   end
   
+  def open_settings
+    @settings_dialog = SettingsWindow.new(@settings)
+  end
+  
   def load_settings
     @settings_path = "settings.yml"
     if File.exist?(@settings_path)
@@ -310,8 +317,11 @@ class DSVE < Qt::MainWindow
   end
   
   def open_in_tiled
-    if @settings[:tiled_path].nil? || !File.exist?(@settings[:tiled_path]) || !File.file?(@settings[:tiled_path])
-      Qt::MessageBox.warning(self, "Can't find Tiled", "You must specify where Tiled is installed.")
+    if @settings[:tiled_path].nil? || @settings[:tiled_path].empty?
+      Qt::MessageBox.warning(self, "Failed to run Tiled", "You must specify where Tiled is installed.")
+      return
+    elsif !File.file?(@settings[:tiled_path])
+      Qt::MessageBox.warning(self, "Failed to run Tiled", "Tiled install path is invalid.")
       return
     end
     folder = "../Exported #{GAME}/rooms"
@@ -370,6 +380,14 @@ class DSVE < Qt::MainWindow
     progress_dialog.setValue(game.fs.files.length)
     
     if launch_emulator
+      if @settings[:emulator_path].nil? || @settings[:emulator_path].empty?
+        Qt::MessageBox.warning(self, "Failed to run emulator", "You must specify the emulator path.")
+        return
+      elsif !File.file?(@settings[:emulator_path])
+        Qt::MessageBox.warning(self, "Failed to run emulator", "Emulator path is invalid.")
+        return
+      end
+      
       system("start \"#{@settings[:emulator_path]}\" \"../#{GAME} hack.nds\"")
     end
   end
@@ -607,6 +625,50 @@ class TextEditor < Qt::Dialog
       @text_database.write_to_rom()
     else
       text.write_to_rom()
+    end
+  end
+end
+
+class SettingsWindow < Qt::Dialog
+  slots "browse_for_tiled_path()"
+  slots "browse_for_emulator_path()"
+  slots "button_pressed(QAbstractButton*)"
+  
+  def initialize(settings)
+    super()
+    @ui = Ui_Settings.new
+    @ui.setup_ui(self)
+    
+    @settings = settings
+    
+    @ui.tiled_path.text = @settings[:tiled_path]
+    @ui.emulator_path.text = @settings[:emulator_path]
+    
+    connect(@ui.tiled_path_browse_button, SIGNAL("clicked()"), self, SLOT("browse_for_tiled_path()"))
+    connect(@ui.emulator_path_browse_button, SIGNAL("clicked()"), self, SLOT("browse_for_emulator_path()"))
+    connect(@ui.buttonBox, SIGNAL("clicked(QAbstractButton*)"), self, SLOT("button_pressed(QAbstractButton*)"))
+    
+    self.setWindowFlags(Qt::MSWindowsFixedSizeDialogHint);
+    
+    self.show()
+  end
+  
+  def browse_for_tiled_path
+    tiled_path = Qt::FileDialog.getOpenFileName()
+    return if tiled_path.nil?
+    @ui.tiled_path.text = tiled_path
+  end
+  
+  def browse_for_emulator_path
+    emulator_path = Qt::FileDialog.getOpenFileName()
+    return if emulator_path.nil?
+    @ui.emulator_path.text = emulator_path
+  end
+  
+  def button_pressed(button)
+    if @ui.buttonBox.standardButton(button) == Qt::DialogButtonBox::Ok
+      @settings[:tiled_path] = @ui.tiled_path.text
+      @settings[:emulator_path] = @ui.emulator_path.text
     end
   end
 end
