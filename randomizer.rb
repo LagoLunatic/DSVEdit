@@ -290,8 +290,18 @@ class Randomizer
     COMMON_ENEMY_IDS.each do |enemy_id|
       enemy = EnemyDNA.new(enemy_id, game.fs)
       
-      enemy["Item 1"] = rng.rand(ITEM_GLOBAL_ID_RANGE)
-      enemy["Item 2"] = rng.rand(ITEM_GLOBAL_ID_RANGE)
+      if rng.rand <= 0.5 # 50% chance to have an item drop
+        enemy["Item 1"] = rng.rand(ITEM_GLOBAL_ID_RANGE)
+        
+        if rng.rand <= 0.5 # Further 50% chance (25% total) to have a second item drop
+          enemy["Item 2"] = rng.rand(ITEM_GLOBAL_ID_RANGE)
+        else
+          enemy["Item 2"] = 0
+        end
+      else
+        enemy["Item 1"] = 0
+        enemy["Item 2"] = 0
+      end
       
       case GAME
       when "dos"
