@@ -27,11 +27,16 @@ class Randomizer
   
   def randomize
     @boss_entities = []
+    @transition_rooms = []
     game.each_room do |room|
       @enemy_pool_for_room = []
       
       room.entities.each do |entity|
         randomize_entity(entity)
+        
+        if entity.type == 0x02 && entity.subtype == 0x5A
+          @transition_rooms << room
+        end
       end
     end
     
@@ -40,7 +45,7 @@ class Randomizer
     end
     
     if options[:randomize_doors]
-      randomize_doors()
+      randomize_transition_doors()
     end
     
     if options[:randomize_enemy_drops]
@@ -369,8 +374,46 @@ class Randomizer
     game.set_starting_room(area.area_index, sector.sector_index, room.room_index)
   end
   
-  def randomize_doors
-    raise NotImplementedError
+  def randomize_transition_doors
+    @transition_rooms.uniq!
+    remaining_transition_rooms = @transition_rooms.dup
+    queued_door_changes = Hash.new{|h, k| h[k] = {}}
+    
+    @transition_rooms.each_with_index do |room, i|
+      next unless remaining_transition_rooms.include?(room) # Already randomized this room
+      
+      # Only randomize one of the doors, no point in randomizing them both.
+      inside_door = room.doors.first
+      old_outside_door = inside_door.destination_door
+      random_index = rng.rand(remaining_transition_rooms.length)
+      transition_room_to_swap_with = remaining_transition_rooms.delete_at(random_index)
+      inside_door_to_swap_with = transition_room_to_swap_with.doors.first
+      new_outside_door = inside_door_to_swap_with.destination_door
+      
+      queued_door_changes[inside_door]["destination_room_metadata_ram_pointer"] = inside_door_to_swap_with.destination_room_metadata_ram_pointer
+      queued_door_changes[inside_door]["dest_x"] = inside_door_to_swap_with.dest_x
+      queued_door_changes[inside_door]["dest_y"] = inside_door_to_swap_with.dest_y
+      
+      queued_door_changes[inside_door_to_swap_with]["destination_room_metadata_ram_pointer"] = inside_door.destination_room_metadata_ram_pointer
+      queued_door_changes[inside_door_to_swap_with]["dest_x"] = inside_door.dest_x
+      queued_door_changes[inside_door_to_swap_with]["dest_y"] = inside_door.dest_y
+      
+      queued_door_changes[old_outside_door]["destination_room_metadata_ram_pointer"] = new_outside_door.destination_room_metadata_ram_pointer
+      queued_door_changes[old_outside_door]["dest_x"] = new_outside_door.dest_x
+      queued_door_changes[old_outside_door]["dest_y"] = new_outside_door.dest_y
+      
+      queued_door_changes[new_outside_door]["destination_room_metadata_ram_pointer"] = old_outside_door.destination_room_metadata_ram_pointer
+      queued_door_changes[new_outside_door]["dest_x"] = old_outside_door.dest_x
+      queued_door_changes[new_outside_door]["dest_y"] = old_outside_door.dest_y
+    end
+    
+    queued_door_changes.each do |door, changes|
+      changes.each do |attribute_name, new_value|
+        door.send("#{attribute_name}=", new_value)
+      end
+      
+      door.write_to_rom()
+    end
   end
   
   def randomize_enemy_ai
