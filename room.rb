@@ -15,16 +15,18 @@ class Room
               :area_index,
               :sector_index,
               :room_index,
-              :fs
+              :fs,
+              :game
   attr_accessor :room_xpos_on_map, :room_ypos_on_map
 
-  def initialize(sector, room_metadata_ram_pointer, area_index, sector_index, room_index, fs)
+  def initialize(sector, room_metadata_ram_pointer, area_index, sector_index, room_index, game)
     @room_metadata_ram_pointer = room_metadata_ram_pointer
     @sector = sector
     @area_index = area_index
     @sector_index = sector_index
     @room_index = room_index
-    @fs = fs
+    @fs = game.fs
+    @game = game
     read_from_rom()
   end
   
@@ -140,7 +142,7 @@ class Room
     (0..number_of_doors-1).each do |i|
       door_pointer = door_list_ram_pointer + i*16
       
-      @doors << Door.new(self, door_pointer, fs)
+      @doors << Door.new(self, door_pointer, game)
     end
   end
   

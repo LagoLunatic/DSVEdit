@@ -128,7 +128,7 @@ class DSVE < Qt::MainWindow
       return
     end
     @area_index = new_area_index
-    @area = Area.new(@area_index, game.fs)
+    @area = Area.new(@area_index, game)
     sector_index_changed(0, force=true)
     @ui.sector.clear()
     AREA_INDEX_TO_OVERLAY_INDEX[@area_index].keys.each do |sector_index|

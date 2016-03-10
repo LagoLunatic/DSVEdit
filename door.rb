@@ -1,7 +1,9 @@
 class Door
   attr_reader :room,
               :fs,
-              :door_ram_pointer
+              :game,
+              :door_ram_pointer,
+              :destination_door
   attr_accessor :destination_room_metadata_ram_pointer,
                 :x_pos,
                 :y_pos,
@@ -10,9 +12,10 @@ class Door
                 :dest_x,
                 :dest_y
   
-  def initialize(room, door_ram_pointer, fs)
+  def initialize(room, door_ram_pointer, game)
     @room = room
-    @fs = fs
+    @fs = game.fs
+    @game = game
     @door_ram_pointer = door_ram_pointer
     
     read_from_rom()
@@ -48,6 +51,42 @@ class Door
       return :down
     else
       raise "Unknown direction"
+    end
+  end
+  
+  def destination_door
+    @destination_door = begin
+      dest_room = nil
+      game.each_room do |room|
+        if room.room_metadata_ram_pointer == destination_room_metadata_ram_pointer
+          dest_room = room
+          break
+        end
+      end
+      if dest_room.nil?
+        raise "Door has invalid destination room: %08X" % destination_room_metadata_ram_pointer
+      end
+      
+      dest_door_predicted_x = dest_x/SCREEN_WIDTH_IN_PIXELS
+      dest_door_predicted_y = dest_y/SCREEN_HEIGHT_IN_PIXELS
+      case direction
+      when :left
+        dest_door_predicted_x += 1
+      when :right
+        dest_door_predicted_x -= 1
+      when :up
+        dest_door_predicted_y += 1
+      when :down
+        dest_door_predicted_y -= 1
+      end
+      dest_door_predicted_x = 0xFF if dest_door_predicted_x == -1
+      dest_door_predicted_y = 0xFF if dest_door_predicted_y == -1
+      dest_door = dest_room.doors.find{|door| door.x_pos == dest_door_predicted_x && door.y_pos == dest_door_predicted_y}
+      if dest_door.nil?
+        raise "dest_door is nil"
+      end
+      
+      dest_door
     end
   end
 end

@@ -2,16 +2,18 @@ class Sector
   class SectorReadError < StandardError ; end
   
   attr_reader :fs,
+              :game,
               :area,
               :sector_ram_pointer,
               :sector_index,
               :rooms
 
-  def initialize(area, sector_index, sector_ram_pointer, fs)
+  def initialize(area, sector_index, sector_ram_pointer, game)
     @area = area
     @sector_ram_pointer = sector_ram_pointer
     @sector_index = sector_index
-    @fs = fs
+    @fs = game.fs
+    @game = game
   end
   
   def rooms
@@ -39,7 +41,7 @@ private
         next # unused, mispointed rooms
       end
       
-      room = Room.new(self, room_metadata_ram_pointer, area.area_index, sector_index, room_index, fs)
+      room = Room.new(self, room_metadata_ram_pointer, area.area_index, sector_index, room_index, game)
       rooms << room
       
       room_index += 1

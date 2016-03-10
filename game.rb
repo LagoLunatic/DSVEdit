@@ -50,7 +50,7 @@ class Game
   def read_from_rom
     @areas = []
     AREA_INDEX_TO_OVERLAY_INDEX.each do |area_index, list_of_sub_areas|
-      area = Area.new(area_index, fs)
+      area = Area.new(area_index, self)
       @areas << area
     end
   end
