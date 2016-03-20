@@ -183,6 +183,9 @@ class Randomizer
       end
       
       case new_boss.name.decoded_string
+      when "Flying Armor"
+        boss_entity.x_pos = boss_entity.room.main_layer_width * SCREEN_WIDTH_IN_PIXELS / 2
+        boss_entity.y_pos = 80
       when "Balore"
         boss_entity.x_pos = 16
         boss_entity.y_pos = 176
@@ -190,6 +193,8 @@ class Randomizer
         if old_boss.name.decoded_string == "Puppet Master"
           boss_entity.x_pos += 144
         end
+      when "Dmitrii"
+        boss_entity.var_a = 0 # Boss rush Dmitrii, doesn't crash when there are no events.
       when "Puppet Master"
         boss_entity.x_pos = 328
         boss_entity.y_pos = 64
@@ -198,6 +203,9 @@ class Randomizer
           # Set Gergoth to boss rush mode, unless he's in his tower.
           boss_entity.var_a = 0
         end
+      when "Zephyr"
+        # Don't put Zephyr inside the left or right walls. If he is either Soma or him will get stuck and soft lock the game.
+        boss_entity.x_pos = 256
       when "Paranoia"
         # If Paranoia spawns in Gergoth's tall tower, his position and the position of his mirrors can become disjointed.
         # This combination of x and y seems to be one of the least buggy.
