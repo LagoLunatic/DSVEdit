@@ -215,6 +215,18 @@ class Randomizer
       boss_entity.subtype = new_boss_id
       
       boss_entity.write_to_rom()
+      
+      # Update the boss doors for the new boss
+      new_boss_door_var_b = BOSS_ID_TO_BOSS_DOOR_VAR_B[new_boss_id]
+      ([boss_entity.room] + boss_entity.room.connected_rooms).each do |room|
+        room.entities.each do |entity|
+          if entity.type == 0x02 && entity.subtype == 0x25
+            entity.var_b = new_boss_door_var_b
+            
+            entity.write_to_rom()
+          end
+        end
+      end
     end
     
     queued_dna_changes.each do |boss_id, changes|

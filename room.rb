@@ -191,4 +191,8 @@ class Room
   def main_layer_height
     layers.select{|layer| layer.scroll_mode == 1}.map(&:height).max
   end
+  
+  def connected_rooms
+    doors.map{|door| door.destination_door.room}.uniq
+  end
 end
