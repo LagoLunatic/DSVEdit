@@ -252,7 +252,8 @@ class Randomizer
     return unless GAME == "dos"
     
     if entity.subtype >= 0x5E && options[:remove_events]
-      if entity.subtype == 0x5F # event with yoko and julius going over the bridge
+      case entity.subtype 
+      when 0x5F # event with yoko and julius going over the bridge
         # Replace it with magic seal 1
         entity.type = 4
         entity.subtype = 2
@@ -260,6 +261,10 @@ class Randomizer
         entity.var_b = 0x3D # magic seal 1
         entity.x_pos = 0x0080
         entity.y_pos = 0x0140
+      when 0x6C..0x6E # menace events
+        # do nothing
+      when 0x71..0x72 # epilogue
+        # do nothing
       else
         # Remove it
         entity.type = 0
