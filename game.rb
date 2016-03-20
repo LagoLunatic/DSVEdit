@@ -2,7 +2,7 @@
 class Game
   class InvalidGameError < StandardError ; end
   
-  attr_reader :areas, :fs, :folder
+  attr_reader :areas, :fs, :folder, :text_database
   
   def initialize_from_folder(input_folder_path)
     header_path = File.join(input_folder_path, "ftc", "ndsheader.bin")
@@ -53,6 +53,8 @@ class Game
       area = Area.new(area_index, self)
       @areas << area
     end
+    
+    @text_database = TextDatabase.new(fs)
   end
   
   def each_room
@@ -145,6 +147,18 @@ class Game
     ]
     address = 0x020BFC00 # Free space.
     fs.write(address, code.pack("V*")) 
+  end
+  
+  def fix_unnamed_skills
+    case GAME
+    when "dos"
+      soul_name_list_start = TEXT_REGIONS["Soul Names"].begin
+      NAMES_FOR_UNNAMED_SKILLS.each do |soul_id, fixed_name|
+        text_database.text_list[soul_id + soul_name_list_start].decoded_string = fixed_name
+      end
+      
+      text_database.write_to_rom()
+    end
   end
   
 private

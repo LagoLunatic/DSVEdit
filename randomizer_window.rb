@@ -129,6 +129,8 @@ class RandomizerWindow < Qt::Dialog
       game.ooe_open_world_map()
     end
     
+    game.fix_unnamed_skills()
+    
     progress_dialog = Qt::ProgressDialog.new
     progress_dialog.windowTitle = "Building"
     progress_dialog.labelText = "Writing files to ROM"
