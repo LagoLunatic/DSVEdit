@@ -2,7 +2,7 @@
 class Game
   class InvalidGameError < StandardError ; end
   
-  attr_reader :areas, :fs, :folder, :text_database
+  attr_reader :areas, :fs, :folder, :text_database, :rooms_by_metadata_pointer
   
   def initialize_from_folder(input_folder_path)
     header_path = File.join(input_folder_path, "ftc", "ndsheader.bin")
@@ -52,6 +52,11 @@ class Game
     AREA_INDEX_TO_OVERLAY_INDEX.each do |area_index, list_of_sub_areas|
       area = Area.new(area_index, self)
       @areas << area
+    end
+    
+    @rooms_by_metadata_pointer = {}
+    each_room do |room|
+      @rooms_by_metadata_pointer[room.room_metadata_ram_pointer] = room
     end
     
     @text_database = TextDatabase.new(fs)

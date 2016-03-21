@@ -120,15 +120,20 @@ class DSVE < Qt::MainWindow
     area_index_changed(0)
   end
   
-  def area_index_changed(new_area_index)
+  def area_index_changed(new_area_index, force=false)
     if @ui.area.findText("Select Area", flags=Qt::MatchExactly) >= 0
       # Remove the placeholder Select Area text.
       @ui.area.removeItem(0)
       area_index_changed(0) # Trigger a second call to area_index_changed to select the actual first area.
       return
     end
+    
+    if new_area_index == @area_index && !force
+      return
+    end
+    
     @area_index = new_area_index
-    @area = Area.new(@area_index, game)
+    @area = game.areas[@area_index]
     sector_index_changed(0, force=true)
     @ui.sector.clear()
     AREA_INDEX_TO_OVERLAY_INDEX[@area_index].keys.each do |sector_index|
@@ -194,14 +199,10 @@ class DSVE < Qt::MainWindow
   end
   
   def change_room_by_metadata(room_metadata_ram_pointer)
-    game.each_room do |room|
-      if room_metadata_ram_pointer == room.room_metadata_ram_pointer
-        area_index_changed(room.area_index)
-        sector_index_changed(room.sector_index)
-        room_index_changed(room.room_index)
-        break
-      end
-    end
+    room = game.rooms_by_metadata_pointer[room_metadata_ram_pointer]
+    area_index_changed(room.area_index)
+    sector_index_changed(room.sector_index)
+    room_index_changed(room.room_index)
   end
   
   def load_layers()
