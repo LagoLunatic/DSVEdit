@@ -117,6 +117,19 @@ class Game
     fs.write(address, code.pack("V*"))
   end
   
+  def dos_boss_doors_skip_seal
+    return unless GAME == "dos"
+    
+    # This makes it so you don't need a Magic Seal to enter a boss door.
+    
+    address = 0x021A9AE4 # Location of the door code for loading the boolean for whether the player is in Julius mode or not.
+    
+    code = [
+      0xE3A00001, # mov r0, 1 ; Always load 1 (meaning it is Julius mode).
+    ]
+    fs.write(address, code.pack("V*"))
+  end
+  
   def ooe_open_world_map
     return unless GAME == "ooe"
     
