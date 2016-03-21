@@ -10,15 +10,18 @@ class TMXInterface
     xml = Nokogiri::XML(tiled_room)
     tiled_layers = xml.css("layer")
     tiled_layers.each do |tmx_layer|
+      props = extract_properties(tmx_layer)
+      
       layer_metadata_ram_pointer = tmx_layer.attr("name").match(/^layer (\h+)$/)[1].to_i(16)
       possible_layers = room.layers.select{|layer| layer.layer_metadata_ram_pointer == layer_metadata_ram_pointer}
       if possible_layers.length != 1
         raise "%08X could be too many possible layers (or not enough)" % layer_metadata_ram_pointer
       end
       game_layer = possible_layers.first
-      game_layer.width = tmx_layer.attr("width").to_i / 16
-      game_layer.height = tmx_layer.attr("height").to_i / 12
-      from_tmx_level_data(tmx_layer.css("data").text, game_layer.tiles)
+      game_layer.width  = props["layer_width"]
+      game_layer.height = props["layer_height"]
+      game_layer.tiles = from_tmx_level_data(tmx_layer.css("data").text, game_layer.width, game_layer.height)
+      
       game_layer.write_to_rom()
     end
     
@@ -102,6 +105,12 @@ class TMXInterface
                     :opacity => layer.opacity/31.0,
                     :z_index => layer.z_index,
                     :colors_per_palette => layer.colors_per_palette) {
+            
+            xml.properties {
+              xml.property(:name => "layer_width",  :value => "%02X" % layer.width)
+              xml.property(:name => "layer_height", :value => "%02X" % layer.height)
+            }
+            
             xml.data(to_tmx_level_data(layer.tiles, layer.width, get_block_offset_for_tileset(layer.tileset_filename, all_tilesets_for_room)), :encoding => "csv")
           }
         end
@@ -180,22 +189,44 @@ class TMXInterface
     block_offset
   end
   
-  def from_tmx_level_data(tile_data_string, game_tiles)
-    tile_data = tile_data_string.scan(/\d+/).map{|str| str.to_i}
+  def from_tmx_level_data(tile_data_string, width, height)
+    tile_rows = tile_data_string.strip.split("\n").map{|row_str| row_str.scan(/\d+/).map{|str| str.to_i}}
+    width_in_blocks = width * 16
+    height_in_blocks = height * 12
     
-    i = 0
-    tile_data = tile_data.map do |block|
+    tile_rows = tile_rows[0, height_in_blocks]
+    if tile_rows.length < height_in_blocks
+      # Pad with empty blocks if the tmx layer is smaller than the game layer should be.
+      tile_rows += [[1] * width_in_blocks] * (height_in_blocks - tile_rows.length)
+    end
+    
+    tile_rows.map! do |row|
+      row = row[0, width_in_blocks]
+      
+      if row.length < width_in_blocks
+        # Pad with empty blocks if the tmx layer is smaller than the game layer should be.
+        row += [1] * (width_in_blocks - row.length)
+      end
+      
+      row
+    end
+    
+    game_tiles = []
+    
+    tile_rows.flatten.each do |block|
       block = 1 if block == 0
       horizontal_flip  = (block & 0x80000000) != 0
       vertical_flip    = (block & 0x40000000) != 0
       index_on_tileset = (block & ~(0x80000000 | 0x40000000 | 0x20000000))
       
-      game_tiles[i].index_on_tileset = index_on_tileset - 1
-      game_tiles[i].horizontal_flip = horizontal_flip
-      game_tiles[i].vertical_flip = vertical_flip
-      
-      i += 1
+      tile = Tile.new
+      tile.index_on_tileset = index_on_tileset - 1
+      tile.horizontal_flip = horizontal_flip
+      tile.vertical_flip = vertical_flip
+      game_tiles << tile
     end
+    
+    return game_tiles
   end
   
 private

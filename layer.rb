@@ -48,7 +48,7 @@ class Layer
   def read_from_layer_tiledata
     tile_data_string = fs.read(layer_tiledata_ram_start_offset, SIZE_OF_A_SCREEN_IN_BYTES*width*height)
     @tiles = tile_data_string.unpack("v*").map do |tile_data|
-      Tile.new(tile_data)
+      Tile.new.from_game_data(tile_data)
     end
   end
   
@@ -97,10 +97,12 @@ class Tile
                 :horizontal_flip,
                 :vertical_flip
   
-  def initialize(tile_data)
+  def from_game_data(tile_data)
     @index_on_tileset = (tile_data & 0b0011111111111111)
     @horizontal_flip  = (tile_data & 0b0100000000000000) != 0
     @vertical_flip    = (tile_data & 0b1000000000000000) != 0
+    
+    return self
   end
   
   def to_tile_data
