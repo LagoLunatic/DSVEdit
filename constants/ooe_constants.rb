@@ -179,7 +179,26 @@ GLYPH_GLOBAL_ID_RANGE = (0..0x50)
 ENEMY_IDS = (0x00..0x78)
 COMMON_ENEMY_IDS = (0x00..0x6A).to_a
 BOSS_IDS = (0x6B..0x78).to_a
+RANDOMIZABLE_BOSS_IDS = BOSS_IDS - [0x76] # remove eligor, he needs his own huge room
 VERY_LARGE_ENEMIES = []
+
+BOSS_DOOR_SUBTYPE = 0x4B
+BOSS_ID_TO_BOSS_DOOR_VAR_B = {
+  0x6B => 0x02, # giant skeleton
+  0x6C => 0x01, # arthroverta
+  0x6D => 0x03, # brachyura
+  0x6E => 0x04, # man eater
+  0x6F => 0x05, # rusalka
+  0x70 => 0x06, # goliath
+  0x71 => 0x07, # gravedorcus
+  0x72 => 0x08, # albus
+  0x73 => 0x09, # barlowe
+  0x74 => 0x0A, # wallman
+  0x75 => 0x0B, # blackmore
+  0x76 => 0x0C, # eligor
+  0x77 => 0x0D, # death
+  0x78 => 0x0F, # dracula
+}
 
 ENEMY_DNA_RAM_START_OFFSET = 0x020B6364
 ENEMY_DNA_LENGTH = 36

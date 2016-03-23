@@ -165,59 +165,16 @@ class Randomizer
       old_boss = game.enemy_dnas[old_boss_id]
       new_boss = game.enemy_dnas[new_boss_id]
       
-      case old_boss.name.decoded_string
-      when "Balore"
-        if boss_entity.var_a == 2
-          # Not actually Balore, this is the wall of ice blocks right before Balore.
-          # We need to get rid of this because we don't want two bosses inside the room. Especially if they're different bosses, as that would take up too much RAM and crash the game.
-          boss_entity.type = 0
-          boss_entity.subtype = 0
-          boss_entity.write_to_rom()
-          next
-        end
-      when "Paranoia"
-        if boss_entity.var_a == 1
-          # Mini-paranoia.
-          next
-        end
+      result = case GAME
+      when "dos"
+        dos_adjust_randomized_boss(boss_entity, old_boss_id, new_boss_id, old_boss, new_boss)
+      when "por"
+        por_adjust_randomized_boss(boss_entity, old_boss_id, new_boss_id, old_boss, new_boss)
+      when "ooe"
+        ooe_adjust_randomized_boss(boss_entity, old_boss_id, new_boss_id, old_boss, new_boss)
       end
-      
-      case new_boss.name.decoded_string
-      when "Flying Armor"
-        boss_entity.x_pos = boss_entity.room.main_layer_width * SCREEN_WIDTH_IN_PIXELS / 2
-        boss_entity.y_pos = 80
-      when "Balore"
-        boss_entity.x_pos = 16
-        boss_entity.y_pos = 176
-        
-        if old_boss.name.decoded_string == "Puppet Master"
-          boss_entity.x_pos += 144
-        end
-      when "Dmitrii"
-        boss_entity.var_a = 0 # Boss rush Dmitrii, doesn't crash when there are no events.
-      when "Puppet Master"
-        boss_entity.x_pos = 328
-        boss_entity.y_pos = 64
-      when "Gergoth"
-        unless old_boss_id == new_boss_id
-          # Set Gergoth to boss rush mode, unless he's in his tower.
-          boss_entity.var_a = 0
-        end
-      when "Zephyr"
-        # Don't put Zephyr inside the left or right walls. If he is either Soma or him will get stuck and soft lock the game.
-        boss_entity.x_pos = 256
-      when "Paranoia"
-        # If Paranoia spawns in Gergoth's tall tower, his position and the position of his mirrors can become disjointed.
-        # This combination of x and y seems to be one of the least buggy.
-        boss_entity.x_pos = 0x1F
-        boss_entity.y_pos = 0x80
-        
-        boss_entity.var_a = 2
-      when "Aguni"
-        boss_entity.var_a = 0
-        boss_entity.var_b = 0
-      else
-        boss_entity.var_a = 1
+      if result == :skip
+        next
       end
       
       boss_entity.subtype = new_boss_id
@@ -228,7 +185,7 @@ class Randomizer
       new_boss_door_var_b = BOSS_ID_TO_BOSS_DOOR_VAR_B[new_boss_id]
       ([boss_entity.room] + boss_entity.room.connected_rooms).each do |room|
         room.entities.each do |entity|
-          if entity.type == 0x02 && entity.subtype == 0x25
+          if entity.type == 0x02 && entity.subtype == BOSS_DOOR_SUBTYPE
             entity.var_b = new_boss_door_var_b
             
             entity.write_to_rom()
@@ -248,9 +205,105 @@ class Randomizer
     end
   end
   
-  def randomize_special_objects(entity)
-    return unless GAME == "dos"
+  def dos_adjust_randomized_boss(boss_entity, old_boss_id, new_boss_id, old_boss, new_boss)
+    case old_boss.name.decoded_string
+    when "Balore"
+      if boss_entity.var_a == 2
+        # Not actually Balore, this is the wall of ice blocks right before Balore.
+        # We need to get rid of this because we don't want two bosses inside the room. Especially if they're different bosses, as that would take up too much RAM and crash the game.
+        boss_entity.type = 0
+        boss_entity.subtype = 0
+        boss_entity.write_to_rom()
+        return :skip
+      end
+    when "Paranoia"
+      if boss_entity.var_a == 1
+        # Mini-paranoia.
+        return :skip
+      end
+    end
     
+    case new_boss.name.decoded_string
+    when "Flying Armor"
+      boss_entity.x_pos = boss_entity.room.main_layer_width * SCREEN_WIDTH_IN_PIXELS / 2
+      boss_entity.y_pos = 80
+    when "Balore"
+      boss_entity.x_pos = 16
+      boss_entity.y_pos = 176
+      
+      if old_boss.name.decoded_string == "Puppet Master"
+        boss_entity.x_pos += 144
+      end
+    when "Dmitrii"
+      boss_entity.var_a = 0 # Boss rush Dmitrii, doesn't crash when there are no events.
+    when "Puppet Master"
+      boss_entity.x_pos = 328
+      boss_entity.y_pos = 64
+    when "Gergoth"
+      unless old_boss_id == new_boss_id
+        # Set Gergoth to boss rush mode, unless he's in his tower.
+        boss_entity.var_a = 0
+      end
+    when "Zephyr"
+      # Don't put Zephyr inside the left or right walls. If he is either Soma or him will get stuck and soft lock the game.
+      boss_entity.x_pos = 256
+      
+      # TODO: If Zephyr spawns in a room that is 1 screen wide then either he or Soma will get stuck, regardless of what Zephyr's x pos is. Need to make sure Zephyr only spawns in rooms 2 screens wide or wider.
+      # also if zephyr spawns inside rahab's room you can't reach him until you have rahab's soul.
+    when "Paranoia"
+      # If Paranoia spawns in Gergoth's tall tower, his position and the position of his mirrors can become disjointed.
+      # This combination of x and y seems to be one of the least buggy.
+      boss_entity.x_pos = 0x1F
+      boss_entity.y_pos = 0x80
+      
+      boss_entity.var_a = 2
+    when "Aguni"
+      boss_entity.var_a = 0
+      boss_entity.var_b = 0
+    else
+      boss_entity.var_a = 1
+    end
+  end
+  
+  def por_adjust_randomized_boss(boss_entity, old_boss_id, new_boss_id, old_boss, new_boss)
+    raise NotImplementedError
+  end
+  
+  def ooe_adjust_randomized_boss(boss_entity, old_boss_id, new_boss_id, old_boss, new_boss)
+    case old_boss.name.decoded_string
+    when "Brachyura"
+      boss_entity.x_pos = 0x0080
+      boss_entity.y_pos = 0x0A20
+    end
+    
+    boss_entity.room.entities.each do |entity|
+      if entity.type == 0x02 && entity.subtype == 0x3E && entity.var_a == 0x01
+        # Searchlights in Giant Skeleton's boss room. These will soft lock the game if Giant Skeleton isn't here, so we need to tweak it a bit.
+        entity.var_a = 0x00
+        entity.write_to_rom()
+      end
+    end
+    
+    case new_boss.name.decoded_string
+    when "Wallman"
+      # We don't want Wallman to be offscreen because then he's impossible to defeat.
+      boss_entity.x_pos = 0xCC
+      boss_entity.y_pos = 0xAF
+    end
+  end
+  
+  def randomize_special_objects(entity)
+    case GAME
+    when "dos"
+      dos_randomize_special_objects(entity)
+    when "por"
+      por_randomize_special_objects(entity)
+    when "ooe"
+      ooe_randomize_special_objects(entity)
+    end
+  end
+  
+  def dos_randomize_special_objects(entity)
     if entity.subtype >= 0x5E && options[:remove_events]
       case entity.subtype 
       when 0x5F # event with yoko and julius going over the bridge
@@ -265,6 +318,33 @@ class Randomizer
         # do nothing
       when 0x71..0x72 # epilogue
         # do nothing
+      else
+        # Remove it
+        entity.type = 0
+        entity.subtype = 0
+      end
+    elsif entity.subtype == 0x01 && (entity.var_a == 0x00 || entity.var_a == 0x10)
+      # Soul candle or money chest
+      entity.type = ENTITY_TYPE_FOR_PICKUPS
+      randomize_pickup_dos_por(entity)
+    end
+  end
+  
+  def por_randomize_special_objects(entity)
+    raise NotImplementedError
+  end
+  
+  def ooe_randomize_special_objects(entity)
+    if entity.subtype >= 0x5E && options[:remove_events]
+      case entity.subtype 
+      when 0x63 # tutorial event that would normally give you your first glyph
+        # Replace it with the glyph in a statue instead
+        entity.type = 2
+        entity.subtype = 2
+        entity.var_a = 0x00 # statue
+        entity.var_b = 0x02 # confodere
+        entity.x_pos = 0x00B0
+        entity.y_pos = 0x0070
       else
         # Remove it
         entity.type = 0
@@ -350,6 +430,21 @@ class Randomizer
       end
       
       enemy.write_to_rom()
+    end
+    
+    if GAME == "ooe"
+      BOSS_IDS.each do |enemy_id|
+        enemy = EnemyDNA.new(enemy_id, game.fs)
+        
+        if enemy["Glyph"] != 0
+          # Boss that has a glyph you can absorb during the fight (Albus, Barlowe, and Wallman).
+          
+          enemy["Glyph"] = rng.rand(GLYPH_GLOBAL_ID_RANGE)
+          enemy["Glyph Chance"] = rng.rand(0x01..0x0F)
+          
+          enemy.write_to_rom()
+        end
+      end
     end
   end
   
