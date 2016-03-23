@@ -8,10 +8,10 @@ class Room
               :number_of_doors,
               :tileset_wrapper_A_ram_pointer,
               :entity_list_ram_pointer,
+              :door_list_ram_pointer,
               :graphic_tilesets_for_room,
               :palette_pages,
               :palette_page_index,
-              :doors,
               :area_index,
               :sector_index,
               :room_index,
@@ -19,7 +19,8 @@ class Room
               :game
   attr_accessor :room_xpos_on_map,
                 :room_ypos_on_map,
-                :entities
+                :entities,
+                :doors
 
   def initialize(sector, room_metadata_ram_pointer, area_index, sector_index, room_index, game)
     @room_metadata_ram_pointer = room_metadata_ram_pointer
@@ -38,7 +39,7 @@ class Room
     @tileset_wrapper_A_ram_pointer = room_metadata[3]
     palette_wrapper_ram_pointer = room_metadata[4]
     @entity_list_ram_pointer = room_metadata[5]
-    door_list_ram_pointer = room_metadata[6]
+    @door_list_ram_pointer = room_metadata[6]
     last_4_bytes = room_metadata[7]
     
     read_last_4_bytes_from_rom(last_4_bytes)
@@ -146,12 +147,24 @@ class Room
     (0..number_of_doors-1).each do |i|
       door_pointer = door_list_ram_pointer + i*16
       
-      @doors << Door.new(self, door_pointer, game)
+      @doors << Door.new(self, game).read_from_rom(door_pointer)
     end
+    
+    @original_number_of_doors = doors.length
   end
   
   def read_last_4_bytes_from_rom(last_4_bytes)
-    @number_of_doors, @room_xpos_on_map, @room_ypos_on_map, @palette_page_index = EXTRACT_EXTRA_ROOM_INFO.call(last_4_bytes)
+    if GAME == "dos"
+      @number_of_doors    = (last_4_bytes & 0b00000000_00000000_11111111_11111111)
+      @room_xpos_on_map   = (last_4_bytes & 0b00000000_00111111_00000000_00000000) >> 16
+      @room_ypos_on_map   = (last_4_bytes & 0b00011111_10000000_00000000_00000000) >> 23
+      @palette_page_index = 0 # always 0 in dos, and so not stored in these 4 bytes
+    else
+      @number_of_doors    = (last_4_bytes & 0b00000000_00000000_00000000_01111111)
+      @room_xpos_on_map   = (last_4_bytes & 0b00000000_00000000_00111111_10000000) >> 7
+      @room_ypos_on_map   = (last_4_bytes & 0b00000000_00011111_11000000_00000000) >> 14
+      @palette_page_index = (last_4_bytes & 0b00001111_10000000_00000000_00000000) >> 23
+    end
   end
   
   def palette_offset
@@ -186,6 +199,47 @@ class Room
       new_entity_pointer += 12
     end
     fs.write(new_entity_pointer, [0x7FFF7FFF, 0, 0].pack("V*")) # Marks the end of the entity list
+  end
+  
+  def write_doors_to_rom
+    sector.load_necessary_overlay()
+    
+    if doors.length > @original_number_of_doors
+      # Repoint the door list so there's room for more doors without overwriting anything.
+      # Doors are originally stored in the arm9 file, but we can't expand that. Instead put them into an overlay file, which can be expanded.
+      # We use the same overlay that the the room's layers are stored on.
+      
+      length_to_expand_by = doors.length*16
+      new_door_list_pointer = fs.expand_file_and_get_end_of_file_ram_address(layers.first.layer_metadata_ram_pointer, length_to_expand_by)
+      @door_list_ram_pointer = new_door_list_pointer
+      fs.write(room_metadata_ram_pointer+6*4, [door_list_ram_pointer].pack("V"))
+    end
+    
+    new_door_pointer = door_list_ram_pointer
+    doors.each do |door|
+      door.door_ram_pointer = new_door_pointer
+      door.write_to_rom()
+      
+      new_door_pointer += 16
+    end
+    
+    @number_of_doors = doors.length
+    write_last_4_bytes_to_rom()
+  end
+  
+  def write_last_4_bytes_to_rom
+    last_4_bytes = 0
+    if GAME == "dos"
+      last_4_bytes |= (@number_of_doors         ) & 0b00000000_00000000_11111111_11111111
+      last_4_bytes |= (@room_xpos_on_map   << 16) & 0b00000000_00111111_00000000_00000000
+      last_4_bytes |= (@room_ypos_on_map   << 23) & 0b00011111_10000000_00000000_00000000
+    else
+      last_4_bytes |= (@number_of_doors         ) & 0b00000000_00000000_00000000_01111111
+      last_4_bytes |= (@room_xpos_on_map   <<  7) & 0b00000000_00000000_00111111_10000000
+      last_4_bytes |= (@room_ypos_on_map   << 14) & 0b00000000_00011111_11000000_00000000
+      last_4_bytes |= (@palette_page_index << 23) & 0b00001111_10000000_00000000_00000000
+    end
+    fs.write(room_metadata_ram_pointer+7*4, [last_4_bytes].pack("V"))
   end
   
   def z_ordered_layers

@@ -2,9 +2,9 @@ class Door
   attr_reader :room,
               :fs,
               :game,
-              :door_ram_pointer,
               :destination_door
-  attr_accessor :destination_room_metadata_ram_pointer,
+  attr_accessor :door_ram_pointer,
+                :destination_room_metadata_ram_pointer,
                 :x_pos,
                 :y_pos,
                 :dest_x_unused,
@@ -12,16 +12,15 @@ class Door
                 :dest_x,
                 :dest_y
   
-  def initialize(room, door_ram_pointer, game)
+  def initialize(room, game)
     @room = room
     @fs = game.fs
     @game = game
-    @door_ram_pointer = door_ram_pointer
-    
-    read_from_rom()
   end
   
-  def read_from_rom
+  def read_from_rom(door_ram_pointer)
+    @door_ram_pointer = door_ram_pointer
+    
     @destination_room_metadata_ram_pointer = fs.read(door_ram_pointer,4).unpack("V*").first
     @x_pos, @y_pos = fs.read(door_ram_pointer+4,2).unpack("C*")
     @dest_x_unused, @dest_y_unused, @dest_x, @dest_y = fs.read(door_ram_pointer+6,8).unpack("v*")
@@ -30,14 +29,20 @@ class Door
     #raise [@dest_x_B, @dest_y_B].inspect if @dest_x_B > 0 || @dest_y_B > 0
     #raise [@unk1, @unk2].inspect if @unk1 > 0 || @unk2 > 0
     # todo: get rest of bytes
+    
+    return self
   end
   
   def write_to_rom
     room.sector.load_necessary_overlay()
     
+    if door_ram_pointer.nil?
+      raise "Can't save a door that doesn't have a pointer"
+    end
+    
     fs.write(door_ram_pointer, [destination_room_metadata_ram_pointer].pack("V"))
     fs.write(door_ram_pointer+4, [x_pos, y_pos].pack("C*"))
-    fs.write(door_ram_pointer+6, [dest_x_unused, dest_y_unused, dest_x, dest_y].pack("v*"))
+    fs.write(door_ram_pointer+6, [dest_x_unused, dest_y_unused, dest_x, dest_y, 0].pack("v*"))
   end
   
   def direction

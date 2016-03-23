@@ -46,13 +46,11 @@ class TMXInterface
     room.write_entities_to_rom()
     
     tiled_doors = xml.css("objectgroup[name='Doors'] object")
+    room.doors = []
     tiled_doors.each do |tiled_door|
       props = extract_properties(tiled_door)
       
-      door = room.doors.find{|d| d.door_ram_pointer == props["door_ram_pointer"]}
-      if door.nil?
-        raise "Couldn't find door at %08X" % door.door_ram_pointer
-      end
+      door = Door.new(room, room.game)
       
       x = tiled_door["x"].to_i / SCREEN_WIDTH_IN_PIXELS
       y = tiled_door["y"].to_i / SCREEN_HEIGHT_IN_PIXELS
@@ -64,9 +62,13 @@ class TMXInterface
       door.y_pos = y
       door.dest_x = props["dest_x"]
       door.dest_y = props["dest_y"]
+      door.dest_x_unused = props["dest_x_unused"]
+      door.dest_y_unused = props["dest_y_unused"]
       door.destination_room_metadata_ram_pointer = props["destination_room"]
-      door.write_to_rom()
+      
+      room.doors << door
     end
+    room.write_doors_to_rom()
     
     puts "Read tmx file #{filename} and saved to rom"
   end
@@ -136,6 +138,8 @@ class TMXInterface
                 xml.property(:name => "destination_room", :value => "%08X" % door.destination_room_metadata_ram_pointer)
                 xml.property(:name => "dest_x", :value => "%04X" % door.dest_x)
                 xml.property(:name => "dest_y", :value => "%04X" % door.dest_y)
+                xml.property(:name => "dest_x_unused", :value => "%04X" % door.dest_x_unused)
+                xml.property(:name => "dest_y_unused", :value => "%04X" % door.dest_y_unused)
               }
               
             }
