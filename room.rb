@@ -7,17 +7,19 @@ class Room
               :layers,
               :number_of_doors,
               :tileset_wrapper_A_ram_pointer,
+              :entity_list_ram_pointer,
               :graphic_tilesets_for_room,
               :palette_pages,
               :palette_page_index,
-              :entities,
               :doors,
               :area_index,
               :sector_index,
               :room_index,
               :fs,
               :game
-  attr_accessor :room_xpos_on_map, :room_ypos_on_map
+  attr_accessor :room_xpos_on_map,
+                :room_ypos_on_map,
+                :entities
 
   def initialize(sector, room_metadata_ram_pointer, area_index, sector_index, room_index, game)
     @room_metadata_ram_pointer = room_metadata_ram_pointer
@@ -35,7 +37,7 @@ class Room
     layer_list_ram_pointer = room_metadata[2]
     @tileset_wrapper_A_ram_pointer = room_metadata[3]
     palette_wrapper_ram_pointer = room_metadata[4]
-    entity_list_ram_pointer = room_metadata[5]
+    @entity_list_ram_pointer = room_metadata[5]
     door_list_ram_pointer = room_metadata[6]
     last_4_bytes = room_metadata[7]
     
@@ -125,10 +127,12 @@ class Room
         break
       end
       
-      @entities << Entity.new(self, entity_pointer, fs)
+      @entities << Entity.new(self, fs).read_from_rom(entity_pointer)
       
       i += 1
     end
+    
+    @original_number_of_entities = entities.length
   end
   
   def read_door_list_from_rom(door_list_ram_pointer)
@@ -158,6 +162,30 @@ class Room
     sector.load_necessary_overlay()
     
     raise NotImplementedError
+  end
+  
+  def write_entities_to_rom
+    sector.load_necessary_overlay()
+    
+    if entities.length > @original_number_of_entities
+      # Repoint the entity list so there's room for more entities without overwriting anything.
+      # Entities are originally stored in the arm9 file, but we can't expand that. Instead put them into an overlay file, which can be expanded.
+      # We use the same overlay that the the room's layers are stored on.
+      
+      length_to_expand_by = (entities.length+1)*12
+      new_entity_list_pointer = fs.expand_file_and_get_end_of_file_ram_address(layers.first.layer_metadata_ram_pointer, length_to_expand_by)
+      @entity_list_ram_pointer = new_entity_list_pointer
+      fs.write(room_metadata_ram_pointer+5*4, [entity_list_ram_pointer].pack("V"))
+    end
+    
+    new_entity_pointer = entity_list_ram_pointer
+    entities.each do |entity|
+      entity.entity_ram_pointer = new_entity_pointer
+      entity.write_to_rom()
+      
+      new_entity_pointer += 12
+    end
+    fs.write(new_entity_pointer, [0x7FFF7FFF, 0, 0].pack("V*")) # Marks the end of the entity list
   end
   
   def z_ordered_layers

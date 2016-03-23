@@ -26,13 +26,11 @@ class TMXInterface
     end
     
     tiled_entities = xml.css("objectgroup[name='Entities'] object")
+    room.entities = []
     tiled_entities.each do |tmx_entity|
       props = extract_properties(tmx_entity)
       
-      entity = room.entities.find{|e| e.entity_ram_pointer == props["entity_ram_pointer"]}
-      if entity.nil?
-        raise "Couldn't find entity at %08X" % tmx_entity.entity_ram_pointer
-      end
+      entity = Entity.new(room, room.fs)
       
       entity.x_pos = tmx_entity["x"].to_i
       entity.y_pos = tmx_entity["y"].to_i
@@ -42,8 +40,10 @@ class TMXInterface
       entity.byte_8 = props["08"]
       entity.var_a = props["var_a"]
       entity.var_b = props["var_b"]
-      entity.write_to_rom()
+      
+      room.entities << entity
     end
+    room.write_entities_to_rom()
     
     tiled_doors = xml.css("objectgroup[name='Doors'] object")
     tiled_doors.each do |tiled_door|
