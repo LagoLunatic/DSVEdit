@@ -117,14 +117,14 @@ class DSVE < Qt::MainWindow
       area_name = AREA_INDEX_TO_AREA_NAME[area_index]
       @ui.area.addItem("%02d %s" % [area_index, area_name])
     end
-    area_index_changed(0)
+    area_index_changed(0, force=true)
   end
   
   def area_index_changed(new_area_index, force=false)
     if @ui.area.findText("Select Area", flags=Qt::MatchExactly) >= 0
       # Remove the placeholder Select Area text.
       @ui.area.removeItem(0)
-      area_index_changed(0) # Trigger a second call to area_index_changed to select the actual first area.
+      area_index_changed(0, force=true) # Trigger a second call to area_index_changed to select the actual first area.
       return
     end
     
