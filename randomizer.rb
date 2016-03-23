@@ -13,6 +13,8 @@ class Randomizer
     @allow_randomization_between_items_skills_passives = true
     
     @next_available_item_id = 0
+    @used_skills = []
+    @used_items = []
     
     @log = File.open("./logs/random.txt", "a")
     if seed
@@ -400,10 +402,10 @@ class Randomizer
       enemy = EnemyDNA.new(enemy_id, game.fs)
       
       if rng.rand <= 0.5 # 50% chance to have an item drop
-        enemy["Item 1"] = rng.rand(ITEM_GLOBAL_ID_RANGE)
+        enemy["Item 1"] = get_random_item()
         
         if rng.rand <= 0.5 # Further 50% chance (25% total) to have a second item drop
-          enemy["Item 2"] = rng.rand(ITEM_GLOBAL_ID_RANGE)
+          enemy["Item 2"] = get_random_item()
         else
           enemy["Item 2"] = 0
         end
@@ -416,7 +418,7 @@ class Randomizer
       when "dos"
         enemy["Item Chance"] = rng.rand(0x01..0x40)
         
-        enemy["Soul"] = rng.rand(SOUL_GLOBAL_ID_RANGE)
+        enemy["Soul"] = get_random_soul()
         enemy["Soul Chance"] = rng.rand(0x01..0x40)
       when "por"
         enemy["Item 1 Chance"] = rng.rand(0x01..0x32)
@@ -425,7 +427,7 @@ class Randomizer
         enemy["Item 1 Chance"] = rng.rand(0x01..0x0F)
         enemy["Item 2 Chance"] = rng.rand(0x01..0x0F)
         
-        enemy["Glyph"] = rng.rand(GLYPH_GLOBAL_ID_RANGE)
+        enemy["Glyph"] = get_random_glyph()
         enemy["Glyph Chance"] = rng.rand(0x01..0x0F)
       end
       
@@ -439,13 +441,32 @@ class Randomizer
         if enemy["Glyph"] != 0
           # Boss that has a glyph you can absorb during the fight (Albus, Barlowe, and Wallman).
           
-          enemy["Glyph"] = rng.rand(GLYPH_GLOBAL_ID_RANGE)
+          enemy["Glyph"] = get_random_glyph()
           enemy["Glyph Chance"] = rng.rand(0x01..0x0F)
           
           enemy.write_to_rom()
         end
       end
     end
+  end
+  
+  def get_random_id(global_id_range, used_list)
+    available_ids = global_id_range.to_a - used_list
+    id = available_ids.sample(random: rng)
+    used_list << id
+    return id
+  end
+  
+  def get_random_item
+    get_random_id(ITEM_GLOBAL_ID_RANGE, @used_items) || 0
+  end
+  
+  def get_random_soul
+    get_random_id(SOUL_GLOBAL_ID_RANGE, @used_skills) || 0xFF
+  end
+  
+  def get_random_glyph
+    get_random_id(GLYPH_GLOBAL_ID_RANGE, @used_skills) || 0
   end
   
   def randomize_boss_souls
