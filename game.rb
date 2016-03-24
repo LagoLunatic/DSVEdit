@@ -54,9 +54,13 @@ class Game
       @areas << area
     end
     
-    @rooms_by_metadata_pointer = {}
-    each_room do |room|
-      @rooms_by_metadata_pointer[room.room_metadata_ram_pointer] = room
+    @sectors_by_room_metadata_pointer = {}
+    areas.each do |area|
+      area.sectors.each do |sector|
+        sector.room_pointers.each do |room_pointer|
+          @sectors_by_room_metadata_pointer[room_pointer] = sector
+        end
+      end
     end
     
     @text_database = TextDatabase.new(fs)
@@ -71,6 +75,13 @@ class Game
         end
       end
     end
+  end
+  
+  def get_room_by_metadata_pointer(room_metadata_pointer)
+    sector = @sectors_by_room_metadata_pointer[room_metadata_pointer]
+    index = sector.room_pointers.index(room_metadata_pointer)
+    room = sector.rooms[index]
+    room
   end
   
   def enemy_dnas

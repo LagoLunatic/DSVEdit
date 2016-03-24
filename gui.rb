@@ -199,7 +199,7 @@ class DSVE < Qt::MainWindow
   end
   
   def change_room_by_metadata(room_metadata_ram_pointer)
-    room = game.rooms_by_metadata_pointer[room_metadata_ram_pointer]
+    room = game.get_room_by_metadata_pointer(room_metadata_ram_pointer)
     area_index_changed(room.area_index)
     sector_index_changed(room.sector_index)
     room_index_changed(room.room_index)
