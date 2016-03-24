@@ -322,10 +322,18 @@ class Randomizer
         # Replace it with magic seal 1
         entity.type = 4
         entity.subtype = 2
-        entity.var_a = 0x01FF # unique id
+        entity.var_a = 0x0200 # unique id
         entity.var_b = 0x3D # magic seal 1
         entity.x_pos = 0x0080
         entity.y_pos = 0x0140
+      when 0x65 # mina's talisman event
+        # Replace it with mina's talisman
+        entity.type = 4
+        entity.subtype = 4
+        entity.var_a = 0x0201 # unique id
+        entity.var_b = 0x35 # mina's talisman
+        entity.x_pos = 0x0080
+        entity.y_pos = 0x00A0
       when 0x6C..0x6E # menace events
         # do nothing
       when 0x71..0x72 # epilogue
@@ -380,6 +388,13 @@ class Randomizer
   def randomize_pickup_dos_por(pickup)
     case GAME
     when "dos"
+      if pickup.type == 0x04 && pickup.subtype == 0x02 && (0x3D..0x41).include?(pickup.var_b)
+        # magic seal
+        return
+      elsif pickup.type == 0x04 && pickup.subtype == 0x02 && pickup.var_b == 0x39
+        # tower key
+        return
+      end
     when "por"
       if pickup.type == 0x04 && pickup.subtype >= 0x08 && [0x5C, 0x5D].include?(pickup.var_b)
         # change cube or call cube
