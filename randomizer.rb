@@ -184,7 +184,7 @@ class Randomizer
       boss_entity.write_to_rom()
       
       # Update the boss doors for the new boss
-      new_boss_door_var_b = BOSS_ID_TO_BOSS_DOOR_VAR_B[new_boss_id]
+      new_boss_door_var_b = BOSS_ID_TO_BOSS_DOOR_VAR_B[new_boss_id] || 0
       ([boss_entity.room] + boss_entity.room.connected_rooms).each do |room|
         room.entities.each do |entity|
           if entity.type == 0x02 && entity.subtype == BOSS_DOOR_SUBTYPE
@@ -268,7 +268,17 @@ class Randomizer
   end
   
   def por_adjust_randomized_boss(boss_entity, old_boss_id, new_boss_id, old_boss, new_boss)
-    raise NotImplementedError
+    case old_boss.name.decoded_string
+    when "Behemoth"
+      if boss_entity.var_b == 0x02
+        # Scripted Behemoth that chases you down the hallway.
+        return :skip
+      end
+    end
+    
+    if (0x81..0x84).include?(new_boss_id)
+      dos_adjust_randomized_boss(boss_entity, old_boss_id, new_boss_id, old_boss, new_boss)
+    end
   end
   
   def ooe_adjust_randomized_boss(boss_entity, old_boss_id, new_boss_id, old_boss, new_boss)
@@ -333,7 +343,19 @@ class Randomizer
   end
   
   def por_randomize_special_objects(entity)
-    raise NotImplementedError
+    if entity.subtype >= 0x95 && options[:remove_events]
+      case entity.subtype 
+      when nil
+      else
+        # Remove it
+        entity.type = 0
+        entity.subtype = 0
+      end
+    elsif entity.subtype == 0x01 && (entity.var_a == 0x0E || entity.var_a == 0x0F)
+      # Money chest
+      entity.type = ENTITY_TYPE_FOR_PICKUPS
+      randomize_pickup_dos_por(entity)
+    end
   end
   
   def ooe_randomize_special_objects(entity)
@@ -356,6 +378,15 @@ class Randomizer
   end
   
   def randomize_pickup_dos_por(pickup)
+    case GAME
+    when "dos"
+    when "por"
+      if pickup.type == 0x04 && pickup.subtype >= 0x08 && [0x5C, 0x5D].include?(pickup.var_b)
+        # change cube or call cube
+        return
+      end
+    end
+    
     case rng.rand(1..100)
     when 1..88
       # Randomize into an item
