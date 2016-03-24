@@ -75,8 +75,8 @@ class TMXInterface
   
   def create(filename, room)
     all_tilesets_for_room = room.layers.map{|layer| layer.tileset_filename}.uniq
-    room_width_in_blocks = room.layers.last.width * 16
-    room_height_in_blocks = room.layers.last.height * 12
+    room_width_in_blocks = room.max_layer_width * 16
+    room_height_in_blocks = room.max_layer_height * 12
     
     builder = Nokogiri::XML::Builder.new do |xml|
       xml.map(:version => "1.0", 

@@ -43,7 +43,7 @@ class Room
     last_4_bytes = room_metadata[7]
     
     read_last_4_bytes_from_rom(last_4_bytes)
-    read_layer_list_from_rom(layer_list_ram_pointer)
+    read_layer_list_from_rom(layer_list_ram_pointer) rescue NDSFileSystem::ConversionError
     read_graphic_tilesets_from_rom(tileset_wrapper_A_ram_pointer)
     read_palette_pages_from_rom(palette_wrapper_ram_pointer)
     read_entity_list_from_rom(entity_list_ram_pointer)
@@ -247,7 +247,7 @@ class Room
   end
   
   def filename
-    "room_a#{area_index}-#{sector_index}-#{room_index}_%08X_x#{room_xpos_on_map}_y#{room_ypos_on_map}_w#{z_ordered_layers.last.width}_h#{z_ordered_layers.last.height}" % room_metadata_ram_pointer
+    "room_a#{area_index}-#{sector_index}-#{room_index}_%08X_x#{room_xpos_on_map}_y#{room_ypos_on_map}_w#{main_layer_width}_h#{main_layer_height}" % room_metadata_ram_pointer
   end
   
   def area_name
@@ -259,19 +259,19 @@ class Room
   end
   
   def max_layer_width
-    layers.map(&:width).max
+    layers.map(&:width).max || 0
   end
   
   def max_layer_height
-    layers.map(&:height).max
+    layers.map(&:height).max || 0
   end
   
   def main_layer_width
-    layers.select{|layer| layer.scroll_mode == 1}.map(&:width).max
+    layers.select{|layer| layer.scroll_mode == 1}.map(&:width).max || 0
   end
   
   def main_layer_height
-    layers.select{|layer| layer.scroll_mode == 1}.map(&:height).max
+    layers.select{|layer| layer.scroll_mode == 1}.map(&:height).max || 0
   end
   
   def connected_rooms

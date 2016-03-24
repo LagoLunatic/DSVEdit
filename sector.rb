@@ -36,10 +36,6 @@ private
       room_metadata_ram_pointer = fs.read(sector_ram_pointer + room_index*4, 4).unpack("V*").first
       
       break if room_metadata_ram_pointer == 0
-      if INVALID_ROOMS.include?(room_metadata_ram_pointer)
-        room_index += 1
-        next # unused, mispointed rooms
-      end
       
       room = Room.new(self, room_metadata_ram_pointer, area.area_index, sector_index, room_index, game)
       rooms << room
