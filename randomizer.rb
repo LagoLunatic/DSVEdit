@@ -356,22 +356,40 @@ class Randomizer
   end
   
   def randomize_pickup_dos_por(pickup)
-    if allow_randomization_between_items_skills_passives
-      if rng.rand(1..100) <= 80 # 80% chance to randomize into an item
-        pickup.subtype = ITEM_LOCAL_ID_RANGES.keys.sample(random: rng)
-        pickup.var_b = rng.rand(ITEM_LOCAL_ID_RANGES[pickup.subtype])
-      elsif GAME == "dos"
+    case rng.rand(1..100)
+    when 1..88
+      # Randomize into an item
+      pickup.type = 4 # pickup
+      pickup.subtype = ITEM_LOCAL_ID_RANGES.keys.sample(random: rng)
+      pickup.var_b = rng.rand(ITEM_LOCAL_ID_RANGES[pickup.subtype])
+      
+      pickup.var_a = get_unique_id()
+    when 89..90
+      # Randomize into a money chest
+      case GAME
+      when "dos"
+        pickup.type = 2 # special object
+        pickup.subtype = 1 # destructible object
+        pickup.var_a = 0x10 # money chest
+      when "por"
+        pickup.type = 2 # special object
+        pickup.subtype = 1 # destructible object
+        pickup.var_a = rng.rand(0x0E..0x0F) # money chest
+      end
+    when 91..100
+      case GAME
+      when "dos"
+        # Randomize into a soul lamp
         pickup.type = 2 # special object
         pickup.subtype = 1 # candle
         pickup.var_a = 0 # glowing soul lamp
-        pickup.var_b = (ITEM_BYTE_11_RANGE_FOR_SKILLS.to_a + ITEM_BYTE_11_RANGE_FOR_PASSIVES.to_a).sample(random: rng)
-      else # 20% chance to randomize into a skill/passive
-        pickup.subtype = ITEM_BYTE_7_VALUE_FOR_SKILLS_AND_PASSIVES
-        pickup.var_b = (ITEM_BYTE_11_RANGE_FOR_SKILLS.to_a + ITEM_BYTE_11_RANGE_FOR_PASSIVES.to_a).sample(random: rng)
+        pickup.var_b = rng.rand(SOUL_GLOBAL_ID_RANGE)
+      when "por"
+        # Randomize into a skill or relic
+        pickup.type = 4 # pickup
+        pickup.subtype = 8 # skill
+        pickup.var_b = rng.rand(SKILL_GLOBAL_ID_RANGE)
       end
-      
-    else
-      
     end
   end
   
@@ -388,8 +406,7 @@ class Randomizer
     when 0x16
       # Chest
       pickup.var_a = rng.rand(0x0070..0x0162)
-      pickup.var_b = @next_available_item_id
-      @next_available_item_id += 1
+      pickup.var_b = get_unique_id()
     when 0x02
       # Glyph statue
       pickup.var_a = 0x00
@@ -467,6 +484,12 @@ class Randomizer
   
   def get_random_glyph
     get_random_id(GLYPH_GLOBAL_ID_RANGE, @used_skills) || 0
+  end
+  
+  def get_unique_id
+    id = @next_available_item_id
+    @next_available_item_id += 1
+    return id
   end
   
   def randomize_boss_souls
