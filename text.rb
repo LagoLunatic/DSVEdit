@@ -15,9 +15,8 @@ class Text
   end
   
   def read_from_rom
-    region_name = TEXT_REGIONS.find{|name, range| range.include?(text_id)}[0]
-    if TEXT_REGIONS_OVERLAYS[region_name]
-      fs.load_overlay(TEXT_REGIONS_OVERLAYS[region_name])
+    if overlay_id
+      fs.load_overlay(overlay_id)
     end
     
     @text_ram_pointer = TEXT_LIST_START_OFFSET + 4*text_id
@@ -29,10 +28,13 @@ class Text
   
   def write_to_rom
     fs.write(text_ram_pointer, [string_ram_pointer].pack("V"))
-    fs.write(string_ram_pointer, [1].pack("v"))
-    
-    fs.write(string_ram_pointer+2, encoded_string)
-    fs.write(string_ram_pointer+2+encoded_string.length, [0xEA].pack("C"))
+    data = [1].pack("v") + encoded_string + [0xEA].pack("C")
+    fs.write(string_ram_pointer, data)
+  end
+  
+  def overlay_id
+    region_name = TEXT_REGIONS.find{|name, range| range.include?(text_id)}[0]
+    TEXT_REGIONS_OVERLAYS[region_name]
   end
   
   def decoded_string=(new_str)

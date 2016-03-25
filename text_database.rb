@@ -26,39 +26,46 @@ class TextDatabase
     
     # For OoE, the strings are already packed snugly, so we can't gain any space that way. But we can expand the overlay file here since nothing immediately follows it in RAM.
     
-    if TEXT_REGIONS_OVERLAYS.first
-      fs.load_overlay(TEXT_REGIONS_OVERLAYS.first[1])
-    end
+    # For PoR, the strings are split across two different overlay files, so we have to handle those separately.
     
-    next_string_ram_pointer = STRING_DATABASE_START_OFFSET
-    should_write_to_end_of_file = false
-    text_list.each do |text|
-      if next_string_ram_pointer + text.encoded_string.length + 3 > STRING_DATABASE_ALLOWABLE_END_OFFSET
-        # Writing strings past this point would result in something being overwritten, so raise an error.
+    overlays = TEXT_REGIONS_OVERLAYS.values.uniq
+    overlays.each do |overlay|
+      fs.load_overlay(overlay)
+      
+      text_list_for_overlay = text_list.select{|text| text.overlay_id == overlay}
+      
+      next_string_ram_pointer = STRING_DATABASE_START_OFFSET
+      should_write_to_end_of_file = false
+      text_list_for_overlay.each do |text|
+        if next_string_ram_pointer + text.encoded_string.length + 3 > STRING_DATABASE_ALLOWABLE_END_OFFSET
+          # Writing strings past this point would result in something being overwritten, so raise an error.
+          
+          raise StringDatabaseTooLargeError.new
+        end
         
-        raise StringDatabaseTooLargeError.new
-      end
-      
-      if GAME == "ooe" && next_string_ram_pointer + text.encoded_string.length + 3 >= STRING_DATABASE_ORIGINAL_END_OFFSET
-        # Reached the end of where strings were in the original game, but in OoE we can expand the file.
+        region_name = TEXT_REGIONS.find{|name, range| range.include?(text.text_id)}[0]
         
-        should_write_to_end_of_file = true
-        next_string_ram_pointer = fs.expand_file_and_get_end_of_file_ram_address(text.string_ram_pointer, text.encoded_string.length + 3)
-      end
-      
-      # Misc strings in DoS must be aligned to the nearest 4 bytes or they won't be displayed.
-      region_name = TEXT_REGIONS.find{|name, range| range.include?(text.text_id)}[0]
-      if GAME == "dos" && region_name == "Misc" && next_string_ram_pointer % 4 != 0
-        next_string_ram_pointer = ((next_string_ram_pointer / 4) * 4) + 4
-      end
-      
-      text.string_ram_pointer = next_string_ram_pointer
-      text.write_to_rom()
-      
-      if should_write_to_end_of_file
-        next_string_ram_pointer = fs.expand_file_and_get_end_of_file_ram_address(text.string_ram_pointer, text.encoded_string.length + 3)
-      else
-        next_string_ram_pointer += text.encoded_string.length + 3
+        if GAME == "ooe" && next_string_ram_pointer + text.encoded_string.length + 3 >= STRING_DATABASE_ORIGINAL_END_OFFSET
+          # Reached the end of where strings were in the original game, but in OoE we can expand the file.
+          
+          should_write_to_end_of_file = true
+          next_string_ram_pointer = fs.expand_file_and_get_end_of_file_ram_address(text.string_ram_pointer, text.encoded_string.length + 3)
+        end
+        
+        # Misc strings must be aligned to the nearest 4 bytes or they won't be displayed.
+        region_name = TEXT_REGIONS.find{|name, range| range.include?(text.text_id)}[0]
+        if region_name == "Misc" && next_string_ram_pointer % 4 != 0
+          next_string_ram_pointer = ((next_string_ram_pointer / 4) * 4) + 4
+        end
+        
+        text.string_ram_pointer = next_string_ram_pointer
+        text.write_to_rom()
+        
+        if should_write_to_end_of_file
+          next_string_ram_pointer = fs.expand_file_and_get_end_of_file_ram_address(text.string_ram_pointer, text.encoded_string.length + 3)
+        else
+          next_string_ram_pointer += text.encoded_string.length + 3
+        end
       end
     end
   end
