@@ -241,7 +241,7 @@ ENEMY_DNA_BITFIELD_ATTRIBUTES = {
     "Weakness 13",
     "Weakness 14",
     "Weakness 15",
-    "Weakness 16",
+    "Made of flesh",
   ],
   "Resistances" => [
     "Strike",

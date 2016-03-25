@@ -8,6 +8,7 @@ class EnemyDNA
                 :description,
                 :dna_attributes,
                 :dna_attribute_integers,
+                :dna_attribute_integer_lengths,
                 :dna_attribute_bitfields
   
   def initialize(enemy_id, fs)
@@ -25,6 +26,7 @@ class EnemyDNA
     
     @dna_attributes = {}
     @dna_attribute_integers = {}
+    @dna_attribute_integer_lengths = []
     @dna_attribute_bitfields = {}
     attributes = fs.read(enemy_dna_ram_pointer, ENEMY_DNA_LENGTH).unpack(attribute_format_string)
     ENEMY_DNA_FORMAT.each do |attribute_length, attribute_name, attribute_type|
@@ -36,6 +38,7 @@ class EnemyDNA
       else
         val = attributes.shift
         @dna_attribute_integers[attribute_name] = val
+        @dna_attribute_integer_lengths << attribute_length
         @dna_attributes[attribute_name] = val
       end
     end

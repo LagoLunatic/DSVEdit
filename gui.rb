@@ -477,7 +477,7 @@ class EnemyEditDialog < Qt::Dialog
       end
       
       label = Qt::Label.new(self)
-      label.text = ENEMY_DNA_FORMAT[i][1]
+      label.text = attribute_name
       form_layout.setWidget(i/2, Qt::FormLayout::LabelRole, label)
       
       field = Qt::LineEdit.new(self)
@@ -521,7 +521,7 @@ class EnemyEditDialog < Qt::Dialog
         form_layout = @ui.attribute_layout_right
       end
       
-      attribute_length = ENEMY_DNA_FORMAT[i].first
+      attribute_length = enemy.dna_attribute_integer_lengths[i]
       string_length = attribute_length*2
       
       field = form_layout.itemAt(i/2, Qt::FormLayout::FieldRole).widget
