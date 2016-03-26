@@ -79,20 +79,20 @@ class Frame
               :number_of_parts,
               :hitbox_offset,
               :part_offset,
+              :part_indexes,
               :parts,
+              :hitbox_index,
               :hitbox
   
   def initialize(frame_data, all_animation_parts, all_animation_hitboxes)
     unk1, unk2, @has_hitbox, @number_of_parts, @hitbox_offset, @part_offset = frame_data.unpack("CCCCVV")
     
     parts_start_index = (part_offset / 0x10)
-    @parts = []
-    number_of_parts.times do |i|
-      @parts << all_animation_parts[parts_start_index + i]
-    end
+    @part_indexes = (parts_start_index..parts_start_index+number_of_parts-1).to_a
+    @parts = @part_indexes.map{|i| all_animation_parts[i]}
     
     if @has_hitbox > 0
-      hitbox_index = hitbox_offset / 0x10
+      @hitbox_index = hitbox_offset / 0x10
       @hitbox = all_animation_hitboxes[hitbox_index]
     end
   end
