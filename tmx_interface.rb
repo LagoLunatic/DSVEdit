@@ -8,6 +8,12 @@ class TMXInterface
     
     tiled_room = File.read(filename)
     xml = Nokogiri::XML(tiled_room)
+    
+    room_props = extract_properties(xml)
+    room.room_xpos_on_map = room_props["map_x"]
+    room.room_ypos_on_map = room_props["map_y"]
+    room.write_last_4_bytes_to_rom()
+    
     tiled_layers = xml.css("layer")
     tiled_layers.each do |tmx_layer|
       props = extract_properties(tmx_layer)
@@ -86,8 +92,8 @@ class TMXInterface
               :tilewidth => 16, :tileheight => 16, 
               :nextobjectid => 1) {
         xml.properties {
-          xml.property(:name => "map_x", :value => room.room_xpos_on_map)
-          xml.property(:name => "map_y", :value => room.room_ypos_on_map)
+          xml.property(:name => "map_x", :value => "%02X" % room.room_xpos_on_map)
+          xml.property(:name => "map_y", :value => "%02X" % room.room_ypos_on_map)
         }
         
         all_tilesets_for_room.each do |tileset|
