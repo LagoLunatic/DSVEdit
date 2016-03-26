@@ -128,14 +128,15 @@ class NDSFileSystem
       end
     end
     
+    str = ""
     @currently_loaded_files.each do |ram_start_offset, file|
       if file[:overlay_id]
-        puts "overlay loaded: %02d" % file[:overlay_id]
+        str << "\n overlay loaded: %02d" % file[:overlay_id]
       end
-      puts "ram_range: %08X..%08X" % [file[:ram_start_offset], file[:ram_start_offset]+file[:size]]
-      puts "rom_start: %08X" % file[:start_offset]
+      str << "\n ram_range: %08X..%08X" % [file[:ram_start_offset], file[:ram_start_offset]+file[:size]]
+      str << "\n rom_start: %08X" % file[:start_offset]
     end
-    raise ConversionError.new("Failed to convert ram address to rom address: %08X." % ram_address)
+    raise ConversionError.new("Failed to convert ram address to rom address: %08X. #{str}" % ram_address)
   end
   
   def read(ram_address, length=1)
