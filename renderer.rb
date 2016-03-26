@@ -145,41 +145,42 @@ class Renderer
   end
   
   def render_graphic_tile(graphic_tile_data_file, palette, tile_index_on_page)
-    graphic_tile = ChunkyPNG::Image.new(16, 16, ChunkyPNG::Color::TRANSPARENT)
+    x_block_on_tileset = tile_index_on_page % 8
+    y_block_on_tileset = tile_index_on_page / 8
+    render_gfx(graphic_tile_data_file, palette, x=x_block_on_tileset*16, y=y_block_on_tileset*16, width=16, height=16)
+  end
+  
+  def render_gfx_page(gfx_file, palette)
+    render_gfx(gfx_file, palette, x=0, y=0, width=128, height=128)
+  end
+  
+  def render_gfx(gfx_file, palette, x, y, width, height)
+    rendered_gfx = ChunkyPNG::Image.new(width, height, ChunkyPNG::Color::TRANSPARENT)
     
-    if graphic_tile_data_file.nil? || palette.nil?
+    if gfx_file.nil? || palette.nil?
       # This room has no graphics, so just return a black tile. Could be a save room, warp room, transition room, etc.
       # TODO: instead it would be better to use the debug squares for these rooms so you can see what's what.
       
-      graphic_tile = ChunkyPNG::Image.new(16, 16, ChunkyPNG::Color.rgba(255, 0, 0, 255))
-      return graphic_tile
+      rendered_gfx = ChunkyPNG::Image.new(width, height, ChunkyPNG::Color.rgba(255, 0, 0, 255))
+      return rendered_gfx
     end
     
-    x_block_on_tileset = tile_index_on_page % 8
-    y_block_on_tileset = tile_index_on_page / 8
     if palette.length == 16
-      size_of_block_in_bytes = 16 * 16 / 2 # 16 pixels tall, 16 pixels wide, each byte has 2 pixels in it
+      pixels_per_byte = 2
     elsif palette.length == 256
-      size_of_block_in_bytes = 16 * 16 # 16 pixels tall, 16 pixels wide, each byte has 1 pixel in it
-    else
-      raise "Unknown palette length: #{palette.length}"
-    end
-    size_of_row_in_bytes = 8 * size_of_block_in_bytes
-    
-    if palette.length == 16
-      bytes_per_16_pixels = 8
-    elsif palette.length == 256
-      bytes_per_16_pixels = 16
+      pixels_per_byte = 1
     else
       raise "Unknown palette length: #{palette.length}"
     end
     
-    offset = y_block_on_tileset*size_of_row_in_bytes + x_block_on_tileset*bytes_per_16_pixels
-    pixel_on_tile = 0
-    (0..15).each do |i|
+    bytes_per_full_row = 128 / pixels_per_byte
+    bytes_per_requested_row = width / pixels_per_byte
+    
+    offset = y*bytes_per_full_row + x/pixels_per_byte
+    (0..height-1).each do |i|
       pixels_for_chunky = []
       
-      fs.rom[graphic_tile_data_file[:start_offset] + offset, bytes_per_16_pixels].each_byte do |byte|
+      fs.rom[gfx_file[:start_offset] + offset, bytes_per_requested_row].each_byte do |byte|
         if palette.length == 16
           pixels = [byte & 0b00001111, byte >> 4] # get the low 4 bits, then the high 4 bits (it's reversed). each is one pixel, two pixels total inside this byte.
         elsif palette.length == 256
@@ -189,10 +190,6 @@ class Renderer
         end
         
         pixels.each do |pixel|
-          x_pixel_on_tile = pixel_on_tile % 16
-          y_pixel_on_tile = pixel_on_tile / 16
-          pixel_on_tile += 1
-          
           if pixel == 0 # transparent
             pixels_for_chunky << ChunkyPNG::Color::TRANSPARENT
           else
@@ -202,11 +199,11 @@ class Renderer
         end
       end
       
-      graphic_tile.replace_row!(i, pixels_for_chunky)
-      offset += 8 * bytes_per_16_pixels
+      rendered_gfx.replace_row!(i, pixels_for_chunky)
+      offset += bytes_per_full_row
     end
     
-    return graphic_tile
+    return rendered_gfx
   end
   
   def generate_palettes(palette_data_start_offset, colors_per_palette)
