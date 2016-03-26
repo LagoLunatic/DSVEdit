@@ -217,16 +217,6 @@ class Renderer
     end
     
     number_of_palettes = fs.read(palette_data_start_offset+2,1).unpack("C*").first
-    if number_of_palettes == 1
-      # When this value is 1, it means this tileset has no palette of its own. Instead it simply leeches off the palette of whatever the previously loaded room was.
-      # Since we can't know what room the player was in last, we can instead simply use the palette of whatever room this room's first door leads to.
-      # This should work fine in theory. But there's a tiny possibility of one of the first door leading to an unused, inaccessible room, which may not have the right palette.
-      
-      # TODO: the above can only be done once functions are organized in such a way that we can get the doors for this room and the palette of another room.
-      # the below is just a hack. it works for the only room in dawn of sorrow that needs this anyway.
-      number_of_palettes = 0x40
-      palette_data_start_offset -= 0x804
-    end
     
     palette_data_start_offset += 4 # Skip the first 4 bytes, as they contain the length of this palette page, not the palette data itself.
 
