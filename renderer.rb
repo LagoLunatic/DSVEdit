@@ -405,4 +405,81 @@ class Renderer
     
     return img
   end
+  
+  def render_entity(gfx_files, palette_pointer, animation_file, frame_to_render = nil, render_hitbox = false)
+    palettes = generate_palettes(palette_pointer, 16)
+    animation = Animation.new(animation_file, fs)
+    
+    rendered_gfx_files_by_palette = Hash.new{|h, k| h[k] = {}}
+    
+    rendered_parts = {}
+    
+    if frame_to_render
+      frame = animation.frames[frame_to_render]
+      if frame.nil?
+        raise "Invalid frame to render: #{frame_to_render}"
+      end
+      frames = [frame]
+    else
+      frames = animation.frames
+    end
+    
+    min_x = 0
+    min_y = 0
+    max_x = 0
+    max_y = 0
+    frames.each do |frame|
+      frame.parts.each do |part|
+        min_x = part.x_pos if part.x_pos < min_x
+        min_y = part.y_pos if part.y_pos < min_y
+        max_x = part.x_pos + part.width if part.x_pos + part.width > max_x
+        max_y = part.y_pos + part.height if part.y_pos + part.height > max_y
+      end
+    end
+    full_width = max_x - min_x
+    full_height = max_y - min_y
+    
+    hitbox_color = ChunkyPNG::Color.rgba(255, 0, 0, 128)
+    rendered_frames = []
+    frames.each do |frame|
+      rendered_frame = ChunkyPNG::Image.new(full_width, full_height, ChunkyPNG::Color::TRANSPARENT)
+
+      frame.part_indexes.reverse.each do |part_index|
+        part = animation.parts[part_index]
+        
+        rendered_gfx_files_by_palette[part.palette_index][part.gfx_page_index] ||= render_gfx_page(gfx_files[part.gfx_page_index], palettes[part.palette_index])
+        rendered_parts[part_index] ||= render_animation_part(part, rendered_gfx_files_by_palette)
+        part_gfx = rendered_parts[part_index]
+        
+        x = part.x_pos - min_x
+        y = part.y_pos - min_y
+        rendered_frame.compose!(part_gfx, x, y)
+      end
+      
+      if frame.hitbox && render_hitbox
+        x = frame.hitbox.x_pos - min_x
+        y = frame.hitbox.y_pos - min_y
+        rendered_frame.rect(x, y, x + frame.hitbox.width, y + frame.hitbox.height, stroke_color = hitbox_color, fill_color = ChunkyPNG::Color::TRANSPARENT)
+      end
+      
+      rendered_frames << rendered_frame
+    end
+    
+    return [rendered_frames, min_x, min_y]
+  end
+  
+  def render_animation_part(part, rendered_gfx_files_by_palette)
+    gfx_files_for_palette = rendered_gfx_files_by_palette[part.palette_index]
+    gfx_file_for_part = gfx_files_for_palette[part.gfx_page_index]
+    
+    part_gfx = gfx_file_for_part.crop(part.gfx_x_offset, part.gfx_y_offset, part.width, part.height)
+    if part.horizontal_flip
+      part_gfx.mirror!
+    end
+    if part.vertical_flip
+      part_gfx.flip!
+    end
+    
+    return part_gfx
+  end
 end
