@@ -447,7 +447,9 @@ class Renderer
       frame.part_indexes.reverse.each do |part_index|
         part = animation.parts[part_index]
         
-        rendered_gfx_files_by_palette[part.palette_index][part.gfx_page_index] ||= render_gfx_page(gfx_files[part.gfx_page_index], palettes[part.palette_index])
+        gfx_file = gfx_files[part.gfx_page_index]
+        palette = palettes[part.palette_index]
+        rendered_gfx_files_by_palette[part.palette_index][part.gfx_page_index] ||= render_gfx_page(gfx_file, palette)
         rendered_parts[part_index] ||= render_animation_part(part, rendered_gfx_files_by_palette)
         part_gfx = rendered_parts[part_index]
         

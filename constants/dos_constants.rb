@@ -159,6 +159,91 @@ ENEMY_DNA_BITFIELD_ATTRIBUTES = {
   ],
 }
 
+OVERLAY_FILE_FOR_ENEMY_AI = {
+  # Enemies not listed here use one of the constant overlays like 0.
+   14 => 28, # golem
+   18 => 27, # manticore
+   25 => 32, # catoblepas
+   34 => 28, # treant
+   37 => 24, # great armor
+   47 => 31, # devil
+   77 => 32, # gorgon
+   81 => 27, # musshusu
+   91 => 31, # flame demon
+   93 => 31, # arc demon
+   97 => 24, # final guard
+  100 => 28, # iron golem
+  101 => 30, # flying armor
+  102 => 23, # balore
+  103 => 29, # malphas
+  104 => 40, # dmitrii
+  105 => 25, # dario
+  106 => 25, # puppet master
+  107 => 26, # rahab
+  108 => 36, # gergoth
+  109 => 33, # zephyr
+  110 => 37, # bat company
+  111 => 35, # paranoia
+  113 => 34, # death
+  114 => 39, # abaddon
+  115 => 38, # menace
+}
+
+DUPLICATE_ENEMY_INIT_AIS = {
+  0x022324B8 => 0x0223266C, # ghoul and zombie
+  0x022706EC => 0x02270704, # erinys and valkyrie
+  0x0228CDB0 => 0x02288FBC, # tanjelly and slime
+}
+
+BEST_ANIMATION_FRAME_FOR_ENEMY = {
+  # Enemies not listed here default to frame 0.
+    0 =>   8, # zombie
+    5 =>  38, # peeping eye
+    9 =>   7, # spin devil
+   14 =>  19, # golem
+   16 =>   7, # une
+   18 =>  78, # manticore
+   21 =>  14, # mandragora
+   23 =>  13, # skeleton farmer
+   27 =>  17, # corpseweed
+   34 =>  15, # treant
+   35 =>  17, # amalaric sniper
+   37 =>  20, # great armor
+   38 =>  27, # killer doll
+   41 =>   5, # witch
+   43 =>   8, # lilith
+   44 =>   3, # killer clown
+   46 =>   6, # fleaman
+   48 =>  37, # guillotiner
+   49 =>  17, # draghignazzo
+   54 =>  27, # wakwak tree
+   60 =>  10, # larva
+   61 =>   4, # heart eater
+   64 =>   2, # medusa head
+   67 =>   1, # mimic
+   74 =>  39, # bugbear
+   76 =>  42, # bone ark
+   78 =>  10, # alura une
+   79 =>   6, # great axe armor
+   83 =>   5, # dead warrior
+   85 =>   9, # succubus
+   86 =>  16, # ripper
+   92 =>  11, # tanjelly
+   97 =>  20, # final guard
+   98 =>  31, # malacoda
+   99 =>   1, # alastor
+  100 =>  15, # iron golem
+  101 =>   6, # flying armor
+  102 =>   5, # balore
+  107 => 113, # rahab
+  108 =>  16, # gergoth
+  110 =>   5, # bat company
+  111 =>  23, # paranoia
+  113 =>  22, # death
+  115 =>  31, # menace
+  116 =>  22, # soma
+}
+
 TEXT_LIST_START_OFFSET = 0x0222F300
 TEXT_RANGE = (0..0x50A)
 TEXT_REGIONS = {

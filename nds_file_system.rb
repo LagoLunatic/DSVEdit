@@ -139,15 +139,22 @@ class NDSFileSystem
     raise ConversionError.new("Failed to convert ram address to rom address: %08X. #{str}" % ram_address)
   end
   
-  def read(ram_address, length=1)
+  def read(ram_address, length=1, options={})
     file_path, offset_in_file = convert_ram_address_to_path_and_offset(ram_address)
-    return read_by_file(file_path, offset_in_file, length)
+    return read_by_file(file_path, offset_in_file, length, options)
   end
   
-  def read_by_file(file_path, offset_in_file, length)
+  def read_by_file(file_path, offset_in_file, length, options={})
     file = files_by_path[file_path]
-    if offset_in_file + length > file[:size]
-      raise OffsetPastEndOfFileError.new("Offset %08X is past end of file #{file_path} (%08X bytes long)" % [offset_in_file, file[:size]])
+    
+    if options[:allow_length_to_exceed_end_of_file]
+      if offset_in_file > file[:size]
+        raise OffsetPastEndOfFileError.new("Offset %08X is past end of file #{file_path} (%08X bytes long)" % [offset_in_file, file[:size]])
+      end
+    else
+      if offset_in_file + length > file[:size]
+        raise OffsetPastEndOfFileError.new("Offset %08X (length %08X) is past end of file #{file_path} (%08X bytes long)" % [offset_in_file, length, file[:size]])
+      end
     end
     
     file_data = get_file_data_from_opened_files_cache(file_path)
@@ -177,6 +184,12 @@ class NDSFileSystem
     file_data[offset_in_file, new_data.length] = new_data
     @opened_files_cache[file_path] = file_data
     @uncommitted_files << file_path
+  end
+  
+  def find_file_by_ram_start_offset(ram_start_offset)
+    files.values.find do |file|
+      file[:type] == :file && file[:ram_start_offset] == ram_start_offset
+    end
   end
   
   def commit_file_changes
