@@ -17,7 +17,7 @@ class Animation
   end
   
   def read_from_rom()
-    @hitbox_list_offset, @anim_list_offset, @frame_delay_list_offset = fs.read_by_file(animation_file[:file_path], 0x08, 12).unpack("V*")
+    @hitbox_list_offset, @anim_list_offset, @frame_delay_list_offset, unknown_offset = fs.read_by_file(animation_file[:file_path], 0x08, 16).unpack("V*")
     @number_of_frames = fs.read_by_file(animation_file[:file_path], 0x24, 4).unpack("V*").first
     
     @parts = []
@@ -49,6 +49,7 @@ class Animation
       @frame_delays << [frame_index, delay, unk]
       
       offset += 8
+      break if offset >= unknown_offset
     end
   end
 end
