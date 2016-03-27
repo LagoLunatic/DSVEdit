@@ -3,7 +3,7 @@ class Animation
   attr_reader :animation_file,
               :hitbox_list_offset,
               :anim_list_offset,
-              :final_list_offset,
+              :frame_delay_list_offset,
               :parts,
               :hitboxes,
               :frames,
@@ -17,7 +17,8 @@ class Animation
   end
   
   def read_from_rom()
-    @hitbox_list_offset, @anim_list_offset, @final_list_offset = fs.read_by_file(animation_file[:file_path], 0x08, 12).unpack("V*")
+    @hitbox_list_offset, @anim_list_offset, @frame_delay_list_offset = fs.read_by_file(animation_file[:file_path], 0x08, 12).unpack("V*")
+    @number_of_frames = fs.read_by_file(animation_file[:file_path], 0x24, 4).unpack("V*").first
     
     @parts = []
     (0x40..hitbox_list_offset-1).step(16) do |offset|
@@ -32,9 +33,22 @@ class Animation
     end
     
     @frames = []
-    (anim_list_offset..final_list_offset-1).step(12) do |offset|
+    offset = anim_list_offset
+    @number_of_frames.times do
       frame_data = fs.read_by_file(animation_file[:file_path], offset, 12)
       @frames << Frame.new(frame_data, parts, hitboxes)
+      
+      offset += 12
+    end
+    
+    @frame_delays = []
+    offset = frame_delay_list_offset
+    @number_of_frames.times do
+      frame_delay_data = fs.read_by_file(animation_file[:file_path], offset, 8)
+      frame_index, delay, unk = frame_delay_data.unpack("vvV")
+      @frame_delays << [frame_index, delay, unk]
+      
+      offset += 8
     end
   end
 end
