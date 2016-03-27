@@ -406,7 +406,7 @@ class Renderer
     return img
   end
   
-  def render_entity(gfx_files, palette_pointer, animation_file, frame_to_render = nil, render_hitbox = false)
+  def render_entity(gfx_files, palette_pointer, palette_offset, animation_file, frame_to_render = nil, render_hitbox = false)
     palettes = generate_palettes(palette_pointer, 16)
     animation = Animation.new(animation_file, fs)
     
@@ -448,9 +448,10 @@ class Renderer
         part = animation.parts[part_index]
         
         gfx_file = gfx_files[part.gfx_page_index]
-        palette = palettes[part.palette_index]
-        rendered_gfx_files_by_palette[part.palette_index][part.gfx_page_index] ||= render_gfx_page(gfx_file, palette)
-        rendered_parts[part_index] ||= render_animation_part(part, rendered_gfx_files_by_palette)
+        palette = palettes[part.palette_index+palette_offset]
+        rendered_gfx_files_by_palette[part.palette_index+palette_offset][part.gfx_page_index] ||= render_gfx_page(gfx_file, palette)
+        rendered_gfx_file = rendered_gfx_files_by_palette[part.palette_index+palette_offset][part.gfx_page_index]
+        rendered_parts[part_index] ||= render_animation_part(part, rendered_gfx_file)
         part_gfx = rendered_parts[part_index]
         
         x = part.x_pos - min_x
@@ -470,11 +471,8 @@ class Renderer
     return [rendered_frames, min_x, min_y]
   end
   
-  def render_animation_part(part, rendered_gfx_files_by_palette)
-    gfx_files_for_palette = rendered_gfx_files_by_palette[part.palette_index]
-    gfx_file_for_part = gfx_files_for_palette[part.gfx_page_index]
-    
-    part_gfx = gfx_file_for_part.crop(part.gfx_x_offset, part.gfx_y_offset, part.width, part.height)
+  def render_animation_part(part, rendered_gfx_file)
+    part_gfx = rendered_gfx_file.crop(part.gfx_x_offset, part.gfx_y_offset, part.width, part.height)
     if part.horizontal_flip
       part_gfx.mirror!
     end

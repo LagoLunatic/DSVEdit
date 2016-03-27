@@ -57,19 +57,28 @@ class EnemyDNA
     gfx_page_pointer = nil
     list_of_gfx_page_pointers_wrapper_pointer = nil
     list_of_gfx_page_pointers = []
+    possible_palette_pointers = []
     enemy_palette_pointer = nil
     animation_file_pointer = nil
     
-    ai_pointer = self["Init AI"]
-    if DUPLICATE_ENEMY_INIT_AIS[ai_pointer]
-      ai_pointer = DUPLICATE_ENEMY_INIT_AIS[ai_pointer]
+    reused_info = REUSED_ENEMY_INFO[enemy_id]
+    if reused_info
+      init_code_pointer      = reused_info[:init_code]
+      gfx_sheet_ptr_index    = reused_info[:gfx_sheet_ptr_index]
+      palette_offset         = reused_info[:palette_offset]
+      palette_list_ptr_index = reused_info[:palette_list_ptr_index]
+    else
+      init_code_pointer      = self["Init AI"]
+      gfx_sheet_ptr_index    = 0
+      palette_offset         = 0
+      palette_list_ptr_index = 0
     end
-    data = fs.read(ai_pointer, 4*1000, allow_length_to_exceed_end_of_file: true)
-    p ("ai at %08X" % ai_pointer)
+    data = fs.read(init_code_pointer, 4*1000, allow_length_to_exceed_end_of_file: true)
+    p ("ai at %08X" % init_code_pointer)
     
-    data.unpack("V*").each do |word|
+    data.unpack("V*").each_with_index do |word, i|
       if (0x02000000..0x02FFFFFF).include?(word)
-        puts "found pointer: %08X" % word
+        puts "found pointer: %08X at index: %08X" % [word, i*4+init_code_pointer]
       end
       
       if    (0x022C6760..0x022CFFFF).include?(word)
@@ -81,15 +90,18 @@ class EnemyDNA
       elsif (0x02115400..0x021155FF).include?(word) && animation_file_pointer.nil?
         animation_file_pointer = word
       elsif (0x022B0000..0x022C675F).include?(word)
-        enemy_palette_pointer = word unless enemy_palette_pointer
+        possible_palette_pointers << word
       end
     end
+    
+    
+    
     
     if possible_gfx_pointers.empty?
       raise InitAIReadError.new("Failed to find any possible enemy gfx pointers.")
     end
     
-    valid_pointers = possible_gfx_pointers.select do |pointer|
+    valid_gfx_pointers = possible_gfx_pointers.select do |pointer|
       header_vals = fs.read(pointer, 4).unpack("C*")
       data = fs.read(pointer+4, 4).unpack("V").first
       if data >= 0x02000000 && data < 0x03000000
@@ -103,11 +115,14 @@ class EnemyDNA
       end
     end
     
-    if valid_pointers.empty?
+    if valid_gfx_pointers.empty?
       raise InitAIReadError.new("Failed to find any valid enemy gfx pointers.")
     end
+    if gfx_sheet_ptr_index >= valid_gfx_pointers.length
+      raise InitAIReadError.new("Failed to find enough valid enemy gfx pointers to match the reused enemy gfx sheet index. (#{valid_gfx_pointers.length} found, #{gfx_sheet_ptr_index+1} needed.)")
+    end
     
-    gfx_pointer = valid_pointers.first
+    gfx_pointer = valid_gfx_pointers[gfx_sheet_ptr_index]
     data = fs.read(gfx_pointer+4, 4).unpack("V").first
     if data >= 0x02000000 && data < 0x03000000
       # gfx list
@@ -145,9 +160,26 @@ class EnemyDNA
       raise InitAIReadError.new("list of gfx pages for enemy empty")
     end
     
-    if enemy_palette_pointer.nil?
-      raise InitAIReadError.new("Failed to find enemy palette pointer.")
+    
+    
+    
+    if possible_palette_pointers.empty?
+      raise InitAIReadError.new("Failed to find any possible enemy palette pointers.")
     end
+    
+    valid_palette_pointers = possible_palette_pointers.select do |pointer|
+      header_vals = fs.read(pointer, 4).unpack("C*")
+      header_vals[0] == 0 && header_vals[1] == 01 && header_vals[2] > 0 && header_vals [3] == 0
+    end
+    
+    if valid_palette_pointers.empty?
+      raise InitAIReadError.new("Failed to find any valid enemy palette pointers.")
+    end
+    if palette_list_ptr_index >= valid_palette_pointers.length
+      raise InitAIReadError.new("Failed to find enough valid enemy palette pointers to match the reused enemy palette list index. (#{valid_palette_pointers.length} found, #{palette_list_ptr_index+1} needed.)")
+    end
+    
+    enemy_palette_pointer = valid_palette_pointers[palette_list_ptr_index]
     
     
     
@@ -183,7 +215,7 @@ class EnemyDNA
     #  raise "Bad animation file: #{animation_file[:file_path]}"
     #end
     
-    return [gfx_files, enemy_palette_pointer, animation_file]
+    return [gfx_files, enemy_palette_pointer, palette_offset, animation_file]
   end
   
   def write_to_rom

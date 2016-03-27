@@ -189,10 +189,17 @@ OVERLAY_FILE_FOR_ENEMY_AI = {
   115 => 38, # menace
 }
 
-DUPLICATE_ENEMY_INIT_AIS = {
-  0x022324B8 => 0x0223266C, # ghoul and zombie
-  0x022706EC => 0x02270704, # erinys and valkyrie
-  0x0228CDB0 => 0x02288FBC, # tanjelly and slime
+REUSED_ENEMY_INFO = {
+  # Enemies that had parts of them reused from another enemy.
+  # init_code: The init code of the original enemy. This is where to look for gfx/palette/animation data, not the reused enemy's init code.
+  # gfx_sheet_ptr_index: The reused enemy uses a different gfx sheet than the original enemy. This value is which one to use.
+  # palette_offset: The reused enemy uses different palettes than the original, but they're still in the same list of palettes. This is the offset of the new palette in the list.
+  # palette_list_ptr_index: The reused enemy uses a completely different palette list from the original. This value is which one to use.
+  26 => {init_code: 0x0223266C, gfx_sheet_ptr_index: 0, palette_offset: 2, palette_list_ptr_index: 0}, # ghoul and zombie
+  84 => {init_code: 0x02270704, gfx_sheet_ptr_index: 0, palette_offset: 1, palette_list_ptr_index: 0}, # erinys and valkyrie
+  92 => {init_code: 0x02288FBC, gfx_sheet_ptr_index: 0, palette_offset: 0, palette_list_ptr_index: 0}, # tanjelly and slime
+  91 => {init_code: 0x022FF9F0, gfx_sheet_ptr_index: 1, palette_offset: 0, palette_list_ptr_index: 1}, # flame demon and devil
+  93 => {init_code: 0x022FF9F0, gfx_sheet_ptr_index: 2, palette_offset: 0, palette_list_ptr_index: 2}, # arc demon and devil
 }
 
 BEST_ANIMATION_FRAME_FOR_ENEMY = {
@@ -205,6 +212,7 @@ BEST_ANIMATION_FRAME_FOR_ENEMY = {
    18 =>  78, # manticore
    21 =>  14, # mandragora
    23 =>  13, # skeleton farmer
+   26 =>   8, # ghoul
    27 =>  17, # corpseweed
    34 =>  15, # treant
    35 =>  17, # amalaric sniper
