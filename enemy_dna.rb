@@ -51,7 +51,17 @@ class EnemyDNA
     # Instead they are loaded as part of the Init AI code, so we must look through this code for pointers that look like they could be the pointers we want.
     
     overlay_to_load = OVERLAY_FILE_FOR_ENEMY_AI[enemy_id]
-    fs.load_overlay(overlay_to_load) if overlay_to_load
+    if overlay_to_load.is_a?(Integer)
+      fs.load_overlay(overlay_to_load)
+    elsif overlay_to_load.is_a?(Array)
+      overlay_to_load.each do |overlay|
+        fs.load_overlay(overlay)
+      end
+    end
+    
+    if GAME == "por"
+      fs.load_overlay(4)
+    end
     
     possible_gfx_pointers = []
     gfx_page_pointer = nil
@@ -59,37 +69,33 @@ class EnemyDNA
     list_of_gfx_page_pointers = []
     possible_palette_pointers = []
     enemy_palette_pointer = nil
+    possible_animation_pointers = []
     animation_file_pointer = nil
     
-    reused_info = REUSED_ENEMY_INFO[enemy_id]
-    if reused_info
-      init_code_pointer      = reused_info[:init_code]
-      gfx_sheet_ptr_index    = reused_info[:gfx_sheet_ptr_index]
-      palette_offset         = reused_info[:palette_offset]
-      palette_list_ptr_index = reused_info[:palette_list_ptr_index]
-    else
-      init_code_pointer      = self["Init AI"]
-      gfx_sheet_ptr_index    = 0
-      palette_offset         = 0
-      palette_list_ptr_index = 0
-    end
-    data = fs.read(init_code_pointer, 4*1000, allow_length_to_exceed_end_of_file: true)
+    reused_info = REUSED_ENEMY_INFO[enemy_id] || {}
+    init_code_pointer      = reused_info[:init_code] || self["Init AI"]
+    gfx_sheet_ptr_index    = reused_info[:gfx_sheet_ptr_index] || 0
+    palette_offset         = reused_info[:palette_offset] || 0
+    palette_list_ptr_index = reused_info[:palette_list_ptr_index] || 0
+    
     p ("ai at %08X" % init_code_pointer)
+    data = fs.read(init_code_pointer, 4*1000, allow_length_to_exceed_end_of_file: true)
     
     data.unpack("V*").each_with_index do |word, i|
       if (0x02000000..0x02FFFFFF).include?(word)
         puts "found pointer: %08X at index: %08X" % [word, i*4+init_code_pointer]
       end
       
-      if    (0x022C6760..0x022CFFFF).include?(word)
+      if    ENEMY_GFX_POINTER_RANGE.include?(word) || (0x022B0000..0x022B1FFF).include?(word) || (0x022E0000..0x022EFFFF).include?(word) || (0x022DE304..0x022DE304).include?(word)
         possible_gfx_pointers << word
-      elsif (0x02290000..0x0229FFFF).include?(word)
+      elsif ENEMY_GFX_LIST_POINTER_RANGES.any?{|range| range.include?(word)}
         possible_gfx_pointers << word
-      elsif (0x02300000..0x0230FFFF).include?(word) && overlay_to_load
+      elsif ENEMY_GFX_LIST_OVERLAY_POINTER_RANGES.any?{|range| range.include?(word)} && overlay_to_load
         possible_gfx_pointers << word
-      elsif (0x02115400..0x021155FF).include?(word) && animation_file_pointer.nil?
-        animation_file_pointer = word
-      elsif (0x022B0000..0x022C675F).include?(word)
+      end
+      if (0x02115400..0x021155FF).include?(word) || (0x02130000..0x0213FFFF).include?(word) || (0x021D0000..0x021DFFFF).include?(word)
+        possible_animation_pointers << word
+      elsif ENEMY_PALETTE_POINTER_RANGES.any?{|range| range.include?(word)} #|| (0x022D0000..0x022DFFFF).include?(word) || (0x022E0014..0x022E0014).include?(word)
         possible_palette_pointers << word
       end
     end
@@ -106,14 +112,18 @@ class EnemyDNA
       data = fs.read(pointer+4, 4).unpack("V").first
       if data >= 0x02000000 && data < 0x03000000
         # gfx list
-        header_vals.all?{|val| val < 0x10} && header_vals[1] == 1
+        header_vals.all?{|val| val < 0x50} && (1..2).include?(header_vals[1])
       elsif data == 0x10
         # not a list, just gfx
-        header_vals[0] == 0 && header_vals[1] == 1 && header_vals[2] == 0x10 && header_vals[3] == 0
+        header_vals[0] == 0 && (1..2).include?(header_vals[1]) && header_vals[2] == 0x10 && header_vals[3] == 0
+      elsif data == 0x20
+        # similar to above. todo: figure out what difference is.
+        header_vals[0] == 0 && (1..2).include?(header_vals[1]) && header_vals[2] == 0x20 && header_vals[3] == 0
       else
         false
       end
     end
+    possible_palette_pointers -= valid_gfx_pointers
     
     if valid_gfx_pointers.empty?
       raise InitAIReadError.new("Failed to find any valid enemy gfx pointers.")
@@ -127,7 +137,7 @@ class EnemyDNA
     if data >= 0x02000000 && data < 0x03000000
       # gfx list
       list_of_gfx_page_pointers_wrapper_pointer = gfx_pointer
-    elsif data == 0x10
+    elsif data == 0x10 || data == 0x20
       # not a list, just gfx
       gfx_page_pointer = gfx_pointer
     else
@@ -145,7 +155,11 @@ class EnemyDNA
       
       i = 0
       while true
-        gfx_page_pointer = fs.read(pointer_to_list_of_gfx_page_pointers+i*4, 4).unpack("V").first
+        begin
+          gfx_page_pointer = fs.read(pointer_to_list_of_gfx_page_pointers+i*4, 4).unpack("V").first
+        rescue NDSFileSystem::OffsetPastEndOfFileError
+          break
+        end
         if gfx_page_pointer < 0x2000000 || gfx_page_pointer >= 0x3000000
           break
         end
@@ -180,7 +194,7 @@ class EnemyDNA
     end
     
     enemy_palette_pointer = valid_palette_pointers[palette_list_ptr_index]
-    
+    puts "palette : %08X" % enemy_palette_pointer
     
     
     
@@ -189,31 +203,32 @@ class EnemyDNA
       gfx_file = fs.find_file_by_ram_start_offset(gfx_pointer)
       if gfx_file.nil?
         if gfx_files.empty?
-          raise "Couldn't find gfx file! pointer: %08X" % gfx_pointer # TODO
+          raise InitAIReadError.new("Couldn't find gfx file! pointer: %08X" % gfx_pointer) # TODO
         else
           break # this probably just means we read too many gfx pointers from the list, so we just stop looking at the list of pointers now.
         end
       end
-      gfx_files << gfx_file
+      
+      render_mode = fs.read(gfx_pointer+1, 1).unpack("C").first
+      
+      gfx_files << {file: gfx_file, render_mode: render_mode}
     end
     
-    gfx_files.first[:file_path] =~ /^\/sc\/(?:f|t)_([a-z0-9_]*?)(?:(?:_)?\d+)?\.dat$/
-    enemy_base_filename = $1
-    if enemy_base_filename.nil?
-      raise "Couldn't find file path corresponding to: #{gfx_files.first[:file_path]}"
+    animation_file_pointer = possible_animation_pointers[0]
+    if animation_file_pointer.nil?
+      raise InitAIReadError.new("Failed to find any possible animation pointers.")
     end
+    animation_file = fs.find_file_by_ram_start_offset(animation_file_pointer)
+
     
-    animation_file = fs.files.values.find{|file| file[:file_path] =~ /^\/so\/p_#{enemy_base_filename}.*\.dat$/}
-    if animation_file.nil?
-      raise "Couldn't find animation file for: #{enemy_base_filename}"
+    puts "anim    : %08X" % animation_file[:ram_start_offset] if animation_file[:ram_start_offset]
+    puts "animname: #{animation_file[:file_path]}"
+    puts "animptr : %08X" % animation_file_pointer if animation_file_pointer
+    puts "animname: #{animation_file[:file_path]}"
+    
+    if animation_file[:file_path] !~ /^\/so\//
+      raise InitAIReadError.new("Bad animation file: #{animation_file[:file_path]}")
     end
-    puts "palette : %08X" % enemy_palette_pointer
-    puts "anim    : %08X" % animation_file[:ram_start_offset]
-    
-    #animation_file = fs.find_file_by_ram_start_offset(animation_file_pointer)
-    #if animation_file[:file_path] !~ /^\/so\//
-    #  raise "Bad animation file: #{animation_file[:file_path]}"
-    #end
     
     return [gfx_files, enemy_palette_pointer, palette_offset, animation_file]
   end

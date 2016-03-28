@@ -263,9 +263,88 @@ ENEMY_DNA_BITFIELD_ATTRIBUTES = {
   ],
 }
 
-OVERLAY_FILE_FOR_ENEMY_AI = {}
-DUPLICATE_ENEMY_INIT_AIS = {}
-BEST_ANIMATION_FRAME_FOR_ENEMY = {}
+ENEMY_GFX_POINTER_RANGE = (0x020B0000..0x020BFFFF)
+ENEMY_GFX_LIST_POINTER_RANGES = [(0x022A0000..0x022BFFFF), (0x02220000..0x0222FFFF)]
+ENEMY_GFX_LIST_OVERLAY_POINTER_RANGES = [(0x020B0000..0x020BFFFF), (0x022C0000..0x022CFFFF)]
+ENEMY_PALETTE_POINTER_RANGES = [(0x020C0000..0x020DFFFF), (0x022B0000..0x022CFFFF)]
+
+# Overlays 24 to 39 are used for enemies.
+OVERLAY_FILE_FOR_ENEMY_AI = {
+   22 => 38, # the creature
+   60 => 38, # owl
+   65 => 38, # owl knight
+   78 => 38, # draculina
+   94 => 38, # spectral sword
+  102 => 36, # final knight
+  103 => 29, # jiang shi
+  108 => 24, # arthroverta
+  109 => 30, # brachyura
+  110 => 26, # maneater
+  111 => 27, # rusalka
+  112 => 32, # goliath
+  113 => 33, # gravedorcus
+  114 => 36, # albus
+  115 => 37, # barlowe
+  116 => 28, # wallman
+  117 => 35, # blackmore
+  118 => 31, # eligor
+  119 => 25, # death
+  120 => [34, 75], # dracula. His palette is actually stored in one of the area overlays (75) instead of his enemy overlay (34).
+}
+REUSED_ENEMY_INFO = {
+  35 => {init_code: 0x022505AC, gfx_sheet_ptr_index: 1, palette_offset: 0, palette_list_ptr_index: 1}, # black fomor -> white fomor
+  48 => {init_code:        nil, gfx_sheet_ptr_index: 0, palette_offset: 3, palette_list_ptr_index: 0}, # ladycat
+  52 => {init_code: 0x0228D23C, gfx_sheet_ptr_index: 0, palette_offset: 0, palette_list_ptr_index: 0}, # automaton zx26
+  72 => {init_code: 0x0224E468, gfx_sheet_ptr_index: 1, palette_offset: 0, palette_list_ptr_index: 1}, # ghoul -> zombie
+  76 => {init_code: 0x0228BBBC, gfx_sheet_ptr_index: 0, palette_offset: 0, palette_list_ptr_index: 0}, # black panther -> ladycat
+  80 => {init_code:        nil, gfx_sheet_ptr_index: 0, palette_offset: 1, palette_list_ptr_index: 0}, # polkir
+  84 => {init_code:        nil, gfx_sheet_ptr_index: 0, palette_offset: 3, palette_list_ptr_index: 0}, # gurkha master
+  93 => {init_code: 0x02241FD4, gfx_sheet_ptr_index: 0, palette_offset: 0, palette_list_ptr_index: 0}, # bugbear
+  95 => {init_code: 0x0228D23C, gfx_sheet_ptr_index: 0, palette_offset: 0, palette_list_ptr_index: 0}, # automaton zx27
+}
+BEST_ANIMATION_FRAME_FOR_ENEMY = {
+    7 =>  36, # nominon
+    9 =>   7, # une
+   14 =>   8, # invisible man
+   17 =>  30, # demon
+   21 =>  16, # forneus
+   22 => 107, # the creature
+   23 =>   3, # black crow
+   24 =>   7, # skull spider
+   26 =>  30, # sea demon
+   30 =>  30, # fire demon
+   36 =>  90, # enkidu
+   41 =>  16, # skeleton rex
+   44 =>   5, # lorelai
+   49 =>  15, # ectoplasm
+   51 =>  21, # miss murder
+   53 =>  23, # skeleton beast
+   54 =>  20, # balloon
+   59 =>  30, # thunder demon
+   63 =>  14, # mandragora
+   65 =>  15, # owl knight
+   71 =>   6, # flea man
+   73 =>  38, # peeping eye
+   80 =>  36, # polkir
+   84 =>  20, # gurkha master
+   85 =>  20, # red smasher
+   91 =>  74, # rebuild
+   93 =>  39, # bugbear
+   95 =>   1, # automaton zx27
+   96 =>   2, # medusa head
+   97 =>   2, # gorgon head
+  100 =>  29, # king skeleton
+  104 =>  30, # demon lord
+  105 =>  20, # double hammer
+  106 =>  20, # weapon master
+  107 =>   6, # giant skeleton
+  108 =>   3, # arthroverta
+  109 =>  64, # brachyura
+  110 =>   7, # maneater
+  112 =>  74, # goliath
+  116 =>  29, # wallman
+  120 =>  56, # dracula
+}
 
 TEXT_LIST_START_OFFSET = 0x021FACC0
 TEXT_RANGE = (0..0x764)

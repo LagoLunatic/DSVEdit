@@ -214,9 +214,89 @@ ENEMY_DNA_BITFIELD_ATTRIBUTES = {
   ],
 }
 
-OVERLAY_FILE_FOR_ENEMY_AI = {}
-DUPLICATE_ENEMY_INIT_AIS = {}
-BEST_ANIMATION_FRAME_FOR_ENEMY = {}
+ENEMY_GFX_POINTER_RANGE = (0x022C6760..0x022DFFFF)
+ENEMY_GFX_LIST_POINTER_RANGES = [(0x02290000..0x0229FFFF)]
+ENEMY_GFX_LIST_OVERLAY_POINTER_RANGES = [(0x02300000..0x0230FFFF)] #(0x022D0000..0x022EFFFF) # (0x02300000..0x0230FFFF)
+ENEMY_PALETTE_POINTER_RANGES = [(0x022B0000..0x022FFFFF)]#(0x022E0000..0x022EFFFF) # (0x022B0000..0x022C675F)
+
+# Overlays 40 to 77 used for enemies.
+OVERLAY_FILE_FOR_ENEMY_AI = {
+  # Enemies not listed here use one of the constant overlays like 0.
+   19 => 72, # andras
+   21 => 76, # golem
+   33 => 44, # great armor
+   34 => 48, # catoblepas
+   37 => 68, # dragon zombie
+   42 => 69, # sand worm
+   44 => 62, # amphisbaena
+   45 => 54, # elgiza
+   85 => 71, # ruler's sword
+  129 => 43, # balore
+  130 => 50, # gergoth
+  138 => 58, # dullahan
+  139 => 53, # behemoth
+  140 => 56, # keremet
+  141 => 74, # astarte
+  142 => 52, # legion
+  143 => 59, # dagon
+  144 => 64, # death
+  145 => 63, # stella/loretta
+  146 => 63, # stella/loretta
+  147 => 55, # brauner
+  148 => 60, # the creature
+  149 => 57, # werewolf
+  150 => 61, # medusa
+  151 => 66, # mummy man
+  152 => 25, # whip's memory
+  153 => 64, # dracula
+  154 => 65, # true dracula
+}
+REUSED_ENEMY_INFO = {
+   84 => {init_code: nil, gfx_sheet_ptr_index: 0, palette_offset: 1, palette_list_ptr_index: 0}, # ghoul and zombie
+  126 => {init_code: nil, gfx_sheet_ptr_index: 0, palette_offset: 1, palette_list_ptr_index: 0}, # golden skeleton and skeleton
+}
+BEST_ANIMATION_FRAME_FOR_ENEMY = {
+    0 =>  26, # zombie
+   11 =>   7, # une
+   14 =>  16, # forneus
+   17 =>  26, # wight
+   20 =>   8, # invisible man
+   26 =>  51, # spittle bone
+   27 =>   6, # ghost
+   30 =>  15, # ectoplasm
+   32 =>   6, # fleaman
+   33 =>  20, # great armor
+   34 =>  36, # catoblepas
+   62 =>  15, # frog
+   64 =>   2, # killer bee
+   65 =>   3, # dogether
+   66 =>  31, # bee hive
+   67 =>  27, # moldy corpse
+   84 =>  26, # ghoul
+   86 =>   5, # witch
+   87 =>   4, # skeleton tree
+   95 =>   5, # dead warrior
+   #99 =>  68, # vice beetle
+  103 =>  14, # mandragora
+  104 =>  27, # wakwak tree
+  105 =>  37, # guillotiner
+  106 =>   1, # nyx
+  113 =>  11, # ripper
+  116 =>  45, # demon head
+  118 =>  26, # ghoul king
+  119 =>  22, # vapula
+  123 =>  42, # bone ark
+  124 =>  13, # skeleton farmer
+  128 =>  24, # amducias
+  129 =>   5, # balore
+  130 =>  16, # gergoth
+  138 =>  94, # dullahan
+  139 =>  53, # behemoth
+  140 =>  91, # keremet
+  141 =>  27, # astarte
+  144 =>  25, # death
+  150 =>  54, # medusa
+}
 
 TEXT_LIST_START_OFFSET = 0x0221BA50
 TEXT_RANGE = (0..0x748)

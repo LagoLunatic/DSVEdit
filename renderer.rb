@@ -219,7 +219,7 @@ class Renderer
 
     palette_list = []
     (0..number_of_palettes).each do |palette_index| # todo: cache palettes
-      palette_data = fs.read(palette_data_start_offset + 32*palette_index, colors_per_palette*2)
+      palette_data = fs.read(palette_data_start_offset + 32*palette_index, colors_per_palette*2, allow_length_to_exceed_end_of_file: true)
       palette = palette_data.scan(/.{2}/m).map do |color|
         color = color.unpack("v*").first
         # these two bytes hold the rgb data for the color in this format:
@@ -407,7 +407,13 @@ class Renderer
   end
   
   def render_entity(gfx_files, palette_pointer, palette_offset, animation_file, frame_to_render = nil, render_hitbox = false)
-    palettes = generate_palettes(palette_pointer, 16)
+    if gfx_files.first[:render_mode] == 1
+      palettes = generate_palettes(palette_pointer, 16)
+    elsif gfx_files.first[:render_mode] == 2
+      palettes = generate_palettes(palette_pointer, 256)
+    else
+      raise NotImplementedError.new("Unknown render mode.")
+    end
     animation = Animation.new(animation_file, fs)
     
     rendered_gfx_files_by_palette = Hash.new{|h, k| h[k] = {}}
@@ -447,7 +453,7 @@ class Renderer
       frame.part_indexes.reverse.each do |part_index|
         part = animation.parts[part_index]
         
-        gfx_file = gfx_files[part.gfx_page_index]
+        gfx_file = gfx_files[part.gfx_page_index][:file]
         palette = palettes[part.palette_index+palette_offset]
         rendered_gfx_files_by_palette[part.palette_index+palette_offset][part.gfx_page_index] ||= render_gfx_page(gfx_file, palette)
         rendered_gfx_file = rendered_gfx_files_by_palette[part.palette_index+palette_offset][part.gfx_page_index]
