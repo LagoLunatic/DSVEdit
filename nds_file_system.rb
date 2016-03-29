@@ -53,7 +53,7 @@ class NDSFileSystem
       new_file_size = file_data.length
       
       new_end_offset = new_start_offset + new_file_size
-      if (new_start_offset..new_end_offset).include?(@arm7_rom_offset) || (new_start_offset..new_end_offset).include?(@banner_end_offset)
+      if (new_start_offset..new_end_offset-1).include?(@arm7_rom_offset) || (new_start_offset..new_end_offset-1).include?(@banner_end_offset)
         new_start_offset = @banner_end_offset
         new_end_offset = new_start_offset + new_file_size
       end
@@ -121,7 +121,7 @@ class NDSFileSystem
   
   def convert_ram_address_to_path_and_offset(ram_address)
     @currently_loaded_files.each do |ram_start_offset, file|
-      ram_range = (file[:ram_start_offset]..file[:ram_start_offset]+file[:size])
+      ram_range = (file[:ram_start_offset]..file[:ram_start_offset]+file[:size]-1)
       if ram_range.include?(ram_address)
         offset_in_file = ram_address - file[:ram_start_offset]
         return [file[:file_path], offset_in_file]
