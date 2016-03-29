@@ -17,6 +17,11 @@ class Animation
   end
   
   def read_from_rom()
+    magic_bytes = fs.read_by_file(animation_file[:file_path], 0, 4).unpack("V*").first
+    if magic_bytes != 0xBEEFF00D
+      raise "Unknown magic bytes: %08X" % magic_bytes
+    end
+    
     @hitbox_list_offset, @anim_list_offset, @frame_delay_list_offset, unknown_offset = fs.read_by_file(animation_file[:file_path], 0x08, 16).unpack("V*")
     @number_of_frames = fs.read_by_file(animation_file[:file_path], 0x24, 4).unpack("V*").first
     

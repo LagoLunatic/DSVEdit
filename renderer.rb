@@ -154,7 +154,7 @@ class Renderer
     render_gfx(gfx_file, palette, x=0, y=0, width=128, height=128)
   end
   
-  def render_gfx(gfx_file, palette, x, y, width, height)
+  def render_gfx(gfx_file, palette, x, y, width, height, canvas_width=128)
     rendered_gfx = ChunkyPNG::Image.new(width, height, ChunkyPNG::Color::TRANSPARENT)
     
     if gfx_file.nil? || palette.nil?
@@ -173,7 +173,7 @@ class Renderer
       raise "Unknown palette length: #{palette.length}"
     end
     
-    bytes_per_full_row = 128 / pixels_per_byte
+    bytes_per_full_row = canvas_width / pixels_per_byte
     bytes_per_requested_row = width / pixels_per_byte
     
     offset = y*bytes_per_full_row + x/pixels_per_byte
@@ -181,12 +181,10 @@ class Renderer
       pixels_for_chunky = []
       
       fs.rom[gfx_file[:start_offset] + offset, bytes_per_requested_row].each_byte do |byte|
-        if palette.length == 16
+        if pixels_per_byte == 2
           pixels = [byte & 0b00001111, byte >> 4] # get the low 4 bits, then the high 4 bits (it's reversed). each is one pixel, two pixels total inside this byte.
-        elsif palette.length == 256
-          pixels = [byte]
         else
-          raise "Unknown palette length: #{palette.length}"
+          pixels = [byte]
         end
         
         pixels.each do |pixel|
@@ -416,6 +414,13 @@ class Renderer
     end
     animation = Animation.new(animation_file, fs)
     
+    gfx_files_with_blanks = []
+    gfx_files.each do |gfx_file|
+      gfx_files_with_blanks << gfx_file
+      blanks_needed = gfx_file[:file][:size] / 0x2000 - 1
+      gfx_files_with_blanks += [nil]*blanks_needed
+    end
+    
     rendered_gfx_files_by_palette = Hash.new{|h, k| h[k] = {}}
     
     rendered_parts = {}
@@ -453,9 +458,15 @@ class Renderer
       frame.part_indexes.reverse.each do |part_index|
         part = animation.parts[part_index]
         
-        gfx_file = gfx_files[part.gfx_page_index][:file]
+        if part.gfx_page_index >= gfx_files_with_blanks.length
+          raise "GFX page index too large (#{part.gfx_page_index+1} pages needed, have #{gfx_files_with_blanks.length})"
+        end
+        gfx_page = gfx_files_with_blanks[part.gfx_page_index]
+        gfx_file = gfx_page[:file]
+        canvas_width = gfx_page[:canvas_width]
         palette = palettes[part.palette_index+palette_offset]
-        rendered_gfx_files_by_palette[part.palette_index+palette_offset][part.gfx_page_index] ||= render_gfx_page(gfx_file, palette)
+        
+        rendered_gfx_files_by_palette[part.palette_index+palette_offset][part.gfx_page_index] ||= render_gfx(gfx_file, palette, 0, 0, canvas_width*8, canvas_width*8, canvas_width=canvas_width*8)
         rendered_gfx_file = rendered_gfx_files_by_palette[part.palette_index+palette_offset][part.gfx_page_index]
         rendered_parts[part_index] ||= render_animation_part(part, rendered_gfx_file)
         part_gfx = rendered_parts[part_index]

@@ -210,8 +210,9 @@ class EnemyDNA
       end
       
       render_mode = fs.read(gfx_pointer+1, 1).unpack("C").first
+      canvas_width = fs.read(gfx_pointer+2, 1).unpack("C").first
       
-      gfx_files << {file: gfx_file, render_mode: render_mode}
+      gfx_files << {file: gfx_file, render_mode: render_mode, canvas_width: canvas_width}
     end
     
     animation_file_pointer = possible_animation_pointers[0]
