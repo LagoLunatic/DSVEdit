@@ -117,7 +117,7 @@ class EnemyDNA
         # not a list, just gfx
         header_vals[0] == 0 && (1..2).include?(header_vals[1]) && header_vals[2] == 0x10 && header_vals[3] == 0
       elsif data == 0x20
-        # similar to above. todo: figure out what difference is.
+        # canvas width is doubled.
         header_vals[0] == 0 && (1..2).include?(header_vals[1]) && header_vals[2] == 0x20 && header_vals[3] == 0
       else
         false
