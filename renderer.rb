@@ -417,7 +417,7 @@ class Renderer
     gfx_files_with_blanks = []
     gfx_files.each do |gfx_file|
       gfx_files_with_blanks << gfx_file
-      blanks_needed = gfx_file[:file][:size] / 0x2000 - 1
+      blanks_needed = (gfx_file[:canvas_width]/0x10 - 1) * 3
       gfx_files_with_blanks += [nil]*blanks_needed
     end
     
