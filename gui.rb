@@ -49,6 +49,8 @@ class DSVE < Qt::MainWindow
     
     @tiled = TMXInterface.new
     
+    @cached_enemy_pixmaps = {}
+    
     connect(@ui.actionOpen, SIGNAL("activated()"), self, SLOT("open_rom_dialog()"))
     connect(@ui.actionOpen_Folder, SIGNAL("activated()"), self, SLOT("open_folder_dialog()"))
     connect(@ui.actionSave, SIGNAL("activated()"), self, SLOT("save_files()"))
@@ -243,6 +245,36 @@ class DSVE < Qt::MainWindow
         tile_gfx = Qt::GraphicsPixmapItem.new(tile_gfx)
         tile_gfx.setPos(x_on_level*16, y_on_level*16)
         tile_gfx.setParentItem(layer_item)
+      end
+    end
+    
+    @room.entities.each do |entity|
+      if entity.type == 0x01
+        enemy_id = entity.subtype
+        
+        pixmap, min_x, min_y = @cached_enemy_pixmaps[enemy_id] ||= begin
+          gfx_files, palette, palette_offset, animation_file = EnemyDNA.new(enemy_id, @game.fs).get_gfx_and_palette_and_animation_from_init_ai
+          frame_to_render = BEST_ANIMATION_FRAME_FOR_ENEMY[enemy_id]
+          
+          chunky_frames, min_x, min_y = @renderer.render_entity(gfx_files, palette, palette_offset, animation_file, frame_to_render)
+          if chunky_frames.empty?
+            next
+          end
+          
+          chunky_frame = chunky_frames.first
+          pixmap = Qt::Pixmap.new
+          blob = chunky_frame.to_blob
+          pixmap.loadFromData(blob, blob.length)
+          
+          [pixmap, min_x, min_y]
+        rescue
+          next
+        end
+        
+        frame_pixmap_item = Qt::GraphicsPixmapItem.new(pixmap)
+        
+        frame_pixmap_item.setPos(entity.x_pos+min_x, entity.y_pos+min_y)
+        @room_graphics_scene.addItem(frame_pixmap_item)
       end
     end
     
