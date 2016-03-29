@@ -276,6 +276,7 @@ class DSVE < Qt::MainWindow
     else
       map = @area.map
     end
+    
     chunky_png_img = @renderer.render_map(map)
     pixmap = Qt::Pixmap.new
     blob = chunky_png_img.to_blob
@@ -291,15 +292,15 @@ class DSVE < Qt::MainWindow
   end
   
   def open_enemy_dna_dialog
-    @enemy_dialog = EnemyEditDialog.new(game.fs)
+    @enemy_dialog = EnemyEditDialog.new(self, game.fs)
   end
   
   def open_text_editor
-    @text_editor = TextEditor.new(game.fs)
+    @text_editor = TextEditor.new(self, game.fs)
   end
   
   def open_settings
-    @settings_dialog = SettingsWindow.new(@settings)
+    @settings_dialog = SettingsWindow.new(self, @settings)
   end
   
   def load_settings
@@ -312,6 +313,7 @@ class DSVE < Qt::MainWindow
   end
   
   def closeEvent(event)
+    puts "Close event triggered."
     File.open(@settings_path, "w") do |f|
       f.write(@settings.to_yaml)
     end
@@ -453,8 +455,8 @@ class EnemyEditDialog < Qt::Dialog
   slots "resistance_button_pressed()"
   slots "button_pressed(QAbstractButton*)"
   
-  def initialize(fs)
-    super()
+  def initialize(main_window, fs)
+    super(main_window)
     @ui = Ui_EnemyDNAEditor.new
     @ui.setup_ui(self)
     
@@ -503,7 +505,7 @@ class EnemyEditDialog < Qt::Dialog
     
     connect(@ui.buttonBox, SIGNAL("clicked(QAbstractButton*)"), self, SLOT("button_pressed(QAbstractButton*)"))
     
-    self.setWindowFlags(Qt::MSWindowsFixedSizeDialogHint)
+    #self.setWindowFlags(Qt::MSWindowsFixedSizeDialogHint)
     
     self.show()
   end
@@ -575,8 +577,8 @@ class TextEditor < Qt::Dialog
   slots "save_button_pressed()"
   slots "button_pressed(QAbstractButton*)"
   
-  def initialize(fs)
-    super()
+  def initialize(main_window, fs)
+    super(main_window)
     @ui = Ui_TextEditor.new
     @ui.setup_ui(self)
     
@@ -631,8 +633,8 @@ class SettingsWindow < Qt::Dialog
   slots "browse_for_emulator_path()"
   slots "button_pressed(QAbstractButton*)"
   
-  def initialize(settings)
-    super()
+  def initialize(main_window, settings)
+    super(main_window)
     @ui = Ui_Settings.new
     @ui.setup_ui(self)
     
@@ -645,7 +647,7 @@ class SettingsWindow < Qt::Dialog
     connect(@ui.emulator_path_browse_button, SIGNAL("clicked()"), self, SLOT("browse_for_emulator_path()"))
     connect(@ui.buttonBox, SIGNAL("clicked(QAbstractButton*)"), self, SLOT("button_pressed(QAbstractButton*)"))
     
-    self.setWindowFlags(Qt::MSWindowsFixedSizeDialogHint);
+    #self.setWindowFlags(Qt::MSWindowsFixedSizeDialogHint);
     
     self.show()
   end
