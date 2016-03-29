@@ -77,6 +77,7 @@ class EnemyDNA
     gfx_sheet_ptr_index    = reused_info[:gfx_sheet_ptr_index] || 0
     palette_offset         = reused_info[:palette_offset] || 0
     palette_list_ptr_index = reused_info[:palette_list_ptr_index] || 0
+    animation_ptr_index    = reused_info[:animation_ptr_index] || 0
     
     p ("ai at %08X" % init_code_pointer)
     data = fs.read(init_code_pointer, 4*1000, allow_length_to_exceed_end_of_file: true)
@@ -215,13 +216,20 @@ class EnemyDNA
       gfx_files << {file: gfx_file, render_mode: render_mode, canvas_width: canvas_width}
     end
     
-    animation_file_pointer = possible_animation_pointers[0]
+    if animation_ptr_index >= possible_animation_pointers.length
+      raise InitAIReadError.new("Failed to find enough valid enemy animation pointers to match the reused enemy animation index. (#{possible_animation_pointers.length} found, #{animation_ptr_index+1} needed.)")
+    end
+    animation_file_pointer = possible_animation_pointers[animation_ptr_index]
     if animation_file_pointer.nil?
       raise InitAIReadError.new("Failed to find any possible animation pointers.")
     end
     animation_file = fs.find_file_by_ram_start_offset(animation_file_pointer)
-
+    if animation_file.nil?
+      raise InitAIReadError.new("Failed to find animation file corresponding to pointer: %08X" % animation_file_pointer)
+    end
     
+    
+    puts "gfxname : #{gfx_files.first[:file][:file_path]}"
     puts "anim    : %08X" % animation_file[:ram_start_offset] if animation_file[:ram_start_offset]
     puts "animname: #{animation_file[:file_path]}"
     puts "animptr : %08X" % animation_file_pointer if animation_file_pointer
