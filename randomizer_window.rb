@@ -131,6 +131,7 @@ class RandomizerWindow < Qt::Dialog
     
     game.fix_unnamed_skills()
     game.dos_boss_doors_skip_seal()
+    game.ooe_enter_any_wall()
     
     progress_dialog = Qt::ProgressDialog.new
     progress_dialog.windowTitle = "Building"

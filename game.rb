@@ -190,6 +190,92 @@ class Game
     end
   end
   
+  def ooe_enter_any_wall
+    return unless GAME == "ooe"
+    
+    # Allow entering any wall with Paries.
+    code = [0xE3A00902] # mov r0, 8000h
+    address = 0x0207BFC4
+    fs.write(address, code.pack("V*"))
+    address = 0x0207C908
+    fs.write(address, code.pack("V*"))
+    
+    
+    
+    # Remove line that teleports Shanoa's y position to the last seen Paries wall when entering a wall.
+    code = [0xE1A00000] # nop
+    address = 0x0207C09C
+    fs.write(address, code.pack("V*"))
+    
+    # Move Shanoa left (if entering a left wall) or right (if entering a right wall).
+    code = [
+      0xE5951108, # ldr r1, [r5, 108h]   ; Load variable for whether shanoa is touching left/right wall.
+      0xE3110080, # tst r1, 80h          ; Test if Shanoa is touching a right wall.
+      0xE5951030, # ldr r1, [r5, 30h]    ; Load shanoa's current x pos
+      0x12811A0A, # addne r1, r1, 0A000h ; Increase x pos if Shanoa is touching a right wall.
+      0x02411A0A, # subeq r1, r1, 0A000h ; Decrease x pos if she's not.
+      0xE5851030, # str r1, [r5, 30h]    ; Store it back.
+      0xEAFEF70E, # b 0207C098           ; Go back to where we came from.
+    ]
+    address = 0x020BE440 # Free space.
+    fs.write(address, code.pack("V*"))
+    # Replace line that teleports Shanoa's x position to the last seen Paries wall when entering a wall to a jump to our own code above.
+    code = [0xEA0108E9] # b 020BE440
+    address = 0x0207C094
+    fs.write(address, code.pack("V*"))
+    
+    # Move Shanoa right (if exiting a left wall) or left (if exiting a right wall).
+    address = 0x020BE45C
+    code = [
+      0xE5950104, # ldr r0, [r5, 104h]   ; Load variable for whether Shanoa is exiting a left/right wall.
+      0xE3100004, # tst r0, 4h           ; Test if Shanoa is exiting a left wall.
+      0xE5950030, # ldr r0, [r5, 30h]    ; Load shanoa's current x pos.
+      0x12800A0A, # addeq r0, r0, 0A000h ; Increase x pos if Shanoa is exiting a left wall.
+      0x02400A0A, # subne r0, r0, 0A000h ; Decrease x pos if she's not.
+      0xE5850030, # str r0, [r5, 30h]    ; Store it back.
+      0xEAFEF94E, # b 0207C9B4           ; Go back to where we came from.
+    ]
+    fs.write(address, code.pack("V*"))
+    # Replace line that always teleports Shanoa to the left when exiting a wall with a jump to our own code above.
+    code = [0xEA0106A9] # b 020BE45C
+    address = 0x0207C9B0
+    fs.write(address, code.pack("V*"))
+    
+    
+    
+    # Allow Shanoa to go up/down out of floors/ceilings.
+    # This is necessary because otherwise walls that are less than 3 blocks tall will cause Shanoa to get permanently stuck with no way to get out.
+    code = [0xE1A00000] # nop
+    # Up out of floors.
+    address = 0x0207C8A4
+    fs.write(address, code.pack("V*"))
+    address = 0x0207C8C0
+    fs.write(address, code.pack("V*"))
+    # Down out of ceilings.
+    address = 0x0207C8E8
+    fs.write(address, code.pack("V*"))
+    address = 0x0207C900
+    fs.write(address, code.pack("V*"))
+    
+    # Make Shanoa instantly enter/exit the wall when she touches the edge of it, instead of having to hold left/right for half a second.
+    code = [0xE3500001] # cmp r0, 1h
+    address = 0x0207C98C
+    fs.write(address, code.pack("V*"))
+    code = [0xE3500002] # cmp r0, 2h
+    address = 0x0207C048
+    fs.write(address, code.pack("V*"))
+    
+    # Make Shanoa instantly exit Paries mode when she goes above/below the wall, instead of needing to press left/right.
+    code = [0xE3A00001] # mov r0, 1h
+    address = 0x0207C808
+    fs.write(address, code.pack("V*"))
+    
+    # Allow Shanoa to exit up/down out of a floor/ceiling, even if the player is still holding up or down on the d-pad.
+    code = [0xE1A00000] # nop
+    address = 0x0207C924
+    fs.write(address, code.pack("V*"))
+  end
+  
 private
   
   def verify_game_and_load_constants(header_path)
