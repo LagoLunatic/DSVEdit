@@ -164,6 +164,7 @@ ENEMY_GFX_LIST_POINTER_RANGES = [(0x02290000..0x0229FFFF)]
 ENEMY_GFX_LIST_OVERLAY_POINTER_RANGES = [(0x02300000..0x0230FFFF)]
 ENEMY_PALETTE_POINTER_RANGES = [(0x022B0000..0x022C675F)]
 
+# Overlays 23 to 40 used for enemies.
 OVERLAY_FILE_FOR_ENEMY_AI = {
   # Enemies not listed here use one of the constant overlays like 0.
    14 => 28, # golem

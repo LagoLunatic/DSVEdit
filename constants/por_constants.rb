@@ -219,7 +219,7 @@ ENEMY_GFX_LIST_POINTER_RANGES = [(0x02290000..0x0229FFFF)]
 ENEMY_GFX_LIST_OVERLAY_POINTER_RANGES = [(0x02300000..0x0230FFFF)] #(0x022D0000..0x022EFFFF) # (0x02300000..0x0230FFFF)
 ENEMY_PALETTE_POINTER_RANGES = [(0x022B0000..0x022FFFFF)]#(0x022E0000..0x022EFFFF) # (0x022B0000..0x022C675F)
 
-# Overlays 40 to 77 used for enemies.
+# Overlays 43 to 77 used for enemies.
 OVERLAY_FILE_FOR_ENEMY_AI = {
   # Enemies not listed here use one of the constant overlays like 0.
    19 => 72, # andras

@@ -163,8 +163,8 @@ class TMXInterface
                 xml.property(:name => "06 (type)", :value => "%02X" % entity.type)
                 xml.property(:name => "07 (subtype)", :value => "%02X" % entity.subtype)
                 xml.property(:name => "08", :value => "%02X" % entity.byte_8)
-                xml.property(:name => "var_a", :value => "%02X" % entity.var_a)
-                xml.property(:name => "var_b", :value => "%02X" % entity.var_b)
+                xml.property(:name => "var_a", :value => "%04X" % entity.var_a)
+                xml.property(:name => "var_b", :value => "%04X" % entity.var_b)
               }
             }
           end

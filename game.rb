@@ -175,7 +175,7 @@ class Game
       0xEAFE48DF, # b 02051F94 ; Return to where we came from.
     ]
     address = 0x020BFC00 # Free space.
-    fs.write(address, code.pack("V*")) 
+    fs.write(address, code.pack("V*"))
   end
   
   def fix_unnamed_skills
