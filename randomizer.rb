@@ -293,13 +293,20 @@ class Randomizer
     when "Brachyura"
       boss_entity.x_pos = 0x0080
       boss_entity.y_pos = 0x0A20
+    when "Giant Skeleton"
+      if boss_entity.var_a == 0
+        # Non-boss version of the giant skeleton.
+        return :skip
+      end
     end
     
-    boss_entity.room.entities.each do |entity|
-      if entity.type == 0x02 && entity.subtype == 0x3E && entity.var_a == 0x01
-        # Searchlights in Giant Skeleton's boss room. These will soft lock the game if Giant Skeleton isn't here, so we need to tweak it a bit.
-        entity.var_a = 0x00
-        entity.write_to_rom()
+    if new_boss.name.decoded_string != "Giant Skeleton"
+      boss_entity.room.entities.each do |entity|
+        if entity.type == 0x02 && entity.subtype == 0x3E && entity.var_a == 0x01
+          # Searchlights in Giant Skeleton's boss room. These will soft lock the game if Giant Skeleton isn't here, so we need to tweak it a bit.
+          entity.var_a = 0x00
+          entity.write_to_rom()
+        end
       end
     end
     
