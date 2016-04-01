@@ -475,6 +475,22 @@ class Randomizer
   end
   
   def randomize_enemy_drops
+    if GAME == "ooe"
+      BOSS_IDS.each do |enemy_id|
+        enemy = EnemyDNA.new(enemy_id, game.fs)
+        
+        if enemy["Glyph"] != 0
+          # Boss that has a glyph you can absorb during the fight (Albus, Barlowe, and Wallman).
+          # These must be done before common enemies because otherwise there won't be any unique glyphs left to give them.
+          
+          enemy["Glyph"] = get_random_glyph()
+          enemy["Glyph Chance"] = rng.rand(0x01..0x0F)
+          
+          enemy.write_to_rom()
+        end
+      end
+    end
+    
     COMMON_ENEMY_IDS.each do |enemy_id|
       enemy = EnemyDNA.new(enemy_id, game.fs)
       
@@ -509,21 +525,6 @@ class Randomizer
       end
       
       enemy.write_to_rom()
-    end
-    
-    if GAME == "ooe"
-      BOSS_IDS.each do |enemy_id|
-        enemy = EnemyDNA.new(enemy_id, game.fs)
-        
-        if enemy["Glyph"] != 0
-          # Boss that has a glyph you can absorb during the fight (Albus, Barlowe, and Wallman).
-          
-          enemy["Glyph"] = get_random_glyph()
-          enemy["Glyph Chance"] = rng.rand(0x01..0x0F)
-          
-          enemy.write_to_rom()
-        end
-      end
     end
   end
   
