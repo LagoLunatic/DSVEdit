@@ -115,7 +115,7 @@ class Randomizer
       return
     end
     
-    if @enemy_pool_for_room.length >= 8
+    if @enemy_pool_for_room.length >= 7
       # We don't want the room to have too many different enemies as this would take up too much space in RAM and crash.
       
       enemy.subtype = @enemy_pool_for_room.sample(random: rng)
