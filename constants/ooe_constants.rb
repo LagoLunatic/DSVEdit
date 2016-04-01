@@ -180,7 +180,6 @@ ENEMY_IDS = (0x00..0x78)
 COMMON_ENEMY_IDS = (0x00..0x6A).to_a
 BOSS_IDS = (0x6B..0x78).to_a
 RANDOMIZABLE_BOSS_IDS = BOSS_IDS - [0x76] # remove eligor, he needs his own huge room
-VERY_LARGE_ENEMIES = []
 
 BOSS_DOOR_SUBTYPE = 0x4B
 BOSS_ID_TO_BOSS_DOOR_VAR_B = {

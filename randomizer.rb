@@ -30,8 +30,18 @@ class Randomizer
   def randomize
     @boss_entities = []
     @transition_rooms = []
+    overlay_ids_for_common_enemies = OVERLAY_FILE_FOR_ENEMY_AI.select do |enemy_id, overlay_id|
+      COMMON_ENEMY_IDS.include?(enemy_id)
+    end
+    overlay_ids_for_common_enemies = overlay_ids_for_common_enemies.values.uniq
+    
     game.each_room do |room|
       @enemy_pool_for_room = []
+      enemy_overlay_id_for_room = overlay_ids_for_common_enemies.sample(random: rng)
+      @allowed_enemies_for_room = COMMON_ENEMY_IDS.select do |enemy_id|
+        overlay = OVERLAY_FILE_FOR_ENEMY_AI[enemy_id]
+        overlay.nil? || overlay == enemy_overlay_id_for_room
+      end
       
       room.entities.each do |entity|
         randomize_entity(entity)
@@ -99,16 +109,13 @@ class Randomizer
     elsif enemy.is_common_enemy?
       return unless options[:randomize_enemies]
       
-      available_enemy_ids_for_entity = COMMON_ENEMY_IDS.dup
-      if !VERY_LARGE_ENEMIES.include?(enemy.subtype)
-        available_enemy_ids_for_entity -= VERY_LARGE_ENEMIES
-      end
+      available_enemy_ids_for_entity = @allowed_enemies_for_room.dup
     else
       puts "Enemy #{enemy.subtype} isn't in either the enemy list or boss list. Todo: fix this"
       return
     end
     
-    if @enemy_pool_for_room.length >= 5
+    if @enemy_pool_for_room.length >= 8
       # We don't want the room to have too many different enemies as this would take up too much space in RAM and crash.
       
       enemy.subtype = @enemy_pool_for_room.sample(random: rng)
@@ -628,11 +635,16 @@ class Randomizer
   
   def randomize_enemy_ai
     common_enemy_dnas = game.enemy_dnas[0..COMMON_ENEMY_IDS.last]
-    available_ais = common_enemy_dnas.map{|dna| dna["Running AI"]}
     
-    common_enemy_dnas.each do |dna|
-      dna["Running AI"] = available_ais.sample(random: rng)
-      dna.write_to_rom()
+    common_enemy_dnas.each do |this_dna|
+      this_overlay = OVERLAY_FILE_FOR_ENEMY_AI[this_dna]
+      available_enemies_with_same_overlay = common_enemy_dnas.select do |other_dna|
+         other_overlay = OVERLAY_FILE_FOR_ENEMY_AI[other_dna.enemy_id]
+         other_overlay.nil? || other_overlay == this_overlay
+      end
+      
+      this_dna["Running AI"] = available_enemies_with_same_overlay.sample(random: rng)["Running AI"]
+      this_dna.write_to_rom()
     end
   end
 end

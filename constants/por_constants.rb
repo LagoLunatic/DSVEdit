@@ -393,7 +393,6 @@ COMMON_ENEMY_IDS = (0x00..0x80).to_a
 BOSS_IDS = (0x81..0x9A).to_a
 FINAL_BOSS_IDS = []
 RANDOMIZABLE_BOSS_IDS = BOSS_IDS - FINAL_BOSS_IDS
-VERY_LARGE_ENEMIES = [0x64, 0x13, 0x79, 0x78, 0x45, 0x25, 0x21, 0x52, 0x2C, 0x7D, 0x7A, 0x22, 0x15] # alura une, andras, flame demon, iron golem, treant, dragon zombie, great armor, final guard, amphisbaena, alastor, demon, catoblepas, golem
 
 BOSS_DOOR_SUBTYPE = 0x22
 BOSS_ID_TO_BOSS_DOOR_VAR_B = {

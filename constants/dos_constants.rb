@@ -297,7 +297,6 @@ COMMON_ENEMY_IDS = (0x00..0x64).to_a
 BOSS_IDS = (0x65..0x75).to_a
 FINAL_BOSS_IDS = (0x73..0x75).to_a
 RANDOMIZABLE_BOSS_IDS = BOSS_IDS - FINAL_BOSS_IDS
-VERY_LARGE_ENEMIES = [0x64, 0x60, 0x25, 0x5D, 0x63, 0x0E, 0x61, 0x5B, 0x2F, 0x22, 0x12, 0x19, 0x4D, 0x51] # iron golem, stolas, great armor, arc demon, alastor, golem, final guard, flame demon, devil, treant, manticore, catoblepas, gorgon, mushussu
 
 BOSS_DOOR_SUBTYPE = 0x25
 BOSS_ID_TO_BOSS_DOOR_VAR_B = {
