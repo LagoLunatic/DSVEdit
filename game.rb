@@ -97,6 +97,30 @@ class Game
     end
   end
   
+  def get_transition_rooms
+    transition_rooms = []
+    
+    if GAME == "dos"
+      transition_room_pointers = fs.read_until_end_marker(TRANSITION_ROOM_LIST_POINTER, [0, 0, 0, 0]).unpack("V*")
+      
+      transition_rooms = transition_room_pointers.map do |pointer|
+        get_room_by_metadata_pointer(pointer)
+      end
+    else
+      areas.each do |area|
+        area.map.tiles.each do |tile|
+          if tile.is_transition
+            transition_rooms << area.sectors[tile.sector_index].rooms[tile.room_index]
+          end
+        end
+      end
+      
+      transition_rooms.uniq!
+    end
+    
+    transition_rooms
+  end
+  
   def fix_top_screen_on_new_game
     return unless GAME == "ooe"
     

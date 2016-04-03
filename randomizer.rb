@@ -29,7 +29,6 @@ class Randomizer
   
   def randomize
     @boss_entities = []
-    @transition_rooms = []
     overlay_ids_for_common_enemies = OVERLAY_FILE_FOR_ENEMY_AI.select do |enemy_id, overlay_id|
       COMMON_ENEMY_IDS.include?(enemy_id)
     end
@@ -45,10 +44,6 @@ class Randomizer
       
       room.entities.each do |entity|
         randomize_entity(entity)
-        
-        if entity.type == 0x02 && entity.subtype == 0x5A
-          @transition_rooms << room
-        end
       end
     end
     
@@ -606,18 +601,26 @@ class Randomizer
   end
   
   def randomize_transition_doors
-    @transition_rooms.uniq!
-    remaining_transition_rooms = @transition_rooms.dup
+    transition_rooms = game.get_transition_rooms()
+    remaining_transition_rooms = transition_rooms.dup
+    remaining_transition_rooms.reject! do |room|
+      FAKE_TRANSITION_ROOMS.include?(room.room_metadata_ram_pointer)
+    end
     queued_door_changes = Hash.new{|h, k| h[k] = {}}
     
-    @transition_rooms.each_with_index do |room, i|
-      next unless remaining_transition_rooms.include?(room) # Already randomized this room
+    transition_rooms.each_with_index do |transition_room, i|
+      next unless remaining_transition_rooms.include?(transition_room) # Already randomized this room
+      
+      # Transition rooms can only lead to rooms in the same area or the game will crash.
+      remaining_transition_rooms_for_area = remaining_transition_rooms.select do |other_room|
+        transition_room.area_index == other_room.area_index
+      end
       
       # Only randomize one of the doors, no point in randomizing them both.
-      inside_door = room.doors.first
+      inside_door = transition_room.doors.first
       old_outside_door = inside_door.destination_door
-      random_index = rng.rand(remaining_transition_rooms.length)
-      transition_room_to_swap_with = remaining_transition_rooms.delete_at(random_index)
+      transition_room_to_swap_with = remaining_transition_rooms_for_area.sample(random: rng)
+      remaining_transition_rooms.delete(transition_room_to_swap_with)
       inside_door_to_swap_with = transition_room_to_swap_with.doors.first
       new_outside_door = inside_door_to_swap_with.destination_door
       
