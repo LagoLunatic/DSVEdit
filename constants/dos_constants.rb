@@ -290,8 +290,6 @@ NAMES_FOR_UNNAMED_SKILLS = {
   0x34 => "Grand Cross",
 }
 
-ENTITY_TYPE_FOR_PICKUPS = 0x04
-
 ENEMY_IDS = (0x00..0x75)
 COMMON_ENEMY_IDS = (0x00..0x64).to_a
 BOSS_IDS = (0x65..0x75).to_a

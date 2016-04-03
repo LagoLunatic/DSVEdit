@@ -84,12 +84,12 @@ class Randomizer
       randomize_enemy(entity)
     when 0x02
       randomize_special_objects(entity)
-    when ENTITY_TYPE_FOR_PICKUPS
+    when 0x04
       case GAME
       when "dos", "por"
         randomize_pickup_dos_por(entity)
       when "ooe"
-        randomize_pickup_ooe(entity)
+        # Do nothing, pickups are special objects in OoE.
       end
     end
     
@@ -396,6 +396,12 @@ class Randomizer
         entity.type = 0
         entity.subtype = 0
       end
+    elsif entity.subtype == 0x02 && entity.var_a == 0x00
+      # Glyph statue
+      randomize_pickup_ooe(entity)
+    elsif entity.subtype == 0x15 || entity.subtype == 0x16
+      # Chest
+      randomize_pickup_ooe(entity)
     end
   end
   
