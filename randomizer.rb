@@ -359,7 +359,7 @@ class Randomizer
       end
     elsif entity.subtype == 0x01 && (entity.var_a == 0x00 || entity.var_a == 0x10)
       # Soul candle or money chest
-      entity.type = ENTITY_TYPE_FOR_PICKUPS
+      entity.type = 0x04
       randomize_pickup_dos_por(entity)
     end
   end
@@ -375,7 +375,7 @@ class Randomizer
       end
     elsif entity.subtype == 0x01 && (entity.var_a == 0x0E || entity.var_a == 0x0F)
       # Money chest
-      entity.type = ENTITY_TYPE_FOR_PICKUPS
+      entity.type = 0x04
       randomize_pickup_dos_por(entity)
     end
   end
