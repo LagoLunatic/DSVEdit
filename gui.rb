@@ -22,6 +22,8 @@ class DSVE < Qt::MainWindow
   slots "write_to_rom()"
   slots "build_and_run()"
   
+  slots "cancel_write_to_rom_thread()"
+  
   slots "area_index_changed(int)"
   slots "sector_index_changed(int)"
   slots "room_index_changed(int)"
@@ -399,39 +401,50 @@ class DSVE < Qt::MainWindow
   end
   
   def write_to_rom(launch_emulator = false)
-    progress_dialog = Qt::ProgressDialog.new
-    progress_dialog.windowTitle = "Building"
-    progress_dialog.labelText = "Writing files to ROM"
-    progress_dialog.maximum = game.fs.files.length
-    progress_dialog.windowModality = Qt::ApplicationModal
-    progress_dialog.windowFlags = Qt::CustomizeWindowHint | Qt::WindowTitleHint
-    progress_dialog.setFixedSize(progress_dialog.size);
+    return if @progress_dialog
     
-    game.fs.write_to_rom("../#{GAME} hack.nds") do |files_written|
-      next unless files_written % 100 == 0 # Only update the UI every 100 files because updating too often is slow.
-      
-      progress_dialog.setValue(files_written)
-      
-      should_cancel = false
-      if progress_dialog.wasCanceled
-        progress_dialog.labelText = "Canceling"
-        should_cancel = true
-      end
-      should_cancel
-    end
-    progress_dialog.setValue(game.fs.files.length)
+    @progress_dialog = Qt::ProgressDialog.new
+    @progress_dialog.windowTitle = "Building"
+    @progress_dialog.labelText = "Writing files to ROM"
+    @progress_dialog.maximum = game.fs.files_without_dirs.length
+    @progress_dialog.windowModality = Qt::ApplicationModal
+    @progress_dialog.windowFlags = Qt::CustomizeWindowHint | Qt::WindowTitleHint
+    @progress_dialog.setFixedSize(@progress_dialog.size);
+    connect(@progress_dialog, SIGNAL("canceled()"), self, SLOT("cancel_write_to_rom_thread()"))
+    @progress_dialog.show
     
-    if launch_emulator
-      if @settings[:emulator_path].nil? || @settings[:emulator_path].empty?
-        Qt::MessageBox.warning(self, "Failed to run emulator", "You must specify the emulator path.")
-        return
-      elsif !File.file?(@settings[:emulator_path])
-        Qt::MessageBox.warning(self, "Failed to run emulator", "Emulator path is invalid.")
-        return
+    @write_to_rom_thread = Thread.new do
+      game.fs.write_to_rom("../#{GAME} hack.nds") do |files_written|
+        next unless files_written % 100 == 0 # Only update the UI every 100 files because updating too often is slow.
+        
+        Qt.execute_in_main_thread do
+          @progress_dialog.setValue(files_written) unless @progress_dialog.wasCanceled
+        end
       end
       
-      system("start \"#{@settings[:emulator_path]}\" \"../#{GAME} hack.nds\"")
+      Qt.execute_in_main_thread do
+        @progress_dialog.setValue(game.fs.files_without_dirs.length) unless @progress_dialog.wasCanceled
+        @progress_dialog = nil
+        
+        if launch_emulator
+          if @settings[:emulator_path].nil? || @settings[:emulator_path].empty?
+            Qt::MessageBox.warning(self, "Failed to run emulator", "You must specify the emulator path.")
+          elsif !File.file?(@settings[:emulator_path])
+            Qt::MessageBox.warning(self, "Failed to run emulator", "Emulator path is invalid.")
+          else
+            system("start \"#{@settings[:emulator_path]}\" \"../#{GAME} hack.nds\"")
+          end
+        else
+          Qt::MessageBox.information(self, "Done", "All files written to rom.")
+        end
+      end
     end
+  end
+  
+  def cancel_write_to_rom_thread
+    puts "Cancelled."
+    @write_to_rom_thread.kill
+    @progress_dialog = nil
   end
   
   def build_and_run

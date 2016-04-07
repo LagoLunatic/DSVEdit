@@ -8,6 +8,7 @@ require_relative 'ui_randomizer'
 class RandomizerWindow < Qt::Dialog
   slots "update_settings()"
   slots "randomize()"
+  slots "cancel_write_to_rom_thread()"
   
   def initialize
     super()
@@ -133,30 +134,43 @@ class RandomizerWindow < Qt::Dialog
     game.dos_boss_doors_skip_seal()
     game.ooe_enter_any_wall()
     
-    progress_dialog = Qt::ProgressDialog.new
-    progress_dialog.windowTitle = "Building"
-    progress_dialog.labelText = "Writing files to ROM"
-    progress_dialog.maximum = game.fs.files.length
-    progress_dialog.windowModality = Qt::ApplicationModal
-    progress_dialog.windowFlags = Qt::CustomizeWindowHint | Qt::WindowTitleHint
-    progress_dialog.setFixedSize(progress_dialog.size);
+    write_to_rom(game)
+  end
+  
+  def write_to_rom(game)
+    @progress_dialog = Qt::ProgressDialog.new
+    @progress_dialog.windowTitle = "Building"
+    @progress_dialog.labelText = "Writing files to ROM"
+    @progress_dialog.maximum = game.fs.files_without_dirs.length
+    @progress_dialog.windowModality = Qt::ApplicationModal
+    @progress_dialog.windowFlags = Qt::CustomizeWindowHint | Qt::WindowTitleHint
+    @progress_dialog.setFixedSize(@progress_dialog.size);
+    connect(@progress_dialog, SIGNAL("canceled()"), self, SLOT("cancel_write_to_rom_thread()"))
+    @progress_dialog.show
     
     output_rom_path = File.join(@ui.output_folder.text, "#{GAME} hack.nds")
-    game.fs.write_to_rom(output_rom_path) do |files_written|
-      next unless files_written % 100 == 0 # Only update the UI every 100 files because updating too often is slow.
-      
-      progress_dialog.setValue(files_written)
-      
-      should_cancel = false
-      if progress_dialog.wasCanceled
-        progress_dialog.labelText = "Canceling"
-        should_cancel = true
+    
+    @write_to_rom_thread = Thread.new do
+      game.fs.write_to_rom(output_rom_path) do |files_written|
+        next unless files_written % 100 == 0 # Only update the UI every 100 files because updating too often is slow.
+        
+        Qt.execute_in_main_thread do
+          @progress_dialog.setValue(files_written) unless @progress_dialog.wasCanceled
+        end
       end
-      should_cancel
+      
+      Qt.execute_in_main_thread do
+        @progress_dialog.setValue(game.fs.files_without_dirs.length) unless @progress_dialog.wasCanceled
+        @progress_dialog = nil
+        Qt::MessageBox.information(self, "Done", "Randomization complete.")
+      end
     end
-    progress_dialog.setValue(game.fs.files.length)
-
-    Qt::MessageBox.information(self, "Done", "Randomization complete.")
+  end
+  
+  def cancel_write_to_rom_thread
+    puts "Cancelled."
+    @write_to_rom_thread.kill
+    @progress_dialog = nil
   end
 end
 

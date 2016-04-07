@@ -40,15 +40,12 @@ class NDSFileSystem
   def write_to_rom(output_rom_path)
     print "Writing files to #{output_rom_path}... "
     
-    new_start_offset = @files[0][:start_offset]
+    new_start_offset = files_without_dirs[0][:start_offset]
+    
+    new_rom = @rom.dup
     
     files_written = 0
-    @files.sort_by{|id, file| id}.each do |id, file|
-      next unless file[:type] == :file
-      if file[:name] =~ /\.bin$/ || file[:name] == "rom.nds"
-        next
-      end
-      
+    files_without_dirs.sort_by{|id, file| id}.each do |id, file|
       file_data = get_file_data_from_opened_files_cache(file[:file_path])
       new_file_size = file_data.length
       
@@ -57,29 +54,21 @@ class NDSFileSystem
         new_start_offset = @banner_end_offset
         new_end_offset = new_start_offset + new_file_size
       end
-      @rom[new_start_offset,new_file_size] = file_data
+      new_rom[new_start_offset,new_file_size] = file_data
       file[:start_offset] = new_start_offset
       offset = file[:id]*8
-      @rom[@file_allocation_table_offset+offset, 8] = [new_start_offset, new_end_offset].pack("VV")
+      new_rom[@file_allocation_table_offset+offset, 8] = [new_start_offset, new_end_offset].pack("VV")
       new_start_offset += new_file_size
       
       # Update the lengths of changed overlay files.
       if file[:overlay_id]
         offset = file[:overlay_id] * 32
-        @rom[@arm9_overlay_table_offset+offset+8, 4] = [new_file_size].pack("V")
+        new_rom[@arm9_overlay_table_offset+offset+8, 4] = [new_file_size].pack("V")
       end
       
       files_written += 1
       if block_given?
-        should_cancel = yield(files_written)
-        if should_cancel
-          # Undo changes made to the ROM before cancelling.
-          rom_path = File.join(@filesystem_directory, "ftc/rom.nds")
-          @rom = File.open(rom_path, "rb") {|file| file.read}
-          
-          puts "Cancelled."
-          return
-        end
+        yield(files_written)
       end
     end
     
@@ -90,10 +79,10 @@ class NDSFileSystem
     if @arm9_size != new_file_size
       raise "ARM9 changed size"
     end
-    @rom[file[:start_offset], file[:size]] = file_data
+    new_rom[file[:start_offset], file[:size]] = file_data
     
     File.open(output_rom_path, "wb") do |f|
-      f.write(@rom)
+      f.write(new_rom)
     end
     puts "Done"
   end
@@ -221,6 +210,10 @@ class NDSFileSystem
     offset_difference = local_end_of_file - offset_in_file
     
     return ram_address + offset_difference
+  end
+  
+  def files_without_dirs
+    files.select{|id, file| file[:type] == :file}
   end
   
 private
