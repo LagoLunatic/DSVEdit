@@ -327,14 +327,15 @@ class Renderer
     fill_img = ChunkyPNG::Image.new(map_image_width, map_image_height, ChunkyPNG::Color::TRANSPARENT)
     lines_img = ChunkyPNG::Image.new(map_image_width, map_image_height, ChunkyPNG::Color::TRANSPARENT)
     
-    fill_color          = ChunkyPNG::Color.rgba(*MAP_FILL_COLOR)
-    save_fill_color     = ChunkyPNG::Color.rgba(*MAP_SAVE_FILL_COLOR)
-    warp_fill_color     = ChunkyPNG::Color.rgba(*MAP_WARP_FILL_COLOR)
-    secret_fill_color   = ChunkyPNG::Color.rgba(*MAP_SECRET_FILL_COLOR)
-    entrance_fill_color = ChunkyPNG::Color.rgba(*MAP_ENTRANCE_FILL_COLOR)
-    line_color          = ChunkyPNG::Color.rgba(*MAP_LINE_COLOR)
-    door_color          = ChunkyPNG::Color.rgba(*MAP_DOOR_COLOR)
-    door_center_color   = ChunkyPNG::Color.rgba(*MAP_DOOR_CENTER_PIXEL_COLOR)
+    fill_color            = ChunkyPNG::Color.rgba(*MAP_FILL_COLOR)
+    save_fill_color       = ChunkyPNG::Color.rgba(*MAP_SAVE_FILL_COLOR)
+    warp_fill_color       = ChunkyPNG::Color.rgba(*MAP_WARP_FILL_COLOR)
+    secret_fill_color     = ChunkyPNG::Color.rgba(*MAP_SECRET_FILL_COLOR)
+    entrance_fill_color   = ChunkyPNG::Color.rgba(*MAP_ENTRANCE_FILL_COLOR)
+    transition_fill_color = ChunkyPNG::Color.rgba(0, 0, 0, 255)
+    line_color            = ChunkyPNG::Color.rgba(*MAP_LINE_COLOR)
+    door_color            = ChunkyPNG::Color.rgba(*MAP_DOOR_COLOR)
+    door_center_color     = ChunkyPNG::Color.rgba(*MAP_DOOR_CENTER_PIXEL_COLOR)
   
     wall_pixels = [line_color]*5
     door_pixels = [line_color, door_color, door_center_color, door_color, line_color]
@@ -349,6 +350,8 @@ class Renderer
       
       color = if tile.is_blank
         ChunkyPNG::Color::TRANSPARENT
+      elsif tile.is_transition
+        transition_fill_color
       elsif tile.is_entrance
         entrance_fill_color
       elsif tile.is_warp
