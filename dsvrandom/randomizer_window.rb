@@ -1,9 +1,6 @@
-require 'Qt'
-require 'fileutils'
-require 'yaml'
 
-require_relative 'dsve'
 require_relative 'ui_randomizer'
+require_relative 'randomizer'
 
 class RandomizerWindow < Qt::Dialog
   slots "update_settings()"
@@ -173,7 +170,3 @@ class RandomizerWindow < Qt::Dialog
     @progress_dialog = nil
   end
 end
-
-$qApp = Qt::Application.new(ARGV)
-RandomizerWindow.new
-$qApp.exec
