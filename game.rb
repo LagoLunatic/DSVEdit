@@ -305,13 +305,20 @@ private
   def verify_game_and_load_constants(header_path)
     case File.read(header_path, 12)
     when "CASTLEVANIA1"
-      load './constants/dos_constants.rb'
+      suppress_warnings { load './constants/dos_constants.rb' }
     when "CASTLEVANIA2"
-      load './constants/por_constants.rb'
+      suppress_warnings { load './constants/por_constants.rb' }
     when "CASTLEVANIA3"
-      load './constants/ooe_constants.rb'
+      suppress_warnings { load './constants/ooe_constants.rb' }
     else
       raise InvalidGameError.new("Specified game is not a DSVania.")
     end
+  end
+  
+  def suppress_warnings(&block)
+    orig_verbosity = $VERBOSE
+    $VERBOSE = nil
+    yield
+    $VERBOSE = orig_verbosity
   end
 end
