@@ -305,11 +305,11 @@ private
   def verify_game_and_load_constants(header_path)
     case File.read(header_path, 12)
     when "CASTLEVANIA1"
-      require_relative './constants/dos_constants.rb'
+      load './constants/dos_constants.rb'
     when "CASTLEVANIA2"
-      require_relative './constants/por_constants.rb'
+      load './constants/por_constants.rb'
     when "CASTLEVANIA3"
-      require_relative './constants/ooe_constants.rb'
+      load './constants/ooe_constants.rb'
     else
       raise InvalidGameError.new("Specified game is not a DSVania.")
     end
