@@ -1,7 +1,7 @@
 
 require_relative 'ui_enemy'
 
-class EnemyEditDialog < Qt::Dialog
+class EnemyEditor < Qt::Dialog
   slots "enemy_changed(int)"
   slots "weakness_button_pressed()"
   slots "resistance_button_pressed()"

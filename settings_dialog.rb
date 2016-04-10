@@ -1,7 +1,7 @@
 
 require_relative 'ui_settings'
 
-class SettingsWindow < Qt::Dialog
+class SettingsDialog < Qt::Dialog
   slots "browse_for_tiled_path()"
   slots "browse_for_emulator_path()"
   slots "button_pressed(QAbstractButton*)"

@@ -6,7 +6,7 @@ require_relative 'animation_editor_dialog'
 
 require_relative 'ui_main'
 
-class DSVE < Qt::MainWindow
+class DSVEdit < Qt::MainWindow
   attr_reader :game
   
   slots "open_rom_dialog()"
@@ -326,7 +326,7 @@ class DSVE < Qt::MainWindow
   end
   
   def open_enemy_dna_dialog
-    @enemy_dialog = EnemyEditDialog.new(self, game.fs)
+    @enemy_dialog = EnemyEditor.new(self, game.fs)
   end
   
   def open_text_editor
@@ -338,7 +338,7 @@ class DSVE < Qt::MainWindow
   end
   
   def open_settings
-    @settings_dialog = SettingsWindow.new(self, @settings)
+    @settings_dialog = SettingsDialog.new(self, @settings)
   end
   
   def load_settings

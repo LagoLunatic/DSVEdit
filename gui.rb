@@ -7,5 +7,5 @@ require_relative 'dsve'
 require_relative 'dsvedit_main_window'
 
 $qApp = Qt::Application.new(ARGV)
-window = DSVE.new
+window = DSVEdit.new
 $qApp.exec
