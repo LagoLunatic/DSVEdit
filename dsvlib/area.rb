@@ -43,4 +43,12 @@ class Area
       @map = Map.new(map_tile_metadata_ram_pointer, map_tile_line_data_ram_pointer, number_of_map_tiles, fs)
     end
   end
+  
+  def map_for_sector(sector_index)
+    if GAME == "dos" && [10, 11].include?(sector_index)
+      @abyss_map
+    else
+      @map
+    end
+  end
 end

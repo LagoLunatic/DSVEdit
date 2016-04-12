@@ -26,6 +26,7 @@ class DSVEdit < Qt::MainWindow
   slots "room_index_changed(int)"
   slots "sector_and_room_indexes_changed(int, int)"
   slots "change_room_by_metadata(int)"
+  slots "change_room_by_map_x_and_y(int, int)"
   slots "open_in_tiled()"
   slots "import_from_tiled()"
   slots "set_current_room_as_starting_room()"
@@ -41,10 +42,11 @@ class DSVEdit < Qt::MainWindow
     @ui.room_graphics_view.setDragMode(Qt::GraphicsView::ScrollHandDrag)
     self.setStyleSheet("QGraphicsView { background-color: transparent; }");
     
-    @map_graphics_scene = Qt::GraphicsScene.new
+    @map_graphics_scene = MapGraphicsScene.new
     @map_graphics_scene.setSceneRect(0, 0, 64*4+1, 48*4+1)
     @ui.map_graphics_view.scale(2, 2)
     @ui.map_graphics_view.setScene(@map_graphics_scene)
+    connect(@map_graphics_scene, SIGNAL("clicked(int, int)"), self, SLOT("change_room_by_map_x_and_y(int, int)"))
     
     @tiled = TMXInterface.new
     
@@ -209,6 +211,20 @@ class DSVEdit < Qt::MainWindow
     room_index_changed(room.room_index)
   end
   
+  def change_room_by_map_x_and_y(x, y)
+    map = @area.map_for_sector(@sector_index)
+    
+    tile = map.tiles.find do |tile|
+      tile.x_pos == x && tile.y_pos == y
+    end
+    
+    if tile.nil? || tile.is_blank
+      return
+    end
+    
+    sector_and_room_indexes_changed(tile.sector_index, tile.room_index)
+  end
+  
   def load_layers()
     @room_graphics_scene.clear()
     @room_graphics_scene.setSceneRect(0, 0, @room.max_layer_width*SCREEN_WIDTH_IN_PIXELS, @room.max_layer_height*SCREEN_HEIGHT_IN_PIXELS)
@@ -305,11 +321,7 @@ class DSVEdit < Qt::MainWindow
   def load_map()
     @map_graphics_scene.clear()
     
-    if GAME == "dos" && [10, 11].include?(@sector_index)
-      map = @area.abyss_map
-    else
-      map = @area.map
-    end
+    map = @area.map_for_sector(@sector_index)
     
     chunky_png_img = @renderer.render_map(map)
     pixmap = Qt::Pixmap.new
@@ -317,12 +329,6 @@ class DSVEdit < Qt::MainWindow
     pixmap.loadFromData(blob, blob.length)
     map_pixmap_item = Qt::GraphicsPixmapItem.new(pixmap)
     @map_graphics_scene.addItem(map_pixmap_item)
-    
-    map.tiles.each do |tile|
-      item = GraphicsMapTileItem.new(tile)
-      connect(item, SIGNAL("room_clicked(int, int)"), self, SLOT("sector_and_room_indexes_changed(int, int)"))
-      @map_graphics_scene.addItem(item)
-    end
   end
   
   def open_enemy_dna_dialog
@@ -469,31 +475,12 @@ class DoorItem < Qt::GraphicsRectItem
   end
 end
 
-class GraphicsMapTileItem < Qt::GraphicsObject
-  attr_reader :map_tile
-  
-  signals "room_clicked(int, int)"
-  
-  def initialize(map_tile)
-    super(nil)
-    
-    @map_tile = map_tile
-  end
-  
-  def pixel_x
-    map_tile.x_pos*4
-  end
-  
-  def pixel_y
-    map_tile.y_pos*4
-  end
-  
-  def boundingRect()
-    return Qt::RectF.new(pixel_x, pixel_y, 5, 5)
-  end
+class MapGraphicsScene < Qt::GraphicsScene
+  signals "clicked(int, int)"
   
   def mousePressEvent(event)
-    return if map_tile.is_blank
-    emit room_clicked(map_tile.sector_index, map_tile.room_index)
+    x = event.scenePos().x.to_i / 4
+    y = event.scenePos().y.to_i / 4
+    emit clicked(x, y)
   end
 end
