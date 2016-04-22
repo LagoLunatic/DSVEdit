@@ -34,7 +34,7 @@ class EnemyDNA
     ENEMY_DNA_FORMAT.each do |attribute_length, attribute_name, attribute_type|
       case attribute_type
       when :bitfield
-        val = VulnerabilityList.new(attributes.shift)
+        val = Bitfield.new(attributes.shift)
         @dna_attribute_bitfields[attribute_name] = val
         @dna_attributes[attribute_name] = val
       else
@@ -278,25 +278,5 @@ private
         raise "Invalid enemy DNA format for #{GAME}"
       end
     end.join
-  end
-end
-
-class VulnerabilityList
-  attr_reader :value
-  
-  def initialize(value)
-    @value = value
-  end
-  
-  def [](index)
-    return ((@value >> index) & 0b1) > 0
-  end
-  
-  def []=(index, bool)
-    if bool
-      @value |= (1 << index)
-    else
-      @value &= ~(1 << index)
-    end
   end
 end

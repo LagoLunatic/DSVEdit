@@ -436,3 +436,134 @@ NEW_GAME_STARTING_ROOM_INDEX_OFFSET = 0x020BFC0C
 
 TRANSITION_ROOM_LIST_POINTER = nil
 FAKE_TRANSITION_ROOMS = [0x020E7F18] # This room is marked as a transition room, but it's not actually.
+
+armor_format = [
+  [2, "Item ID"],
+  [1, "Icon"],
+  [1, "Palette"],
+  [4, "Price"],
+  [1, "Type"],
+  [1, "Unknown 1"],
+  [1, "equippable bitfield"],
+  [1, "Attack"],
+  [1, "Defense"],
+  [1, "Strength"],
+  [1, "Constitution"],
+  [1, "Intelligence"],
+  [1, "Mind"],
+  [1, "Luck"],
+  [1, "Unknown 2"],
+  [1, "Unknown 3"],
+  [1, "Unknown 4"],
+  [1, "Unknown 5"],
+  [1, "Unknown 6"],
+  [1, "Unknown 7"],
+]
+ITEM_TYPES = [
+  {
+    name: "Consumables",
+    list_pointer: 0x020E2724,
+    count: 96,
+    format: [
+      [2, "Item ID"],
+      [1, "Icon"],
+      [1, "Palette"],
+      [4, "Price"],
+      [1, "Type"],
+      [1, "Unknown 1"],
+      [2, "Var A"],
+    ]
+  },
+  {
+    name: "Body Armor",
+    list_pointer: 0x020E2BA4,
+    count: 58,
+    format: armor_format
+  },
+  {
+    name: "Head Armor",
+    list_pointer: 0x020E1FA4,
+    count: 38,
+    format: armor_format
+  },
+  {
+    name: "Leg Armor",
+    list_pointer: 0x020E1CEC,
+    count: 29,
+    format: armor_format
+  },
+  {
+    name: "Accessories",
+    list_pointer: 0x020E2334,
+    count: 42,
+    format: armor_format
+  },
+  {
+    name: "Weapons",
+    list_pointer: 0x020E3114,
+    count: 73,
+    format: [
+      [2, "Item ID"],
+      [2, "Icon"],
+      [4, "Price"],
+      [1, "Unknown 1"],
+      [1, "Unknown 2"],
+      [1, "Unknown 3"],
+      [1, "Attack"],
+      [1, "Defense"],
+      [1, "Strength"],
+      [1, "Constitution"],
+      [1, "Intelligence"],
+      [1, "Mind"],
+      [1, "Luck"],
+      [1, "Unknown 4"],
+      [1, "Unknown 5"],
+      [2, "Effects", :bitfield],
+      [1, "Unknown 6"],
+      [2, "Unknown 7"],
+      [1, "gfx?"],
+      [2, "Unknown 8"],
+      [2, "Swing Modifiers", :bitfield],
+      [2, "Unknown 9"],
+    ]
+  }
+]
+
+ITEM_BITFIELD_ATTRIBUTES = {
+  "Effects" => [
+    "Effect 1",
+    "Effect 2",
+    "constant dmg?",
+    "Effect 4",
+    "Effect 5",
+    "Electric",
+    "Effect 7",
+    "Holy",
+    "Poison",
+    "Curse",
+    "Petrify",
+    "Effect 12",
+    "Effect 13",
+    "Effect 14",
+    "Effect 15",
+    "Effect 16",
+  ],
+  "Swing Modifiers" => [
+    "No interrupt on land",
+    "Weapon floats in place",
+    "Modifier 3",
+    "Player can move",
+    "Modifier 5",
+    "Modifier 6",
+    "Transparent weapon",
+    "Shaky weapon",
+    "No interrupt on anim end",
+    "Modifier 10",
+    "Modifier 11",
+    "Modifier 12",
+    "Modifier 13",
+    "Modifier 14",
+    "Modifier 15",
+    "Modifier 16",
+  ],
+}

@@ -349,8 +349,8 @@ TEXT_LIST_START_OFFSET = 0x021FACC0
 TEXT_RANGE = (0..0x764)
 TEXT_REGIONS = {
   "Character Names" => (0..0x15),
-  "Glyph & Item Names" => (0x16..0x177),
-  "Glyph & Item Descriptions" => (0x178..0x2D9),
+  "Item Names" => (0x16..0x177),
+  "Item Descriptions" => (0x178..0x2D9),
   "Enemy Names" => (0x2DA..0x352),
   "Enemy Descriptions" => (0x353..0x3CB),
   "Misc" => (0x3CC..0x407),
@@ -359,8 +359,8 @@ TEXT_REGIONS = {
 }
 TEXT_REGIONS_OVERLAYS = {
   "Character Names" => 0,
-  "Glyph & Item Names" => 0,
-  "Glyph & Item Descriptions" => 0,
+  "Item Names" => 0,
+  "Item Descriptions" => 0,
   "Enemy Names" => 0,
   "Enemy Descriptions" => 0,
   "Misc" => 0,
@@ -379,3 +379,188 @@ NEW_GAME_STARTING_TOP_SCREEN_TYPE_OFFSET = 0x02214F68
 
 TRANSITION_ROOM_LIST_POINTER = nil
 FAKE_TRANSITION_ROOMS = [0x022AE3A8, 0x022A7E78]
+
+armor_format = [
+  [2, "Item ID"],
+  [1, "Icon"],
+  [1, "Palette"],
+  [4, "Price"],
+  [1, "Unknown 1"],
+  [1, "Unknown 2"],
+  [1, "Defense"],
+  [1, "Strength"],
+  [1, "Constitution"],
+  [1, "Intelligence"],
+  [1, "Mind"],
+  [1, "Luck"],
+  [1, "Unknown 3"],
+  [1, "Unknown 4"],
+  [1, "Unknown 5"],
+  [1, "Unknown 6"],
+]
+ITEM_TYPES = [
+  {
+    name: "Arm Glyphs",
+    list_pointer: 0x020F0A08,
+    count: 55,
+    format: [
+      [2, "Item ID"],
+      [2, "Attack"],
+      [4, "Code Pointer"],
+      [1, "GFX"],
+      [1, "Unknown 2"],
+      [1, "Unknown 3"],
+      [1, "Mana"],
+      [4, "Unknown 4"],
+      [4, "Unknown 5"],
+      [2, "Icon"],
+      [1, "bitf"],
+      [1, "Unknown 6"],
+      [1, "Unknown 7"],
+      [1, "Unknown 8"],
+      [1, "Unknown 9"],
+      [1, "Delay"],
+      [1, "SFX"],
+      [1, "Unknown 11"],
+      [1, "Unknown 12"],
+      [1, "Unknown 13"],
+    ]
+  },
+  {
+    name: "Back Glyphs",
+    list_pointer: 0x020EF8CC,
+    count: 25,
+    format: [
+      [2, "Item ID"],
+      [2, "Unknown 1"],
+      [4, "Code Pointer"],
+      [1, "GFX"],
+      [1, "Unknown 2"],
+      [1, "Unknown 3"],
+      [1, "Mana"],
+      [4, "Unknown 4"],
+      [4, "Unknown 5"],
+      [2, "Icon"],
+      [1, "bitf?"],
+      [1, "Unknown 6"],
+      [1, "Unknown 7"],
+      [1, "Unknown 8"],
+      [1, "Unknown 9"],
+      [1, "Unknown 10"],
+    ]
+  },
+  {
+    name: "Relics",
+    list_pointer: 0x020EF4C4,
+    count: 6,
+    format: [
+      [2, "Item ID"],
+      [1, "Unknown 1"],
+      [1, "Unknown 2"],
+      [4, "Unknown 3"],
+      [4, "Unknown 4"],
+    ]
+  },
+  {
+    name: "Consumables",
+    list_pointer: 0x020F04C8,
+    count: 112,
+    format: [
+      [2, "Item ID"],
+      [1, "Icon"],
+      [1, "Palette"],
+      [4, "Price"],
+      [1, "Type"],
+      [1, "Unknown 1"],
+      [2, "Var A"],
+    ]
+  },
+  {
+    name: "Body Armor",
+    list_pointer: 0x020EF6B0,
+    count: 27,
+    format: armor_format
+  },
+  {
+    name: "Head Armor",
+    list_pointer: 0x020EFB88,
+    count: 36,
+    format: armor_format
+  },
+  {
+    name: "Accessories",
+    list_pointer: 0x020EFE58,
+    count: 39,
+    format: armor_format
+  },
+  {
+    name: "Leg Armor",
+    list_pointer: 0x020EF50C,
+    count: 21,
+    format: armor_format
+  },
+  {
+    name: "Weapons",
+    list_pointer: 0x020EF48C,
+    count: 2,
+    format: [
+      [2, "Item ID"],
+      [2, "Icon"],
+      [4, "Price"],
+      [1, "unk"],
+      [1, "Attack"],
+      [1, "Defense"],
+      [1, "Strength"],
+      [1, "Constitution"],
+      [1, "Intelligence"],
+      [1, "Mind"],
+      [1, "Luck"],
+      [2, "Effects", :bitfield],
+      [1, "unk1"],
+      [2, "unk2"],
+      [1, "gfx?"],
+      [2, "unk3"],
+      [2, "Swing Modifiers", :bitfield],
+      [2, "unk4"],
+    ]
+  },
+]
+
+ITEM_BITFIELD_ATTRIBUTES = {
+  "Effects" => [
+    "Effect 1",
+    "Effect 2",
+    "constant dmg?",
+    "Effect 4",
+    "Effect 5",
+    "Electric",
+    "Effect 7",
+    "Holy",
+    "Poison",
+    "Curse",
+    "Petrify",
+    "Effect 12",
+    "Effect 13",
+    "Effect 14",
+    "Effect 15",
+    "Effect 16",
+  ],
+  "Swing Modifiers" => [
+    "No interrupt on land",
+    "Weapon floats in place",
+    "Modifier 3",
+    "Player can move",
+    "Modifier 5",
+    "Modifier 6",
+    "Transparent weapon",
+    "Shaky weapon",
+    "No interrupt on anim end",
+    "Modifier 10",
+    "Modifier 11",
+    "Modifier 12",
+    "Modifier 13",
+    "Modifier 14",
+    "Modifier 15",
+    "Modifier 16",
+  ],
+}

@@ -1,5 +1,6 @@
 
 require_relative 'dsvlib/nds_file_system'
+require_relative 'dsvlib/bitfield'
 
 require_relative 'dsvlib/game'
 require_relative 'dsvlib/area'
@@ -14,6 +15,7 @@ require_relative 'dsvlib/enemy_dna'
 require_relative 'dsvlib/text'
 require_relative 'dsvlib/text_database'
 require_relative 'dsvlib/animation'
+require_relative 'dsvlib/item'
 
 require_relative 'dsvlib/renderer'
 require_relative 'dsvlib/tmx_interface'

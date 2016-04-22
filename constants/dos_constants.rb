@@ -332,3 +332,110 @@ NEW_GAME_STARTING_ROOM_INDEX_OFFSET = 0x0202FB90
 
 TRANSITION_ROOM_LIST_POINTER = 0x0208AD8C
 FAKE_TRANSITION_ROOMS = []
+
+ITEM_TYPES = [
+  {
+    name: "Consumables",
+    list_pointer: 0x0209BA68,
+    count: 66,
+    format: [
+      [2, "Item ID"],
+      [1, "Icon"],
+      [1, "Palette"],
+      [4, "Price"],
+      [1, "Type"],
+      [1, "Unknown 1"],
+      [2, "Var A"],
+      [4, "Unused"],
+    ]
+  },
+  {
+    name: "Body Armor",
+    list_pointer: 0x0209BE88,
+    count: 61,
+    format: [
+      [2, "Item ID"],
+      [1, "Icon"],
+      [1, "Palette"],
+      [4, "Price"],
+      [1, "Type"],
+      [1, "Unknown 1"],
+      [1, "Attack"],
+      [1, "Defense"],
+      [1, "Strength"],
+      [1, "Constitution"],
+      [1, "Intelligence"],
+      [1, "Luck"],
+      [1, "Unknown 2"],
+      [1, "Unknown 3"],
+      [1, "Unknown 4"],
+      [1, "Unknown 5"],
+    ]
+  },
+  {
+    name: "Weapons",
+    list_pointer: 0x0209C34C,
+    count: 79,
+    format: [
+      [2, "Item ID"],
+      [1, "Icon"],
+      [1, "Palette"],
+      [4, "Price"],
+      [1, "Swing Anim"],
+      [1, "Unknown 1"],
+      [1, "Attack"],
+      [1, "Defense"],
+      [1, "Strength"],
+      [1, "Constitution"],
+      [1, "Intelligence"],
+      [1, "Luck"],
+      [2, "Effects", :bitfield],
+      [1, "Unknown 2"],
+      [1, "Unknown 3"],
+      [1, "gfx?"],
+      [1, "Super Anim"],
+      [2, "Unknown 4"],
+      [2, "Swing Modifiers", :bitfield],
+      [2, "Swing SFX"],
+    ]
+  }
+]
+
+ITEM_BITFIELD_ATTRIBUTES = {
+  "Effects" => [
+    "Effect 1",
+    "Effect 2",
+    "constant dmg?",
+    "Effect 4",
+    "Effect 5",
+    "Electric",
+    "Effect 7",
+    "Holy",
+    "Poison",
+    "Curse",
+    "Petrify",
+    "Effect 12",
+    "Effect 13",
+    "Effect 14",
+    "Effect 15",
+    "Effect 16",
+  ],
+  "Swing Modifiers" => [
+    "No interrupt on land",
+    "Weapon floats in place",
+    "Modifier 3",
+    "Player can move",
+    "Modifier 5",
+    "Modifier 6",
+    "Transparent weapon",
+    "Shaky weapon",
+    "No interrupt on anim end",
+    "Modifier 10",
+    "Modifier 11",
+    "Modifier 12",
+    "Modifier 13",
+    "Modifier 14",
+    "Modifier 15",
+    "Modifier 16",
+  ],
+}
