@@ -3,6 +3,7 @@ require_relative 'enemy_editor_dialog'
 require_relative 'text_editor_dialog'
 require_relative 'settings_dialog'
 require_relative 'animation_editor_dialog'
+require_relative 'item_editor_dialog'
 
 require_relative 'ui_main'
 
@@ -15,6 +16,7 @@ class DSVEdit < Qt::MainWindow
   slots "open_enemy_dna_dialog()"
   slots "open_text_editor()"
   slots "open_animation_editor()"
+  slots "open_item_editor()"
   slots "open_settings()"
   slots "write_to_rom()"
   slots "build_and_run()"
@@ -58,6 +60,7 @@ class DSVEdit < Qt::MainWindow
     connect(@ui.actionEnemy_Editor, SIGNAL("activated()"), self, SLOT("open_enemy_dna_dialog()"))
     connect(@ui.actionText_Editor, SIGNAL("activated()"), self, SLOT("open_text_editor()"))
     connect(@ui.actionAnimation_Editor, SIGNAL("activated()"), self, SLOT("open_animation_editor()"))
+    connect(@ui.actionItem_Editor, SIGNAL("activated()"), self, SLOT("open_item_editor()"))
     connect(@ui.actionSettings, SIGNAL("activated()"), self, SLOT("open_settings()"))
     connect(@ui.actionBuild, SIGNAL("activated()"), self, SLOT("write_to_rom()"))
     connect(@ui.actionBuild_and_Run, SIGNAL("activated()"), self, SLOT("build_and_run()"))
@@ -341,6 +344,10 @@ class DSVEdit < Qt::MainWindow
   
   def open_animation_editor
     @animation_editor = AnimationEditor.new(self, game.fs, @renderer)
+  end
+    
+  def open_item_editor
+    @item_editor = ItemEditor.new(self, game.fs)
   end
   
   def open_settings

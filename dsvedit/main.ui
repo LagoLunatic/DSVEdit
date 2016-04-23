@@ -153,6 +153,7 @@
     <addaction name="actionText_Editor"/>
     <addaction name="actionAnimation_Editor"/>
     <addaction name="actionSettings"/>
+    <addaction name="actionItem_Editor"/>
     <addaction name="actionBuild"/>
     <addaction name="actionBuild_and_Run"/>
    </widget>
@@ -229,6 +230,14 @@
    </property>
    <property name="shortcut">
     <string>A</string>
+   </property>
+  </action>
+  <action name="actionItem_Editor">
+   <property name="text">
+    <string>Item Editor</string>
+   </property>
+   <property name="shortcut">
+    <string>I</string>
    </property>
   </action>
  </widget>
