@@ -2,14 +2,13 @@
 class Item
   attr_reader :ram_pointer,
               :item_type_format,
-              :fs
-              
-  attr_accessor :name,
-                :description,
-                :item_attributes,
-                :item_attribute_integers,
-                :item_attribute_integer_lengths,
-                :item_attribute_bitfields
+              :fs,
+              :name,
+              :description,
+              :item_attributes,
+              :item_attribute_integers,
+              :item_attribute_integer_lengths,
+              :item_attribute_bitfields
   
   def initialize(pointer, format, fs)
     @fs = fs
@@ -54,6 +53,12 @@ class Item
   
   def []=(attribute_name, new_value)
     @item_attributes[attribute_name] = new_value
+    
+    if @item_attribute_integers.include?(attribute_name)
+      @item_attribute_integers[attribute_name] = new_value
+    else
+      @item_attribute_bitfields[attribute_name] = new_value
+    end
   end
   
   def item_format_length

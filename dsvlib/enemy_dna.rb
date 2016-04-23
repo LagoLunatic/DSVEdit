@@ -4,14 +4,13 @@ class EnemyDNA
   
   attr_reader :enemy_id,
               :enemy_dna_ram_pointer,
-              :fs
-  
-  attr_accessor :name,
-                :description,
-                :dna_attributes,
-                :dna_attribute_integers,
-                :dna_attribute_integer_lengths,
-                :dna_attribute_bitfields
+              :fs,
+              :name,
+              :description,
+              :dna_attributes,
+              :dna_attribute_integers,
+              :dna_attribute_integer_lengths,
+              :dna_attribute_bitfields
   
   def initialize(enemy_id, fs)
     @enemy_id = enemy_id
@@ -261,6 +260,12 @@ class EnemyDNA
   
   def []=(attribute_name, new_value)
     @dna_attributes[attribute_name] = new_value
+    
+    if @dna_attribute_integers.include?(attribute_name)
+      @dna_attribute_integers[attribute_name] = new_value
+    else
+      @dna_attribute_bitfields[attribute_name] = new_value
+    end
   end
   
 private
