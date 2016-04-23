@@ -4,6 +4,8 @@ require_relative 'generic_editor_widget'
 require_relative 'ui_item_editor'
 
 class ItemEditor < Qt::Dialog
+  slots "button_pressed(QAbstractButton*)"
+  
   def initialize(main_window, fs)
     super(main_window)
     @ui = Ui_ItemEditor.new
@@ -17,6 +19,14 @@ class ItemEditor < Qt::Dialog
       @ui.tabWidget.addTab(tab, name)
     end
     
+    connect(@ui.buttonBox, SIGNAL("clicked(QAbstractButton*)"), self, SLOT("button_pressed(QAbstractButton*)"))
+    
     self.show()
+  end
+  
+  def button_pressed(button)
+    if @ui.buttonBox.standardButton(button) == Qt::DialogButtonBox::Apply
+      @ui.tabWidget.currentWidget.save_current_item()
+    end
   end
 end

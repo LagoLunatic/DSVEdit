@@ -47,6 +47,19 @@ class Item
     @description = Text.new(TEXT_REGIONS["Item Descriptions"].begin + self["Item ID"], fs)
   end
   
+  def write_to_rom
+    new_data = []
+    item_type_format.each do |attribute_length, attribute_name, attribute_type|
+      case attribute_type
+      when :bitfield
+        new_data << @item_attributes[attribute_name].value
+      else
+        new_data << @item_attributes[attribute_name]
+      end
+    end
+    fs.write(ram_pointer, new_data.pack(attribute_format_string))
+  end
+  
   def [](attribute_name)
     @item_attributes[attribute_name]
   end

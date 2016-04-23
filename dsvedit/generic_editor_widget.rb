@@ -95,4 +95,26 @@ class GenericEditorWidget < Qt::Widget
       end
     end
   end
+  
+  def save_current_item
+    item = @items[@ui.item_list.currentRow]
+    
+    item.item_attribute_integers.each do |attribute_name, value|
+      item[attribute_name] = @attribute_text_fields[attribute_name].text.to_i(16)
+    end
+    
+    item.item_attribute_bitfields.keys.each_with_index do |attribute_name, col|
+      (0..15).each do |row|
+        item = @ui.treeWidget.topLevelItem(row)
+        
+        if item.checkState(col) == Qt::Checked
+          item.item_attribute_bitfields[attribute_name][row] = true
+        else
+          item.item_attribute_bitfields[attribute_name][row] = false
+        end
+      end
+    end
+    
+    item.write_to_rom()
+  end
 end
