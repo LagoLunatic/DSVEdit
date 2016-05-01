@@ -78,12 +78,12 @@ class EnemyDNA
     palette_list_ptr_index = reused_info[:palette_list_ptr_index] || 0
     animation_ptr_index    = reused_info[:animation_ptr_index] || 0
     
-    p ("ai at %08X" % init_code_pointer)
+    #p ("ai at %08X" % init_code_pointer)
     data = fs.read(init_code_pointer, 4*1000, allow_length_to_exceed_end_of_file: true)
     
     data.unpack("V*").each_with_index do |word, i|
       if (0x02000000..0x02FFFFFF).include?(word)
-        puts "found pointer: %08X at index: %08X" % [word, i*4+init_code_pointer]
+        #puts "found pointer: %08X at index: %08X" % [word, i*4+init_code_pointer]
       end
       
       if    ENEMY_GFX_POINTER_RANGE.include?(word) || (0x022B0000..0x022B1FFF).include?(word) || (0x022E0000..0x022EFFFF).include?(word) || (0x022DE304..0x022DE304).include?(word)
@@ -145,13 +145,13 @@ class EnemyDNA
     end
     
     if gfx_page_pointer
-      puts "gfx     : %08X" % gfx_page_pointer
+      #puts "gfx     : %08X" % gfx_page_pointer
       
       list_of_gfx_page_pointers = [gfx_page_pointer]
     elsif list_of_gfx_page_pointers_wrapper_pointer
       pointer_to_list_of_gfx_page_pointers = fs.read(list_of_gfx_page_pointers_wrapper_pointer+4, 4).unpack("V*").first
       
-      puts "gfxwrap : %08X" % list_of_gfx_page_pointers_wrapper_pointer if list_of_gfx_page_pointers_wrapper_pointer
+      #puts "gfxwrap : %08X" % list_of_gfx_page_pointers_wrapper_pointer if list_of_gfx_page_pointers_wrapper_pointer
       
       i = 0
       while true
@@ -194,7 +194,7 @@ class EnemyDNA
     end
     
     enemy_palette_pointer = valid_palette_pointers[palette_list_ptr_index]
-    puts "palette : %08X" % enemy_palette_pointer
+    #puts "palette : %08X" % enemy_palette_pointer
     
     
     
@@ -228,11 +228,11 @@ class EnemyDNA
     end
     
     
-    puts "gfxname : #{gfx_files.first[:file][:file_path]}"
-    puts "anim    : %08X" % animation_file[:ram_start_offset] if animation_file[:ram_start_offset]
-    puts "animname: #{animation_file[:file_path]}"
-    puts "animptr : %08X" % animation_file_pointer if animation_file_pointer
-    puts "animname: #{animation_file[:file_path]}"
+    #puts "gfxname : #{gfx_files.first[:file][:file_path]}"
+    #puts "anim    : %08X" % animation_file[:ram_start_offset] if animation_file[:ram_start_offset]
+    #puts "animname: #{animation_file[:file_path]}"
+    #puts "animptr : %08X" % animation_file_pointer if animation_file_pointer
+    #puts "animname: #{animation_file[:file_path]}"
     
     if animation_file[:file_path] !~ /^\/so\//
       raise InitAIReadError.new("Bad animation file: #{animation_file[:file_path]}")
