@@ -386,6 +386,14 @@ class Randomizer
         entity.var_b = 0x02 # confodere
         entity.x_pos = 0x00B0
         entity.y_pos = 0x0070
+      when 0x8A # Magnes glyph + tutorial
+        # Replace it with magnes in a glyph statue.
+        entity.type = 2
+        entity.subtype = 2
+        entity.var_a = 0x00 # statue
+        entity.var_b = 0x39 # magnes
+        entity.x_pos = 0x0080
+        entity.y_pos = 0x02E0
       else
         # Remove it
         entity.type = 0
