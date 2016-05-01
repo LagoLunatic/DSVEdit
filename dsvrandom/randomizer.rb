@@ -133,6 +133,17 @@ class Randomizer
     end
     
     enemy_dna = game.enemy_dnas[enemy.subtype]
+    case GAME
+    when "dos"
+      dos_adjust_randomized_enemy(enemy, enemy_dna)
+    when "por"
+      por_adjust_randomized_enemy(enemy, enemy_dna)
+    when "ooe"
+      ooe_adjust_randomized_enemy(enemy, enemy_dna)
+    end
+  end
+  
+  def dos_adjust_randomized_enemy(enemy, enemy_dna)
     case enemy_dna.name.decoded_string
     when "Bat"
       # 50% chance to be a single bat, 50% chance to be a spawner.
@@ -143,6 +154,25 @@ class Randomizer
       end
     when "Fleaman"
       enemy.var_a = rng.rand(1..10)
+    end
+  end
+  
+  def por_adjust_randomized_enemy(enemy, enemy_dna)
+    case enemy_dna.name.decoded_string
+    when "Bat", "Fleaman"
+      dos_adjust_randomized_enemy(enemy, enemy_dna)
+    end
+  end
+  
+  def ooe_adjust_randomized_enemy(enemy, enemy_dna)
+    case enemy_dna.name.decoded_string
+    when "Bat", "Fleaman"
+      dos_adjust_randomized_enemy(enemy, enemy_dna)
+    when "Ghost"
+      enemy.var_a = rng.rand(1..10) # Max ghosts on screen at once.
+    when "Saint Elmo"
+      enemy.var_a = rng.rand(1..3)
+      enemy.var_b = 0x78
     end
   end
   
