@@ -18,7 +18,7 @@
     <normaloff>images/icon.png</normaloff>images/icon.png</iconset>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <layout class="QHBoxLayout" name="horizontalLayout" stretch="1,8">
+   <layout class="QHBoxLayout" name="horizontalLayout">
     <item>
      <layout class="QVBoxLayout" name="verticalLayout">
       <item>
@@ -113,7 +113,7 @@
         <rect>
          <x>0</x>
          <y>0</y>
-         <width>567</width>
+         <width>511</width>
          <height>525</height>
         </rect>
        </property>
