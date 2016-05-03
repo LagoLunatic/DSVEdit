@@ -274,7 +274,8 @@ class DSVEdit < Qt::MainWindow
           gfx_files, palette, palette_offset, animation_file = EnemyDNA.new(enemy_id, @game.fs).get_gfx_and_palette_and_animation_from_init_ai
           frame_to_render = BEST_ANIMATION_FRAME_FOR_ENEMY[enemy_id]
           
-          chunky_frames, min_x, min_y = @renderer.render_entity(gfx_files, palette, palette_offset, animation_file, frame_to_render)
+          animation = Animation.new(animation_file, game.fs)
+          chunky_frames, min_x, min_y = @renderer.render_entity(gfx_files, palette, palette_offset, animation, frame_to_render)
           if chunky_frames.empty?
             next
           end

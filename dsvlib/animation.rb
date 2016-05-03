@@ -7,6 +7,7 @@ class Animation
               :parts,
               :hitboxes,
               :frames,
+              :frame_delays,
               :fs
   
   def initialize(animation_file, fs)

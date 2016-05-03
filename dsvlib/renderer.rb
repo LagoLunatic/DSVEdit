@@ -407,7 +407,7 @@ class Renderer
     return img
   end
   
-  def render_entity(gfx_files, palette_pointer, palette_offset, animation_file, frame_to_render = nil, render_hitbox = false)
+  def render_entity(gfx_files, palette_pointer, palette_offset, animation, frame_to_render = nil, render_hitbox = false)
     if gfx_files.first[:render_mode] == 1
       palettes = generate_palettes(palette_pointer, 16)
     elsif gfx_files.first[:render_mode] == 2
@@ -415,7 +415,6 @@ class Renderer
     else
       raise NotImplementedError.new("Unknown render mode.")
     end
-    animation = Animation.new(animation_file, fs)
     
     gfx_files_with_blanks = []
     gfx_files.each do |gfx_file|
@@ -488,7 +487,7 @@ class Renderer
       rendered_frames << rendered_frame
     end
     
-    return [rendered_frames, min_x, min_y]
+    return [rendered_frames, min_x, min_y, rendered_parts.values, palettes]
   end
   
   def render_animation_part(part, rendered_gfx_file)
