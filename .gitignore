@@ -4,3 +4,5 @@ ui_*.rb
 /docs
 /lua scripts
 /build
+/armips
+/asm
