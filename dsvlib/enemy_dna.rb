@@ -108,7 +108,7 @@ class EnemyDNA
     end
     
     valid_gfx_pointers = possible_gfx_pointers.select do |pointer|
-      header_vals = fs.read(pointer, 4).unpack("C*")
+      header_vals = fs.read(pointer, 4).unpack("C*") rescue next
       data = fs.read(pointer+4, 4).unpack("V").first
       if data >= 0x02000000 && data < 0x03000000
         # gfx list
@@ -182,7 +182,7 @@ class EnemyDNA
     end
     
     valid_palette_pointers = possible_palette_pointers.select do |pointer|
-      header_vals = fs.read(pointer, 4).unpack("C*")
+      header_vals = fs.read(pointer, 4).unpack("C*") rescue next
       header_vals[0] == 0 && header_vals[1] == 01 && header_vals[2] > 0 && header_vals [3] == 0
     end
     
@@ -238,7 +238,14 @@ class EnemyDNA
       raise InitAIReadError.new("Bad animation file: #{animation_file[:file_path]}")
     end
     
-    return [gfx_files, enemy_palette_pointer, palette_offset, animation_file]
+    gfx_files_with_blanks = []
+    gfx_files.each do |gfx_file|
+      gfx_files_with_blanks << gfx_file
+      blanks_needed = (gfx_file[:canvas_width]/0x10 - 1) * 3
+      gfx_files_with_blanks += [nil]*blanks_needed
+    end
+    
+    return [gfx_files_with_blanks, enemy_palette_pointer, palette_offset, animation_file]
   end
   
   def write_to_rom

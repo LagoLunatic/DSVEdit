@@ -407,20 +407,13 @@ class Renderer
     return img
   end
   
-  def render_entity(gfx_files, palette_pointer, palette_offset, animation, frame_to_render = nil, render_hitbox = false)
-    if gfx_files.first[:render_mode] == 1
+  def render_entity(gfx_files_with_blanks, palette_pointer, palette_offset, animation, frame_to_render = nil, render_hitbox = false)
+    if gfx_files_with_blanks.first[:render_mode] == 1
       palettes = generate_palettes(palette_pointer, 16)
-    elsif gfx_files.first[:render_mode] == 2
+    elsif gfx_files_with_blanks.first[:render_mode] == 2
       palettes = generate_palettes(palette_pointer, 256)
     else
       raise NotImplementedError.new("Unknown render mode.")
-    end
-    
-    gfx_files_with_blanks = []
-    gfx_files.each do |gfx_file|
-      gfx_files_with_blanks << gfx_file
-      blanks_needed = (gfx_file[:canvas_width]/0x10 - 1) * 3
-      gfx_files_with_blanks += [nil]*blanks_needed
     end
     
     rendered_gfx_files_by_palette = Hash.new{|h, k| h[k] = {}}
@@ -452,6 +445,21 @@ class Renderer
     full_width = max_x - min_x
     full_height = max_y - min_y
     
+    animation.parts.each_with_index do |part, part_index|
+      if part.gfx_page_index >= gfx_files_with_blanks.length
+        raise "GFX page index too large (#{part.gfx_page_index+1} pages needed, have #{gfx_files_with_blanks.length})"
+      end
+      
+      gfx_page = gfx_files_with_blanks[part.gfx_page_index]
+      gfx_file = gfx_page[:file]
+      canvas_width = gfx_page[:canvas_width]
+      palette = palettes[part.palette_index+palette_offset]
+      
+      rendered_gfx_files_by_palette[part.palette_index+palette_offset][part.gfx_page_index] ||= render_gfx(gfx_file, palette, 0, 0, canvas_width*8, canvas_width*8, canvas_width=canvas_width*8)
+      rendered_gfx_file = rendered_gfx_files_by_palette[part.palette_index+palette_offset][part.gfx_page_index]
+      rendered_parts[part_index] ||= render_animation_part(part, rendered_gfx_file)
+    end
+    
     hitbox_color = ChunkyPNG::Color.rgba(255, 0, 0, 128)
     rendered_frames = []
     frames.each do |frame|
@@ -459,18 +467,6 @@ class Renderer
 
       frame.part_indexes.reverse.each do |part_index|
         part = animation.parts[part_index]
-        
-        if part.gfx_page_index >= gfx_files_with_blanks.length
-          raise "GFX page index too large (#{part.gfx_page_index+1} pages needed, have #{gfx_files_with_blanks.length})"
-        end
-        gfx_page = gfx_files_with_blanks[part.gfx_page_index]
-        gfx_file = gfx_page[:file]
-        canvas_width = gfx_page[:canvas_width]
-        palette = palettes[part.palette_index+palette_offset]
-        
-        rendered_gfx_files_by_palette[part.palette_index+palette_offset][part.gfx_page_index] ||= render_gfx(gfx_file, palette, 0, 0, canvas_width*8, canvas_width*8, canvas_width=canvas_width*8)
-        rendered_gfx_file = rendered_gfx_files_by_palette[part.palette_index+palette_offset][part.gfx_page_index]
-        rendered_parts[part_index] ||= render_animation_part(part, rendered_gfx_file)
         part_gfx = rendered_parts[part_index]
         
         x = part.x_pos - min_x
@@ -487,7 +483,7 @@ class Renderer
       rendered_frames << rendered_frame
     end
     
-    return [rendered_frames, min_x, min_y, rendered_parts.values, palettes]
+    return [rendered_frames, min_x, min_y, rendered_parts, palettes]
   end
   
   def render_animation_part(part, rendered_gfx_file)

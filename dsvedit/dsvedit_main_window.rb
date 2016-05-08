@@ -271,11 +271,11 @@ class DSVEdit < Qt::MainWindow
         enemy_id = entity.subtype
         
         pixmap, min_x, min_y = @cached_enemy_pixmaps[enemy_id] ||= begin
-          gfx_files, palette, palette_offset, animation_file = EnemyDNA.new(enemy_id, @game.fs).get_gfx_and_palette_and_animation_from_init_ai
-          frame_to_render = BEST_ANIMATION_FRAME_FOR_ENEMY[enemy_id]
+          gfx_files_with_blanks, palette, palette_offset, animation_file = EnemyDNA.new(enemy_id, @game.fs).get_gfx_and_palette_and_animation_from_init_ai
+          frame_to_render = BEST_ANIMATION_FRAME_FOR_ENEMY[enemy_id] || 0
           
           animation = Animation.new(animation_file, game.fs)
-          chunky_frames, min_x, min_y = @renderer.render_entity(gfx_files, palette, palette_offset, animation, frame_to_render)
+          chunky_frames, min_x, min_y = @renderer.render_entity(gfx_files_with_blanks, palette, palette_offset, animation, frame_to_render)
           if chunky_frames.empty?
             next
           end

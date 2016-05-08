@@ -36,13 +36,9 @@
             <layout class="QHBoxLayout" name="horizontalLayout_3" stretch="1,1,1">
              <item>
               <layout class="QFormLayout" name="formLayout_3">
-               <item row="1" column="0">
-                <widget class="QLabel" name="label_5">
-                 <property name="text">
-                  <string>Show hitbox</string>
-                 </property>
-                </widget>
-               </item>
+               <property name="fieldGrowthPolicy">
+                <enum>QFormLayout::AllNonFixedFieldsGrow</enum>
+               </property>
                <item row="0" column="0">
                 <widget class="QLabel" name="label_6">
                  <property name="text">
@@ -53,6 +49,13 @@
                <item row="0" column="1">
                 <widget class="QComboBox" name="frame_index"/>
                </item>
+               <item row="1" column="0">
+                <widget class="QLabel" name="label_5">
+                 <property name="text">
+                  <string>Show hitbox</string>
+                 </property>
+                </widget>
+               </item>
                <item row="1" column="1">
                 <widget class="QCheckBox" name="show_hitbox">
                  <property name="text">
@@ -60,15 +63,42 @@
                  </property>
                 </widget>
                </item>
-               <item row="2" column="1">
-                <widget class="QLineEdit" name="frame_delay"/>
-               </item>
                <item row="2" column="0">
-                <widget class="QLabel" name="label_8">
+                <widget class="QLabel" name="label_9">
                  <property name="text">
-                  <string>Delay</string>
+                  <string>First part</string>
                  </property>
                 </widget>
+               </item>
+               <item row="2" column="1">
+                <widget class="QLineEdit" name="frame_first_part"/>
+               </item>
+               <item row="3" column="0">
+                <widget class="QLabel" name="label_10">
+                 <property name="text">
+                  <string># of parts</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="3" column="1">
+                <widget class="QLineEdit" name="frame_number_of_parts"/>
+               </item>
+              </layout>
+             </item>
+             <item>
+              <layout class="QFormLayout" name="formLayout_2">
+               <property name="fieldGrowthPolicy">
+                <enum>QFormLayout::AllNonFixedFieldsGrow</enum>
+               </property>
+               <item row="0" column="0">
+                <widget class="QLabel" name="label_4">
+                 <property name="text">
+                  <string>Part</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="0" column="1">
+                <widget class="QComboBox" name="part_index"/>
                </item>
               </layout>
              </item>
@@ -106,30 +136,6 @@
                </item>
               </layout>
              </item>
-             <item>
-              <layout class="QFormLayout" name="formLayout_2">
-               <item row="1" column="0">
-                <widget class="QLabel" name="label_3">
-                 <property name="text">
-                  <string>TextLabel</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="0" column="0">
-                <widget class="QLabel" name="label_4">
-                 <property name="text">
-                  <string>Part</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="0" column="1">
-                <widget class="QComboBox" name="part_index"/>
-               </item>
-               <item row="1" column="1">
-                <widget class="QLineEdit" name="lineEdit_2"/>
-               </item>
-              </layout>
-             </item>
             </layout>
            </item>
            <item>
@@ -138,10 +144,10 @@
               <widget class="QGraphicsView" name="frame_graphics_view"/>
              </item>
              <item>
-              <widget class="QGraphicsView" name="gfx_file_graphics_view"/>
+              <widget class="QGraphicsView" name="part_graphics_view"/>
              </item>
              <item>
-              <widget class="QGraphicsView" name="part_graphics_view"/>
+              <widget class="QGraphicsView" name="gfx_file_graphics_view"/>
              </item>
             </layout>
            </item>
