@@ -151,7 +151,7 @@
     </property>
     <addaction name="actionEnemy_Editor"/>
     <addaction name="actionText_Editor"/>
-    <addaction name="actionAnimation_Editor"/>
+    <addaction name="actionSprite_Editor"/>
     <addaction name="actionSettings"/>
     <addaction name="actionItem_Editor"/>
     <addaction name="actionBuild"/>
@@ -224,12 +224,15 @@
     <string>T</string>
    </property>
   </action>
-  <action name="actionAnimation_Editor">
+  <action name="actionSprite_Editor">
    <property name="text">
-    <string>Animation Editor</string>
+    <string>Sprite Editor</string>
+   </property>
+   <property name="toolTip">
+    <string>Sprite Editor</string>
    </property>
    <property name="shortcut">
-    <string>A</string>
+    <string>P</string>
    </property>
   </action>
   <action name="actionItem_Editor">

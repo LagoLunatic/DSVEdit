@@ -2,7 +2,7 @@
 require_relative 'enemy_editor_dialog'
 require_relative 'text_editor_dialog'
 require_relative 'settings_dialog'
-require_relative 'animation_editor_dialog'
+require_relative 'sprite_editor_dialog'
 require_relative 'item_editor_dialog'
 
 require_relative 'ui_main'
@@ -15,7 +15,7 @@ class DSVEdit < Qt::MainWindow
   slots "save_files()"
   slots "open_enemy_dna_dialog()"
   slots "open_text_editor()"
-  slots "open_animation_editor()"
+  slots "open_sprite_editor()"
   slots "open_item_editor()"
   slots "open_settings()"
   slots "write_to_rom()"
@@ -59,7 +59,7 @@ class DSVEdit < Qt::MainWindow
     connect(@ui.actionSave, SIGNAL("activated()"), self, SLOT("save_files()"))
     connect(@ui.actionEnemy_Editor, SIGNAL("activated()"), self, SLOT("open_enemy_dna_dialog()"))
     connect(@ui.actionText_Editor, SIGNAL("activated()"), self, SLOT("open_text_editor()"))
-    connect(@ui.actionAnimation_Editor, SIGNAL("activated()"), self, SLOT("open_animation_editor()"))
+    connect(@ui.actionSprite_Editor, SIGNAL("activated()"), self, SLOT("open_sprite_editor()"))
     connect(@ui.actionItem_Editor, SIGNAL("activated()"), self, SLOT("open_item_editor()"))
     connect(@ui.actionSettings, SIGNAL("activated()"), self, SLOT("open_settings()"))
     connect(@ui.actionBuild, SIGNAL("activated()"), self, SLOT("write_to_rom()"))
@@ -271,11 +271,11 @@ class DSVEdit < Qt::MainWindow
         enemy_id = entity.subtype
         
         pixmap, min_x, min_y = @cached_enemy_pixmaps[enemy_id] ||= begin
-          gfx_files_with_blanks, palette, palette_offset, animation_file = EnemyDNA.new(enemy_id, @game.fs).get_gfx_and_palette_and_animation_from_init_ai
-          frame_to_render = BEST_ANIMATION_FRAME_FOR_ENEMY[enemy_id] || 0
+          gfx_files_with_blanks, palette, palette_offset, sprite_file = EnemyDNA.new(enemy_id, @game.fs).get_gfx_and_palette_and_sprite_from_init_ai
+          frame_to_render = BEST_SPRITE_FRAME_FOR_ENEMY[enemy_id] || 0
           
-          animation = Animation.new(animation_file, game.fs)
-          chunky_frames, min_x, min_y = @renderer.render_entity(gfx_files_with_blanks, palette, palette_offset, animation, frame_to_render)
+          sprite = Sprite.new(sprite_file, game.fs)
+          chunky_frames, min_x, min_y = @renderer.render_sprite(gfx_files_with_blanks, palette, palette_offset, sprite, frame_to_render)
           if chunky_frames.empty?
             next
           end
@@ -343,8 +343,8 @@ class DSVEdit < Qt::MainWindow
     @text_editor = TextEditor.new(self, game.fs)
   end
   
-  def open_animation_editor
-    @animation_editor = AnimationEditor.new(self, game.fs, @renderer)
+  def open_sprite_editor
+    @sprite_editor = SpriteEditor.new(self, game.fs, @renderer)
   end
     
   def open_item_editor

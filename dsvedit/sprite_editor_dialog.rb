@@ -1,7 +1,7 @@
 
-require_relative 'ui_animation_editor'
+require_relative 'ui_sprite_editor'
 
-class AnimationEditor < Qt::Dialog
+class SpriteEditor < Qt::Dialog
   RED_PEN_COLOR = Qt::Pen.new(Qt::Color.new(255, 0, 0))
   
   slots "frame_changed(int)"
@@ -19,7 +19,7 @@ class AnimationEditor < Qt::Dialog
     @fs = fs
     @renderer = renderer
     
-    @ui = Ui_AnimationEditor.new
+    @ui = Ui_SpriteEditor.new
     @ui.setup_ui(self)
     
     # rbuic4 is bugged and ignores stretch values, so they must be manually set.
@@ -57,24 +57,24 @@ class AnimationEditor < Qt::Dialog
   end
   
   def enemy_changed(enemy_id)
-    @gfx_files_with_blanks, palette, palette_offset, animation_file = begin
-      EnemyDNA.new(enemy_id, @fs).get_gfx_and_palette_and_animation_from_init_ai
+    @gfx_files_with_blanks, palette, palette_offset, sprite_file = begin
+      EnemyDNA.new(enemy_id, @fs).get_gfx_and_palette_and_sprite_from_init_ai
     rescue StandardError => e
       Qt::MessageBox.warning(self,
-        "Enemy animation extraction failed",
+        "Enemy sprite extraction failed",
         "Failed to extract gfx or palette data for enemy #{enemy_id}.\n#{e.message}\n\n#{e.backtrace.join("\n")}"
       )
       return
     end
     
-    @animation = Animation.new(animation_file, @fs)
+    @sprite = Sprite.new(sprite_file, @fs)
     
     chunky_frames, @min_x, @min_y, rendered_parts, @palettes, full_width, full_height = begin
-      @renderer.render_entity(@gfx_files_with_blanks, palette, palette_offset, @animation, frame_to_render = 0)
+      @renderer.render_sprite(@gfx_files_with_blanks, palette, palette_offset, @sprite, frame_to_render = 0)
     rescue StandardError => e
       Qt::MessageBox.warning(self,
-        "Enemy animation rendering failed",
-        "Failed to render animations for enemy #{enemy_id}.\n#{e.message}\n\n#{e.backtrace.join("\n")}"
+        "Enemy sprite rendering failed",
+        "Failed to render sprites for enemy #{enemy_id}.\n#{e.message}\n\n#{e.backtrace.join("\n")}"
       )
       return
     end
@@ -86,12 +86,12 @@ class AnimationEditor < Qt::Dialog
     @paused = true
     
     @ui.frame_index.clear()
-    @animation.frames.each_index do |i|
+    @sprite.frames.each_index do |i|
       @ui.frame_index.addItem("%02X" % i)
     end
     
     @ui.seek_slider.minimum = 0
-    @ui.seek_slider.maximum = @animation.frames.length-1
+    @ui.seek_slider.maximum = @sprite.frames.length-1
     @ui.seek_slider.value = 0
     
     @ui.gfx_page_index.setCurrentIndex(0)
@@ -107,7 +107,7 @@ class AnimationEditor < Qt::Dialog
     @ui.part_index.clear()
     ordered_rendered_parts = rendered_parts.sort_by{|part_index, chunky_image| part_index}
     ordered_rendered_parts.each do |part_index, chunky_image|
-      part = @animation.parts[part_index]
+      part = @sprite.parts[part_index]
       
       pixmap = Qt::Pixmap.new
       blob = chunky_image.to_blob
@@ -157,8 +157,8 @@ class AnimationEditor < Qt::Dialog
       @frame_graphics_scene.removeItem(item)
     end
     
-    @animation.frames[i].part_indexes.reverse.each do |part_index|
-      part = @animation.parts[part_index]
+    @sprite.frames[i].part_indexes.reverse.each do |part_index|
+      part = @sprite.parts[part_index]
       
       part_pixmap = @part_pixmaps_for_frame_view[part_index]
       @frame_graphics_scene.addItem(part_pixmap)
@@ -167,7 +167,7 @@ class AnimationEditor < Qt::Dialog
     @ui.frame_index.setCurrentIndex(i)
     @ui.seek_slider.value = @current_frame_index
     
-    frame = @animation.frames[i]
+    frame = @sprite.frames[i]
     
     @ui.frame_first_part.text = "%02X" % (frame.part_indexes.first || 0)
     @ui.frame_number_of_parts.text = "%02X" % frame.part_indexes.length
@@ -224,7 +224,7 @@ class AnimationEditor < Qt::Dialog
     
     @ui.part_index.setCurrentIndex(i)
     
-    part = @animation.parts[i]
+    part = @sprite.parts[i]
     gfx_page_changed(part.gfx_page_index)
     palette_changed(part.palette_index)
     selection_rectangle = Qt::GraphicsRectItem.new

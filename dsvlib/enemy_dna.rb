@@ -45,8 +45,8 @@ class EnemyDNA
     end
   end
   
-  def get_gfx_and_palette_and_animation_from_init_ai
-    # This function attempts to find the enemy's gfx files, palette pointer, and animation file. These aren't stored directly in the enemy DNA data.
+  def get_gfx_and_palette_and_sprite_from_init_ai
+    # This function attempts to find the enemy's gfx files, palette pointer, and sprite file. These aren't stored directly in the enemy DNA data.
     # Instead they are loaded as part of the Init AI code, so we must look through this code for pointers that look like they could be the pointers we want.
     
     overlay_to_load = OVERLAY_FILE_FOR_ENEMY_AI[enemy_id]
@@ -68,15 +68,15 @@ class EnemyDNA
     list_of_gfx_page_pointers = []
     possible_palette_pointers = []
     enemy_palette_pointer = nil
-    possible_animation_pointers = []
-    animation_file_pointer = nil
+    possible_sprite_pointers = []
+    sprite_file_pointer = nil
     
     reused_info = REUSED_ENEMY_INFO[enemy_id] || {}
     init_code_pointer      = reused_info[:init_code] || self["Init AI"]
     gfx_sheet_ptr_index    = reused_info[:gfx_sheet_ptr_index] || 0
     palette_offset         = reused_info[:palette_offset] || 0
     palette_list_ptr_index = reused_info[:palette_list_ptr_index] || 0
-    animation_ptr_index    = reused_info[:animation_ptr_index] || 0
+    sprite_ptr_index       = reused_info[:sprite_ptr_index] || 0
     
     #p ("ai at %08X" % init_code_pointer)
     data = fs.read(init_code_pointer, 4*1000, allow_length_to_exceed_end_of_file: true)
@@ -94,7 +94,7 @@ class EnemyDNA
         possible_gfx_pointers << word
       end
       if (0x02115400..0x021155FF).include?(word) || (0x02130000..0x0213FFFF).include?(word) || (0x021D0000..0x021DFFFF).include?(word)
-        possible_animation_pointers << word
+        possible_sprite_pointers << word
       elsif ENEMY_PALETTE_POINTER_RANGES.any?{|range| range.include?(word)} #|| (0x022D0000..0x022DFFFF).include?(word) || (0x022E0014..0x022E0014).include?(word)
         possible_palette_pointers << word
       end
@@ -215,27 +215,27 @@ class EnemyDNA
       gfx_files << {file: gfx_file, render_mode: render_mode, canvas_width: canvas_width}
     end
     
-    if animation_ptr_index >= possible_animation_pointers.length
-      raise InitAIReadError.new("Failed to find enough valid enemy animation pointers to match the reused enemy animation index. (#{possible_animation_pointers.length} found, #{animation_ptr_index+1} needed.)")
+    if sprite_ptr_index >= possible_sprite_pointers.length
+      raise InitAIReadError.new("Failed to find enough valid enemy sprite pointers to match the reused enemy sprite index. (#{possible_sprite_pointers.length} found, #{sprite_ptr_index+1} needed.)")
     end
-    animation_file_pointer = possible_animation_pointers[animation_ptr_index]
-    if animation_file_pointer.nil?
-      raise InitAIReadError.new("Failed to find any possible animation pointers.")
+    sprite_file_pointer = possible_sprite_pointers[sprite_ptr_index]
+    if sprite_file_pointer.nil?
+      raise InitAIReadError.new("Failed to find any possible sprite pointers.")
     end
-    animation_file = fs.find_file_by_ram_start_offset(animation_file_pointer)
-    if animation_file.nil?
-      raise InitAIReadError.new("Failed to find animation file corresponding to pointer: %08X" % animation_file_pointer)
+    sprite_file = fs.find_file_by_ram_start_offset(sprite_file_pointer)
+    if sprite_file.nil?
+      raise InitAIReadError.new("Failed to find sprite file corresponding to pointer: %08X" % sprite_file_pointer)
     end
     
     
-    #puts "gfxname : #{gfx_files.first[:file][:file_path]}"
-    #puts "anim    : %08X" % animation_file[:ram_start_offset] if animation_file[:ram_start_offset]
-    #puts "animname: #{animation_file[:file_path]}"
-    #puts "animptr : %08X" % animation_file_pointer if animation_file_pointer
-    #puts "animname: #{animation_file[:file_path]}"
+    #puts "gfxname: #{gfx_files.first[:file][:file_path]}"
+    #puts "spr    : %08X" % sprite_file[:ram_start_offset] if sprite_file[:ram_start_offset]
+    #puts "sprname: #{sprite_file[:file_path]}"
+    #puts "sprptr : %08X" % sprite_file_pointer if sprite_file_pointer
+    #puts "sprname: #{sprite_file[:file_path]}"
     
-    if animation_file[:file_path] !~ /^\/so\//
-      raise InitAIReadError.new("Bad animation file: #{animation_file[:file_path]}")
+    if sprite_file[:file_path] !~ /^\/so\//
+      raise InitAIReadError.new("Bad sprite file: #{sprite_file[:file_path]}")
     end
     
     gfx_files_with_blanks = []
@@ -245,7 +245,7 @@ class EnemyDNA
       gfx_files_with_blanks += [nil]*blanks_needed
     end
     
-    return [gfx_files_with_blanks, enemy_palette_pointer, palette_offset, animation_file]
+    return [gfx_files_with_blanks, enemy_palette_pointer, palette_offset, sprite_file]
   end
   
   def write_to_rom

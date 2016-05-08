@@ -278,12 +278,12 @@ REUSED_ENEMY_INFO = {
    92 => {init_code: 0x022D7918, palette_list_ptr_index: 1},
    94 => {init_code: 0x02259EE4}, # tanjelly -> slime
    99 => {init_code: 0x022630F8}, # vice beetle -> spittle bone
-  114 => {init_code: 0x022D7900, gfx_sheet_ptr_index: 1, palette_list_ptr_index: 1, animation_ptr_index: 1}, # poison worm -> sand worm
-  121 => {init_code: 0x02297320, gfx_sheet_ptr_index: 1, palette_list_ptr_index: 1, animation_ptr_index: 1}, # double axe armor -> axe armor
-  122 => {init_code: 0x022D7930, gfx_sheet_ptr_index: 1, palette_list_ptr_index: 1, animation_ptr_index: 1}, # demon
+  114 => {init_code: 0x022D7900, gfx_sheet_ptr_index: 1, palette_list_ptr_index: 1, sprite_ptr_index: 1}, # poison worm -> sand worm
+  121 => {init_code: 0x02297320, gfx_sheet_ptr_index: 1, palette_list_ptr_index: 1, sprite_ptr_index: 1}, # double axe armor -> axe armor
+  122 => {init_code: 0x022D7930, gfx_sheet_ptr_index: 1, palette_list_ptr_index: 1, sprite_ptr_index: 1}, # demon
   126 => {palette_offset: 1}, # golden skeleton and skeleton
 }
-BEST_ANIMATION_FRAME_FOR_ENEMY = {
+BEST_SPRITE_FRAME_FOR_ENEMY = {
     0 =>  26, # zombie
    11 =>   7, # une
    14 =>  16, # forneus

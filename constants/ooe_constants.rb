@@ -301,7 +301,7 @@ REUSED_ENEMY_INFO = {
   93 => {init_code: 0x02241FD4, gfx_sheet_ptr_index: 0, palette_offset: 0, palette_list_ptr_index: 0}, # bugbear
   95 => {init_code: 0x0228D23C, gfx_sheet_ptr_index: 0, palette_offset: 0, palette_list_ptr_index: 0}, # automaton zx27
 }
-BEST_ANIMATION_FRAME_FOR_ENEMY = {
+BEST_SPRITE_FRAME_FOR_ENEMY = {
     7 =>  36, # nominon
     9 =>   7, # une
    14 =>   8, # invisible man

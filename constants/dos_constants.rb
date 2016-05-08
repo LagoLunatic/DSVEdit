@@ -197,7 +197,7 @@ OVERLAY_FILE_FOR_ENEMY_AI = {
 
 REUSED_ENEMY_INFO = {
   # Enemies that had parts of them reused from another enemy.
-  # init_code: The init code of the original enemy. This is where to look for gfx/palette/animation data, not the reused enemy's init code.
+  # init_code: The init code of the original enemy. This is where to look for gfx/palette/sprite data, not the reused enemy's init code.
   # gfx_sheet_ptr_index: The reused enemy uses a different gfx sheet than the original enemy. This value is which one to use.
   # palette_offset: The reused enemy uses different palettes than the original, but they're still in the same list of palettes. This is the offset of the new palette in the list.
   # palette_list_ptr_index: The reused enemy uses a completely different palette list from the original. This value is which one to use.
@@ -208,7 +208,7 @@ REUSED_ENEMY_INFO = {
   93 => {init_code: 0x022FF9F0, gfx_sheet_ptr_index: 2, palette_offset: 0, palette_list_ptr_index: 2}, # arc demon and devil
 }
 
-BEST_ANIMATION_FRAME_FOR_ENEMY = {
+BEST_SPRITE_FRAME_FOR_ENEMY = {
   # Enemies not listed here default to frame 0.
     0 =>   8, # zombie
     5 =>  38, # peeping eye
