@@ -242,7 +242,7 @@ class SpriteEditor < Qt::Dialog
   
   def advance_frame
     unless @paused
-      if @current_frame_index >= @pixmap_frames.length-1
+      if @current_frame_index >= @sprite.frames.length-1
         frame_changed(0)
         @paused = true
       else
