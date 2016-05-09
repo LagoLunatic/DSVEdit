@@ -4,10 +4,14 @@ class Sprite
               :hitbox_list_offset,
               :sprite_list_offset,
               :frame_delay_list_offset,
+              :animation_list_offset,
+              :file_footer_offset,
+              :number_of_frames,
               :parts,
               :hitboxes,
               :frames,
               :frame_delays,
+              :animations,
               :fs
   
   def initialize(sprite_file, fs)
@@ -23,8 +27,9 @@ class Sprite
       raise "Unknown magic bytes: %08X" % magic_bytes
     end
     
-    @hitbox_list_offset, @sprite_list_offset, @frame_delay_list_offset, unknown_offset = fs.read_by_file(sprite_file[:file_path], 0x08, 16).unpack("V*")
-    @number_of_frames = fs.read_by_file(sprite_file[:file_path], 0x24, 4).unpack("V*").first
+    @hitbox_list_offset, @sprite_list_offset,
+      @frame_delay_list_offset, @animation_list_offset, unk, unk,
+      @file_footer_offset, @number_of_frames = fs.read_by_file(sprite_file[:file_path], 0x08, 32).unpack("V*")
     
     @parts = []
     (0x40..hitbox_list_offset-1).step(16) do |offset|
@@ -48,13 +53,19 @@ class Sprite
     end
     
     @frame_delays = []
-    offset = frame_delay_list_offset
-    @number_of_frames.times do
-      frame_delay_data = fs.read_by_file(sprite_file[:file_path], offset, 8)
-      @frame_delays << FrameDelay.new(frame_delay_data)
-      
-      offset += 8
-      break if offset >= unknown_offset
+    unless frame_delay_list_offset == 0
+      (frame_delay_list_offset..animation_list_offset-1).step(8) do |offset|
+        frame_delay_data = fs.read_by_file(sprite_file[:file_path], offset, 8)
+        @frame_delays << FrameDelay.new(frame_delay_data)
+      end
+    end
+    
+    @animations = []
+    unless animation_list_offset == 0
+      (animation_list_offset..file_footer_offset-1).step(8) do |offset|
+        animation_data = fs.read_by_file(sprite_file[:file_path], offset, 8)
+        @animations << Animation.new(animation_data, frame_delays)
+      end
     end
   end
 end
@@ -124,5 +135,20 @@ class FrameDelay
               
   def initialize(frame_delay_data)
     @frame_index, @delay, unk = frame_delay_data.unpack("vvV")
+  end
+end
+
+class Animation
+  attr_reader :number_of_frames,
+              :frame_delays_start_offset,
+              :frame_delay_indexes,
+              :frame_delays
+              
+  def initialize(animation_data, all_frame_delay_indexes)
+    @number_of_frames, @frame_delays_start_offset = animation_data.unpack("VV")
+    
+    frame_delays_start_index = (frame_delays_start_offset / 0x08)
+    @frame_delay_indexes = (frame_delays_start_index..frame_delays_start_index+number_of_frames-1).to_a
+    @frame_delays = @frame_delay_indexes.map{|i| all_frame_delay_indexes[i]}
   end
 end

@@ -11,6 +11,7 @@ class SpriteEditor < Qt::Dialog
   slots "palette_changed(int)"
   slots "part_changed(int)"
   slots "enemy_changed(int)"
+  slots "animation_changed(int)"
   slots "toggle_animation_paused()"
   slots "advance_frame()"
   
@@ -47,11 +48,12 @@ class SpriteEditor < Qt::Dialog
     
     connect(@ui.enemy_list, SIGNAL("currentRowChanged(int)"), self, SLOT("enemy_changed(int)"))
     connect(@ui.frame_index, SIGNAL("activated(int)"), self, SLOT("frame_changed(int)"))
-    connect(@ui.seek_slider, SIGNAL("valueChanged(int)"), self, SLOT("animation_frame_changed(int)"))
+    connect(@ui.seek_slider, SIGNAL("sliderMoved(int)"), self, SLOT("animation_frame_changed(int)"))
     connect(@ui.show_hitbox, SIGNAL("stateChanged(int)"), self, SLOT("toggle_hitbox(int)"))
     connect(@ui.gfx_page_index, SIGNAL("activated(int)"), self, SLOT("gfx_page_changed(int)"))
     connect(@ui.palette_index, SIGNAL("activated(int)"), self, SLOT("palette_changed(int)"))
     connect(@ui.part_index, SIGNAL("activated(int)"), self, SLOT("part_changed(int)"))
+    connect(@ui.animation_index, SIGNAL("activated(int)"), self, SLOT("animation_changed(int)"))
     connect(@ui.toggle_paused_button, SIGNAL("clicked()"), self, SLOT("toggle_animation_paused()"))
     
     self.show()
@@ -84,17 +86,11 @@ class SpriteEditor < Qt::Dialog
     @frame_graphics_scene.setSceneRect(0, 0, full_width, full_height)
     
     @current_frame_index = 0
-    @current_animation_frame_index = 0
-    @animation_paused = true
     
     @ui.frame_index.clear()
     @sprite.frames.each_index do |i|
       @ui.frame_index.addItem("%02X" % i)
     end
-    
-    @ui.seek_slider.minimum = 0
-    @ui.seek_slider.maximum = @sprite.frame_delays.length-1
-    @ui.seek_slider.value = 0
     
     @ui.gfx_page_index.setCurrentIndex(0)
     
@@ -127,6 +123,12 @@ class SpriteEditor < Qt::Dialog
     part_changed(0)
     
     frame_changed(0)
+    
+    @ui.animation_index.clear()
+    @sprite.animations.each_with_index do |animation, i|
+      @ui.animation_index.addItem("%02X" % i)
+    end
+    animation_changed(0)
   end
   
   def load_gfx_pages(palette_index)
@@ -234,9 +236,29 @@ class SpriteEditor < Qt::Dialog
     @gfx_file_graphics_scene.addItem(selection_rectangle)
   end
   
+  def animation_changed(i)
+    @ui.seek_slider.value = 0
+    @current_animation_frame_index = 0
+    @animation_paused = true
+    
+    @current_animation = @sprite.animations[i]
+    if @current_animation.nil?
+      @ui.seek_slider.enabled = false
+      @ui.toggle_paused_button.enabled = false
+      return
+    end
+    
+    @ui.seek_slider.enabled = true
+    @ui.seek_slider.minimum = 0
+    @ui.seek_slider.maximum = @current_animation.frame_delays.length-1
+    @ui.toggle_paused_button.enabled = true
+    
+    animation_frame_changed(0)
+  end
+  
   def animation_frame_changed(i)
     @current_animation_frame_index = i
-    frame_delay = @sprite.frame_delays[@current_animation_frame_index]
+    frame_delay = @current_animation.frame_delays[@current_animation_frame_index]
     frame_changed(frame_delay.frame_index)
     @ui.seek_slider.value = @current_animation_frame_index
   end
@@ -249,15 +271,17 @@ class SpriteEditor < Qt::Dialog
   end
   
   def advance_frame
-    # TODO: doesn't work for enemies like golem, look into this
-    unless @animation_paused
-      frame_delay = @sprite.frame_delays[@current_animation_frame_index]
+    if @current_animation && !@animation_paused
+      frame_delay = @current_animation.frame_delays[@current_animation_frame_index]
       millisecond_delay = (frame_delay.delay / 60.0 * 1000).round
       puts "anim #{@current_animation_frame_index} #{frame_delay.delay} #{millisecond_delay}"
       
-      if @current_animation_frame_index >= @sprite.frame_delays.length-1
+      if @current_animation_frame_index >= @current_animation.frame_delays.length-1
         animation_frame_changed(0)
-        @animation_paused = true
+        
+        unless @ui.loop_animation.checked
+          @animation_paused = true
+        end
       else
         animation_frame_changed(@current_animation_frame_index+1)
       end
