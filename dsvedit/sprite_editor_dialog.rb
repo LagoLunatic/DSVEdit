@@ -5,12 +5,13 @@ class SpriteEditor < Qt::Dialog
   RED_PEN_COLOR = Qt::Pen.new(Qt::Color.new(255, 0, 0))
   
   slots "frame_changed(int)"
+  slots "animation_frame_changed(int)"
   slots "toggle_hitbox(int)"
   slots "gfx_page_changed(int)"
   slots "palette_changed(int)"
   slots "part_changed(int)"
   slots "enemy_changed(int)"
-  slots "toggle_paused()"
+  slots "toggle_animation_paused()"
   slots "advance_frame()"
   
   def initialize(main_window, fs, renderer)
@@ -45,13 +46,13 @@ class SpriteEditor < Qt::Dialog
     end
     
     connect(@ui.enemy_list, SIGNAL("currentRowChanged(int)"), self, SLOT("enemy_changed(int)"))
-    connect(@ui.seek_slider, SIGNAL("valueChanged(int)"), self, SLOT("frame_changed(int)"))
     connect(@ui.frame_index, SIGNAL("activated(int)"), self, SLOT("frame_changed(int)"))
+    connect(@ui.seek_slider, SIGNAL("valueChanged(int)"), self, SLOT("animation_frame_changed(int)"))
     connect(@ui.show_hitbox, SIGNAL("stateChanged(int)"), self, SLOT("toggle_hitbox(int)"))
     connect(@ui.gfx_page_index, SIGNAL("activated(int)"), self, SLOT("gfx_page_changed(int)"))
     connect(@ui.palette_index, SIGNAL("activated(int)"), self, SLOT("palette_changed(int)"))
     connect(@ui.part_index, SIGNAL("activated(int)"), self, SLOT("part_changed(int)"))
-    connect(@ui.toggle_paused_button, SIGNAL("clicked()"), self, SLOT("toggle_paused()"))
+    connect(@ui.toggle_paused_button, SIGNAL("clicked()"), self, SLOT("toggle_animation_paused()"))
     
     self.show()
   end
@@ -83,7 +84,8 @@ class SpriteEditor < Qt::Dialog
     @frame_graphics_scene.setSceneRect(0, 0, full_width, full_height)
     
     @current_frame_index = 0
-    @paused = true
+    @current_animation_frame_index = 0
+    @animation_paused = true
     
     @ui.frame_index.clear()
     @sprite.frames.each_index do |i|
@@ -91,7 +93,7 @@ class SpriteEditor < Qt::Dialog
     end
     
     @ui.seek_slider.minimum = 0
-    @ui.seek_slider.maximum = @sprite.frames.length-1
+    @ui.seek_slider.maximum = @sprite.frame_delays.length-1
     @ui.seek_slider.value = 0
     
     @ui.gfx_page_index.setCurrentIndex(0)
@@ -165,7 +167,6 @@ class SpriteEditor < Qt::Dialog
     end
     
     @ui.frame_index.setCurrentIndex(i)
-    @ui.seek_slider.value = @current_frame_index
     
     frame = @sprite.frames[i]
     
@@ -233,22 +234,35 @@ class SpriteEditor < Qt::Dialog
     @gfx_file_graphics_scene.addItem(selection_rectangle)
   end
   
-  def toggle_paused
-    @paused = !@paused
-    unless @paused
+  def animation_frame_changed(i)
+    @current_animation_frame_index = i
+    frame_delay = @sprite.frame_delays[@current_animation_frame_index]
+    frame_changed(frame_delay.frame_index)
+    @ui.seek_slider.value = @current_animation_frame_index
+  end
+  
+  def toggle_animation_paused
+    @animation_paused = !@animation_paused
+    unless @animation_paused
       advance_frame()
     end
   end
   
   def advance_frame
-    unless @paused
-      if @current_frame_index >= @sprite.frames.length-1
-        frame_changed(0)
-        @paused = true
+    # TODO: doesn't work for enemies like golem, look into this
+    unless @animation_paused
+      frame_delay = @sprite.frame_delays[@current_animation_frame_index]
+      millisecond_delay = (frame_delay.delay / 60.0 * 1000).round
+      puts "anim #{@current_animation_frame_index} #{frame_delay.delay} #{millisecond_delay}"
+      
+      if @current_animation_frame_index >= @sprite.frame_delays.length-1
+        animation_frame_changed(0)
+        @animation_paused = true
       else
-        frame_changed(@current_frame_index+1)
+        animation_frame_changed(@current_animation_frame_index+1)
       end
-      Qt::Timer.singleShot(50, self, SLOT("advance_frame()")) # Todo: Accurate per-frame delays.
+      
+      Qt::Timer.singleShot(millisecond_delay, self, SLOT("advance_frame()"))
     end
   end
 end

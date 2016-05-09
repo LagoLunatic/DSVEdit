@@ -51,8 +51,7 @@ class Sprite
     offset = frame_delay_list_offset
     @number_of_frames.times do
       frame_delay_data = fs.read_by_file(sprite_file[:file_path], offset, 8)
-      frame_index, delay, unk = frame_delay_data.unpack("vvV")
-      @frame_delays << [frame_index, delay, unk]
+      @frame_delays << FrameDelay.new(frame_delay_data)
       
       offset += 8
       break if offset >= unknown_offset
@@ -116,5 +115,14 @@ class Frame
       @hitbox_index = hitbox_offset / 0x10
       @hitbox = all_sprite_hitboxes[hitbox_index]
     end
+  end
+end
+
+class FrameDelay
+  attr_reader :frame_index,
+              :delay
+              
+  def initialize(frame_delay_data)
+    @frame_index, @delay, unk = frame_delay_data.unpack("vvV")
   end
 end
