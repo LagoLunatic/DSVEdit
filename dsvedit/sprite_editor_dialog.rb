@@ -239,12 +239,12 @@ class SpriteEditor < Qt::Dialog
   def animation_changed(i)
     @ui.seek_slider.value = 0
     @current_animation_frame_index = 0
-    @animation_paused = true
     
     @current_animation = @sprite.animations[i]
     if @current_animation.nil?
       @ui.seek_slider.enabled = false
       @ui.toggle_paused_button.enabled = false
+      @animation_paused = true
       return
     end
     
@@ -274,7 +274,6 @@ class SpriteEditor < Qt::Dialog
     if @current_animation && !@animation_paused
       frame_delay = @current_animation.frame_delays[@current_animation_frame_index]
       millisecond_delay = (frame_delay.delay / 60.0 * 1000).round
-      puts "anim #{@current_animation_frame_index} #{frame_delay.delay} #{millisecond_delay}"
       
       if @current_animation_frame_index >= @current_animation.frame_delays.length-1
         animation_frame_changed(0)
