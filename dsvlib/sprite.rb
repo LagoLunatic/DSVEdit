@@ -28,7 +28,7 @@ class Sprite
     end
     
     @hitbox_list_offset, @sprite_list_offset,
-      @frame_delay_list_offset, @animation_list_offset, unk, unk,
+      @frame_delay_list_offset, @animation_list_offset, unused_1, unused_2,
       @file_footer_offset, @number_of_frames = fs.read_by_file(sprite_file[:file_path], 0x08, 32).unpack("V*")
     
     @parts = []
@@ -87,7 +87,7 @@ class Part
       @gfx_x_offset, @gfx_y_offset,
       @width, @height,
       @gfx_page_index, flip_bits,
-      @palette_index, unknown = part_data.unpack("s<s<vvvvCCCC")
+      @palette_index, unused = part_data.unpack("s<s<vvvvCCCC")
     
     @vertical_flip   = (flip_bits & 0b00000001) > 0
     @horizontal_flip = (flip_bits & 0b00000010) > 0
@@ -134,7 +134,7 @@ class FrameDelay
               :delay
               
   def initialize(frame_delay_data)
-    @frame_index, @delay, unk = frame_delay_data.unpack("vvV")
+    @frame_index, @delay, unknown = frame_delay_data.unpack("vvV")
   end
 end
 
