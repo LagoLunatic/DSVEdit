@@ -46,6 +46,8 @@ class SpriteEditor < Qt::Dialog
       @ui.enemy_list.addItem("%03d %s" % [enemy_id, enemy.name.decoded_string])
     end
     
+    @animation_paused = true
+    
     connect(@ui.enemy_list, SIGNAL("currentRowChanged(int)"), self, SLOT("enemy_changed(int)"))
     connect(@ui.frame_index, SIGNAL("activated(int)"), self, SLOT("frame_changed(int)"))
     connect(@ui.seek_slider, SIGNAL("sliderMoved(int)"), self, SLOT("animation_frame_changed(int)"))
@@ -172,7 +174,12 @@ class SpriteEditor < Qt::Dialog
     
     frame = @sprite.frames[i]
     
-    @ui.frame_first_part.text = "%02X" % (frame.part_indexes.first || 0)
+    if frame.part_indexes.first
+      @ui.frame_first_part.text = "%02X" % frame.part_indexes.first
+      part_changed(frame.part_indexes.first)
+    else
+      @ui.frame_first_part.text = ""
+    end
     @ui.frame_number_of_parts.text = "%02X" % frame.part_indexes.length
     
     if frame.hitbox && @ui.show_hitbox.checked
