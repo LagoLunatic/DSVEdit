@@ -46,7 +46,7 @@ class SpriteEditor < Qt::Dialog
       @ui.enemy_list.addItem("%03d %s" % [enemy_id, enemy.name.decoded_string])
     end
     
-    @animation_paused = true
+    set_animation_paused(true)
     
     connect(@ui.enemy_list, SIGNAL("currentRowChanged(int)"), self, SLOT("enemy_changed(int)"))
     connect(@ui.frame_index, SIGNAL("activated(int)"), self, SLOT("frame_changed(int)"))
@@ -251,7 +251,7 @@ class SpriteEditor < Qt::Dialog
     if @current_animation.nil?
       @ui.seek_slider.enabled = false
       @ui.toggle_paused_button.enabled = false
-      @animation_paused = true
+      set_animation_paused(true)
       return
     end
     
@@ -270,11 +270,18 @@ class SpriteEditor < Qt::Dialog
     @ui.seek_slider.value = @current_animation_frame_index
   end
   
-  def toggle_animation_paused
-    @animation_paused = !@animation_paused
-    unless @animation_paused
+  def set_animation_paused(paused)
+    @animation_paused = paused
+    if @animation_paused
+      @ui.toggle_paused_button.text = "Play"
+    else
+      @ui.toggle_paused_button.text = "Pause"
       advance_frame()
     end
+  end
+  
+  def toggle_animation_paused
+    set_animation_paused(!@animation_paused)
   end
   
   def advance_frame
@@ -286,7 +293,7 @@ class SpriteEditor < Qt::Dialog
         animation_frame_changed(0)
         
         unless @ui.loop_animation.checked
-          @animation_paused = true
+          set_animation_paused(true)
         end
       else
         animation_frame_changed(@current_animation_frame_index+1)
