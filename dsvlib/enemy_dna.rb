@@ -84,19 +84,10 @@ class EnemyDNA
     data.unpack("V*").each_with_index do |word, i|
       if (0x02000000..0x02FFFFFF).include?(word)
         #puts "found pointer: %08X at index: %08X" % [word, i*4+init_code_pointer]
-      end
-      
-      if    ENEMY_GFX_POINTER_RANGE.include?(word) || (0x022B0000..0x022B1FFF).include?(word) || (0x022E0000..0x022EFFFF).include?(word) || (0x022DE304..0x022DE304).include?(word)
+        
         possible_gfx_pointers << word
-      elsif ENEMY_GFX_LIST_POINTER_RANGES.any?{|range| range.include?(word)}
-        possible_gfx_pointers << word
-      elsif ENEMY_GFX_LIST_OVERLAY_POINTER_RANGES.any?{|range| range.include?(word)} && overlay_to_load
-        possible_gfx_pointers << word
-      end
-      if (0x02115400..0x021155FF).include?(word) || (0x02130000..0x0213FFFF).include?(word) || (0x021D0000..0x021DFFFF).include?(word)
-        possible_sprite_pointers << word
-      elsif ENEMY_PALETTE_POINTER_RANGES.any?{|range| range.include?(word)} #|| (0x022D0000..0x022DFFFF).include?(word) || (0x022E0014..0x022E0014).include?(word)
         possible_palette_pointers << word
+        possible_sprite_pointers << word
       end
     end
     
@@ -157,7 +148,7 @@ class EnemyDNA
       while true
         begin
           gfx_page_pointer = fs.read(pointer_to_list_of_gfx_page_pointers+i*4, 4).unpack("V").first
-        rescue NDSFileSystem::OffsetPastEndOfFileError
+        rescue NDSFileSystem::ConversionError, NDSFileSystem::OffsetPastEndOfFileError
           break
         end
         if gfx_page_pointer < 0x2000000 || gfx_page_pointer >= 0x3000000
@@ -214,11 +205,24 @@ class EnemyDNA
       
       gfx_files << {file: gfx_file, render_mode: render_mode, canvas_width: canvas_width}
     end
+    #puts "gfxname: #{gfx_files.first[:file][:file_path]}"
     
-    if sprite_ptr_index >= possible_sprite_pointers.length
-      raise InitAIReadError.new("Failed to find enough valid enemy sprite pointers to match the reused enemy sprite index. (#{possible_sprite_pointers.length} found, #{sprite_ptr_index+1} needed.)")
+    all_sprite_pointers = fs.files.select do |id, file|
+      file[:type] == :file && file[:file_path] =~ /^\/so\/p_/
+    end.map do |id, file|
+      file[:ram_start_offset]
     end
-    sprite_file_pointer = possible_sprite_pointers[sprite_ptr_index]
+    valid_sprite_pointers = possible_sprite_pointers.select do |pointer|
+      all_sprite_pointers.include?(pointer)
+    end
+    if valid_sprite_pointers.empty?
+      raise InitAIReadError.new("Failed to find any valid enemy sprite pointers.")
+    end
+    
+    if sprite_ptr_index >= valid_sprite_pointers.length
+      raise InitAIReadError.new("Failed to find enough valid enemy sprite pointers to match the reused enemy sprite index. (#{valid_sprite_pointers.length} found, #{sprite_ptr_index+1} needed.)")
+    end
+    sprite_file_pointer = valid_sprite_pointers[sprite_ptr_index]
     if sprite_file_pointer.nil?
       raise InitAIReadError.new("Failed to find any possible sprite pointers.")
     end
@@ -228,7 +232,6 @@ class EnemyDNA
     end
     
     
-    #puts "gfxname: #{gfx_files.first[:file][:file_path]}"
     #puts "spr    : %08X" % sprite_file[:ram_start_offset] if sprite_file[:ram_start_offset]
     #puts "sprname: #{sprite_file[:file_path]}"
     #puts "sprptr : %08X" % sprite_file_pointer if sprite_file_pointer
