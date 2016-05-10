@@ -123,7 +123,7 @@ class Frame
     @parts = @part_indexes.map{|i| all_sprite_parts[i]}
     
     if @has_hitbox > 0
-      @hitbox_index = hitbox_offset / 0x10
+      @hitbox_index = hitbox_offset / 0x08
       @hitbox = all_sprite_hitboxes[hitbox_index]
     end
   end
