@@ -10,7 +10,7 @@ require_relative 'ui_main'
 class DSVEdit < Qt::MainWindow
   attr_reader :game
   
-  slots "open_rom_dialog()"
+  slots "extract_rom_dialog()"
   slots "open_folder_dialog()"
   slots "save_files()"
   slots "open_enemy_dna_dialog()"
@@ -54,8 +54,8 @@ class DSVEdit < Qt::MainWindow
     
     @cached_enemy_pixmaps = {}
     
-    connect(@ui.actionOpen, SIGNAL("activated()"), self, SLOT("open_rom_dialog()"))
     connect(@ui.actionOpen_Folder, SIGNAL("activated()"), self, SLOT("open_folder_dialog()"))
+    connect(@ui.actionExtract_ROM, SIGNAL("activated()"), self, SLOT("extract_rom_dialog()"))
     connect(@ui.actionSave, SIGNAL("activated()"), self, SLOT("save_files()"))
     connect(@ui.actionEnemy_Editor, SIGNAL("activated()"), self, SLOT("open_enemy_dna_dialog()"))
     connect(@ui.actionText_Editor, SIGNAL("activated()"), self, SLOT("open_text_editor()"))
@@ -83,11 +83,11 @@ class DSVEdit < Qt::MainWindow
     end
   end
   
-  def open_rom_dialog
+  def extract_rom_dialog
     rom_path = Qt::FileDialog.getOpenFileName(self, "Select ROM", nil, "NDS ROM Files (*.nds)")
     return if rom_path.nil?
     folder = File.dirname(rom_path)
-    open_rom(rom_path)
+    extract_rom(rom_path)
   end
   
   def open_folder_dialog
@@ -96,7 +96,7 @@ class DSVEdit < Qt::MainWindow
     open_folder(folder)
   end
   
-  def open_rom(rom_path)
+  def extract_rom(rom_path)
     @game = Game.new
     game.initialize_from_rom(rom_path, extract_to_hard_drive = true)
     @renderer = Renderer.new(game.fs)
