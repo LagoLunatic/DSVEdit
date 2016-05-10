@@ -311,6 +311,11 @@ class Randomizer
     if (0x81..0x84).include?(new_boss_id)
       dos_adjust_randomized_boss(boss_entity, old_boss_id, new_boss_id, old_boss, new_boss)
     end
+    
+    case new_boss.name.decoded_string
+    when "Stella"
+      boss_entity.var_a = 0 # Just Stella, we don't want Stella&Loretta.
+    end
   end
   
   def ooe_adjust_randomized_boss(boss_entity, old_boss_id, new_boss_id, old_boss, new_boss)
