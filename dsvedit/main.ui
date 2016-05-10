@@ -152,13 +152,19 @@
     <addaction name="actionEnemy_Editor"/>
     <addaction name="actionText_Editor"/>
     <addaction name="actionSprite_Editor"/>
-    <addaction name="actionSettings"/>
     <addaction name="actionItem_Editor"/>
+    <addaction name="actionSettings"/>
+   </widget>
+   <widget class="QMenu" name="menuBuild">
+    <property name="title">
+     <string>Build</string>
+    </property>
     <addaction name="actionBuild"/>
     <addaction name="actionBuild_and_Run"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuTools"/>
+   <addaction name="menuBuild"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
   <action name="actionOpen">
