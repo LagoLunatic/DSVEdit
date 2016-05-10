@@ -4,6 +4,8 @@ require_relative 'randomizer'
 
 class RandomizerWindow < Qt::Dialog
   slots "update_settings()"
+  slots "browse_for_clean_rom()"
+  slots "browse_for_output_folder()"
   slots "randomize()"
   slots "cancel_write_to_rom_thread()"
   
@@ -15,7 +17,9 @@ class RandomizerWindow < Qt::Dialog
     load_settings()
     
     connect(@ui.clean_rom, SIGNAL("editingFinished()"), self, SLOT("update_settings()"))
+    connect(@ui.clean_rom_browse_button, SIGNAL("clicked()"), self, SLOT("browse_for_clean_rom()"))
     connect(@ui.output_folder, SIGNAL("editingFinished()"), self, SLOT("update_settings()"))
+    connect(@ui.output_folder_browse_button, SIGNAL("clicked()"), self, SLOT("browse_for_output_folder()"))
     connect(@ui.seed, SIGNAL("editingFinished()"), self, SLOT("update_settings()"))
     
     connect(@ui.randomize_items, SIGNAL("stateChanged(int)"), self, SLOT("update_settings()"))
@@ -70,6 +74,18 @@ class RandomizerWindow < Qt::Dialog
     File.open(@settings_path, "w") do |f|
       f.write(@settings.to_yaml)
     end
+  end
+  
+  def browse_for_clean_rom
+    clean_rom_path = Qt::FileDialog.getOpenFileName(self, "Select ROM", nil, "NDS ROM Files (*.nds)")
+    return if clean_rom_path.nil?
+    @ui.clean_rom.text = clean_rom_path
+  end
+  
+  def browse_for_output_folder
+    output_folder_path = Qt::FileDialog.getExistingDirectory(self, "Select output folder", nil)
+    return if output_folder_path.nil?
+    @ui.output_folder.text = output_folder_path
   end
   
   def update_settings

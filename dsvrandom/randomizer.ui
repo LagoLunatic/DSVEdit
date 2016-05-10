@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>400</width>
+    <width>640</width>
     <height>372</height>
    </rect>
   </property>
@@ -25,15 +25,16 @@
       </attribute>
       <layout class="QVBoxLayout" name="verticalLayout_2">
        <item>
-        <layout class="QFormLayout" name="formLayout">
-         <property name="fieldGrowthPolicy">
-          <enum>QFormLayout::AllNonFixedFieldsGrow</enum>
-         </property>
-         <item row="2" column="1">
-          <widget class="QLineEdit" name="seed"/>
-         </item>
+        <layout class="QGridLayout" name="gridLayout">
          <item row="1" column="1">
           <widget class="QLineEdit" name="output_folder"/>
+         </item>
+         <item row="0" column="0">
+          <widget class="QLabel" name="label_2">
+           <property name="text">
+            <string>Clean ROM</string>
+           </property>
+          </widget>
          </item>
          <item row="0" column="1">
           <widget class="QLineEdit" name="clean_rom"/>
@@ -52,10 +53,20 @@
            </property>
           </widget>
          </item>
-         <item row="0" column="0">
-          <widget class="QLabel" name="label_2">
+         <item row="2" column="1">
+          <widget class="QLineEdit" name="seed"/>
+         </item>
+         <item row="0" column="2">
+          <widget class="QPushButton" name="clean_rom_browse_button">
            <property name="text">
-            <string>Clean ROM</string>
+            <string>Browse</string>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="2">
+          <widget class="QPushButton" name="output_folder_browse_button">
+           <property name="text">
+            <string>Browse</string>
            </property>
           </widget>
          </item>
