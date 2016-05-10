@@ -2,11 +2,12 @@
 class Sprite
   attr_reader :sprite_file,
               :hitbox_list_offset,
-              :sprite_list_offset,
+              :frame_list_offset,
               :frame_delay_list_offset,
               :animation_list_offset,
               :file_footer_offset,
               :number_of_frames,
+              :number_of_animations,
               :parts,
               :hitboxes,
               :frames,
@@ -27,9 +28,9 @@ class Sprite
       raise "Unknown magic bytes: %08X" % magic_bytes
     end
     
-    @hitbox_list_offset, @sprite_list_offset,
+    @hitbox_list_offset, @frame_list_offset,
       @frame_delay_list_offset, @animation_list_offset, unused_1, unused_2,
-      @file_footer_offset, @number_of_frames = fs.read_by_file(sprite_file[:file_path], 0x08, 32).unpack("V*")
+      @file_footer_offset, @number_of_frames, @number_of_animations = fs.read_by_file(sprite_file[:file_path], 0x08, 36).unpack("V*")
     
     @parts = []
     (0x40..hitbox_list_offset-1).step(16) do |offset|
@@ -38,18 +39,16 @@ class Sprite
     end
     
     @hitboxes = []
-    (hitbox_list_offset..sprite_list_offset-1).step(8) do |offset|
+    (hitbox_list_offset..frame_list_offset-1).step(8) do |offset|
       hitbox_data = fs.read_by_file(sprite_file[:file_path], offset, 8)
       @hitboxes << Hitbox.new(hitbox_data)
     end
     
     @frames = []
-    offset = sprite_list_offset
-    @number_of_frames.times do
+    offset = frame_list_offset
+    (frame_list_offset..frame_delay_list_offset-1).step(12) do |offset|
       frame_data = fs.read_by_file(sprite_file[:file_path], offset, 12)
       @frames << Frame.new(frame_data, parts, hitboxes)
-      
-      offset += 12
     end
     
     @frame_delays = []
