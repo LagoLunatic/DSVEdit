@@ -387,7 +387,7 @@ ITEM_TYPES = [
       [2, "Effects", :bitfield],
       [1, "Unknown 2"],
       [1, "Unknown 3"],
-      [1, "gfx?"],
+      [1, "Sprite"],
       [1, "Super Anim"],
       [2, "Unknown 4"],
       [2, "Swing Modifiers", :bitfield],
