@@ -46,9 +46,11 @@ class Sprite
     
     @frames = []
     offset = frame_list_offset
-    (frame_list_offset..frame_delay_list_offset-1).step(12) do |offset|
+    number_of_frames.times do
       frame_data = fs.read_by_file(sprite_file[:file_path], offset, 12)
       @frames << Frame.new(frame_data, parts, hitboxes)
+      
+      offset += 12
     end
     
     @frame_delays = []
