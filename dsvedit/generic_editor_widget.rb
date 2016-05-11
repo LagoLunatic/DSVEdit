@@ -61,6 +61,8 @@ class GenericEditorWidget < Qt::Widget
       # If there are no bitfields then blank out the tree widget, otherwise it defaults to showing just a "1".
       @ui.treeWidget.headerItem.setText(0, "")
     end
+    
+    item_changed(0)
   end
   
   def item_changed(index)

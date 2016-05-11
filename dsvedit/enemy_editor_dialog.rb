@@ -3,8 +3,6 @@ require_relative 'ui_enemy'
 
 class EnemyEditor < Qt::Dialog
   slots "enemy_changed(int)"
-  slots "weakness_button_pressed()"
-  slots "resistance_button_pressed()"
   slots "button_pressed(QAbstractButton*)"
   
   def initialize(main_window, fs)
@@ -58,6 +56,8 @@ class EnemyEditor < Qt::Dialog
     connect(@ui.buttonBox, SIGNAL("clicked(QAbstractButton*)"), self, SLOT("button_pressed(QAbstractButton*)"))
     
     #self.setWindowFlags(Qt::MSWindowsFixedSizeDialogHint)
+    
+    enemy_changed(0)
     
     self.show()
   end
