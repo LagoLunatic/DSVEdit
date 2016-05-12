@@ -140,7 +140,7 @@ end
 
 start_time = Time.now
 located_rooms = []
-output_folder = "../Exported #{options[:game]}"
+output_folder = "cache/#{options[:game]}"
 
 case options[:mode]
 when "map"

@@ -6,3 +6,4 @@ ui_*.rb
 /build
 /armips
 /asm
+/cache

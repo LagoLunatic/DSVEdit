@@ -234,7 +234,7 @@ class DSVEdit < Qt::MainWindow
     
     @room.sector.load_necessary_overlay()
     @room.layers.each do |layer|
-      tileset_filename = "../Exported #{GAME}/rooms/#{@room.area_name}/Tilesets/#{layer.tileset_filename}.png"
+      tileset_filename = "cache/#{GAME}/rooms/#{@room.area_name}/Tilesets/#{layer.tileset_filename}.png"
       unless File.exist?(tileset_filename)
         @renderer.render_tileset(layer.ram_pointer_to_tileset_for_layer, @room.palette_offset, @room.graphic_tilesets_for_room, layer.colors_per_palette, layer.collision_tileset_ram_pointer, tileset_filename)
       end
@@ -379,7 +379,7 @@ class DSVEdit < Qt::MainWindow
       Qt::MessageBox.warning(self, "Failed to run Tiled", "Tiled install path is invalid.")
       return
     end
-    folder = "../Exported #{GAME}/rooms"
+    folder = "cache/#{GAME}/rooms"
     tmx_path = "#{folder}/#{@room.area_name}/#{@room.filename}.tmx"
     
     @renderer.ensure_tilesets_exist(folder, @room)
@@ -388,7 +388,7 @@ class DSVEdit < Qt::MainWindow
   end
   
   def import_from_tiled
-    folder = "../Exported #{GAME}/rooms"
+    folder = "cache/#{GAME}/rooms"
     tmx_path = "#{folder}/#{@room.area_name}/#{@room.filename}.tmx"
     if !File.exist?(tmx_path) || !File.file?(tmx_path)
       Qt::MessageBox.warning(self, "TMX file doesn't exist", "Can't find the TMX file. You must export to tiled first.")
