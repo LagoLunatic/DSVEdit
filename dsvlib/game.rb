@@ -12,6 +12,8 @@ class Game
     
     verify_game_and_load_constants(header_path)
     
+    @folder = input_folder_path
+    
     @fs = NDSFileSystem.new
     fs.open_directory(input_folder_path)
     CONSTANT_OVERLAYS.each do |overlay_index|
@@ -36,6 +38,8 @@ class Game
       @fs = NDSFileSystem.new
       fs.open_and_extract_rom(input_rom_path, folder)
     else
+      @folder = nil
+      
       @fs = NDSFileSystem.new
       fs.open_rom(input_rom_path)
     end
