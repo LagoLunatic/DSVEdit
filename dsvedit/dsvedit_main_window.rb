@@ -202,7 +202,6 @@ class DSVEdit < Qt::MainWindow
   end
   
   def sector_and_room_indexes_changed(new_sector_index, new_room_index)
-    puts "sector_and_room_indexes_changed: #{new_sector_index}, #{new_room_index}"
     sector_index_changed(new_sector_index)
     room_index_changed(new_room_index)
   end
