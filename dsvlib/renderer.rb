@@ -3,6 +3,7 @@ require 'oily_png'
 
 class Renderer
   COLLISION_SOLID_COLOR = ChunkyPNG::Color::BLACK
+  COLLISION_SEMISOLID_COLOR = ChunkyPNG::Color.rgba(127, 127, 127, 255)
   COLLISION_DAMAGE_COLOR = ChunkyPNG::Color.rgba(255, 0, 0, 255)
   COLLISION_WATER_COLOR = ChunkyPNG::Color.rgba(0, 0, 255, 255)
   
@@ -84,13 +85,19 @@ class Renderer
     end
   end
   
-  def ensure_tilesets_exist(folder, room)
+  def ensure_tilesets_exist(folder, room, collision=false)
     room.layers.each do |layer|
       tileset_filename = "#{folder}/#{room.area_name}/Tilesets/#{layer.tileset_filename}.png"
-      if File.exist?(tileset_filename)
-        next
-      else
+      if !File.exist?(tileset_filename)
         render_tileset(layer.ram_pointer_to_tileset_for_layer, room.palette_offset, room.graphic_tilesets_for_room, layer.colors_per_palette, layer.collision_tileset_ram_pointer, tileset_filename)
+      end
+      
+      if collision
+        collision_tileset_filename = "#{folder}/#{room.area_name}/Tilesets/#{layer.tileset_filename}_collision.png"
+        
+        if !File.exist?(collision_tileset_filename)
+          render_collision_tileset(layer.collision_tileset_ram_pointer, collision_tileset_filename)
+        end
       end
     end
   end
@@ -267,7 +274,11 @@ class Renderer
     
     if tile.is_slope
       if tile.has_top && tile.slope_piece > 0 && !tile.is_gradual_slope
-        graphic_tile.rect(0, 0, 15, 4, stroke_color = COLLISION_SOLID_COLOR, fill_color = COLLISION_SOLID_COLOR)
+        graphic_tile.rect(0, 0, 15, 4, stroke_color = COLLISION_SOLID_COLOR, fill_color = COLLISION_SEMISOLID_COLOR)
+        
+        if tile.vertical_flip
+          graphic_tile.flip!
+        end
       elsif tile.has_top
         if tile.is_gradual_slope && tile.not_a_half_slope
           x_offset = tile.slope_piece*16
@@ -310,7 +321,7 @@ class Renderer
       if tile.has_top && tile.has_sides_and_bottom
         graphic_tile.rect(0, 0, 15, 15, stroke_color = color, fill_color = color)
       elsif tile.has_top
-        graphic_tile.rect(0, 0, 4, 4, stroke_color = color, fill_color = color)
+        graphic_tile.rect(0, 0, 16, 4, stroke_color = color, fill_color = COLLISION_SEMISOLID_COLOR)
       elsif tile.has_sides_and_bottom
         graphic_tile.polygon([0, 0, 7, 7, 15, 0, 15, 15, 0, 15], stroke_color = color, fill_color = color)
       end
