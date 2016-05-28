@@ -44,8 +44,8 @@ class TMXInterface
       entity.type = props["06 (type)"]
       entity.subtype = props["07 (subtype)"]
       entity.byte_8 = props["08"]
-      entity.var_a = props["var_a"]
-      entity.var_b = props["var_b"]
+      entity.var_a = props["09 (var_a)"]
+      entity.var_b = props["11 (var_b)"]
       
       room.entities << entity
     end
@@ -110,13 +110,15 @@ class TMXInterface
           layer_name = "layer %08X" % layer.layer_metadata_ram_pointer
           xml.layer(:name => layer_name,
                     :width => layer.width*16, :height => layer.height*12,
-                    :opacity => layer.opacity/31.0,
-                    :z_index => layer.z_index,
-                    :colors_per_palette => layer.colors_per_palette) {
+                    :opacity => layer.opacity/31.0) {
             
             xml.properties {
-              xml.property(:name => "layer_width",  :value => "%02X" % layer.width)
-              xml.property(:name => "layer_height", :value => "%02X" % layer.height)
+              xml.property(:name => "layer_width",        :value => "%02X" % layer.width)
+              xml.property(:name => "layer_height",       :value => "%02X" % layer.height)
+              xml.property(:name => "z_index",            :value => "%02X" % layer.z_index)
+              xml.property(:name => "colors_per_palette", :value => "%02X" % layer.colors_per_palette)
+              xml.property(:name => "tileset",            :value => "%08X" % layer.ram_pointer_to_tileset_for_layer)
+              xml.property(:name => "collision_tileset",  :value => "%08X" % layer.collision_tileset_ram_pointer)
             }
             
             xml.data(to_tmx_level_data(layer.tiles, layer.width, get_block_offset_for_tileset(layer.tileset_filename, all_tilesets_for_room)), :encoding => "csv")
@@ -163,8 +165,8 @@ class TMXInterface
                 xml.property(:name => "06 (type)", :value => "%02X" % entity.type)
                 xml.property(:name => "07 (subtype)", :value => "%02X" % entity.subtype)
                 xml.property(:name => "08", :value => "%02X" % entity.byte_8)
-                xml.property(:name => "var_a", :value => "%04X" % entity.var_a)
-                xml.property(:name => "var_b", :value => "%04X" % entity.var_b)
+                xml.property(:name => "09 (var_a)", :value => "%04X" % entity.var_a)
+                xml.property(:name => "11 (var_b)", :value => "%04X" % entity.var_b)
               }
             }
           end
