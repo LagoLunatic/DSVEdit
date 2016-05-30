@@ -345,28 +345,6 @@ ITEM_TYPES = [
     ]
   },
   {
-    name: "Body Armor",
-    list_pointer: 0x0209BE88,
-    count: 61,
-    format: [
-      [2, "Item ID"],
-      [1, "Icon"],
-      [1, "Palette"],
-      [4, "Price"],
-      [1, "Type"],
-      [1, "Unknown 1"],
-      [1, "Attack"],
-      [1, "Defense"],
-      [1, "Strength"],
-      [1, "Constitution"],
-      [1, "Intelligence"],
-      [1, "Luck"],
-      [2, "Resistances", :bitfield],
-      [1, "Unknown 2"],
-      [1, "Unknown 3"],
-    ]
-  },
-  {
     name: "Weapons",
     list_pointer: 0x0209C34C,
     count: 79,
@@ -392,7 +370,29 @@ ITEM_TYPES = [
       [2, "Swing Modifiers", :bitfield],
       [2, "Swing Sound"],
     ]
-  }
+  },
+  {
+    name: "Body Armor",
+    list_pointer: 0x0209BE88,
+    count: 61,
+    format: [
+      [2, "Item ID"],
+      [1, "Icon"],
+      [1, "Palette"],
+      [4, "Price"],
+      [1, "Type"],
+      [1, "Unknown 1"],
+      [1, "Attack"],
+      [1, "Defense"],
+      [1, "Strength"],
+      [1, "Constitution"],
+      [1, "Intelligence"],
+      [1, "Luck"],
+      [2, "Resistances", :bitfield],
+      [1, "Unknown 2"],
+      [1, "Unknown 3"],
+    ]
+  },
 ]
 
 ITEM_BITFIELD_ATTRIBUTES = {

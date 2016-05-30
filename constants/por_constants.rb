@@ -469,30 +469,6 @@ ITEM_TYPES = [
     ]
   },
   {
-    name: "Body Armor",
-    list_pointer: 0x020E2BA4,
-    count: 58,
-    format: armor_format
-  },
-  {
-    name: "Head Armor",
-    list_pointer: 0x020E1FA4,
-    count: 38,
-    format: armor_format
-  },
-  {
-    name: "Leg Armor",
-    list_pointer: 0x020E1CEC,
-    count: 29,
-    format: armor_format
-  },
-  {
-    name: "Accessories",
-    list_pointer: 0x020E2334,
-    count: 42,
-    format: armor_format
-  },
-  {
     name: "Weapons",
     list_pointer: 0x020E3114,
     count: 73,
@@ -520,7 +496,31 @@ ITEM_TYPES = [
       [2, "Swing Modifiers", :bitfield],
       [2, "Swing Sound"],
     ]
-  }
+  },
+  {
+    name: "Body Armor",
+    list_pointer: 0x020E2BA4,
+    count: 58,
+    format: armor_format
+  },
+  {
+    name: "Head Armor",
+    list_pointer: 0x020E1FA4,
+    count: 38,
+    format: armor_format
+  },
+  {
+    name: "Leg Armor",
+    list_pointer: 0x020E1CEC,
+    count: 29,
+    format: armor_format
+  },
+  {
+    name: "Accessories",
+    list_pointer: 0x020E2334,
+    count: 42,
+    format: armor_format
+  },
 ]
 
 ITEM_BITFIELD_ATTRIBUTES = {

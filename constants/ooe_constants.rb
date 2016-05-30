@@ -482,15 +482,15 @@ ITEM_TYPES = [
     format: armor_format
   },
   {
-    name: "Accessories",
-    list_pointer: 0x020EFE58,
-    count: 39,
-    format: armor_format
-  },
-  {
     name: "Leg Armor",
     list_pointer: 0x020EF50C,
     count: 21,
+    format: armor_format
+  },
+  {
+    name: "Accessories",
+    list_pointer: 0x020EFE58,
+    count: 39,
     format: armor_format
   },
   {
