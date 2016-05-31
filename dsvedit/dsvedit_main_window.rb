@@ -52,8 +52,6 @@ class DSVEdit < Qt::MainWindow
     
     @tiled = TMXInterface.new
     
-    @cached_enemy_pixmaps = {}
-    
     connect(@ui.actionOpen_Folder, SIGNAL("activated()"), self, SLOT("open_folder_dialog()"))
     connect(@ui.actionExtract_ROM, SIGNAL("activated()"), self, SLOT("extract_rom_dialog()"))
     connect(@ui.actionSave, SIGNAL("activated()"), self, SLOT("save_files()"))
@@ -100,6 +98,7 @@ class DSVEdit < Qt::MainWindow
     @game = Game.new
     game.initialize_from_rom(rom_path, extract_to_hard_drive = true)
     @renderer = Renderer.new(game.fs)
+    @cached_enemy_pixmaps = {}
     
     initialize_dropdowns()
     
@@ -110,6 +109,7 @@ class DSVEdit < Qt::MainWindow
     @game = Game.new
     game.initialize_from_folder(folder_path)
     @renderer = Renderer.new(game.fs)
+    @cached_enemy_pixmaps = {}
     
     initialize_dropdowns()
     
