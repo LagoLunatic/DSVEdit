@@ -1,0 +1,40 @@
+
+Collision tileset:
+Each block in the tileset is 4 bytes long.
+Starts from the first real tile, not the blank tile.
+Byte 1: The collision of this tile. See Tile collision values.
+Byte 2: 00
+Byte 3: 0B
+Byte 4: 3C
+
+Tile collision values:
+Bitfield. Least significant bit first.
+Bits 1-4: Varies depending on whether this tile is a slope or not. See Tile collision values for slopes/non-slopes.
+Bit 5:
+Bit 6:
+Bit 7: Slope TODO
+Bit 8:
+
+Tile collision values for non-slopes:
+Least significant bit first.
+Bit 1: Platform you can jump up through. Combine with bit 2 to get a fully solid block.
+Bit 2: Solid bottom, left, and right, but top pushes you downwards and out to either the left or right.
+Bit 3: Damage
+Bit 4: Water
+
+Tile collision values for slopes:
+Least significant bit first.
+Bit 1: Must be 1 for the slope to be solid, otherwise it acts as an air block.
+Bit 2: Floor slope when 0, ceiling slope when 1.
+Bit 3: When 0, slopes from top left to bottom right. When 1, slopes from bottom left to top right.
+Bit 4: Nothing.
+
+1000
+1010
+0100 - Normal slope.
+1100 - 4-part slope, highest part.
+1101 - 4-part slope, higher-middle part.
+1110 - 4-part slope, lower-middle part.
+1111 - 4-part slope, lowest part.
+
+00110011 - Half-height solid block.

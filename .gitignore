@@ -1,7 +1,8 @@
 ui_*.rb
 *.yml
 /logs
-/docs
+/docs/unorganized
+/docs/lists
 /lua scripts
 /build
 /armips

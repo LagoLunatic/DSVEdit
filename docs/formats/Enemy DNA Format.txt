@@ -1,0 +1,100 @@
+DoS Enemy DNA (36 bytes long):
+Bytes 1-4: Pointer to enemy initialization code.
+Bytes 5-8: Pointer to enemy running AI code.
+Bytes 9-10: The Item1 this enemy drops. 00 means no item, so the actual item list is offset by 1 (potion is 01 instead of 00).
+Byte 11-12: The Item2 this enemy drops. See above.
+Byte 13: Unknown. Usually 00, but not always.
+Byte 14: Unknown. Ranges from 1 (for Zombie) to 99 decimal (for Dracula). As you scroll down the list of enemies this value only gets bigger or stays the same, never smaller.
+Bytes 15-16: Max HP.
+Bytes 17-18: Max MP.
+Bytes 19-20: EXP.
+Byte 21: Chance to drop its soul. 00 is a guaranteed drop, but after that it scales from 01 (rare) to FF (common, but not guaranteed).
+Byte 22: Attack stat.
+Byte 23: Defense stat.
+Byte 24: Chance to drop an item.
+Bytes 25-26: ???
+Byte 27: ID of soul this enemy drops (see soul ID list).
+Byte 28: ???
+Byte 29-30: Which elements this enemy is weak to. Bitfield.
+  Least significant bit first.
+  Bit 1: Clubs
+  Bit 2: Spears
+  Bit 3: Swords
+  Bit 4: Fire
+  Bit 5: Water
+  Bit 6: Lightning
+  Bit 7: Dark
+  Bit 8: Holy
+  Bit 9: Poison
+  Bit 10: Curse
+  Bit 11: Earth
+  Bit 12: Unused.
+  Bit 13: Unused.
+  Bit 14: Unused.
+  Bit 15: Unused.
+  Bit 16: The enemy is made of flesh, it makes a fleshy sound effect and graphical effect when you attack it.
+Bytes 31-32: ??
+Bytes 33-34: Which elements this enemy is resistant to. Bitfield.
+  Least significant bit first.
+  Bit 1: Clubs
+  Bit 2: Spears
+  Bit 3: Swords
+  Bit 4: Fire
+  Bit 5: Water
+  Bit 6: Lightning
+  Bit 7: Dark
+  Bit 8: Holy
+  Bit 9: Poison
+  Bit 10: Curse
+  Bit 11: Earth
+  Bit 12: Unused.
+  Bit 13: Immune to time stop.
+  Bit 14: Unknown. All bosses and Final Guard have this set.
+  Bit 15: Immune to backstabs.
+  Bit 16: Unknown. Only used by Tombstone.
+Bytes 35-36: 00 00
+
+PoR Enemy DNA (32 bytes long):
+Bytes 1-4: Enemy init code.
+Bytes 5-8: Enemy running AI.
+Bytes 9-10: Item 1
+Bytes 11-12: Item 2
+Byte 13: ???
+Byte 14: SP.
+Bytes 15-16: Max HP.
+Bytes 17-18: EXP.
+Byte 19: ???
+Byte 20: Attack stat.
+Byte 21: Defense stat.
+Byte 22: ???
+Byte 23: Chance to drop item 1
+Byte 24: Chance to drop item 2
+Bytes 25-26: Weaknesses
+Bytes 27-28: ???
+Bytes 29-30: Resistances
+Bytes 31-32: ??? If the highest bit is flipped the enemy has corrupted graphics and palette.
+
+OoE Enemy DNA (36 bytes long):
+Bytes 1-4: Enemy init code.
+Bytes 5-8: Enemy running AI.
+Bytes 9-10: Item 1
+Bytes 11-12: Item 2
+Byte 13: ???
+Byte 14: ???
+Bytes 15-16: Max HP
+Bytes 17-18: EXP
+Byte 19: ???
+Byte 20: ???
+Bytes 21-22: Glyph
+Byte 23: Chance to drop glyph
+Byte 24: Attack
+Byte 25: ???
+Byte 26: ???
+Byte 27: Chance to drop item 1
+Byte 28: Chance to drop item 2
+Bytes 29-30: Weaknesses
+Bytes 31-32: ??? Bitfield.
+  Least significant bit first.
+  Bit 10: Enemy takes extra damage (117 -> 176)
+Bytes 33-34: Resistances
+Bytes 35-36: ??? If the highest bit is flipped the enemy has corrupted graphics and palette.

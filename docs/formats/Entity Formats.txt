@@ -1,0 +1,65 @@
+
+Entity list:
+Each entity is 12 bytes long.
+The end of the list for entities in this room is marked by the following 12 bytes: FF 7F FF 7F 00 00 00 00 00 00 00 00
+
+Entity:
+Bytes 1-2: Entity's x position in the room, in pixels.
+Bytes 3-4: Entity's y position in the room, in pixels.
+Byte 5: ???
+Byte 6: Entity type.
+Byte 7: Entity subtype.
+Byte 8: ???
+Bytes 9-10: Entity variable A.
+Bytes 11-12: Entity variable B.
+
+
+
+Entity type (DoS):
+00 Nothing.
+01 Enemy. Entity subtype determines which enemy. It's equal to ID of enemy in the bestiary, except starting at 0 instead of at 1.
+02 Special object. Entity subtype determines which object. See special object list details on each object.
+03 Candlestick (doesn't care about entity subtype).
+04 Item/soul. See item subtype list.
+05+ Nothing?
+
+Item subtype (DoS):
+00 Heart. Var B changes the type of heart, 0 is small, 1 or higher is big.
+01 Money. Var B changes the value of the coin/bag.
+02 Item: consumable. Var b is the local ID of the consumable.
+03 Item: weapon.     Var b is the local ID of the weapon.
+04 Item: body armor. Var b is the local ID of the body armor.
+05+ Free soul.       Var b is the global ID of the soul.
+
+
+
+Entity type (PoR):
+00 Nothing.
+01 Enemy. Entity subtype determines which enemy. It's equal to ID of enemy in the bestiary, except starting at 0 instead of at 1.
+02 Special object. Entity subtype determines which object. See special object list details on each object.
+03 Candlestick (doesn't care about entity subtype).
+04 Item/skill/relic. See item subtype list.
+05 nothing?
+06 nothing?
+07 Item/skill/relic
+08+ nothing?
+
+Item subtype (PoR):
+00 Big heart?
+01 100 dollar coin?
+02 Item: consumable. Var b is the local ID of the consumable.
+03 Item: weapon.     Var b is the local ID of the weapon.
+04 Item: body armor. Var b is the local ID of the body armor.
+05 Item: head armor. Var b is the local ID of the head armor.
+06 Item: feet armor. Var b is the local ID of the feet armor.
+07 Item: accessory.  Var b is the local ID of the accessory.
+08+ Skill.           Var b is the local ID of the skill.
+
+
+
+Entity type (OoE):
+00 Nothing.
+01 Enemy. Entity subtype determines which enemy. It's equal to ID of enemy in the bestiary, except starting at 0 instead of at 1.
+02 Object. Entity subtype determines which object. See special object list details on each object.
+03 Generic candle. Always drops a heart, even if you don't need one. Unaffected by subtype.
+04 Pickup. See pickups list.

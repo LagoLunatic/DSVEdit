@@ -1,0 +1,59 @@
+
+Room metadata (32 bytes long):
+Bytes 1-4: Always 0.
+Bytes 5-8: Always 0.
+Bytes 9-12: Pointer to layer list for this room.
+Bytes 13-16: Pointer to tileset wrapper A for this room.
+Bytes 17-20: Pointer to palette wrapper for this room.
+Bytes 21-24: Pointer to entity list for this room.
+Bytes 25-28: Pointer to door list for this room.
+Bytes 29-32: Varies by game. See below.
+
+Last 4 bytes of room metadata (DoS):
+Most significant bit first.
+  Bits 1-3:
+  Bits 4-9: Room's Y position on the map.
+  Bit 10:
+  Bits 11-16: Room's X position on the map.
+  Bits 17-32: Number of doors this room has.
+
+Last 4 bytes of room metadata (PoR and OoE):
+Most significant bit first.
+  Bits 1-4:
+  Bits 5-9: Index of the palette page to use for this room.
+  Bits 10-11: 
+  Bits 12-18: Room's Y position on the map.
+  Bits 19-25: Room's X position on the map.
+  Bits 26-32: Number of doors this room has.
+
+Layer list:
+Always 64 bytes long. Each entry takes up 16 bytes, so the maximum number of layers in a room is 4.
+If a room has less than 4 layers, the remaining entries will simply be filled with all 00s to indicate those should be ignored.
+Whichever layer is first in the layer list will be used for collision.
+Format for each entry here:
+Byte 1: Z-Index to draw the layer at. TODO: List some examples.
+Byte 2: How the layer scrolls. TODO: Figure out how it works.
+Byte 3: Opacity of the layer. 0 is invisible, 31 (0x1F) is fully visible. In OoE 0 looks fully visible, so the lowest you can get there is 1.
+Byte 4: Unknown.
+Bytes 5-8: Unknown. If changed it resets every time you re-enter the room, unlike the other values here.
+Byte 9: Render mode of the layer. 00 and 01 are normal 16 color mode. Anything higher is 256 color mode. However different areas require a different, specific value. TODO: Figure out how this works.
+Byte 10: Affects palette somehow?
+Byte 11-12: Affects tileset and palette somehow? Only has an effect when in 256 color mode.
+Byte 13-16: Pointer to layer metadata.
+
+Layer metadata (16 bytes long):
+Byte 1: Number of screens wide this layer is (maximum 15 screens wide).
+Byte 2: Number of screens tall this layer is (maximum 15 screens tall).
+Byte 3: Always 0.
+Byte 4: Always 0.
+Bytes 5-8: Something related to tile graphics.
+Bytes 9-12: Pointer to the collision tileset used by this layer.
+Bytes 13-16: Pointer to this layer's tile data.
+
+Layer tile data:
+List of this layer's tiles. Each tile is 2 bytes long. Each screen is 16 blocks wide and 12 blocks tall. So each screen takes up 384 bytes here.
+Format for each tile here:
+Most significant bit first.
+  First bit is whether the tile is flipped vertically.
+  Second bit is whether the tile is flipped horizontally.
+  Remaining 14 bits are the index of which tile to use from the tileset, 1 meaning the first tile on the tileset, 0 meaning a blank tile.

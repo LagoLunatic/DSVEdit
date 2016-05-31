@@ -1,0 +1,265 @@
+Weapon format (DoS):
+28 bytes long.
+Bytes 1-2: Item ID.
+Byte 3: Equip menu graphic.
+Byte 4: Palette the equip menu graphic.
+Bytes 5-8: Store price of the item.
+Byte 9: Animation Soma plays when swinging the weapon.
+  00: Fast stab.
+  01: Normal stab.
+  02: Slash.
+  03: Overhead swing.
+  04: Far forward stab.
+  05: Slightly different overhead swing.
+  06: Slightly different overhead swing.
+  07: Japanese sword.
+  08: Punch.
+  09: Firing a pistol.
+  0A: Fast Japanese sword.
+  0B: Firing a rocket launcher.
+  0C: Stab.
+  0D+: Not weapon animations, just animations like Soma walking or standing.
+Byte 10: 
+Byte 11: Attack stat.
+Byte 12: Defense stat.
+Byte 13: Strength stat (signed).
+Byte 14: Constitution stat (signed).
+Byte 15: Intelligence stat (signed).
+Byte 16: Luck stat (signed).
+Bytes 17-18:
+  Least significant bit first.
+  Bit 1: 
+  Bit 3: Has some effect on damage. Doesn't actually affect atk/str stats though. RPG has this bit set. Since RPG is known to do damage independent of Soma's stats, that's probably what's happening here.
+  Bit 6: Has electrical graphic/sound effect when hitting an enemy. Also doubles damage?
+  Bit 8: Has the holy graphic/sound effect of the Claimh Solais when hitting an enemy. Also doubles damage?
+  Bit 9: Poison effect.
+  Bit 10: Curse effect.
+  Bit 11: Petrification effect.
+Byte 19: 
+Byte 20: 
+Byte 21: Affects graphics of the weapon.
+Byte 22: Super attack animation.
+  00: This weapon has no super attack.
+  01: Overhead swing while moving forward.
+  02: Quick overhead swing while moving forward.
+  03: Backstab (Cutall/Alucard Sword).
+  04: Axe jump up.
+  05: Three fast overhead swings.
+  06: One fast overhead swing.
+  07: Overhead swing with weird effect??
+  08: Uppercut.
+  09: Overhead swing.
+  0A: Seems to be the Death Scythe effect of sending the skull forward (though the skull's graphics are replaced with the current weapon's graphics).
+  0B: 
+  0C: Ice breath?
+  0D: Explosion?
+  0E: Claimh Solais' huge sword overhead swing.
+  0F+: Crash.
+Byte 23: 
+Byte 24: 
+Byte 25-26: Bitfield affecting the attack animation and super attack animation.
+  Least significant bit first.
+  Bit 1: Animation doesn't get interrupted when Soma lands.
+  Bit 2: Weapon doesn't follow Soma, it floats in the air where Soma started swinging it.
+  Bit 3: 
+  Bit 4: Soma doesn't play a swinging animation. This normally means the weapon stops swinging immediately, but combine this with bit 10 and you can swing the weapon and walk around at the same time, like with the Valmanway.
+  Bit 7: Makes weapon transparent.
+  Bit 8: Gives weapon a shaky echo effect and moves it up above Soma higher than it should be.
+  Bit 9: Weapon doesn't stop swinging when Soma's swinging animation ends. Only seems to do anything if combined with bit 5.
+Bytes 27-28: Swinging sound effect of the weapon.
+
+Body armor and Accessory format (DoS):
+20 bytes long.
+Bytes 1-2: Item ID.
+Byte 3: Equip menu graphic.
+Byte 4: Palette the equip menu graphic.
+Bytes 5-8: Store price of the item.
+Byte 9: 01 for body armor, 02 for rings...?
+Byte 10: 
+Byte 11: Attack stat? Unused for rings/body armor
+Byte 12: Defense stat.
+Byte 13: Strength stat (signed).
+Byte 14: Constitution stat (signed).
+Byte 15: Intelligence stat (signed).
+Byte 16: Luck stat (signed).
+Byte 17: Bitfield for what elemental resistances this armor gives you.
+Byte 18:
+Byte 19:
+Byte 20:
+
+Consumable format (DoS):
+16 bytes long.
+Bytes 1-2: Item ID.
+Byte 3: Use menu graphic. If this is FF it means the item is a magic seal.
+Byte 4: Palette for the equip menu graphic. If the item is a magic seal this is instead which magic seal it is (00 being Magic Seal 1, etc).
+Bytes 5-8: Store price of the item.
+Byte 9: Type of the item. 0 restores HP, 1 restores MP, 2 is special, 3 subtracts HP, 4 cannot be used.
+Byte 10: Always 00, no effect.
+Bytes 11-12: Varies by the item type.
+  For type 0: Amount of HP to restore.
+  For type 1: Amount of MP to restore.
+  For type 2:
+    00: Cannot be used.
+    01: Cures poison.
+    02: Nullifies curse.
+  For type 3: Amount of HP to subtract.
+  For type 4: No effect.
+Bytes 13-16: Always 00 00 00 00.
+
+
+
+Consumable format (PoR):
+12 bytes long.
+Same as DoS but without the last 4 bytes.
+
+Armor format (PoR):
+24 bytes long.
+Bytes 1-2: Item ID.
+Byte 3: Equip menu graphic.
+Byte 4: Palette
+Bytes 5-8: Store price of the item.
+Byte 9: 02 for accessories, 01 for other types of armor.
+Byte 10: 
+Byte 11: Bitfield for who can equip this item.
+  Least significant bit first.
+  Bit 1: Jonathan can equip the item.
+  Bit 2: Charlotte can equip the item.
+Byte 12: Attack stat? Unused for rings/body armor
+Byte 13: Defense stat.
+Byte 14: Strength stat (signed).
+Byte 15: Constitution stat (signed).
+Byte 16: Intelligence stat (signed).
+Byte 17: Mind stat (signed).
+Byte 18: Luck stat (signed).
+Byte 19:
+Byte 20:
+Bytes 21-22: Bitfield for what elemental resistances this armor gives you.
+Byte 23:
+Byte 24:
+
+Weapon format (PoR):
+32 bytes long.
+Bytes 1-2: Item ID.
+Bytes 3-4: Equip menu icon.
+Bytes 5-8: Store price of the item.
+Byte 9: Animation the player character plays when swinging the weapon.
+  00: Fast stab.
+  02: Slash.
+  03: Fast overhead swing.
+  04: Far forward stab.
+  05: Slow overhead swing.
+  06: Slow overhead swing, same as 05?
+  07: Punch.
+  08: Whip.
+  09: Book.
+Byte 10: Graphical effect.
+  00: No effect.
+  01: Nebula.
+  02: Flame Whip.
+  03: Rahab's Frost.
+  04: Agni's Flame.
+  05: Heaven's Sword (throw the weapon straight in front of you, then it comes back to you).
+  06: Illusion Fist.
+  07: Tori (throw the weapon diagonally upwards, then it comes back to you).
+  08+: Crash.
+Byte 11: ?
+Byte 12: Attack stat.
+Byte 13: Defense stat.
+Byte 14: Strength stat (signed).
+Byte 15: Constitution stat (signed).
+Byte 16: Intelligence stat (signed).
+Byte 17: Mind stat (signed).
+Byte 18: Luck stat (signed).
+Byte 19: ?
+Byte 20: ?
+Bytes 21-22: Bitfield for the elemental damage types this weapon deals.
+Bytes 23-24: Bitfield.
+  Least significant bit first.
+  Bit 16: Unknown, set for all fist weapons (except the default fists you get when nothing is equipped).
+  Bit 20: Can kill Red Skeletons/Axe Armors.
+Byte 25: Sprite to use for the weapon when you swing it. Doesn't just effect visuals, also hitboxes.
+Byte 26: Palette offset to use for the weapon when you swing it.
+Bytes 27-28: ?
+Byte 29-30: Bitfield affecting the attack animation and super attack animation.
+  Least significant bit first.
+  Bit 1: Animation doesn't get interrupted when the player lands.
+  Bit 2: Weapon doesn't follow the player, it floats in the air where the player started swinging it.
+  Bit 3: Unused.
+  Bit 4: The player doesn't play a swinging animation.
+  Bit 5: No trailing slash effect on the weapon.
+  Bit 6: ??? Used for Heaven's Sword.
+  Bit 7: ???
+  Bit 8: Gives weapon a shaky echo effect.
+  Bit 9: If combined with bit 4, the weapon stops swinging immediately. Basically this is the inverse of how it worked in DoS.
+  Bit 10:
+  Bit 11:
+  Bit 12: Weapon persists even when the player's swing animation end.
+  Bit 13: Whip cannot be dangled.
+  Bit 14:
+  Bit 15:
+  Bit 16:
+Bytes 31-32: Swinging sound effect of the weapon.
+
+
+
+Arm glyph format (OoE):
+32 bytes long.
+Bytes 1-2: Item ID.
+Bytes 3-4: Attack.
+Bytes 5-8: Pointer to code run when using the glyph.
+Byte 12: Mana cost of using this glyph.
+Bytes 21-22: Icon.
+Byte 23: Bitfield.
+  Least significant bit first.
+  Bit 2: Makes the swinging sound effect and Shanoa's shouts come from off the left of the screen instead of the center.
+  Bit 5: On for melee glyphs. Off for projectile glyphs. Effect unknown.
+Byte 28: Delay in frames before you're allowed to use this glyph again after you use it once.
+Byte 29: Swing sound.
+Byte 30: 
+Byte 31: 
+Byte 32: 
+
+Back glyph format (OoE):
+28 bytes long.
+Bytes 1-2: Item ID.
+Bytes 3-4: 
+Bytes 5-8: Pointer to code run when using the glyph.
+Byte 9: GFX?
+Byte 10:
+Byte 11:
+Byte 12: Mana cost.
+Bytes 13-16: 
+Bytes 17-20: 
+Bytes 21-22: Icon.
+Byte 23: Bitfield?
+Byte 24:
+Bytes 25-28:
+
+Relic format (OoE):
+12 bytes long.
+Bytes 1-2: Item ID.
+Byte 3: Relic ID (from 1-6).
+Byte 4: 30.
+Bytes 5-12: Always 0.
+
+Armor format (OoE):
+20 bytes long.
+Bytes 1-2: Item ID.
+Byte 3: Equip menu graphic.
+Byte 4: Palette
+Bytes 5-8: Store price of the item.
+Byte 9: 02 for accessories, 01 for other types of armor.
+Byte 10: ???
+Byte 11: Defense stat.
+Byte 12: Strength stat (signed).
+Byte 13: Constitution stat (signed).
+Byte 14: Intelligence stat (signed).
+Byte 15: Mind stat (signed).
+Byte 16: Luck stat (signed).
+Bytes 17-18: Bitfield for what elemental resistances this armor gives you.
+Byte 19:
+Byte 20:
+
+Consumable format (OoE):
+12 bytes long.
+Same as PoR.
