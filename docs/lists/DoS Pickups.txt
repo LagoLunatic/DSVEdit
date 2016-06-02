@@ -1,0 +1,129 @@
+Soul ID list:
+=== Red souls
+00 Puppet Master
+01 Zephyr
+02 Paranoia
+03 Imp
+04 Skeleton
+05 Zombie
+06 Axe Armor
+07 Student Witch
+08 Warg
+09 Bomber Armor
+0A Amalaric Sniper
+0B Cave Troll
+0C Waiter Skeleton
+0D Slime
+0E Yorick
+0F Une
+10 Mandragora
+11 Rycuda
+12 Fleaman
+13 Ripper
+14 Guillotiner
+15 Killer Clown
+16 Malachi
+17 Disc Armor
+18 Great Axe Armor
+19 Slaughterer
+1A Hell Boar
+1B Frozen Shade
+1C Merman
+1D Larva
+1E Ukoback
+1F Decarabia
+20 Succubus
+21 Slogra
+22 Erinys
+23 Homunculus
+24 Witch
+25 Fish Head
+26 Mollusca
+27 Dead Mate
+28 Killer Fish
+29 Malacoda
+2A Flame Demon
+2B Aguni
+2C Abaddon
+2D Hell Fire
+2E NULL. Alucard's ability to transform into a bat. On Soma it uses his normal bat company graphics.
+2F NULL. Yoko's fire spell.
+30 NULL. Yoko's ice spell.
+31 NULL. Yoko's electricity spell.
+32 NULL. Julius's cross.
+33 NULL. Julius's holy water.
+34 NULL. Julius's grand cross.
+=== Blue souls
+35 Flying Armor
+36 Bat Company
+37 Black Panther
+38 Armor Knight
+39 Spin Devil
+3A Skull Archer
+3B Ghost
+3C Yeti
+3D Buer
+3E Manticore
+3F Mushussu
+40 White Dragon
+41 Catoblepas
+42 Gorgon
+43 Persephone
+44 Flying Humanoid
+45 Devil
+46 Medusa Head
+47 Final Guard
+48 Werewolf
+49 Alura Une
+4A Iron Golem
+4B Bone Ark
+4C Barbariccia
+4D Valkyrie
+4E Bat
+4F Great Armor
+50 Mini Devil
+51 Harpy
+52 Corpseweed
+53 Quetzalcoatl
+54 Needles
+55 Alastor
+56 Gaibon
+57 Gergoth
+58 Death
+=== Yellow souls
+59 Golem
+5A Bone Pillar
+5B Lilith
+5C Ghost Dancer
+5D Tanjelly
+5E Bugbear
+5F Arc Demon
+60 Giant Slug
+61 Killer Doll
+62 Tombstone
+63 Treant
+64 Ghoul
+65 Skelerang
+66 Skeleton Ape
+67 Dead Warrior
+68 Dead Pirate
+69 Draghignazzo
+6A Heart Eater
+6B Peeping Eye
+6C Skeleton Farmer
+6D The Creature
+6E Mimic
+6F Mothman
+70 Ouija Table
+71 Dead Crusader
+72 Stolas
+73 Wakwak Tree
+=== Ability souls
+74 Balore
+75 Malphas
+76 Doppelganger
+77 Rahab
+78 Hippogryph
+79 Procel
+7A Mud Demon
+7B+ Grey soul that has no name and does nothing.

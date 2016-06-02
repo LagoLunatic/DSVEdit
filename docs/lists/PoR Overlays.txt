@@ -1,0 +1,16 @@
+
+0      021CDF60 
+1      0221F680 Strings for everything except character names and events.
+2      0221F680 Strings for character names and events.
+3-4    0222C840 
+5      022B2A80 
+6      022B2AE0 
+7      022B7660 
+8      022D0F40 
+9-24   022D7500 
+25     022D7900 
+26-39  022E01A0
+40-42  022D7900 
+43-77  022D7900 Enemy code.
+78-117 022E8820 Rooms. (except 116?)
+118    022E04A0 Rooms for area 13, an unused area.

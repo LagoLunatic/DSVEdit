@@ -1,0 +1,5 @@
+
+Global ID (Local ID)
+00-41 (00-41): Consumables + Magic Seals
+42-90 (00-4E): Weapons
+91-AE (00-3C): Body armor + Accessories

@@ -1,0 +1,195 @@
+Special objects:
+01 Candle or other destructible piece of scenery. Var A controls the type:
+  00-0D Normal objects.
+  0E-0F Money chests.
+  10-19 More normal objects.
+  1A+ Nothing.
+02 
+03 nothing
+04 
+05 
+06 
+07 
+08 
+09 
+0A 
+0B 
+0C 
+0D 
+0E 
+0F 
+10 
+11 
+12 
+13 
+14 
+15 
+16 
+17 
+18 
+19 
+1A Portrait.
+  Var a: Area index of the destination room.
+  Var b:
+    (Least to most significant bit order)
+    Bits 1-6: Room index of destination room.
+    Bits 7-10: Sector index of the destination room.
+    Bits 11-16: Nothing.
+1B nothing
+1C Drawbrige. Requires overlay 78.
+1D save point
+1E warp point
+1F nothing
+20 spiked pillar trap that falls down
+21 crash
+22 Boss door.
+  Var a:
+  Var b:
+23 
+24 
+25 
+26 
+27 
+28 
+29 
+2A 
+2B 
+2C 
+2D 
+2E 
+2F 
+30 
+31 
+32 
+33 
+34 
+35 
+36 
+37 used but seems to be nothing
+38
+39
+3A
+3B Breakable wall.
+  Var a: Which wall it is.
+3C
+3D
+3E
+3F
+40
+41
+42
+43
+44
+45 used in stairway leading up to throne room
+46 Elevator from Tower of Death. Requires overlay 85.
+47
+48
+49 used in stairway leading up to throne room
+4A in death's boss room.
+4B
+4C
+4D Pushable recntagular block.
+  Var a: 0 for tall block, 1 for short block.
+4E
+4F stops the music
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+5A
+5B
+5C
+5D used but seems to be nothing
+5E used but seems to be nothing
+5F
+61
+62
+63
+64
+65
+66
+67 used in stairway leading up to throne room
+68
+69
+6A
+6B
+6C
+6D
+6E
+6F
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79 The bloody text that appears the first time you enter a new area. Var A is which area name to display.
+7A
+7B
+7C
+7D
+7E
+7F
+80
+81
+82 Wooden door separating areas.
+83
+84
+85
+86 portrait (black, no graphic)
+87
+88
+89
+8A
+8B
+8C Switch next to elevator from Tower of Death you have to hit to activate it.
+8D
+8E
+8F in the sister's boss room
+90
+91
+92
+93
+94
+95 event in first room of game?
+96
+97
+98 used but seems to be nothing
+99
+9A
+9B
+9C
+9D
+9E
+9F
+A0 event in death's boss room.
+A1
+A2 event in the sister's boss room.
+A3 event in the sister's boss room.
+A4 event in the sister's boss room.
+A5 event in lost gallery
+A6 event in lost gallery
+A7 event in the stairway leading up to the throne room
+A8 event in dracula's throne room?
+A9 
+AA event in epilogue
+AB event in epilogue
+AC
+AD
+AE event in the sister's boss room.
+AF event in first room of game?
+B0 event in lost gallery
+B1
+B2
+B3
+B4 event in vincent's room?
+B5 event in wind's room?

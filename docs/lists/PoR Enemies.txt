@@ -1,0 +1,13 @@
+33 Skeleton Gunman
+  Come in threes. First and third are kneeling, the middle one is standing.
+  Var b: Distance in pixels between the first and third gunmen. (The middle one is placed halfway between the others.)
+8B Behemoth
+  Var b: When 2, the scripted Behemoth that chases you. When 0, normal Behemoth.
+91 Stella
+  Var a: 0 for just Stella. 1 for the double fight with both Stella and Loretta.
+  Var b: 0 for boss rush. 1 for normal.
+92 Loretta
+  Doesn't do anything but bob up and down if placed. Should instead by spawned by Stella.
+  Var b: Normally 0. If greater than 0, then Loretta doesn't bob up and down or animate at all, she's just frozen completely still.
+94 The Creature
+  Var a: 1 for boss rush. 0 for normal.

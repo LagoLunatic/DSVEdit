@@ -1,0 +1,19 @@
+00 Zombie
+  Var a: When 0, it's a single zombie. When greater than 0 it's a spawner that infinitely creates zombie. Var a might also control the rate at which they spawn?
+01 Bat
+  Var a: When 0, it's a single bat that hangs on the ceiling. When greater than 0, it's a spawner for bats that flying from the sides of the screen. Var a controls the delay in frames between each bat spawning, so lower values cause bats to spawn more quickly.
+2E Fleaman
+  Var a: Number of fleamen to spawn. (They only spawn once when you enter the room, not infinitely.) If this is 0, then 1 fleaman spawns instead.
+3A Malachi
+  For a normal Malachi, set var a to 0 and var b to 1.
+  For the Malachi that just stands still for Dmitrii's event set var a to 1 and var b to 0.
+68 Dmitrii
+  Var a: 1 for normal Dmitrii fight, this seems to crash the game when he dies if the events are in his room. 0 for boss rush Dmitrii.
+6C Gergoth
+  Var a: 1 and Gergoth will fall down the tower after when his health gets low, 0 and he'll never fall (for boss rush).
+  Var b: 0
+6F Paranoia
+  Var a: 2 for normal paranoia fight, 1 for mini paranoia fight, 0 for boss rush paranoia fight.
+  Var b: 0
+71 Death
+  Both var a and var b are 1 for normal death fight, 0 for boss rush.

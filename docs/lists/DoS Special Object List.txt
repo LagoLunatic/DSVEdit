@@ -1,0 +1,160 @@
+Special objects:
+00 A rectangle of blocks breakable by the balore soul.
+  Var a is the width of the rectangle in blocks.
+  Var b is the height of the rectangle in blocks.
+01 A destructible such as a candle. Var A controls the type:
+  00 The glowing lamp vessel containing a soul (with var B controlling which soul is in it).
+  01-0F Just normal candles, each with a different graphic.
+  10 Chest containing money.
+  11-17 More candle graphics, including statues and grandfather clocks.
+  18-FF Buggy candles, that have mismatched graphics, sfx, and contents, or they just don't show up at all.
+02 Water level.
+03 
+04 Some kind of water visual effect
+05 
+06 
+07 START text appears and music changes to boss rush or whatever it is. also does something with enemy set mode TODO
+08 Ends boss rush. also does something with enemy set mode TODO
+09 Chair. Var A is the type of chair (if an invalid chair type is set, no chair will appear). Var B is the orientation - 00 is right-facing, 01 or higher is left-facing.
+0A A mirror.
+  If you use paranoia to enter the mirror for a room that isn't set up to support mirrors, the screen just stays white and doesn't fade out (though a cutscene can fade it out). You can't exit the mirror using paranoia. You can't exit the room via the doors. Also, the doors don't block you from moving like they would in a normal mirror room - presumably some special object or tiles need to be set up to block the door.
+0B used in throne room
+0C 
+0D Part of the big sliding puzzle in the demon guest house.
+  This object acts as the walls (and number) for a room. The visuals for the walls (and number) are fixed on screen and scroll with the screen. But the physical walls are locked to the top screen. Var a controls which number room it is.
+  00: Probably the empty room with no number.
+  01-0F: 1-15.
+  10: Just a horizontal wall visual in the exact center of the screen, no collision.
+  11: Same as 10, but vertical instead of horizontal.
+  12: The 3 "out arrows" in the puzzle room that show you where you can go.
+  13+: The 1 "in arrow".
+0E Snow effect.
+0F Car with snow on it.
+10 Platform moving up and down.
+11 Fog effect (like in the lost village).
+12 Cog you can walk on. Spinning speed is controlled by var b.
+13 Locks the screen scrolling at the top left screen and doesn't follow soma.
+14 That horizontally moving platform that takes you through the long room with balore blocks. TODO: what is var a?
+15 
+16 
+17 
+18 Long golden platform, always appears at the bottom of the first screen, and locks the screen scrolling to that screen.
+19 Bloody spike that spins around. Spinning speed controlled by var b.
+1A Like 19, but the actual spike is broken off so it can't hurt you.
+1B Pendulum...? Animation speed affected by var b.
+1C Button?
+1D Wooden door (for area connections).
+1E 
+1F Portrait of a woman whose eyes follow you around.
+20 Blockade that appears right at the start of the game.
+21 Appears the drawbridge room?
+22 
+23 Huge bell you can walk on.
+24 
+25 Boss door.
+  Var a is is how the door acts. Values:
+    00 Door outside the boss room that you need a magic seal to open.
+    01 Door inside the boss room that opens when the boss is killed.
+    02 gergoth?
+    03 Door inside the boss room that doesn't open when the boss is killed (e.g. the right door in mini Paranoia's room).
+  Var b is the boss this door is for. Values:
+    01 Flying Armor
+    02 Balore
+    03 Dmitrii
+    04 Malphas
+    05 Dario
+    06 Puppet Master
+    07 Gergoth
+    08 Rahab
+    09 Zephyr
+    0A Bat Company
+    0B Aguni
+    0C Paranoia
+    0D Death
+    0E Doppelganger (the event in the center of the castle)
+    0F Abaddon
+26 
+27 
+28 Some kind of platform...?
+29
+2A 
+2B Animated tiny waterfall.
+2C Chandelier? upside down maybe?
+2D Hanging spikes, disappear when you get near them.
+2E crash
+2F applies a very strange visual effect to the tiles of the room.
+30 Save room. Not just the save point like in PoR and OoE, this is the whole room's graphics, and locks itself to the upper left screen. You can't collide with its tiles though, so you must still place collision tiles for this room. Var a is the direction of the save room: 0 has a door on the left, 1 has a door on the right.
+31 Warp room, works just like save room.
+32 Room that transports you to the abyss.
+33 
+34 The 3d background in condemned tower.
+35 
+36 Causes the background to flicker slightly. Entity byte 8 is sometimes set, sometimes not, but doesn't seem to change anything? Used in Menace's room among others.
+37 
+38 Fades the music out to nothing. music comes back when you leave the room. This is used in transition rooms.
+39 Keys of the piano you can play from the demon guest house.
+3A The cannon + time pillar that you need Zephyr's soul to get past.
+3B The darkness barrier in the condemned tower that you can't get past until late in the game.
+3C Yoko. After you've trigger the event for Yoko to follow you, she will follow you in any rooms that this special object is placed in. She won't follow you into rooms without this object.
+3D The castle in the background in the epilogue. Also permanently changes the top screen to the symbol you see during cutscenes.
+3E The bouncing ball in the puzzle with touch screen blocks. It just explodes instantly if it's not inside touch screen blocks.
+3F The one strongman puzzle you have to hit with a hammer.
+40 Yellow square TODO. Changes into what looks like tiles depending on var a. Inner square rotates depending on var b,
+41 Puts a timer on screen and restarts the current music track.
+42 The item you get as a reward at the end of boss rush.
+43 
+44 A destroyable wall (for hiding secret rooms). Var A changes which wall it is (the color, the direction, etc). Some values for var A (such as FFFF) corrupt the way the map looks - probably because destroying this wall is supposed to reveal the secret on the map. These tend to face downwards?
+45 A button and a gate opened by the button. (Maybe for letting the water level down?)
+46 More destroyable walls like 44. But these tend to be facing to the right or upwards.
+47 Hammer (can be used as a shop)
+48 Yoko (can be used for weapon synth, etc)
+49 Red wall with an enemy on it that opens up when you use that enemy's soul against the wall. Var a controls which enemy:
+  00 Skeleton
+  01 Axe Armor
+  02 Killer Clown
+  03 Ukoback
+4A 
+4B That puzzle that can be zapped?
+4C A consumable, like regular consumables var B controls which one it is. But why is this a special object?
+4D 
+4E 
+4F 
+50
+51
+52
+53
+54
+55
+56 used in prologue room
+57
+58 used in menace's room
+59 
+5A entity used in transition rooms to hide the fact that they have no tiles.
+5B 
+5C used in menace's room
+=== Below are events. Var A may be an identifier for each event to check if it's been seen already or not. Var B is unknown.
+5D Event - prologue
+5E Event - soma walking into the castle and meeting hammer.
+5F Event - julius leaves yoko at the drawbridge.
+60 Event - by the door to flying armor's room with yoko.
+61 Event - something in flying armor's room.
+62 Event - soma meeting dario and dmitrii in wizardry lab.
+63 Event - dmitrii and the malachi in the demon guest house.
+64 Event - dario in his the garden of madness.
+65 Event - arikado gives mina's talisma to soma
+66 Event - in the room of condemned tower that is sealed.
+67 Event - celia warping in and talking to soma when he enters the clock tower.
+68 Event - Julius defeated by Dario in the silenced ruins.
+69 Event - throne room.
+6A Event - when celia pretends to kill mina in the center of the castle.
+6B Event - in the room of condemned tower that is sealed.
+6C Event - menace related
+6D Event - menace related
+6E Event - menace related
+6F Event - appears in the first room of dracula's castle. probably for julius mode, as it doesn't do anything in soma mode.
+70 Event - arikado and julius in the first room of the castle after soma became the dark lord, talking about how they'll have to kill him now.
+71 Event - epilogue. soma and arikado watch the castle collapse.
+72 Event - epilogue. ???
+73 Event - in Yoko's room.
+74 Event - julius meets alucard
+75 Event - Julius/Yoko/Alucard meets evil Soma in the throne room at the end of Julius mode.

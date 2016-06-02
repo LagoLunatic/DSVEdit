@@ -14,7 +14,7 @@ EXTRACT_EXTRA_ROOM_INFO = Proc.new do |last_4_bytes_of_room_metadata|
   [number_of_doors, room_xpos_on_map, room_ypos_on_map, palette_page_index]
 end
 
-# Overlays 78 to 116. Missing: 116
+# Overlays 78 to 118. Missing: 116
 AREA_INDEX_TO_OVERLAY_INDEX = {
   0 => { # castle
      0 => 78,

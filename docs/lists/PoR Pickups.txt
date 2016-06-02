@@ -1,0 +1,49 @@
+Skill/Relic IDs
+=== Unused/Richter Mode Skills
+00 --- (Blank skill)
+01 Puppet Master
+02 Axe (Richter)
+03 Cross (Richter)
+04 Holy Water (Richter)
+05 Cross (Richter's big cross)
+06 Seiryu (Maria's dragon)
+07 Suzaku (red birds)
+08 Byakko (cat)
+09 Gnebu
+=== Jonathan's Subweapons
+0A Knife (#1 ingame)
+0B Axe
+0C Cross
+0D Holy Water
+0E Bible
+0F Javelin
+10 Ricochet Rock
+...
+26 Rocket Slash
+=== Spells
+27 Toad Morph
+...
+50 Summon Frog
+=== Dual Crushes
+51 --- Dual Crush
+52 Rush
+53 Holy Lightning
+...
+5B Greatest Five (#81 ingame)
+=== Relics
+5C Change Cube
+5D Call Cube
+5E Skill Cube
+5F Wait Cube
+60 Acrobat Cube
+61 Push Cube
+62 Lizard Tail
+63 Stone of Flight
+64 Griffon Wing
+65 Strength Glove
+66 Spinning Art
+67 Martial Art
+68 Critical Art
+69 Whip Skill 1
+6A Whip Skill 2
+6B Book of Spirits

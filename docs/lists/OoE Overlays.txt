@@ -1,0 +1,9 @@
+
+0     021DD280 Strings (English).
+1     021DD280 Strings (French).
+2-18  021FFDA0 
+19-20 021FFFC0 
+21-23 02223E00 
+24-38 022B73A0 Enemy code.
+39    022B73A0 Wireless mode.
+40-85 022C1FE0 Rooms. (75 also has Dracula's palette.)

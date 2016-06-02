@@ -17,6 +17,7 @@ Byte 6: Entity type.
   06 ??? Makes all non-boss enemies in the room disappear?
   07 Loads font for event text. Without this entity in the room, text will look like garbage.
   08 ???
+  09 ???
 Byte 7: Entity subtype. See below.
 Byte 8: ???
 Bytes 9-10: Entity variable A.
