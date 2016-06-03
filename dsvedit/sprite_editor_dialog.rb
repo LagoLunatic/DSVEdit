@@ -208,6 +208,12 @@ class SpriteEditor < Qt::Dialog
     end
     
     @ui.gfx_page_index.setCurrentIndex(i)
+    
+    part = @sprite.parts[@ui.part_index.currentIndex]
+    selection_rectangle = Qt::GraphicsRectItem.new
+    selection_rectangle.setPen(RED_PEN_COLOR)
+    selection_rectangle.setRect(part.gfx_x_offset, part.gfx_y_offset, part.width, part.height)
+    @gfx_file_graphics_scene.addItem(selection_rectangle)
   end
   
   def palette_changed(palette_index, force=false)
@@ -237,10 +243,6 @@ class SpriteEditor < Qt::Dialog
     part = @sprite.parts[i]
     gfx_page_changed(part.gfx_page_index)
     palette_changed(part.palette_index)
-    selection_rectangle = Qt::GraphicsRectItem.new
-    selection_rectangle.setPen(RED_PEN_COLOR)
-    selection_rectangle.setRect(part.gfx_x_offset, part.gfx_y_offset, part.width, part.height)
-    @gfx_file_graphics_scene.addItem(selection_rectangle)
   end
   
   def animation_changed(i)
