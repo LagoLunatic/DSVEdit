@@ -88,6 +88,7 @@ class SpriteEditor < Qt::Dialog
     @frame_graphics_scene.setSceneRect(0, 0, full_width, full_height)
     
     @current_frame_index = 0
+    @current_part_index = 0
     
     @ui.frame_index.clear()
     @sprite.frames.each_index do |i|
@@ -209,7 +210,7 @@ class SpriteEditor < Qt::Dialog
     
     @ui.gfx_page_index.setCurrentIndex(i)
     
-    part = @sprite.parts[@ui.part_index.currentIndex]
+    part = @sprite.parts[@current_part_index]
     selection_rectangle = Qt::GraphicsRectItem.new
     selection_rectangle.setPen(RED_PEN_COLOR)
     selection_rectangle.setRect(part.gfx_x_offset, part.gfx_y_offset, part.width, part.height)
@@ -232,6 +233,7 @@ class SpriteEditor < Qt::Dialog
   end
   
   def part_changed(i)
+    @current_part_index = i
     @part_graphics_scene.items.each do |item|
       @part_graphics_scene.removeItem(item)
     end
