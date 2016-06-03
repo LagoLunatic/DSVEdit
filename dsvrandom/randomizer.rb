@@ -439,7 +439,7 @@ class Randomizer
     elsif entity.subtype == 0x02 && entity.var_a == 0x00
       # Glyph statue
       randomize_pickup_ooe(entity)
-    elsif entity.subtype == 0x15 || entity.subtype == 0x16
+    elsif (0x15..0x17).include?(entity.subtype)
       # Chest
       randomize_pickup_ooe(entity)
     end
@@ -500,19 +500,25 @@ class Randomizer
   end
   
   def randomize_pickup_ooe(pickup)
-    unless [0x15, 0x16].include?(pickup.subtype) || (pickup.subtype == 0x02 && pickup.var_a == 0x00) # wooden chest, red chest, or glyph statue
+    unless (0x15..0x17).include?(pickup.subtype) || (pickup.subtype == 0x02 && pickup.var_a == 0x00) # chest or glyph statue
       return
     end
     
     pickup.subtype = [0x15, 0x16, 0x02].sample(random: rng)
     case pickup.subtype
     when 0x15
+      # Wooden chest
       pickup.var_a = rng.rand(0x00..0x0F)
       pickup.var_b = 0
     when 0x16
-      # Chest
+      # Red chest
       pickup.var_a = rng.rand(0x0070..0x0162)
       pickup.var_b = get_unique_id()
+      
+      if rng.rand(1..100) < 15
+        # Blue chest
+        pickup.subtype = 0x17
+      end
     when 0x02
       # Glyph statue
       pickup.var_a = 0x00

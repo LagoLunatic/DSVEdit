@@ -27,7 +27,7 @@ Special Object Subtypes
 16 Red chest.
   Var A controls what item is inside it, it's the global ID of the item + 1. 0 means the chest won't appear. If you put a glyph in the chest nothing will appear when you open it.
   Var B is the ID the game uses to keep track of whether you've opened this chest yet or not.
-17
+17 Blue chest. Hidden in the floor, you must stand over it and crouch to reveal it. Var A and var B work like red chests.
 18 Does several strange things, overwrites the entities for this room in ram (with level data maybe?) and lags the emulator so much it almost seems frozen
 19 crash
 1A 
