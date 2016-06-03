@@ -3,7 +3,7 @@ require 'fileutils'
 require 'optparse'
 require 'yaml'
 
-require_relative 'dsve'
+require_relative 'dsvlib'
 
 options = {}
 OptionParser.new do |opts|
