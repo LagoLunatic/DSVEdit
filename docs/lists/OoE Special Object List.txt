@@ -1,36 +1,54 @@
-Special Object Subtypes
-00 nothing
-01 magnes grapple point
-02
+Special Objects:
+00 Nothing.
+01 Magnes grapple point.
+02 Destructible.
   When var A is 00 it's a statue that yields a glyph when destroyed. Var B controls what glyph it is, it's the global ID of the glyph + 1.
   When var A is 01 to 1E, it's a candle.
   When var A is 1F or higher, it looks like a glyph statue but has a messed up palette, and it may yield either a glyph or money like a candle.
-03
+03 Unused and no apparent effect.
 04 large block with spikes on its right side that shanoa can push. part of an unused puzzle?
-05 stone block that shanoa can push and it breaks if it falls.
-06 water level.
+05 Stone block that shanoa can push and it breaks if it falls.
+06 Water level.
 07 paries entry point. when var a is 00 it points left, when var a is 01 it points right.
-08 3 2 1 start!
+08 Activates practice mode with "3 2 1 Start!"
 09 teleports shanoa to the middle-left of the upper-left screen of the room.
-0A
-0B crash
-0C
-0D
-0E
-0F
+0A Powerup in practice mode. Will only appear if in practice mode, as triggered by object 08.
+  Var A is which powerup:
+    00 Invincibility.
+    01 is increased run speed.
+    02 High jump.
+    03 Darkness skull.
+0B Crash. Appears in unused Wygol Village room.
+0C Nothing? Appears in unused Wygol Village room.
+0D Boarded up door in unused Wygol Village room. Both this and 0E must be there for the door to appear.
+  Var A is which door, 0 being the leftmost and 3 being the rightmost.
+0E Boarded up door in unused Wygol Village room. Both this and 0E must be there for the door to appear.
+  Var A is which door, 0 being the leftmost and 3 being the rightmost.
+0F Nothing? Appears in unused Wygol Village room. Like 0D and 0E, there are 4 of these corresponding to the 4 doors, but removing 0F doesn't make the door disappear.
 10 adds the boss rush timer to the screen. timer doesn't go away. reentering the room restarts the timer.
-11 boss rush portal that takes you to the next boss. doesn't appear unless you have the boss rush timer on screen. crashes when you enter it.
-12 crash
+11 Boss rush portal that takes you to the next boss. Doesn't appear unless the boss rush timer is on screen. Crashes when you enter it.
+12 Crash. Used in final room of boss rush that gives you the prize.
 13 Pot of infinite big hearts.
-14
+14 Row of spikes.
+  Var A is the style of spikes:
+    00 Normal floor spikes (Lighthouse)
+    04 Stone floor spikes (Tymeo Mountains)
+    08 Metal floor spikes (Mechanical Tower)
+    09 Metal left wall spikes
+    0A Metal ceiling spikes (Mechanical Tower)
+    0C Ice floor spikes (Tristis Pass)
+    10 Spiked balls (Training Chamber)
+  Var B is the number of blocks wide the spikes span.
 15 Wooden/green chest. Var A controls the item in it?
 16 Red chest.
   Var A controls what item is inside it, it's the global ID of the item + 1. 0 means the chest won't appear. If you put a glyph in the chest nothing will appear when you open it.
   Var B is the ID the game uses to keep track of whether you've opened this chest yet or not.
 17 Blue chest. Hidden in the floor, you must stand over it and crouch to reveal it. Var A and var B work like red chests.
 18 Does several strange things, overwrites the entities for this room in ram (with level data maybe?) and lags the emulator so much it almost seems frozen
-19 crash
-1A 
+19 Part of the waterfall in Tristis pass. This object is responsible for making it impossible for Shanoa to jump up the waterfall, and making bubbles appear around Shanoa when she is inside it.
+1A Movement blocker. The area covered by this object will act impassable, both to Shanoa in human form and in Paries form.
+  Var A: Width of the area.
+  Var B: Height of the area.
 1B Same as 1C?
 1C Background shadow for Shanoa. Var A is the z-index of the shadow (can make the shadow go on top of Shanoa with this). Var B affects what layer the shadow is constrained onto (TODO: figure out specifics).
 1D 
@@ -46,6 +64,7 @@ Special Object Subtypes
 27 hard crash
 28 crash
 29 Bloody platform.
+2A 
 2B Area exit. touching it puts you back on the world map. extends infinitely vertically. also draws the arrows pointing out.
 2C Wygol door that leads into a house. Vars A and B both do something - they seem to affect the x/y position Shanoa will appear in the house.
 2D crash
@@ -67,16 +86,16 @@ Special Object Subtypes
 37
 38 crash
 39
-3A crash
+3A 3D boat in the background of Kalidus channel.
 3B Pneuma glyph and the wind puzzle around it.
-3C
+3C Something in Kalidus channel?
 3D crash
 3E Darkness overlay from Minera Prison Island.
   If var A is 0 the searchlights are on. If it's 1 they're off.
   If var A is 1 and the Giant Skeleton isn't dead yet then the searchlights take control away from the player and wait for the Giant Skeleton to do its thing (if he's not in the room the game will softlock).
   TODO: look into how enemies are spawned by searchlights.
 3F Cat. Var a controls which cat it is.
-40 crash
+40 The falling block puzzle from the monastery.
 41 Object that floats (supposed to be in the water). Var a changes what it is:
   00 Log platform
   01 Crate platform
@@ -120,8 +139,8 @@ Special Object Subtypes
 4D Wooden door. (todo: how does this differ from 2E?)
 4E Ecclesia door.
 4F Hides the ui, then crash.
-50 crash
-51 crash
+50 crash. used in eligor's room
+51 crash. used in room with the cerberus gate
 52 Fire hazard from training hall. Var a controls... uh, something. Var b also controls... something.
 53 crash
 54 crash
@@ -131,13 +150,48 @@ Special Object Subtypes
   01 Counter-clockwise
 57 crash
 58 Wygol's sky background.
+59 
+5A 
+5B 
+5C 
+5D 
+5E 
 5F barrels in wygol (only when var a is 5)
-
 === Events
 60 event - in barlowe's room
 61 event - starting room of game
+62 
 63 event - tutorial room
-
+64 
+65 
+66 
+67 
+68 
+69 
+70 
+71 
+72 
+73 
+74 
+75 
+76 
+77 
+79 
+7A 
+7B 
+7C 
+7D 
+7E 
+7F 
+80 used in room with the cerberus gate
+81 used in room after Eligor with Arma Custos in it
+82 used in room after Eligor with Arma Custos in it
+83 used in room after Eligor with Arma Custos in it
+84 used in room with the cerberus gate
+85 
+86 
+87 
+88 
 89 - a villager in torpor along with the event associated with them.
   var a: which villager.
     2A Jacob
