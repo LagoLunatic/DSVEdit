@@ -15,7 +15,7 @@ Special Objects:
 0A Powerup in practice mode. Will only appear if in practice mode, as triggered by object 08.
   Var A is which powerup:
     00 Invincibility.
-    01 is increased run speed.
+    01 Increased run speed.
     02 High jump.
     03 Darkness skull.
 0B Crash. Appears in unused Wygol Village room.
@@ -94,9 +94,9 @@ Special Objects:
   If var A is 0 the searchlights are on. If it's 1 they're off.
   If var A is 1 and the Giant Skeleton isn't dead yet then the searchlights take control away from the player and wait for the Giant Skeleton to do its thing (if he's not in the room the game will softlock).
   TODO: look into how enemies are spawned by searchlights.
-3F Cat. Var a controls which cat it is.
+3F Cat. Var A controls which cat it is.
 40 The falling block puzzle from the monastery.
-41 Object that floats (supposed to be in the water). Var a changes what it is:
+41 Object that floats (supposed to be in the water). Var A changes what it is:
   00 Log platform
   01 Crate platform
   02 Red ball
@@ -136,7 +136,7 @@ Special Objects:
     0E ??? TODO
     0F Dracula
 4C crash
-4D Wooden door. (todo: how does this differ from 2E?)
+4D Wooden door in Ecclesia. Unlike a regular wooden door (2E), this one will be locked at the beginning of the game.
 4E Ecclesia door.
 4F Hides the ui, then crash.
 50 crash. used in eligor's room
