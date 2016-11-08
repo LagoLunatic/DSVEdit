@@ -140,6 +140,7 @@ class Room
     if door_list_ram_pointer > (0x02000000+ARM9_LENGTH) && door_list_ram_pointer < fs.overlays[0][:ram_start_offset]
       # A pointer to nothing here indicates the room has no doors (e.g. Menace's room).
       @doors = []
+      @original_number_of_doors = 0
       return
     end
     
