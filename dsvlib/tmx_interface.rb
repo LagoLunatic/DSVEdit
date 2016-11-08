@@ -14,6 +14,8 @@ class TMXInterface
     room.room_ypos_on_map = room_props["map_y"]
     room.write_last_4_bytes_to_rom()
     
+    all_tilesets_for_room = room.layers.map{|layer| layer.tileset_filename}.uniq
+    
     tiled_layers = xml.css("layer")
     tiled_layers.each do |tmx_layer|
       props = extract_properties(tmx_layer)
@@ -26,7 +28,7 @@ class TMXInterface
       game_layer = possible_layers.first
       game_layer.width  = props["layer_width"]
       game_layer.height = props["layer_height"]
-      game_layer.tiles = from_tmx_level_data(tmx_layer.css("data").text, game_layer.width, game_layer.height)
+      game_layer.tiles = from_tmx_level_data(tmx_layer.css("data").text, game_layer.width, game_layer.height, get_block_offset_for_tileset(game_layer.tileset_filename, all_tilesets_for_room))
       
       game_layer.write_to_rom()
     end
@@ -201,7 +203,7 @@ class TMXInterface
     block_offset
   end
   
-  def from_tmx_level_data(tile_data_string, width, height)
+  def from_tmx_level_data(tile_data_string, width, height, block_offset)
     tile_rows = tile_data_string.strip.split("\n").map{|row_str| row_str.scan(/\d+/).map{|str| str.to_i}}
     width_in_blocks = width * 16
     height_in_blocks = height * 12
@@ -232,7 +234,7 @@ class TMXInterface
       index_on_tileset = (block & ~(0x80000000 | 0x40000000 | 0x20000000))
       
       tile = Tile.new
-      tile.index_on_tileset = index_on_tileset - 1
+      tile.index_on_tileset = index_on_tileset - block_offset
       tile.horizontal_flip = horizontal_flip
       tile.vertical_flip = vertical_flip
       game_tiles << tile
