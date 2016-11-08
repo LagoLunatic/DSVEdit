@@ -1,6 +1,7 @@
 
 class Sprite
   attr_reader :sprite_file,
+              :part_list_offset,
               :hitbox_list_offset,
               :frame_list_offset,
               :frame_delay_list_offset,
@@ -28,12 +29,12 @@ class Sprite
       raise "Unknown magic bytes: %08X" % magic_bytes
     end
     
-    @hitbox_list_offset, @frame_list_offset,
+    @part_list_offset, @hitbox_list_offset, @frame_list_offset,
       @frame_delay_list_offset, @animation_list_offset, unused_1, unused_2,
-      @file_footer_offset, @number_of_frames, @number_of_animations = fs.read_by_file(sprite_file[:file_path], 0x08, 36).unpack("V*")
+      @file_footer_offset, @number_of_frames, @number_of_animations = fs.read_by_file(sprite_file[:file_path], 0x04, 40).unpack("V*")
     
     @parts = []
-    (0x40..hitbox_list_offset-1).step(16) do |offset|
+    (part_list_offset..hitbox_list_offset-1).step(16) do |offset|
       part_data = fs.read_by_file(sprite_file[:file_path], offset, 16)
       @parts << Part.new(part_data)
     end
@@ -107,26 +108,26 @@ class Hitbox
 end
 
 class Frame
-  attr_reader :has_hitbox,
+  attr_reader :number_of_hitboxes,
               :number_of_parts,
-              :hitbox_offset,
+              :unused_hitbox_offset,
               :part_offset,
               :part_indexes,
               :parts,
               :hitbox_index,
-              :hitbox
+              :hitboxes
   
   def initialize(frame_data, all_sprite_parts, all_sprite_hitboxes)
-    unk1, unk2, @has_hitbox, @number_of_parts, @hitbox_offset, @part_offset = frame_data.unpack("CCCCVV")
+    unk1, unk2, @number_of_hitboxes, @number_of_parts, @unused_hitbox_offset, @part_offset = frame_data.unpack("CCCCVV")
     
     parts_start_index = (part_offset / 0x10)
     @part_indexes = (parts_start_index..parts_start_index+number_of_parts-1).to_a
     @parts = @part_indexes.map{|i| all_sprite_parts[i]}
     
-    if @has_hitbox > 0
-      @hitbox_index = hitbox_offset / 0x08
-      @hitbox = all_sprite_hitboxes[hitbox_index]
+    if all_sprite_hitboxes.length < number_of_hitboxes
+      raise "Not enough hitboxes left"
     end
+    @hitboxes = all_sprite_hitboxes.shift(number_of_hitboxes)
   end
 end
 

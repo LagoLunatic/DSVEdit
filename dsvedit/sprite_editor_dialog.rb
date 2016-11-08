@@ -183,11 +183,13 @@ class SpriteEditor < Qt::Dialog
     end
     @ui.frame_number_of_parts.text = "%02X" % frame.part_indexes.length
     
-    if frame.hitbox && @ui.show_hitbox.checked
-      hitbox_item = Qt::GraphicsRectItem.new
-      hitbox_item.setPen(RED_PEN_COLOR)
-      hitbox_item.setRect(frame.hitbox.x_pos - @min_x, frame.hitbox.y_pos - @min_y, frame.hitbox.width, frame.hitbox.height)
-      @frame_graphics_scene.addItem(hitbox_item)
+    if @ui.show_hitbox.checked
+      frame.hitboxes.each do |hitbox|
+        hitbox_item = Qt::GraphicsRectItem.new
+        hitbox_item.setPen(RED_PEN_COLOR)
+        hitbox_item.setRect(hitbox.x_pos - @min_x, hitbox.y_pos - @min_y, hitbox.width, hitbox.height)
+        @frame_graphics_scene.addItem(hitbox_item)
+      end
     end
   end
   

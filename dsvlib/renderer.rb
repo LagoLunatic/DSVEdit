@@ -418,7 +418,7 @@ class Renderer
     return img
   end
   
-  def render_sprite(gfx_files_with_blanks, palette_pointer, palette_offset, sprite, frame_to_render = nil, render_hitbox = false)
+  def render_sprite(gfx_files_with_blanks, palette_pointer, palette_offset, sprite, frame_to_render = nil, render_hitboxes = false)
     if gfx_files_with_blanks.first[:render_mode] == 1
       palettes = generate_palettes(palette_pointer, 16)
     elsif gfx_files_with_blanks.first[:render_mode] == 2
@@ -485,10 +485,13 @@ class Renderer
         rendered_frame.compose!(part_gfx, x, y)
       end
       
-      if frame.hitbox && render_hitbox
-        x = frame.hitbox.x_pos - min_x
-        y = frame.hitbox.y_pos - min_y
-        rendered_frame.rect(x, y, x + frame.hitbox.width, y + frame.hitbox.height, stroke_color = hitbox_color, fill_color = ChunkyPNG::Color::TRANSPARENT)
+      if render_hitboxes
+        puts frame.hitboxes.size
+        frame.hitboxes.each do |hitbox|
+          x = hitbox.x_pos - min_x
+          y = hitbox.y_pos - min_y
+          rendered_frame.rect(x, y, x + hitbox.width, y + hitbox.height, stroke_color = hitbox_color, fill_color = ChunkyPNG::Color::TRANSPARENT)
+        end
       end
       
       rendered_frames << rendered_frame
