@@ -50,7 +50,15 @@ class Entity
     is_enemy? && BOSS_IDS.include?(subtype)
   end
   
+  def is_special_object?
+    type == 0x02
+  end
+  
   def is_pickup?
-    raise NotImplementedError
+    type == 0x04
+  end
+  
+  def is_item?
+    is_pickup? && ITEM_LOCAL_ID_RANGES.keys.include?(subtype)
   end
 end
