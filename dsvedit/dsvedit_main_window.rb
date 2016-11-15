@@ -4,6 +4,7 @@ require_relative 'text_editor_dialog'
 require_relative 'settings_dialog'
 require_relative 'sprite_editor_dialog'
 require_relative 'item_editor_dialog'
+require_relative 'entity_search_dialog'
 
 require_relative 'ui_main'
 
@@ -17,6 +18,7 @@ class DSVEdit < Qt::MainWindow
   slots "open_text_editor()"
   slots "open_sprite_editor()"
   slots "open_item_editor()"
+  slots "open_entity_search()"
   slots "open_settings()"
   slots "write_to_rom()"
   slots "build_and_run()"
@@ -59,6 +61,7 @@ class DSVEdit < Qt::MainWindow
     connect(@ui.actionText_Editor, SIGNAL("activated()"), self, SLOT("open_text_editor()"))
     connect(@ui.actionSprite_Editor, SIGNAL("activated()"), self, SLOT("open_sprite_editor()"))
     connect(@ui.actionItem_Editor, SIGNAL("activated()"), self, SLOT("open_item_editor()"))
+    connect(@ui.actionEntity_search, SIGNAL("activated()"), self, SLOT("open_entity_search()"))
     connect(@ui.actionSettings, SIGNAL("activated()"), self, SLOT("open_settings()"))
     connect(@ui.actionBuild, SIGNAL("activated()"), self, SLOT("write_to_rom()"))
     connect(@ui.actionBuild_and_Run, SIGNAL("activated()"), self, SLOT("build_and_run()"))
@@ -346,6 +349,10 @@ class DSVEdit < Qt::MainWindow
     
   def open_item_editor
     @item_editor = ItemEditor.new(self, game.fs)
+  end
+  
+  def open_entity_search
+    @entity_search_dialog = EntitySearchDialog.new(self)
   end
   
   def open_settings

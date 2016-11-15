@@ -178,6 +178,7 @@
     <addaction name="actionText_Editor"/>
     <addaction name="actionSprite_Editor"/>
     <addaction name="actionItem_Editor"/>
+    <addaction name="actionEntity_search"/>
     <addaction name="actionSettings"/>
    </widget>
    <widget class="QMenu" name="menuBuild">
@@ -272,6 +273,14 @@
    </property>
    <property name="shortcut">
     <string>I</string>
+   </property>
+  </action>
+  <action name="actionEntity_search">
+   <property name="text">
+    <string>Entity search</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+F</string>
    </property>
   </action>
  </widget>
