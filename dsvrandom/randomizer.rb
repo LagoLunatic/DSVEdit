@@ -387,10 +387,18 @@ class Randomizer
         entity.type = 0
         entity.subtype = 0
       end
-    elsif entity.subtype == 0x01 && (entity.var_a == 0x00 || entity.var_a == 0x10)
-      # Soul candle or money chest
-      entity.type = 0x04
-      randomize_pickup_dos_por(entity)
+    elsif entity.subtype == 0x01 && entity.var_a == 0x00
+      # Soul candle
+      if options[:randomize_souls_relics_and_glyphs]
+        entity.type = 0x04
+        randomize_pickup_dos_por(entity)
+      end
+    elsif entity.subtype == 0x01 && entity.var_a == 0x10
+      # Money chest
+      if options[:randomize_items]
+        entity.type = 0x04
+        randomize_pickup_dos_por(entity)
+      end
     end
   end
   
@@ -405,8 +413,10 @@ class Randomizer
       end
     elsif entity.subtype == 0x01 && (entity.var_a == 0x0E || entity.var_a == 0x0F)
       # Money chest
-      entity.type = 0x04
-      randomize_pickup_dos_por(entity)
+      if options[:randomize_items]
+        entity.type = 0x04
+        randomize_pickup_dos_por(entity)
+      end
     end
   end
   
@@ -469,26 +479,28 @@ class Randomizer
     end
     
     rand = rng.rand(1..100)
-    if (1..88).include?(rand) && options[:randomize_items]
-      # Randomize into an item
-      pickup.type = 4 # pickup
-      pickup.subtype = ITEM_LOCAL_ID_RANGES.keys.sample(random: rng)
-      pickup.var_b = rng.rand(ITEM_LOCAL_ID_RANGES[pickup.subtype])
-      
-      pickup.var_a = get_unique_id()
-    elsif (89..90).include?(rand) && options[:randomize_items]
-      # Randomize into a money chest
-      case GAME
-      when "dos"
-        pickup.type = 2 # special object
-        pickup.subtype = 1 # destructible object
-        pickup.var_a = 0x10 # money chest
-      when "por"
-        pickup.type = 2 # special object
-        pickup.subtype = 1 # destructible object
-        pickup.var_a = rng.rand(0x0E..0x0F) # money chest
+    if options[:randomize_items] && ((1..90).include?(rand) || !options[:randomize_souls_relics_and_glyphs])
+      if (1..88).include?(rand)
+        # Randomize into an item
+        pickup.type = 4 # pickup
+        pickup.subtype = ITEM_LOCAL_ID_RANGES.keys.sample(random: rng)
+        pickup.var_b = rng.rand(ITEM_LOCAL_ID_RANGES[pickup.subtype])
+        
+        pickup.var_a = get_unique_id()
+      else
+        # Randomize into a money chest
+        case GAME
+        when "dos"
+          pickup.type = 2 # special object
+          pickup.subtype = 1 # destructible object
+          pickup.var_a = 0x10 # money chest
+        when "por"
+          pickup.type = 2 # special object
+          pickup.subtype = 1 # destructible object
+          pickup.var_a = rng.rand(0x0E..0x0F) # money chest
+        end
       end
-    elsif (91..100).include?(rand) && options[:randomize_souls_relics_and_glyphs]
+    elsif options[:randomize_souls_relics_and_glyphs] && ((91..100).include?(rand) || !options[:randomize_items])
       case GAME
       when "dos"
         # Randomize into a soul lamp
