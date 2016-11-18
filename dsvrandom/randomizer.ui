@@ -15,7 +15,7 @@
   </property>
   <property name="windowIcon">
    <iconset>
-    <normaloff>images/dsvrandom_icon.png</normaloff>images/dsvrandom_icon.png</iconset>
+    <normaloff>images/dsvrandom_icon.ico</normaloff>images/dsvrandom_icon.ico</iconset>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>

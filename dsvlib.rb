@@ -23,7 +23,10 @@ require_relative 'dsvlib/tmx_interface'
 require_relative 'constants/shared_constants'
 
 if defined?(Ocra)
+  orig_verbosity = $VERBOSE
+  $VERBOSE = nil
   require_relative 'constants/dos_constants'
   require_relative 'constants/por_constants'
   require_relative 'constants/ooe_constants'
+  $VERBOSE = orig_verbosity
 end
