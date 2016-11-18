@@ -312,7 +312,7 @@ BOSS_ID_TO_BOSS_DOOR_VAR_B = {
 ITEM_LOCAL_ID_RANGES = {
   0x02 => (0x00..0x41), # consumable
   0x03 => (0x01..0x4E), # weapon
-  0x04 => (0x00..0x3D), # body armor
+  0x04 => (0x00..0x3C), # body armor
 }
 ITEM_GLOBAL_ID_RANGE = (1..0xCE)
 SOUL_GLOBAL_ID_RANGE = (0..0x7A)
