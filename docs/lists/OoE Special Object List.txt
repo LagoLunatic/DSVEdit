@@ -144,7 +144,7 @@ Special Objects:
 52 Fire hazard from training hall. Var a controls... uh, something. Var b also controls... something.
 53 crash
 54 crash
-55 Area name when you first enter it.
+55 Area name shown the first time you enter an area. Var A controls which area it is.
 56 Gear from tower of death with a magnes point attached to it. Var a is the direction:
   00 Clockwise
   01 Counter-clockwise

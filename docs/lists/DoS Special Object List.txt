@@ -12,7 +12,7 @@ Special objects:
 03 
 04 Some kind of water visual effect
 05 
-06 Area title shown the first time you enter an area. Var A controls which area it is.
+06 Area name shown the first time you enter an area. Var A controls which area it is.
 07 START text appears and music changes to boss rush or whatever it is. also does something with enemy set mode TODO
 08 Ends boss rush. also does something with enemy set mode TODO
 09 Chair. Var A is the type of chair (if an invalid chair type is set, no chair will appear). Var B is the orientation - 00 is right-facing, 01 or higher is left-facing.

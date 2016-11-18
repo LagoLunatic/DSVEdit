@@ -132,7 +132,7 @@ Special objects:
 76
 77
 78
-79 The bloody text that appears the first time you enter a new area. Var A is which area name to display.
+79 Area name shown the first time you enter an area. Var A controls which area it is.
 7A
 7B
 7C

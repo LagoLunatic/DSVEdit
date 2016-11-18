@@ -47,6 +47,10 @@ class Randomizer
       end
     end
     
+    if options[:remove_events] && GAME == "dos"
+      game.set_starting_room(0, 0, 1) # Start the game in the castle instead of the prologue area.
+    end
+    
     if options[:randomize_bosses]
       randomize_bosses()
     end
@@ -387,6 +391,11 @@ class Randomizer
         entity.type = 0
         entity.subtype = 0
       end
+    elsif entity.subtype == 0x06 && options[:remove_events]
+      # Area name
+      # Remove it
+      entity.type = 0
+      entity.subtype = 0
     elsif entity.subtype == 0x01 && entity.var_a == 0x00
       # Soul candle
       if options[:randomize_souls_relics_and_glyphs]
@@ -411,6 +420,11 @@ class Randomizer
         entity.type = 0
         entity.subtype = 0
       end
+    elsif entity.subtype == 0x79 && options[:remove_events]
+      # Area name
+      # Remove it
+      entity.type = 0
+      entity.subtype = 0
     elsif entity.subtype == 0x01 && (entity.var_a == 0x0E || entity.var_a == 0x0F)
       # Money chest
       if options[:randomize_items]
@@ -446,6 +460,11 @@ class Randomizer
         entity.type = 0
         entity.subtype = 0
       end
+    elsif entity.subtype == 0x55 && options[:remove_events]
+      # Area name
+      # Remove it
+      entity.type = 0
+      entity.subtype = 0
     elsif entity.subtype == 0x02 && entity.var_a == 0x00
       # Glyph statue
       randomize_pickup_ooe(entity)
