@@ -1,0 +1,1 @@
+rake build_installers
