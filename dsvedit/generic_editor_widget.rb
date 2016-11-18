@@ -1,5 +1,5 @@
 
-require_relative 'ui_generic_editor_widget'
+require_relative 'ui_generic_editor'
 
 class GenericEditorWidget < Qt::Widget
   attr_reader :fs

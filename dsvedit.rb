@@ -4,7 +4,7 @@ require 'yaml'
 
 require_relative 'dsvlib'
 
-require_relative 'dsvedit/dsvedit_main_window'
+require_relative 'dsvedit/main_window'
 
 $qApp = Qt::Application.new(ARGV)
 window = DSVEdit.new

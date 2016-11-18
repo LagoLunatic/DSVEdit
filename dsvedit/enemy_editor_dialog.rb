@@ -1,5 +1,5 @@
 
-require_relative 'ui_enemy'
+require_relative 'ui_enemy_editor'
 
 class EnemyEditor < Qt::Dialog
   slots "enemy_changed(int)"
