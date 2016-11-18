@@ -448,29 +448,35 @@ class Randomizer
   def randomize_pickup_dos_por(pickup)
     case GAME
     when "dos"
-      if pickup.type == 0x04 && pickup.subtype == 0x02 && (0x3D..0x41).include?(pickup.var_b)
+      return if !options[:randomize_items] && pickup.subtype < 0x05
+      return if !options[:randomize_souls_relics_and_glyphs] && pickup.subtype >= 0x05 # free soul
+      
+      if pickup.subtype == 0x02 && (0x3D..0x41).include?(pickup.var_b)
         # magic seal
         return
-      elsif pickup.type == 0x04 && pickup.subtype == 0x02 && pickup.var_b == 0x39
+      elsif pickup.subtype == 0x02 && pickup.var_b == 0x39
         # tower key
         return
       end
     when "por"
-      if pickup.type == 0x04 && pickup.subtype >= 0x08 && [0x5C, 0x5D].include?(pickup.var_b)
+      return if !options[:randomize_items] && pickup.subtype < 0x08
+      return if !options[:randomize_souls_relics_and_glyphs] && pickup.subtype >= 0x08 # relic
+      
+      if pickup.subtype >= 0x08 && [0x5C, 0x5D].include?(pickup.var_b)
         # change cube or call cube
         return
       end
     end
     
-    case rng.rand(1..100)
-    when 1..88
+    rand = rng.rand(1..100)
+    if (1..88).include?(rand) && options[:randomize_items]
       # Randomize into an item
       pickup.type = 4 # pickup
       pickup.subtype = ITEM_LOCAL_ID_RANGES.keys.sample(random: rng)
       pickup.var_b = rng.rand(ITEM_LOCAL_ID_RANGES[pickup.subtype])
       
       pickup.var_a = get_unique_id()
-    when 89..90
+    elsif (89..90).include?(rand) && options[:randomize_items]
       # Randomize into a money chest
       case GAME
       when "dos"
@@ -482,7 +488,7 @@ class Randomizer
         pickup.subtype = 1 # destructible object
         pickup.var_a = rng.rand(0x0E..0x0F) # money chest
       end
-    when 91..100
+    elsif (91..100).include?(rand) && options[:randomize_souls_relics_and_glyphs]
       case GAME
       when "dos"
         # Randomize into a soul lamp
@@ -504,7 +510,18 @@ class Randomizer
       return
     end
     
-    pickup.subtype = [0x15, 0x16, 0x02].sample(random: rng)
+    return if !options[:randomize_items] && (0x15..0x17).include?(pickup.subtype) # chest
+    return if !options[:randomize_souls_relics_and_glyphs] && pickup.subtype == 0x02 && pickup.var_a == 0x00 # glyph statue
+    
+    allowed_subtypes = []
+    if options[:randomize_items]
+      allowed_subtypes += [0x15, 0x16] # chest
+    end
+    if options[:randomize_souls_relics_and_glyphs]
+      allowed_subtypes += [0x02] # glyph statue
+    end
+    pickup.subtype = allowed_subtypes.sample(random: rng)
+    
     case pickup.subtype
     when 0x15
       # Wooden chest
