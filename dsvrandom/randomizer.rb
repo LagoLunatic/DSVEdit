@@ -248,7 +248,7 @@ class Randomizer
     when "Balore"
       if boss_entity.var_a == 2
         # Not actually Balore, this is the wall of ice blocks right before Balore.
-        # We need to get rid of this because we don't want two bosses inside the room. Especially if they're different bosses, as that would take up too much RAM and crash the game.
+        # We need to get rid of this because having this + a different boss besides Balore in the same room will load two different overlays into the same spot and crash the game.
         boss_entity.type = 0
         boss_entity.subtype = 0
         boss_entity.write_to_rom()
@@ -272,11 +272,17 @@ class Randomizer
       if old_boss.name.decoded_string == "Puppet Master"
         boss_entity.x_pos += 144
       end
+    when "Malphas"
+      boss_entity.var_b = 0
     when "Dmitrii"
       boss_entity.var_a = 0 # Boss rush Dmitrii, doesn't crash when there are no events.
+    when "Dario"
+      boss_entity.var_b = 0
     when "Puppet Master"
-      boss_entity.x_pos = 328
-      boss_entity.y_pos = 64
+      boss_entity.x_pos = 256
+      boss_entity.y_pos = 96
+      
+      boss_entity.var_a = 0
     when "Gergoth"
       unless old_boss_id == new_boss_id
         # Set Gergoth to boss rush mode, unless he's in his tower.
@@ -298,6 +304,8 @@ class Randomizer
     when "Aguni"
       boss_entity.var_a = 0
       boss_entity.var_b = 0
+    when "Death"
+      # TODO: when you kill death in a room besides his own, he just freezes up, soft locking the game.
     else
       boss_entity.var_a = 1
     end

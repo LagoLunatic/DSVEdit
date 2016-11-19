@@ -7,13 +7,27 @@
 3A Malachi
   For a normal Malachi, set var a to 0 and var b to 1.
   For the Malachi that just stands still for Dmitrii's event set var a to 1 and var b to 0.
+67 Malphas
+  Var b: 0 for normal Malphas fight. 1 for a version of Malphas that doesn't require a magic seal on death and doesn't set the flag meaning Malphas is dead.
 68 Dmitrii
   Var a: 1 for normal Dmitrii fight, this seems to crash the game when he dies if the events are in his room. 0 for boss rush Dmitrii.
+69 Dario
+  Var b: 0 for normal Dario fight. 1 for Dario in the throne room with Aguni.
+6A Puppet Master
+  Var a: 1 for normal Puppet Master fight, cuts off the left edge of the room. 0 for boss rush Puppet Master fight, doesn't cut off the left edge of the room.
+6B 
 6C Gergoth
   Var a: 1 and Gergoth will fall down the tower after when his health gets low, 0 and he'll never fall (for boss rush).
   Var b: 0
+6D 
+6E 
 6F Paranoia
   Var a: 2 for normal paranoia fight, 1 for mini paranoia fight, 0 for boss rush paranoia fight.
   Var b: 0
+70 
 71 Death
   Both var a and var b are 1 for normal death fight, 0 for boss rush.
+72 
+73 Menace
+  For the first phase, Menace locks the camera to the bottom edge of the room, one screen away from the left edge of the room. However, Menace himself appears where you set his x/y positions.
+  For the second phase, Menace needs a very large room to fit in and move around.
