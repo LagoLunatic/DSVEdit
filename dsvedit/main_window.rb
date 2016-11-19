@@ -146,6 +146,7 @@ class DSVEdit < Qt::MainWindow
     
     @area_index = new_area_index
     @area = game.areas[@area_index]
+    @ui.area.setCurrentIndex(@area_index)
     sector_index_changed(0, force=true)
     @ui.sector.clear()
     AREA_INDEX_TO_OVERLAY_INDEX[@area_index].keys.each do |sector_index|
