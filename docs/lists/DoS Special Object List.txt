@@ -9,9 +9,9 @@ Special objects:
   11-17 More candle graphics, including statues and grandfather clocks.
   18-FF Buggy candles, that have mismatched graphics, sfx, and contents, or they just don't show up at all.
 02 Water level.
-03 
+03 Waterfall that pushes the player downwards when they jump up into it. Var A is the width, Var B is the height.
 04 Some kind of water visual effect
-05 
+05 Used in rooms with quicksand.
 06 Area name shown the first time you enter an area. Var A controls which area it is.
 07 START text appears and music changes to boss rush or whatever it is. also does something with enemy set mode TODO
 08 Ends boss rush. also does something with enemy set mode TODO
@@ -19,7 +19,7 @@ Special objects:
 0A A mirror.
   If you use paranoia to enter the mirror for a room that isn't set up to support mirrors, the screen just stays white and doesn't fade out (though a cutscene can fade it out). You can't exit the mirror using paranoia. You can't exit the room via the doors. Also, the doors don't block you from moving like they would in a normal mirror room - presumably some special object or tiles need to be set up to block the door.
 0B used in throne room
-0C 
+0C The control room for the sliding puzzle in the Demon Guest House.
 0D Part of the big sliding puzzle in the demon guest house.
   This object acts as the walls (and number) for a room. The visuals for the walls (and number) are fixed on screen and scroll with the screen. But the physical walls are locked to the top screen. Var a controls which number room it is.
   00: Probably the empty room with no number.
@@ -35,16 +35,16 @@ Special objects:
 12 Cog you can walk on. Spinning speed is controlled by var b.
 13 Locks the screen scrolling at the top left screen and doesn't follow soma.
 14 That horizontally moving platform that takes you through the long room with balore blocks. TODO: what is var a?
-15 
-16 
-17 
+15 Rapidly moving clouds background effect used in the very large room in the Dark Chapel.
+16 Moving clouds background effect used in the Condemned Tower.
+17 Invisible block that becomes visible when a Ghost hovers over it. Var A and Var B are set to various values from 0 to C, but don't seem to affect anything?
 18 Long golden platform, always appears at the bottom of the first screen, and locks the screen scrolling to that screen.
 19 Bloody spike that spins around. Spinning speed controlled by var b.
 1A Like 19, but the actual spike is broken off so it can't hurt you.
 1B Pendulum...? Animation speed affected by var b.
-1C Button?
+1C Button from Cursed Clock Tower. Blows up 1E. The game uses Var B to remember whether the button has been pressed yet.
 1D Wooden door (for area connections).
-1E 
+1E Explodable wall from Cursed Clock Tower. 1C blows it up. The game uses Var B to remember whether the wall has exploded yet.
 1F Portrait of a woman whose eyes follow you around.
 20 Blockade that appears right at the start of the game.
 21 Appears the drawbridge room?
@@ -73,8 +73,8 @@ Special objects:
     0D Death
     0E Doppelganger (the event in the center of the castle)
     0F Abaddon
-26 
-27 
+26 Gold door that only opens when the last three digits of your gold match the number on the door. Var A is which version of the door to use - 0 is 573, 1 is 777, 2 is 666. Var B is the ID of the door.
+27 Gate in Condemned Tower that only opens with the Tower Key.
 28 Some kind of platform...?
 29
 2A 
