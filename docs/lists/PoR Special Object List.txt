@@ -73,18 +73,18 @@ Special objects:
   Var a: Which wall it is.
 3C
 3D
-3E
-3F
-40
+3E Platform that flips if you stand on it too long. Var A is the graphic style of the platform.
+3F Platform that floats up and down.
+40 Large pushable switch.
 41
-42
-43
-44
-45 used in stairway leading up to throne room
+42 Unused
+43 Block that crumbles if you stand on it too long.
+44 Sand falling from the ceiling.
+45 Background with the moon and mountains used in the Master's Keep and Throne Room.
 46 Elevator from Tower of Death. Requires overlay 85.
 47
 48
-49 used in stairway leading up to throne room
+49 Rapidly moving clouds background effect used in the Master's Keep and Throne Room.
 4A in death's boss room.
 4B
 4C
@@ -114,8 +114,8 @@ Special objects:
 64
 65
 66
-67 used in stairway leading up to throne room
-68
+67 3D background model of the clock tower, used in the stairway leading up to the throne.
+68 If Var A is 0, it's the statue of Mary from Nation of Fools. If Var A is 1, it's the cross from 13th Street.
 69
 6A
 6B
