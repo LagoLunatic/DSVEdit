@@ -95,6 +95,12 @@ class SpriteEditor < Qt::Dialog
       @ui.frame_index.addItem("%02X" % i)
     end
     
+    @gfx_page_pixmaps_by_palette = {}
+    
+    @ui.gfx_page_index.clear()
+    @gfx_files_with_blanks.each_with_index do |gfx_page, i|
+      @ui.gfx_page_index.addItem(i.to_s)
+    end
     @ui.gfx_page_index.setCurrentIndex(0)
     
     @ui.palette_index.clear()
@@ -135,13 +141,9 @@ class SpriteEditor < Qt::Dialog
   end
   
   def load_gfx_pages(palette_index)
-    @gfx_page_pixmaps = []
-    @ui.gfx_page_index.clear()
-    @gfx_files_with_blanks.each_with_index do |gfx_page, i|
-      @ui.gfx_page_index.addItem(i.to_s)
-      
+    @gfx_page_pixmaps_by_palette[palette_index] ||= @gfx_files_with_blanks.map do |gfx_page|
       if gfx_page.nil?
-        @gfx_page_pixmaps << nil
+        nil
       else
         gfx_file = gfx_page[:file]
         canvas_width = gfx_page[:canvas_width]
@@ -151,11 +153,11 @@ class SpriteEditor < Qt::Dialog
         blob = chunky_image.to_blob
         pixmap.loadFromData(blob, blob.length)
         gfx_page_pixmap_item = Qt::GraphicsPixmapItem.new(pixmap)
-        @gfx_page_pixmaps << gfx_page_pixmap_item
+        gfx_page_pixmap_item
       end
     end
     
-    @gfx_file_graphics_scene.setSceneRect(0, 0, @gfx_page_pixmaps.first.pixmap.width, @gfx_page_pixmaps.first.pixmap.height)
+    @gfx_file_graphics_scene.setSceneRect(0, 0, @gfx_page_pixmaps_by_palette[palette_index].first.pixmap.width, @gfx_page_pixmaps_by_palette[palette_index].first.pixmap.height)
   end
   
   def frame_changed(i)
@@ -205,7 +207,7 @@ class SpriteEditor < Qt::Dialog
       @gfx_file_graphics_scene.removeItem(item)
     end
     
-    pixmap = @gfx_page_pixmaps[i]
+    pixmap = @gfx_page_pixmaps_by_palette[@palette_index][i]
     if pixmap.nil?
       @ui.gfx_file_name.text = "Invalid"
     else
@@ -228,7 +230,6 @@ class SpriteEditor < Qt::Dialog
     end
     @palette_index = palette_index
     
-    # TODO: cache rendered pages by the palette so that changing the palette doesn't mean all pages need to be rerendered.
     old_gfx_page_index = @ui.gfx_page_index.currentIndex
     old_gfx_page_index = 0 if old_gfx_page_index == -1
     load_gfx_pages(palette_index)
