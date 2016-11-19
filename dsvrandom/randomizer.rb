@@ -710,6 +710,8 @@ class Randomizer
     transition_rooms.each_with_index do |transition_room, i|
       next unless remaining_transition_rooms.include?(transition_room) # Already randomized this room
       
+      remaining_transition_rooms.delete(transition_room)
+      
       # Transition rooms can only lead to rooms in the same area or the game will crash.
       remaining_transition_rooms_for_area = remaining_transition_rooms.select do |other_room|
         transition_room.area_index == other_room.area_index
