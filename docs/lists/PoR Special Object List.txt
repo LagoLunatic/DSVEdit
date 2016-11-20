@@ -4,30 +4,31 @@ Special objects:
   0E-0F Money chests.
   10-19 More normal objects.
   1A+ Nothing.
-02 
-03 nothing
-04 
-05 
-06 
-07 
-08 
-09 
-0A 
-0B 
-0C 
-0D 
-0E 
-0F 
-10 
-11 
-12 
-13 
-14 
-15 
-16 
-17 
-18 
-19 
+02 Unused
+03 Changes gravity for enemies, used in Nation of Fools/Burnt Paradise. Only works for certain enemies specifically coded to do this.
+  Var A is 0000 in rooms with the floor on the right, 8000 with the floor on the left, C000 with the floor on the top.
+04 starts boss rush?
+05 ends boss rush?
+06 used in all nest of evil rooms with common enemies
+07 Unused
+08 Unused
+09 Unused
+0A Unused
+0B Unused
+0C Unused
+0D Unused
+0E Unused
+0F Unused
+10 Unused
+11 Unused
+12 Unused
+13 Unused
+14 Unused
+15 Unused
+16 Mirage background effect used in Sandy Grave.
+17 Background with the moon used in Sandy Grave. Var A seems to affect the z-index, lower values meaning closer to the screen.
+18 used in city of haze
+19 Effect that makes the screen very dark except the area around the player. Used in Forest of Doom.
 1A Portrait.
   Var a: Area index of the destination room.
   Var b:
@@ -35,17 +36,21 @@ Special objects:
     Bits 1-6: Room index of destination room.
     Bits 7-10: Sector index of the destination room.
     Bits 11-16: Nothing.
-1B nothing
+1B nothing? used in sandy grave
 1C Drawbrige. Requires overlay 78.
-1D save point
-1E warp point
-1F nothing
-20 spiked pillar trap that falls down
-21 crash
+1D Save point.
+1E Warp point.
+1F Large falling spiked block trap used in Sandy Grave.
+  Var A is the y pos it returns to after falling (should be the same as the entity's y pos).
+  Var B is the y pos it falls down to.
+20 Spiked falling pillar trap used in Sandry Grave.
+  Var A is the y pos it returns to after falling (should be the same as the entity's y pos).
+  Var B is the y pos it falls down to.
+21 Having this entity in the room causes the laser lamps and buttons that activate them (from Sandy Grave) to appear in the room. This entity can sometimes cause crashes.
 22 Boss door.
   Var a:
   Var b:
-23 
+23 Pulsating background effect. Used inside of the worm stomachs.
 24 
 25 
 26 

@@ -207,7 +207,7 @@ ENEMY_DNA_BITFIELD_ATTRIBUTES = {
     "Curse",
     "Stone",
     "Resistance 12",
-    "Resistance 13",
+    "Time Stop",
     "Resistance 14",
     "Resistance 15",
     "Resistance 16",
