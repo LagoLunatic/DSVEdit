@@ -1,5 +1,7 @@
 ui_*.rb
 *.yml
+*.exe
+ocratemp.iss
 /logs
 /docs/unorganized
 /lua scripts
