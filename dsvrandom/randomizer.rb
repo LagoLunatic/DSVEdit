@@ -497,9 +497,11 @@ class Randomizer
       
       if pickup.subtype == 0x02 && (0x3D..0x41).include?(pickup.var_b)
         # magic seal
+        pickup.var_a = get_unique_id()
         return
       elsif pickup.subtype == 0x02 && pickup.var_b == 0x39
         # tower key
+        pickup.var_a = get_unique_id()
         return
       end
     when "por"
