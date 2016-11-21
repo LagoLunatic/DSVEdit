@@ -270,7 +270,21 @@ TEXT_REGIONS = {
   "Library" => (0x478..0x4A5),
   "Events" => (0x4A6..0x50A)
 }
-TEXT_REGIONS_OVERLAYS = {}
+TEXT_REGIONS_OVERLAYS = {
+  "Character Names" => 0,
+  "Item Names" => 0,
+  "Item Descriptions" => 0,
+  "Enemy Names" => 0,
+  "Enemy Descriptions" => 0,
+  "Soul Names" => 0,
+  "Soul Descriptions" => 0,
+  "Area Names" => 0,
+  "Music Names" => 0,
+  "Misc" => 0,
+  "Menus" => 0,
+  "Library" => 0,
+  "Events" => 0
+}
 STRING_DATABASE_START_OFFSET = 0x02217E14
 STRING_DATABASE_ORIGINAL_END_OFFSET = 0x0222B8CA
 STRING_DATABASE_ALLOWABLE_END_OFFSET = STRING_DATABASE_ORIGINAL_END_OFFSET
