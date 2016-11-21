@@ -49,6 +49,13 @@ class Randomizer
     
     if options[:remove_events] && GAME == "dos"
       game.set_starting_room(0, 0, 1) # Start the game in the castle instead of the prologue area.
+      
+      @boss_entities.each do |boss_entity|
+        if boss_entity.subtype == 0x68 # Dmitrii
+          boss_entity.var_a = 0 # Boss rush Dmitrii, doesn't crash when there are no events.
+          boss_entity.write_to_rom()
+        end
+      end
     end
     
     if options[:randomize_bosses]
