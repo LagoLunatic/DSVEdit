@@ -62,7 +62,7 @@ class SpriteEditor < Qt::Dialog
   end
   
   def enemy_changed(enemy_id)
-    @gfx_files_with_blanks, palette, palette_offset, sprite_file = begin
+    @gfx_files_with_blanks, @palette_pointer, palette_offset, @sprite_file = begin
       EnemyDNA.new(enemy_id, @fs).get_gfx_and_palette_and_sprite_from_init_ai
     rescue StandardError => e
       Qt::MessageBox.warning(self,
@@ -72,10 +72,10 @@ class SpriteEditor < Qt::Dialog
       return
     end
     
-    @sprite = Sprite.new(sprite_file, @fs)
+    @sprite = Sprite.new(@sprite_file, @fs)
     
     chunky_frames, @min_x, @min_y, rendered_parts, @palettes, full_width, full_height = begin
-      @renderer.render_sprite(@gfx_files_with_blanks, palette, palette_offset, @sprite, frame_to_render = 0)
+      @renderer.render_sprite(@gfx_files_with_blanks, @palette_pointer, palette_offset, @sprite, frame_to_render = 0)
     rescue StandardError => e
       Qt::MessageBox.warning(self,
         "Enemy sprite rendering failed",
@@ -90,6 +90,8 @@ class SpriteEditor < Qt::Dialog
     @current_frame_index = 0
     @current_part_index = 0
     
+    @ui.sprite_file_name.text = @sprite_file[:file_path]
+    
     @ui.frame_index.clear()
     @sprite.frames.each_index do |i|
       @ui.frame_index.addItem("%02X" % i)
@@ -102,6 +104,8 @@ class SpriteEditor < Qt::Dialog
       @ui.gfx_page_index.addItem(i.to_s)
     end
     @ui.gfx_page_index.setCurrentIndex(0)
+    
+    @ui.palette_pointer.text = "%08X" % @palette_pointer
     
     @ui.palette_index.clear()
     @palettes.each_with_index do |palette, i|
