@@ -144,8 +144,8 @@ class RandomizerWindow < Qt::Dialog
     end
     
     game.fix_unnamed_skills()
-    game.dos_boss_doors_skip_seal()
-    game.ooe_enter_any_wall()
+    #game.dos_boss_doors_skip_seal()
+    #game.ooe_enter_any_wall()
     
     write_to_rom(game)
   end

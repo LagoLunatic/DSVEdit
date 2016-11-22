@@ -397,6 +397,10 @@ class Randomizer
         entity.var_b = 0x35 # mina's talisman
         entity.x_pos = 0x0080
         entity.y_pos = 0x00A0
+      when 0x69 # event in throne room with dario and aguni
+        # do nothing. if we remove this event the game will crash when entering the mirror.
+      when 0x6A..0x6B # event in center of castle + event where julius breaks the seal to the mine of judgement
+        # do nothing
       when 0x6C..0x6E # menace events
         # do nothing
       when 0x71..0x72 # epilogue
