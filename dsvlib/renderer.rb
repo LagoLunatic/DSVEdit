@@ -165,8 +165,7 @@ class Renderer
     rendered_gfx = ChunkyPNG::Image.new(width, height, ChunkyPNG::Color::TRANSPARENT)
     
     if gfx_file.nil? || palette.nil?
-      # This room has no graphics, so just return a black tile. Could be a save room, warp room, transition room, etc.
-      # TODO: instead it would be better to use the debug squares for these rooms so you can see what's what.
+      # Invalid graphics, render a red rectangle instead.
       
       rendered_gfx = ChunkyPNG::Image.new(width, height, ChunkyPNG::Color.rgba(255, 0, 0, 255))
       return rendered_gfx
@@ -206,6 +205,66 @@ class Renderer
       
       rendered_gfx.replace_row!(i, pixels_for_chunky)
       offset += bytes_per_full_row
+    end
+    
+    return rendered_gfx
+  end
+  
+  def render_gfx_1_dimensional_mode(gfx_file, palette)
+    x = y = 0
+    width = height = canvas_width = 128
+    
+    rendered_gfx = ChunkyPNG::Image.new(width, height, ChunkyPNG::Color::TRANSPARENT)
+    
+    if gfx_file.nil? || palette.nil?
+      # Invalid graphics, render a red rectangle instead.
+      
+      rendered_gfx = ChunkyPNG::Image.new(width, height, ChunkyPNG::Color.rgba(255, 0, 0, 255))
+      return rendered_gfx
+    end
+    
+    if palette.length == 16
+      pixels_per_byte = 2
+    elsif palette.length == 256
+      pixels_per_byte = 1
+      raise "256-color palette in 1-dimensional mode"
+    else
+      raise "Unknown palette length: #{palette.length}"
+    end
+    
+    bytes_per_block = 8*8 / pixels_per_byte
+    
+    offset = 0
+    (0..256-1).each do |block_num|
+      pixels_for_chunky = []
+      
+      fs.rom[gfx_file[:start_offset] + offset, bytes_per_block].each_byte do |byte|
+        if pixels_per_byte == 2
+          pixels = [byte & 0b00001111, byte >> 4] # get the low 4 bits, then the high 4 bits (it's reversed). each is one pixel, two pixels total inside this byte.
+        else
+          pixels = [byte]
+        end
+        
+        pixels.each do |pixel|
+          if pixel == 0 # transparent
+            pixels_for_chunky << ChunkyPNG::Color::TRANSPARENT
+          else
+            pixel_color = palette[pixel]
+            pixels_for_chunky << pixel_color
+          end
+        end
+      end
+      
+      pixels_for_chunky.each_with_index do |pixel, pixel_num|
+        block_x = (block_num % 16) * 8
+        block_y = (block_num / 16) * 8
+        pixel_x = (pixel_num % 8) + block_x
+        pixel_y = (pixel_num / 8) + block_y
+        
+        rendered_gfx[pixel_x, pixel_y] = pixel
+      end
+      
+      offset += bytes_per_block
     end
     
     return rendered_gfx

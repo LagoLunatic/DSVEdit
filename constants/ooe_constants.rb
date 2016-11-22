@@ -376,10 +376,22 @@ NEW_GAME_STARTING_TOP_SCREEN_TYPE_OFFSET = 0x02214F68
 TRANSITION_ROOM_LIST_POINTER = nil
 FAKE_TRANSITION_ROOMS = [0x022AE3A8, 0x022A7E78]
 
+ITEM_ICONS_PALETTE_POINTER = 0x020D177C
+GLYPH_ICONS_PALETTE_POINTER = 0x020C9854
+EXTRACT_ICON_INDEX_AND_PALETTE_INDEX = Proc.new do |icon_data|
+  icon_index    = (icon_data & 0b00000111_11111111)
+  palette_index = (icon_data & 0b11111000_00000000) >> 11
+  [icon_index, palette_index]
+end
+PACK_ICON_INDEX_AND_PALETTE_INDEX = Proc.new do |icon_index, palette_index|
+  icon_data  = icon_index
+  icon_data |= palette_index << 11
+  icon_data
+end
+
 armor_format = [
   [2, "Item ID"],
-  [1, "Icon"],
-  [1, "Palette"],
+  [2, "Icon"],
   [4, "Price"],
   [1, "Type"],
   [1, "Unknown 1"],
@@ -462,8 +474,7 @@ ITEM_TYPES = [
     count: 112,
     format: [
       [2, "Item ID"],
-      [1, "Icon"],
-      [1, "Palette"],
+      [2, "Icon"],
       [4, "Price"],
       [1, "Type"],
       [1, "Unknown 1"],

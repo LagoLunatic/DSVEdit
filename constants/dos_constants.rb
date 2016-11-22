@@ -342,6 +342,18 @@ NEW_GAME_STARTING_ROOM_INDEX_OFFSET = 0x0202FB90
 TRANSITION_ROOM_LIST_POINTER = 0x0208AD8C
 FAKE_TRANSITION_ROOMS = []
 
+ITEM_ICONS_PALETTE_POINTER = 0x022C4684
+EXTRACT_ICON_INDEX_AND_PALETTE_INDEX = Proc.new do |icon_data|
+  icon_index    = (icon_data & 0b00000000_11111111)
+  palette_index = (icon_data & 0b11111111_00000000) >> 8
+  [icon_index, palette_index]
+end
+PACK_ICON_INDEX_AND_PALETTE_INDEX = Proc.new do |icon_index, palette_index|
+  icon_data  = icon_index
+  icon_data |= palette_index << 8
+  icon_data
+end
+
 ITEM_TYPES = [
   {
     name: "Consumables",
@@ -349,8 +361,7 @@ ITEM_TYPES = [
     count: 66,
     format: [
       [2, "Item ID"],
-      [1, "Icon"],
-      [1, "Palette"],
+      [2, "Icon"],
       [4, "Price"],
       [1, "Type"],
       [1, "Unknown 1"],
@@ -364,8 +375,7 @@ ITEM_TYPES = [
     count: 79,
     format: [
       [2, "Item ID"],
-      [1, "Icon"],
-      [1, "Palette"],
+      [2, "Icon"],
       [4, "Price"],
       [1, "Swing Anim"],
       [1, "Unknown 1"],
@@ -391,8 +401,7 @@ ITEM_TYPES = [
     count: 61,
     format: [
       [2, "Item ID"],
-      [1, "Icon"],
-      [1, "Palette"],
+      [2, "Icon"],
       [4, "Price"],
       [1, "Type"],
       [1, "Unknown 1"],

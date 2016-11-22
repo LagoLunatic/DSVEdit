@@ -5,6 +5,7 @@ require_relative 'settings_dialog'
 require_relative 'sprite_editor_dialog'
 require_relative 'item_editor_dialog'
 require_relative 'entity_search_dialog'
+require_relative 'icon_chooser_dialog'
 
 require_relative 'ui_main'
 

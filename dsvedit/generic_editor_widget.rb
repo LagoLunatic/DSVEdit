@@ -5,13 +5,16 @@ class GenericEditorWidget < Qt::Widget
   attr_reader :fs
   
   slots "item_changed(int)"
+  slots "open_icon_chooser()"
   
-  def initialize(list_pointer, count, format, fs)
+  def initialize(fs, name, list_pointer, count, format)
     super()
     @ui = Ui_GenericEditorWidget.new
     @ui.setup_ui(self)
     
     @fs = fs
+    
+    @item_type_name = name
     
     @items = []
     format_length = format.inject(0){|sum, attr| sum += attr[0]}
@@ -35,7 +38,12 @@ class GenericEditorWidget < Qt::Widget
       label.text = attribute_name
       form_layout.setWidget(i/2, Qt::FormLayout::LabelRole, label)
       
-      field = Qt::LineEdit.new(self)
+      if attribute_name == "Icon"
+        field = Qt::PushButton.new(self)
+        connect(field, SIGNAL("clicked()"), self, SLOT("open_icon_chooser()"))
+      else
+        field = Qt::LineEdit.new(self)
+      end
       field.setMaximumSize(80, 16777215)
       form_layout.setWidget(i/2, Qt::FormLayout::FieldRole, field)
       
@@ -120,5 +128,19 @@ class GenericEditorWidget < Qt::Widget
     end
     
     item.write_to_rom()
+  end
+  
+  def set_icon(new_icon_data)
+    @attribute_text_fields["Icon"].text = "%04X" % new_icon_data
+  end
+  
+  def open_icon_chooser
+    icon_data = @attribute_text_fields["Icon"].text.to_i(16)
+    if @item_type_name =~ /Glyph/
+      mode = :glyph
+    else
+      mode = :item
+    end
+    @icon_chooser_dialog = IconChooserDialog.new(self, fs, mode, icon_data)
   end
 end
