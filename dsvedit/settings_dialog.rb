@@ -7,7 +7,7 @@ class SettingsDialog < Qt::Dialog
   slots "button_pressed(QAbstractButton*)"
   
   def initialize(main_window, settings)
-    super(main_window)
+    super(main_window, Qt::WindowTitleHint | Qt::WindowSystemMenuHint)
     @ui = Ui_Settings.new
     @ui.setup_ui(self)
     

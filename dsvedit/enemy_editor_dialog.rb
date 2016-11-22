@@ -6,7 +6,7 @@ class EnemyEditor < Qt::Dialog
   slots "button_pressed(QAbstractButton*)"
   
   def initialize(main_window, fs)
-    super(main_window)
+    super(main_window, Qt::WindowTitleHint | Qt::WindowSystemMenuHint)
     @ui = Ui_EnemyDNAEditor.new
     @ui.setup_ui(self)
     

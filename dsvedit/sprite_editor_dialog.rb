@@ -16,7 +16,7 @@ class SpriteEditor < Qt::Dialog
   slots "advance_frame()"
   
   def initialize(main_window, fs, renderer)
-    super(main_window)
+    super(main_window, Qt::WindowTitleHint | Qt::WindowSystemMenuHint)
     
     @fs = fs
     @renderer = renderer

@@ -6,7 +6,7 @@ class EntitySearchDialog < Qt::Dialog
   slots "room_changed(int)"
   
   def initialize(main_window)
-    super(main_window)
+    super(main_window, Qt::WindowTitleHint | Qt::WindowSystemMenuHint)
     @ui = Ui_EntitySearch.new
     @ui.setup_ui(self)
     
