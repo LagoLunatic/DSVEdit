@@ -40,6 +40,8 @@ class TextEditor < Qt::Dialog
     text = @text_database.text_list[text_id]
     
     @ui.textEdit.setPlainText(text.decoded_string)
+    
+    @ui.text_list.setCurrentRow(text_id)
   end
   
   def button_pressed(button)

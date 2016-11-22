@@ -93,6 +93,8 @@ class EnemyEditor < Qt::Dialog
         end
       end
     end
+    
+    @ui.enemy_list.setCurrentRow(enemy_id)
   end
   
   def button_pressed(button)

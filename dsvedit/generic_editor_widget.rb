@@ -96,6 +96,8 @@ class GenericEditorWidget < Qt::Widget
         end
       end
     end
+    
+    @ui.item_list.setCurrentRow(index)
   end
   
   def save_current_item

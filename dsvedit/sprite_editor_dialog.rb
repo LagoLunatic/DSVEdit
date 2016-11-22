@@ -138,6 +138,8 @@ class SpriteEditor < Qt::Dialog
       @ui.animation_index.addItem("%02X" % i)
     end
     animation_changed(0)
+    
+    @ui.enemy_list.setCurrentRow(enemy_id)
   end
   
   def load_gfx_pages(palette_index)
