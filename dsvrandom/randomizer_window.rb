@@ -161,6 +161,7 @@ class RandomizerWindow < Qt::Dialog
     connect(@progress_dialog, SIGNAL("canceled()"), self, SLOT("cancel_write_to_rom_thread()"))
     @progress_dialog.show
     
+    FileUtils.mkdir_p(@ui.output_folder.text)
     output_rom_path = File.join(@ui.output_folder.text, "#{GAME} hack.nds")
     
     @write_to_rom_thread = Thread.new do
