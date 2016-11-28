@@ -162,7 +162,7 @@ class RandomizerWindow < Qt::Dialog
     @progress_dialog.show
     
     FileUtils.mkdir_p(@ui.output_folder.text)
-    output_rom_path = File.join(@ui.output_folder.text, "#{GAME} hack.nds")
+    output_rom_path = File.join(@ui.output_folder.text, "#{GAME} Random #{@ui.seed.text}.nds")
     
     @write_to_rom_thread = Thread.new do
       game.fs.write_to_rom(output_rom_path) do |files_written|
