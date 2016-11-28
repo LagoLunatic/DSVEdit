@@ -77,6 +77,7 @@ class GenericEditorWidget < Qt::Widget
     item = @items[index]
     
     @ui.item_name.setText(item.name.decoded_string)
+    @ui.item_pointer.setText("%08X" % item.ram_pointer)
     @ui.item_desc.setPlainText(item.description.decoded_string)
     
     item.item_attribute_integers.values.each_with_index do |value, i|

@@ -66,6 +66,7 @@ class EnemyEditor < Qt::Dialog
     enemy = @enemies[enemy_id]
     
     @ui.name.setText(enemy.name.decoded_string)
+    @ui.pointer.setText("%08X" % enemy.enemy_dna_ram_pointer)
     @ui.desc.setPlainText(enemy.description.decoded_string)
     
     enemy.dna_attribute_integers.values.each_with_index do |value, i|
