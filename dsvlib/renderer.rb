@@ -500,18 +500,10 @@ class Renderer
       frames = sprite.frames
     end
     
-    min_x = 0
-    min_y = 0
-    max_x = 0
-    max_y = 0
-    frames.each do |frame|
-      frame.parts.each do |part|
-        min_x = part.x_pos if part.x_pos < min_x
-        min_y = part.y_pos if part.y_pos < min_y
-        max_x = part.x_pos + part.width if part.x_pos + part.width > max_x
-        max_y = part.y_pos + part.height if part.y_pos + part.height > max_y
-      end
-    end
+    min_x = sprite.parts.map{|part| part.x_pos}.min
+    min_y = sprite.parts.map{|part| part.y_pos}.min
+    max_x = sprite.parts.map{|part| part.x_pos + part.width}.max
+    max_y = sprite.parts.map{|part| part.y_pos + part.height}.max
     full_width = max_x - min_x
     full_height = max_y - min_y
     
@@ -556,7 +548,7 @@ class Renderer
       rendered_frames << rendered_frame
     end
     
-    return [rendered_frames, min_x, min_y, rendered_parts, palettes]
+    return [rendered_frames, min_x, min_y, rendered_parts, palettes, full_width, full_height]
   end
   
   def render_sprite_part(part, rendered_gfx_file)

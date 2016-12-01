@@ -74,7 +74,7 @@ class SpriteEditor < Qt::Dialog
     
     @sprite = Sprite.new(@sprite_file, @fs)
     
-    chunky_frames, @min_x, @min_y, rendered_parts, @palettes, full_width, full_height = begin
+    chunky_frames, @min_x, @min_y, rendered_parts, @palettes, @full_width, @full_height = begin
       @renderer.render_sprite(@gfx_files_with_blanks, @palette_pointer, palette_offset, @sprite, frame_to_render = 0)
     rescue StandardError => e
       Qt::MessageBox.warning(self,
@@ -84,8 +84,8 @@ class SpriteEditor < Qt::Dialog
       return
     end
     
-    @frame_graphics_scene.clear()
-    @frame_graphics_scene.setSceneRect(0, 0, full_width, full_height)
+    @frame_graphics_scene.setSceneRect(@min_x, @min_y, @full_width, @full_height)
+    @part_graphics_scene.setSceneRect(@min_x, @min_y, @full_width, @full_height)
     
     @current_frame_index = 0
     @current_part_index = 0
@@ -125,10 +125,10 @@ class SpriteEditor < Qt::Dialog
       pixmap.loadFromData(blob, blob.length)
       
       part_pixmap_item_for_part_view = Qt::GraphicsPixmapItem.new(pixmap)
-      part_pixmap_item_for_part_view.setOffset(part.x_pos - @min_x, part.y_pos - @min_y)
+      part_pixmap_item_for_part_view.setOffset(part.x_pos, part.y_pos)
       @part_pixmaps_for_part_view << part_pixmap_item_for_part_view
       part_pixmap_item_for_frame_view = Qt::GraphicsPixmapItem.new(pixmap)
-      part_pixmap_item_for_frame_view.setOffset(part.x_pos - @min_x, part.y_pos - @min_y)
+      part_pixmap_item_for_frame_view.setOffset(part.x_pos, part.y_pos)
       @part_pixmaps_for_frame_view << part_pixmap_item_for_frame_view
       
       @ui.part_index.addItem("%02X" % part_index)
@@ -195,7 +195,7 @@ class SpriteEditor < Qt::Dialog
       frame.hitboxes.each do |hitbox|
         hitbox_item = Qt::GraphicsRectItem.new
         hitbox_item.setPen(RED_PEN_COLOR)
-        hitbox_item.setRect(hitbox.x_pos - @min_x, hitbox.y_pos - @min_y, hitbox.width, hitbox.height)
+        hitbox_item.setRect(hitbox.x_pos, hitbox.y_pos, hitbox.width, hitbox.height)
         @frame_graphics_scene.addItem(hitbox_item)
       end
     end
