@@ -167,9 +167,6 @@ class SpriteEditor < Qt::Dialog
   end
   
   def frame_changed(i)
-    @frame_graphics_scene = Qt::GraphicsScene.new
-    @ui.frame_graphics_view.setScene(@frame_graphics_scene)
-    
     @current_frame_index = i
     @frame_graphics_scene.items.each do |item|
       @frame_graphics_scene.removeItem(item)
