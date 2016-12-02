@@ -169,6 +169,39 @@ class Game
     fs.write(address, code.pack("V*"))
   end
   
+  def dos_use_what_you_see_souls
+    return unless GAME == "dos"
+    
+    # Automatically equip every soul you get, and don't allow the player to manually change what soul they have equipped.
+    
+    address = 0x0202E19C
+    code = [0xEA00000A] # b 0202E1CCh ; Always take the branch that means the player 0 of this soul, even if they don't really.
+    fs.write(address, code.pack("V*"))
+    
+    address = 0x0202E234
+    code = [0xE1A00000, 0xE1A00000, 0xE1A00000] # nop ; Don't return from this function yet, pretend this is the first of this soul the player has gotten, whether it has or not.
+    fs.write(address, code.pack("V*"))
+    
+    #address = 0x0202E240
+    #code = [0xE3540003] # cmp r4,3h
+    #fs.write(address, code.pack("V*"))
+    
+    address = 0x0202E1E0 # Code for displaying the description of the soul when you get it for the first time.
+    code = [0xE1A00000] # nop
+    fs.write(address, code.pack("V*"))
+    address = 0x0202E1F4 # More code like the above.
+    code = [0xE1A00000] # nop
+    fs.write(address, code.pack("V*"))
+    
+    address = 0x0202E304
+    code = [0xEAFFFFA5] # b 0202E1A0h ; Jump back to the code we skipped which causes the soul name to display in the upper right corner of the screen.
+    fs.write(address, code.pack("V*"))
+    
+    address = 0x0221024C
+    code = [0xE3A01000] # mov r1,0h ; Store the number of this type of soul you have as 0. This causes the player's soul inventory to always be empty, so they can't equip anything manually. TODO this is bad for ability souls
+    fs.write(address, code.pack("V*"))
+  end
+  
   def ooe_open_world_map
     return unless GAME == "ooe"
     
