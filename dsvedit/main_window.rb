@@ -86,14 +86,20 @@ class DSVEdit < Qt::MainWindow
   end
   
   def extract_rom_dialog
-    rom_path = Qt::FileDialog.getOpenFileName(self, "Select ROM", nil, "NDS ROM Files (*.nds)")
+    if game && game.folder
+      default_dir = File.dirname(game.folder)
+    end
+    rom_path = Qt::FileDialog.getOpenFileName(self, "Select ROM", default_dir, "NDS ROM Files (*.nds)")
     return if rom_path.nil?
     folder = File.dirname(rom_path)
     extract_rom(rom_path)
   end
   
   def open_folder_dialog
-    folder = Qt::FileDialog.getExistingDirectory(self, "Open folder")
+    if game && game.folder
+      default_dir = File.dirname(game.folder)
+    end
+    folder = Qt::FileDialog.getExistingDirectory(self, "Open folder", default_dir)
     return if folder.nil?
     open_folder(folder)
   end
