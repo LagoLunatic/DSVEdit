@@ -26,17 +26,6 @@
   str r1, [r5, 30h]    ; Store it back.
   b 0207C098h          ; Go back to where we came from.
 
-.org 0x0207C9B0 ; A line that always teleports Shanoa to the left when exiting a wall.
-  b 020BE45Ch ; Replace with a jump to our own code below.
-.org 0x020BE45C ; More free space.
-  ldr r0, [r5, 104h]   ; Load variable for whether Shanoa is exiting a left/right wall.
-  tst r0, 4h           ; Test if Shanoa is exiting a left wall.
-  ldr r0, [r5, 30h]    ; Load Shanoa's current x pos.
-  addne r0, r0, 0A000h ; Increase x pos if Shanoa is exiting a left wall.
-  subeq r0, r0, 0A000h ; Decrease x pos if she's not.
-  str r0, [r5, 30h]    ; Store it back.
-  b 0207C9B4h          ; Go back to where we came from.
-
 ; Allow Shanoa to go up/down out of floors/ceilings.
 ; This is necessary because otherwise walls that are less than 3 blocks tall will cause Shanoa to get permanently stuck with no way to get out.
 .org 0x0207C8A4 ; Going up out of a floor.
@@ -54,9 +43,19 @@
 .org 0x0207C98C ; Exiting.
   cmp r0, 1h ; 1 frame delay before exiting.
 
-; Make Shanoa instantly exit Paries mode when she goes above/below the wall, instead of needing to press left/right.
-.org 0x0207C808
-  mov r0, 1h
+; Allow Shanoa to go in thin floors/ceilings she normally wouldn't be able to fit in.
+.org 0x0207C820
+  nop
+
+; Don't require Shanoa to press left or right when exiting out of a floor/ceiling.
+.org 0x0207C810
+  nop
+
+; Fix Shanoa being teleported left or right when exiting a wall/floor/ceiling, and sometimes being put out of bounds.
+.org 0x0207C83C
+  nop
+.org 0x0207C850
+  nop
 
 ; Allow Shanoa to exit up/down out of a floor/ceiling, even if the player is still holding up or down on the d-pad.
 .org 0x0207C924
