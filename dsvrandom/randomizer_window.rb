@@ -136,17 +136,18 @@ class RandomizerWindow < Qt::Dialog
     randomizer.randomize()
     
     if @ui.fix_first_ability_soul.checked()
-      game.dos_fix_first_ability_soul()
+      game.apply_armips_patch("dos_fix_first_ability_soul")
     end
     
     if @ui.open_world_map.checked()
-      game.ooe_open_world_map()
+      game.apply_armips_patch("ooe_open_world_map")
     end
     
     game.fix_unnamed_skills()
-    #game.dos_boss_doors_skip_seal()
-    #game.ooe_enter_any_wall()
-    game.dos_use_what_you_see_souls()
+    
+    #game.apply_armips_patch("dos_boss_doors_skip_seal")
+    #game.apply_armips_patch("ooe_enter_any_wall")
+    #game.apply_armips_patch("dos_use_what_you_see_souls")
     
     write_to_rom(game)
   end

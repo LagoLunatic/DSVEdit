@@ -132,6 +132,47 @@ class Game
     fs.write(NEW_GAME_STARTING_TOP_SCREEN_TYPE_OFFSET, [0x05].pack("C"))
   end
   
+  def apply_armips_patch(patch_name)
+    game_name = patch_name[0,3]
+    return unless GAME == game_name.downcase
+    
+    patch_file = "asm/#{patch_name}.asm"
+    
+    # Temporarily copy code files to asm directory so armips can be run without permanently modifying the files.
+    fs.all_files.each do |file|
+      next unless (file[:overlay_id] || file[:name] == "arm9.bin")
+      
+      file_data = fs.read_by_file(file[:file_path], 0, file[:size])
+      
+      output_path = File.join("asm", file[:file_path])
+      output_dir = File.dirname(output_path)
+      FileUtils.mkdir_p(output_dir)
+      File.open(output_path, "wb") do |f|
+        f.write(file_data)
+      end
+    end
+    
+    success = system("./armips/armips.exe \"#{patch_file}\"")
+    unless success
+      raise "Armips call failed"
+    end
+    
+    # Now reload the file contents from the temporary directory, and then delete the directory.
+    fs.all_files.each do |file|
+      next unless (file[:overlay_id] || file[:name] == "arm9.bin")
+      
+      input_path = File.join("asm", file[:file_path])
+      input_dir = File.dirname(input_path)
+      FileUtils.mkdir_p(input_dir)
+      file_data = File.open(input_path, "rb") do |f|
+        f.read()
+      end
+      
+      fs.write_by_file(file[:file_path], 0, file_data)
+    end
+    FileUtils.rm_r(File.join("asm", "ftc"))
+  end
+  
   def dos_fix_first_ability_soul
     return unless GAME == "dos"
     
@@ -210,7 +251,7 @@ class Game
   end
   
   def set_starting_room(area_index, sector_index, room_index)
-    por_allow_changing_starting_room()
+    apply_armips_patch("por_allow_changing_starting_room")
     
     if NEW_GAME_STARTING_AREA_INDEX_OFFSET
       fs.write(NEW_GAME_STARTING_AREA_INDEX_OFFSET, [area_index].pack("C"))
