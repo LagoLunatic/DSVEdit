@@ -9,6 +9,7 @@ Special objects:
   11-17 More candle graphics, including statues and grandfather clocks.
   18-FF Buggy candles, that have mismatched graphics, sfx, and contents, or they just don't show up at all.
 02 Water level.
+  Var B: Set this to the same value as a lever's Var B and pulling the lever will permanently drain this water.
 03 Waterfall that pushes the player downwards when they jump up into it. Var A is the width, Var B is the height.
 04 Some kind of water visual effect
 05 Used in rooms with quicksand.
@@ -18,7 +19,8 @@ Special objects:
 09 Chair. Var A is the type of chair (if an invalid chair type is set, no chair will appear). Var B is the orientation - 00 is right-facing, 01 or higher is left-facing.
 0A A mirror.
   If you use paranoia to enter the mirror for a room that isn't set up to support mirrors, the screen just stays white and doesn't fade out (though a cutscene can fade it out). You can't exit the mirror using paranoia. You can't exit the room via the doors. Also, the doors don't block you from moving like they would in a normal mirror room - presumably some special object or tiles need to be set up to block the door.
-0B used in throne room
+0B Mirror world. This should be placed in all rooms that have mirrors in order for them to work correctly.
+  For pickups, entity byte 8 affects how it appears in the mirror world. 0 means it appears only in the real world, 1 means it appears only in the mirror world.
 0C The control room for the sliding puzzle in the Demon Guest House.
 0D Part of the big sliding puzzle in the demon guest house.
   This object acts as the walls (and number) for a room. The visuals for the walls (and number) are fixed on screen and scroll with the screen. But the physical walls are locked to the top screen. Var a controls which number room it is.
@@ -46,11 +48,22 @@ Special objects:
 1D Wooden door (for area connections).
 1E Explodable wall from Cursed Clock Tower. 1C blows it up. The game uses Var B to remember whether the wall has exploded yet.
 1F Portrait of a woman whose eyes follow you around.
-20 Blockade that appears right at the start of the game.
-21 Appears the drawbridge room?
-22 
+20 A wall.
+  Var A: Type of wall:
+    0 for the blockade at the start of the game and in front of the first warp room.
+    1 for the wall that divides the mirror room in the Lost Village.
+    2 for a blockade like 0 but flipped horizontally (unused).
+    3 for a wall like 1 but shorter and has no collision (unused).
+  Var B:
+    0 and it's normal (always present).
+    1 and it disappears in the mirror world.
+    2 and it disappears after the player has found a warp room.
+21 Drawbridge.
+  Var B: 3?
+22 Bubbles floating up through the water. Var A and Var B are used for something.
 23 Huge bell you can walk on.
-24 
+24 The lever you pull to lower the water level in the Lost Village.
+  Var B: Set this to the same value as a water level's Var B and pulling this lever will permanently drain the water.
 25 Boss door.
   Var a is is how the door acts. Values:
     00 Door outside the boss room that you need a magic seal to open.
@@ -73,24 +86,31 @@ Special objects:
     0D Death
     0E Doppelganger (the event in the center of the castle)
     0F Abaddon
-26 Gold door that only opens when the last three digits of your gold match the number on the door. Var A is which version of the door to use - 0 is 573, 1 is 777, 2 is 666. Var B is the ID of the door.
+26 Gold door that only opens when the last three digits of your gold match the number on the door.
+  Var A: Which version of the door to use - 0 is 573, 1 is 777, 2 is 666.
+  Var B: The ID of the door.
 27 Gate in Condemned Tower that only opens with the Tower Key.
-28 Some kind of platform...?
-29
-2A 
+28 The button in the Dark Chapel that lowers the wall blocking the path.
+  Var B: Set to the same as the button's Var B.
+29 The wall that blocks the path in the Dark Chapel.
+  Var B: Set to the same as the wall's Var B.
+2A The metal gate that seals in the water in the Lost Village.
+  Var B: Set to the same as the lever's Var B.
 2B Animated tiny waterfall.
 2C Chandelier? upside down maybe?
 2D Hanging spikes, disappear when you get near them.
-2E crash
+2E Unused, crash
 2F applies a very strange visual effect to the tiles of the room.
 30 Save room. Not just the save point like in PoR and OoE, this is the whole room's graphics, and locks itself to the upper left screen. You can't collide with its tiles though, so you must still place collision tiles for this room. Var a is the direction of the save room: 0 has a door on the left, 1 has a door on the right.
 31 Warp room, works just like save room.
 32 Room that transports you to the abyss.
-33 
-34 The 3d background in condemned tower.
-35 
+33 3D background model for either the Lost Village or the Pinnacle (the model is chosen automatically depending on what sector the room is in).
+  Var A: Which camera angle to view the model from. 0 to 4.
+34 The 3D background in Condemned Tower.
+35 The 3D background in Mine of Judgement.
 36 Causes the background to flicker slightly. Entity byte 8 is sometimes set, sometimes not, but doesn't seem to change anything? Used in Menace's room among others.
-37 
+37 The ceiling hatch and button to open it from Demon Guest House.
+  Var A: 0 for the button and the hatch and the bottom of the room. 1 for the hatch at the top of the room.
 38 Fades the music out to nothing. music comes back when you leave the room. This is used in transition rooms.
 39 Keys of the piano you can play from the demon guest house.
 3A The cannon + time pillar that you need Zephyr's soul to get past.
@@ -99,7 +119,7 @@ Special objects:
 3D The castle in the background in the epilogue. Also permanently changes the top screen to the symbol you see during cutscenes.
 3E The bouncing ball in the puzzle with touch screen blocks. It just explodes instantly if it's not inside touch screen blocks.
 3F The one strongman puzzle you have to hit with a hammer.
-40 Yellow square TODO. Changes into what looks like tiles depending on var a. Inner square rotates depending on var b,
+40 Unused. Yellow square TODO. Changes into what looks like tiles depending on var a. Inner square rotates depending on var b,
 41 Puts a timer on screen and restarts the current music track.
 42 The item you get as a reward at the end of boss rush.
 43 
@@ -108,11 +128,12 @@ Special objects:
 46 More destroyable walls like 44. But these tend to be facing to the right or upwards.
 47 Hammer (can be used as a shop)
 48 Yoko (can be used for weapon synth, etc)
-49 Red wall with an enemy on it that opens up when you use that enemy's soul against the wall. Var a controls which enemy:
-  00 Skeleton
-  01 Axe Armor
-  02 Killer Clown
-  03 Ukoback
+49 Red wall with an enemy on it that opens up when you use that enemy's soul against the wall.
+  Var A controls which enemy wall it is:
+    00 Skeleton
+    01 Axe Armor
+    02 Killer Clown
+    03 Ukoback
 4A used in dario's garden of madness boss room. no effect?
 4B That puzzle that can be zapped?
 4C A consumable, like regular consumables var B controls which one it is. But why is this a special object?
