@@ -173,83 +173,6 @@ class Game
     FileUtils.rm_r(File.join("asm", "ftc"))
   end
   
-  def dos_fix_first_ability_soul
-    return unless GAME == "dos"
-    
-    # This fixes a bug in the original game that occurs when you get your first ability soul. It activates more ability souls than you actually possess.
-    
-    # The bug works like this: The first time you get an ability soul, the same function that equips the first bullet/guardian/enchant souls you get in the tutorial tries to run on the ability soul you get too. But this is a problem, because while your equipped bullet/guardian/enchant souls are stored as an integer representing the ID of the soul you have equipped, the ability souls you have equipped is stored as a bit field.
-    # For example, Doppelganger is the 2nd ability soul (counting from 0, not from 1). 2 in binary is 00000010. When it tries to store this in the bitfield representing the ability souls you have activated, it activates the 1st ability soul, Malphas. In other words, if your first ability soul is Doppelganger you gain both Doppelganger and Malphas. (Though Malphas doesn't show up in the list of ability souls you own, so you can't deactivate it.)
-    # This bug isn't noticeable in a normal playthrough because the first ability soul you get is always Balore. Balore is the 0th ability soul, and 0 in binary is still 0, so no extra souls get activated.
-    
-    address = 0x0202E240 # Where the code for automatically equipping the first souls you get is.
-    
-    code = [
-      0xE3540003, # cmp r4,3h     ; Compares the type of soul Soma just got with 3, type 3 being ability souls.
-      0x0A00002D, # beq 0202E300h ; If it's equal, we jump past all this code that equips the soul automatically.
-      0x908FF104, # The next 5 lines of code are just shifting the original code down by one line since we needed space for the above line of code.
-      0xEA000011,
-      0xEA000001,
-      0xEA000004,
-      0xEA000007,
-      # After shifting those 5 lines down, one line at the end got overwritten. But that line only seems to be run for ability souls, so we don't want it anyway.
-    ]
-    fs.write(address, code.pack("V*"))
-  end
-  
-  def dos_boss_doors_skip_seal
-    return unless GAME == "dos"
-    
-    # This makes it so you don't need a Magic Seal to enter a boss door.
-    
-    address = 0x021A9AE4 # Location of the door code for loading the boolean for whether the player is in Julius mode or not.
-    
-    code = [
-      0xE3A00001, # mov r0, 1 ; Always load 1 (meaning it is Julius mode).
-    ]
-    fs.write(address, code.pack("V*"))
-  end
-  
-  def dos_use_what_you_see_souls
-    return unless GAME == "dos"
-    
-    # Automatically equip every soul you get, and don't allow the player to manually change what soul they have equipped.
-    
-    address = 0x0202E19C
-    code = [0xEA00000A] # b 0202E1CCh ; Always take the branch that means the player 0 of this soul, even if they don't really.
-    fs.write(address, code.pack("V*"))
-    
-    address = 0x0202E234
-    code = [0xE1A00000, 0xE1A00000, 0xE1A00000] # nop ; Don't return from this function yet, pretend this is the first of this soul the player has gotten, whether it has or not.
-    fs.write(address, code.pack("V*"))
-    
-    #address = 0x0202E240
-    #code = [0xE3540003] # cmp r4,3h
-    #fs.write(address, code.pack("V*"))
-    
-    address = 0x0202E1E0 # Code for displaying the description of the soul when you get it for the first time.
-    code = [0xE1A00000] # nop
-    fs.write(address, code.pack("V*"))
-    address = 0x0202E1F4 # More code like the above.
-    code = [0xE1A00000] # nop
-    fs.write(address, code.pack("V*"))
-    
-    address = 0x0202E304
-    code = [0xEAFFFFA5] # b 0202E1A0h ; Jump back to the code we skipped which causes the soul name to display in the upper right corner of the screen.
-    fs.write(address, code.pack("V*"))
-    
-    address = 0x0221024C
-    code = [0xE3A01000] # mov r1,0h ; Store the number of this type of soul you have as 0. This causes the player's soul inventory to always be empty, so they can't equip anything manually. TODO this is bad for ability souls
-    fs.write(address, code.pack("V*"))
-  end
-  
-  def ooe_open_world_map
-    return unless GAME == "ooe"
-    
-    # Make all areas on the world map accessible.
-    fs.write(0x020AA8E4, [0xE3A00001].pack("V"))
-  end
-  
   def set_starting_room(area_index, sector_index, room_index)
     apply_armips_patch("por_allow_changing_starting_room")
     
@@ -258,26 +181,6 @@ class Game
     end
     fs.write(NEW_GAME_STARTING_SECTOR_INDEX_OFFSET, [sector_index].pack("C"))
     fs.write(NEW_GAME_STARTING_ROOM_INDEX_OFFSET, [room_index].pack("C"))
-  end
-  
-  def por_allow_changing_starting_room
-    return unless GAME == "por"
-    
-    code = [
-      0xEA01B71A, # b 020BFC00 ; Jump to some free space, where we will put our own code for loading the area/sector/room indexes.
-    ]
-    address = 0x02051F90 # Where the original game's code for loading area/sector/room indexes is.
-    fs.write(address, code.pack("V*")) 
-    
-    code = [
-      0xE3A05000, # mov r5,0h ; Load the area index into r5.
-      0xE5C05515, # strb r5,[r0,515] ; Store the area index to the ram address where r0 will read it later.
-      0xE3A05000, # mov r5,0h ; Load the sector index into r5.
-      0xE3A04000, # mov r4,0h ; Load the room index into r4.
-      0xEAFE48DF, # b 02051F94 ; Return to where we came from.
-    ]
-    address = 0x020BFC00 # Free space.
-    fs.write(address, code.pack("V*"))
   end
   
   def fix_unnamed_skills
@@ -290,92 +193,6 @@ class Game
       
       text_database.write_to_rom()
     end
-  end
-  
-  def ooe_enter_any_wall
-    return unless GAME == "ooe"
-    
-    # Allow entering any wall with Paries.
-    code = [0xE3A00902] # mov r0, 8000h
-    address = 0x0207BFC4
-    fs.write(address, code.pack("V*"))
-    address = 0x0207C908
-    fs.write(address, code.pack("V*"))
-    
-    
-    
-    # Remove line that teleports Shanoa's y position to the last seen Paries wall when entering a wall.
-    code = [0xE1A00000] # nop
-    address = 0x0207C09C
-    fs.write(address, code.pack("V*"))
-    
-    # Move Shanoa left (if entering a left wall) or right (if entering a right wall).
-    code = [
-      0xE5951108, # ldr r1, [r5, 108h]   ; Load variable for whether shanoa is touching left/right wall.
-      0xE3110080, # tst r1, 80h          ; Test if Shanoa is touching a right wall.
-      0xE5951030, # ldr r1, [r5, 30h]    ; Load shanoa's current x pos
-      0x12811A0A, # addne r1, r1, 0A000h ; Increase x pos if Shanoa is touching a right wall.
-      0x02411A0A, # subeq r1, r1, 0A000h ; Decrease x pos if she's not.
-      0xE5851030, # str r1, [r5, 30h]    ; Store it back.
-      0xEAFEF70E, # b 0207C098           ; Go back to where we came from.
-    ]
-    address = 0x020BE440 # Free space.
-    fs.write(address, code.pack("V*"))
-    # Replace line that teleports Shanoa's x position to the last seen Paries wall when entering a wall to a jump to our own code above.
-    code = [0xEA0108E9] # b 020BE440
-    address = 0x0207C094
-    fs.write(address, code.pack("V*"))
-    
-    # Move Shanoa right (if exiting a left wall) or left (if exiting a right wall).
-    address = 0x020BE45C
-    code = [
-      0xE5950104, # ldr r0, [r5, 104h]   ; Load variable for whether Shanoa is exiting a left/right wall.
-      0xE3100004, # tst r0, 4h           ; Test if Shanoa is exiting a left wall.
-      0xE5950030, # ldr r0, [r5, 30h]    ; Load shanoa's current x pos.
-      0x12800A0A, # addeq r0, r0, 0A000h ; Increase x pos if Shanoa is exiting a left wall.
-      0x02400A0A, # subne r0, r0, 0A000h ; Decrease x pos if she's not.
-      0xE5850030, # str r0, [r5, 30h]    ; Store it back.
-      0xEAFEF94E, # b 0207C9B4           ; Go back to where we came from.
-    ]
-    fs.write(address, code.pack("V*"))
-    # Replace line that always teleports Shanoa to the left when exiting a wall with a jump to our own code above.
-    code = [0xEA0106A9] # b 020BE45C
-    address = 0x0207C9B0
-    fs.write(address, code.pack("V*"))
-    
-    
-    
-    # Allow Shanoa to go up/down out of floors/ceilings.
-    # This is necessary because otherwise walls that are less than 3 blocks tall will cause Shanoa to get permanently stuck with no way to get out.
-    code = [0xE1A00000] # nop
-    # Up out of floors.
-    address = 0x0207C8A4
-    fs.write(address, code.pack("V*"))
-    address = 0x0207C8C0
-    fs.write(address, code.pack("V*"))
-    # Down out of ceilings.
-    address = 0x0207C8E8
-    fs.write(address, code.pack("V*"))
-    address = 0x0207C900
-    fs.write(address, code.pack("V*"))
-    
-    # Make Shanoa instantly enter/exit the wall when she touches the edge of it, instead of having to hold left/right for half a second.
-    code = [0xE3500001] # cmp r0, 1h
-    address = 0x0207C98C
-    fs.write(address, code.pack("V*"))
-    code = [0xE3500002] # cmp r0, 2h
-    address = 0x0207C048
-    fs.write(address, code.pack("V*"))
-    
-    # Make Shanoa instantly exit Paries mode when she goes above/below the wall, instead of needing to press left/right.
-    code = [0xE3A00001] # mov r0, 1h
-    address = 0x0207C808
-    fs.write(address, code.pack("V*"))
-    
-    # Allow Shanoa to exit up/down out of a floor/ceiling, even if the player is still holding up or down on the d-pad.
-    code = [0xE1A00000] # nop
-    address = 0x0207C924
-    fs.write(address, code.pack("V*"))
   end
   
 private
