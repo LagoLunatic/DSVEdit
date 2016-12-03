@@ -10,13 +10,7 @@
 ; For example, Doppelganger is the 2nd ability soul (counting from 0, not from 1). 2 in binary is 00000010. When it tries to store this in the bitfield representing the ability souls you have activated, it activates the 1st ability soul, Malphas. In other words, if your first ability soul is Doppelganger you gain both Doppelganger and Malphas. (Though Malphas doesn't show up in the list of ability souls you own, so you can't deactivate it.)
 ; This bug isn't noticeable in a normal playthrough because the first ability soul you get is always Balore. Balore is the 0th ability soul, and 0 in binary is still 0, so no extra souls get activated.
 
-.org 0x0202E240 ; Where the code for automatically equipping the first souls you get is.
-  cmp r4,3h     ; Compares the type of soul Soma just got with 3, type 3 being ability souls.
-  beq 0202E300h ; If it's equal, we jump past all this code that equips the soul automatically.
-  addls r15, r15, r4, lsl 2h
-  b 202E298h
-  b 202E25Ch
-  b 202E26Ch
-  b 202E27Ch
+.org 0x0202E258 ; Run the first time you get an ability soul. This branches to the bugged code.
+  b 0202E300h ; Replace with a branch to after the bugged code is over.
 
 .close
