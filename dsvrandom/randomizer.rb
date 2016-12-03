@@ -16,6 +16,7 @@ class Randomizer
     @used_skills = []
     @used_items = []
     
+    FileUtils.mkdir_p("./logs")
     @log = File.open("./logs/random.txt", "a")
     if seed
       @rng = Random.new(seed)
