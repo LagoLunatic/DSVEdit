@@ -35,14 +35,15 @@ Byte 4: x pos on map.
 Map tile line data (PoR and OoE):
 Each tile on the map takes up 1 byte.
 Most significant bit first.
-  Bit 1: has bottom door (overrides bit 2)
+  Bit 1: has bottom door
   Bit 2: has bottom floor
-  Bit 3: has right door (overrides bit 4)
+  Bit 3: has right door
   Bit 4: has right wall
-  Bit 5: has top door (overrides bit 6)
+  Bit 5: has top door
   Bit 6: has top ceiling
-  Bit 7: has left door (overrides bit 8)
+  Bit 7: has left door
   Bit 8: has left wall
+Note that normally only the door bit or the wall bit will be set. But for destroyable walls, both of them will be set. This will be drawn as a wall before the wall has been destroyed, and as a door afterwards.
 
 Map length in tiles (PoR and OoE):
 Each entry is 2 bytes long. It's simply the number of map tiles that this map has, so you know when to stop reading map tiles.

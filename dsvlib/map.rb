@@ -3,13 +3,16 @@ class Map
   attr_reader :map_tile_metadata_ram_pointer,
               :map_tile_line_data_ram_pointer,
               :number_of_tiles,
+              :secret_door_list_pointer,
               :fs,
-              :tiles
+              :tiles,
+              :secret_doors
   
-  def initialize(map_tile_metadata_ram_pointer, map_tile_line_data_ram_pointer, number_of_tiles, fs)
+  def initialize(map_tile_metadata_ram_pointer, map_tile_line_data_ram_pointer, number_of_tiles, secret_door_list_pointer, fs)
     @map_tile_metadata_ram_pointer = map_tile_metadata_ram_pointer
     @map_tile_line_data_ram_pointer = map_tile_line_data_ram_pointer
     @number_of_tiles = number_of_tiles
+    @secret_door_list_pointer = secret_door_list_pointer
     @fs = fs
   
     read_from_rom()
@@ -20,8 +23,27 @@ class Map
     (0..number_of_tiles-1).each do |i|
       tile_line_data = fs.read(map_tile_line_data_ram_pointer + i).unpack("C*").first
       tile_metadata = fs.read(map_tile_metadata_ram_pointer + i*4, 4).unpack("vCC")
-
+      
       @tiles << MapTile.new(tile_metadata, tile_line_data)
+    end
+    
+    tiles_with_secret_doors = tiles.select{|tile| tile.has_secret_door}
+    
+    @secret_doors = []
+    if secret_door_list_pointer != 0
+      tiles_with_secret_doors.each_with_index do |tile, i|
+        tile_index = tiles.index(tile)
+        
+        map_tile_index, secret_door_index = fs.read(secret_door_list_pointer + i*4, 4).unpack("v*")
+        secret_door = SecretDoor.new(map_tile_index, secret_door_index, tiles)
+        
+        if secret_door.map_tile_index >= tile_index
+          @secret_doors << secret_door
+        else
+          # Reached the end of the secret door list for this area.
+          break
+        end
+      end
     end
   end
 end
@@ -47,7 +69,8 @@ class MapTile
                 :room_index,
                 :y_pos,
                 :x_pos,
-                :is_blank
+                :is_blank,
+                :has_secret_door
   
   def initialize(tile_metadata, tile_line_data)
     @tile_metadata = tile_metadata
@@ -64,7 +87,7 @@ class MapTile
     @top_wall       = tile_line_data & 0b00000100 > 0
     @left_door      = tile_line_data & 0b00000010 > 0
     @left_wall      = tile_line_data & 0b00000001 > 0
-
+    
     @is_save        =  tile_metadata[0] & 0b10000000_00000000 > 0
     @is_warp        =  tile_metadata[0] & 0b01000000_00000000 > 0
     @is_secret      =  tile_metadata[0] & 0b00100000_00000000 > 0
@@ -74,13 +97,31 @@ class MapTile
     @room_index     =  tile_metadata[0] & 0b00000000_00111111
     @y_pos          =  tile_metadata[1]
     @x_pos          =  tile_metadata[2]
+    
+    @has_secret_door = (bottom_door && bottom_wall) ||
+                       (right_door && right_wall) ||
+                       (top_door && top_wall) ||
+                       (left_door && left_wall)
+  end
+end
+
+class SecretDoor
+  attr_reader :map_tile_index,
+              :secret_door_index,
+              :map_tile
+  
+  def initialize(map_tile_index, secret_door_index, all_map_tiles)
+    @map_tile_index  = map_tile_index
+    @secret_door_index = secret_door_index
+    
+    @map_tile = all_map_tiles[@map_tile_index]
   end
 end
 
 class DoSMap < Map
   attr_reader :is_abyss
   
-  def initialize(map_tile_metadata_ram_pointer, map_tile_line_data_ram_pointer, number_of_tiles, fs, is_abyss = false)
+  def initialize(map_tile_metadata_ram_pointer, map_tile_line_data_ram_pointer, number_of_tiles, secret_door_list_pointer, fs, is_abyss = false)
     @is_abyss = is_abyss
     if is_abyss
       @width = 18
@@ -88,7 +129,7 @@ class DoSMap < Map
       @width = 64
     end
     
-    super(map_tile_metadata_ram_pointer, map_tile_line_data_ram_pointer, number_of_tiles, fs)
+    super(map_tile_metadata_ram_pointer, map_tile_line_data_ram_pointer, number_of_tiles, secret_door_list_pointer, fs)
   end
   
   def read_from_rom
@@ -115,6 +156,20 @@ class DoSMap < Map
         
         i += 1
       end
+    end
+    
+    @secret_doors = []
+    i = 0
+    while true
+      x_pos, y_pos = fs.read(secret_door_list_pointer + i*2, 2).unpack("C*")
+      
+      if x_pos == 0xFF && y_pos == 0xFF
+        break
+      end
+      
+      @secret_doors << DoSSecretDoor.new(x_pos, y_pos)
+      
+      i += 1
     end
   end
 end
@@ -167,5 +222,25 @@ class DoSMapTile
     @x_pos          = @tile_index % map_width
     
     @is_blank       = tile_metadata[0] == 0xFFFF
+  end
+end
+
+class DoSSecretDoor < SecretDoor
+  attr_reader :x_pos,
+              :y_pos,
+              :door_side
+  
+  def initialize(x_pos, y_pos)
+    @x_pos = x_pos
+    @y_pos = y_pos
+    
+    if @y_pos >= 0x80
+      # If y is negative the door is on the left of the tile.
+      @y_pos = (-@y_pos & 0xFF) # Negate y.
+      @door_side = :left
+    else
+      # If y is positive the door is on the top of the tile.
+      @door_side = :top
+    end
   end
 end

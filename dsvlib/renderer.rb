@@ -406,9 +406,11 @@ class Renderer
     line_color            = ChunkyPNG::Color.rgba(*MAP_LINE_COLOR)
     door_color            = ChunkyPNG::Color.rgba(*MAP_DOOR_COLOR)
     door_center_color     = ChunkyPNG::Color.rgba(*MAP_DOOR_CENTER_PIXEL_COLOR)
+    secret_door_color     = ChunkyPNG::Color.rgba(*MAP_SECRET_DOOR_COLOR)
   
     wall_pixels = [line_color]*5
     door_pixels = [line_color, door_color, door_center_color, door_color, line_color]
+    secret_door_pixels = [line_color, secret_door_color, secret_door_color, secret_door_color, line_color]
   
     # 25 pixels per tile. But they overlap, so the left and top of a tile overlaps the right and bottom of other tiles.
     i = 0
@@ -437,34 +439,69 @@ class Renderer
       fill_tile = ChunkyPNG::Image.new(5, 5, color)
       lines_tile = ChunkyPNG::Image.new(5, 5, ChunkyPNG::Color::TRANSPARENT)
       
-      if tile.left_door
-        lines_tile.replace_column!(0, door_pixels)
-      elsif tile.left_wall
+      if tile.left_wall
         lines_tile.replace_column!(0, wall_pixels)
+      elsif tile.left_door
+        lines_tile.replace_column!(0, door_pixels)
       end
       
-      if tile.right_door # Never used in game because it would always get overwritten by the tile to the right.
-        lines_tile.replace_column!(4, door_pixels)
-      elsif tile.right_wall
+      if tile.right_wall
         lines_tile.replace_column!(4, wall_pixels)
+      elsif tile.right_door
+        lines_tile.replace_column!(4, door_pixels)
       end
       
-      if tile.top_door
-        lines_tile.replace_row!(0, door_pixels)
-      elsif tile.top_wall
+      if tile.top_wall
         lines_tile.replace_row!(0, wall_pixels)
+      elsif tile.top_door
+        lines_tile.replace_row!(0, door_pixels)
       end
       
-      if tile.bottom_door # Never used in game because it would always get overwritten by the tile below.
-        lines_tile.replace_row!(4, door_pixels)
-      elsif tile.bottom_wall
+      if tile.bottom_wall
         lines_tile.replace_row!(4, wall_pixels)
+      elsif tile.bottom_door
+        lines_tile.replace_row!(4, door_pixels)
       end
       
       fill_img.compose!(fill_tile, tile.x_pos*4, tile.y_pos*4)
       lines_img.compose!(lines_tile, tile.x_pos*4, tile.y_pos*4)
       
       i += 1
+    end
+    
+    if GAME == "dos"
+      map.secret_doors.each do |secret_door|
+        secret_door_img = ChunkyPNG::Image.new(5, 5, ChunkyPNG::Color::TRANSPARENT)
+        
+        if secret_door.door_side == :top
+          secret_door_img.replace_row!(0, secret_door_pixels)
+        else
+          secret_door_img.replace_column!(0, secret_door_pixels)
+        end
+        
+        lines_img.compose!(secret_door_img, secret_door.x_pos*4, secret_door.y_pos*4)
+      end
+    else
+      map.secret_doors.each do |secret_door|
+        secret_door_img = ChunkyPNG::Image.new(5, 5, ChunkyPNG::Color::TRANSPARENT)
+        
+        tile = secret_door.map_tile
+        
+        if tile.left_wall && tile.left_door
+          secret_door_img.replace_column!(0, secret_door_pixels)
+        end
+        if tile.right_wall && tile.right_door
+          secret_door_img.replace_column!(4, secret_door_pixels)
+        end
+        if tile.top_wall && tile.top_door
+          secret_door_img.replace_row!(0, secret_door_pixels)
+        end
+        if tile.bottom_wall && tile.bottom_door
+          secret_door_img.replace_row!(4, secret_door_pixels)
+        end
+        
+        lines_img.compose!(secret_door_img, tile.x_pos*4, tile.y_pos*4)
+      end
     end
     
     img = ChunkyPNG::Image.new(map_image_width, map_image_height, ChunkyPNG::Color::TRANSPARENT)
