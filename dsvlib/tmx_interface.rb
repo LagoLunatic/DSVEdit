@@ -20,10 +20,10 @@ class TMXInterface
     tiled_layers.each do |tmx_layer|
       props = extract_properties(tmx_layer)
       
-      layer_metadata_ram_pointer = tmx_layer.attr("name").match(/^layer (\h+)$/)[1].to_i(16)
-      possible_layers = room.layers.select{|layer| layer.layer_metadata_ram_pointer == layer_metadata_ram_pointer}
+      layer_list_entry_ram_pointer = tmx_layer.attr("name").match(/^layer (\h+)$/)[1].to_i(16)
+      possible_layers = room.layers.select{|layer| layer.layer_list_entry_ram_pointer == layer_list_entry_ram_pointer}
       if possible_layers.length != 1
-        raise "%08X could be too many possible layers (or not enough)" % layer_metadata_ram_pointer
+        raise "%08X could be too many possible layers (or not enough)" % layer_list_entry_ram_pointer
       end
       game_layer = possible_layers.first
       game_layer.width  = props["layer_width"]
@@ -109,7 +109,7 @@ class TMXInterface
         end
         
         room.z_ordered_layers.each do |layer|
-          layer_name = "layer %08X" % layer.layer_metadata_ram_pointer
+          layer_name = "layer %08X" % layer.layer_list_entry_ram_pointer
           xml.layer(:name => layer_name,
                     :width => layer.width*16, :height => layer.height*12,
                     :opacity => layer.opacity/31.0) {
