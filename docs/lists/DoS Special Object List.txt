@@ -11,7 +11,7 @@ Special objects:
 02 Water level.
   Var B: Set this to the same value as a lever's Var B and pulling the lever will permanently drain this water.
 03 Waterfall that pushes the player downwards when they jump up into it. Var A is the width, Var B is the height.
-04 Some kind of water visual effect
+04 Large water splashing visual and sound effects, used at the bottom of the large waterfall.
 05 Used in rooms with quicksand.
 06 Area name shown the first time you enter an area. Var A controls which area it is.
 07 START text appears and music changes to boss rush or whatever it is. also does something with enemy set mode TODO
@@ -40,7 +40,7 @@ Special objects:
 15 Rapidly moving clouds background effect used in the very large room in the Dark Chapel.
 16 Moving clouds background effect used in the Condemned Tower.
 17 Invisible block that becomes visible when a Ghost hovers over it. Var A and Var B are set to various values from 0 to C, but don't seem to affect anything?
-18 Long golden platform, always appears at the bottom of the first screen, and locks the screen scrolling to that screen.
+18 Long golden platform, always appears at the bottom of the first screen, and locks the screen scrolling to that screen. Used in Gergoth's tower. TODO
 19 Bloody spike that spins around. Spinning speed controlled by var b.
 1A Like 19, but the actual spike is broken off so it can't hurt you.
 1B Pendulum...? Animation speed affected by var b.
@@ -96,7 +96,11 @@ Special objects:
   Var B: Set to the same as the wall's Var B.
 2A The metal gate that seals in the water in the Lost Village.
   Var B: Set to the same as the lever's Var B.
-2B Animated tiny waterfall.
+2B The destroyable floor in the Lost Village underneath the statues.
+  Var A:
+    0 for the floor and the animated water on the statue.
+    1 for the ceiling with explosives strapped to it and the button that blows it up. (The button automatically positions itself to the upper left screen, and the explosive ceiling visually positions itself there too, but the collision on the ceiling will be wherever you set the X and Y to.)
+  Var B: The index of the destroyable floor.
 2C Chandelier? upside down maybe?
 2D Hanging spikes, disappear when you get near them.
 2E Unused, crash
@@ -120,12 +124,21 @@ Special objects:
 3E The bouncing ball in the puzzle with touch screen blocks. It just explodes instantly if it's not inside touch screen blocks.
 3F The one strongman puzzle you have to hit with a hammer.
 40 Unused. Yellow square TODO. Changes into what looks like tiles depending on var a. Inner square rotates depending on var b,
-41 Puts a timer on screen and restarts the current music track.
+41 Starts boss rush, puts a timer on screen and restarts the current music track.
 42 The item you get as a reward at the end of boss rush.
-43 
-44 A destroyable wall (for hiding secret rooms). Var A changes which wall it is (the color, the direction, etc). Some values for var A (such as FFFF) corrupt the way the map looks - probably because destroying this wall is supposed to reveal the secret on the map. These tend to face downwards?
+43 The destroyable wall in the room with the waterfall. Automatically positions itself.
+44 A destroyable wall (for hiding secret rooms).
+  Var A:
+    0 for the ceiling in Demon Guest House.
+    1 for the ceiling in the Pinnacle.
 45 A button and a gate opened by the button. (Maybe for letting the water level down?)
-46 More destroyable walls like 44. But these tend to be facing to the right or upwards.
+46 More destroyable walls like 44.
+  Var A:
+    0 for the left wall in the underground portion of Lost Village.
+    1 for the floor in the Lost Village.
+    2 for the ceiling in the Garden of Madness.
+    3 for the left wall in the Pinnacle.
+    4 for the floor in the Pinnacle.
 47 Hammer (can be used as a shop)
 48 Yoko (can be used for weapon synth, etc)
 49 Red wall with an enemy on it that opens up when you use that enemy's soul against the wall.
@@ -139,19 +152,19 @@ Special objects:
 4C A consumable, like regular consumables var B controls which one it is. But why is this a special object?
 4D Trigger to make a secret item (Konami Man/Crown/Bell) appear.
 4E Mina Hakuba doll (only appears if Aria of Sorrow is in the GBA slot).
-4F Unused
-50 Unused
-51 Unused
-52 Unused
-53 Unused
-54 Unused
-55 Unused
+4F Unused, nothing.
+50 Unused, nothing.
+51 Unused, nothing.
+52 Unused, nothing.
+53 Unused, nothing.
+54 Unused, nothing.
+55 Unused, nothing.
 56 Used in prologue room. Force fields?
-57 Breakable ceiling from the long room at the end of Wizardry Lab.
+57 The destroyable ceiling from the long room at the end of Wizardry Lab.
 58 Celia on a cross. Used in Menace's room. Doesn't appear until the event causes it to.
 59 Pillars of flame from the Abyss.
 5A Big entity that acts as the graphics to transition rooms to hide the fact that they have no tiles.
-5B Unused
+5B Unused, nothing.
 5C used in menace's room
 === Below are events. Var A may be an identifier for each event to check if it's been seen already or not. Var B is unknown.
 5D Event - prologue

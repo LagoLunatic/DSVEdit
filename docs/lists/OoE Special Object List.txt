@@ -207,3 +207,5 @@ Special Objects:
     57 Daniela
   var b: does something, can make the villager disappear. usually 0.
 8A - magnes glyph with event
+8B
+8C - ending event
