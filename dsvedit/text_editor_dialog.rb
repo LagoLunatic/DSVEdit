@@ -11,6 +11,10 @@ class TextEditor < Qt::Dialog
     @ui = Ui_TextEditor.new
     @ui.setup_ui(self)
     
+    # rbuic4 is bugged and ignores stretch values, so they must be manually set.
+    @ui.horizontalLayout_2.setStretch(0, 1)
+    @ui.horizontalLayout_2.setStretch(1, 2)
+    
     @fs = fs
     
     @text_database = TextDatabase.new(fs)
