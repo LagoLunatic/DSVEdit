@@ -26,8 +26,8 @@ task :build_installers do
   # Instead you need to use the latest version of OCRA from the source: https://github.com/larsch/ocra/tree/2e7c88fd6ac7ae5f881d838dedd7ad437bda018b
   # The easiest way to do this is to install the latest gem version of OCRA, then go to the folder where OCRA was installed in your Ruby installation and replace the file /bin/ocra with the /bin/ocra from the source.
 
-  system "ocra dsvedit.rb --output DSVEdit.exe --no-lzma --chdir-first --innosetup setup_dsvedit.iss --windows --gem-files ./images/dsvedit_icon.ico --gem-extras README.md --icon ./images/dsvedit_icon.ico"
-  system "ocra dsvrandom.rb --output DSVRandom.exe --no-lzma --chdir-first --innosetup setup_dsvrandom.iss --windows --gem-files ./images/dsvrandom_icon.ico --gem-extras README.md --icon ./images/dsvrandom_icon.ico"
+  system "ocra dsvedit.rb --output DSVEdit.exe --no-lzma --chdir-first --innosetup setup_dsvedit.iss --windows --gem-files ./images/dsvedit_icon.ico --gem-extras README.txt armips asm --icon ./images/dsvedit_icon.ico"
+  system "ocra dsvrandom.rb --output DSVRandom.exe --no-lzma --chdir-first --innosetup setup_dsvrandom.iss --windows --gem-files ./images/dsvrandom_icon.ico --gem-extras README.txt armips asm --icon ./images/dsvrandom_icon.ico"
 end
 
 task :build_releases do
@@ -57,9 +57,9 @@ task :build_releases do
     FileUtils.mkdir "./build/#{program_name}/src"
     
     if program_name == "DSVania Editor"
-      FileUtils.cp_r ["./constants", "./dsvedit", "./dsvlib", "./images", "dsvedit.rb", "dsvlib.rb", "README.md"], "./build/#{program_name}/src"
+      FileUtils.cp_r ["./constants", "./dsvedit", "./dsvlib", "./images", "dsvedit.rb", "dsvlib.rb", "README.txt"], "./build/#{program_name}/src"
     else
-      FileUtils.cp_r ["./constants", "./dsvrandom", "./dsvlib", "./images", "dsvrandom.rb", "dsvlib.rb", "README.md"], "./build/#{program_name}/src"
+      FileUtils.cp_r ["./constants", "./dsvrandom", "./dsvlib", "./images", "dsvrandom.rb", "dsvlib.rb", "README.txt"], "./build/#{program_name}/src"
     end
     
     Zip::File.open("./build/#{program_name}.zip", Zip::File::CREATE) do |zipfile|
