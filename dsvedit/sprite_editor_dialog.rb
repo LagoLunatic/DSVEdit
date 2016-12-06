@@ -14,6 +14,7 @@ class SpriteEditor < Qt::Dialog
   slots "animation_changed(int)"
   slots "toggle_animation_paused()"
   slots "advance_frame()"
+  slots "button_box_clicked(QAbstractButton*)"
   
   def initialize(main_window, fs, renderer)
     super(main_window, Qt::WindowTitleHint | Qt::WindowSystemMenuHint)
@@ -57,13 +58,15 @@ class SpriteEditor < Qt::Dialog
     connect(@ui.part_index, SIGNAL("activated(int)"), self, SLOT("part_changed(int)"))
     connect(@ui.animation_index, SIGNAL("activated(int)"), self, SLOT("animation_changed(int)"))
     connect(@ui.toggle_paused_button, SIGNAL("clicked()"), self, SLOT("toggle_animation_paused()"))
+    connect(@ui.buttonBox, SIGNAL("clicked(QAbstractButton*)"), self, SLOT("button_box_clicked(QAbstractButton*)"))
     
     self.show()
   end
   
   def enemy_changed(enemy_id)
-    @gfx_files_with_blanks, @palette_pointer, palette_offset, @sprite_file = begin
-      EnemyDNA.new(enemy_id, @fs).get_gfx_and_palette_and_sprite_from_init_ai
+    begin
+      @gfx_pointer, @palette_pointer, @palette_offset, @sprite_file = 
+        EnemyDNA.new(enemy_id, @fs).get_gfx_and_palette_and_sprite_from_init_ai
     rescue StandardError => e
       Qt::MessageBox.warning(self,
         "Enemy sprite extraction failed",
@@ -72,14 +75,21 @@ class SpriteEditor < Qt::Dialog
       return
     end
     
-    @sprite = Sprite.new(@sprite_file, @fs)
+    load_sprite()
     
-    chunky_frames, @min_x, @min_y, rendered_parts, @palettes, @full_width, @full_height = begin
-      @renderer.render_sprite(@gfx_files_with_blanks, @palette_pointer, palette_offset, @sprite, frame_to_render = 0)
+    @ui.enemy_list.setCurrentRow(enemy_id)
+  end
+  
+  def load_sprite
+    begin
+      @sprite = Sprite.new(@sprite_file, @fs)
+      
+      chunky_frames, @min_x, @min_y, rendered_parts, @gfx_files_with_blanks, @palettes, @full_width, @full_height = 
+        @renderer.render_sprite(@gfx_pointer, @palette_pointer, @palette_offset, @sprite, frame_to_render = 0)
     rescue StandardError => e
       Qt::MessageBox.warning(self,
-        "Enemy sprite rendering failed",
-        "Failed to render sprites for enemy #{enemy_id}.\n#{e.message}\n\n#{e.backtrace.join("\n")}"
+        "Sprite rendering failed",
+        "Failed to render sprite.\n#{e.message}\n\n#{e.backtrace.join("\n")}"
       )
       return
     end
@@ -98,6 +108,8 @@ class SpriteEditor < Qt::Dialog
     end
     
     @gfx_page_pixmaps_by_palette = {}
+    
+    @ui.gfx_pointer.text = "%08X" % @gfx_pointer
     
     @ui.gfx_page_index.clear()
     @gfx_files_with_blanks.each_with_index do |gfx_page, i|
@@ -142,8 +154,6 @@ class SpriteEditor < Qt::Dialog
       @ui.animation_index.addItem("%02X" % i)
     end
     animation_changed(0)
-    
-    @ui.enemy_list.setCurrentRow(enemy_id)
   end
   
   def load_gfx_pages(palette_index)
@@ -314,5 +324,19 @@ class SpriteEditor < Qt::Dialog
       
       Qt::Timer.singleShot(millisecond_delay, self, SLOT("advance_frame()"))
     end
+  end
+  
+  def button_box_clicked(button)
+    if @ui.buttonBox.standardButton(button) == Qt::DialogButtonBox::Apply
+      reload_sprite()
+    end
+  end
+  
+  def reload_sprite
+    @gfx_pointer = @ui.gfx_pointer.text.to_i(16)
+    @palette_pointer = @ui.palette_pointer.text.to_i(16)
+    @sprite_file = @fs.files_by_path[@ui.sprite_file_name.text]
+    
+    load_sprite()
   end
 end

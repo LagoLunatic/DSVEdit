@@ -514,7 +514,9 @@ class Renderer
     return img
   end
   
-  def render_sprite(gfx_files_with_blanks, palette_pointer, palette_offset, sprite, frame_to_render = nil, render_hitboxes = false)
+  def render_sprite(gfx_pointer, palette_pointer, palette_offset, sprite, frame_to_render = nil, render_hitboxes = false)
+    gfx_files_with_blanks = fs.get_gfx_files_with_blanks_from_gfx_pointer(gfx_pointer)
+    
     if gfx_files_with_blanks.first[:render_mode] == 1
       palettes = generate_palettes(palette_pointer, 16)
     elsif gfx_files_with_blanks.first[:render_mode] == 2
@@ -585,7 +587,7 @@ class Renderer
       rendered_frames << rendered_frame
     end
     
-    return [rendered_frames, min_x, min_y, rendered_parts, palettes, full_width, full_height]
+    return [rendered_frames, min_x, min_y, rendered_parts, gfx_files_with_blanks, palettes, full_width, full_height]
   end
   
   def render_sprite_part(part, rendered_gfx_file)

@@ -4,6 +4,8 @@ require 'fileutils'
 class NDSFileSystem
   class ConversionError < StandardError ; end
   class OffsetPastEndOfFileError < StandardError ; end
+  class GFXPointerError < StandardError ; end
+  class SpritePointerError < StandardError ; end
   
   attr_reader :files,
               :files_by_path,
@@ -213,6 +215,83 @@ class NDSFileSystem
   
   def files_without_dirs
     files.select{|id, file| file[:type] == :file}
+  end
+  
+  def get_gfx_files_with_blanks_from_gfx_pointer(gfx_pointer)
+    data = read(gfx_pointer+4, 4).unpack("V").first
+    if data >= 0x02000000 && data < 0x03000000
+      # List of GFX pages
+      list_of_gfx_page_pointers_wrapper_pointer = gfx_pointer
+    elsif data == 0x10 || data == 0x20
+      # Just one GFX page, not a list
+      gfx_page_pointer = gfx_pointer
+    else
+      raise GFXPointerError.new("GFX pointer is invalid.")
+    end
+    
+    list_of_gfx_page_pointers = []
+    if gfx_page_pointer
+      list_of_gfx_page_pointers = [gfx_page_pointer]
+    elsif list_of_gfx_page_pointers_wrapper_pointer
+      pointer_to_list_of_gfx_page_pointers = read(list_of_gfx_page_pointers_wrapper_pointer+4, 4).unpack("V*").first
+      
+      i = 0
+      while true
+        begin
+          gfx_page_pointer = read(pointer_to_list_of_gfx_page_pointers+i*4, 4).unpack("V").first
+        rescue NDSFileSystem::ConversionError, NDSFileSystem::OffsetPastEndOfFileError
+          break
+        end
+        if gfx_page_pointer < 0x2000000 || gfx_page_pointer >= 0x3000000
+          break
+        end
+        list_of_gfx_page_pointers << gfx_page_pointer
+        i += 1
+      end
+    end
+    
+    if list_of_gfx_page_pointers.empty?
+      raise GFXPointerError.new("List of gfx pages empty")
+    end
+    
+    gfx_files = []
+    list_of_gfx_page_pointers.each_with_index do |gfx_pointer, i|
+      gfx_file = find_file_by_ram_start_offset(gfx_pointer)
+      if gfx_file.nil?
+        if gfx_files.empty?
+          raise GFXPointerError.new("Couldn't find gfx file! pointer: %08X" % gfx_pointer) # TODO
+        else
+          break # this probably just means we read too many gfx pointers from the list, so we just stop looking at the list of pointers now.
+        end
+      end
+      
+      render_mode = read(gfx_pointer+1, 1).unpack("C").first
+      canvas_width = read(gfx_pointer+2, 1).unpack("C").first
+      
+      gfx_files << {file: gfx_file, render_mode: render_mode, canvas_width: canvas_width}
+    end
+    
+    gfx_files_with_blanks = []
+    gfx_files.each do |gfx_file|
+      gfx_files_with_blanks << gfx_file
+      blanks_needed = (gfx_file[:canvas_width]/0x10 - 1) * 3
+      gfx_files_with_blanks += [nil]*blanks_needed
+    end
+    
+    gfx_files_with_blanks
+  end
+  
+  def get_sprite_file_from_pointer(sprite_file_pointer)
+    sprite_file = find_file_by_ram_start_offset(sprite_file_pointer)
+    
+    if sprite_file.nil?
+      raise SpritePointerError.new("Failed to find sprite file corresponding to pointer: %08X" % sprite_file_pointer)
+    end
+    if sprite_file[:file_path] !~ /^\/so\//
+      raise SpritePointerError.new("Bad sprite file: #{sprite_file[:file_path]}")
+    end
+    
+    sprite_file
   end
   
 private
