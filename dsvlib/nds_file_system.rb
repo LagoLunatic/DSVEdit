@@ -233,20 +233,13 @@ class NDSFileSystem
     if gfx_page_pointer
       list_of_gfx_page_pointers = [gfx_page_pointer]
     elsif list_of_gfx_page_pointers_wrapper_pointer
+      number_of_gfx_pages = read(list_of_gfx_page_pointers_wrapper_pointer+2, 1).unpack("C").first
       pointer_to_list_of_gfx_page_pointers = read(list_of_gfx_page_pointers_wrapper_pointer+4, 4).unpack("V*").first
       
-      i = 0
-      while true
-        begin
-          gfx_page_pointer = read(pointer_to_list_of_gfx_page_pointers+i*4, 4).unpack("V").first
-        rescue NDSFileSystem::ConversionError, NDSFileSystem::OffsetPastEndOfFileError
-          break
-        end
-        if gfx_page_pointer < 0x2000000 || gfx_page_pointer >= 0x3000000
-          break
-        end
+      (0..number_of_gfx_pages-1).each do |i|
+        gfx_page_pointer = read(pointer_to_list_of_gfx_page_pointers+i*4, 4).unpack("V").first
+        
         list_of_gfx_page_pointers << gfx_page_pointer
-        i += 1
       end
     end
     
@@ -322,6 +315,9 @@ private
     get_file_allocation_table()
     get_extra_files()
     generate_file_paths()
+    CONSTANT_OVERLAYS.each do |overlay_index|
+      load_overlay(overlay_index)
+    end
     get_file_ram_start_offsets()
   end
   
@@ -455,6 +451,17 @@ private
       file[:ram_start_offset] = ram_start_offset
       
       offset += LIST_OF_FILE_RAM_LOCATIONS_ENTRY_LENGTH
+    end
+    
+    if GAME == "por"
+      # Richter's gfx files don't have a ram offset stored in the normal place.
+      i = 0
+      files.values.each do |file|
+        if file[:ram_start_offset] == 0 && file[:file_path] =~ /\/sc2\/s0_ri_..\.dat/
+          file[:ram_start_offset] = read(RICHTERS_LIST_OF_GFX_POINTERS + i*4, 4).unpack("V").first
+          i += 1
+        end
+      end
     end
   end
   

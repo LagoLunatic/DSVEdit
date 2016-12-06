@@ -16,9 +16,6 @@ class Game
     
     @fs = NDSFileSystem.new
     fs.open_directory(input_folder_path)
-    CONSTANT_OVERLAYS.each do |overlay_index|
-      fs.load_overlay(overlay_index)
-    end
     
     read_from_rom()
   end
@@ -42,10 +39,6 @@ class Game
       
       @fs = NDSFileSystem.new
       fs.open_rom(input_rom_path)
-    end
-    
-    CONSTANT_OVERLAYS.each do |overlay_index|
-      fs.load_overlay(overlay_index)
     end
     
     read_from_rom()

@@ -99,8 +99,14 @@ class EnemyDNA
       header_vals = fs.read(pointer, 4).unpack("C*") rescue next
       data = fs.read(pointer+4, 4).unpack("V").first
       if data >= 0x02000000 && data < 0x03000000
-        # List of GFX pages
-        header_vals.all?{|val| val < 0x50} && (1..2).include?(header_vals[1])
+        # There's a chance this might just be something that looks like a pointer (like palette data), so check to make sure it really is one.
+        possible_gfx_page_pointer = fs.read(data, 4).unpack("V").first rescue next
+        if possible_gfx_page_pointer >= 0x02000000 && possible_gfx_page_pointer < 0x03000000
+          # List of GFX pages
+          header_vals.all?{|val| val < 0x50} && (1..2).include?(header_vals[1])
+        else
+          false
+        end
       elsif data == 0x10
         # Just one GFX page, not a list
         header_vals[0] == 0 && (1..2).include?(header_vals[1]) && header_vals[2] == 0x10 && header_vals[3] == 0

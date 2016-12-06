@@ -279,7 +279,9 @@ REUSED_ENEMY_INFO = {
   121 => {init_code: 0x02297320, gfx_sheet_ptr_index: 1, palette_list_ptr_index: 1, sprite_ptr_index: 1}, # double axe armor -> axe armor
   122 => {init_code: 0x022D7930, gfx_sheet_ptr_index: 1, palette_list_ptr_index: 1, sprite_ptr_index: 1}, # demon
   126 => {palette_offset: 1}, # golden skeleton and skeleton
+  152 => {init_code: 0x0221E954} # whip's memory. for some reason his pointers are off in some random place not near his init code.
 }
+RICHTERS_LIST_OF_GFX_POINTERS = 0x0221E6B0
 BEST_SPRITE_FRAME_FOR_ENEMY = {
     0 =>  26, # zombie
    11 =>   7, # une

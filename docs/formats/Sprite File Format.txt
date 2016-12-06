@@ -29,7 +29,9 @@ Each part is 16 bytes long.
     Least significant bit first.
     Bit 1: Vertical flip
     Bit 2: Horizontal flip.
-    Bits 3-8: Unused?
+    Bit 3: Unused.
+    Bit 4: Used by some parts in Hanged Bones, Skeleton Tree, and Brauner, but has no apparent effect.
+    Bits 5-8: Unused.
   Byte 15: Palette index to use.
   Byte 16: 0x00.
 
