@@ -7,6 +7,7 @@ class MapEditorDialog < Qt::Dialog
   slots "edit_map_tile(int, int)"
   slots "select_tile(int, int)"
   slots "reload_available_tiles(int)"
+  slots "button_box_clicked(QAbstractButton*)"
   
   def initialize(main_window, fs, renderer, map)
     super(main_window, Qt::WindowTitleHint | Qt::WindowSystemMenuHint)
@@ -41,7 +42,7 @@ class MapEditorDialog < Qt::Dialog
     @available_tiles = []
     if GAME == "dos"
       (0..0xF).each do |line_type|
-        tile = DoSMapTile.new([0], line_type, line_type, 16)
+        tile = DoSMapTile.new(0, line_type, line_type, 16)
         @available_tiles << tile
         
         tile_pixmap_item = create_tile_pixmap_item(tile)
@@ -78,6 +79,8 @@ class MapEditorDialog < Qt::Dialog
     else
       @ui.is_blank.disabled = true
     end
+    
+    connect(@ui.buttonBox, SIGNAL("clicked(QAbstractButton*)"), self, SLOT("button_box_clicked(QAbstractButton*)"))
     
     self.show()
   end
@@ -156,5 +159,18 @@ class MapEditorDialog < Qt::Dialog
     i = x/8 + y/8*16
     @selected_map_tile = @available_tiles[i]
     load_selected_map_tile()
+  end
+  
+  def button_box_clicked(button)
+    if @ui.buttonBox.standardButton(button) == Qt::DialogButtonBox::Ok
+      @map.write_to_rom()
+      parent.load_map()
+      self.close()
+    elsif @ui.buttonBox.standardButton(button) == Qt::DialogButtonBox::Cancel
+      self.close()
+    elsif @ui.buttonBox.standardButton(button) == Qt::DialogButtonBox::Apply
+      @map.write_to_rom()
+      parent.load_map()
+    end
   end
 end

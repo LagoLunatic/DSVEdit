@@ -145,7 +145,7 @@ class DoSMap < Map
     i = 0
     while i < number_of_tiles
       2.times do
-        tile_line_data = fs.read(map_tile_line_data_ram_pointer + i/2).unpack("C*").first
+        tile_line_data = fs.read(map_tile_line_data_ram_pointer + i/2).unpack("C").first
         if i.even?
           tile_line_data = tile_line_data >> 4
         else
@@ -158,7 +158,7 @@ class DoSMap < Map
           # Here we skip that extra block so that the tile metadata and line data stay in sync.
           index_for_metadata += i / @width
         end
-        tile_metadata = fs.read(map_tile_metadata_ram_pointer + index_for_metadata*2, 2).unpack("v")
+        tile_metadata = fs.read(map_tile_metadata_ram_pointer + index_for_metadata*2, 2).unpack("v").first
         
         @tiles << DoSMapTile.new(tile_metadata, tile_line_data, i, @width)
         
@@ -178,6 +178,36 @@ class DoSMap < Map
       @secret_doors << DoSSecretDoor.new(x_pos, y_pos)
       
       i += 1
+    end
+  end
+  
+  def write_to_rom
+    i = 0
+    while i < number_of_tiles
+      prev_tile_line_data = nil
+      2.times do
+        tile_line_data, tile_metadata = @tiles[i].to_data
+        
+        if i.even?
+          prev_tile_line_data = tile_line_data
+        else
+          tile_line_data |= (prev_tile_line_data << 4)
+          prev_tile_line_data = nil
+          
+          fs.write(map_tile_line_data_ram_pointer + i/2, [tile_line_data].pack("C"))
+        end
+        
+        index_for_metadata = i
+        if is_abyss
+          # For some reason, the Abyss's tile metadata (but not line data) has an extra block at the end of each row.
+          # Here we skip that extra block so that the tile metadata and line data stay in sync.
+          index_for_metadata += i / @width
+        end
+        
+        fs.write(map_tile_metadata_ram_pointer + index_for_metadata*2, [tile_metadata].pack("v"))
+        
+        i += 1
+      end
     end
   end
 end
@@ -227,15 +257,49 @@ class DoSMapTile
     @left_door      =  tile_line_data & 0b0011       == 2
     @left_wall      =  tile_line_data & 0b0011       == 3
 
-    @is_save        =  tile_metadata[0] & 0b10000000_00000000 > 0
-    @is_warp        =  tile_metadata[0] & 0b01000000_00000000 > 0
-    @sector_index   = (tile_metadata[0] & 0b00000011_11000000) >> 6
-    @room_index     =  tile_metadata[0] & 0b00000000_00111111
+    @is_save        =  tile_metadata & 0b10000000_00000000 > 0
+    @is_warp        =  tile_metadata & 0b01000000_00000000 > 0
+    @sector_index   = (tile_metadata & 0b00000011_11000000) >> 6
+    @room_index     =  tile_metadata & 0b00000000_00111111
     
     @y_pos          = @tile_index / map_width
     @x_pos          = @tile_index % map_width
     
-    @is_blank       = tile_metadata[0] == 0xFFFF
+    @is_blank       = tile_metadata == 0xFFFF
+  end
+  
+  def to_data
+    if left_secret
+      @tile_line_data = 1
+    elsif left_door
+      @tile_line_data = 2
+    elsif left_wall
+      @tile_line_data = 3
+    end
+    
+    if top_secret
+      @tile_line_data |= 1 << 2
+    elsif top_door
+      @tile_line_data |= 2 << 2
+    elsif top_wall
+      @tile_line_data |= 3 << 2
+    end
+    
+    if is_blank
+      @tile_metadata = 0xFFFF
+    else
+      @tile_metadata = 0
+      if is_save
+        @tile_metadata |= 1 << 15
+      end
+      if is_warp
+        @tile_metadata |= 1 << 14
+      end
+      @tile_metadata |= (sector_index & 0b1111) << 6
+      @tile_metadata |= (room_index & 0b111111)
+    end
+    
+    return [tile_line_data, tile_metadata]
   end
 end
 
