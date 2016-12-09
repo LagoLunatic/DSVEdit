@@ -10,6 +10,8 @@ if defined?(Ocra)
   exit
 end
 
+Dir.chdir(File.dirname(__FILE__))
+
 $qApp = Qt::Application.new(ARGV)
 window = RandomizerWindow.new
 $qApp.exec
