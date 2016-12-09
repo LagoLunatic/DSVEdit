@@ -21,7 +21,7 @@ class Map
   def read_from_rom
     @tiles = []
     (0..number_of_tiles-1).each do |i|
-      tile_line_data = fs.read(map_tile_line_data_ram_pointer + i).unpack("C*").first
+      tile_line_data = fs.read(map_tile_line_data_ram_pointer + i).unpack("C").first
       tile_metadata = fs.read(map_tile_metadata_ram_pointer + i*4, 4).unpack("vCC")
       
       @tiles << MapTile.new(tile_metadata, tile_line_data)
@@ -44,6 +44,15 @@ class Map
           break
         end
       end
+    end
+  end
+  
+  def write_to_rom
+    (0..number_of_tiles-1).each do |i|
+      tile_line_data, tile_metadata = @tiles[i].to_data
+      
+      fs.write(map_tile_line_data_ram_pointer + i, [tile_line_data].pack("C"))
+      fs.write(map_tile_metadata_ram_pointer + i*4, tile_metadata.pack("vCC"))
     end
   end
 end
@@ -110,6 +119,64 @@ class MapTile
                        (right_door && right_wall) ||
                        (top_door && top_wall) ||
                        (left_door && left_wall)
+  end
+  
+  def to_data
+    if left_secret
+      @tile_line_data = 1
+    elsif left_door
+      @tile_line_data = 2
+    elsif left_wall
+      @tile_line_data = 3
+    end
+    
+    if top_secret
+      @tile_line_data |= 1 << 2
+    elsif top_door
+      @tile_line_data |= 2 << 2
+    elsif top_wall
+      @tile_line_data |= 3 << 2
+    end
+    
+    if right_secret
+      @tile_line_data |= 1 << 4
+    elsif right_door
+      @tile_line_data |= 2 << 4
+    elsif right_wall
+      @tile_line_data |= 3 << 4
+    end
+    
+    if bottom_secret
+      @tile_line_data |= 1 << 6
+    elsif bottom_door
+      @tile_line_data |= 2 << 6
+    elsif bottom_wall
+      @tile_line_data |= 3 << 6
+    end
+    
+    @tile_metadata[0] = 0
+    if is_save
+      @tile_metadata[0] |= 1 << 15
+    end
+    if is_warp
+      @tile_metadata[0] |= 1 << 14
+    end
+    if is_secret
+      @tile_metadata[0] |= 1 << 13
+    end
+    if is_transition
+      @tile_metadata[0] |= 1 << 12
+    end
+    if is_entrance
+      @tile_metadata[0] |= 1 << 11
+    end
+    @tile_metadata[0] |= (sector_index & 0b1111) << 6
+    @tile_metadata[0] |= (room_index & 0b111111)
+    
+    @tile_metadata[1] = @y_pos
+    @tile_metadata[2] = @x_pos
+    
+    return [tile_line_data, tile_metadata]
   end
 end
 
