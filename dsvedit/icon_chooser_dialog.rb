@@ -169,13 +169,3 @@ class IconChooserDialog < Qt::Dialog
     end
   end
 end
-
-class ClickableGraphicsScene < Qt::GraphicsScene
-  signals "clicked(int, int)"
-  
-  def mousePressEvent(event)
-    x = event.scenePos().x.to_i
-    y = event.scenePos().y.to_i
-    emit clicked(x, y)
-  end
-end

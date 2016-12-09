@@ -105,6 +105,13 @@
        </widget>
       </item>
       <item>
+       <widget class="QPushButton" name="edit_map">
+        <property name="text">
+         <string>Edit map</string>
+        </property>
+       </widget>
+      </item>
+      <item>
        <widget class="QGraphicsView" name="map_graphics_view"/>
       </item>
       <item>

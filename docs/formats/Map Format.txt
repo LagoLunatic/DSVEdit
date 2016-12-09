@@ -17,6 +17,7 @@ Most significant bit first.
   Bit 2: has top ceiling
   Bit 3: has left door
   Bit 4: has left wall
+Note that normally for a wall both the door bit and the wall bit will be set. But for destroyable walls, only the wall bit will be set.
 
 Map tile metadata (PoR and OoE):
 Bytes 1-2: control type of room.

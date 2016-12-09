@@ -54,12 +54,16 @@ class MapTile
               
   attr_accessor :bottom_door,
                 :bottom_wall,
+                :bottom_secret,
                 :right_door,
                 :right_wall,
+                :right_secret,
                 :top_door,
                 :top_wall,
+                :top_secret,
                 :left_door,
                 :left_wall,
+                :left_secret,
                 :is_save,
                 :is_warp,
                 :is_secret,
@@ -79,14 +83,18 @@ class MapTile
   end
   
   def read_from_rom
-    @bottom_door    = tile_line_data & 0b10000000 > 0
-    @bottom_wall    = tile_line_data & 0b01000000 > 0
-    @right_door     = tile_line_data & 0b00100000 > 0
-    @right_wall     = tile_line_data & 0b00010000 > 0
-    @top_door       = tile_line_data & 0b00001000 > 0
-    @top_wall       = tile_line_data & 0b00000100 > 0
-    @left_door      = tile_line_data & 0b00000010 > 0
-    @left_wall      = tile_line_data & 0b00000001 > 0
+    @bottom_wall    = (tile_line_data & 0b11000000) >> 6 == 1
+    @bottom_door    = (tile_line_data & 0b11000000) >> 6 == 2
+    @bottom_secret  = (tile_line_data & 0b11000000) >> 6 == 3
+    @right_wall     = (tile_line_data & 0b00110000) >> 4 == 1
+    @right_door     = (tile_line_data & 0b00110000) >> 4 == 2
+    @right_secret   = (tile_line_data & 0b00110000) >> 4 == 3
+    @top_wall       = (tile_line_data & 0b00001100) >> 2 == 1
+    @top_door       = (tile_line_data & 0b00001100) >> 2 == 2
+    @top_secret     = (tile_line_data & 0b00001100) >> 2 == 3
+    @left_wall      =  tile_line_data & 0b00000011       == 1
+    @left_door      =  tile_line_data & 0b00000011       == 2
+    @left_secret    =  tile_line_data & 0b00000011       == 3
     
     @is_save        =  tile_metadata[0] & 0b10000000_00000000 > 0
     @is_warp        =  tile_metadata[0] & 0b01000000_00000000 > 0
@@ -181,12 +189,16 @@ class DoSMapTile
               
   attr_accessor :bottom_door,
                 :bottom_wall,
+                :bottom_secret,
                 :right_door,
                 :right_wall,
+                :right_secret,
                 :top_door,
                 :top_wall,
+                :top_secret,
                 :left_door,
                 :left_wall,
+                :left_secret,
                 :is_save,
                 :is_warp,
                 :is_secret,
@@ -208,10 +220,12 @@ class DoSMapTile
   end
   
   def read_from_rom
-    @top_door       = (tile_line_data >> 2) & 0b0011 == 2
-    @top_wall       = (tile_line_data >> 2) & 0b0011 == 3
-    @left_door      =  tile_line_data       & 0b0011 == 2
-    @left_wall      =  tile_line_data       & 0b0011 == 3
+    @top_secret     = (tile_line_data & 0b1100) >> 2 == 1
+    @top_door       = (tile_line_data & 0b1100) >> 2 == 2
+    @top_wall       = (tile_line_data & 0b1100) >> 2 == 3
+    @left_secret    =  tile_line_data & 0b0011       == 1
+    @left_door      =  tile_line_data & 0b0011       == 2
+    @left_wall      =  tile_line_data & 0b0011       == 3
 
     @is_save        =  tile_metadata[0] & 0b10000000_00000000 > 0
     @is_warp        =  tile_metadata[0] & 0b01000000_00000000 > 0

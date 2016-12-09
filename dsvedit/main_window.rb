@@ -6,6 +6,7 @@ require_relative 'sprite_editor_dialog'
 require_relative 'item_editor_dialog'
 require_relative 'entity_search_dialog'
 require_relative 'icon_chooser_dialog'
+require_relative 'map_editor_dialog'
 
 require_relative 'ui_main'
 
@@ -20,6 +21,7 @@ class DSVEdit < Qt::MainWindow
   slots "open_sprite_editor()"
   slots "open_item_editor()"
   slots "open_entity_search()"
+  slots "open_map_editor()"
   slots "open_settings()"
   slots "write_to_rom()"
   slots "build_and_run()"
@@ -47,7 +49,7 @@ class DSVEdit < Qt::MainWindow
     @ui.room_graphics_view.setDragMode(Qt::GraphicsView::ScrollHandDrag)
     self.setStyleSheet("QGraphicsView { background-color: transparent; }");
     
-    @map_graphics_scene = MapGraphicsScene.new
+    @map_graphics_scene = ClickableGraphicsScene.new
     @map_graphics_scene.setSceneRect(0, 0, 64*4+1, 48*4+1)
     @ui.map_graphics_view.scale(2, 2)
     @ui.map_graphics_view.setScene(@map_graphics_scene)
@@ -74,6 +76,7 @@ class DSVEdit < Qt::MainWindow
     connect(@ui.tiled_import, SIGNAL("released()"), self, SLOT("import_from_tiled()"))
     connect(@ui.set_as_starting_room, SIGNAL("released()"), self, SLOT("set_current_room_as_starting_room()"))
     connect(@ui.copy_room_pointer, SIGNAL("released()"), self, SLOT("copy_room_pointer_to_clipboad()"))
+    connect(@ui.edit_map, SIGNAL("released()"), self, SLOT("open_map_editor()"))
     
     load_settings()
     
@@ -225,6 +228,9 @@ class DSVEdit < Qt::MainWindow
   end
   
   def change_room_by_map_x_and_y(x, y)
+    x = x / 4
+    y = y / 4
+    
     map = @area.map_for_sector(@sector_index)
     
     tile = map.tiles.find do |tile|
@@ -363,6 +369,11 @@ class DSVEdit < Qt::MainWindow
     @entity_search_dialog = EntitySearchDialog.new(self)
   end
   
+  def open_map_editor
+    map = @area.map_for_sector(@sector_index)
+    @map_editor_dialog = MapEditorDialog.new(self, game.fs, @renderer, map)
+  end
+  
   def open_settings
     @settings_dialog = SettingsDialog.new(self, @settings)
   end
@@ -495,12 +506,21 @@ class DoorItem < Qt::GraphicsRectItem
   end
 end
 
-class MapGraphicsScene < Qt::GraphicsScene
+class ClickableGraphicsScene < Qt::GraphicsScene
   signals "clicked(int, int)"
+  signals "moved(int, int)"
   
   def mousePressEvent(event)
-    x = event.scenePos().x.to_i / 4
-    y = event.scenePos().y.to_i / 4
+    x = event.scenePos().x.to_i
+    y = event.scenePos().y.to_i
+    return unless (0..width-1).include?(x) && (0..height-1).include?(y)
     emit clicked(x, y)
+  end
+  
+  def mouseMoveEvent(event)
+    x = event.scenePos().x.to_i
+    y = event.scenePos().y.to_i
+    return unless (0..width-1).include?(x) && (0..height-1).include?(y)
+    emit moved(x, y)
   end
 end

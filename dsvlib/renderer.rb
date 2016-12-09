@@ -7,8 +7,21 @@ class Renderer
   COLLISION_DAMAGE_COLOR = ChunkyPNG::Color.rgba(255, 0, 0, 255)
   COLLISION_WATER_COLOR = ChunkyPNG::Color.rgba(0, 0, 255, 255)
   
-  attr_reader :fs
-  
+  attr_reader :fs,
+              :fill_color,
+              :save_fill_color,
+              :warp_fill_color,
+              :secret_fill_color,
+              :entrance_fill_color,
+              :transition_fill_color,
+              :line_color,
+              :door_color,
+              :door_center_color,
+              :secret_door_color,
+              :wall_pixels,
+              :door_pixels,
+              :secret_door_pixels
+              
   def initialize(fs)
     @fs = fs
   end
@@ -397,121 +410,95 @@ class Renderer
     fill_img = ChunkyPNG::Image.new(map_image_width, map_image_height, ChunkyPNG::Color::TRANSPARENT)
     lines_img = ChunkyPNG::Image.new(map_image_width, map_image_height, ChunkyPNG::Color::TRANSPARENT)
     
-    fill_color            = ChunkyPNG::Color.rgba(*MAP_FILL_COLOR)
-    save_fill_color       = ChunkyPNG::Color.rgba(*MAP_SAVE_FILL_COLOR)
-    warp_fill_color       = ChunkyPNG::Color.rgba(*MAP_WARP_FILL_COLOR)
-    secret_fill_color     = ChunkyPNG::Color.rgba(*MAP_SECRET_FILL_COLOR)
-    entrance_fill_color   = ChunkyPNG::Color.rgba(*MAP_ENTRANCE_FILL_COLOR)
-    transition_fill_color = ChunkyPNG::Color.rgba(0, 0, 0, 255)
-    line_color            = ChunkyPNG::Color.rgba(*MAP_LINE_COLOR)
-    door_color            = ChunkyPNG::Color.rgba(*MAP_DOOR_COLOR)
-    door_center_color     = ChunkyPNG::Color.rgba(*MAP_DOOR_CENTER_PIXEL_COLOR)
-    secret_door_color     = ChunkyPNG::Color.rgba(*MAP_SECRET_DOOR_COLOR)
-  
-    wall_pixels = [line_color]*5
-    door_pixels = [line_color, door_color, door_center_color, door_color, line_color]
-    secret_door_pixels = [line_color, secret_door_color, secret_door_color, secret_door_color, line_color]
-  
     # 25 pixels per tile. But they overlap, so the left and top of a tile overlaps the right and bottom of other tiles.
-    i = 0
     map.tiles.each do |tile|
       if tile.is_blank && !tile.left_door && !tile.left_wall && !tile.top_door && !tile.top_wall && !tile.right_door && !tile.right_wall && !tile.bottom_door && !tile.bottom_wall
-        i += 1
         next
       end
       
-      color = if tile.is_blank
-        ChunkyPNG::Color::TRANSPARENT
-      elsif tile.is_transition
-        transition_fill_color
-      elsif tile.is_entrance
-        entrance_fill_color
-      elsif tile.is_warp
-        warp_fill_color
-      elsif tile.is_secret
-        secret_fill_color
-      elsif tile.is_save
-        save_fill_color
-      else
-        fill_color
-      end
-      
-      fill_tile = ChunkyPNG::Image.new(5, 5, color)
-      lines_tile = ChunkyPNG::Image.new(5, 5, ChunkyPNG::Color::TRANSPARENT)
-      
-      if tile.left_wall
-        lines_tile.replace_column!(0, wall_pixels)
-      elsif tile.left_door
-        lines_tile.replace_column!(0, door_pixels)
-      end
-      
-      if tile.right_wall
-        lines_tile.replace_column!(4, wall_pixels)
-      elsif tile.right_door
-        lines_tile.replace_column!(4, door_pixels)
-      end
-      
-      if tile.top_wall
-        lines_tile.replace_row!(0, wall_pixels)
-      elsif tile.top_door
-        lines_tile.replace_row!(0, door_pixels)
-      end
-      
-      if tile.bottom_wall
-        lines_tile.replace_row!(4, wall_pixels)
-      elsif tile.bottom_door
-        lines_tile.replace_row!(4, door_pixels)
-      end
+      fill_tile, lines_tile = render_map_tile(tile)
       
       fill_img.compose!(fill_tile, tile.x_pos*4, tile.y_pos*4)
       lines_img.compose!(lines_tile, tile.x_pos*4, tile.y_pos*4)
-      
-      i += 1
     end
     
-    if GAME == "dos"
-      map.secret_doors.each do |secret_door|
-        secret_door_img = ChunkyPNG::Image.new(5, 5, ChunkyPNG::Color::TRANSPARENT)
-        
-        if secret_door.door_side == :top
-          secret_door_img.replace_row!(0, secret_door_pixels)
-        else
-          secret_door_img.replace_column!(0, secret_door_pixels)
-        end
-        
-        lines_img.compose!(secret_door_img, secret_door.x_pos*4, secret_door.y_pos*4)
-      end
-    else
-      map.secret_doors.each do |secret_door|
-        secret_door_img = ChunkyPNG::Image.new(5, 5, ChunkyPNG::Color::TRANSPARENT)
-        
-        tile = secret_door.map_tile
-        
-        if tile.left_wall && tile.left_door
-          secret_door_img.replace_column!(0, secret_door_pixels)
-        end
-        if tile.right_wall && tile.right_door
-          secret_door_img.replace_column!(4, secret_door_pixels)
-        end
-        if tile.top_wall && tile.top_door
-          secret_door_img.replace_row!(0, secret_door_pixels)
-        end
-        if tile.bottom_wall && tile.bottom_door
-          secret_door_img.replace_row!(4, secret_door_pixels)
-        end
-        
-        lines_img.compose!(secret_door_img, tile.x_pos*4, tile.y_pos*4)
-      end
-    end
-    
-    img = ChunkyPNG::Image.new(map_image_width, map_image_height, ChunkyPNG::Color::TRANSPARENT)
-    img.compose!(fill_img, 0, 0)
+    img = fill_img
     img.compose!(lines_img, 0, 0)
     unless scale == 1
       img.resample_nearest_neighbor!(map_image_width*scale, map_image_height*scale)
     end
     
     return img
+  end
+  
+  def render_map_tile(tile)
+    @fill_color            ||= ChunkyPNG::Color.rgba(*MAP_FILL_COLOR)
+    @save_fill_color       ||= ChunkyPNG::Color.rgba(*MAP_SAVE_FILL_COLOR)
+    @warp_fill_color       ||= ChunkyPNG::Color.rgba(*MAP_WARP_FILL_COLOR)
+    @secret_fill_color     ||= ChunkyPNG::Color.rgba(*MAP_SECRET_FILL_COLOR)
+    @entrance_fill_color   ||= ChunkyPNG::Color.rgba(*MAP_ENTRANCE_FILL_COLOR)
+    @transition_fill_color ||= ChunkyPNG::Color.rgba(0, 0, 0, 255)
+    @line_color            ||= ChunkyPNG::Color.rgba(*MAP_LINE_COLOR)
+    @door_color            ||= ChunkyPNG::Color.rgba(*MAP_DOOR_COLOR)
+    @door_center_color     ||= ChunkyPNG::Color.rgba(*MAP_DOOR_CENTER_PIXEL_COLOR)
+    @secret_door_color     ||= ChunkyPNG::Color.rgba(*MAP_SECRET_DOOR_COLOR)
+  
+    @wall_pixels           ||= [line_color]*5
+    @door_pixels           ||= [line_color, door_color, door_center_color, door_color, line_color]
+    @secret_door_pixels    ||= [line_color, secret_door_color, secret_door_color, secret_door_color, line_color]
+    
+    color = if tile.is_blank
+      ChunkyPNG::Color::TRANSPARENT
+    elsif tile.is_transition
+      transition_fill_color
+    elsif tile.is_entrance
+      entrance_fill_color
+    elsif tile.is_warp
+      warp_fill_color
+    elsif tile.is_secret
+      secret_fill_color
+    elsif tile.is_save
+      save_fill_color
+    else
+      fill_color
+    end
+    
+    fill_tile = ChunkyPNG::Image.new(5, 5, color)
+    lines_tile = ChunkyPNG::Image.new(5, 5, ChunkyPNG::Color::TRANSPARENT)
+    
+    if tile.left_secret
+      lines_tile.replace_column!(0, secret_door_pixels)
+    elsif tile.left_wall
+      lines_tile.replace_column!(0, wall_pixels)
+    elsif tile.left_door
+      lines_tile.replace_column!(0, door_pixels)
+    end
+    
+    if tile.right_secret
+      lines_tile.replace_column!(4, secret_door_pixels)
+    elsif tile.right_wall
+      lines_tile.replace_column!(4, wall_pixels)
+    elsif tile.right_door
+      lines_tile.replace_column!(4, door_pixels)
+    end
+    
+    if tile.top_secret
+      lines_tile.replace_row!(0, secret_door_pixels)
+    elsif tile.top_wall
+      lines_tile.replace_row!(0, wall_pixels)
+    elsif tile.top_door
+      lines_tile.replace_row!(0, door_pixels)
+    end
+    
+    if tile.bottom_secret
+      lines_tile.replace_row!(4, secret_door_pixels)
+    elsif tile.bottom_wall
+      lines_tile.replace_row!(4, wall_pixels)
+    elsif tile.bottom_door
+      lines_tile.replace_row!(4, door_pixels)
+    end
+    
+    return [fill_tile, lines_tile]
   end
   
   def render_sprite(gfx_pointer, palette_pointer, palette_offset, sprite, frame_to_render = nil, render_hitboxes = false)
