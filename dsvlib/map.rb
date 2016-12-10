@@ -123,35 +123,35 @@ class MapTile
   
   def to_data
     if left_secret
-      @tile_line_data = 1
+      @tile_line_data = 3
     elsif left_door
       @tile_line_data = 2
     elsif left_wall
-      @tile_line_data = 3
+      @tile_line_data = 1
     end
     
     if top_secret
-      @tile_line_data |= 1 << 2
+      @tile_line_data |= 3 << 2
     elsif top_door
       @tile_line_data |= 2 << 2
     elsif top_wall
-      @tile_line_data |= 3 << 2
+      @tile_line_data |= 1 << 2
     end
     
     if right_secret
-      @tile_line_data |= 1 << 4
+      @tile_line_data |= 3 << 4
     elsif right_door
       @tile_line_data |= 2 << 4
     elsif right_wall
-      @tile_line_data |= 3 << 4
+      @tile_line_data |= 1 << 4
     end
     
     if bottom_secret
-      @tile_line_data |= 1 << 6
+      @tile_line_data |= 3 << 6
     elsif bottom_door
       @tile_line_data |= 2 << 6
     elsif bottom_wall
-      @tile_line_data |= 3 << 6
+      @tile_line_data |= 1 << 6
     end
     
     @tile_metadata[0] = 0

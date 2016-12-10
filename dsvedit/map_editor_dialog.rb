@@ -53,7 +53,7 @@ class MapEditorDialog < Qt::Dialog
       (0..0xFF).each do |line_type|
         x = line_type % 16
         y = line_type / 16
-        tile = MapTile.new([0, x, y], line_type)
+        tile = MapTile.new([0, y, x], line_type)
         @available_tiles << tile
         
         tile_pixmap_item = create_tile_pixmap_item(tile)
