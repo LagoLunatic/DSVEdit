@@ -7,7 +7,7 @@ class IconChooserDialog < Qt::Dialog
   slots "gfx_page_changed(int)"
   slots "palette_changed(int)"
   slots "icon_changed(int)"
-  slots "change_icon_by_page_x_and_y(int, int)"
+  slots "change_icon_by_page_x_and_y(int, int, const Qt::MouseButton&)"
   slots "button_pressed(QAbstractButton*)"
   
   def initialize(parent, fs, mode=:item, icon_data=0)
@@ -26,7 +26,7 @@ class IconChooserDialog < Qt::Dialog
     connect(@ui.gfx_page_index, SIGNAL("activated(int)"), self, SLOT("gfx_page_changed(int)"))
     connect(@ui.palette_index, SIGNAL("activated(int)"), self, SLOT("palette_changed(int)"))
     connect(@ui.icon_index, SIGNAL("activated(int)"), self, SLOT("icon_changed(int)"))
-    connect(@gfx_file_graphics_scene, SIGNAL("clicked(int, int)"), self, SLOT("change_icon_by_page_x_and_y(int, int)"))
+    connect(@gfx_file_graphics_scene, SIGNAL("clicked(int, int, const Qt::MouseButton&)"), self, SLOT("change_icon_by_page_x_and_y(int, int, const Qt::MouseButton&)"))
     connect(@ui.buttonBox, SIGNAL("clicked(QAbstractButton*)"), self, SLOT("button_pressed(QAbstractButton*)"))
     
     if mode == :item
@@ -144,8 +144,7 @@ class IconChooserDialog < Qt::Dialog
     @selection_rectangle.setRect(x, y, @icon_width, @icon_height)
   end
   
-  def change_icon_by_page_x_and_y(x, y)
-    return unless (0..127).include?(x) && (0..127).include?(y)
+  def change_icon_by_page_x_and_y(x, y, button)
     new_icon_index = @ui.gfx_page_index.currentIndex*@icons_per_page + (y / @icon_height)*@icons_per_row + (x / @icon_width)
     icon_changed(new_icon_index)
   end

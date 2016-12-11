@@ -403,8 +403,8 @@ class Renderer
   end
   
   def render_map(map, scale = 1)
-    map_width_in_blocks = 64
-    map_height_in_blocks = 48
+    map_width_in_blocks = map.tiles.map{|tile| tile.x_pos}.max + 1
+    map_height_in_blocks = map.tiles.map{|tile| tile.y_pos}.max + 1
     map_image_width = map_width_in_blocks*4 + 1
     map_image_height = map_height_in_blocks*4 + 1
     fill_img = ChunkyPNG::Image.new(map_image_width, map_image_height, ChunkyPNG::Color::TRANSPARENT)

@@ -4,33 +4,37 @@ require_relative 'ui_map_editor'
 class MapEditorDialog < Qt::Dialog
   BACKGROUND_BRUSH = Qt::Brush.new(Qt::Color.new(200, 200, 200, 255))
   
-  slots "edit_map_tile(int, int)"
-  slots "select_tile(int, int)"
+  slots "edit_map_tile(int, int, const Qt::MouseButton&)"
+  slots "select_tile(int, int, const Qt::MouseButton&)"
   slots "reload_available_tiles(int)"
   slots "button_box_clicked(QAbstractButton*)"
   
-  def initialize(main_window, fs, renderer, map)
+  def initialize(main_window, fs, renderer, area_index, sector_index)
     super(main_window, Qt::WindowTitleHint | Qt::WindowSystemMenuHint)
     @ui = Ui_MapEditor.new
     @ui.setup_ui(self)
     
     @fs = fs
     @renderer = renderer
-    @map = map
+    if GAME == "dos"
+      @map = DoSMap.new(area_index, sector_index, fs)
+    else
+      @map = Map.new(area_index, sector_index, fs)
+    end
     
     @map_graphics_scene = ClickableGraphicsScene.new
     @map_graphics_scene.setSceneRect(0, 0, 64*4+1, 48*4+1)
     @ui.map_graphics_view.scale(2, 2)
     @ui.map_graphics_view.setScene(@map_graphics_scene)
     @map_graphics_scene.setBackgroundBrush(BACKGROUND_BRUSH)
-    connect(@map_graphics_scene, SIGNAL("clicked(int, int)"), self, SLOT("edit_map_tile(int, int)"))
-    connect(@map_graphics_scene, SIGNAL("moved(int, int)"), self, SLOT("edit_map_tile(int, int)"))
+    connect(@map_graphics_scene, SIGNAL("clicked(int, int, const Qt::MouseButton&)"), self, SLOT("edit_map_tile(int, int, const Qt::MouseButton&)"))
+    connect(@map_graphics_scene, SIGNAL("moved(int, int, const Qt::MouseButton&)"), self, SLOT("edit_map_tile(int, int, const Qt::MouseButton&)"))
     
     @available_tiles_graphics_scene = ClickableGraphicsScene.new
     @ui.available_tiles_graphics_view.scale(3, 3)
     @ui.available_tiles_graphics_view.setScene(@available_tiles_graphics_scene)
     @available_tiles_graphics_scene.setBackgroundBrush(BACKGROUND_BRUSH)
-    connect(@available_tiles_graphics_scene, SIGNAL("clicked(int, int)"), self, SLOT("select_tile(int, int)"))
+    connect(@available_tiles_graphics_scene, SIGNAL("clicked(int, int, const Qt::MouseButton&)"), self, SLOT("select_tile(int, int, const Qt::MouseButton&)"))
     
     @selected_tile_graphics_scene = Qt::GraphicsScene.new
     @ui.selected_tile_graphics_view.scale(8, 8)
@@ -132,18 +136,51 @@ class MapEditorDialog < Qt::Dialog
     load_selected_map_tile()
   end
   
-  def edit_map_tile(x, y)
+  def edit_map_tile(x, y, button)
     x = x / 4
     y = y / 4
+    
+    max_x = @map.tiles.map{|tile| tile.x_pos}.max
+    max_y = @map.tiles.map{|tile| tile.y_pos}.max
+    return unless (0..max_x).include?(x) && (0..max_y).include?(y)
     
     old_tile = @map.tiles.find do |tile|
       tile.x_pos == x && tile.y_pos == y
     end
     
-    if old_tile.nil?
+    case button
+    when Qt::LeftButton
+      if old_tile
+        change_map_tile(old_tile)
+      else
+        add_map_tile(x, y)
+      end
+    when Qt::RightButton
+      if old_tile
+        delete_map_tile(old_tile)
+      end
+    else
       return
     end
     
+    load_map()
+  end
+  
+  def add_map_tile(x, y)
+    # In PoR/OoE, add a tile where there wasn't one before.
+    if @map.tiles.length < @map.number_of_tiles
+      new_tile = @selected_map_tile.dup
+      new_tile.sector_index = 0 # TODO
+      new_tile.room_index = 0 # TODO
+      new_tile.y_pos = y
+      new_tile.x_pos = x
+      @map.tiles << new_tile
+    else
+      Qt::MessageBox.warning(self, "Can't add more tiles", "Can't add any more tiles to maps in PoR or OoE. Please delete some tiles with right click so you can add more.")
+    end
+  end
+  
+  def change_map_tile(old_tile)
     index = @map.tiles.index(old_tile)
     new_tile = @selected_map_tile.dup
     new_tile.sector_index = old_tile.sector_index
@@ -151,11 +188,21 @@ class MapEditorDialog < Qt::Dialog
     new_tile.y_pos = old_tile.y_pos
     new_tile.x_pos = old_tile.x_pos
     @map.tiles[index] = new_tile
-    
-    load_map()
   end
   
-  def select_tile(x, y)
+  def delete_map_tile(old_tile)
+    if GAME == "dos"
+      index = @map.tiles.index(old_tile)
+      new_tile = @available_tiles[0].dup
+      new_tile.is_blank = true
+      @map.tiles[index] = new_tile
+    else
+      index = @map.tiles.index(old_tile)
+      @map.tiles.delete_at(index)
+    end
+  end
+  
+  def select_tile(x, y, button)
     i = x/8 + y/8*16
     @selected_map_tile = @available_tiles[i]
     load_selected_map_tile()
@@ -163,14 +210,22 @@ class MapEditorDialog < Qt::Dialog
   
   def button_box_clicked(button)
     if @ui.buttonBox.standardButton(button) == Qt::DialogButtonBox::Ok
-      @map.write_to_rom()
-      parent.load_map()
-      self.close()
+      if @map.tiles.length == @map.number_of_tiles
+        @map.write_to_rom()
+        parent.load_map()
+        self.close()
+      else
+        Qt::MessageBox.warning(self, "Can't save", "Can't save maps in PoR or OoE unless the number of tiles is the same as the original. Please add more tiles.")
+      end
     elsif @ui.buttonBox.standardButton(button) == Qt::DialogButtonBox::Cancel
       self.close()
     elsif @ui.buttonBox.standardButton(button) == Qt::DialogButtonBox::Apply
-      @map.write_to_rom()
-      parent.load_map()
+      if @map.tiles.length == @map.number_of_tiles
+        @map.write_to_rom()
+        parent.load_map()
+      else
+        Qt::MessageBox.warning(self, "Can't save", "Can't save maps in PoR or OoE unless the number of tiles is the same as the original. Please add more tiles.")
+      end
     end
   end
 end

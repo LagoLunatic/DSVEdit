@@ -33,7 +33,7 @@ class DSVEdit < Qt::MainWindow
   slots "room_index_changed(int)"
   slots "sector_and_room_indexes_changed(int, int)"
   slots "change_room_by_metadata(int)"
-  slots "change_room_by_map_x_and_y(int, int)"
+  slots "change_room_by_map_x_and_y(int, int, const Qt::MouseButton&)"
   slots "open_in_tiled()"
   slots "import_from_tiled()"
   slots "set_current_room_as_starting_room()"
@@ -53,7 +53,7 @@ class DSVEdit < Qt::MainWindow
     @map_graphics_scene.setSceneRect(0, 0, 64*4+1, 48*4+1)
     @ui.map_graphics_view.scale(2, 2)
     @ui.map_graphics_view.setScene(@map_graphics_scene)
-    connect(@map_graphics_scene, SIGNAL("clicked(int, int)"), self, SLOT("change_room_by_map_x_and_y(int, int)"))
+    connect(@map_graphics_scene, SIGNAL("clicked(int, int, const Qt::MouseButton&)"), self, SLOT("change_room_by_map_x_and_y(int, int, const Qt::MouseButton&)"))
     
     @tiled = TMXInterface.new
     
@@ -227,13 +227,11 @@ class DSVEdit < Qt::MainWindow
     room_index_changed(room.room_index)
   end
   
-  def change_room_by_map_x_and_y(x, y)
+  def change_room_by_map_x_and_y(x, y, button)
     x = x / 4
     y = y / 4
     
-    map = @area.map_for_sector(@sector_index)
-    
-    tile = map.tiles.find do |tile|
+    tile = @map.tiles.find do |tile|
       tile.x_pos == x && tile.y_pos == y
     end
     
@@ -339,9 +337,13 @@ class DSVEdit < Qt::MainWindow
   def load_map()
     @map_graphics_scene.clear()
     
-    map = @area.map_for_sector(@sector_index)
+    if GAME == "dos"
+      @map = DoSMap.new(@area_index, @sector_index, game.fs)
+    else
+      @map = Map.new(@area_index, @sector_index, game.fs)
+    end
     
-    chunky_png_img = @renderer.render_map(map)
+    chunky_png_img = @renderer.render_map(@map)
     pixmap = Qt::Pixmap.new
     blob = chunky_png_img.to_blob
     pixmap.loadFromData(blob, blob.length)
@@ -370,8 +372,7 @@ class DSVEdit < Qt::MainWindow
   end
   
   def open_map_editor
-    map = @area.map_for_sector(@sector_index)
-    @map_editor_dialog = MapEditorDialog.new(self, game.fs, @renderer, map)
+    @map_editor_dialog = MapEditorDialog.new(self, game.fs, @renderer, @area_index, @sector_index)
   end
   
   def open_settings
@@ -507,20 +508,20 @@ class DoorItem < Qt::GraphicsRectItem
 end
 
 class ClickableGraphicsScene < Qt::GraphicsScene
-  signals "clicked(int, int)"
-  signals "moved(int, int)"
+  signals "clicked(int, int, const Qt::MouseButton&)"
+  signals "moved(int, int, const Qt::MouseButton&)"
   
   def mousePressEvent(event)
     x = event.scenePos().x.to_i
     y = event.scenePos().y.to_i
     return unless (0..width-1).include?(x) && (0..height-1).include?(y)
-    emit clicked(x, y)
+    emit clicked(x, y, event.buttons)
   end
   
   def mouseMoveEvent(event)
     x = event.scenePos().x.to_i
     y = event.scenePos().y.to_i
     return unless (0..width-1).include?(x) && (0..height-1).include?(y)
-    emit moved(x, y)
+    emit moved(x, y, event.buttons)
   end
 end

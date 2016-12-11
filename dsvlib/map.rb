@@ -5,20 +5,25 @@ class Map
               :number_of_tiles,
               :secret_door_list_pointer,
               :fs,
+              :area_index,
+              :sector_index,
               :tiles,
               :secret_doors
   
-  def initialize(map_tile_metadata_ram_pointer, map_tile_line_data_ram_pointer, number_of_tiles, secret_door_list_pointer, fs)
-    @map_tile_metadata_ram_pointer = map_tile_metadata_ram_pointer
-    @map_tile_line_data_ram_pointer = map_tile_line_data_ram_pointer
-    @number_of_tiles = number_of_tiles
-    @secret_door_list_pointer = secret_door_list_pointer
+  def initialize(area_index, sector_index, fs)
+    @area_index = area_index
+    @sector_index = sector_index
     @fs = fs
-  
+    
     read_from_rom()
   end
   
   def read_from_rom
+    @map_tile_metadata_ram_pointer = fs.read(MAP_TILE_METADATA_LIST_START_OFFSET + area_index*4, 4).unpack("V*").first
+    @map_tile_line_data_ram_pointer = fs.read(MAP_TILE_LINE_DATA_LIST_START_OFFSET + area_index*4, 4).unpack("V*").first
+    @number_of_tiles = fs.read(MAP_LENGTH_DATA_START_OFFSET + area_index*2, 2).unpack("v*").first
+    @secret_door_list_pointer = fs.read(MAP_SECRET_DOOR_LIST_START_OFFSET + area_index*4, 4).unpack("V*").first
+    
     @tiles = []
     (0..number_of_tiles-1).each do |i|
       tile_line_data = fs.read(map_tile_line_data_ram_pointer + i).unpack("C").first
@@ -122,12 +127,14 @@ class MapTile
   end
   
   def to_data
+    @tile_line_data = 0
+    
     if left_secret
-      @tile_line_data = 3
+      @tile_line_data |= 3
     elsif left_door
-      @tile_line_data = 2
+      @tile_line_data |= 2
     elsif left_wall
-      @tile_line_data = 1
+      @tile_line_data |= 1
     end
     
     if top_secret
@@ -154,6 +161,7 @@ class MapTile
       @tile_line_data |= 1 << 6
     end
     
+    @tile_metadata = []
     @tile_metadata[0] = 0
     if is_save
       @tile_metadata[0] |= 1 << 15
@@ -196,18 +204,37 @@ end
 class DoSMap < Map
   attr_reader :is_abyss
   
-  def initialize(map_tile_metadata_ram_pointer, map_tile_line_data_ram_pointer, number_of_tiles, secret_door_list_pointer, fs, is_abyss = false)
-    @is_abyss = is_abyss
-    if is_abyss
-      @width = 18
+  def initialize(area_index, sector_index, fs)
+    @area_index = area_index
+    @sector_index = sector_index
+    @fs = fs
+    
+    if [10, 11].include?(sector_index)
+      @is_abyss = true
     else
-      @width = 64
+      @is_abyss = false
     end
     
-    super(map_tile_metadata_ram_pointer, map_tile_line_data_ram_pointer, number_of_tiles, secret_door_list_pointer, fs)
+    read_from_rom()
   end
   
   def read_from_rom
+    if is_abyss
+      @width = 18
+      
+      @map_tile_metadata_ram_pointer = ABYSS_MAP_TILE_METADATA_START_OFFSET
+      @map_tile_line_data_ram_pointer = ABYSS_MAP_TILE_LINE_DATA_START_OFFSET
+      @number_of_tiles = ABYSS_MAP_NUMBER_OF_TILES
+      @secret_door_list_pointer = ABYSS_MAP_SECRET_DOOR_DATA_START_OFFSET
+    else
+      @width = 64
+      
+      @map_tile_metadata_ram_pointer = MAP_TILE_METADATA_START_OFFSET
+      @map_tile_line_data_ram_pointer = MAP_TILE_LINE_DATA_START_OFFSET
+      @number_of_tiles = MAP_NUMBER_OF_TILES
+      @secret_door_list_pointer = MAP_SECRET_DOOR_DATA_START_OFFSET
+    end
+    
     @tiles = []
     i = 0
     while i < number_of_tiles
@@ -336,12 +363,14 @@ class DoSMapTile
   end
   
   def to_data
+    @tile_line_data = 0
+    
     if left_secret
-      @tile_line_data = 1
+      @tile_line_data |= 1
     elsif left_door
-      @tile_line_data = 2
+      @tile_line_data |= 2
     elsif left_wall
-      @tile_line_data = 3
+      @tile_line_data |= 3
     end
     
     if top_secret
