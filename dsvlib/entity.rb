@@ -61,4 +61,8 @@ class Entity
   def is_item?
     is_pickup? && ITEM_LOCAL_ID_RANGES.keys.include?(subtype)
   end
+  
+  def is_glyph?
+    GAME == "ooe" && is_pickup? && (2..4).include?(subtype)
+  end
 end

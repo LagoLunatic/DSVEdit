@@ -279,10 +279,10 @@ class DSVEdit < Qt::MainWindow
     end
     
     @room.entities.each do |entity|
-      if entity.type == 0x01
+      if entity.is_enemy?
         enemy_id = entity.subtype
         
-        pixmap, min_x, min_y = @cached_enemy_pixmaps[enemy_id] ||= begin
+        chunky_frame, min_x, min_y = @cached_enemy_pixmaps[enemy_id] ||= begin
           gfx_pointer, palette, palette_offset, sprite_file = EnemyDNA.new(enemy_id, @game.fs).get_gfx_and_palette_and_sprite_from_init_ai
           frame_to_render = BEST_SPRITE_FRAME_FOR_ENEMY[enemy_id] || 0
           
@@ -293,19 +293,35 @@ class DSVEdit < Qt::MainWindow
           end
           
           chunky_frame = chunky_frames.first
-          pixmap = Qt::Pixmap.new
-          blob = chunky_frame.to_blob
-          pixmap.loadFromData(blob, blob.length)
           
-          [pixmap, min_x, min_y]
+          [chunky_frame, min_x, min_y]
         rescue
           next
         end
         
-        frame_pixmap_item = Qt::GraphicsPixmapItem.new(pixmap)
+        frame_pixmap_item = GraphicsChunkyItem.new(chunky_frame)
         
         frame_pixmap_item.setPos(entity.x_pos+min_x, entity.y_pos+min_y)
         @room_graphics_scene.addItem(frame_pixmap_item)
+      elsif entity.is_item?
+        item_type = entity.subtype
+        item_id = entity.var_b
+        chunky_image = @renderer.render_icon(item_type-2, item_id)
+        
+        graphics_item = GraphicsChunkyItem.new(chunky_image)
+        graphics_item.setPos(entity.x_pos-8, entity.y_pos-16)
+        @room_graphics_scene.addItem(graphics_item)
+      elsif entity.is_glyph?
+        glyph_id = entity.var_b
+        if glyph_id <= 0x36
+          chunky_image = @renderer.render_icon(0, glyph_id-1, mode=:glyph)
+        else
+          chunky_image = @renderer.render_icon(1, glyph_id-1-0x37, mode=:glyph)
+        end
+        
+        graphics_item = GraphicsChunkyItem.new(chunky_image)
+        graphics_item.setPos(entity.x_pos-16, entity.y_pos-16)
+        @room_graphics_scene.addItem(graphics_item)
       end
     end
     
@@ -344,10 +360,7 @@ class DSVEdit < Qt::MainWindow
     end
     
     chunky_png_img = @renderer.render_map(@map)
-    pixmap = Qt::Pixmap.new
-    blob = chunky_png_img.to_blob
-    pixmap.loadFromData(blob, blob.length)
-    map_pixmap_item = Qt::GraphicsPixmapItem.new(pixmap)
+    map_pixmap_item = GraphicsChunkyItem.new(chunky_png_img)
     @map_graphics_scene.addItem(map_pixmap_item)
   end
   
@@ -523,5 +536,14 @@ class ClickableGraphicsScene < Qt::GraphicsScene
     y = event.scenePos().y.to_i
     return unless (0..width-1).include?(x) && (0..height-1).include?(y)
     emit moved(x, y, event.buttons)
+  end
+end
+
+class GraphicsChunkyItem < Qt::GraphicsPixmapItem
+  def initialize(chunky_image)
+    pixmap = Qt::Pixmap.new
+    blob = chunky_image.to_blob
+    pixmap.loadFromData(blob, blob.length)
+    super(pixmap)
   end
 end

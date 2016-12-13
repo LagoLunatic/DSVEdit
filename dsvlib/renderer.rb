@@ -588,4 +588,51 @@ class Renderer
     
     return part_gfx
   end
+  
+  def render_icon(item_type, item_id, mode=:item)
+    item_type = ITEM_TYPES[item_type]
+    format = item_type[:format]
+    format_length = format.inject(0){|sum, attr| sum += attr[0]}
+    pointer = item_type[:list_pointer] + item_id*format_length
+    item = Item.new(pointer, format, fs)
+    
+    icon_width = mode == :item ? 16 : 32
+    icon_height = icon_width
+    icons_per_row = 128 / icon_width
+    icons_per_column = 128 / icon_height
+    icons_per_page = 128*128 / icon_width / icon_width
+    
+    if mode == :item
+      icon_index, palette_index = EXTRACT_ICON_INDEX_AND_PALETTE_INDEX.call(item["Icon"])
+    else
+      icon_index = item["Icon"]
+      if item_type == 0
+        palette_index = 2
+      else
+        palette_index = 1
+      end
+    end
+    
+    gfx_page_index = icon_index / icons_per_page
+    
+    filename = mode == :item ? "item" : "rune"
+    gfx_files = fs.files.values.select do |file|
+      file[:file_path] =~ /\/sc\/f_#{filename}\d+\.dat/
+    end
+    
+    palette_pointer = mode == :item ? ITEM_ICONS_PALETTE_POINTER : GLYPH_ICONS_PALETTE_POINTER
+    palettes = generate_palettes(palette_pointer, 16)
+    
+    if mode == :item
+      gfx_page_image = render_gfx_1_dimensional_mode(gfx_files[gfx_page_index], palettes[palette_index])
+    else
+      gfx_page_image = render_gfx_page(gfx_files[gfx_page_index], palettes[palette_index])
+    end
+    
+    x_pos = ((icon_index % icons_per_page) % icons_per_row) * icon_width
+    y_pos = ((icon_index % icons_per_page) / icons_per_column) * icon_height
+    item_image = gfx_page_image.crop(x_pos, y_pos, icon_width, icon_height)
+    
+    return item_image
+  end
 end
