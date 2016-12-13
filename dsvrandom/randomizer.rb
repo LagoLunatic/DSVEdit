@@ -419,13 +419,11 @@ class Randomizer
     elsif entity.subtype == 0x01 && entity.var_a == 0x00
       # Soul candle
       if options[:randomize_souls_relics_and_glyphs]
-        entity.type = 0x04
         randomize_pickup_dos_por(entity)
       end
     elsif entity.subtype == 0x01 && entity.var_a == 0x10
       # Money chest
       if options[:randomize_items]
-        entity.type = 0x04
         randomize_pickup_dos_por(entity)
       end
     end
@@ -448,7 +446,6 @@ class Randomizer
     elsif entity.subtype == 0x01 && (entity.var_a == 0x0E || entity.var_a == 0x0F)
       # Money chest
       if options[:randomize_items]
-        entity.type = 0x04
         randomize_pickup_dos_por(entity)
       end
     end
@@ -497,23 +494,25 @@ class Randomizer
   def randomize_pickup_dos_por(pickup)
     case GAME
     when "dos"
-      return if !options[:randomize_items] && pickup.subtype < 0x05
-      return if !options[:randomize_souls_relics_and_glyphs] && pickup.subtype >= 0x05 # free soul
+      return if !options[:randomize_items] && pickup.is_pickup? && pickup.subtype < 0x05
+      return if !options[:randomize_souls_relics_and_glyphs] && pickup.is_pickup? && pickup.subtype >= 0x05 # free soul
+      return if !options[:randomize_souls_relics_and_glyphs] && pickup.type == 0x02 && pickup.subtype == 0x01 # soul candle or money chest
       
-      if pickup.subtype == 0x02 && (0x3D..0x41).include?(pickup.var_b)
+      if pickup.is_pickup? && pickup.subtype == 0x02 && (0x3D..0x41).include?(pickup.var_b)
         # magic seal
         pickup.var_a = get_unique_id()
         return
-      elsif pickup.subtype == 0x02 && pickup.var_b == 0x39
+      elsif pickup.is_pickup? && pickup.subtype == 0x02 && pickup.var_b == 0x39
         # tower key
         pickup.var_a = get_unique_id()
         return
       end
     when "por"
-      return if !options[:randomize_items] && pickup.subtype < 0x08
-      return if !options[:randomize_souls_relics_and_glyphs] && pickup.subtype >= 0x08 # relic
+      return if !options[:randomize_items] && pickup.is_pickup? && pickup.subtype < 0x08
+      return if !options[:randomize_souls_relics_and_glyphs] && pickup.is_pickup? && pickup.subtype >= 0x08 # relic
+      return if !options[:randomize_souls_relics_and_glyphs] && pickup.type == 0x02 && pickup.subtype == 0x01 # money chest
       
-      if pickup.subtype >= 0x08 && [0x5C, 0x5D].include?(pickup.var_b)
+      if pickup.is_pickup? && pickup.subtype >= 0x08 && [0x5C, 0x5D].include?(pickup.var_b)
         # change cube or call cube
         return
       end
