@@ -44,7 +44,7 @@ class SpriteEditor < Qt::Dialog
     ENEMY_IDS.each do |enemy_id|
       enemy = EnemyDNA.new(enemy_id, fs)
       @enemies << enemy
-      @ui.enemy_list.addItem("%03d %s" % [enemy_id, enemy.name.decoded_string])
+      @ui.enemy_list.addItem("%02X %s" % [enemy_id, enemy.name.decoded_string])
     end
     
     set_animation_paused(true)
