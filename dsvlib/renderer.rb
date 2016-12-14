@@ -589,8 +589,8 @@ class Renderer
     return part_gfx
   end
   
-  def render_icon(item_type, item_id, mode=:item)
-    item_type = ITEM_TYPES[item_type]
+  def render_icon(item_type_index, item_id, mode=:item)
+    item_type = ITEM_TYPES[item_type_index]
     format = item_type[:format]
     format_length = format.inject(0){|sum, attr| sum += attr[0]}
     pointer = item_type[:list_pointer] + item_id*format_length
@@ -606,7 +606,7 @@ class Renderer
       icon_index, palette_index = EXTRACT_ICON_INDEX_AND_PALETTE_INDEX.call(item["Icon"])
     else
       icon_index = item["Icon"]
-      if item_type == 0
+      if item_type_index == 0
         palette_index = 2
       else
         palette_index = 1
