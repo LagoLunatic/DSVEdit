@@ -81,6 +81,8 @@ class DSVEdit < Qt::MainWindow
     load_settings()
     
     self.setWindowState(Qt::WindowMaximized)
+    self.setWindowTitle("DSVania Editor #{DSVEDIT_VERSION}")
+    
     self.show()
     
     if @settings[:last_used_folder] && File.directory?(@settings[:last_used_folder])

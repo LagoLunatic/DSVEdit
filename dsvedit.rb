@@ -4,6 +4,8 @@ require 'yaml'
 
 require_relative 'dsvlib'
 
+require_relative 'version'
+
 require_relative 'dsvedit/main_window'
 
 if defined?(Ocra)

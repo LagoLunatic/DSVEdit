@@ -40,6 +40,7 @@ class RandomizerWindow < Qt::Dialog
     connect(@ui.submit, SIGNAL("clicked()"), self, SLOT("randomize()"))
     
     self.setWindowFlags(Qt::MSWindowsFixedSizeDialogHint)
+    self.setWindowTitle("DSVania Randomizer #{DSVRANDOM_VERSION}")
     
     self.show()
   end

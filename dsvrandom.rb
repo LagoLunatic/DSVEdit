@@ -4,6 +4,8 @@ require 'yaml'
 
 require_relative 'dsvlib'
 
+require_relative 'version'
+
 require_relative 'dsvrandom/randomizer_window'
 
 if defined?(Ocra)
