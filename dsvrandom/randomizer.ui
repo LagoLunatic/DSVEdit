@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>640</width>
-    <height>372</height>
+    <height>373</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -149,9 +149,9 @@
        <item>
         <layout class="QHBoxLayout" name="horizontalLayout_4">
          <item>
-          <widget class="QCheckBox" name="randomize_doors">
+          <widget class="QCheckBox" name="randomize_area_connections">
            <property name="text">
-            <string>Doors</string>
+            <string>Area Connections</string>
            </property>
           </widget>
          </item>

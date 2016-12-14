@@ -63,7 +63,7 @@ class Randomizer
       randomize_bosses()
     end
     
-    if options[:randomize_doors]
+    if options[:randomize_area_connections]
       randomize_transition_doors()
     end
     
