@@ -45,6 +45,6 @@ Item subtype (PoR):
 Item subtype (OoE):
 00 Heart. Var B changes the type of heart, 0 is small, 1 or higher is big.
 01 Money. Var B changes the value of the coin/bag.
-02-04 Free glyph. Var B is the ID of the glyph.
+02-04 Free glyph. Var A is the unique item ID. Var B is the ID of the glyph.
 05-FE Crash
 FF Nothing?

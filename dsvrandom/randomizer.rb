@@ -100,7 +100,7 @@ class Randomizer
       when "dos", "por"
         randomize_pickup_dos_por(entity)
       when "ooe"
-        # Do nothing, pickups are special objects in OoE.
+        randomize_pickup_ooe(entity)
       end
     end
     
@@ -562,29 +562,21 @@ class Randomizer
   end
   
   def randomize_pickup_ooe(pickup)
-    unless (0x15..0x17).include?(pickup.subtype) || (pickup.subtype == 0x02 && pickup.var_a == 0x00) # chest or glyph statue
-      return
-    end
+    return if !options[:randomize_items] && pickup.is_special_object? && (0x15..0x17).include?(pickup.subtype) # chest
+    return if !options[:randomize_souls_relics_and_glyphs] && pickup.is_special_object? && pickup.subtype == 0x02 && pickup.var_a == 0x00 # glyph statue
+    return if !options[:randomize_souls_relics_and_glyphs] && pickup.is_pickup? && (2..4).include?(pickup.subtype) # free glyph
     
-    return if !options[:randomize_items] && (0x15..0x17).include?(pickup.subtype) # chest
-    return if !options[:randomize_souls_relics_and_glyphs] && pickup.subtype == 0x02 && pickup.var_a == 0x00 # glyph statue
-    
-    allowed_subtypes = []
-    if options[:randomize_items]
-      allowed_subtypes += [0x15, 0x16] # chest
-    end
-    if options[:randomize_souls_relics_and_glyphs]
-      allowed_subtypes += [0x02] # glyph statue
-    end
-    pickup.subtype = allowed_subtypes.sample(random: rng)
-    
-    case pickup.subtype
-    when 0x15
+    case rng.rand(0..3)
+    when 0
       # Wooden chest
+      pickup.type = 0x02
+      pickup.subtype = 0x15
       pickup.var_a = rng.rand(0x00..0x0F)
       pickup.var_b = 0
-    when 0x16
+    when 1
       # Red chest
+      pickup.type = 0x02
+      pickup.subtype = 0x16
       pickup.var_a = rng.rand(0x0070..0x0162)
       pickup.var_b = get_unique_id()
       
@@ -592,10 +584,18 @@ class Randomizer
         # Blue chest
         pickup.subtype = 0x17
       end
-    when 0x02
+    when 2
       # Glyph statue
+      pickup.type = 0x02
+      pickup.subtype = 0x02
       pickup.var_a = 0x00
-      pickup.var_b = rng.rand(0x00..0x50)
+      pickup.var_b = get_random_glyph()
+    when 3
+      # Free glyph
+      pickup.type = 0x04
+      pickup.subtype = 0x02
+      pickup.var_a = get_unique_id()
+      pickup.var_b = get_random_glyph()
     end
   end
   
