@@ -119,6 +119,8 @@ class TMXInterface
               xml.property(:name => "layer_height",       :value => "%02X" % layer.height)
               xml.property(:name => "z_index",            :value => "%02X" % layer.z_index)
               xml.property(:name => "colors_per_palette", :value => "%02X" % layer.colors_per_palette)
+              xml.property(:name => "render_type",        :value => "%02X" % layer.render_type)
+              xml.property(:name => "scroll_mode",        :value => "%02X" % layer.scroll_mode)
               xml.property(:name => "tileset",            :value => "%08X" % layer.ram_pointer_to_tileset_for_layer)
               xml.property(:name => "collision_tileset",  :value => "%08X" % layer.collision_tileset_ram_pointer)
             }

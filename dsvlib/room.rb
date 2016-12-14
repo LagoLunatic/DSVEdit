@@ -268,11 +268,11 @@ class Room
   end
   
   def main_layer_width
-    layers.select{|layer| layer.scroll_mode == 1}.map(&:width).max || 0
+    layers.first.width
   end
   
   def main_layer_height
-    layers.select{|layer| layer.scroll_mode == 1}.map(&:height).max || 0
+    layers.first.height
   end
   
   def connected_rooms

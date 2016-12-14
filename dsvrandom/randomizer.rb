@@ -67,6 +67,10 @@ class Randomizer
       randomize_transition_doors()
     end
     
+    if options[:randomize_room_connections]
+      randomize_non_transition_doors()
+    end
+    
     if options[:randomize_enemy_drops]
       randomize_enemy_drops()
     end
@@ -761,6 +765,78 @@ class Randomizer
       queued_door_changes[new_outside_door]["destination_room_metadata_ram_pointer"] = old_outside_door.destination_room_metadata_ram_pointer
       queued_door_changes[new_outside_door]["dest_x"] = old_outside_door.dest_x
       queued_door_changes[new_outside_door]["dest_y"] = old_outside_door.dest_y
+    end
+    
+    queued_door_changes.each do |door, changes|
+      changes.each do |attribute_name, new_value|
+        door.send("#{attribute_name}=", new_value)
+      end
+      
+      door.write_to_rom()
+    end
+  end
+  
+  def randomize_non_transition_doors
+    transition_rooms = game.get_transition_rooms()
+    
+    queued_door_changes = Hash.new{|h, k| h[k] = {}}
+    
+    game.areas.each do |area|
+      area.sectors.each do |sector|
+        remaining_doors = {
+          left: [],
+          up: [],
+          right: [],
+          down: []
+        }
+        
+        sector.rooms.each do |room|
+          next if transition_rooms.include?(room)
+          
+          room.doors.each do |door|
+            next if transition_rooms.include?(door.destination_door.room)
+            
+            remaining_doors[door.direction] << door
+          end
+        end
+        
+        sector.rooms.each do |room|
+          next if transition_rooms.include?(room)
+          
+          room.doors.each do |inside_door|
+            next if transition_rooms.include?(inside_door.destination_door.room)
+            
+            next unless remaining_doors[inside_door.direction].include?(inside_door) # Already randomized this door
+            
+            remaining_doors[inside_door.direction].delete(inside_door)
+            
+            next if remaining_doors[inside_door.direction].length == 0
+            
+            old_outside_door = inside_door.destination_door
+            remaining_doors[old_outside_door.direction].delete(old_outside_door)
+            inside_door_to_swap_with = remaining_doors[inside_door.direction].sample(random: rng)
+            remaining_doors[inside_door_to_swap_with.direction].delete(inside_door_to_swap_with)
+            new_outside_door = inside_door_to_swap_with.destination_door
+            remaining_doors[new_outside_door.direction].delete(new_outside_door)
+            
+            queued_door_changes[inside_door]["destination_room_metadata_ram_pointer"] = inside_door_to_swap_with.destination_room_metadata_ram_pointer
+            queued_door_changes[inside_door]["dest_x"] = inside_door_to_swap_with.dest_x
+            queued_door_changes[inside_door]["dest_y"] = inside_door_to_swap_with.dest_y
+            
+            queued_door_changes[inside_door_to_swap_with]["destination_room_metadata_ram_pointer"] = inside_door.destination_room_metadata_ram_pointer
+            queued_door_changes[inside_door_to_swap_with]["dest_x"] = inside_door.dest_x
+            queued_door_changes[inside_door_to_swap_with]["dest_y"] = inside_door.dest_y
+            
+            queued_door_changes[old_outside_door]["destination_room_metadata_ram_pointer"] = new_outside_door.destination_room_metadata_ram_pointer
+            queued_door_changes[old_outside_door]["dest_x"] = new_outside_door.dest_x
+            queued_door_changes[old_outside_door]["dest_y"] = new_outside_door.dest_y
+            
+            queued_door_changes[new_outside_door]["destination_room_metadata_ram_pointer"] = old_outside_door.destination_room_metadata_ram_pointer
+            queued_door_changes[new_outside_door]["dest_x"] = old_outside_door.dest_x
+            queued_door_changes[new_outside_door]["dest_y"] = old_outside_door.dest_y
+          end
+        end
+      end
     end
     
     queued_door_changes.each do |door, changes|

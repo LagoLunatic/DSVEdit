@@ -29,6 +29,7 @@ class RandomizerWindow < Qt::Dialog
     connect(@ui.randomize_enemy_drops, SIGNAL("stateChanged(int)"), self, SLOT("update_settings()"))
     connect(@ui.randomize_boss_souls, SIGNAL("stateChanged(int)"), self, SLOT("update_settings()"))
     connect(@ui.randomize_area_connections, SIGNAL("stateChanged(int)"), self, SLOT("update_settings()"))
+    connect(@ui.randomize_room_connections, SIGNAL("stateChanged(int)"), self, SLOT("update_settings()"))
     connect(@ui.randomize_starting_room, SIGNAL("stateChanged(int)"), self, SLOT("update_settings()"))
     connect(@ui.randomize_enemy_ai, SIGNAL("stateChanged(int)"), self, SLOT("update_settings()"))
     
@@ -62,6 +63,7 @@ class RandomizerWindow < Qt::Dialog
     @ui.randomize_enemy_drops.setChecked(@settings[:randomize_enemy_drops]) unless @settings[:randomize_enemy_drops].nil?
     @ui.randomize_boss_souls.setChecked(@settings[:randomize_boss_souls]) unless @settings[:randomize_boss_souls].nil?
     @ui.randomize_area_connections.setChecked(@settings[:randomize_area_connections]) unless @settings[:randomize_area_connections].nil?
+    @ui.randomize_room_connections.setChecked(@settings[:randomize_room_connections]) unless @settings[:randomize_room_connections].nil?
     @ui.randomize_starting_room.setChecked(@settings[:randomize_starting_room]) unless @settings[:randomize_starting_room].nil?
     @ui.randomize_enemy_ai.setChecked(@settings[:randomize_enemy_ai]) unless @settings[:randomize_enemy_ai].nil?
     
@@ -100,6 +102,7 @@ class RandomizerWindow < Qt::Dialog
     @settings[:randomize_enemy_drops] = @ui.randomize_enemy_drops.checked
     @settings[:randomize_boss_souls] = @ui.randomize_boss_souls.checked
     @settings[:randomize_area_connections] = @ui.randomize_area_connections.checked
+    @settings[:randomize_room_connections] = @ui.randomize_room_connections.checked
     @settings[:randomize_starting_room] = @ui.randomize_starting_room.checked
     @settings[:randomize_enemy_ai] = @ui.randomize_enemy_ai.checked
     
@@ -129,6 +132,7 @@ class RandomizerWindow < Qt::Dialog
       :randomize_enemy_drops => @ui.randomize_enemy_drops.checked(),
       :randomize_boss_souls => @ui.randomize_boss_souls.checked(),
       :randomize_area_connections => @ui.randomize_area_connections.checked(),
+      :randomize_room_connections => @ui.randomize_room_connections.checked(),
       :randomize_starting_room => @ui.randomize_starting_room.checked(),
       :randomize_enemy_ai => @ui.randomize_enemy_ai.checked(),
       :remove_events => @ui.remove_events.checked()
