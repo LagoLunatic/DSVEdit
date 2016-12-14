@@ -36,36 +36,36 @@ task :build_releases do
   
   ["DSVania Editor", "DSVania Randomizer"].each do |program_name|
     # Delete unnecessary libraries that bloat the filesize.
-    FileUtils.rm_rf "./build/#{program_name}/lib/ruby/gems/2.2.0/gems/chunky_png-1.3.5/spec"
-    FileUtils.rm_rf "./build/#{program_name}/lib/ruby/gems/2.2.0/gems/nokogiri-1.6.7.2-x86-mingw32/test"
-    FileUtils.rm_rf "./build/#{program_name}/lib/ruby/gems/2.2.0/gems/nokogiri-1.6.7.2-x86-mingw32/lib/nokogiri/1.9"
-    FileUtils.rm_rf "./build/#{program_name}/lib/ruby/gems/2.2.0/gems/nokogiri-1.6.7.2-x86-mingw32/lib/nokogiri/2.0"
-    FileUtils.rm_rf "./build/#{program_name}/lib/ruby/gems/2.2.0/gems/nokogiri-1.6.7.2-x86-mingw32/lib/nokogiri/2.1"
-    FileUtils.rm_rf "./build/#{program_name}/lib/ruby/gems/2.2.0/gems/qtbindings-4.8.6.2-x86-mingw32/bin"
-    FileUtils.rm_rf "./build/#{program_name}/lib/ruby/gems/2.2.0/gems/qtbindings-4.8.6.2-x86-mingw32/examples"
-    FileUtils.rm_rf "./build/#{program_name}/lib/ruby/gems/2.2.0/gems/qtbindings-4.8.6.2-x86-mingw32/lib/2.0"
-    FileUtils.rm_rf "./build/#{program_name}/lib/ruby/gems/2.2.0/gems/qtbindings-4.8.6.2-x86-mingw32/lib/2.1"
-    FileUtils.rm_rf "./build/#{program_name}/lib/ruby/gems/2.2.0/gems/qtbindings-qt-4.8.6-x86-mingw32/qtbin/plugins"
+    FileUtils.rm_rf "../build/#{program_name}/lib/ruby/gems/2.2.0/gems/chunky_png-1.3.5/spec"
+    FileUtils.rm_rf "../build/#{program_name}/lib/ruby/gems/2.2.0/gems/nokogiri-1.6.7.2-x86-mingw32/test"
+    FileUtils.rm_rf "../build/#{program_name}/lib/ruby/gems/2.2.0/gems/nokogiri-1.6.7.2-x86-mingw32/lib/nokogiri/1.9"
+    FileUtils.rm_rf "../build/#{program_name}/lib/ruby/gems/2.2.0/gems/nokogiri-1.6.7.2-x86-mingw32/lib/nokogiri/2.0"
+    FileUtils.rm_rf "../build/#{program_name}/lib/ruby/gems/2.2.0/gems/nokogiri-1.6.7.2-x86-mingw32/lib/nokogiri/2.1"
+    FileUtils.rm_rf "../build/#{program_name}/lib/ruby/gems/2.2.0/gems/qtbindings-4.8.6.2-x86-mingw32/bin"
+    FileUtils.rm_rf "../build/#{program_name}/lib/ruby/gems/2.2.0/gems/qtbindings-4.8.6.2-x86-mingw32/examples"
+    FileUtils.rm_rf "../build/#{program_name}/lib/ruby/gems/2.2.0/gems/qtbindings-4.8.6.2-x86-mingw32/lib/2.0"
+    FileUtils.rm_rf "../build/#{program_name}/lib/ruby/gems/2.2.0/gems/qtbindings-4.8.6.2-x86-mingw32/lib/2.1"
+    FileUtils.rm_rf "../build/#{program_name}/lib/ruby/gems/2.2.0/gems/qtbindings-qt-4.8.6-x86-mingw32/qtbin/plugins"
     %w(libgcc_s_dw2-1.dll libstdc++-6.dll libwinpthread-1.dll phonon4.dll Qt3Support4.dll QtCLucene4.dll QtDBus4.dll QtDeclarative4.dll QtDesigner4.dll QtDesignerComponents4.dll QtHelp4.dll QtMultimedia4.dll QtScript4.dll QtScriptTools4.dll QtTest4.dll QtWebKit4.dll QtXmlPatterns4.dll).each do |filename|
-      FileUtils.rm_f "./build/#{program_name}/lib/ruby/gems/2.2.0/gems/qtbindings-qt-4.8.6-x86-mingw32/qtbin/#{filename}"
+      FileUtils.rm_f "../build/#{program_name}/lib/ruby/gems/2.2.0/gems/qtbindings-qt-4.8.6-x86-mingw32/qtbin/#{filename}"
     end
     %w(libsmokeqtdeclarative.dll libsmokeqthelp.dll libsmokeqtmultimedia.dll libsmokeqtscript.dll libsmokeqttest.dll libsmokeqtuitools.dll libsmokeqtwebkit.dll libsmokeqtxmlpatterns.dll).each do |filename|
-      FileUtils.rm_f "./build/#{program_name}/lib/ruby/gems/2.2.0/gems/qtbindings-4.8.6.2-x86-mingw32/lib/2.2/#{filename}"
+      FileUtils.rm_f "../build/#{program_name}/lib/ruby/gems/2.2.0/gems/qtbindings-4.8.6.2-x86-mingw32/lib/2.2/#{filename}"
     end
 
-    FileUtils.rm_f "./build/#{program_name}.zip"
-    FileUtils.rm_rf "./build/#{program_name}/src"
-    FileUtils.mkdir "./build/#{program_name}/src"
+    FileUtils.rm_f "../build/#{program_name}.zip"
+    FileUtils.rm_rf "../build/#{program_name}/src"
+    FileUtils.mkdir "../build/#{program_name}/src"
     
     if program_name == "DSVania Editor"
-      FileUtils.cp_r ["./constants", "./dsvedit", "./dsvlib", "./images", "dsvedit.rb", "dsvlib.rb", "README.txt"], "./build/#{program_name}/src"
+      FileUtils.cp_r ["./constants", "./dsvedit", "./dsvlib", "./images", "dsvedit.rb", "dsvlib.rb", "README.txt"], "../build/#{program_name}/src"
     else
-      FileUtils.cp_r ["./constants", "./dsvrandom", "./dsvlib", "./images", "dsvrandom.rb", "dsvlib.rb", "README.txt"], "./build/#{program_name}/src"
+      FileUtils.cp_r ["./constants", "./dsvrandom", "./dsvlib", "./images", "dsvrandom.rb", "dsvlib.rb", "README.txt"], "../build/#{program_name}/src"
     end
     
-    Zip::File.open("./build/#{program_name}.zip", Zip::File::CREATE) do |zipfile|
-      Dir.glob("./build/#{program_name}/**/*.*").each do |file_path|
-        relative_path = Pathname.new(file_path).relative_path_from(Pathname.new("./build/#{program_name}"))
+    Zip::File.open("../build/#{program_name}.zip", Zip::File::CREATE) do |zipfile|
+      Dir.glob("../build/#{program_name}/**/*.*").each do |file_path|
+        relative_path = Pathname.new(file_path).relative_path_from(Pathname.new("../build/#{program_name}"))
         zipfile.add(relative_path, file_path)
       end
     end
