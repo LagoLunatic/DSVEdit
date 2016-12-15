@@ -28,9 +28,11 @@ task :build_installers do
   # The gem version of OCRA won't work, it's missing the most recent few commits which fix building the Inno Setup file.
   # Instead you need to use the latest version of OCRA from the source: https://github.com/larsch/ocra/tree/2e7c88fd6ac7ae5f881d838dedd7ad437bda018b
   # The easiest way to do this is to install the latest gem version of OCRA, then go to the folder where OCRA was installed in your Ruby installation and replace the file /bin/ocra with the /bin/ocra from the source.
+  
+  # OCRA normally places all the source files in the /src directory. In order to make it place them in the base directory open up /bin/ocra and change line 204 from SRCDIR = Pathname.new('src') to SRCDIR = Pathname.new('.').
 
-  system "ocra dsvedit.rb --output DSVEdit.exe --no-lzma --chdir-first --innosetup setup_dsvedit.iss --windows --gem-files ./images/dsvedit_icon.ico --gem-extras armips asm --icon ./images/dsvedit_icon.ico"
-  system "ocra dsvrandom.rb --output DSVRandom.exe --no-lzma --chdir-first --innosetup setup_dsvrandom.iss --windows --gem-files ./images/dsvrandom_icon.ico --gem-extras armips asm --icon ./images/dsvrandom_icon.ico"
+  system "ruby ocra-1.3.6/bin/ocra dsvedit.rb --output DSVEdit.exe --no-lzma --chdir-first --innosetup setup_dsvedit.iss --windows --icon ./images/dsvedit_icon.ico"
+  system "ruby ocra-1.3.6/bin/ocra dsvrandom.rb --output DSVRandom.exe --no-lzma --chdir-first --innosetup setup_dsvrandom.iss --windows --icon ./images/dsvrandom_icon.ico"
 end
 
 task :build_releases do
@@ -55,16 +57,24 @@ task :build_releases do
       FileUtils.rm_f "../build/#{program_name}/lib/ruby/gems/2.2.0/gems/qtbindings-4.8.6.2-x86-mingw32/lib/2.2/#{filename}"
     end
     
-    FileUtils.rm_rf "../build/#{program_name}/src"
-    FileUtils.mkdir "../build/#{program_name}/src"
+    FileUtils.rm_f ["../build/#{program_name}/constants", "../build/#{program_name}/dsvlib", "../build/#{program_name}/images", "../build/#{program_name}/dsvlib.rb", "../build/#{program_name}/version.rb"]
+    FileUtils.cp_r ["./constants", "./dsvlib", "./images", "dsvlib.rb", "version.rb"], "../build/#{program_name}"
     
     if program_name == "DSVania Editor"
-      FileUtils.cp_r ["./constants", "./dsvedit", "./dsvlib", "./images", "dsvedit.rb", "dsvlib.rb", "version.rb"], "../build/#{program_name}/src"
+      FileUtils.rm_f ["../build/#{program_name}/dsvedit", "../build/#{program_name}/dsvedit.rb"]
+      FileUtils.cp_r ["./dsvedit", "dsvedit.rb"], "../build/#{program_name}"
       FileUtils.cp "README.txt", "../build/#{program_name}/README.txt"
+      FileUtils.rm_f "../build/#{program_name}/settings.yml"
     else
-      FileUtils.cp_r ["./constants", "./dsvrandom", "./dsvlib", "./images", "dsvrandom.rb", "dsvlib.rb", "version.rb"], "../build/#{program_name}/src"
+      FileUtils.rm_f ["../build/#{program_name}/dsvrandom", "../build/#{program_name}/dsvrandom.rb"]
+      FileUtils.cp_r ["./dsvrandom", "dsvrandom.rb"], "../build/#{program_name}"
       FileUtils.cp "README_RANDOMIZER.txt", "../build/#{program_name}/README.txt"
+      FileUtils.rm_f "../build/#{program_name}/randomizer_settings.yml"
     end
+    
+    FileUtils.rm_rf "../build/#{program_name}/docs"
+    FileUtils.mkdir "../build/#{program_name}/docs"
+    FileUtils.cp_r ["./docs/formats", "./docs/lists"], "../build/#{program_name}/docs"
     
     version = program_name == "DSVania Editor" ? DSVEDIT_VERSION : DSVRANDOM_VERSION
     
