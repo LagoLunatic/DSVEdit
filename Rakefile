@@ -72,6 +72,8 @@ task :build_releases do
       FileUtils.rm_f "../build/#{program_name}/randomizer_settings.yml"
     end
     
+    FileUtils.rm_rf "../build/#{program_name}/cache"
+    
     FileUtils.rm_rf "../build/#{program_name}/docs"
     FileUtils.mkdir "../build/#{program_name}/docs"
     FileUtils.cp_r ["./docs/formats", "./docs/lists"], "../build/#{program_name}/docs"
