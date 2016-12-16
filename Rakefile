@@ -57,8 +57,8 @@ task :build_releases do
       FileUtils.rm_f "../build/#{program_name}/lib/ruby/gems/2.2.0/gems/qtbindings-4.8.6.2-x86-mingw32/lib/2.2/#{filename}"
     end
     
-    FileUtils.rm_f ["../build/#{program_name}/constants", "../build/#{program_name}/dsvlib", "../build/#{program_name}/images", "../build/#{program_name}/dsvlib.rb", "../build/#{program_name}/version.rb"]
-    FileUtils.cp_r ["./constants", "./dsvlib", "./images", "dsvlib.rb", "version.rb"], "../build/#{program_name}"
+    FileUtils.rm_f ["../build/#{program_name}/armips", "../build/#{program_name}/asm", "../build/#{program_name}/constants", "../build/#{program_name}/dsvlib", "../build/#{program_name}/images", "../build/#{program_name}/dsvlib.rb", "../build/#{program_name}/version.rb"]
+    FileUtils.cp_r ["./armips", "./asm", "./constants", "./dsvlib", "./images", "dsvlib.rb", "version.rb"], "../build/#{program_name}"
     
     if program_name == "DSVania Editor"
       FileUtils.rm_f ["../build/#{program_name}/dsvedit", "../build/#{program_name}/dsvedit.rb"]
