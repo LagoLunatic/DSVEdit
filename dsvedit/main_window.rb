@@ -463,8 +463,10 @@ class DSVEdit < Qt::MainWindow
     connect(@progress_dialog, SIGNAL("canceled()"), self, SLOT("cancel_write_to_rom_thread()"))
     @progress_dialog.show
     
+    output_rom_path = File.join(game.folder, "built_rom.nds")
+    
     @write_to_rom_thread = Thread.new do
-      game.fs.write_to_rom("../#{GAME} hack.nds") do |files_written|
+      game.fs.write_to_rom(output_rom_path) do |files_written|
         next unless files_written % 100 == 0 # Only update the UI every 100 files because updating too often is slow.
         
         Qt.execute_in_main_thread do
@@ -482,7 +484,7 @@ class DSVEdit < Qt::MainWindow
           elsif !File.file?(@settings[:emulator_path])
             Qt::MessageBox.warning(self, "Failed to run emulator", "Emulator path is invalid.")
           else
-            system("start \"#{@settings[:emulator_path]}\" \"../#{GAME} hack.nds\"")
+            system("start \"#{@settings[:emulator_path]}\" \"#{output_rom_path}\"")
           end
         else
           Qt::MessageBox.information(self, "Done", "All files written to rom.")
