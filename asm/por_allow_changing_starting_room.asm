@@ -9,7 +9,7 @@
 
 .org 0x020BFC00 ; Free space.
   mov r5,0h        ; Load the area index into r5.
-  strb r5,[r0,515] ; Store the area index to the ram address where r0 will read it later.
+  strb r5,[r0,515h] ; Store the area index to the ram address where r0 will read it later. (0x02111785)
   mov r5,0h        ; Load the sector index into r5.
   mov r4,0h        ; Load the room index into r4.
   b 02051F94h      ; Return to where we came from.
