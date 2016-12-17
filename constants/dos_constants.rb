@@ -203,6 +203,7 @@ REUSED_ENEMY_INFO = {
   # palette_offset: The reused enemy uses different palettes than the original, but they're still in the same list of palettes. This is the offset of the new palette in the list.
   # palette_list_ptr_index: The reused enemy uses a completely different palette list from the original. This value is which one to use.
   26 => {init_code: 0x0223266C, gfx_sheet_ptr_index: 0, palette_offset: 2, palette_list_ptr_index: 0}, # ghoul and zombie
+  77 => {init_code:        nil, gfx_sheet_ptr_index: 0, palette_offset: 0, palette_list_ptr_index: 1}, # gorgon and catoblepas
   84 => {init_code: 0x02270704, gfx_sheet_ptr_index: 0, palette_offset: 1, palette_list_ptr_index: 0}, # erinys and valkyrie
   92 => {init_code: 0x02288FBC, gfx_sheet_ptr_index: 0, palette_offset: 0, palette_list_ptr_index: 0}, # tanjelly and slime
   91 => {init_code: 0x022FF9F0, gfx_sheet_ptr_index: 1, palette_offset: 0, palette_list_ptr_index: 1}, # flame demon and devil
@@ -213,12 +214,13 @@ BEST_SPRITE_FRAME_FOR_ENEMY = {
   # Enemies not listed here default to frame 0.
     0 =>   8, # zombie
     5 =>  38, # peeping eye
-    9 =>   7, # spin devil
+    9 =>  17, # spin devil
    14 =>  19, # golem
    16 =>   7, # une
    18 =>  78, # manticore
    21 =>  14, # mandragora
    23 =>  13, # skeleton farmer
+   25 =>  36, # catoblepas
    26 =>   8, # ghoul
    27 =>  17, # corpseweed
    34 =>  15, # treant
@@ -238,6 +240,7 @@ BEST_SPRITE_FRAME_FOR_ENEMY = {
    67 =>   1, # mimic
    74 =>  39, # bugbear
    76 =>  42, # bone ark
+   77 =>  36, # gorgon
    78 =>  10, # alura une
    79 =>   6, # great axe armor
    83 =>   5, # dead warrior
