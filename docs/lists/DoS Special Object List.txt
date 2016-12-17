@@ -9,7 +9,7 @@ Special objects:
   11-17 More candle graphics, including statues and grandfather clocks.
   18-FF Buggy candles, that have mismatched graphics, sfx, and contents, or they just don't show up at all.
 02 Water level.
-  Var B: Set this to the same value as a lever's Var B and pulling the lever will permanently drain this water.
+  Var B: The event flag for the water being lowered. Set to the same as the lever's Var B.
 03 Waterfall that pushes the player downwards when they jump up into it. Var A is the width, Var B is the height.
 04 Large water splashing visual and sound effects, used at the bottom of the large waterfall.
 05 Used in rooms with quicksand.
@@ -36,14 +36,39 @@ Special objects:
 11 Fog effect (like in the lost village).
 12 Cog you can walk on. Spinning speed is controlled by var b.
 13 Locks the screen scrolling at the top left screen and doesn't follow soma.
-14 That horizontally moving platform that takes you through the long room with balore blocks. TODO: what is var a?
+14 Moving platform.
+  Var A: Type of platform.
+    00 From Cursed Clock Tower. Starts one screen down, one screen to the right. Moves down, then back.
+    01 From Cursed Clock Tower. Starts one screen down, one screen to the right. Moves down, then back.
+    02 From Cursed Clock Tower. Starts in the top-left screen. Moves down, right, up, then back.
+    03 From Cursed Clock Tower. Starts two screens down. Moves up, then back.
+    04 From Cursed Clock Tower. Starts in the top-left screen. Moves down, then back.
+    05 From Cursed Clock Tower. Starts in the top-left screen. Moves down, left, up, then back.
+    06 From Cursed Clock Tower. Starts two screens down. Moves up, then back.
+    07 From Cursed Clock Tower. Starts in the top-left screen. Moves down two screens, then back.
+    08 From Wizardry Lab. Horizontally moving platform that only starts moving when you stand on it.
+    11 From Demon Guest House. Starts in the top-left screen. Moves down, then back.
 15 Rapidly moving clouds background effect used in the very large room in the Dark Chapel.
 16 Moving clouds background effect used in the Condemned Tower.
-17 Invisible block that becomes visible when a Ghost hovers over it. Var A and Var B are set to various values from 0 to C, but don't seem to affect anything?
+17 Invisible block that becomes visible when a Ghost hovers over it.
+  Var A: Which tile graphics to use.
+  Var B: Flip bits for the tile graphics.
+    Bit 0: Horizontal flip.
+    Bit 1: Vertical flip.
 18 Long golden platform, always appears at the bottom of the first screen, and locks the screen scrolling to that screen. Used in Gergoth's tower. TODO
 19 Bloody spike that spins around. Spinning speed controlled by var b.
 1A Like 19, but the actual spike is broken off so it can't hurt you.
-1B Pendulum...? Animation speed affected by var b.
+1B Swinging pendulum.
+  Var A: 
+    Least significant byte is the type of weight on the pendulum:
+      00 - Small weight.
+      01 - Large weight.
+      02+ - Buggy, causes one of the rods that's supposed to hold up the weights to take the place of the weight.
+    Most significant byte is the length of the rod.
+      00 and 01 have no length.
+      02-05 are intended for small weights.
+      06 is intended for large weights.
+  Var B: Initial swinging velocity. Can be negative. Positive means it starts swinging clockwise, negative means counterclockwise.
 1C Button from Cursed Clock Tower. Blows up 1E. The game uses Var B to remember whether the button has been pressed yet.
 1D Wooden door (for area connections).
 1E Explodable wall from Cursed Clock Tower. 1C blows it up. The game uses Var B to remember whether the wall has exploded yet.
@@ -59,11 +84,11 @@ Special objects:
     1 and it disappears in the mirror world.
     2 and it disappears after the player has found a warp room.
 21 Drawbridge.
-  Var B: 3?
+  Var B: The event flag for the drawbridge being down.
 22 Bubbles floating up through the water. Var A and Var B are used for something.
 23 Huge bell you can walk on.
 24 The lever you pull to lower the water level in the Lost Village.
-  Var B: Set this to the same value as a water level's Var B and pulling this lever will permanently drain the water.
+  Var B: The event flag for the water being lowered. Set to the same as the water level's Var B.
 25 Boss door.
   Var a is is how the door acts. Values:
     00 Door outside the boss room that you need a magic seal to open.
@@ -88,19 +113,19 @@ Special objects:
     0F Abaddon
 26 Gold door that only opens when the last three digits of your gold match the number on the door.
   Var A: Which version of the door to use - 0 is 573, 1 is 777, 2 is 666.
-  Var B: The ID of the door.
+  Var B: The event flag for the door being opened.
 27 Gate in Condemned Tower that only opens with the Tower Key.
 28 The button in the Dark Chapel that lowers the wall blocking the path.
-  Var B: Set to the same as the button's Var B.
+  Var B: The event flag for the wall being down. Set to the same as the wall's Var B.
 29 The wall that blocks the path in the Dark Chapel.
-  Var B: Set to the same as the wall's Var B.
+  Var B: The event flag for the wall being down. Set to the same as the button's Var B.
 2A The metal gate that seals in the water in the Lost Village.
-  Var B: Set to the same as the lever's Var B.
+  Var B: The event flag for the water being lowered. Set to the same as the lever's Var B.
 2B The destroyable floor in the Lost Village underneath the statues.
   Var A:
     0 for the floor and the animated water on the statue.
     1 for the ceiling with explosives strapped to it and the button that blows it up. (The button automatically positions itself to the upper left screen, and the explosive ceiling visually positions itself there too, but the collision on the ceiling will be wherever you set the X and Y to.)
-  Var B: The index of the destroyable floor.
+  Var B: The event flag for the floor being destroyed.
 2C Chandelier? upside down maybe?
 2D Hanging spikes, disappear when you get near them.
 2E Unused, crash
@@ -131,7 +156,14 @@ Special objects:
   Var A:
     0 for the ceiling in Demon Guest House.
     1 for the ceiling in the Pinnacle.
-45 A button and a gate opened by the button. (Maybe for letting the water level down?)
+45 A button and a gate opened by the button.
+  Var A: Type of gate.
+    00 - Double gate with button to the right.
+    01 - Single gate with button to the right.
+    02 - Single gate with button to the left.
+    03 - Double gate with button to the left.
+    04+ - Gate only, no button.
+  Var B: The event flag for the gate being opened.
 46 More destroyable walls like 44.
   Var A:
     0 for the left wall in the underground portion of Lost Village.
