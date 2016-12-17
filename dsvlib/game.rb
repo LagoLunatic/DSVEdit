@@ -130,6 +130,9 @@ class Game
     return unless GAME == game_name.downcase
     
     patch_file = "asm/#{patch_name}.asm"
+    if !File.file?(patch_file)
+      raise "Could not find patch file: #{patch_file}"
+    end
     
     # Temporarily copy code files to asm directory so armips can be run without permanently modifying the files.
     fs.all_files.each do |file|
@@ -163,7 +166,10 @@ class Game
       
       fs.write_by_file(file[:file_path], 0, file_data)
     end
-    FileUtils.rm_r(File.join("asm", "ftc"))
+  ensure
+    if File.exist?(File.join("asm", "ftc"))
+      FileUtils.rm_r(File.join("asm", "ftc"))
+    end
   end
   
   def set_starting_room(area_index, sector_index, room_index)
