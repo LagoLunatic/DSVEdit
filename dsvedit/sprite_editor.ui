@@ -71,7 +71,7 @@
              <item>
               <widget class="QLabel" name="label_11">
                <property name="text">
-                <string>Palette ptr</string>
+                <string>Palette pointer</string>
                </property>
               </widget>
              </item>

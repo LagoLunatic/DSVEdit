@@ -9,7 +9,7 @@ Special objects:
   Var A is 0000 in rooms with the floor on the right, 8000 with the floor on the left, C000 with the floor on the top.
 04 starts boss rush?
 05 ends boss rush?
-06 used in all nest of evil rooms with common enemies
+06 used in all nest of evil rooms with common enemies. maybe opens the doors after a set amount of time?
 07 Unused
 08 Unused
 09 Unused
@@ -36,7 +36,7 @@ Special objects:
     Bits 1-6: Room index of destination room.
     Bits 7-10: Sector index of the destination room.
     Bits 11-16: Nothing.
-1B nothing? used in sandy grave
+1B nothing? used in sandy grave outside rooms
 1C Drawbrige. Requires overlay 78.
 1D Save point.
 1E Warp point.
@@ -51,7 +51,7 @@ Special objects:
   Var a:
   Var b:
 23 Pulsating background effect. Used inside of the worm stomachs.
-24 
+24 Makes various food particles fly when the player lands on certain platforms. It's hardcoded to activate only when the player lands on tile 9E. In the appropriate tileset (City of Haze) this is an invisible tile that acts as a platform you can jump through. In order to make the platform visible, place visible platform tiles on a separate, non-collision layer.
 25 
 26 
 27 
