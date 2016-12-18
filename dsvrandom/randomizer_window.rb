@@ -116,7 +116,9 @@ class RandomizerWindow < Qt::Dialog
     if @settings[:seed] =~ /^\d+$/
       seed = @settings[:seed].to_i
     elsif @settings[:seed] =~ /^\s*$/
-      seed = nil
+      seed = rand(0..999_999_999)
+      @settings[:seed] = seed.to_s
+      @ui.seed.text = @settings[:seed]
     else
       Qt::MessageBox.warning(self, "Invalid seed", "Seed must be an integer.")
       return
@@ -171,7 +173,7 @@ class RandomizerWindow < Qt::Dialog
     @progress_dialog.show
     
     FileUtils.mkdir_p(@ui.output_folder.text)
-    output_rom_path = File.join(@ui.output_folder.text, "#{GAME} Random #{@ui.seed.text}.nds")
+    output_rom_path = File.join(@ui.output_folder.text, "#{GAME} Random #{@ui.seed.text.to_i}.nds")
     
     @write_to_rom_thread = Thread.new do
       game.fs.write_to_rom(output_rom_path) do |files_written|
