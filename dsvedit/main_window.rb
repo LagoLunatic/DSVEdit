@@ -463,7 +463,7 @@ class DSVEdit < Qt::MainWindow
     connect(@progress_dialog, SIGNAL("canceled()"), self, SLOT("cancel_write_to_rom_thread()"))
     @progress_dialog.show
     
-    output_rom_path = File.join(game.folder, "built_rom.nds")
+    output_rom_path = File.join(game.folder, "built_rom_#{GAME}.nds")
     
     @write_to_rom_thread = Thread.new do
       game.fs.write_to_rom(output_rom_path) do |files_written|
