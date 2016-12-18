@@ -7,6 +7,7 @@ require_relative 'item_editor_dialog'
 require_relative 'entity_search_dialog'
 require_relative 'icon_chooser_dialog'
 require_relative 'map_editor_dialog'
+require_relative 'entity_editor_dialog'
 
 require_relative 'ui_main'
 
@@ -214,7 +215,7 @@ class DSVEdit < Qt::MainWindow
     @room = room
     @ui.room.setCurrentIndex(@room_index)
     
-    load_layers()
+    load_room()
   end
   
   def sector_and_room_indexes_changed(new_sector_index, new_room_index)
@@ -244,7 +245,7 @@ class DSVEdit < Qt::MainWindow
     sector_and_room_indexes_changed(tile.sector_index, tile.room_index)
   end
   
-  def load_layers()
+  def load_room()
     @room_graphics_scene.clear()
     @room_graphics_scene.setSceneRect(0, 0, @room.max_layer_width*SCREEN_WIDTH_IN_PIXELS, @room.max_layer_height*SCREEN_HEIGHT_IN_PIXELS)
     
@@ -298,10 +299,12 @@ class DSVEdit < Qt::MainWindow
           
           [chunky_frame, min_x, min_y]
         rescue
-          next
+          # Failed to render enemy sprite, put a generic rectangle there instead.
+          graphics_item = EntityRectItem.new(entity, self)
+          @room_graphics_scene.addItem(graphics_item)
         end
         
-        frame_pixmap_item = GraphicsChunkyItem.new(chunky_frame)
+        frame_pixmap_item = EntityChunkyItem.new(chunky_frame, entity, self)
         
         frame_pixmap_item.setPos(entity.x_pos+min_x, entity.y_pos+min_y)
         @room_graphics_scene.addItem(frame_pixmap_item)
@@ -310,7 +313,7 @@ class DSVEdit < Qt::MainWindow
         item_id = entity.var_b
         chunky_image = @renderer.render_icon(item_type-2, item_id)
         
-        graphics_item = GraphicsChunkyItem.new(chunky_image)
+        graphics_item = EntityChunkyItem.new(chunky_image, entity, self)
         graphics_item.setPos(entity.x_pos-8, entity.y_pos-16)
         @room_graphics_scene.addItem(graphics_item)
       elsif entity.is_glyph?
@@ -321,8 +324,11 @@ class DSVEdit < Qt::MainWindow
           chunky_image = @renderer.render_icon(1, glyph_id-1-0x37, mode=:glyph)
         end
         
-        graphics_item = GraphicsChunkyItem.new(chunky_image)
+        graphics_item = EntityChunkyItem.new(chunky_image, entity, self)
         graphics_item.setPos(entity.x_pos-16, entity.y_pos-16)
+        @room_graphics_scene.addItem(graphics_item)
+      else
+        graphics_item = EntityRectItem.new(entity, self)
         @room_graphics_scene.addItem(graphics_item)
       end
     end
@@ -390,6 +396,10 @@ class DSVEdit < Qt::MainWindow
     @map_editor_dialog = MapEditorDialog.new(self, game.fs, @renderer, @area_index, @sector_index)
   end
   
+  def open_entity_editor(entity)
+    @entity_editor = EntityEditorDialog.new(self, entity)
+  end
+  
   def open_settings
     @settings_dialog = SettingsDialog.new(self, @settings)
   end
@@ -435,7 +445,7 @@ class DSVEdit < Qt::MainWindow
     end
     
     @tiled.read(tmx_path, @room)
-    load_layers()
+    load_room()
   end
   
   def set_current_room_as_starting_room
@@ -549,5 +559,57 @@ class GraphicsChunkyItem < Qt::GraphicsPixmapItem
     blob = chunky_image.to_blob
     pixmap.loadFromData(blob, blob.length)
     super(pixmap)
+  end
+end
+
+class EntityChunkyItem < GraphicsChunkyItem
+  def initialize(chunky_image, entity, window)
+    super(chunky_image)
+    
+    @entity = entity
+    @window = window
+  end
+  
+  def mousePressEvent(event)
+    if event.button == Qt::RightButton
+      @window.open_entity_editor(@entity)
+    else
+      super(event)
+    end
+  end
+end
+
+class EntityRectItem < Qt::GraphicsRectItem
+  NOTHING_BRUSH        = Qt::Brush.new(Qt::Color.new(200, 200, 200, 150))
+  ENEMY_BRUSH          = Qt::Brush.new(Qt::Color.new(200, 0, 0, 150))
+  SPECIAL_OBJECT_BRUSH = Qt::Brush.new(Qt::Color.new(0, 0, 200, 150))
+  CANDLE_BRUSH         = Qt::Brush.new(Qt::Color.new(200, 200, 0, 150))
+  OTHER_BRUSH          = Qt::Brush.new(Qt::Color.new(200, 0, 200, 150))
+  
+  def initialize(entity, window)
+    super(entity.x_pos-8, entity.y_pos-8, 16, 16)
+    
+    case entity.type
+    when 0
+      self.setBrush(NOTHING_BRUSH)
+    when 1
+      self.setBrush(ENEMY_BRUSH)
+    when 2
+      self.setBrush(SPECIAL_OBJECT_BRUSH)
+    when 3
+      self.setBrush(CANDLE_BRUSH)
+    else
+      self.setBrush(OTHER_BRUSH)
+    end
+    @entity = entity
+    @window = window
+  end
+  
+  def mousePressEvent(event)
+    if event.button == Qt::RightButton
+      @window.open_entity_editor(@entity)
+    else
+      super(event)
+    end
   end
 end

@@ -424,9 +424,8 @@ ITEM_LOCAL_ID_RANGES = {
 ITEM_GLOBAL_ID_RANGE = (1..0x1BB) # regular items end at 150. skills end at 1AB. 1BB is including relics.
 SKILL_GLOBAL_ID_RANGE = (1..0x6B)
 
-ITEM_BYTE_7_RANGE_FOR_DEFENSIVE_EQUIPMENT = (0x04..0x07)
-
-ITEM_BYTE_7_VALUE_FOR_SKILLS_AND_PASSIVES = 0x08
+PICKUP_SUBTYPES_FOR_ITEMS = (0x02..0x07)
+PICKUP_SUBTYPES_FOR_SKILLS = (0x08..0x09)
 
 # Note: the below are not actually where the original game stores the indexes. All three of those are at 02051F88 (since all three are the same: 00). The three addresses below are free space reused for the purpose of allowing the three values to be different.
 NEW_GAME_STARTING_AREA_INDEX_OFFSET = 0x020BFC00
