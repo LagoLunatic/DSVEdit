@@ -2,7 +2,7 @@
 class Tileset
   TILESET_WIDTH_IN_BLOCKS = 16
   TILESET_HEIGHT_IN_BLOCKS = 64
-  LENGTH_OF_TILESET_IN_BLOCKS = TILESET_WIDTH_IN_BLOCKS*TILESET_HEIGHT_IN_BLOCKS - 1 # -1 because the first (blank) tile in a tileset is always blank.
+  LENGTH_OF_TILESET_IN_BLOCKS = TILESET_WIDTH_IN_BLOCKS*TILESET_HEIGHT_IN_BLOCKS - 1 # -1 because the first tile in a tileset is always blank.
   
   attr_reader :tileset_ram_pointer,
               :tiles,
@@ -56,7 +56,7 @@ class TilesetTile
     @unknown_2          = (tile_data & 0b00000000_11111000_00000000_00000000) >> 19
     @palette_index      = (tile_data & 0b11111111_00000000_00000000_00000000) >> 24
     
-    # Unknown 1 and unknown 2 are used in PoR and OoE, not used in DoS.
+    # Unknown 1 and unknown 2 aren't used, they only sometimes seem to be used because of reading garbage data past the end of the actual tilset.
   end
 end
 

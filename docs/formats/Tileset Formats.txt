@@ -1,4 +1,15 @@
 
+Tileset:
+Each block in the tileset is 4 bytes long.
+Starts from the first real tile, not the blank tile.
+Bits   1-6: Index of the tile on the tile page.
+Bits  7-12: Seems unused.
+Bits 13-17: Tile page index.
+Bit     18: Horizontal flip.
+Bit     19: Vertical flip.
+Bits 20-24: Seems unused.
+Bits 25-32: Palette index.
+
 Collision tileset:
 Each block in the tileset is 4 bytes long.
 Starts from the first real tile, not the blank tile.
