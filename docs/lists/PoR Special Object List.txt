@@ -48,25 +48,50 @@ Special objects:
   Var B is the y pos it falls down to.
 21 Having this entity in the room causes the laser lamps and buttons that activate them (from Sandy Grave) to appear in the room. This entity can sometimes cause crashes.
 22 Boss door.
-  Var a:
-  Var b:
+  Var A is is how the door acts:
+    00 Door outside the boss room that opens when you touch it.
+    01 Door inside the boss room that opens when the boss is killed.
+    02 Door inside the boss room that doesn't open when the boss is killed (e.g. the door you enter from in Nest of Evil rooms or Dracula's throne room).
+  Var B is the boss this door is for:
+    00 N/A (Never permanently disappears)
+    01 Dullahan
+    02 Behemoth
+    04 Keremet
+    05 Legion
+    06 Dagon
+    07 Astarte
+    08 Werewolf
+    09 The Creature
+    0A Mummy Man
+    0B Medusa
+    0D Stella
+    0E Stella & Loretta
+    10 Death
+    11 Dracula
+    14 ??? Used in Gergoth's room in Boss Rush Course 1.
+    19 Doppelganger (from Nest of Evil)
 23 Pulsating background effect. Used inside of the worm stomachs.
 24 Makes various food particles fly when the player lands on certain platforms. It's hardcoded to activate only when the player lands on tile 9E. In the appropriate tileset (City of Haze) this is an invisible tile that acts as a platform you can jump through. In order to make the platform visible, place visible platform tiles on a separate, non-collision layer.
-25 
-26 
-27 
-28 
-29 
+25 Cash register from City of Haze that gives you different pastries depending on how much money you drop into it.
+26 Pushable cart.
+  Var A: ???
+27 Rain visual and sound effects.
+  Var A: Affects what sound effects the rain plays.
+28 Train you need to slow down to a stop?
+29 Spawns the Ghoul King?
 2A 
-2B 
-2C 
-2D 
-2E 
-2F 
+2B Red moon background from Forgotten City.
+2C Transition room hider for Sandy Grave.
+2D Transition room hider for Forgotten City.
+2E motorcycles?
+2F pushable grave from forest of doom? might require a certain overlay
 30 
 31 
-32 
-33 
+32 pushable block from sandy grave? might require a certain overlay
+33 Falling boulder.
+  Var A:
+    00 Rolls left.
+    01 Rolls right.
 34 
 35 
 36 

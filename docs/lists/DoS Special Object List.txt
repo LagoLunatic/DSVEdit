@@ -1,8 +1,8 @@
 Special objects:
-00 A rectangle of blocks breakable by the balore soul.
-  Var a is the width of the rectangle in blocks.
-  Var b is the height of the rectangle in blocks.
-01 A destructible such as a candle. Var A controls the type:
+00 Rectangle of blocks breakable by the balore soul.
+  Var A: Number of blocks wide.
+  Var B: Number of blocks tall.
+01 Destructible such as a candle. Var A controls the type:
   00 The glowing lamp vessel containing a soul (with var B controlling which soul is in it).
   01-0F Just normal candles, each with a different graphic.
   10 Chest containing money.
@@ -17,7 +17,7 @@ Special objects:
 07 START text appears and music changes to boss rush or whatever it is. also does something with enemy set mode TODO
 08 Ends boss rush. also does something with enemy set mode TODO
 09 Chair. Var A is the type of chair (if an invalid chair type is set, no chair will appear). Var B is the orientation - 00 is right-facing, 01 or higher is left-facing.
-0A A mirror.
+0A Mirror.
   If you use paranoia to enter the mirror for a room that isn't set up to support mirrors, the screen just stays white and doesn't fade out (though a cutscene can fade it out). You can't exit the mirror using paranoia. You can't exit the room via the doors. Also, the doors don't block you from moving like they would in a normal mirror room - presumably some special object or tiles need to be set up to block the door.
 0B Mirror world. This should be placed in all rooms that have mirrors in order for them to work correctly.
   For pickups, entity byte 8 affects how it appears in the mirror world. 0 means it appears only in the real world, 1 means it appears only in the mirror world.
@@ -73,7 +73,7 @@ Special objects:
 1D Wooden door (for area connections).
 1E Explodable wall from Cursed Clock Tower. 1C blows it up. The game uses Var B to remember whether the wall has exploded yet.
 1F Portrait of a woman whose eyes follow you around.
-20 A wall.
+20 Blockade/wall.
   Var A: Type of wall:
     0 for the blockade at the start of the game and in front of the first warp room.
     1 for the wall that divides the mirror room in the Lost Village.
@@ -90,12 +90,13 @@ Special objects:
 24 The lever you pull to lower the water level in the Lost Village.
   Var B: The event flag for the water being lowered. Set to the same as the water level's Var B.
 25 Boss door.
-  Var a is is how the door acts. Values:
+  Var A is is how the door acts:
     00 Door outside the boss room that you need a magic seal to open.
     01 Door inside the boss room that opens when the boss is killed.
-    02 gergoth?
+    02 used for gergoth?
     03 Door inside the boss room that doesn't open when the boss is killed (e.g. the right door in mini Paranoia's room).
-  Var b is the boss this door is for. Values:
+  Var B is the boss this door is for:
+    00 N/A (Never permanently disappears)
     01 Flying Armor
     02 Balore
     03 Dmitrii
@@ -143,7 +144,7 @@ Special objects:
 38 Fades the music out to nothing. music comes back when you leave the room. This is used in transition rooms.
 39 Keys of the piano you can play from the demon guest house.
 3A The cannon + time pillar that you need Zephyr's soul to get past.
-3B The darkness barrier in the condemned tower that you can't get past until late in the game.
+3B The darkness barrier in the Condemned Tower that you can't get past until late in the game.
 3C Yoko. After you've trigger the event for Yoko to follow you, she will follow you in any rooms that this special object is placed in. She won't follow you into rooms without this object.
 3D The castle in the background in the epilogue. Also permanently changes the top screen to the symbol you see during cutscenes.
 3E The bouncing ball in the puzzle with touch screen blocks. It just explodes instantly if it's not inside touch screen blocks.
@@ -199,21 +200,21 @@ Special objects:
 5B Unused, nothing.
 5C used in menace's room
 === Below are events. Var A may be an identifier for each event to check if it's been seen already or not. Var B is unknown.
-5D Event - prologue
-5E Event - soma walking into the castle and meeting hammer.
-5F Event - julius leaves yoko at the drawbridge.
-60 Event - by the door to flying armor's room with yoko.
-61 Event - something in flying armor's room.
-62 Event - soma meeting dario and dmitrii in wizardry lab.
+5D Event - Prologue.
+5E Event - Soma walking into the castle and meeting Hammer.
+5F Event - Julius leaves Yoko at the drawbridge.
+60 Event - Yoko talks about magic seals by the door to Flying Armor's room.
+61 Event - Talking with Yoko after killing Flying Armor.
+62 Event - Soma meeting Dario and Dmitrii in Wizardry Lab.
 63 Event - dmitrii and the malachi in the demon guest house.
 64 Event - dario in his the garden of madness.
-65 Event - arikado gives mina's talisma to soma
-66 Event - in the room of condemned tower that is sealed.
+65 Event - Arikado gives Mina's Talisman to Soma.
+66 Event - Talk with Julius about the Mine of Judgement seal.
 67 Event - celia warping in and talking to soma when he enters the clock tower.
-68 Event - Julius defeated by Dario in the silenced ruins.
+68 Event - Julius defeated by Dario in the Silenced Ruins.
 69 Event - throne room.
 6A Event - when celia pretends to kill mina in the center of the castle.
-6B Event - in the room of condemned tower that is sealed.
+6B Event - When Julius breaks the Mine of Judgement seal.
 6C Event - menace related
 6D Event - menace related
 6E Event - menace related
