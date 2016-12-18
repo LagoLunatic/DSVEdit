@@ -51,7 +51,7 @@ task :build_releases do
     FileUtils.rm_rf "../build/#{program_name}/lib/ruby/gems/2.2.0/gems/qtbindings-4.8.6.2-x86-mingw32/lib/2.0"
     FileUtils.rm_rf "../build/#{program_name}/lib/ruby/gems/2.2.0/gems/qtbindings-4.8.6.2-x86-mingw32/lib/2.1"
     FileUtils.rm_rf "../build/#{program_name}/lib/ruby/gems/2.2.0/gems/qtbindings-qt-4.8.6-x86-mingw32/qtbin/plugins"
-    %w(libgcc_s_dw2-1.dll libstdc++-6.dll libwinpthread-1.dll phonon4.dll Qt3Support4.dll QtCLucene4.dll QtDBus4.dll QtDeclarative4.dll QtDesigner4.dll QtDesignerComponents4.dll QtHelp4.dll QtMultimedia4.dll QtScript4.dll QtScriptTools4.dll QtTest4.dll QtWebKit4.dll QtXmlPatterns4.dll).each do |filename|
+    %w(libgcc_s_dw2-1.dll libstdc++-6.dll phonon4.dll Qt3Support4.dll QtCLucene4.dll QtDBus4.dll QtDeclarative4.dll QtDesigner4.dll QtDesignerComponents4.dll QtHelp4.dll QtMultimedia4.dll QtScript4.dll QtScriptTools4.dll QtTest4.dll QtWebKit4.dll QtXmlPatterns4.dll).each do |filename|
       FileUtils.rm_f "../build/#{program_name}/lib/ruby/gems/2.2.0/gems/qtbindings-qt-4.8.6-x86-mingw32/qtbin/#{filename}"
     end
     %w(libsmokeqtdeclarative.dll libsmokeqthelp.dll libsmokeqtmultimedia.dll libsmokeqtscript.dll libsmokeqttest.dll libsmokeqtuitools.dll libsmokeqtwebkit.dll libsmokeqtxmlpatterns.dll).each do |filename|
