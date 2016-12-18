@@ -302,6 +302,7 @@ class DSVEdit < Qt::MainWindow
           # Failed to render enemy sprite, put a generic rectangle there instead.
           graphics_item = EntityRectItem.new(entity, self)
           @room_graphics_scene.addItem(graphics_item)
+          next
         end
         
         frame_pixmap_item = EntityChunkyItem.new(chunky_frame, entity, self)
