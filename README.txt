@@ -13,6 +13,10 @@ DSVEdit (DSVania Editor) is a work-in-progress editor for the three Castlevania 
 
 Also included in this repository is DSVRandom, a program that randomizes items, enemies, etc, in the games automatically.
 
+### Requirements
+
+Install Visual C++ Redistributable for Visual Studio 2015: https://www.microsoft.com/en-us/download/details.aspx?id=48145
+
 ### How to open a game ROM
 
 Go to File -> Extract ROM and select the .nds file you want to open. DSVEdit will then extract all the files from the game, which can take a minute. The files will be placed in a folder with the same name as the .nds file (e.g. "Dawn of Sorrow.nds" extracts to "Dawn of Sorrow".)

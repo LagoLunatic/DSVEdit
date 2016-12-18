@@ -15,3 +15,7 @@ DSVRandom has options to randomize the following:
 * Room Connections (Randomizes which rooms are connected to each other.)
 * Starting Room
 * Enemy AI (Makes enemies behave like other enemies. Very buggy. Can cause crashes.)
+
+### Requirements
+
+Install Visual C++ Redistributable for Visual Studio 2015: https://www.microsoft.com/en-us/download/details.aspx?id=48145

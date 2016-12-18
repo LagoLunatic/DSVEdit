@@ -150,7 +150,7 @@ class Game
     
     success = system("./armips/armips.exe \"#{patch_file}\"")
     unless success
-      raise "Armips call failed"
+      raise "Armips call failed (try installing the Visual C++ Redistributable for Visual Studio 2015)"
     end
     
     # Now reload the file contents from the temporary directory, and then delete the directory.
