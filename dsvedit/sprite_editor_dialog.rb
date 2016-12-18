@@ -215,20 +215,21 @@ class SpriteEditor < Qt::Dialog
     frame_changed(@current_frame_index)
   end
   
-  def gfx_page_changed(i)
+  def gfx_page_changed(gfx_page_index)
     @gfx_file_graphics_scene.items.each do |item|
       @gfx_file_graphics_scene.removeItem(item)
     end
+    @gfx_page_index = gfx_page_index
     
-    pixmap = @gfx_page_pixmaps_by_palette[@palette_index][i]
+    pixmap = @gfx_page_pixmaps_by_palette[@palette_index][gfx_page_index]
     if pixmap.nil?
-      @ui.gfx_file_name.text = "Invalid"
+      @ui.gfx_file_name.text = "Invalid (gfx page index #{gfx_page_index})"
     else
       @gfx_file_graphics_scene.addItem(pixmap)
-      @ui.gfx_file_name.text = @gfx_files_with_blanks[i][:file][:file_path]
+      @ui.gfx_file_name.text = @gfx_files_with_blanks[gfx_page_index][:file][:file_path]
     end
     
-    @ui.gfx_page_index.setCurrentIndex(i)
+    @ui.gfx_page_index.setCurrentIndex(gfx_page_index)
     
     part = @sprite.parts[@current_part_index]
     selection_rectangle = Qt::GraphicsRectItem.new
@@ -243,8 +244,8 @@ class SpriteEditor < Qt::Dialog
     end
     @palette_index = palette_index
     
-    old_gfx_page_index = @ui.gfx_page_index.currentIndex
-    old_gfx_page_index = 0 if old_gfx_page_index == -1
+    old_gfx_page_index = @gfx_page_index
+    old_gfx_page_index = 0 if old_gfx_page_index.nil?
     load_gfx_pages(palette_index)
     gfx_page_changed(old_gfx_page_index)
     

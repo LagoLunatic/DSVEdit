@@ -535,15 +535,20 @@ class Renderer
     
     sprite.parts.each_with_index do |part, part_index|
       if part.gfx_page_index >= gfx_files_with_blanks.length
-        raise "GFX page index too large (#{part.gfx_page_index+1} pages needed, have #{gfx_files_with_blanks.length})"
+        puts "GFX page index too large (#{part.gfx_page_index+1} pages needed, have #{gfx_files_with_blanks.length})"
+        
+        # Invalid gfx page index, so just render a big red square.
+        first_canvas_width = gfx_files_with_blanks.first[:canvas_width]
+        rendered_gfx_files_by_palette[part.palette_index+palette_offset][part.gfx_page_index] ||= render_gfx(nil, nil, 0, 0, first_canvas_width*8, first_canvas_width*8, canvas_width=first_canvas_width*8)
+      else
+        gfx_page = gfx_files_with_blanks[part.gfx_page_index]
+        gfx_file = gfx_page[:file]
+        canvas_width = gfx_page[:canvas_width]
+        palette = palettes[part.palette_index+palette_offset]
+        
+        rendered_gfx_files_by_palette[part.palette_index+palette_offset][part.gfx_page_index] ||= render_gfx(gfx_file, palette, 0, 0, canvas_width*8, canvas_width*8, canvas_width=canvas_width*8)
       end
       
-      gfx_page = gfx_files_with_blanks[part.gfx_page_index]
-      gfx_file = gfx_page[:file]
-      canvas_width = gfx_page[:canvas_width]
-      palette = palettes[part.palette_index+palette_offset]
-      
-      rendered_gfx_files_by_palette[part.palette_index+palette_offset][part.gfx_page_index] ||= render_gfx(gfx_file, palette, 0, 0, canvas_width*8, canvas_width*8, canvas_width=canvas_width*8)
       rendered_gfx_file = rendered_gfx_files_by_palette[part.palette_index+palette_offset][part.gfx_page_index]
       rendered_parts[part_index] ||= render_sprite_part(part, rendered_gfx_file)
     end
