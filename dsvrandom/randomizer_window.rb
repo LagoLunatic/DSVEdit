@@ -155,6 +155,8 @@ class RandomizerWindow < Qt::Dialog
     #game.apply_armips_patch("dos_use_what_you_see_souls")
     
     write_to_rom(game)
+  rescue StandardError => e
+    Qt::MessageBox.critical(self, "Randomization Failed", "Randomization failed with error:\n#{e.message}\n\n#{e.backtrace.join("\n")}")
   end
   
   def write_to_rom(game)
