@@ -344,6 +344,7 @@ BEST_SPRITE_FRAME_FOR_ENEMY = {
   110 =>   7, # maneater
   112 =>  74, # goliath
   116 =>  29, # wallman
+  119 =>  23, # death
   120 =>  56, # dracula
 }
 

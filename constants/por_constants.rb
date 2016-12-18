@@ -347,6 +347,7 @@ BEST_SPRITE_FRAME_FOR_ENEMY = {
   141 =>  27, # astarte
   144 =>  25, # death
   150 =>  54, # medusa
+  154 =>   9, # true dracula
 }
 
 TEXT_LIST_START_OFFSET = 0x0221BA50
