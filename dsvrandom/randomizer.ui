@@ -232,15 +232,7 @@
          <property name="title">
           <string>Portrait of Ruin</string>
          </property>
-         <layout class="QHBoxLayout" name="horizontalLayout_6">
-          <item>
-           <widget class="QCheckBox" name="checkBox_7">
-            <property name="text">
-             <string>CheckBox</string>
-            </property>
-           </widget>
-          </item>
-         </layout>
+         <layout class="QHBoxLayout" name="horizontalLayout_6"/>
         </widget>
        </item>
        <item>
