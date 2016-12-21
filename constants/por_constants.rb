@@ -216,7 +216,7 @@ ENEMY_DNA_BITFIELD_ATTRIBUTES = {
   ],
 }
 
-# Overlays 43 to 77 used for enemies.
+# Overlays 25 and 43 to 77 used for enemies.
 OVERLAY_FILE_FOR_ENEMY_AI = {
   # Enemies not listed here use one of the constant overlays like 0.
    19 => 72, # andras

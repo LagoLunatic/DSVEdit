@@ -8,7 +8,7 @@
 7      022B7660 
 8      022D0F40 
 9-24   022D7500 
-25     022D7900 
+25     022D7900 Enemy code for Whip's Memory.
 26-39  022E01A0
 40-42  022D7900 
 43-77  022D7900 Enemy code.
