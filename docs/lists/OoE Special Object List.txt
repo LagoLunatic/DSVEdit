@@ -28,6 +28,7 @@ Special Objects:
 0F Nothing? Appears in unused Wygol Village room. Like 0D and 0E, there are 4 of these corresponding to the 4 doors, but removing 0F doesn't make the door disappear.
 10 adds the boss rush timer to the screen. timer doesn't go away. reentering the room restarts the timer.
 11 Boss rush portal that takes you to the next boss. Doesn't appear unless the boss rush timer is on screen. Crashes when you enter it.
+  Var A: Boss ID.
 12 Crash. Used in final room of boss rush that gives you the prize.
 13 Pot of infinite big hearts.
 14 Row of spikes.
@@ -59,7 +60,7 @@ Special Objects:
 20 The ring of flaming heads with a magnes point in the center from the Training Chamber. Var b is the speed it rotates at.
 21
 22 
-23 hard crash
+23 hard crash. used in training hall
 24 
 25 Cross. Requires overlay 62 (Oblivion Ridge sector 0) to be loaded, or it will crash the game.
 26 Rat running around.
@@ -82,9 +83,13 @@ Special Objects:
   Var b is the speed it moves at. It's very precise - small values will make it look like it's not moving at all, so it's best to change the high byte. When var b is 0 it just uses a default speed, which is about equal to setting var b to 0x1000 manually.
 32 Falling boulder.
 33 Falling boulder.
-34 Warp point. Var A does... something?
+34 Warp point.
+  Var A: Affects the background reflected in the floating water. Can be 00-0A.
+  Var B: Affects the background reflected in the floating water. Can be 00-01.
 35 
-36 Bubbles come out of Shanoa's mouth as if she was underwater.
+36 Transition room hider.
+  Var A is which room graphics to use:
+    00 underwater. Bubbles come out of Shanoa's mouth as if she was underwater.
 37
 38 crash
 39
@@ -113,10 +118,10 @@ Special Objects:
 44 Lapiste glyph and the boulder trap that comes with it.
 45 crash
 46 Save point. Obeys the x pos you set but ignores the y pos. Instead it decides its y pos by placing itself on the highest point of solid ground at the given x pos (excluding the ceiling).
-47 crash
-48 crash
-49 crash
-4A crash
+47 used in the upper frozen waterfall room with Vol Grando. crash
+48 used in the lower frozen waterfall room. crash
+49 used in the upper frozen waterfall room with Vol Grando. crash
+4A used in the lower frozen waterfall room. crash
 4B Boss door.
   Var a is is how the door acts. Values:
     00 Door outside the boss room that opens when you touch it.
@@ -148,7 +153,9 @@ Special Objects:
 52 Fire hazard from Training Chamber. Var a controls... uh, something. Var b also controls... something.
 53 crash
 54 crash
-55 Area name shown the first time you enter an area. Var A controls which area it is.
+55 Area name shown the first time you enter an area.
+  Var A controls which area it is.
+  Var B ???
 56 Gear from tower of death with a magnes point attached to it. Var a is the direction:
   00 Clockwise
   01 Counter-clockwise
@@ -159,7 +166,10 @@ Special Objects:
 5B 
 5C 
 5D 
-5E 
+5E Metal gate with a button to the right of it to unlock it.
+  Var A:
+    00 Single gate.
+    01 Large row of many gates.
 5F barrels in wygol (only when var a is 5)
 === Events
 60 event - in barlowe's room

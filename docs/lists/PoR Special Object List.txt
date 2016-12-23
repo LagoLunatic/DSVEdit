@@ -29,10 +29,11 @@ Special objects:
 17 Background with the moon used in Sandy Grave. Var A seems to affect the z-index, lower values meaning closer to the screen.
 18 used in city of haze
 19 Effect that makes the screen very dark except the area around the player. Used in Forest of Doom.
-1A Portrait.
-  Var a: Area index of the destination room.
-  Var b:
-    (Least to most significant bit order)
+1A Portrait to City of Haze, Sandy Grave, Nation of Fools, or Forest of Doom.
+  Note that it can still bring you to any area you set, but it will only display the right visuals for the above areas.
+  Var A: Area index of the destination room.
+  Var B:
+    Least significant bit first.
     Bits 1-6: Room index of destination room.
     Bits 7-10: Sector index of the destination room.
     Bits 11-16: Nothing.
@@ -101,8 +102,21 @@ Special objects:
 3A
 3B Breakable wall.
   Var a: Which wall it is.
-3C
-3D
+3C Large swinging axe.
+  Var B: Starting rotation. 4000 rotates it by 90 degrees clockwise. For example:
+    0000 Attached to the ceiling.
+    4000 Attached to a right wall.
+    8000 Attached to the floor.
+    C000 Attached to a left wall.
+    These aren't the only values that work - 2000 for example rotates it by 45 degrees clockwise.
+3D Rings of flaming skulls.
+  Var A: Affects the gaps left in the ring.
+    00 No gaps.
+    01 One gap.
+    02 Two gaps, one on each side.
+    03 One large gap that takes up half the ring.
+    04+ No gaps.
+  Var B: Unknown. Always a multiple of 0x1000.
 3E Platform that flips if you stand on it too long. Var A is the graphic style of the platform.
 3F Platform that floats up and down.
 40 Large pushable switch.
@@ -111,17 +125,17 @@ Special objects:
 43 Block that crumbles if you stand on it too long.
 44 Sand falling from the ceiling.
 45 Background with the moon and mountains used in the Master's Keep and Throne Room.
-46 Elevator from Tower of Death. Requires overlay 85.
+46 Fast mechanical elevator from Tower of Death. Requires overlay 85.
 47
-48
+48 Waterwheel platforms elevator from Tower of Death. Requires overlay 86.
 49 Rapidly moving clouds background effect used in the Master's Keep and Throne Room.
 4A in death's boss room.
-4B
-4C
-4D Pushable recntagular block.
-  Var a: 0 for tall block, 1 for short block.
-4E
-4F stops the music
+4B Unused
+4C Unused
+4D Pushable rectangular block.
+  Var A: 0 for tall block, 1 for short block.
+4E Pushable and destroyable statue from near the start of the game.
+4F Transition room hider for Dracula's Castle.
 50
 51
 52
@@ -135,8 +149,8 @@ Special objects:
 5A
 5B
 5C
-5D used but seems to be nothing
-5E used but seems to be nothing
+5D Transition room hider for Dracula's Castle (connects inside part of Entrance to Behemoth's area).
+5E Transition room hider for Dracula's Castle (connects outside part of Entrance to inside part of entrance).
 5F
 61
 62
@@ -159,27 +173,50 @@ Special objects:
 73
 74
 75
-76
-77
+76 Portrait to 13th Street, Forgotten City, Burnt Paradise, or Dark Academy. (Uses different picture frame than 1A.)
+  Note that it can still bring you to any area you set, but it will only display the right visuals for the above areas.
+  Var A: Area index of the destination room.
+  Var B:
+    Least significant bit first.
+    Bits 1-6: Room index of destination room.
+    Bits 7-10: Sector index of the destination room.
+    Bits 11-16: Nothing.
+77 Studio portrait (sealed with chains).
 78
 79 Area name shown the first time you enter an area. Var A controls which area it is.
 7A
 7B
 7C
-7D
+7D Transition room hider for Dracula's Castle (connects Great Stairway to Keremet).
 7E
 7F
-80
-81
+80 Transition room hider for Dracula's Castle (connects Great Stairway to other Great Stairway sector).
+81 Barrier blocking the way to the Throne Room.
+  The blocking effect extends all the way down the left edge of the screen, but the visuals only appear on the top-left screen.
 82 Wooden door separating areas.
 83
-84
-85
-86 portrait (black, no graphic)
-87
+84 requires overlay 99?
+85 used in tower of death, motorcycle room and stella fight room
+  Var A: 1 or 0
+86 Portrait to Dracula's Castle or Nest of Evil.
+  Note that it can still bring you to any area you set, but it will only display the right visuals for the above areas.
+  Var A: Area index of the destination room.
+  Var B:
+    Least significant bit first.
+    Bits 1-6: Room index of destination room.
+    Bits 7-10: Sector index of the destination room.
+    Bits 11-16: Nothing.
+87 Portrait to Dracula's Castle or Nest of Evil. (Uses different picture frame than 86.)
+  Note that it can still bring you to any area you set, but it will only display the right visuals for the above areas.
+  Var A: Area index of the destination room.
+  Var B:
+    Least significant bit first.
+    Bits 1-6: Room index of destination room.
+    Bits 7-10: Sector index of the destination room.
+    Bits 11-16: Nothing.
 88
 89
-8A
+8A Studio portrait (burned).
 8B
 8C Switch next to elevator from Tower of Death you have to hit to activate it.
 8D
