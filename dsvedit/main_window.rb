@@ -140,7 +140,7 @@ class DSVEdit < Qt::MainWindow
     @ui.area.model.item(0).setEnabled(false)
     AREA_INDEX_TO_OVERLAY_INDEX.keys.each do |area_index|
       area_name = AREA_INDEX_TO_AREA_NAME[area_index]
-      @ui.area.addItem("%02d %s" % [area_index, area_name])
+      @ui.area.addItem("%02X %s" % [area_index, area_name])
     end
     area_index_changed(0, force=true)
   end
@@ -165,9 +165,9 @@ class DSVEdit < Qt::MainWindow
     AREA_INDEX_TO_OVERLAY_INDEX[@area_index].keys.each do |sector_index|
       if SECTOR_INDEX_TO_SECTOR_NAME[@area_index]
         sector_name = SECTOR_INDEX_TO_SECTOR_NAME[@area_index][sector_index]
-        @ui.sector.addItem("%02d %s" % [sector_index, sector_name])
+        @ui.sector.addItem("%02X %s" % [sector_index, sector_name])
       else
-        @ui.sector.addItem("%02d" % sector_index)
+        @ui.sector.addItem("%02X" % sector_index)
       end
     end
     
@@ -191,7 +191,7 @@ class DSVEdit < Qt::MainWindow
     room_index_changed(0, force=true)
     @ui.room.clear()
     @sector.rooms.each_with_index do |room, room_index|
-      @ui.room.addItem("%02d %08X" % [room_index, room.room_metadata_ram_pointer])
+      @ui.room.addItem("%02X %08X" % [room_index, room.room_metadata_ram_pointer])
     end
     
     if should_load_map
