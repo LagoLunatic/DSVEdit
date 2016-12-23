@@ -54,8 +54,8 @@ class EntityEditorDialog < Qt::Dialog
     type_changed(entity.type)
     @ui.byte_8.text = "%02X" % entity.byte_8
     subtype_changed(entity.subtype)
-    @ui.var_a.text = "%02X" % entity.var_a
-    @ui.var_b.text = "%02X" % entity.var_b
+    @ui.var_a.text = "%04X" % entity.var_a
+    @ui.var_b.text = "%04X" % entity.var_b
     
     connect(@ui.type, SIGNAL("activated(int)"), self, SLOT("type_changed(int)"))
     connect(@ui.subtype, SIGNAL("activated(int)"), self, SLOT("subtype_changed(int)"))
