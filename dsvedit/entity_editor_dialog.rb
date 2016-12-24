@@ -49,6 +49,9 @@ class EntityEditorDialog < Qt::Dialog
     
     @entity = entity
     
+    @ui.pointer.text = "%08X" % entity.entity_ram_pointer
+    @ui.x_pos.text = "%04X" % entity.x_pos
+    @ui.y_pos.text = "%04X" % entity.y_pos
     @ui.byte_5.text = "%02X" % entity.byte_5
     @ui.type.setCurrentIndex(entity.type)
     type_changed(entity.type)
@@ -76,7 +79,7 @@ class EntityEditorDialog < Qt::Dialog
          subtype_name = @game.enemy_dnas[subtype].name.decoded_string
         end
       when 2
-        subtype_name = (@special_object_docs[subtype] || "").strip[0..100]
+        subtype_name = (@special_object_docs[subtype] || " ").lines.first.strip[0..100]
       when 4
         if subtype == 0
           subtype_name = "Heart"
@@ -108,6 +111,8 @@ class EntityEditorDialog < Qt::Dialog
   end
   
   def save_entity
+    @entity.x_pos   = @ui.x_pos.text.to_i(16)
+    @entity.y_pos   = @ui.y_pos.text.to_i(16)
     @entity.byte_5  = @ui.byte_5.text.to_i(16)
     @entity.type    = @ui.type.currentIndex
     @entity.subtype = @ui.subtype.currentIndex
