@@ -22,8 +22,10 @@ class EntitySearchDialog < Qt::Dialog
     
     type = @ui.type.text =~ /^\h+$/ ? @ui.type.text.to_i(16) : nil
     subtype = @ui.subtype.text =~ /^\h+$/ ? @ui.subtype.text.to_i(16) : nil
+    var_a = @ui.var_a.text =~ /^\h+$/ ? @ui.var_a.text.to_i(16) : nil
+    var_b = @ui.var_b.text =~ /^\h+$/ ? @ui.var_b.text.to_i(16) : nil
     
-    if !type && !subtype
+    if !type && !subtype && !var_a && !var_b
       return
     end
     
@@ -32,6 +34,8 @@ class EntitySearchDialog < Qt::Dialog
       room.entities.each do |entity|
         next if type && type != entity.type
         next if subtype && subtype != entity.subtype
+        next if var_a && var_a != entity.var_a
+        next if var_b && var_b != entity.var_b
         
         @rooms << room.room_metadata_ram_pointer
         @ui.room_list.addItem("%08X" % room.room_metadata_ram_pointer)
