@@ -2,6 +2,7 @@
 require 'fileutils'
 
 class NDSFileSystem
+  class InvalidFileError < StandardError ; end
   class ConversionError < StandardError ; end
   class OffsetPastEndOfFileError < StandardError ; end
   class GFXPointerError < StandardError ; end
@@ -291,7 +292,7 @@ private
   
   def read_from_rom
     @game_name = @rom[0x00,12]
-    raise "Not a DSVania" unless %w(CASTLEVANIA1 CASTLEVANIA2 CASTLEVANIA3).include?(@game_name)
+    raise InvalidFileError.new("Not a DSVania") unless %w(CASTLEVANIA1 CASTLEVANIA2 CASTLEVANIA3).include?(@game_name)
     
     @arm9_rom_offset, @arm9_entry_address, @arm9_ram_offset, @arm9_size = @rom[0x20,16].unpack("VVVV")
     @arm7_rom_offset, @arm7_entry_address, @arm7_ram_offset, @arm7_size = @rom[0x30,16].unpack("VVVV")

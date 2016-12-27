@@ -17,6 +17,7 @@ class DSVEdit < Qt::MainWindow
   slots "extract_rom_dialog()"
   slots "open_folder_dialog()"
   slots "save_files()"
+  slots "update_visible_view_items()"
   slots "open_enemy_dna_dialog()"
   slots "open_text_editor()"
   slots "open_sprite_editor()"
@@ -61,6 +62,10 @@ class DSVEdit < Qt::MainWindow
     connect(@ui.actionOpen_Folder, SIGNAL("activated()"), self, SLOT("open_folder_dialog()"))
     connect(@ui.actionExtract_ROM, SIGNAL("activated()"), self, SLOT("extract_rom_dialog()"))
     connect(@ui.actionSave, SIGNAL("activated()"), self, SLOT("save_files()"))
+    connect(@ui.actionEntities, SIGNAL("activated()"), self, SLOT("update_visible_view_items()"))
+    connect(@ui.actionDoors, SIGNAL("activated()"), self, SLOT("update_visible_view_items()"))
+    connect(@ui.actionCollision, SIGNAL("activated()"), self, SLOT("update_visible_view_items()"))
+    connect(@ui.actionLayers, SIGNAL("activated()"), self, SLOT("update_visible_view_items()"))
     connect(@ui.actionEnemy_Editor, SIGNAL("activated()"), self, SLOT("open_enemy_dna_dialog()"))
     connect(@ui.actionText_Editor, SIGNAL("activated()"), self, SLOT("open_text_editor()"))
     connect(@ui.actionSprite_Editor, SIGNAL("activated()"), self, SLOT("open_sprite_editor()"))
@@ -111,25 +116,31 @@ class DSVEdit < Qt::MainWindow
   end
   
   def extract_rom(rom_path)
-    @game = Game.new
+    game = Game.new
     game.initialize_from_rom(rom_path, extract_to_hard_drive = true)
+    @game = game
     @renderer = Renderer.new(game.fs)
     @cached_enemy_pixmaps = {}
     
     initialize_dropdowns()
     
     @settings[:last_used_folder] = game.folder
+  rescue NDSFileSystem::InvalidFileError
+    Qt::MessageBox.warning(self, "Invalid file", "Selected file is not a DSVania")
   end
   
   def open_folder(folder_path)
-    @game = Game.new
+    game = Game.new
     game.initialize_from_folder(folder_path)
+    @game = game
     @renderer = Renderer.new(game.fs)
     @cached_enemy_pixmaps = {}
     
     initialize_dropdowns()
     
     @settings[:last_used_folder] = folder_path
+  rescue NDSFileSystem::InvalidFileError
+    Qt::MessageBox.warning(self, "Invalid file", "Selected file is not a DSVania")
   end
   
   def initialize_dropdowns
@@ -247,8 +258,12 @@ class DSVEdit < Qt::MainWindow
   
   def load_room()
     @room_graphics_scene.clear()
+    @room_graphics_scene = Qt::GraphicsScene.new
+    @ui.room_graphics_view.setScene(@room_graphics_scene)
     @room_graphics_scene.setSceneRect(0, 0, @room.max_layer_width*SCREEN_WIDTH_IN_PIXELS, @room.max_layer_height*SCREEN_HEIGHT_IN_PIXELS)
     
+    @layers_view_item = Qt::GraphicsRectItem.new
+    @room_graphics_scene.addItem(@layers_view_item)
     @room.sector.load_necessary_overlay()
     @renderer.ensure_tilesets_exist("cache/#{GAME}/rooms/", @room)
     @room.layers.each do |layer|
@@ -257,30 +272,21 @@ class DSVEdit < Qt::MainWindow
       layer_item = Qt::GraphicsRectItem.new
       layer_item.setZValue(-layer.z_index)
       layer_item.setOpacity(layer.opacity/31.0)
-      @room_graphics_scene.addItem(layer_item)
+      layer_item.setParentItem(@layers_view_item)
       
-      layer.tiles.each_with_index do |tile, index_on_level|
-        x_on_tileset = tile.index_on_tileset % 16
-        y_on_tileset = tile.index_on_tileset / 16
-        x_on_level = index_on_level % (layer.width*16)
-        y_on_level = index_on_level / (layer.width*16)
-        
-        tile_gfx = tileset.copy(x_on_tileset*16, y_on_tileset*16, 16, 16)
-        
-        if tile.horizontal_flip
-          tile_gfx = tile_gfx.mirrored(horizontal=true, vertical=false)
-        end
-        if tile.vertical_flip
-          tile_gfx = tile_gfx.mirrored(horizontal=false, vertical=true)
-        end
-        
-        tile_gfx = Qt::Pixmap.from_image(tile_gfx)
-        tile_gfx = Qt::GraphicsPixmapItem.new(tile_gfx)
-        tile_gfx.setPos(x_on_level*16, y_on_level*16)
-        tile_gfx.setParentItem(layer_item)
-      end
+      load_layer(layer, tileset, layer_item)
     end
     
+    @collision_view_item = Qt::GraphicsRectItem.new
+    @room_graphics_scene.addItem(@collision_view_item)
+    @renderer.ensure_tilesets_exist("cache/#{GAME}/rooms/", @room, collision=true)
+    tileset_filename = "cache/#{GAME}/rooms/#{@room.area_name}/Tilesets/#{@room.layers.first.tileset_filename}_collision.png"
+    tileset = Qt::Image.new(tileset_filename)
+    layer = @room.layers.first
+    load_layer(layer, tileset, @collision_view_item)
+    
+    @entities_view_item = Qt::GraphicsRectItem.new
+    @room_graphics_scene.addItem(@entities_view_item)
     @room.entities.each do |entity|
       if entity.is_enemy?
         enemy_id = entity.subtype
@@ -301,14 +307,14 @@ class DSVEdit < Qt::MainWindow
         rescue
           # Failed to render enemy sprite, put a generic rectangle there instead.
           graphics_item = EntityRectItem.new(entity, self)
-          @room_graphics_scene.addItem(graphics_item)
+          graphics_item.setParentItem(@entities_view_item)
           next
         end
         
-        frame_pixmap_item = EntityChunkyItem.new(chunky_frame, entity, self)
+        graphics_item = EntityChunkyItem.new(chunky_frame, entity, self)
         
-        frame_pixmap_item.setPos(entity.x_pos+min_x, entity.y_pos+min_y)
-        @room_graphics_scene.addItem(frame_pixmap_item)
+        graphics_item.setPos(entity.x_pos+min_x, entity.y_pos+min_y)
+        graphics_item.setParentItem(@entities_view_item)
       elsif entity.is_item?
         item_type = entity.subtype
         item_id = entity.var_b
@@ -316,7 +322,7 @@ class DSVEdit < Qt::MainWindow
         
         graphics_item = EntityChunkyItem.new(chunky_image, entity, self)
         graphics_item.setPos(entity.x_pos-8, entity.y_pos-16)
-        @room_graphics_scene.addItem(graphics_item)
+        graphics_item.setParentItem(@entities_view_item)
       elsif entity.is_glyph?
         glyph_id = entity.var_b
         if glyph_id <= 0x36
@@ -327,13 +333,15 @@ class DSVEdit < Qt::MainWindow
         
         graphics_item = EntityChunkyItem.new(chunky_image, entity, self)
         graphics_item.setPos(entity.x_pos-16, entity.y_pos-16)
-        @room_graphics_scene.addItem(graphics_item)
+        graphics_item.setParentItem(@entities_view_item)
       else
         graphics_item = EntityRectItem.new(entity, self)
-        @room_graphics_scene.addItem(graphics_item)
+        graphics_item.setParentItem(@entities_view_item)
       end
     end
     
+    @doors_view_item = Qt::GraphicsRectItem.new
+    @room_graphics_scene.addItem(@doors_view_item)
     min_x = 0
     min_y = 0
     max_x = @room.max_layer_width*SCREEN_WIDTH_IN_PIXELS
@@ -354,9 +362,41 @@ class DSVEdit < Qt::MainWindow
       max_y = door_bottom_y if door_bottom_y > max_y
       
       door_item = DoorItem.new(door, x, y, self)
-      @room_graphics_scene.addItem(door_item)
+      door_item.setParentItem(@doors_view_item)
     end
     @room_graphics_scene.setSceneRect(min_x, min_y, max_x-min_x, max_y-min_y)
+    
+    update_visible_view_items()
+  end
+  
+  def load_layer(layer, tileset, layer_graphics_item)
+    layer.tiles.each_with_index do |tile, index_on_level|
+      x_on_tileset = tile.index_on_tileset % 16
+      y_on_tileset = tile.index_on_tileset / 16
+      x_on_level = index_on_level % (layer.width*16)
+      y_on_level = index_on_level / (layer.width*16)
+      
+      tile_gfx = tileset.copy(x_on_tileset*16, y_on_tileset*16, 16, 16)
+      
+      if tile.horizontal_flip
+        tile_gfx = tile_gfx.mirrored(horizontal=true, vertical=false)
+      end
+      if tile.vertical_flip
+        tile_gfx = tile_gfx.mirrored(horizontal=false, vertical=true)
+      end
+      
+      tile_gfx = Qt::Pixmap.from_image(tile_gfx)
+      tile_gfx = Qt::GraphicsPixmapItem.new(tile_gfx)
+      tile_gfx.setPos(x_on_level*16, y_on_level*16)
+      tile_gfx.setParentItem(layer_graphics_item)
+    end
+  end
+  
+  def update_visible_view_items
+    @entities_view_item.setVisible(@ui.actionEntities.checked)
+    @doors_view_item.setVisible(@ui.actionDoors.checked)
+    @collision_view_item.setVisible(@ui.actionCollision.checked)
+    @layers_view_item.setVisible(@ui.actionLayers.checked)
   end
   
   def load_map()
