@@ -115,7 +115,7 @@ class Renderer
     end
   end
   
-  def render_tileset(tileset_offset, palette_offset, graphic_tilesets_for_room, colors_per_palette, collision_tileset_offset, output_filename)
+  def render_tileset(tileset_offset, palette_offset, graphic_tilesets_for_room, colors_per_palette, collision_tileset_offset, output_filename=nil)
     if graphic_tilesets_for_room.nil?
       return render_collision_tileset(collision_tileset_offset, output_filename)
     end
@@ -158,9 +158,11 @@ class Renderer
       rendered_tileset.compose!(graphic_tile, x_on_tileset*16, y_on_tileset*16)
     end
     
-    FileUtils::mkdir_p(File.dirname(output_filename))
-    rendered_tileset.save(output_filename, :fast_rgba)
-    puts "Wrote #{output_filename}"
+    if output_filename
+      FileUtils::mkdir_p(File.dirname(output_filename))
+      rendered_tileset.save(output_filename, :fast_rgba)
+      puts "Wrote #{output_filename}"
+    end
     return rendered_tileset
   end
   
@@ -177,11 +179,16 @@ class Renderer
   def render_gfx(gfx_file, palette, x, y, width, height, canvas_width=128)
     rendered_gfx = ChunkyPNG::Image.new(width, height, ChunkyPNG::Color::TRANSPARENT)
     
-    if gfx_file.nil? || palette.nil?
+    if gfx_file.nil?
       # Invalid graphics, render a red rectangle instead.
       
       rendered_gfx = ChunkyPNG::Image.new(width, height, ChunkyPNG::Color.rgba(255, 0, 0, 255))
       return rendered_gfx
+    end
+    if palette.nil?
+      # Invalid palette, use a dummy palette instead.
+      
+      palette = generate_palettes(nil, 256).first
     end
     
     if palette.length == 16
@@ -229,11 +236,16 @@ class Renderer
     
     rendered_gfx = ChunkyPNG::Image.new(width, height, ChunkyPNG::Color::TRANSPARENT)
     
-    if gfx_file.nil? || palette.nil?
+    if gfx_file.nil?
       # Invalid graphics, render a red rectangle instead.
       
       rendered_gfx = ChunkyPNG::Image.new(width, height, ChunkyPNG::Color.rgba(255, 0, 0, 255))
       return rendered_gfx
+    end
+    if palette.nil?
+      # Invalid palette, use a dummy palette instead.
+      
+      palette = generate_palettes(nil, 256).first
     end
     
     if palette.length == 16
@@ -285,7 +297,9 @@ class Renderer
   
   def generate_palettes(palette_data_start_offset, colors_per_palette)
     if palette_data_start_offset.nil?
-      palette = [ChunkyPNG::Color.rgba(0, 0, 0, 0)] * colors_per_palette
+      # Invalid palette, use a dummy palette instead.
+      
+      palette = [ChunkyPNG::Color.rgba(0, 0, 0, 0)] + [ChunkyPNG::Color.rgba(255, 0, 0, 255)] * (colors_per_palette-1)
       palette_list = [palette] * 128 # 128 is the maximum number of palettes
       return palette_list
     end
@@ -319,7 +333,7 @@ class Renderer
     palette_list
   end
   
-  def render_collision_tileset(collision_tileset_offset, output_filename)
+  def render_collision_tileset(collision_tileset_offset, output_filename=nil)
     if File.exist?(output_filename)
       return ChunkyPNG::Image.from_file(output_filename)
     end
@@ -335,9 +349,11 @@ class Renderer
       rendered_tileset.compose!(graphic_tile, x_on_tileset*16, y_on_tileset*16)
     end
     
-    FileUtils::mkdir_p(File.dirname(output_filename))
-    rendered_tileset.save(output_filename, :fast_rgba)
-    puts "Wrote #{output_filename}"
+    if output_filename
+      FileUtils::mkdir_p(File.dirname(output_filename))
+      rendered_tileset.save(output_filename, :fast_rgba)
+      puts "Wrote #{output_filename}"
+    end
     return rendered_tileset
   end
   
