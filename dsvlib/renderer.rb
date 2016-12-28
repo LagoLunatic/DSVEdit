@@ -4,8 +4,9 @@ require 'oily_png'
 class Renderer
   COLLISION_SOLID_COLOR = ChunkyPNG::Color::BLACK
   COLLISION_SEMISOLID_COLOR = ChunkyPNG::Color.rgba(127, 127, 127, 255)
-  COLLISION_DAMAGE_COLOR = ChunkyPNG::Color.rgba(255, 0, 0, 255)
-  COLLISION_WATER_COLOR = ChunkyPNG::Color.rgba(0, 0, 255, 255)
+  COLLISION_DAMAGE_COLOR = ChunkyPNG::Color.rgba(208, 32, 32, 255)
+  COLLISION_WATER_COLOR = ChunkyPNG::Color.rgba(32, 32, 208, 255)
+  COLLISION_CONVEYOR_COLOR = ChunkyPNG::Color.rgba(32, 208, 32, 255)
   
   attr_reader :fs,
               :fill_color,
@@ -358,60 +359,96 @@ class Renderer
   end
   
   def render_collision_tile(tile)
-    graphic_tile = ChunkyPNG::Image.new(16, 16, ChunkyPNG::Color::TRANSPARENT)
+    bg_color = ChunkyPNG::Color::TRANSPARENT
+    if tile.is_water
+      bg_color = COLLISION_WATER_COLOR
+    end
+    if tile.block_effect == :damage
+      bg_color = COLLISION_DAMAGE_COLOR
+    end
+    graphic_tile = ChunkyPNG::Image.new(16, 16, bg_color)
     
-    if tile.is_slope
-      if tile.has_top && tile.slope_piece > 0 && !tile.is_gradual_slope
-        graphic_tile.rect(0, 0, 15, 4, stroke_color = COLLISION_SOLID_COLOR, fill_color = COLLISION_SEMISOLID_COLOR)
-        
-        if tile.vertical_flip
-          graphic_tile.flip!
-        end
-      elsif tile.has_top
-        if tile.is_gradual_slope && tile.not_a_half_slope
-          x_offset = tile.slope_piece*16
-          width = 16*4
-        elsif tile.is_gradual_slope
-          x_offset = tile.slope_piece/2*16
-          width = 16*2
-        else
-          if tile.slope_piece > 0
-            # ???
-            x_offset = 0
-            width = 16
-          else
-            x_offset = 0
-            width = 16
-          end
-        end
-        if tile.vertical_flip
-          x_end = width-1
-          y_end = 0
-        else
-          x_end = 0
-          y_end = 15
-        end
-        graphic_tile.polygon([0-x_offset, 0, width-1-x_offset, 15, x_end-x_offset, y_end], stroke_color = COLLISION_SOLID_COLOR, fill_color = COLLISION_SOLID_COLOR)
-      
-        if tile.horizontal_flip
-          graphic_tile.mirror!
-        end
-      end
-    else
-      color = COLLISION_SOLID_COLOR
-      if tile.is_damage
-        color = COLLISION_DAMAGE_COLOR
-      end
-      if tile.is_water
-        color = COLLISION_WATER_COLOR
-      end
-      
+    color = COLLISION_SOLID_COLOR
+    
+    case tile.block_shape
+    when 0..1
+      # Full block.
       if tile.has_top && tile.has_sides_and_bottom
         graphic_tile.rect(0, 0, 15, 15, stroke_color = color, fill_color = color)
       elsif tile.has_top
-        graphic_tile.rect(0, 0, 16, 4, stroke_color = color, fill_color = COLLISION_SEMISOLID_COLOR)
+        graphic_tile.rect(0, 0, 15, 3, stroke_color = color, fill_color = COLLISION_SEMISOLID_COLOR)
       elsif tile.has_sides_and_bottom
         graphic_tile.polygon([0, 0, 7, 7, 15, 0, 15, 15, 0, 15], stroke_color = color, fill_color = color)
+      end
+    when 2
+      # Half-height block (top half).
+      if tile.block_effect == :conveyor_belt_left
+        if tile.has_top && tile.has_sides_and_bottom
+          graphic_tile.rect(0, 0, 15, 15, stroke_color = color, fill_color = color)
+          graphic_tile.polygon([10, 1, 4, 7, 4, 8, 10, 14], stroke_color = COLLISION_CONVEYOR_COLOR, fill_color = COLLISION_CONVEYOR_COLOR)
+        elsif tile.has_top
+          graphic_tile.rect(0, 0, 15, 7, stroke_color = color, fill_color = COLLISION_SEMISOLID_COLOR)
+          graphic_tile.polygon([5, 1, 3, 3, 3, 4, 5, 6, 5, 4, 12, 4, 12, 3, 5, 3], stroke_color = COLLISION_CONVEYOR_COLOR, fill_color = COLLISION_CONVEYOR_COLOR)
+        else
+          graphic_tile.polygon([10, 1, 4, 7, 4, 8, 10, 14], stroke_color = COLLISION_CONVEYOR_COLOR, fill_color = COLLISION_CONVEYOR_COLOR)
+        end
+      else
+        if tile.has_top && tile.has_sides_and_bottom
+          graphic_tile.rect(0, 0, 15, 7, stroke_color = color, fill_color = color)
+        elsif tile.has_top
+          graphic_tile.rect(0, 0, 15, 7, stroke_color = color, fill_color = COLLISION_SEMISOLID_COLOR)
+        end
+      end
+    when 3
+      # Half-height block (bottom half).
+      if tile.block_effect == :conveyor_belt_right
+        if tile.has_top && tile.has_sides_and_bottom
+          graphic_tile.rect(0, 0, 15, 15, stroke_color = color, fill_color = color)
+          graphic_tile.polygon([5, 1, 11, 7, 11, 8, 5, 14], stroke_color = COLLISION_CONVEYOR_COLOR, fill_color = COLLISION_CONVEYOR_COLOR)
+        elsif tile.has_top
+          graphic_tile.rect(0, 0, 15, 7, stroke_color = color, fill_color = COLLISION_SEMISOLID_COLOR)
+          graphic_tile.polygon([10, 1, 12, 3, 12, 4, 10, 6, 10, 4, 3, 4, 3, 3, 10, 3], stroke_color = COLLISION_CONVEYOR_COLOR, fill_color = COLLISION_CONVEYOR_COLOR)
+        else
+          graphic_tile.polygon([5, 1, 11, 7, 11, 8, 5, 14], stroke_color = COLLISION_CONVEYOR_COLOR, fill_color = COLLISION_CONVEYOR_COLOR)
+        end
+      else
+        if tile.has_top && tile.has_sides_and_bottom
+          graphic_tile.rect(0, 8, 15, 15, stroke_color = color, fill_color = color)
+        elsif tile.has_top
+          graphic_tile.rect(0, 8, 15, 15, stroke_color = color, fill_color = COLLISION_SEMISOLID_COLOR)
+        end
+      end
+    when 4..15
+      # Slope.
+      case tile.block_shape
+      when 4
+        width = 16
+        x_offset = 0
+      when 8, 10
+        width = 2*16
+        x_offset = (tile.block_shape-8)*8
+      when 12..15
+        width = 4*16
+        x_offset = (tile.block_shape-12)*16
+      else
+        puts "Unknown block shape: #{tile.block_shape}"
+        p tile
+        puts "%08X" % tile.ram_location
+        graphic_tile.rect(1, 1, 14, 14, stroke_color = color, fill_color = ChunkyPNG::Color.rgba(0, 255, 0, 255))
+        return graphic_tile
+      end
+      
+      if tile.vertical_flip
+        x_end = width-1
+        y_end = 0
+      else
+        x_end = 0
+        y_end = 15
+      end
+      
+      graphic_tile.polygon([0-x_offset, 0, width-1-x_offset, 15, x_end-x_offset, y_end], stroke_color = COLLISION_SOLID_COLOR, fill_color = COLLISION_SOLID_COLOR)
+      if tile.horizontal_flip
+        graphic_tile.mirror!
       end
     end
     

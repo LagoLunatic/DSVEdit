@@ -20,32 +20,30 @@ Byte 4: 3C
 
 Tile collision values:
 Bitfield. Least significant bit first.
-Bits 1-4: Varies depending on whether this tile is a slope or not. See Tile collision values for slopes/non-slopes.
-Bit 5:
-Bit 6:
-Bit 7: Slope TODO
-Bit 8:
-
-Tile collision values for non-slopes:
-Least significant bit first.
 Bit 1: Platform you can jump up through. Combine with bit 2 to get a fully solid block.
-Bit 2: Solid bottom, left, and right, but top pushes you downwards and out to either the left or right.
-Bit 3: Damage
-Bit 4: Water
-
-Tile collision values for slopes:
-Least significant bit first.
-Bit 1: Must be 1 for the slope to be solid, otherwise it acts as an air block.
-Bit 2: Floor slope when 0, ceiling slope when 1.
-Bit 3: When 0, slopes from top left to bottom right. When 1, slopes from bottom left to top right.
-Bit 4: Nothing.
-
-1000
-1010
-0100 - Normal slope.
-1100 - 4-part slope, highest part.
-1101 - 4-part slope, higher-middle part.
-1110 - 4-part slope, lower-middle part.
-1111 - 4-part slope, lowest part.
-
-00110011 - Half-height solid block.
+Bit 2: Varies depending on the value of bits 5-8:
+  0-3 - Solid bottom, left, and right, but top pushes you downwards and out to either the left or right.
+  4-F - Floor slope when 0, ceiling slope when 1. (Vertical flip.)
+Bit 3: Varies depending on the value of bits 5-8:
+  0-1 - Damage. Gets overridden by water.
+  2   - Conveyor belt left.
+  3   - Conveyor belt right.
+  4-F - When 0, slopes from top left to bottom right. When 1, slopes from bottom left to top right. (Horizontal flip.)
+Bit 4: Water. Overrides damage.
+Bit 5-8: Shape of the block:
+  0000 - Full block.
+  0001 - ??? Same as 0?
+  0010 - Half-height block (top half).
+  0011 - Half-height block (bottom half).
+  0100 - Normal slope.
+  0101 - ???
+  0110 - ???
+  0111 - ???
+  1000 - 2-part slope, highest part.
+  1001 - ???
+  1010 - 2-part slope, lowest part.
+  1011 - ???
+  1100 - 4-part slope, highest part.
+  1101 - 4-part slope, higher-middle part.
+  1110 - 4-part slope, lower-middle part.
+  1111 - 4-part slope, lowest part.

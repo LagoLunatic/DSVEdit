@@ -17,12 +17,12 @@ class Tileset
   
   def read_from_rom
     @tiles = []
-    @tiles << tile_class.new(0) # First entry on every tileset is always blank.
+    @tiles << tile_class.new(0, 0) # First entry on every tileset is always blank.
     
     (0..LENGTH_OF_TILESET_IN_BLOCKS-1).each do |i|
       tile_data = fs.read(tileset_ram_pointer + i*4, 4).unpack("V").first
       
-      @tiles << tile_class.new(tile_data)
+      @tiles << tile_class.new(tile_data, tileset_ram_pointer + i*4)
     end
   end
   
@@ -32,7 +32,8 @@ class Tileset
 end
 
 class TilesetTile
-  attr_reader :index_on_tile_page,
+  attr_reader :ram_location,
+              :index_on_tile_page,
               :unknown_1,
               :tile_page,
               :horizontal_flip,
@@ -41,7 +42,9 @@ class TilesetTile
               :palette_index,
               :is_blank
               
-  def initialize(tile_data)
+  def initialize(tile_data, ram_location)
+    @ram_location = ram_location
+    
     if tile_data == 0
       # This indicates the tile is completely blank, no graphics or collision.
       @is_blank = true
@@ -67,42 +70,49 @@ class CollisionTileset < Tileset
 end
 
 class CollisionTile
-  attr_reader :unknown_1,
+  attr_reader :ram_location,
+              :tile_data,
+              :unknown_1,
               :unknown_2,
               :unknown_3,
-              :is_slope,
               :has_top,
               :vertical_flip,
               :horizontal_flip,
-              :unknown_4,
-              :slope_piece,
-              :not_a_half_slope,
-              :is_gradual_slope,
               :has_sides_and_bottom,
-              :is_damage,
+              :block_effect,
               :is_water,
-              :unknown_5
+              :block_shape
               
-  def initialize(tile_data)
+  def initialize(tile_data, ram_location)
+    @tile_data = tile_data
+    @ram_location = ram_location
+    
     collision_data     = (tile_data & 0x000000FF)
     @unknown_1         = (tile_data & 0x0000FF00) >> 8
     @unknown_2         = (tile_data & 0x00FF0000) >> 16
     @unknown_3         = (tile_data & 0xFF000000) >> 24
     
-    @is_slope               = (collision_data & 0b11110000) > 0
-    @has_top                = (collision_data & 0b00000001) > 0
-    if is_slope
-      @vertical_flip        = (collision_data & 0b00000010) > 0
-      @horizontal_flip      = (collision_data & 0b00000100) > 0
-      @unknown_4            = (collision_data & 0b00001000) > 0
-      @slope_piece          = (collision_data & 0b00110000) >> 4
-      @not_a_half_slope     = (collision_data & 0b01000000) > 0
-      @is_gradual_slope     = (collision_data & 0b10000000) > 0
+    @has_top     = (collision_data & 0b00000001) > 0
+    bit_2        = (collision_data & 0b00000010) > 0
+    bit_3        = (collision_data & 0b00000100) > 0
+    @is_water    = (collision_data & 0b00001000) > 0
+    @block_shape = (collision_data & 0b11110000) >> 4
+    
+    if block_shape >= 4
+      @vertical_flip   = bit_2
+      @horizontal_flip = bit_3
     else
-      @has_sides_and_bottom = (collision_data & 0b00000010) > 0
-      @is_damage            = (collision_data & 0b00000100) > 0
-      @is_water             = (collision_data & 0b00001000) > 0
-      @unknown_5            = (collision_data & 0b11110000) >> 4
+      @has_sides_and_bottom = bit_2
+      if bit_3
+        case block_shape
+        when 0..1
+          @block_effect = :damage
+        when 2
+          @block_effect = :conveyor_belt_left
+        when 3
+          @block_effect = :conveyor_belt_right
+        end
+      end
     end
   end
 end
