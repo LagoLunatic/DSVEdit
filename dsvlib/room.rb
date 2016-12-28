@@ -71,52 +71,48 @@ class Room
   end
   
   def read_graphic_tilesets_from_rom(tileset_wrapper_A_ram_pointer)
-    if tileset_wrapper_A_ram_pointer > (0x02000000+ARM9_LENGTH) && tileset_wrapper_A_ram_pointer < fs.overlays[0][:ram_start_offset]
-      # When this pointer is like this (e.g. 0x02195984), it just points to 00s instead of actual data.
-      # What this means is that the room doesn't load a tileset. Instead it just keeps whatever tileset the previous room had loaded.
-      @graphic_tilesets_for_room = nil
-    else
-      i = 0
-      @graphic_tilesets_for_room = []
-      while true
-        tileset_wrapper_B_ram_pointer = fs.read(tileset_wrapper_A_ram_pointer + i*8, 4).unpack("V*").first # we're not going to actually follow tileset wrapper b pointer. we're just using it to identify the tileset.
-        unknown_data = fs.read(tileset_wrapper_A_ram_pointer + i*8 + 4, 4).unpack("V*").first
-        #puts "u%08X" % unknown_data
-        break if tileset_wrapper_B_ram_pointer == 0
-        #unknown_data2 = rom[tileset_wrapper_B_pointer, 4].unpack("V*").first # TODO
-        #unknown_data3 = rom[tileset_wrapper_B_pointer+4, 4].unpack("V*").first
-        #puts "u%08X" % unknown_data2
-        #puts "u%08X" % unknown_data3
-        file = fs.files.values.find{|file| file[:ram_start_offset] == tileset_wrapper_B_ram_pointer}
-        if file.nil?
-          puts "Couldn't find tileset. Possible transition room? wrapper B ram %08X. wrapper A ram: %08X" % [tileset_wrapper_B_ram_pointer, tileset_wrapper_A_ram_pointer]
-          break
-        end
-        @graphic_tilesets_for_room << file
-        i += 1
+    i = 0
+    @graphic_tilesets_for_room = []
+    while true
+      tileset_wrapper_B_ram_pointer = fs.read(tileset_wrapper_A_ram_pointer + i*8, 4).unpack("V*").first # we're not going to actually follow tileset wrapper b pointer. we're just using it to identify the tileset.
+      unknown_data = fs.read(tileset_wrapper_A_ram_pointer + i*8 + 4, 4).unpack("V*").first
+      #puts "u%08X" % unknown_data
+      break if tileset_wrapper_B_ram_pointer == 0
+      #unknown_data2 = rom[tileset_wrapper_B_pointer, 4].unpack("V*").first # TODO
+      #unknown_data3 = rom[tileset_wrapper_B_pointer+4, 4].unpack("V*").first
+      #puts "u%08X" % unknown_data2
+      #puts "u%08X" % unknown_data3
+      file = fs.files.values.find{|file| file[:ram_start_offset] == tileset_wrapper_B_ram_pointer}
+      if file.nil?
+        puts "Couldn't find tileset. Possible transition room? wrapper B ram %08X. wrapper A ram: %08X" % [tileset_wrapper_B_ram_pointer, tileset_wrapper_A_ram_pointer]
+        break
       end
+      @graphic_tilesets_for_room << file
+      i += 1
     end
+  rescue NDSFileSystem::ConversionError => e
+    # When tileset_wrapper_A_ram_pointer is like this (e.g. 0x02195984), it just points to 00s instead of actual data.
+    # What this means is that the room doesn't load a tileset. Instead it just keeps whatever tileset the previous room had loaded.
+    @graphic_tilesets_for_room = nil
   end
   
   def read_palette_pages_from_rom(palette_wrapper_ram_pointer)
-    if palette_wrapper_ram_pointer > (0x02000000+ARM9_LENGTH) && palette_wrapper_ram_pointer < fs.overlays[0][:ram_start_offset]
-      # When this pointer is like this (e.g. 0x02195984), it just points to 00s instead of actual data.
-      # What this means is that the room doesn't load a palette. Instead it just keeps whatever palette the previous room had loaded.
-      @palette_pages = [nil]
-    else
-      i = 0
-      @palette_pages = []
-      while true
-        palette_ram_pointer = fs.read(palette_wrapper_ram_pointer + i*8,4).unpack("V*").first
-        unknown_data = fs.read(palette_wrapper_ram_pointer + i*8 + 4,4).unpack("V*").first # TODO
-        
-        break if palette_ram_pointer == 0
-        
-        @palette_pages << palette_ram_pointer
-        
-        i += 1
-      end
+    i = 0
+    @palette_pages = []
+    while true
+      palette_ram_pointer = fs.read(palette_wrapper_ram_pointer + i*8,4).unpack("V*").first
+      unknown_data = fs.read(palette_wrapper_ram_pointer + i*8 + 4,4).unpack("V*").first # TODO
+      
+      break if palette_ram_pointer == 0
+      
+      @palette_pages << palette_ram_pointer
+      
+      i += 1
     end
+  rescue NDSFileSystem::ConversionError => e
+    # When palette_wrapper_ram_pointer is like this (e.g. 0x02195984), it just points to 00s instead of actual data.
+    # What this means is that the room doesn't load a palette. Instead it just keeps whatever palette the previous room had loaded.
+    @palette_pages = [nil]
   end
   
   def read_entity_list_from_rom(entity_list_ram_pointer)
@@ -137,13 +133,6 @@ class Room
   end
   
   def read_door_list_from_rom(door_list_ram_pointer)
-    if door_list_ram_pointer > (0x02000000+ARM9_LENGTH) && door_list_ram_pointer < fs.overlays[0][:ram_start_offset]
-      # A pointer to nothing here indicates the room has no doors (e.g. Menace's room).
-      @doors = []
-      @original_number_of_doors = 0
-      return
-    end
-    
     @doors = []
     (0..number_of_doors-1).each do |i|
       door_pointer = door_list_ram_pointer + i*16
@@ -152,6 +141,10 @@ class Room
     end
     
     @original_number_of_doors = doors.length
+  rescue NDSFileSystem::ConversionError => e
+    # When door_list_ram_pointer points to nothing it indicates the room has no doors (e.g. Menace's room).
+    @doors = []
+    @original_number_of_doors = 0
   end
   
   def read_last_4_bytes_from_rom(last_4_bytes)

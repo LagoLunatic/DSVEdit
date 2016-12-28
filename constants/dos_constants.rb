@@ -91,16 +91,9 @@ MAP_SECRET_DOOR_COLOR = [248, 248, 0, 255]
 
 RAM_START_FOR_ROOM_OVERLAYS = 0x022DA4A0
 RAM_END_FOR_ROOM_OVERLAYS = 0x022DA4A0 + 152864
-ARM9_LENGTH = 813976
-LIST_OF_FILE_RAM_LOCATIONS_START_OFFSET = 0x90C6C
-LIST_OF_FILE_RAM_LOCATIONS_END_OFFSET = 0x9E0C3
-LIST_OF_FILE_RAM_LOCATIONS_ENTRY_LENGTH = 40
-
-OVERLAY_RAM_INFO_START_OFFSET = 0x0CAC00
-OVERLAY_ROM_INFO_START_OFFSET = 0x3DEA00
-
-ENTITY_BLOCK_START_OFFSET = 0x0A4B9C
-ENTITY_BLOCK_END_OFFSET   = 0x0C3D9C
+LIST_OF_FILE_RAM_LOCATIONS_START_OFFSET = 0x0208CC6C
+LIST_OF_FILE_RAM_LOCATIONS_END_OFFSET = 0x0209A0C3
+LIST_OF_FILE_RAM_LOCATIONS_ENTRY_LENGTH = 0x28
 
 ENEMY_DNA_RAM_START_OFFSET = 0x02078CAC
 ENEMY_DNA_LENGTH = 36
@@ -206,7 +199,7 @@ REUSED_ENEMY_INFO = {
   77 => {init_code:        nil, gfx_sheet_ptr_index: 0, palette_offset: 0, palette_list_ptr_index: 1}, # gorgon and catoblepas
   84 => {init_code: 0x02270704, gfx_sheet_ptr_index: 0, palette_offset: 1, palette_list_ptr_index: 0, sprite_ptr_index: 1}, # erinys and valkyrie
   92 => {init_code: 0x02288FBC, gfx_sheet_ptr_index: 0, palette_offset: 0, palette_list_ptr_index: 0}, # tanjelly and slime
-  91 => {init_code: 0x022FF9F0, gfx_sheet_ptr_index: 1, palette_offset: 0, palette_list_ptr_index: 1}, # flame demon and devil
+  91 => {init_code: 0x022FF9F0, gfx_sheet_ptr_index: 1, palette_offset: 0, palette_list_ptr_index: 1, sprite_ptr_index: 1}, # flame demon and devil
   93 => {init_code:        nil, gfx_sheet_ptr_index: 2, palette_offset: 0, palette_list_ptr_index: 2, sprite_ptr_index: 2}, # arc demon and devil
 }
 

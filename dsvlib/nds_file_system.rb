@@ -319,7 +319,7 @@ private
     CONSTANT_OVERLAYS.each do |overlay_index|
       load_overlay(overlay_index)
     end
-    get_file_ram_start_offsets()
+    get_file_ram_start_offsets_and_file_data_types()
   end
   
   def extract_to_hard_drive
@@ -438,18 +438,21 @@ private
     end
   end
   
-  def get_file_ram_start_offsets
+  def get_file_ram_start_offsets_and_file_data_types
     offset = LIST_OF_FILE_RAM_LOCATIONS_START_OFFSET
     while offset < LIST_OF_FILE_RAM_LOCATIONS_END_OFFSET
-      file_data = @rom[offset, LIST_OF_FILE_RAM_LOCATIONS_ENTRY_LENGTH]
+      file_data = read(offset, LIST_OF_FILE_RAM_LOCATIONS_ENTRY_LENGTH)
       
-      ram_start_offset = file_data[0,4].unpack("V*").first
+      ram_start_offset = file_data[0..3].unpack("V").first
+      
+      file_data_type = file_data[4..5].unpack("v").first
       
       file_path = file_data[6..-1]
       file_path = file_path.delete("\x00") # Remove null bytes padding the end of the string
       file = files_by_path[file_path]
       
       file[:ram_start_offset] = ram_start_offset
+      file[:file_data_type] = file_data_type
       
       offset += LIST_OF_FILE_RAM_LOCATIONS_ENTRY_LENGTH
     end
