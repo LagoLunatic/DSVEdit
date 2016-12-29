@@ -198,8 +198,8 @@ Special objects:
 39 Keys of the piano you can play from the Demon Guest House.
 3A The cannon + time pillar that you need Zephyr's soul to get past.
 3B The darkness barrier in the Condemned Tower that you can't get past until late in the game.
-3C Yoko follower.
-  After you've triggered the event for Yoko to follow you, she will appear in any rooms that this special object is placed in. She won't follow you into rooms without this object.
+3C Yoko follower and event actor.
+  Follows you around if you've triggered the event for Yoko to follow you, but only in rooms that this special object is placed in.
 3D The castle in the background in the epilogue. Also permanently changes the top screen to the symbol you see during cutscenes.
 3E The bouncing ball in the puzzle with touch screen blocks. It just explodes instantly if it's not inside touch screen blocks.
 3F Strongman puzzle you have to hit with a hammer.
@@ -239,20 +239,28 @@ Special objects:
 4C A consumable, like regular consumables var B controls which one it is. But why is this a special object?
 4D Trigger to make a secret item (Konami Man/Crown/Bell) appear.
 4E Mina Hakuba doll (only appears if Aria of Sorrow is in the GBA slot).
-4F Unused, nothing.
-50 Unused, nothing.
-51 Unused, nothing.
-52 Unused, nothing.
-53 Unused, nothing.
-54 Unused, nothing.
-55 Unused, nothing.
+4F Mina event actor.
+  Unused, nothing.
+50 Hammer event actor.
+  Unused, nothing.
+51 Arikado event actor.
+  Unused, nothing.
+52 Julius event actor.
+  Unused, nothing.
+53 Celia event actor.
+  Unused, nothing.
+54 Dario event actor.
+  Unused, nothing.
+55 Dmitrii event actor.
+  Unused, nothing.
 56 Used in prologue room. Force fields?
 57 The destroyable ceiling from the long room at the end of Wizardry Lab.
 58 Celia on a cross. Used in Menace's room. Doesn't appear until the event causes it to.
 59 Pillars of flame from the Abyss.
 5A Transition room hider.
   A big entity that acts as the graphics to transition rooms to hide the fact that they have no tiles.
-5B Unused, nothing.
+5B Alucard event actor.
+  Unused, nothing.
 5C used in menace's room. no effect?
 === Below are events. Var A may be an identifier for each event to check if it's been seen already or not. Var B is unknown.
 5D Event - Prologue.

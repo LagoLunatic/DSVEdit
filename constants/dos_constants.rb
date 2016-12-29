@@ -255,6 +255,28 @@ BEST_SPRITE_FRAME_FOR_ENEMY = {
   116 =>  22, # soma
 }
 
+ENEMY_FILES_TO_LOAD_LIST = 0x0208CA90
+
+SPECIAL_OBJECT_IDS = (0..0x75)
+SPECIAL_OBJECT_CREATE_CODE_LIST = 0x0222C714
+SPECIAL_OBJECT_UPDATE_CODE_LIST = 0x0222C8F0
+OVERLAY_FILE_FOR_SPECIAL_OBJECT = {}
+REUSED_SPECIAL_OBJECT_INFO = {
+  0x26 => {init_code: 0x021A8FC8, gfx_sheet_ptr_index: 0, palette_offset: 0, palette_list_ptr_index: 0}, # slot machine
+  0x27 => {init_code: 0x021A8434, gfx_sheet_ptr_index: 0, palette_offset: 0, palette_list_ptr_index: 0}, # condemned tower gate
+  0x29 => {init_code: 0x021A7FC4, gfx_sheet_ptr_index: 0, palette_offset: 0, palette_list_ptr_index: 0}, # dark chapel gate
+  0x4F => {init_code: 0x0222CBE0, gfx_sheet_ptr_index: 0, palette_offset: 0, palette_list_ptr_index: 0}, # mina event actor
+  0x50 => {init_code: 0x0222CC10, gfx_sheet_ptr_index: 0, palette_offset: 0, palette_list_ptr_index: 0}, # hammer event actor
+  0x51 => {init_code: 0x0222CBF0, gfx_sheet_ptr_index: 0, palette_offset: 0, palette_list_ptr_index: 0}, # arikado event actor
+  0x52 => {init_code: 0x0222CC20, gfx_sheet_ptr_index: 0, palette_offset: 0, palette_list_ptr_index: 0}, # julius event actor
+  0x53 => {init_code: 0x0222CC30, gfx_sheet_ptr_index: 0, palette_offset: 0, palette_list_ptr_index: 0}, # celia event actor
+  0x54 => {init_code: 0x0222CC40, gfx_sheet_ptr_index: 0, palette_offset: 0, palette_list_ptr_index: 0}, # dario event actor
+  0x55 => {init_code: 0x0222CC50, gfx_sheet_ptr_index: 0, palette_offset: 0, palette_list_ptr_index: 0}, # dmitrii event actor
+  0x5B => {init_code: 0x0222CC60, gfx_sheet_ptr_index: 0, palette_offset: 0, palette_list_ptr_index: 0}, # alucard event actor
+}
+BEST_SPRITE_FRAME_FOR_SPECIAL_OBJECT = {}
+SPECIAL_OBJECT_FILES_TO_LOAD_LIST = 0x0209B88C
+
 TEXT_LIST_START_OFFSET = 0x0222F300
 TEXT_RANGE = (0..0x50A)
 TEXT_REGIONS = {

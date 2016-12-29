@@ -1,7 +1,7 @@
 
 0     0219E3E0 
 1     02230A00
-2     0229A920
+2     0229A920 Sprite data that isn't stored in individual files.
 3     0229E600
 4     022B9900
 5     022D6E80

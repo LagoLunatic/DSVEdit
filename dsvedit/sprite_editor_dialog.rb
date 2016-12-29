@@ -11,6 +11,8 @@ class SpriteEditor < Qt::Dialog
   slots "palette_changed(int)"
   slots "part_changed(int)"
   slots "enemy_changed(int)"
+  slots "special_object_changed(int)"
+  slots "other_sprite_changed(int)"
   slots "animation_changed(int)"
   slots "toggle_animation_paused()"
   slots "advance_frame()"
@@ -47,9 +49,20 @@ class SpriteEditor < Qt::Dialog
       @ui.enemy_list.addItem("%02X %s" % [enemy_id, enemy.name.decoded_string])
     end
     
+    @special_objects = []
+    SPECIAL_OBJECT_IDS.each do |special_object_id|
+      special_object = SpecialObjectType.new(special_object_id, fs)
+      @special_objects << special_object
+      @ui.special_object_list.addItem("%02X" % special_object_id)
+    end
+    
+    @other_sprites = []
+    
     set_animation_paused(true)
     
     connect(@ui.enemy_list, SIGNAL("currentRowChanged(int)"), self, SLOT("enemy_changed(int)"))
+    connect(@ui.special_object_list, SIGNAL("currentRowChanged(int)"), self, SLOT("special_object_changed(int)"))
+    connect(@ui.other_sprites_list, SIGNAL("currentRowChanged(int)"), self, SLOT("other_sprite_changed(int)"))
     connect(@ui.frame_index, SIGNAL("activated(int)"), self, SLOT("frame_changed(int)"))
     connect(@ui.seek_slider, SIGNAL("sliderMoved(int)"), self, SLOT("animation_frame_changed(int)"))
     connect(@ui.show_hitbox, SIGNAL("stateChanged(int)"), self, SLOT("toggle_hitbox(int)"))
@@ -65,7 +78,7 @@ class SpriteEditor < Qt::Dialog
   
   def enemy_changed(enemy_id)
     begin
-      @gfx_pointer, @palette_pointer, @palette_offset, @sprite_file = 
+      @gfx_pointer, @palette_pointer, @palette_offset, @sprite_file =
         EnemyDNA.new(enemy_id, @fs).get_gfx_and_palette_and_sprite_from_init_ai
     rescue StandardError => e
       Qt::MessageBox.warning(self,
@@ -78,6 +91,40 @@ class SpriteEditor < Qt::Dialog
     load_sprite()
     
     @ui.enemy_list.setCurrentRow(enemy_id)
+  end
+  
+  def special_object_changed(special_object_id)
+    begin
+      @gfx_pointer, @palette_pointer, @palette_offset, @sprite_file =
+        SpecialObjectType.new(special_object_id, @fs).get_gfx_and_palette_and_sprite_from_create_code
+    rescue StandardError => e
+      Qt::MessageBox.warning(self,
+        "Special object sprite extraction failed",
+        "Failed to extract gfx or palette data for special object #{special_object_id}.\n#{e.message}\n\n#{e.backtrace.join("\n")}"
+      )
+      return
+    end
+    
+    load_sprite()
+    
+    @ui.special_object_list.setCurrentRow(special_object_id)
+  end
+  
+  def other_sprite_changed(id)
+    begin
+      @gfx_pointer, @palette_pointer, @palette_offset, @sprite_file =
+        SpriteInfoExtractor.get_gfx_and_palette_and_sprite_from_create_code(@other_sprites[id], @fs, nil, {})
+    rescue StandardError => e
+      Qt::MessageBox.warning(self,
+        "Sprite extraction failed",
+        "Failed to extract gfx or palette data for other sprite #{id}.\n#{e.message}\n\n#{e.backtrace.join("\n")}"
+      )
+      return
+    end
+    
+    load_sprite()
+    
+    @ui.other_sprites_list.setCurrentRow(id)
   end
   
   def load_sprite

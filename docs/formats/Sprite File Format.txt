@@ -67,5 +67,7 @@ File footer:
   Bytes 1-2: Number of frames this sprite has, duplicate of 0x24 in the header.
   Bytes 3-4: Number of animations this sprite has, duplicate of 0x28 in the header.
   Bytes 5-8: Length of this file in bytes, duplicate of 0x2C in the header.
+    At runtime this gets replaced with a pointer to the start of the sprite's frames.
   Bytes 9-12: Can either be the length of this file in bytes, or just 0.
+    At runtime this gets replaced with a pointer to the start of the sprite's animations.
   Bytes 13-end of file: All 0.

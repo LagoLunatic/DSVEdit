@@ -88,7 +88,8 @@ Special objects:
 2F pushable grave from forest of doom? might require a certain overlay
 30 
 31 
-32 pushable block from sandy grave? might require a certain overlay
+32 pushable block from sandy grave?
+  Requires overlay 91.
 33 Falling boulder.
   Var A:
     00 Rolls left.
@@ -126,15 +127,24 @@ Special objects:
 44 Sand falling from the ceiling.
 45 Background with the moon and mountains used in the Master's Keep and Throne Room.
 46 Fast mechanical elevator from Tower of Death. Requires overlay 85.
-47
+47 ??? from Dark Academy
+  Var A:
+    0
+    1
+    2
+    3
+    4
+    5
 48 Waterwheel platforms elevator from Tower of Death. Requires overlay 86.
 49 Rapidly moving clouds background effect used in the Master's Keep and Throne Room.
-4A in death's boss room.
+4A Hands on the clock from Death's boss room.
+  These rotate to match the DS's system time.
 4B Unused
 4C Unused
 4D Pushable rectangular block.
   Var A: 0 for tall block, 1 for short block.
 4E Pushable and destroyable statue from near the start of the game.
+  Requires overlay 79.
 4F Transition room hider for Dracula's Castle.
 50
 51
@@ -160,9 +170,9 @@ Special objects:
 66
 67 3D background model of the clock tower, used in the stairway leading up to the throne.
 68 If Var A is 0, it's the statue of Mary from Nation of Fools. If Var A is 1, it's the cross from 13th Street.
-69
-6A
-6B
+69 Transition room hider for Master's Keep.
+6A Transition room hider for Master's Keep.
+6B Transition room hider for Master's Keep.
 6C
 6D
 6E

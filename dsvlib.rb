@@ -16,6 +16,8 @@ require_relative 'dsvlib/text'
 require_relative 'dsvlib/text_database'
 require_relative 'dsvlib/sprite'
 require_relative 'dsvlib/item'
+require_relative 'dsvlib/special_object_type'
+require_relative 'dsvlib/sprite_info_extractor'
 
 require_relative 'dsvlib/renderer'
 require_relative 'dsvlib/tmx_interface'
