@@ -354,7 +354,10 @@ class SpriteEditor < Qt::Dialog
       @ui.toggle_paused_button.text = "Play"
     else
       @ui.toggle_paused_button.text = "Pause"
-      advance_frame()
+      
+      frame_delay = @current_animation.frame_delays[@current_animation_frame_index]
+      millisecond_delay = (frame_delay.delay / 60.0 * 1000).round
+      Qt::Timer.singleShot(millisecond_delay, self, SLOT("advance_frame()"))
     end
   end
   
@@ -364,9 +367,6 @@ class SpriteEditor < Qt::Dialog
   
   def advance_frame
     if @current_animation && !@animation_paused
-      frame_delay = @current_animation.frame_delays[@current_animation_frame_index]
-      millisecond_delay = (frame_delay.delay / 60.0 * 1000).round
-      
       if @current_animation_frame_index >= @current_animation.frame_delays.length-1
         animation_frame_changed(0)
         
@@ -377,6 +377,8 @@ class SpriteEditor < Qt::Dialog
         animation_frame_changed(@current_animation_frame_index+1)
       end
       
+      frame_delay = @current_animation.frame_delays[@current_animation_frame_index]
+      millisecond_delay = (frame_delay.delay / 60.0 * 1000).round
       Qt::Timer.singleShot(millisecond_delay, self, SLOT("advance_frame()"))
     end
   end
