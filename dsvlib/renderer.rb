@@ -335,7 +335,7 @@ class Renderer
   end
   
   def render_collision_tileset(collision_tileset_offset, output_filename=nil)
-    if File.exist?(output_filename)
+    if output_filename && File.exist?(output_filename)
       return ChunkyPNG::Image.from_file(output_filename)
     end
     
