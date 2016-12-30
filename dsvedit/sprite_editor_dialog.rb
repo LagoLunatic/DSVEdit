@@ -236,6 +236,13 @@ class SpriteEditor < Qt::Dialog
       @frame_graphics_scene.removeItem(item)
     end
     
+    if i == nil
+      @ui.frame_index.setCurrentIndex(-1)
+      @ui.frame_first_part.text = ""
+      @ui.frame_number_of_parts.text = ""
+      return
+    end
+    
     @sprite.frames[i].part_indexes.reverse.each do |part_index|
       part = @sprite.parts[part_index]
       
@@ -338,7 +345,11 @@ class SpriteEditor < Qt::Dialog
     @ui.seek_slider.maximum = @current_animation.frame_delays.length-1
     @ui.toggle_paused_button.enabled = true
     
-    animation_frame_changed(0)
+    if @current_animation.number_of_frames > 0
+      animation_frame_changed(0)
+    else
+      frame_changed(nil) # Blank out the frame display
+    end
   end
   
   def animation_frame_changed(i)
