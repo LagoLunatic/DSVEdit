@@ -102,7 +102,7 @@ class Game
       enemy_docs = {}
       enemy_docs_arr.each do |desc|
         id = desc.first[0..1].to_i(16)
-        @enemy_docs[id] = desc.first[3..-1]
+        enemy_docs[id] = desc.first[3..-1]
       end
       
       enemy_docs
