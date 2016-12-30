@@ -579,10 +579,11 @@ class Renderer
       frames = sprite.frames
     end
     
-    min_x = sprite.parts.map{|part| part.x_pos}.min
-    min_y = sprite.parts.map{|part| part.y_pos}.min
-    max_x = sprite.parts.map{|part| part.x_pos + part.width}.max
-    max_y = sprite.parts.map{|part| part.y_pos + part.height}.max
+    parts_and_hitboxes = (sprite.parts + sprite.hitboxes)
+    min_x = parts_and_hitboxes.map{|item| item.x_pos}.min
+    min_y = parts_and_hitboxes.map{|item| item.y_pos}.min
+    max_x = parts_and_hitboxes.map{|item| item.x_pos + item.width}.max
+    max_y = parts_and_hitboxes.map{|item| item.y_pos + item.height}.max
     full_width = max_x - min_x
     full_height = max_y - min_y
     
