@@ -45,6 +45,10 @@ class SpriteEditor < Qt::Dialog
     @part_graphics_scene = Qt::GraphicsScene.new
     @ui.part_graphics_view.setScene(@part_graphics_scene)
     
+    @animation_timer = Qt::Timer.new()
+    @animation_timer.setSingleShot(true)
+    connect(@animation_timer, SIGNAL("timeout()"), self, SLOT("advance_frame()"))
+    
     @enemies = []
     ENEMY_IDS.each do |enemy_id|
       enemy = EnemyDNA.new(enemy_id, fs)
@@ -329,6 +333,7 @@ class SpriteEditor < Qt::Dialog
   end
   
   def animation_changed(i)
+    @animation_timer.stop()
     @ui.seek_slider.value = 0
     @current_animation_frame_index = 0
     
@@ -347,6 +352,7 @@ class SpriteEditor < Qt::Dialog
     
     if @current_animation.number_of_frames > 0
       animation_frame_changed(0)
+      start_animation()
     else
       frame_changed(nil) # Blank out the frame display
     end
@@ -366,10 +372,14 @@ class SpriteEditor < Qt::Dialog
     else
       @ui.toggle_paused_button.text = "Pause"
       
-      frame_delay = @current_animation.frame_delays[@current_animation_frame_index]
-      millisecond_delay = (frame_delay.delay / 60.0 * 1000).round
-      Qt::Timer.singleShot(millisecond_delay, self, SLOT("advance_frame()"))
+      start_animation()
     end
+  end
+  
+  def start_animation
+    frame_delay = @current_animation.frame_delays[@current_animation_frame_index]
+    millisecond_delay = (frame_delay.delay / 60.0 * 1000).round
+    @animation_timer.start(millisecond_delay)
   end
   
   def toggle_animation_paused
@@ -390,7 +400,7 @@ class SpriteEditor < Qt::Dialog
       
       frame_delay = @current_animation.frame_delays[@current_animation_frame_index]
       millisecond_delay = (frame_delay.delay / 60.0 * 1000).round
-      Qt::Timer.singleShot(millisecond_delay, self, SLOT("advance_frame()"))
+      @animation_timer.start(millisecond_delay)
     end
   end
   
