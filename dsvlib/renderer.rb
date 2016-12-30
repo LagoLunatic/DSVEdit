@@ -554,8 +554,13 @@ class Renderer
     return [fill_tile, lines_tile]
   end
   
-  def render_sprite(gfx_pointer, palette_pointer, palette_offset, sprite, frame_to_render = nil, render_hitboxes = false)
-    gfx_files_with_blanks = fs.get_gfx_files_with_blanks_from_gfx_pointer(gfx_pointer)
+  def render_sprite(gfx_files, palette_pointer, palette_offset, sprite, frame_to_render = nil, render_hitboxes = false)
+    gfx_files_with_blanks = []
+    gfx_files.each do |gfx_file|
+      gfx_files_with_blanks << gfx_file
+      blanks_needed = (gfx_file[:canvas_width]/0x10 - 1) * 3
+      gfx_files_with_blanks += [nil]*blanks_needed
+    end
     
     if gfx_files_with_blanks.first[:render_mode] == 1
       palettes = generate_palettes(palette_pointer, 16)

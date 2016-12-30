@@ -295,11 +295,11 @@ class DSVEdit < Qt::MainWindow
         enemy_id = entity.subtype
         
         chunky_frame, min_x, min_y = @cached_enemy_pixmaps[enemy_id] ||= begin
-          gfx_pointer, palette, palette_offset, sprite_file = EnemyDNA.new(enemy_id, @game.fs).get_gfx_and_palette_and_sprite_from_init_ai
+          gfx_files, palette, palette_offset, sprite_file = EnemyDNA.new(enemy_id, @game.fs).get_gfx_and_palette_and_sprite_from_init_ai
           frame_to_render = BEST_SPRITE_FRAME_FOR_ENEMY[enemy_id] || 0
           
           sprite = Sprite.new(sprite_file, game.fs)
-          chunky_frames, min_x, min_y = @renderer.render_sprite(gfx_pointer, palette, palette_offset, sprite, frame_to_render)
+          chunky_frames, min_x, min_y = @renderer.render_sprite(gfx_files, palette, palette_offset, sprite, frame_to_render)
           if chunky_frames.empty?
             next
           end
@@ -340,11 +340,11 @@ class DSVEdit < Qt::MainWindow
       elsif entity.is_special_object?
         special_object_id = entity.subtype
         chunky_frame, min_x, min_y = @cached_special_object_pixmaps[special_object_id] ||= begin
-          gfx_pointer, palette, palette_offset, sprite_file = SpecialObjectType.new(special_object_id, game.fs).get_gfx_and_palette_and_sprite_from_create_code
+          gfx_files, palette, palette_offset, sprite_file = SpecialObjectType.new(special_object_id, game.fs).get_gfx_and_palette_and_sprite_from_create_code
           frame_to_render = BEST_SPRITE_FRAME_FOR_SPECIAL_OBJECT[special_object_id] || 0
           
           sprite = Sprite.new(sprite_file, game.fs)
-          chunky_frames, min_x, min_y = @renderer.render_sprite(gfx_pointer, palette, palette_offset, sprite, frame_to_render)
+          chunky_frames, min_x, min_y = @renderer.render_sprite(gfx_files, palette, palette_offset, sprite, frame_to_render)
           if chunky_frames.empty?
             next
           end

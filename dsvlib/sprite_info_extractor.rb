@@ -1,9 +1,64 @@
 class SpriteInfoExtractor
   class CreateCodeReadError < StandardError ; end
   
-  def self.get_gfx_and_palette_and_sprite_from_create_code(create_code_pointer, fs, overlay_to_load, reused_info)
-    # This function attempts to find the enemy/object's gfx files, palette pointer, and sprite file. These aren't stored directly in a list anywhere.
-    # Instead they are loaded as part of the create code, so we must look through this code for pointers that look like they could be the pointers we want.
+  def self.get_gfx_and_palette_and_sprite_from_create_code(create_code_pointer, fs, overlay_to_load, reused_info, ptr_to_ptr_to_files_to_load=nil)
+    # This function attempts to find the enemy/object's gfx files, palette pointer, and sprite file.
+    # It first looks in the list of files to load for that enemy/object (if given).
+    # If any are missing after looking there, it then looks in the create code for pointers that look like they could be the pointers we want.
+    
+    init_code_pointer      = reused_info[:init_code] || create_code_pointer
+    gfx_sheet_ptr_index    = reused_info[:gfx_sheet_ptr_index] || 0
+    palette_offset         = reused_info[:palette_offset] || 0
+    palette_list_ptr_index = reused_info[:palette_list_ptr_index] || 0
+    sprite_ptr_index       = reused_info[:sprite_ptr_index] || 0
+    
+    if ptr_to_ptr_to_files_to_load
+      pointer_to_start_of_file_index_list = fs.read(ptr_to_ptr_to_files_to_load, 4).unpack("V").first
+      gfx_files_to_load = []
+      sprite_files_to_load = []
+      palette_pointer_to_load = nil
+      
+      i = 0
+      while true
+        file_index_or_palette_pointer, file_data_type = fs.read(pointer_to_start_of_file_index_list+i*8, 8).unpack("VV")
+        puts "%08X %08X" % [file_index_or_palette_pointer, file_data_type]
+        if file_index_or_palette_pointer == 0xFFFFFFFF
+          # End of list.
+          break
+        end
+        if file_data_type == 1 || file_data_type == 2
+          file_index = file_index_or_palette_pointer
+          file = fs.files_by_index[file_index]
+          
+          if file_data_type == 1
+            render_mode = fs.read(file[:ram_start_offset]+1, 1).unpack("C").first
+            canvas_width = fs.read(file[:ram_start_offset]+2, 1).unpack("C").first
+            gfx_files_to_load << {file: file, render_mode: render_mode, canvas_width: canvas_width}
+          elsif file_data_type == 2
+            sprite_files_to_load << file
+          end
+        elsif file_data_type == 3
+          palette_pointer_to_load = file_index_or_palette_pointer
+        else
+          raise CreateCodeReadError.new("Unknown file data type: #{file_data_type}")
+        end
+        
+        i += 1
+      end
+      
+      if gfx_files_to_load.empty?
+        raise CreateCodeReadError.new("No gfx files to load found")
+      end
+      if sprite_files_to_load.empty?
+        raise CreateCodeReadError.new("No sprite file to load found")
+      end
+      
+      if gfx_files_to_load.length > 0 && sprite_files_to_load.length > 0 && palette_pointer_to_load
+        return [gfx_files_to_load, palette_pointer_to_load, palette_offset, sprite_files_to_load.first]
+      end
+    end
+    
+    
     
     if overlay_to_load.is_a?(Integer)
       fs.load_overlay(overlay_to_load)
@@ -25,18 +80,10 @@ class SpriteInfoExtractor
     possible_sprite_pointers = []
     sprite_file_pointer = nil
     
-    init_code_pointer      = reused_info[:init_code] || create_code_pointer
-    gfx_sheet_ptr_index    = reused_info[:gfx_sheet_ptr_index] || 0
-    palette_offset         = reused_info[:palette_offset] || 0
-    palette_list_ptr_index = reused_info[:palette_list_ptr_index] || 0
-    sprite_ptr_index       = reused_info[:sprite_ptr_index] || 0
-    
     data = fs.read(init_code_pointer, 4*1000, allow_length_to_exceed_end_of_file: true)
     
     data.unpack("V*").each_with_index do |word, i|
       if (0x02000000..0x02FFFFFF).include?(word)
-        #puts "found pointer: %08X at index: %08X" % [word, i*4+init_code_pointer]
-        
         possible_gfx_pointers << word
         possible_palette_pointers << word
         possible_sprite_pointers << word
@@ -81,6 +128,7 @@ class SpriteInfoExtractor
     end
     
     gfx_pointer = valid_gfx_pointers[gfx_sheet_ptr_index]
+    gfx_files = fs.get_gfx_files_from_gfx_pointer(gfx_pointer)
     
     
     
@@ -128,6 +176,10 @@ class SpriteInfoExtractor
     
     
     
-    return [gfx_pointer, palette_pointer, palette_offset, sprite_file]
+    if ptr_to_ptr_to_files_to_load
+      return [gfx_files_to_load, palette_pointer_to_load || palette_pointer, palette_offset, sprite_files_to_load.first]
+    else
+      return [gfx_files, palette_pointer, palette_offset, sprite_file]
+    end
   end
 end

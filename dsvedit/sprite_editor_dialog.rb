@@ -89,7 +89,7 @@ class SpriteEditor < Qt::Dialog
   
   def enemy_changed(enemy_id)
     begin
-      @gfx_pointer, @palette_pointer, @palette_offset, @sprite_file =
+      @gfx_files, @palette_pointer, @palette_offset, @sprite_file =
         EnemyDNA.new(enemy_id, @fs).get_gfx_and_palette_and_sprite_from_init_ai
     rescue StandardError => e
       Qt::MessageBox.warning(self,
@@ -106,7 +106,7 @@ class SpriteEditor < Qt::Dialog
   
   def special_object_changed(special_object_id)
     begin
-      @gfx_pointer, @palette_pointer, @palette_offset, @sprite_file =
+      @gfx_files, @palette_pointer, @palette_offset, @sprite_file =
         SpecialObjectType.new(special_object_id, @fs).get_gfx_and_palette_and_sprite_from_create_code
     rescue StandardError => e
       Qt::MessageBox.warning(self,
@@ -123,7 +123,7 @@ class SpriteEditor < Qt::Dialog
   
   def other_sprite_changed(id)
     begin
-      @gfx_pointer, @palette_pointer, @palette_offset, @sprite_file =
+      @gfx_files, @palette_pointer, @palette_offset, @sprite_file =
         SpriteInfoExtractor.get_gfx_and_palette_and_sprite_from_create_code(OTHER_SPRITES[id][:pointer], @fs, OTHER_SPRITES[id][:overlay], {})
     rescue StandardError => e
       Qt::MessageBox.warning(self,
@@ -143,7 +143,7 @@ class SpriteEditor < Qt::Dialog
       @sprite = Sprite.new(@sprite_file, @fs)
       
       chunky_frames, @min_x, @min_y, rendered_parts, @gfx_files_with_blanks, @palettes, @full_width, @full_height = 
-        @renderer.render_sprite(@gfx_pointer, @palette_pointer, @palette_offset, @sprite, frame_to_render = 0)
+        @renderer.render_sprite(@gfx_files, @palette_pointer, @palette_offset, @sprite, frame_to_render = 0)
     rescue StandardError => e
       Qt::MessageBox.warning(self,
         "Sprite rendering failed",
@@ -167,7 +167,7 @@ class SpriteEditor < Qt::Dialog
     
     @gfx_page_pixmaps_by_palette = {}
     
-    @ui.gfx_pointer.text = "%08X" % @gfx_pointer
+    @ui.gfx_pointer.text = "" # "%08X" % @gfx_pointer
     
     @ui.gfx_page_index.clear()
     @gfx_files_with_blanks.each_with_index do |gfx_page, i|
@@ -411,7 +411,7 @@ class SpriteEditor < Qt::Dialog
   end
   
   def reload_sprite
-    @gfx_pointer = @ui.gfx_pointer.text.to_i(16)
+    #@gfx_pointer = @ui.gfx_pointer.text.to_i(16)
     @palette_pointer = @ui.palette_pointer.text.to_i(16)
     @sprite_file = @fs.files_by_path[@ui.sprite_file_name.text]
     

@@ -10,6 +10,7 @@ class NDSFileSystem
   
   attr_reader :files,
               :files_by_path,
+              :files_by_index,
               :overlays,
               :rom
   
@@ -218,7 +219,7 @@ class NDSFileSystem
     files.select{|id, file| file[:type] == :file}
   end
   
-  def get_gfx_files_with_blanks_from_gfx_pointer(gfx_pointer)
+  def get_gfx_files_from_gfx_pointer(gfx_pointer)
     data = read(gfx_pointer+4, 4).unpack("V").first
     if data >= 0x02000000 && data < 0x03000000
       # List of GFX pages
@@ -265,24 +266,21 @@ class NDSFileSystem
       gfx_files << {file: gfx_file, render_mode: render_mode, canvas_width: canvas_width}
     end
     
-    gfx_files_with_blanks = []
-    gfx_files.each do |gfx_file|
-      gfx_files_with_blanks << gfx_file
-      blanks_needed = (gfx_file[:canvas_width]/0x10 - 1) * 3
-      gfx_files_with_blanks += [nil]*blanks_needed
-    end
-    
-    gfx_files_with_blanks
+    gfx_files
   end
   
   def get_sprite_file_from_pointer(sprite_file_pointer)
+    if sprite_file_pointer.nil?
+      raise SpritePointerError.new("Sprite pointer is nil")
+    end
+    
     sprite_file = find_file_by_ram_start_offset(sprite_file_pointer)
     
     if sprite_file.nil?
       raise SpritePointerError.new("Failed to find sprite file corresponding to pointer: %08X" % sprite_file_pointer)
     end
     if sprite_file[:file_path] !~ /^\/so\//
-      raise SpritePointerError.new("Bad sprite file: #{sprite_file[:file_path]}")
+      raise SpritePointerError.new("Bad sprite file at pointer %08X: %s" % [sprite_file_pointer, sprite_file[:file_path]])
     end
     
     sprite_file
@@ -439,6 +437,7 @@ private
   end
   
   def get_file_ram_start_offsets_and_file_data_types
+    @files_by_index = []
     offset = LIST_OF_FILE_RAM_LOCATIONS_START_OFFSET
     while offset < LIST_OF_FILE_RAM_LOCATIONS_END_OFFSET
       file_data = read(offset, LIST_OF_FILE_RAM_LOCATIONS_ENTRY_LENGTH)
@@ -453,6 +452,8 @@ private
       
       file[:ram_start_offset] = ram_start_offset
       file[:file_data_type] = file_data_type
+      
+      @files_by_index << file
       
       offset += LIST_OF_FILE_RAM_LOCATIONS_ENTRY_LENGTH
     end
