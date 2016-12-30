@@ -176,11 +176,12 @@ class DSVEdit < Qt::MainWindow
     sector_index_changed(0, force=true)
     @ui.sector.clear()
     AREA_INDEX_TO_OVERLAY_INDEX[@area_index].keys.each do |sector_index|
+      overlay_id = AREA_INDEX_TO_OVERLAY_INDEX[@area_index][sector_index]
       if SECTOR_INDEX_TO_SECTOR_NAME[@area_index]
         sector_name = SECTOR_INDEX_TO_SECTOR_NAME[@area_index][sector_index]
-        @ui.sector.addItem("%02X %s" % [sector_index, sector_name])
+        @ui.sector.addItem("%02X %s (Overlay %d)" % [sector_index, sector_name, overlay_id])
       else
-        @ui.sector.addItem("%02X" % sector_index)
+        @ui.sector.addItem("%02X (Overlay %d)" % [sector_index, overlay_id])
       end
     end
     
