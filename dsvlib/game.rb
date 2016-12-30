@@ -94,6 +94,36 @@ class Game
     end
   end
   
+  def enemy_docs
+    @enemy_docs ||= begin
+      file_contents = File.read("./docs/lists/#{GAME} Enemies.txt")
+      enemy_docs_arr = file_contents.scan(/^(\h\h [^\n]+\n(?:  [^\n]+\n)*)/)
+      
+      enemy_docs = {}
+      enemy_docs_arr.each do |desc|
+        id = desc.first[0..1].to_i(16)
+        @enemy_docs[id] = desc.first[3..-1]
+      end
+      
+      enemy_docs
+    end
+  end
+  
+  def special_object_docs
+    @special_object_docs ||= begin
+      file_contents = File.read("./docs/lists/#{GAME} Special Object List.txt")
+      special_object_docs_arr = file_contents.scan(/^(\h\h [^\n]+\n(?:  [^\n]+\n)*)/)
+      
+      special_object_docs = {}
+      special_object_docs_arr.each do |desc|
+        id = desc.first[0..1].to_i(16)
+        special_object_docs[id] = desc.first[3..-1]
+      end
+      
+      special_object_docs
+    end
+  end
+  
   def get_transition_rooms
     transition_rooms = []
     

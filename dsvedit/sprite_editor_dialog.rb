@@ -4,6 +4,8 @@ require_relative 'ui_sprite_editor'
 class SpriteEditor < Qt::Dialog
   RED_PEN_COLOR = Qt::Pen.new(Qt::Color.new(255, 0, 0))
   
+  attr_reader :game, :fs
+  
   slots "frame_changed(int)"
   slots "animation_frame_changed(int)"
   slots "toggle_hitbox(int)"
@@ -18,10 +20,11 @@ class SpriteEditor < Qt::Dialog
   slots "advance_frame()"
   slots "button_box_clicked(QAbstractButton*)"
   
-  def initialize(main_window, fs, renderer)
+  def initialize(main_window, game, renderer)
     super(main_window, Qt::WindowTitleHint | Qt::WindowSystemMenuHint)
     
-    @fs = fs
+    @game = game
+    @fs = game.fs
     @renderer = renderer
     
     @ui = Ui_SpriteEditor.new
@@ -53,7 +56,7 @@ class SpriteEditor < Qt::Dialog
     SPECIAL_OBJECT_IDS.each do |special_object_id|
       special_object = SpecialObjectType.new(special_object_id, fs)
       @special_objects << special_object
-      object_name = @special_object_docs[special_object_id] || " "
+      object_name = game.special_object_docs[special_object_id] || " "
       object_name = object_name.lines.first.strip[0..25]
       @ui.special_object_list.addItem("%02X %s" % [special_object_id, object_name])
     end

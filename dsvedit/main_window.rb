@@ -422,7 +422,7 @@ class DSVEdit < Qt::MainWindow
   end
   
   def open_sprite_editor
-    @sprite_editor = SpriteEditor.new(self, game.fs, @renderer)
+    @sprite_editor = SpriteEditor.new(self, game, @renderer)
   end
     
   def open_item_editor

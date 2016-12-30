@@ -15,6 +15,8 @@ class EntityEditorDialog < Qt::Dialog
     9 => "???",
   }
   
+  attr_reader :game
+  
   slots "type_changed(int)"
   slots "subtype_changed(int)"
   slots "button_box_clicked(QAbstractButton*)"
@@ -25,22 +27,6 @@ class EntityEditorDialog < Qt::Dialog
     @ui.setup_ui(self)
     
     @game = main_window.game
-    
-    file_contents = File.read("./docs/lists/#{GAME} Enemies.txt")
-    enemy_docs_arr = file_contents.scan(/^(\h\h [^\n]+\n(?:  [^\n]+\n)*)/)
-    @enemy_docs = {}
-    enemy_docs_arr.each do |desc|
-      id = desc.first[0..1].to_i(16)
-      @enemy_docs[id] = desc.first[3..-1]
-    end
-    
-    file_contents = File.read("./docs/lists/#{GAME} Special Object List.txt")
-    special_object_docs_arr = file_contents.scan(/^(\h\h [^\n]+\n(?:  [^\n]+\n)*)/)
-    @special_object_docs = {}
-    special_object_docs_arr.each do |desc|
-      id = desc.first[0..1].to_i(16)
-      @special_object_docs[id] = desc.first[3..-1]
-    end
     
     (0..0xFF).each do |i|
       description = ENTITY_TYPE_DESCRIPTIONS[i] || "Unused"
@@ -79,7 +65,7 @@ class EntityEditorDialog < Qt::Dialog
          subtype_name = @game.enemy_dnas[subtype].name.decoded_string
         end
       when 2
-        subtype_name = (@special_object_docs[subtype] || " ").lines.first.strip[0..100]
+        subtype_name = (game.special_object_docs[subtype] || " ").lines.first.strip[0..100]
       when 4
         if subtype == 0
           subtype_name = "Heart"
@@ -102,9 +88,9 @@ class EntityEditorDialog < Qt::Dialog
   def subtype_changed(subtype)
     case @ui.type.currentIndex
     when 1
-      @ui.entity_doc.setPlainText(@enemy_docs[subtype])
+      @ui.entity_doc.setPlainText(game.enemy_docs[subtype])
     when 2
-      @ui.entity_doc.setPlainText(@special_object_docs[subtype])
+      @ui.entity_doc.setPlainText(game.special_object_docs[subtype])
     else
       @ui.entity_doc.setPlainText("")
     end
