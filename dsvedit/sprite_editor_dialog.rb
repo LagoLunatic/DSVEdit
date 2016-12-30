@@ -53,10 +53,14 @@ class SpriteEditor < Qt::Dialog
     SPECIAL_OBJECT_IDS.each do |special_object_id|
       special_object = SpecialObjectType.new(special_object_id, fs)
       @special_objects << special_object
-      @ui.special_object_list.addItem("%02X" % special_object_id)
+      object_name = @special_object_docs[special_object_id] || " "
+      object_name = object_name.lines.first.strip[0..25]
+      @ui.special_object_list.addItem("%02X %s" % [special_object_id, object_name])
     end
     
-    @other_sprites = []
+    OTHER_SPRITES.each_with_index do |other_sprite, id|
+      @ui.other_sprites_list.addItem("%02X %s" % [id, other_sprite[:desc]])
+    end
     
     set_animation_paused(true)
     
@@ -113,7 +117,7 @@ class SpriteEditor < Qt::Dialog
   def other_sprite_changed(id)
     begin
       @gfx_pointer, @palette_pointer, @palette_offset, @sprite_file =
-        SpriteInfoExtractor.get_gfx_and_palette_and_sprite_from_create_code(@other_sprites[id], @fs, nil, {})
+        SpriteInfoExtractor.get_gfx_and_palette_and_sprite_from_create_code(OTHER_SPRITES[id][:pointer], @fs, OTHER_SPRITES[id][:overlay], {})
     rescue StandardError => e
       Qt::MessageBox.warning(self,
         "Sprite extraction failed",

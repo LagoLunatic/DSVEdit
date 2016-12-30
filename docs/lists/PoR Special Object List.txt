@@ -95,7 +95,7 @@ Special objects:
     00 Rolls left.
     01 Rolls right.
 34 
-35 
+35 Cog
 36 
 37 used but seems to be nothing
 38
@@ -162,6 +162,7 @@ Special objects:
 5D Transition room hider for Dracula's Castle (connects inside part of Entrance to Behemoth's area).
 5E Transition room hider for Dracula's Castle (connects outside part of Entrance to inside part of entrance).
 5F
+60 Crumbling block from Great Stairway.
 61
 62
 63
@@ -270,3 +271,12 @@ B2
 B3
 B4 event in vincent's room?
 B5 event in wind's room?
+B6 Wind event actor.
+B7 Vincent event actor.
+B8 Stella event actor.
+B9 Loretta event actor.
+BA Brauner event actor.
+BB Death event actor.
+BC Dracula event actor.
+BD Eric event actor.
+BE Vampiric Vincent event actor.

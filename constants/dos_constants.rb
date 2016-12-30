@@ -277,6 +277,28 @@ REUSED_SPECIAL_OBJECT_INFO = {
 BEST_SPRITE_FRAME_FOR_SPECIAL_OBJECT = {}
 SPECIAL_OBJECT_FILES_TO_LOAD_LIST = 0x0209B88C
 
+OTHER_SPRITES = [
+  {pointer: 0x0222E474, desc: "Soma player"},
+  {pointer: 0x0222E4CC, desc: "Julius player"},
+  {pointer: 0x0222E524, desc: "Yoko player"},
+  {pointer: 0x0222E57C, desc: "Alucard player"},
+  {pointer: 0x0203D4A0, desc: "Nintendo splash screen"},
+  {pointer: 0x0203D564, desc: "Konami splash screen"},
+  {pointer: 0x0203D8A8, desc: "Main menu"},
+  {pointer: 0x0203DAB0, desc: "Castlevania logo"},
+  {pointer: 0x0203ED3C, desc: "Credits"},
+  {pointer: 0x0203ED58, desc: "Characters used during credits"},
+  {pointer: 0x0203ED70, desc: "BGs used during credits"},
+  {pointer: 0x0203F410, desc: "Game over screen"},
+  {pointer: 0x02046714, desc: "Name signing screen"},
+  {pointer: 0x02046ACC, desc: "File select menu"},
+  {pointer: 0x020489A4, desc: "Choose course - unused?"},
+  {pointer: 0x02049078, desc: "Enemy set mode menu"},
+  {pointer: 0x0204908C, desc: "Enemy set mode retry/complete"},
+  {pointer: 0x020490A0, desc: "Wi-fi menu"},
+  {pointer: 0x02304B98, desc: "Iron maiden", overlay: 25},
+]
+
 TEXT_LIST_START_OFFSET = 0x0222F300
 TEXT_RANGE = (0..0x50A)
 TEXT_REGIONS = {

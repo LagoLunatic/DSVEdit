@@ -345,7 +345,7 @@ BEST_SPRITE_FRAME_FOR_ENEMY = {
 
 ENEMY_FILES_TO_LOAD_LIST = 0x020CD88C
 
-SPECIAL_OBJECT_IDS = (0..0xB5)
+SPECIAL_OBJECT_IDS = (0..0xBE)
 SPECIAL_OBJECT_CREATE_CODE_LIST = 0x0221D908
 SPECIAL_OBJECT_UPDATE_CODE_LIST = 0x0221DC18
 OVERLAY_FILE_FOR_SPECIAL_OBJECT = {
@@ -354,7 +354,17 @@ OVERLAY_FILE_FOR_SPECIAL_OBJECT = {
   0x4E => 79,
   0x84 => 99,
 }
-REUSED_SPECIAL_OBJECT_INFO = {}
+REUSED_SPECIAL_OBJECT_INFO = {
+  0xB6 => {init_code: 0x0221B9C0},
+  0xB7 => {init_code: 0x0221B9D0},
+  0xB8 => {init_code: 0x0221B9E0},
+  0xB9 => {init_code: 0x0221B9F0},
+  0xBA => {init_code: 0x0221BA00},
+  0xBB => {init_code: 0x0221BA10},
+  0xBC => {init_code: 0x0221BA20},
+  0xBD => {init_code: 0x0221BA30},
+  0xBE => {init_code: 0x0221BA40},
+}
 BEST_SPRITE_FRAME_FOR_SPECIAL_OBJECT = {
   0x1C => 0x19,
   0x32 => 0x09,
@@ -364,6 +374,18 @@ BEST_SPRITE_FRAME_FOR_SPECIAL_OBJECT = {
   0x79 => 0x07,
 }
 SPECIAL_OBJECT_FILES_TO_LOAD_LIST = 0x020E19DC # 0x0221F110 #???
+
+OTHER_SPRITES = [
+  {pointer: 0x0221E7F4, desc: "Jonathan player"},
+  {pointer: 0x0221E84C, desc: "Charlotte player"},
+  {pointer: 0x0221E8A4, desc: "Stella player"},
+  {pointer: 0x0221E8FC, desc: "Loretta player"},
+  {pointer: 0x0221E950, desc: "Richter player"},
+  {pointer: 0x0221E9AC, desc: "Maria player"},
+  {pointer: 0x0221EA04, desc: "Old Axe Armor player"},
+  {pointer: 0x022DEE20, desc: "Co-op mode start menu", overlay: 25},
+  {pointer: 0x022DC9AC, desc: "Co-op mode end menu", overlay: 25},
+]
 
 TEXT_LIST_START_OFFSET = 0x0221BA50
 TEXT_RANGE = (0..0x748)

@@ -240,19 +240,12 @@ Special objects:
 4D Trigger to make a secret item (Konami Man/Crown/Bell) appear.
 4E Mina Hakuba doll (only appears if Aria of Sorrow is in the GBA slot).
 4F Mina event actor.
-  Unused, nothing.
 50 Hammer event actor.
-  Unused, nothing.
 51 Arikado event actor.
-  Unused, nothing.
 52 Julius event actor.
-  Unused, nothing.
 53 Celia event actor.
-  Unused, nothing.
 54 Dario event actor.
-  Unused, nothing.
 55 Dmitrii event actor.
-  Unused, nothing.
 56 Used in prologue room. Force fields?
 57 The destroyable ceiling from the long room at the end of Wizardry Lab.
 58 Celia on a cross. Used in Menace's room. Doesn't appear until the event causes it to.
@@ -260,7 +253,6 @@ Special objects:
 5A Transition room hider.
   A big entity that acts as the graphics to transition rooms to hide the fact that they have no tiles.
 5B Alucard event actor.
-  Unused, nothing.
 5C used in menace's room. no effect?
 === Below are events. Var A may be an identifier for each event to check if it's been seen already or not. Var B is unknown.
 5D Event - Prologue.
