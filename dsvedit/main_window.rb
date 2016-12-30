@@ -121,6 +121,7 @@ class DSVEdit < Qt::MainWindow
     @game = game
     @renderer = Renderer.new(game.fs)
     @cached_enemy_pixmaps = {}
+    @cached_special_object_pixmaps = {}
     
     initialize_dropdowns()
     
@@ -135,6 +136,7 @@ class DSVEdit < Qt::MainWindow
     @game = game
     @renderer = Renderer.new(game.fs)
     @cached_enemy_pixmaps = {}
+    @cached_special_object_pixmaps = {}
     
     initialize_dropdowns()
     
@@ -333,6 +335,32 @@ class DSVEdit < Qt::MainWindow
         
         graphics_item = EntityChunkyItem.new(chunky_image, entity, self)
         graphics_item.setPos(entity.x_pos-16, entity.y_pos-16)
+        graphics_item.setParentItem(@entities_view_item)
+      elsif entity.is_special_object?
+        special_object_id = entity.subtype
+        chunky_frame, min_x, min_y = @cached_special_object_pixmaps[special_object_id] ||= begin
+          gfx_pointer, palette, palette_offset, sprite_file = SpecialObjectType.new(special_object_id, game.fs).get_gfx_and_palette_and_sprite_from_create_code
+          frame_to_render = BEST_SPRITE_FRAME_FOR_SPECIAL_OBJECT[special_object_id] || 0
+          
+          sprite = Sprite.new(sprite_file, game.fs)
+          chunky_frames, min_x, min_y = @renderer.render_sprite(gfx_pointer, palette, palette_offset, sprite, frame_to_render)
+          if chunky_frames.empty?
+            next
+          end
+          
+          chunky_frame = chunky_frames.first
+          
+          [chunky_frame, min_x, min_y]
+        rescue
+          # Failed to render object sprite, put a generic rectangle there instead.
+          graphics_item = EntityRectItem.new(entity, self)
+          graphics_item.setParentItem(@entities_view_item)
+          next
+        end
+        
+        graphics_item = EntityChunkyItem.new(chunky_frame, entity, self)
+        
+        graphics_item.setPos(entity.x_pos+min_x, entity.y_pos+min_y)
         graphics_item.setParentItem(@entities_view_item)
       else
         graphics_item = EntityRectItem.new(entity, self)
