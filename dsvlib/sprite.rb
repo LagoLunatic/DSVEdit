@@ -26,7 +26,7 @@ class Sprite
   def read_from_rom()
     magic_bytes = fs.read_by_file(sprite_file[:file_path], 0, 4).unpack("V*").first
     if magic_bytes != 0xBEEFF00D
-      raise "Unknown magic bytes: %08X" % magic_bytes
+      raise "Unknown magic bytes for sprite file %s: %08X" % [sprite_file[:file_path], magic_bytes]
     end
     
     @part_list_offset, @hitbox_list_offset, @frame_list_offset,

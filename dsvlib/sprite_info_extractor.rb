@@ -6,6 +6,18 @@ class SpriteInfoExtractor
     # It first looks in the list of files to load for that enemy/object (if given).
     # If any are missing after looking there, it then looks in the create code for pointers that look like they could be the pointers we want.
     
+    if overlay_to_load.is_a?(Integer)
+      fs.load_overlay(overlay_to_load)
+    elsif overlay_to_load.is_a?(Array)
+      overlay_to_load.each do |overlay|
+        fs.load_overlay(overlay)
+      end
+    end
+    
+    if GAME == "por"
+      fs.load_overlay(4)
+    end
+    
     init_code_pointer      = reused_info[:init_code] || create_code_pointer
     gfx_sheet_ptr_index    = reused_info[:gfx_sheet_ptr_index] || 0
     palette_offset         = reused_info[:palette_offset] || 0
@@ -35,7 +47,13 @@ class SpriteInfoExtractor
             canvas_width = fs.read(file[:ram_start_offset]+2, 1).unpack("C").first
             gfx_files_to_load << {file: file, render_mode: render_mode, canvas_width: canvas_width}
           elsif file_data_type == 2
-            sprite_files_to_load << file
+            if file[:file_path] =~ /\/so2?\/.+\.dat/
+              sprite_files_to_load << file
+            elsif file[:file_path] =~ /\/jnt\/.+\.jnt/
+              puts file
+            else
+              puts file
+            end
           end
         elsif file_data_type == 3
           palette_pointer_to_load = file_index_or_palette_pointer
@@ -59,18 +77,6 @@ class SpriteInfoExtractor
     end
     
     
-    
-    if overlay_to_load.is_a?(Integer)
-      fs.load_overlay(overlay_to_load)
-    elsif overlay_to_load.is_a?(Array)
-      overlay_to_load.each do |overlay|
-        fs.load_overlay(overlay)
-      end
-    end
-    
-    if GAME == "por"
-      fs.load_overlay(4)
-    end
     
     possible_gfx_pointers = []
     gfx_page_pointer = nil
