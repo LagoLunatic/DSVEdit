@@ -274,7 +274,9 @@ REUSED_SPECIAL_OBJECT_INFO = {
   0x55 => {init_code: 0x0222CC50, gfx_sheet_ptr_index: 0, palette_offset: 0, palette_list_ptr_index: 0}, # dmitrii event actor
   0x5B => {init_code: 0x0222CC60, gfx_sheet_ptr_index: 0, palette_offset: 0, palette_list_ptr_index: 0}, # alucard event actor
 }
-BEST_SPRITE_FRAME_FOR_SPECIAL_OBJECT = {}
+BEST_SPRITE_FRAME_FOR_SPECIAL_OBJECT = {
+  0x3A => 0x08,
+}
 SPECIAL_OBJECT_FILES_TO_LOAD_LIST = 0x0209B88C
 
 OTHER_SPRITES = [

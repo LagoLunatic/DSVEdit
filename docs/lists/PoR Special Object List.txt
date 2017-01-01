@@ -27,7 +27,7 @@ Special objects:
 15 Unused
 16 Mirage background effect used in Sandy Grave.
 17 Background with the moon used in Sandy Grave. Var A seems to affect the z-index, lower values meaning closer to the screen.
-18 used in city of haze
+18 Background from City of Haze.
 19 Effect that makes the screen very dark except the area around the player. Used in Forest of Doom.
 1A Portrait to City of Haze, Sandy Grave, Nation of Fools, or Forest of Doom.
   Note that it can still bring you to any area you set, but it will only display the right visuals for the above areas.
@@ -38,7 +38,8 @@ Special objects:
     Bits 7-10: Sector index of the destination room.
     Bits 11-16: Nothing.
 1B nothing? used in sandy grave outside rooms
-1C Drawbrige. Requires overlay 78.
+1C Drawbridge.
+  Requires overlay 78.
 1D Save point.
 1E Warp point.
 1F Large falling spiked block trap used in Sandy Grave.
@@ -80,25 +81,33 @@ Special objects:
   Var A: Affects what sound effects the rain plays.
 28 Train you need to slow down to a stop?
 29 Spawns the Ghoul King?
-2A 
+2A Background from 13th Street.
 2B Red moon background from Forgotten City.
 2C Transition room hider for Sandy Grave.
 2D Transition room hider for Forgotten City.
 2E motorcycles?
 2F pushable grave from forest of doom? might require a certain overlay
-30 
-31 
+30 Breakable ceiling from Dark Academy that lets rain through after it's broken.
+31 The drill cart that breaks a wall in City of Haze.
+  Requires overlay 94.
 32 pushable block from sandy grave?
   Requires overlay 91.
 33 Falling boulder.
   Var A:
     00 Rolls left.
     01 Rolls right.
-34 
-35 Cog
-36 
-37 used but seems to be nothing
-38
+34 Very large cog.
+35 Cog.
+36 The wall and button that opens it from Sandy Grave/Forgotten City.
+  Var A:
+    0 For Sandy Grave?
+    1 For Forgotten City?
+37 The ceiling/floor and button that opens them from the Entrance.
+  Var A:
+    0 For the button and floor.
+    1 For the ceiling.
+38 Wall and bell that lowers it.
+  Var A: ?
 39
 3A
 3B Breakable wall.
@@ -121,26 +130,26 @@ Special objects:
 3E Platform that flips if you stand on it too long. Var A is the graphic style of the platform.
 3F Platform that floats up and down.
 40 Large pushable switch.
-41
+41 Wall of fire and button to the left that lowers it.
 42 Unused
-43 Block that crumbles if you stand on it too long.
+43 Crumbling block from Tower of Death.
 44 Sand falling from the ceiling.
 45 Background with the moon and mountains used in the Master's Keep and Throne Room.
 46 Fast mechanical elevator from Tower of Death. Requires overlay 85.
-47 ??? from Dark Academy
+47 Ghosts from Dark Academy.
   Var A:
-    0
-    1
-    2
-    3
-    4
-    5
+    0 Stairs?
+    1 Pianist.
+    2 Bathroom door.
+    3 Anatomical model.
+    4 Bloody handprints on the blackboard.
+    5 Ghost man that only appears when you're close to him.
 48 Waterwheel platforms elevator from Tower of Death. Requires overlay 86.
 49 Rapidly moving clouds background effect used in the Master's Keep and Throne Room.
 4A Hands on the clock from Death's boss room.
   These rotate to match the DS's system time.
 4B Unused
-4C Unused
+4C Unused. Blockade, similar to the ones in Dawn of Sorrow.
 4D Pushable rectangular block.
   Var A: 0 for tall block, 1 for short block.
 4E Pushable and destroyable statue from near the start of the game.
@@ -154,11 +163,11 @@ Special objects:
 55
 56
 57
-58
-59
-5A
-5B
-5C
+58 Transition room hider for City of Haze.
+59 Transition room hider for City of Haze.
+5A Transition room hider for City of Haze.
+5B Transition room hider for 13th Street.
+5C Transition room hider for 13th Street.
 5D Transition room hider for Dracula's Castle (connects inside part of Entrance to Behemoth's area).
 5E Transition room hider for Dracula's Castle (connects outside part of Entrance to inside part of entrance).
 5F
@@ -174,15 +183,15 @@ Special objects:
 69 Transition room hider for Master's Keep.
 6A Transition room hider for Master's Keep.
 6B Transition room hider for Master's Keep.
-6C
-6D
-6E
-6F
-70
-71
-72
-73
-74
+6C Transition room hider for Forest of Doom.
+6D Transition room hider for Forest of Doom.
+6E Transition room hider for Forest of Doom.
+6F Transition room hider for Forest of Doom.
+70 Transition room hider for Forest of Doom.
+71 Transition room hider for Dark Academy.
+72 Transition room hider for Dark Academy.
+73 Transition room hider for Dark Academy.
+74 Transition room hider for Tower of Death.
 75
 76 Portrait to 13th Street, Forgotten City, Burnt Paradise, or Dark Academy. (Uses different picture frame than 1A.)
   Note that it can still bring you to any area you set, but it will only display the right visuals for the above areas.
@@ -233,10 +242,10 @@ Special objects:
 8D
 8E
 8F in the sister's boss room
-90
-91
-92
-93
+90 Transition room hider for Nation of Fools.
+91 Transition room hider for Nation of Fools and Burnt Paradise.
+92 Transition room hider for Nation of Fools and Burnt Paradise.
+93 Transition room hider for Nation of Fools.
 94
 95 event in first room of game?
 96
