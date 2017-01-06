@@ -259,7 +259,7 @@ class DSVEdit < Qt::MainWindow
     sector_and_room_indexes_changed(tile.sector_index, tile.room_index)
   end
   
-  def load_room()
+  def load_room
     @room_graphics_scene.clear()
     @room_graphics_scene = Qt::GraphicsScene.new
     @ui.room_graphics_view.setScene(@room_graphics_scene)
@@ -282,11 +282,13 @@ class DSVEdit < Qt::MainWindow
     
     @collision_view_item = Qt::GraphicsRectItem.new
     @room_graphics_scene.addItem(@collision_view_item)
-    @renderer.ensure_tilesets_exist("cache/#{GAME}/rooms/", @room, collision=true)
-    tileset_filename = "cache/#{GAME}/rooms/#{@room.area_name}/Tilesets/#{@room.layers.first.tileset_filename}_collision.png"
-    tileset = Qt::Image.new(tileset_filename)
-    layer = @room.layers.first
-    load_layer(layer, tileset, @collision_view_item)
+    if @room.layers.length > 0
+      @renderer.ensure_tilesets_exist("cache/#{GAME}/rooms/", @room, collision=true)
+      tileset_filename = "cache/#{GAME}/rooms/#{@room.area_name}/Tilesets/#{@room.layers.first.tileset_filename}_collision.png"
+      tileset = Qt::Image.new(tileset_filename)
+      layer = @room.layers.first
+      load_layer(layer, tileset, @collision_view_item)
+    end
     
     @entities_view_item = Qt::GraphicsRectItem.new
     @room_graphics_scene.addItem(@entities_view_item)
@@ -491,7 +493,10 @@ class DSVEdit < Qt::MainWindow
   end
   
   def open_in_tiled
-    if @settings[:tiled_path].nil? || @settings[:tiled_path].empty?
+    if @room.layers.length == 0
+      Qt::MessageBox.warning(self, "Room has no layers", "Cannot edit a room that has no layers.")
+      return
+    elsif @settings[:tiled_path].nil? || @settings[:tiled_path].empty?
       Qt::MessageBox.warning(self, "Failed to run Tiled", "You must specify where Tiled is installed.")
       return
     elsif !File.file?(@settings[:tiled_path])
