@@ -159,10 +159,24 @@ class DSVEdit < Qt::MainWindow
   end
   
   def area_index_changed(new_area_index, force=false)
+    change_area(new_area_index, force)
+    sector_index_changed(0, force=true)
+  end
+  
+  def sector_index_changed(new_sector_index, force=false)
+    change_sector(new_sector_index, force)
+    room_index_changed(0, force=true)
+  end
+  
+  def room_index_changed(new_room_index, force=false)
+    change_room(new_room_index, force)
+  end
+  
+  def change_area(new_area_index, force=false)
     if @ui.area.findText("Select Area", flags=Qt::MatchExactly) >= 0
       # Remove the placeholder Select Area text.
       @ui.area.removeItem(0)
-      area_index_changed(0, force=true) # Trigger a second call to area_index_changed to select the actual first area.
+      change_area(0, force=true) # Trigger a second call to change_area to select the actual first area.
       return
     end
     
@@ -173,7 +187,6 @@ class DSVEdit < Qt::MainWindow
     @area_index = new_area_index
     @area = game.areas[@area_index]
     @ui.area.setCurrentIndex(@area_index)
-    sector_index_changed(0, force=true)
     @ui.sector.clear()
     AREA_INDEX_TO_OVERLAY_INDEX[@area_index].keys.each do |sector_index|
       overlay_id = AREA_INDEX_TO_OVERLAY_INDEX[@area_index][sector_index]
@@ -188,7 +201,7 @@ class DSVEdit < Qt::MainWindow
     load_map()
   end
   
-  def sector_index_changed(new_sector_index, force=false)
+  def change_sector(new_sector_index, force=false)
     if new_sector_index == @sector_index && !force
       return
     end
@@ -202,7 +215,6 @@ class DSVEdit < Qt::MainWindow
     @sector_index = new_sector_index
     @sector = @area.sectors[@sector_index]
     @ui.sector.setCurrentIndex(@sector_index)
-    room_index_changed(0, force=true)
     @ui.room.clear()
     @sector.rooms.each_with_index do |room, room_index|
       @ui.room.addItem("%02X %08X" % [room_index, room.room_metadata_ram_pointer])
@@ -213,7 +225,7 @@ class DSVEdit < Qt::MainWindow
     end
   end
   
-  def room_index_changed(new_room_index, force=false)
+  def change_room(new_room_index, force=false)
     if new_room_index == @room_index && !force
       return
     end
@@ -233,15 +245,15 @@ class DSVEdit < Qt::MainWindow
   end
   
   def sector_and_room_indexes_changed(new_sector_index, new_room_index)
-    sector_index_changed(new_sector_index)
-    room_index_changed(new_room_index)
+    change_sector(new_sector_index)
+    change_room(new_room_index)
   end
   
   def change_room_by_metadata(room_metadata_ram_pointer)
     room = game.get_room_by_metadata_pointer(room_metadata_ram_pointer)
-    area_index_changed(room.area_index)
-    sector_index_changed(room.sector_index)
-    room_index_changed(room.room_index)
+    change_area(room.area_index)
+    change_sector(room.sector_index)
+    change_room(room.room_index)
   end
   
   def change_room_by_map_x_and_y(x, y, button)
