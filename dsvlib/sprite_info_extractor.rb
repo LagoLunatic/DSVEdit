@@ -147,7 +147,7 @@ class SpriteInfoExtractor
       
       data = fs.read(gfx_pointer+4, 4).unpack("V").first
       if data >= 0x02000000 && data < 0x03000000
-        _, _, number_of_gfx_pages, _ = fs.read(list_of_gfx_page_pointers_wrapper_pointer, 1).unpack("C*")
+        _, _, number_of_gfx_pages, _ = fs.read(gfx_pointer, 4).unpack("C*")
         pointer_to_list_of_gfx_file_pointers = data
         
         gfx_file_pointers = fs.read(pointer_to_list_of_gfx_file_pointers, 4*number_of_gfx_pages).unpack("V*")
