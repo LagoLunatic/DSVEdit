@@ -554,9 +554,13 @@ class Renderer
     return [fill_tile, lines_tile]
   end
   
-  def render_sprite(gfx_files, palette_pointer, palette_offset, sprite, frame_to_render = nil, render_hitboxes = false)
+  def render_sprite(gfx_file_pointers, palette_pointer, palette_offset, sprite, frame_to_render = nil, render_hitboxes = false)
     gfx_files_with_blanks = []
-    gfx_files.each do |gfx_file|
+    gfx_file_pointers.each do |gfx_file_pointer|
+      gfx_file = fs.find_file_by_ram_start_offset(gfx_file_pointer)
+      _, render_mode, canvas_width, _ = fs.read(gfx_file_pointer, 4).unpack("C*")
+      gfx_file = {file: gfx_file, render_mode: render_mode, canvas_width: canvas_width}
+      
       gfx_files_with_blanks << gfx_file
       blanks_needed = (gfx_file[:canvas_width]/0x10 - 1) * 3
       gfx_files_with_blanks += [nil]*blanks_needed

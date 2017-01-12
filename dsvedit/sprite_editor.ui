@@ -112,9 +112,19 @@
               <widget class="QLineEdit" name="palette_pointer">
                <property name="maximumSize">
                 <size>
-                 <width>200</width>
+                 <width>80</width>
                  <height>16777215</height>
                 </size>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QPushButton" name="view_skeleton_button">
+               <property name="enabled">
+                <bool>false</bool>
+               </property>
+               <property name="text">
+                <string>View skeleton</string>
                </property>
               </widget>
              </item>
