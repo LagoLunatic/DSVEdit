@@ -247,14 +247,14 @@ class DSVEdit < Qt::MainWindow
   
   def sector_and_room_indexes_changed(new_sector_index, new_room_index)
     change_sector(new_sector_index)
-    change_room(new_room_index)
+    change_room(new_room_index, force=true)
   end
   
   def change_room_by_metadata(room_metadata_ram_pointer)
     room = game.get_room_by_metadata_pointer(room_metadata_ram_pointer)
     change_area(room.area_index)
-    change_sector(room.sector_index)
-    change_room(room.room_index)
+    change_sector(room.sector_index, force=true)
+    change_room(room.room_index, force=true)
   end
   
   def change_room_by_map_x_and_y(x, y, button)
