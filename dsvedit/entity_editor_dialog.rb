@@ -36,8 +36,8 @@ class EntityEditorDialog < Qt::Dialog
     @entity = entity
     
     @ui.pointer.text = "%08X" % entity.entity_ram_pointer
-    @ui.x_pos.text = "%04X" % entity.x_pos
-    @ui.y_pos.text = "%04X" % entity.y_pos
+    @ui.x_pos.text = "%04X" % [entity.x_pos].pack("s").unpack("v").first
+    @ui.y_pos.text = "%04X" % [entity.y_pos].pack("s").unpack("v").first
     @ui.byte_5.text = "%02X" % entity.byte_5
     @ui.type.setCurrentIndex(entity.type)
     type_changed(entity.type)
@@ -97,8 +97,8 @@ class EntityEditorDialog < Qt::Dialog
   end
   
   def save_entity
-    @entity.x_pos   = @ui.x_pos.text.to_i(16)
-    @entity.y_pos   = @ui.y_pos.text.to_i(16)
+    @entity.x_pos   = [@ui.x_pos.text.to_i(16)].pack("v").unpack("s").first
+    @entity.y_pos   = [@ui.y_pos.text.to_i(16)].pack("v").unpack("s").first
     @entity.byte_5  = @ui.byte_5.text.to_i(16)
     @entity.type    = @ui.type.currentIndex
     @entity.subtype = @ui.subtype.currentIndex

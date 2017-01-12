@@ -4,8 +4,8 @@ Each entity is 12 bytes long.
 The end of the list for entities in this room is marked by the following 12 bytes: FF 7F FF 7F 00 00 00 00 00 00 00 00
 
 Entity:
-Bytes 1-2: Entity's x position in the room, in pixels.
-Bytes 3-4: Entity's y position in the room, in pixels.
+Bytes 1-2: Entity's x position in the room, in pixels. (Signed.)
+Bytes 3-4: Entity's y position in the room, in pixels. (Signed.)
 Byte 5: ???
 Byte 6: Entity type.
   00 Nothing.
