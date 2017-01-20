@@ -108,10 +108,15 @@ Special objects:
     1 For the ceiling.
 38 Wall and bell that lowers it.
   Var A: ?
-39
-3A
+39 Large windmill blades spinning in the background.
+  Requires overlay 86.
+3A Various objects from corridor where Behemoth chases you.
+  Requires overlay 79.
+  Byte 5: If this is between 14-29 or FE-FF, the object will no longer appear after Behemoth chased you.
+  Var A: The sprite frame to use for this object. 0-9 are pillars, A-B are platforms, C-D are the steel door at the end of the corridor.
 3B Breakable wall.
-  Var a: Which wall it is.
+  Byte 5: ???
+  Var A: Which wall it is.
 3C Large swinging axe.
   Var B: Starting rotation. 4000 rotates it by 90 degrees clockwise. For example:
     0000 Attached to the ceiling.
