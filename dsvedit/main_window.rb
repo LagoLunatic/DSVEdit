@@ -585,7 +585,7 @@ class DSVEdit < Qt::MainWindow
             system("start \"#{@settings[:emulator_path]}\" \"#{output_rom_path}\"")
           end
         else
-          Qt::MessageBox.information(self, "Done", "All files written to rom.")
+          #Qt::MessageBox.information(self, "Done", "All files written to rom.")
         end
       end
     end
