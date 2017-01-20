@@ -261,7 +261,6 @@ OVERLAY_FILE_FOR_ENEMY_AI = {
   154 => 65, # true dracula
 }
 REUSED_ENEMY_INFO = {
-   #17 => {init_code: 0x0222D5DC, gfx_sheet_ptr_index: 0, palette_offset: 3, palette_list_ptr_index: 0}, # wight -> zombie
    49 => {palette_offset: 2}, # lilith
    70 => {init_code: 0x02297320, palette_offset: 3}, # red axe armor -> axe armor
    78 => {init_code: 0x022D7930}, # flame demon
@@ -360,11 +359,14 @@ OVERLAY_FILE_FOR_SPECIAL_OBJECT = {
   0x30 => 111,
   0x31 => 94,
   0x32 => 91,
+  0x39 => 86,
+  0x3A => 79,
   0x4A => 85,
   0x4E => 79,
   0x84 => 99,
 }
 REUSED_SPECIAL_OBJECT_INFO = {
+  0x01 => {init_code: 0x020F4B6C},
   0xB6 => {init_code: 0x0221B9C0},
   0xB7 => {init_code: 0x0221B9D0},
   0xB8 => {init_code: 0x0221B9E0},
@@ -376,8 +378,10 @@ REUSED_SPECIAL_OBJECT_INFO = {
   0xBE => {init_code: 0x0221BA40},
 }
 BEST_SPRITE_FRAME_FOR_SPECIAL_OBJECT = {
+  0x01 => 0x0F,
   0x1C => 0x19,
   0x32 => 0x09,
+  0x39 => 0x01,
   0x43 => 0x0A,
   0x4D => 0x02,
   0x6A => 0x02,
@@ -395,8 +399,38 @@ OTHER_SPRITES = [
   {pointer: 0x0221E950, desc: "Richter player"},
   {pointer: 0x0221E9AC, desc: "Maria player"},
   {pointer: 0x0221EA04, desc: "Old Axe Armor player"},
+  
+  {pointer: 0x020F4B58, desc: "Destructibles 0"},
+  {pointer: 0x020F4B6C, desc: "Destructibles 1"},
+  {pointer: 0x020F4B80, desc: "Destructibles 2"},
+  {pointer: 0x020F4B94, desc: "Destructibles 3"},
+  {pointer: 0x020F4BA8, desc: "Destructibles 4"},
+  {pointer: 0x020F4BBC, desc: "Destructibles 5"},
+  {pointer: 0x020F4BD0, desc: "Destructibles 6"},
+  {pointer: 0x020F4BE4, desc: "Destructibles 7"},
+  {pointer: 0x020F4BF8, desc: "Destructibles 8"},
+  {pointer: 0x020F4C0C, desc: "Destructibles 9"},
+  {pointer: 0x020F4C20, desc: "Destructibles 10"},
+  {pointer: 0x020F4C34, desc: "Destructibles 11"},
+  {pointer: 0x020F4C48, desc: "Destructibles 12"},
+  {pointer: 0x020F4C5C, desc: "Destructibles 13"},
+  {pointer: 0x020F4C70, desc: "Destructibles 14"},
+  {pointer: 0x020F4C84, desc: "Destructibles 15"},
+  {pointer: 0x020F4E84, desc: "Portrait frame 0"},
+  {pointer: 0x020F4E90, desc: "Portrait frame 1"},
+  {pointer: 0x020F4E9C, desc: "Portrait painting 0"},
+  {pointer: 0x020F4EA8, desc: "Portrait painting 1"},
+  {pointer: 0x020F4EB4, desc: "Portrait painting ???"}, # broken
+  {pointer: 0x020F4EC0, desc: "Portrait painting 3"},
+  
+  {pointer: 0x022E0700, desc: "Title screen graphics", overlay: 26},
+  {pointer: 0x022E0710, desc: "Title screen options", overlay: 26},
+  {pointer: 0x022DAAE0, desc: "Name entry menu", overlay: 25},
   {pointer: 0x022DEE20, desc: "Co-op mode start menu", overlay: 25},
   {pointer: 0x022DC9AC, desc: "Co-op mode end menu", overlay: 25},
+  
+  {pointer: 0x022D7CBC, desc: "Brauner inside mirror portrait", overlay: 55},
+  {pointer: 0x022D7C98, desc: "Brauner curse beast", overlay: 55},
 ]
 
 TEXT_LIST_START_OFFSET = 0x0221BA50

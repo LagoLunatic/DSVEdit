@@ -264,9 +264,13 @@ SPECIAL_OBJECT_CREATE_CODE_LIST = 0x0222C714
 SPECIAL_OBJECT_UPDATE_CODE_LIST = 0x0222C8F0
 OVERLAY_FILE_FOR_SPECIAL_OBJECT = {}
 REUSED_SPECIAL_OBJECT_INFO = {
+  0x01 => {init_code: 0x0222BAAC, gfx_sheet_ptr_index: 0, palette_offset: 0, palette_list_ptr_index: 0}, # destructible
+  0x09 => {init_code: 0x0222BD04, gfx_sheet_ptr_index: 0, palette_offset: 0, palette_list_ptr_index: 0}, # chair
   0x26 => {init_code: 0x021A8FC8, gfx_sheet_ptr_index: 0, palette_offset: 0, palette_list_ptr_index: 0}, # slot machine
   0x27 => {init_code: 0x021A8434, gfx_sheet_ptr_index: 0, palette_offset: 0, palette_list_ptr_index: 0}, # condemned tower gate
   0x29 => {init_code: 0x021A7FC4, gfx_sheet_ptr_index: 0, palette_offset: 0, palette_list_ptr_index: 0}, # dark chapel gate
+  0x47 => {init_code: 0x0222CC10, gfx_sheet_ptr_index: 0, palette_offset: 0, palette_list_ptr_index: 0}, # hammer shopkeeper
+  0x48 => {init_code: 0x0222CC00, gfx_sheet_ptr_index: 0, palette_offset: 0, palette_list_ptr_index: 0}, # yoko shopkeeper
   0x4F => {init_code: 0x0222CBE0, gfx_sheet_ptr_index: 0, palette_offset: 0, palette_list_ptr_index: 0}, # mina event actor
   0x50 => {init_code: 0x0222CC10, gfx_sheet_ptr_index: 0, palette_offset: 0, palette_list_ptr_index: 0}, # hammer event actor
   0x51 => {init_code: 0x0222CBF0, gfx_sheet_ptr_index: 0, palette_offset: 0, palette_list_ptr_index: 0}, # arikado event actor
@@ -286,6 +290,21 @@ OTHER_SPRITES = [
   {pointer: 0x0222E4CC, desc: "Julius player"},
   {pointer: 0x0222E524, desc: "Yoko player"},
   {pointer: 0x0222E57C, desc: "Alucard player"},
+  
+  {pointer: 0x0222BAAC, desc: "Destructibles 0"},
+  {pointer: 0x0222BAB8, desc: "Destructibles 1"},
+  {pointer: 0x0222BAC4, desc: "Destructibles 2"},
+  {pointer: 0x0222BAD0, desc: "Destructibles 3"},
+  {pointer: 0x0222BADC, desc: "Destructibles 4"},
+  {pointer: 0x0222BAE8, desc: "Destructibles 5"},
+  {pointer: 0x0222BAF4, desc: "Destructibles 6"},
+  {pointer: 0x0222BB00, desc: "Destructibles 7"},
+  {pointer: 0x0222BB0C, desc: "Destructibles 8"},
+  {pointer: 0x0222BD04, desc: "Chair 1"},
+  {pointer: 0x0222BD10, desc: "Chair 2"},
+  {pointer: 0x0222BD1C, desc: "Chair 3"},
+  {pointer: 0x0222BD28, desc: "Chair 4"},
+  
   {pointer: 0x0203D4A0, desc: "Nintendo splash screen"},
   {pointer: 0x0203D564, desc: "Konami splash screen"},
   {pointer: 0x0203D8A8, desc: "Main menu"},
@@ -298,8 +317,9 @@ OTHER_SPRITES = [
   {pointer: 0x02046ACC, desc: "File select menu"},
   {pointer: 0x020489A4, desc: "Choose course - unused?"},
   {pointer: 0x02049078, desc: "Enemy set mode menu"},
-  {pointer: 0x0204908C, desc: "Enemy set mode retry/complete"},
+  {pointer: 0x0204908C, desc: "Enemy set retry/complete"},
   {pointer: 0x020490A0, desc: "Wi-fi menu"},
+  
   {pointer: 0x02304B98, desc: "Iron maiden", overlay: 25},
 ]
 

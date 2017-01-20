@@ -378,8 +378,13 @@ OVERLAY_FILE_FOR_SPECIAL_OBJECT = {
   0x60 => 42,
   0x66 => 78,
 }
-REUSED_SPECIAL_OBJECT_INFO = {}
+REUSED_SPECIAL_OBJECT_INFO = {
+  0x16 => {init_code: 0x0221A408, gfx_sheet_ptr_index: 0, palette_offset: 1, palette_list_ptr_index: 0}, # red chest
+  0x17 => {init_code: 0x0221A408, gfx_sheet_ptr_index: 0, palette_offset: 2, palette_list_ptr_index: 0}, # blue chest
+}
 BEST_SPRITE_FRAME_FOR_SPECIAL_OBJECT = {
+  0x16 => 0x05,
+  0x17 => 0x05,
   0x25 => 0x02,
   0x4E => 0x09,
   0x59 => 0x01,
@@ -387,6 +392,29 @@ BEST_SPRITE_FRAME_FOR_SPECIAL_OBJECT = {
   0x60 => 0x06,
 }
 SPECIAL_OBJECT_FILES_TO_LOAD_LIST = 0x020F343C
+
+OTHER_SPRITES = [
+  {pointer: 0x020EED5C, desc: "Shanoa player"},
+  {pointer: 0x020EEDB8, desc: "Arma Felix player"},
+  {pointer: 0x020EEE14, desc: "Arma Chiroptera player"},
+  {pointer: 0x020EEE70, desc: "Arma Machina player"},
+  {pointer: 0x020EEECC, desc: "Albus player"},
+  
+  {pointer: 0x022B6DA8, desc: "Glyph statue"},
+  {pointer: 0x022B6DBC, desc: "Destructibles 0"},
+  {pointer: 0x022B6DD0, desc: "Destructibles 1"},
+  {pointer: 0x022B6DE4, desc: "Destructibles 2"},
+  {pointer: 0x022B6DF8, desc: "Destructibles 3"},
+  {pointer: 0x022B6E0C, desc: "Destructibles 4"},
+  {pointer: 0x022B6E20, desc: "Destructibles 5"},
+  {pointer: 0x022B6E34, desc: "Destructibles 6"},
+  {pointer: 0x022B6E48, desc: "Destructibles 7"},
+  {pointer: 0x022B6E5C, desc: "Destructibles 8"},
+  {pointer: 0x022B6E70, desc: "Destructibles 9"},
+  {pointer: 0x022B6E84, desc: "Destructibles 10"},
+  {pointer: 0x022B6E98, desc: "Destructibles 11"},
+  {pointer: 0x022B6EAC, desc: "Destructibles 12"},
+]
 
 TEXT_LIST_START_OFFSET = 0x021FACC0
 TEXT_RANGE = (0..0x764)
