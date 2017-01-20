@@ -6,16 +6,16 @@ class Layer
   attr_reader :room,
               :layer_list_entry_ram_pointer,
               :layer_metadata_ram_pointer,
-              :render_type,
-              :opacity,
-              :scroll_mode,
-              :z_index,
-              :ram_pointer_to_tileset_for_layer,
               :fs,
-              :collision_tileset_ram_pointer,
               :layer_tiledata_ram_start_offset
   attr_accessor :width,
                 :height,
+                :ram_pointer_to_tileset_for_layer,
+                :collision_tileset_ram_pointer,
+                :z_index,
+                :scroll_mode,
+                :opacity,
+                :render_type,
                 :tiles
   
   def initialize(room, layer_list_entry_ram_pointer, fs)
@@ -69,6 +69,9 @@ class Layer
     end
     
     fs.write(layer_metadata_ram_pointer, [width, height].pack("CC"))
+    fs.write(layer_metadata_ram_pointer+4, [ram_pointer_to_tileset_for_layer, collision_tileset_ram_pointer].pack("VV"))
+    fs.write(layer_list_entry_ram_pointer, [z_index, scroll_mode, opacity].pack("CCC"))
+    fs.write(layer_list_entry_ram_pointer+8, [render_type].pack("C"))
     tile_data = tiles.map(&:to_tile_data).pack("v*")
     fs.write(layer_tiledata_ram_start_offset, tile_data)
   end
