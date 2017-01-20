@@ -305,13 +305,21 @@ class Renderer
       return palette_list
     end
     
-    number_of_palettes = fs.read(palette_data_start_offset+2,1).unpack("C*").first
+    if colors_per_palette == 256
+      # color_offsets_per_palette_index: How many colors one index offsets by. This is always 16 for 16-color palettes. But for 256-color palettes it differs between DoS and PoR/OoE. In DoS one index only offsets by 16 colors, meaning you use indexes 0x00, 0x10, 0x20, etc. In PoR and OoE one index offsets by the full 256 colors, meaning you use indexes 0x00, 0x01, 0x02, etc
+      color_offsets_per_palette_index = COLOR_OFFSETS_PER_256_PALETTE_INDEX
+    else
+      color_offsets_per_palette_index = 16
+    end
+    
+    number_of_palettes = fs.read(palette_data_start_offset+2,1).unpack("C*").first / (color_offsets_per_palette_index/16)
     
     palette_data_start_offset += 4 # Skip the first 4 bytes, as they contain the length of this palette page, not the palette data itself.
 
     palette_list = []
     (0..number_of_palettes-1).each do |palette_index| # todo: cache palettes
-      palette_data = fs.read(palette_data_start_offset + 32*palette_index, colors_per_palette*2, allow_length_to_exceed_end_of_file: true)
+      palette_data = fs.read(palette_data_start_offset + (2*color_offsets_per_palette_index)*palette_index, colors_per_palette*2, allow_length_to_exceed_end_of_file: true)
+      
       palette = palette_data.scan(/.{2}/m).map do |color|
         color = color.unpack("v*").first
         # these two bytes hold the rgb data for the color in this format:
