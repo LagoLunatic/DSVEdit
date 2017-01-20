@@ -61,16 +61,27 @@ Special Objects:
 1F crash
 20 The ring of flaming heads with a magnes point in the center from the Training Chamber. Var b is the speed it rotates at.
 21 foreground pillar used in arms depot?
-22 
-23 hard crash. used in training hall
-24 
+22 Area that slows the player's movement significantly.
+  Var A: Width in pixels for the area to extend.
+23 Volaticus blocker.
+  Requires overlay 43.
+  Prevents using Volaticus in rooms that have this object in them.
+  Var A: 0 for normal. 1 to display the message saying that Volaticus cannot be used. This message will appear every time you exit and re-enter the Training Hall.
+24 Opens boss doors after a full minute has passed.
+  Only opens boss doors that have Var A = 1 (the type that usually opens when there are no enemies left in the room).
 25 Cross.
   Requires overlay 62.
 26 Rat running around.
-27 hard crash
+27 Iron maiden trap.
+  Requires overlay 51.
 28 crash, used in brachyura's room
-29 Bloody platform.
-2A 
+29 Moving platform.
+  Byte 5: Which waypoints are for this platform? (See below.) This should match all of the waypoints byte 5s.
+  Var A: Sprite animation to use.
+  Var B: Speed to move.
+2A Moving platform waypoint.
+  Object 29 will seek out its waypoints and move to them one at a time (in the order the waypoints were placed in the room), and then go back to its starting position and repeat the process.
+  Byte 5: Which platform is this waypoint for? This should match the platform's byte 5.
 2B Area exit. touching it puts you back on the world map. extends infinitely vertically. also draws the arrows pointing out.
 2C Wygol door that leads into a house. Vars A and B both do something - they seem to affect the x/y position Shanoa will appear in the house.
 2D crash
@@ -89,7 +100,8 @@ Special Objects:
 34 Warp point.
   Var A: Affects the background reflected in the floating water. Can be 00-0A.
   Var B: Affects the background reflected in the floating water. Can be 00-01.
-35 
+35 ??? used in a large number of rooms
+  Var A: ??? 0-8
 36 Transition room hider.
   Var A is which room graphics to use:
     00 underwater. Bubbles come out of Shanoa's mouth as if she was underwater.
@@ -99,8 +111,12 @@ Special Objects:
   Var B: Speed in subpixels per frame for the clouds to move left.
 38 Waves in the background of Kalidus Channel.
   Requires overlay 46.
-39
+39 Water level.
+  Var A: Vertical distance in pixels for the waves to move the water level up or down. For example, a value of 0x20 means at its highest point the water level will be 2 blocks above the position you placed it at, and at its lowest point the water level will be 2 blocks below the position you placed it at. 0 means the water level does not move up or down.
+  Var B: If Var A is 0, this is the z-index for the water level to be drawn on.
+    Otherwise, it's the speed for the water level to move up and down at. This is relative to the total distance the water level needs to travel, so for larger values of Var A the water level will move faster even if Var B is the same.
 3A 3D boat in the background of Kalidus channel.
+  Requires overlay 46.
 3B Pneuma glyph and the wind puzzle around it.
   Requires overlay 55.
 3C Something in Kalidus channel?
@@ -111,8 +127,15 @@ Special Objects:
   If var A is 1 and the Giant Skeleton isn't dead yet then the searchlights take control away from the player and wait for the Giant Skeleton to do its thing (if he's not in the room the game will softlock).
   TODO: look into how enemies are spawned by searchlights.
 3F Cat.
-  Var A controls which cat it is?
-  Var B ???
+  Var A: Which cat it is:
+    00 Tofu (white)
+    01 Ink (black)
+    02 SoyBeanFlour (orange)
+    03 Tom (gray)
+  Var B: How the cat acts.
+    00 Cat returned to its home in Wygol village.
+    01 Jumping up trying to free its master.
+    02 Crouched/standing, meowing. Can be picked up.
 40 The falling block puzzle from the Monastery.
   Requires overlay 78.
 41 Object that floats (supposed to be in the water). Var A changes what it is:
@@ -120,13 +143,13 @@ Special Objects:
   01 Crate platform
   02 Red ball
   03 Rubber ducky
-  04+ Log, but unlike 00 it doesn't bob up and down and you can't use it as a platform.
 42 A trap from Minera Prison Island.
   When var A is 0, it's a guillotine. Var B is the delay in frames between each time it comes down.
   When var A is greater than 0, it's a swinging axe. Var A controls the length of the axe's chain. Var B is the speed at which it swings.
 43 Pair of large curtains in the background.
   Requires overlay 65.
 44 Lapiste glyph and the boulder trap that comes with it.
+  Requires overlay 68.
 45 Rock stalactite.
   Requires overlay 55.
   Var A: Which graphic of stalactite to use. 0-5.
@@ -144,10 +167,10 @@ Special Objects:
 4A used in the lower frozen waterfall room.
   Requires overlay 57.
 4B Boss door.
-  Var a is is how the door acts. Values:
+  Var A is is how the door acts. Values:
     00 Door outside the boss room that opens when you touch it.
-    01 Door inside the boss room that opens when the boss is killed.
-    02 Used in Large Cavern. TODO
+    01 Door inside the boss room that opens when there are no enemies left in the room.
+    02 Never opens. Used in Large Cavern.
   Var B controls which boss it's linked to - if that boss is dead the door won't appear. Values:
     00 Used in Large Cavern. TODO
     01 Arthroverta
@@ -172,7 +195,8 @@ Special Objects:
   Requires overlay 42.
 4F The ground and rocks from Gravedorcus's room.
   Requires overlay 63.
-50 crash. used in eligor's room
+50 Background torches in Eligor's room.
+  Requires overlay 76.
 51 Cerberus statue from Forsaken Cloister.
   Requires overlay 77.
 52 Fire hazard from Training Chamber. Var a controls... uh, something. Var b also controls... something.
@@ -183,9 +207,10 @@ Special Objects:
 55 Area name shown the first time you enter an area.
   Var A: Controls which area it is.
   Var B: Flag for the player seeing this area name.
-56 Gear from tower of death with a magnes point attached to it. Var a is the direction:
-  00 Clockwise
-  01 Counter-clockwise
+56 Gear from Tower of Death with a magnes point attached to it.
+  Var A: The direction:
+    00 Clockwise
+    01 Counter-clockwise
 57 Background from Mechanical Tower.
   Requires overlay 72.
 58 Wygol's sky background.
@@ -208,7 +233,7 @@ Special Objects:
   Var A:
     00 Single gate.
     01 Large row of many gates.
-5F barrels in wygol (only when var a is 5)
+5F ??? barrels in wygol (only when var a is 5)
 60 Dracula's soul vessel in Ecclesia.
   Also spawns the Barlowe that gives you tips when you talk to him.
   Requires overlay 42.
