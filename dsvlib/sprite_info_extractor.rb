@@ -6,7 +6,7 @@ class SpriteInfoExtractor
     # It first looks in the list of files to load for that enemy/object (if given).
     # If any are missing after looking there, it then looks in the create code for pointers that look like they could be the pointers we want.
     
-    puts "create code: %08X" % create_code_pointer
+    #puts "create code: %08X" % create_code_pointer
     
     if overlay_to_load.is_a?(Integer)
       fs.load_overlay(overlay_to_load)
@@ -26,6 +26,10 @@ class SpriteInfoExtractor
     palette_list_ptr_index = reused_info[:palette_list_ptr_index] || 0
     sprite_ptr_index       = reused_info[:sprite_ptr_index] || 0
     
+    if init_code_pointer == -1
+      raise CreateCodeReadError.new("This entity has no sprite.")
+    end
+    
     gfx_files_to_load = []
     sprite_files_to_load = []
     skeleton_files_to_load = []
@@ -36,7 +40,7 @@ class SpriteInfoExtractor
       i = 0
       while true
         file_index_or_palette_pointer, file_data_type = fs.read(pointer_to_start_of_file_index_list+i*8, 8).unpack("VV")
-        puts "%08X %08X" % [file_index_or_palette_pointer, file_data_type]
+        #puts "%08X %08X" % [file_index_or_palette_pointer, file_data_type]
         if file_index_or_palette_pointer == 0xFFFFFFFF
           # End of list.
           break
@@ -68,10 +72,10 @@ class SpriteInfoExtractor
       end
       
       if gfx_files_to_load.empty? && sprite_files_to_load.empty?
-        raise CreateCodeReadError.new("No gfx files or sprite files to load found")
+        #raise CreateCodeReadError.new("No gfx files or sprite files to load found")
       end
       if gfx_files_to_load.empty?
-        raise CreateCodeReadError.new("No gfx files to load found")
+        #raise CreateCodeReadError.new("No gfx files to load found")
       end
       if sprite_files_to_load.empty?
         #raise CreateCodeReadError.new("No sprite file to load found")
@@ -185,7 +189,7 @@ class SpriteInfoExtractor
         file[:ram_start_offset]
       end
       valid_sprite_pointers = possible_sprite_pointers.select do |pointer|
-        all_sprite_pointers.include?(pointer) || (0x02290000..0x0229FFFF).include?(pointer)
+        all_sprite_pointers.include?(pointer) || (GAME == "dos" && (0x02290000..0x0229FFFF).include?(pointer))
       end
       if valid_sprite_pointers.empty?
         raise CreateCodeReadError.new("Failed to find any valid enemy sprite pointers.")
