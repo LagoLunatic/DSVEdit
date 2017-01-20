@@ -12,6 +12,7 @@ class SpriteEditor < Qt::Dialog
   slots "gfx_page_changed(int)"
   slots "palette_changed(int)"
   slots "part_changed(int)"
+  slots "tab_changed(int)"
   slots "enemy_changed(int)"
   slots "special_object_changed(int)"
   slots "other_sprite_changed(int)"
@@ -72,6 +73,7 @@ class SpriteEditor < Qt::Dialog
     
     set_animation_paused(true)
     
+    connect(@ui.tabWidget, SIGNAL("currentChanged(int)"), self, SLOT("tab_changed(int)"))
     connect(@ui.enemy_list, SIGNAL("currentRowChanged(int)"), self, SLOT("enemy_changed(int)"))
     connect(@ui.special_object_list, SIGNAL("currentRowChanged(int)"), self, SLOT("special_object_changed(int)"))
     connect(@ui.other_sprites_list, SIGNAL("currentRowChanged(int)"), self, SLOT("other_sprite_changed(int)"))
@@ -87,6 +89,23 @@ class SpriteEditor < Qt::Dialog
     connect(@ui.buttonBox, SIGNAL("clicked(QAbstractButton*)"), self, SLOT("button_box_clicked(QAbstractButton*)"))
     
     self.show()
+  end
+  
+  def tab_changed(tab_id)
+    case tab_id
+    when 0
+      id = @ui.enemy_list.currentRow
+      return if id == -1
+      enemy_changed(id)
+    when 1
+      id = @ui.special_object_list.currentRow
+      return if id == -1
+      special_object_changed(id)
+    when 2
+      id = @ui.other_sprites_list.currentRow
+      return if id == -1
+      other_sprite_changed(id)
+    end
   end
   
   def enemy_changed(enemy_id)
@@ -434,7 +453,7 @@ class SpriteEditor < Qt::Dialog
   end
   
   def reload_sprite
-    @gfx_file_pointers = @ui.gfx_pointer.text.split(", ").map{|ptr| ptr.to_i(16)}
+    @gfx_file_pointers = @ui.gfx_pointer.text.split(/,\s*/).map{|ptr| ptr.to_i(16)}
     @palette_pointer = @ui.palette_pointer.text.to_i(16)
     @sprite_file = @fs.files_by_path[@ui.sprite_file_name.text]
     @sprite_pointer = @ui.sprite_file_name.text.to_i(16)
