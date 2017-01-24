@@ -4,15 +4,6 @@ LONG_GAME_NAME = "Dawn of Sorrow"
 
 AREA_LIST_RAM_START_OFFSET = 0x02006FC4 # Technically not a list, this points to code that has the the area hard coded, since DoS only has one area.
 
-EXTRACT_EXTRA_ROOM_INFO = Proc.new do |last_4_bytes_of_room_metadata|
-  number_of_doors    = (last_4_bytes_of_room_metadata & 0b00000000_00000000_11111111_11111111)
-  room_xpos_on_map   = (last_4_bytes_of_room_metadata & 0b00000000_00111111_00000000_00000000) >> 16
-  room_ypos_on_map   = (last_4_bytes_of_room_metadata & 0b00011111_10000000_00000000_00000000) >> 23
- #unknown_1          = (last_4_bytes_of_room_metadata & 0b00100000_00000000_00000000_00000000) >> 29
-  palette_page_index = 0 # always 0 in dos, and so not stored in these 4 bytes
-  [number_of_doors, room_xpos_on_map, room_ypos_on_map, palette_page_index]
-end
-
 # Overlays 6 to 22.
 AREA_INDEX_TO_OVERLAY_INDEX = {
    0 => {
@@ -89,8 +80,6 @@ MAP_DOOR_COLOR = [16, 216, 32, 255]
 MAP_DOOR_CENTER_PIXEL_COLOR = MAP_DOOR_COLOR
 MAP_SECRET_DOOR_COLOR = [248, 248, 0, 255]
 
-RAM_START_FOR_ROOM_OVERLAYS = 0x022DA4A0
-RAM_END_FOR_ROOM_OVERLAYS = 0x022DA4A0 + 152864
 LIST_OF_FILE_RAM_LOCATIONS_START_OFFSET = 0x0208CC6C
 LIST_OF_FILE_RAM_LOCATIONS_END_OFFSET = 0x0209A0C3
 LIST_OF_FILE_RAM_LOCATIONS_ENTRY_LENGTH = 0x28
@@ -258,7 +247,6 @@ BEST_SPRITE_FRAME_FOR_ENEMY = {
 }
 
 ENEMY_FILES_TO_LOAD_LIST = 0x0208CA90
-OVERLAY_FILES_WITH_SPRITE_DATA = [2]
 
 SPECIAL_OBJECT_IDS = (0..0x75)
 SPECIAL_OBJECT_CREATE_CODE_LIST = 0x0222C714
@@ -323,6 +311,8 @@ OTHER_SPRITES = [
   
   {pointer: 0x02304B98, desc: "Iron maiden", overlay: 25},
 ]
+
+OVERLAY_FILES_WITH_SPRITE_DATA = [2]
 
 TEXT_LIST_START_OFFSET = 0x0222F300
 TEXT_RANGE = (0..0x50A)
@@ -430,6 +420,7 @@ ITEM_TYPES = [
     list_pointer: 0x0209BA68,
     count: 66,
     format: [
+      # length: 16
       [2, "Item ID"],
       [2, "Icon"],
       [4, "Price"],
@@ -444,6 +435,7 @@ ITEM_TYPES = [
     list_pointer: 0x0209C34C,
     count: 79,
     format: [
+      # length: 28
       [2, "Item ID"],
       [2, "Icon"],
       [4, "Price"],
@@ -470,6 +462,7 @@ ITEM_TYPES = [
     list_pointer: 0x0209BE88,
     count: 61,
     format: [
+      # length: 20
       [2, "Item ID"],
       [2, "Icon"],
       [4, "Price"],

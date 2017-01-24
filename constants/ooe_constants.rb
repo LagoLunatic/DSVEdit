@@ -4,14 +4,6 @@ LONG_GAME_NAME = "Order of Ecclesia"
 
 AREA_LIST_RAM_START_OFFSET = 0x020ECDDC
 
-EXTRACT_EXTRA_ROOM_INFO = Proc.new do |last_4_bytes_of_room_metadata|
-  number_of_doors    = (last_4_bytes_of_room_metadata & 0b00000000_00000000_00000000_01111111)
-  room_xpos_on_map   = (last_4_bytes_of_room_metadata & 0b00000000_00000000_00111111_10000000) >> 7
-  room_ypos_on_map   = (last_4_bytes_of_room_metadata & 0b00000000_00011111_11000000_00000000) >> 14
-  palette_page_index = (last_4_bytes_of_room_metadata & 0b00001111_10000000_00000000_00000000) >> 23
-  [number_of_doors, room_xpos_on_map, room_ypos_on_map, palette_page_index]
-end
-
 # Overlays 40 to 85.
 AREA_INDEX_TO_OVERLAY_INDEX = {
   0 => {
@@ -165,8 +157,6 @@ MAP_DOOR_COLOR = [216, 216, 216, 255]
 MAP_DOOR_CENTER_PIXEL_COLOR = [0, 0, 0, 0]
 MAP_SECRET_DOOR_COLOR = [248, 248, 0, 255]
 
-RAM_START_FOR_ROOM_OVERLAYS = 0x022C1FE0
-RAM_END_FOR_ROOM_OVERLAYS = 0x022C1FE0 + 168384
 LIST_OF_FILE_RAM_LOCATIONS_START_OFFSET = 0x020D8CEC
 LIST_OF_FILE_RAM_LOCATIONS_END_OFFSET = 0x020ECA0B
 LIST_OF_FILE_RAM_LOCATIONS_ENTRY_LENGTH = 0x20
@@ -347,7 +337,6 @@ BEST_SPRITE_FRAME_FOR_ENEMY = {
 }
 
 ENEMY_FILES_TO_LOAD_LIST = 0x020F2814
-OVERLAY_FILES_WITH_SPRITE_DATA = []
 
 SPECIAL_OBJECT_IDS = (0..0x8C)
 SPECIAL_OBJECT_CREATE_CODE_LIST = 0x020F370C
@@ -425,6 +414,8 @@ OTHER_SPRITES = [
   {pointer: 0x022B6EAC, desc: "Destructibles 12"},
 ]
 
+OVERLAY_FILES_WITH_SPRITE_DATA = []
+
 TEXT_LIST_START_OFFSET = 0x021FACC0
 TEXT_RANGE = (0..0x764)
 TEXT_REGIONS = {
@@ -474,6 +465,7 @@ PACK_ICON_INDEX_AND_PALETTE_INDEX = Proc.new do |icon_index, palette_index|
 end
 
 armor_format = [
+  # length: 20
   [2, "Item ID"],
   [2, "Icon"],
   [4, "Price"],
@@ -495,6 +487,7 @@ ITEM_TYPES = [
     list_pointer: 0x020F0A08,
     count: 55,
     format: [
+      # length: 32
       [2, "Item ID"],
       [2, "Attack"],
       [4, "Code Pointer"],
@@ -522,6 +515,7 @@ ITEM_TYPES = [
     list_pointer: 0x020EF8CC,
     count: 25,
     format: [
+      # length: 28
       [2, "Item ID"],
       [2, "Unknown 1"],
       [4, "Code Pointer"],
@@ -545,6 +539,7 @@ ITEM_TYPES = [
     list_pointer: 0x020EF4C4,
     count: 6,
     format: [
+      # length: 12
       [2, "Item ID"],
       [1, "Unknown 1"],
       [1, "Unknown 2"],
@@ -557,6 +552,7 @@ ITEM_TYPES = [
     list_pointer: 0x020F04C8,
     count: 112,
     format: [
+      # length: 12
       [2, "Item ID"],
       [2, "Icon"],
       [4, "Price"],
@@ -569,31 +565,32 @@ ITEM_TYPES = [
     name: "Body Armor",
     list_pointer: 0x020EF6B0,
     count: 27,
-    format: armor_format
+    format: armor_format # length: 20
   },
   {
     name: "Head Armor",
     list_pointer: 0x020EFB88,
     count: 36,
-    format: armor_format
+    format: armor_format # length: 20
   },
   {
     name: "Leg Armor",
     list_pointer: 0x020EF50C,
     count: 21,
-    format: armor_format
+    format: armor_format # length: 20
   },
   {
     name: "Accessories",
     list_pointer: 0x020EFE58,
     count: 39,
-    format: armor_format
+    format: armor_format # length: 20
   },
   {
     name: "Weapons",
     list_pointer: 0x020EF48C,
     count: 2,
     format: [
+      # length: 28
       [2, "Item ID"],
       [2, "Icon"],
       [4, "Price"],

@@ -4,16 +4,6 @@ LONG_GAME_NAME = "Portrait of Ruin"
 
 AREA_LIST_RAM_START_OFFSET = 0x020DF36C
 
-EXTRACT_EXTRA_ROOM_INFO = Proc.new do |last_4_bytes_of_room_metadata|
-  number_of_doors    = (last_4_bytes_of_room_metadata & 0b00000000_00000000_00000000_01111111)
-  room_xpos_on_map   = (last_4_bytes_of_room_metadata & 0b00000000_00000000_00011111_10000000) >> 7
- #unknown_1          = (last_4_bytes_of_room_metadata & 0b00000000_00000000_00100000_00000000) >> 13
-  room_ypos_on_map   = (last_4_bytes_of_room_metadata & 0b00000000_00001111_11000000_00000000) >> 14
- #unknown_2          = (last_4_bytes_of_room_metadata & 0b00000000_00010000_00000000_00000000) >> 20
-  palette_page_index = (last_4_bytes_of_room_metadata & 0b00001111_10000000_00000000_00000000) >> 23
-  [number_of_doors, room_xpos_on_map, room_ypos_on_map, palette_page_index]
-end
-
 # Overlays 78 to 118. Missing: 116
 AREA_INDEX_TO_OVERLAY_INDEX = {
   0 => { # castle
@@ -142,8 +132,6 @@ MAP_DOOR_COLOR = [216, 216, 216, 255]
 MAP_DOOR_CENTER_PIXEL_COLOR = [0, 0, 0, 0]
 MAP_SECRET_DOOR_COLOR = [248, 248, 0, 255]
 
-RAM_START_FOR_ROOM_OVERLAYS = 0x022E8820
-RAM_END_FOR_ROOM_OVERLAYS = 0x022E8820 + 132736
 LIST_OF_FILE_RAM_LOCATIONS_START_OFFSET = 0x020CDAFC
 LIST_OF_FILE_RAM_LOCATIONS_END_OFFSET = 0x020DF15B
 LIST_OF_FILE_RAM_LOCATIONS_ENTRY_LENGTH = 0x20
@@ -345,7 +333,6 @@ BEST_SPRITE_FRAME_FOR_ENEMY = {
 }
 
 ENEMY_FILES_TO_LOAD_LIST = 0x020CD88C
-OVERLAY_FILES_WITH_SPRITE_DATA = [5, 6]
 
 SPECIAL_OBJECT_IDS = (0..0xBE)
 SPECIAL_OBJECT_CREATE_CODE_LIST = 0x0221D908
@@ -434,6 +421,8 @@ OTHER_SPRITES = [
   {pointer: 0x022D7C98, desc: "Brauner curse beast", overlay: 55},
 ]
 
+OVERLAY_FILES_WITH_SPRITE_DATA = [5, 6]
+
 TEXT_LIST_START_OFFSET = 0x0221BA50
 TEXT_RANGE = (0..0x748)
 TEXT_REGIONS = {
@@ -467,8 +456,8 @@ TEXT_REGIONS_OVERLAYS = {
   "Debug" => 1
 }
 STRING_DATABASE_START_OFFSET = 0x0221F680
-STRING_DATABASE_END_OFFSET = 0x0222C835
-STRING_DATABASE_ALLOWABLE_END_OFFSET = STRING_DATABASE_END_OFFSET
+STRING_DATABASE_ORIGINAL_END_OFFSET = 0x0222C835
+STRING_DATABASE_ALLOWABLE_END_OFFSET = STRING_DATABASE_ORIGINAL_END_OFFSET
 
 ENEMY_IDS = (0x00..0x9A)
 COMMON_ENEMY_IDS = (0x00..0x80).to_a
@@ -533,6 +522,7 @@ PACK_ICON_INDEX_AND_PALETTE_INDEX = Proc.new do |icon_index, palette_index|
 end
 
 armor_format = [
+  # length: 24
   [2, "Item ID"],
   [2, "Icon"],
   [4, "Price"],
@@ -558,6 +548,7 @@ ITEM_TYPES = [
     list_pointer: 0x020E2724,
     count: 96,
     format: [
+      # length: 12
       [2, "Item ID"],
       [2, "Icon"],
       [4, "Price"],
@@ -571,6 +562,7 @@ ITEM_TYPES = [
     list_pointer: 0x020E3114,
     count: 73,
     format: [
+      # length: 32
       [2, "Item ID"],
       [2, "Icon"],
       [4, "Price"],
@@ -599,25 +591,25 @@ ITEM_TYPES = [
     name: "Body Armor",
     list_pointer: 0x020E2BA4,
     count: 58,
-    format: armor_format
+    format: armor_format # length: 24
   },
   {
     name: "Head Armor",
     list_pointer: 0x020E1FA4,
     count: 38,
-    format: armor_format
+    format: armor_format # length: 24
   },
   {
     name: "Leg Armor",
     list_pointer: 0x020E1CEC,
     count: 29,
-    format: armor_format
+    format: armor_format # length: 24
   },
   {
     name: "Accessories",
     list_pointer: 0x020E2334,
     count: 42,
-    format: armor_format
+    format: armor_format # length: 24
   },
 ]
 
