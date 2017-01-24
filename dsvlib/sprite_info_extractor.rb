@@ -189,7 +189,16 @@ class SpriteInfoExtractor
         file[:ram_start_offset]
       end
       valid_sprite_pointers = possible_sprite_pointers.select do |pointer|
-        all_sprite_pointers.include?(pointer) || (GAME == "dos" && (0x02290000..0x0229FFFF).include?(pointer))
+        if all_sprite_pointers.include?(pointer)
+          true
+        else
+          # Check if any of the overlay files containing sprite data include this pointer.
+          OVERLAY_FILES_WITH_SPRITE_DATA.any? do |overlay_id|
+            overlay = fs.overlays[overlay_id]
+            range = (overlay[:ram_start_offset]..overlay[:ram_start_offset]+overlay[:size]-1)
+            range.include?(pointer)
+          end
+        end
       end
       if valid_sprite_pointers.empty?
         raise CreateCodeReadError.new("Failed to find any valid enemy sprite pointers.")

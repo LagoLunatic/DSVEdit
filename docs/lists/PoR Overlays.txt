@@ -3,8 +3,8 @@
 1      0221F680 Strings for everything except character names and events.
 2      0221F680 Strings for character names and events.
 3-4    0222C840 
-5      022B2A80 
-6      022B2AE0 
+5      022B2A80 Sprite data that isn't stored in individual files. (Unused?)
+6      022B2AE0 Sprite data that isn't stored in individual files. (Unused?)
 7      022B7660 
 8      022D0F40 
 9-24   022D7500 
