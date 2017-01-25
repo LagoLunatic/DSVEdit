@@ -140,9 +140,7 @@ class MapEditorDialog < Qt::Dialog
     x = x / 4
     y = y / 4
     
-    max_x = @map.tiles.map{|tile| tile.x_pos}.max
-    max_y = @map.tiles.map{|tile| tile.y_pos}.max
-    return unless (0..max_x).include?(x) && (0..max_y).include?(y)
+    return unless (0..255).include?(x) && (0..255).include?(y)
     
     old_tile = @map.tiles.find do |tile|
       tile.x_pos == x && tile.y_pos == y
