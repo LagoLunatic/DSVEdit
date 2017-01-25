@@ -242,6 +242,13 @@ class DSVEdit < Qt::MainWindow
     @room = room
     @ui.room.setCurrentIndex(@room_index)
     
+    @position_indicator.setPos(@room.room_xpos_on_map*4 + 2.25, @room.room_ypos_on_map*4 + 2.25)
+    if @room.layers.length > 0
+      @position_indicator.setRect(-2, -2, 4*@room.main_layer_width, 4*@room.main_layer_height)
+    else
+      @position_indicator.setRect(-2, -2, 4, 4)
+    end
+    
     load_room()
   end
   
@@ -455,6 +462,8 @@ class DSVEdit < Qt::MainWindow
     chunky_png_img = @renderer.render_map(@map)
     map_pixmap_item = GraphicsChunkyItem.new(chunky_png_img)
     @map_graphics_scene.addItem(map_pixmap_item)
+    
+    @position_indicator = @map_graphics_scene.addRect(-2, -2, 4, 4, Qt::Pen.new(Qt::NoPen), Qt::Brush.new(Qt::Color.new(255, 255, 128, 128)))
   end
   
   def open_enemy_dna_dialog

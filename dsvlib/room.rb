@@ -261,11 +261,19 @@ class Room
   end
   
   def main_layer_width
-    layers.first.width
+    if layers.length > 0
+      layers.first.width
+    else
+      0
+    end
   end
   
   def main_layer_height
-    layers.first.height
+    if layers.length > 0
+      layers.first.height
+    else
+      0
+    end
   end
   
   def connected_rooms
