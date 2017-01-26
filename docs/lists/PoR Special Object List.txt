@@ -80,7 +80,7 @@ Special objects:
 27 Rain visual and sound effects.
   Var A: Affects what sound effects the rain plays.
 28 Train you need to slow down to a stop?
-29 Spawns the Ghoul King?
+29 Background from 13th Street.
 2A Background from 13th Street.
 2B Red moon background from Forgotten City.
 2C Transition room hider for Sandy Grave.
@@ -165,8 +165,10 @@ Special objects:
 52
 53
 54
-55
-56
+55 Animates water on backgrounds in Sandy Grave.
+  Requires overlay 92.
+56 Makes the background flicker in Forgotten City.
+  Requires overlay 102.
 57
 58 Transition room hider for City of Haze.
 59 Transition room hider for City of Haze.
@@ -175,7 +177,12 @@ Special objects:
 5C Transition room hider for 13th Street.
 5D Transition room hider for Dracula's Castle (connects inside part of Entrance to Behemoth's area).
 5E Transition room hider for Dracula's Castle (connects outside part of Entrance to inside part of entrance).
-5F
+5F Room graphics and background for the rooms that contain the four seal portraits.
+  Var A: Where the openings for doors should be.
+    00 Door at bottom right.
+    01 Door at bottom left.
+    02 Door at center left and center right.
+    03 Door at center left.
 60 Crumbling block from Great Stairway.
 61
 62
@@ -184,7 +191,8 @@ Special objects:
 65
 66
 67 3D background model of the clock tower, used in the stairway leading up to the throne.
-68 If Var A is 0, it's the statue of Mary from Nation of Fools. If Var A is 1, it's the cross from 13th Street.
+68 Statue/cross.
+  Var A: 0 for the statue of Mary from Nation of Fools. 1 for the cross from 13th Street.
 69 Transition room hider for Master's Keep.
 6A Transition room hider for Master's Keep.
 6B Transition room hider for Master's Keep.
@@ -209,17 +217,20 @@ Special objects:
 77 Studio portrait (sealed with chains).
 78
 79 Area name shown the first time you enter an area. Var A controls which area it is.
-7A
-7B
-7C
+7A Background effect from Buried Chamber of prisoner shaking the bars of the cell.
+7B ??? from Buried Chamber.
+7C Transition room hider for Dracula's Castle (connects Great Stairway to other Great Stairway sector).
 7D Transition room hider for Dracula's Castle (connects Great Stairway to Keremet).
-7E
-7F
+7E Small waterfall.
+  check if Requires overlay 86.
+  Var A: 0 for the top of the waterfall. 1 for the long midsection of the waterfall.
+7F the meat you hit for that one quest?
+  Requires overlay 93.
 80 Transition room hider for Dracula's Castle (connects Great Stairway to other Great Stairway sector).
 81 Barrier blocking the way to the Throne Room.
   The blocking effect extends all the way down the left edge of the screen, but the visuals only appear on the top-left screen.
 82 Wooden door separating areas.
-83
+83 Button and wall it lowers from Great Stairway.
 84 requires overlay 99?
 85 used in tower of death, motorcycle room and stella fight room
   Var A: 1 or 0
@@ -239,8 +250,9 @@ Special objects:
     Bits 1-6: Room index of destination room.
     Bits 7-10: Sector index of the destination room.
     Bits 11-16: Nothing.
-88
-89
+88 Breakable wall.
+89 Button and floor it explodes from Master's Keep.
+  Var A: 0 for ceiling. 1 for button and floor.
 8A Studio portrait (burned).
 8B
 8C Switch next to elevator from Tower of Death you have to hit to activate it.
