@@ -53,6 +53,17 @@ SECTOR_INDEX_TO_SECTOR_NAME = {
   }
 }
 
+ENTITY_TYPE_DESCRIPTIONS = {
+  0 => "Nothing",
+  1 => "Enemy",
+  2 => "Special object",
+  3 => "Candle",
+  4 => "Pickup",
+  5 => "???",
+  6 => "Enemy hider",
+  7 => "Font loader",
+}
+
 CONSTANT_OVERLAYS = [0, 1, 2, 3, 4, 5]
 
 INVALID_ROOMS = []

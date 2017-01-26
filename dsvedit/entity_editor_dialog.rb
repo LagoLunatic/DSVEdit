@@ -2,19 +2,6 @@
 require_relative 'ui_entity_editor'
 
 class EntityEditorDialog < Qt::Dialog
-  ENTITY_TYPE_DESCRIPTIONS = {
-    0 => "Nothing",
-    1 => "Enemy",
-    2 => "Special Object",
-    3 => "Candle",
-    4 => "Pickup",
-    5 => "???",
-    6 => "???",
-    7 => "???",
-    8 => "???",
-    9 => "???",
-  }
-  
   attr_reader :game
   
   slots "type_changed(int)"
