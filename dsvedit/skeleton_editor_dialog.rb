@@ -2,12 +2,17 @@
 require_relative 'ui_skeleton_editor'
 
 class SkeletonEditorDialog < Qt::Dialog
+  GREY_PEN = Qt::Pen.new(Qt::Brush.new(Qt::Color.new(128, 128, 128)), 2)
   RED_PEN = Qt::Pen.new(Qt::Brush.new(Qt::Color.new(224, 16, 16)), 2)
+  GREEN_PEN = Qt::Pen.new(Qt::Brush.new(Qt::Color.new(16, 224, 16)), 2)
+  BLUE_PEN = Qt::Pen.new(Qt::Brush.new(Qt::Color.new(16, 16, 224)), 2)
+  WHITE_PEN = Qt::Pen.new(Qt::Brush.new(Qt::Color.new(255, 255, 255)), 2)
   
   attr_reader :game, :fs
   
   slots "pose_changed(int)"
   slots "toggle_show_skeleton(int)"
+  slots "toggle_show_hitboxes(int)"
   slots "button_box_clicked(QAbstractButton*)"
   
   def initialize(parent, fs, skeleton_file, chunky_frames, min_x, min_y)
@@ -26,6 +31,7 @@ class SkeletonEditorDialog < Qt::Dialog
     
     connect(@ui.pose_index, SIGNAL("activated(int)"), self, SLOT("pose_changed(int)"))
     connect(@ui.show_skeleton, SIGNAL("stateChanged(int)"), self, SLOT("toggle_show_skeleton(int)"))
+    connect(@ui.show_hitboxes, SIGNAL("stateChanged(int)"), self, SLOT("toggle_show_hitboxes(int)"))
     connect(@ui.buttonBox, SIGNAL("clicked(QAbstractButton*)"), self, SLOT("button_box_clicked(QAbstractButton*)"))
     
     self.show()
@@ -62,13 +68,12 @@ class SkeletonEditorDialog < Qt::Dialog
       
       joint.x_pos = parent_joint.x_pos
       joint.y_pos = parent_joint.y_pos
+      joint.total_rotation = parent_joint_change.rotation
       
-      connected_rotation = parent_joint_change.rotation
-      grandparent_id = parent_joint.parent_id
-      if grandparent_id != 0xFF && parent_joint.copy_parent_visual_rotation
-        connected_rotation += pose[grandparent_id].rotation
+      if parent_joint.copy_parent_visual_rotation && parent_joint.parent_id != 0xFF
+        joint.total_rotation += parent_joint.total_rotation
       end
-      connected_rotation_in_degrees = connected_rotation/182.0
+      connected_rotation_in_degrees = joint.total_rotation/182.0
       
       offset_angle = connected_rotation_in_degrees
       offset_angle += 90 * joint.positional_rotation
@@ -82,14 +87,14 @@ class SkeletonEditorDialog < Qt::Dialog
     @skeleton.joint_indexes_by_draw_order.each do |joint_index|
       joint = @skeleton.joints[joint_index]
       joint_change = pose[joint_index]
-      rotation = joint_change.rotation
-      if joint.parent_id != 0xFF && joint.copy_parent_visual_rotation
-        parent_joint_change = pose[joint.parent_id]
-        rotation += parent_joint_change.rotation
-      end
-      rotation_in_degrees = rotation/182.0
       
       next if joint.frame_id == 0xFF
+      
+      rotation = joint_change.rotation
+      if joint.parent_id != 0xFF && joint.copy_parent_visual_rotation
+        rotation += joint.total_rotation
+      end
+      rotation_in_degrees = rotation/182.0
       
       if joint_change.new_frame_id == 0xFF
         frame_id = joint.frame_id
@@ -114,12 +119,41 @@ class SkeletonEditorDialog < Qt::Dialog
       
       
       if @ui.show_skeleton.checked
-        ellipse = @skeleton_graphics_scene.addEllipse(joint.x_pos-1, joint.y_pos-1, 3, 3, RED_PEN)
+        ellipse = @skeleton_graphics_scene.addEllipse(joint.x_pos-1, joint.y_pos-1, 3, 3, GREY_PEN)
         ellipse.setZValue(1)
         if joint.parent_id != 0xFF
           parent_joint = @skeleton.joints[joint.parent_id]
-          line = @skeleton_graphics_scene.addLine(joint.x_pos, joint.y_pos, parent_joint.x_pos, parent_joint.y_pos, RED_PEN)
+          line = @skeleton_graphics_scene.addLine(joint.x_pos, joint.y_pos, parent_joint.x_pos, parent_joint.y_pos, GREY_PEN)
           line.setZValue(1)
+        end
+      end
+      
+      if @ui.show_hitboxes.checked
+        @skeleton.hitboxes.select{|hitbox| hitbox.parent_joint_id == joint_index}.each do |hitbox|
+          x_pos = joint.x_pos-hitbox.width/2
+          y_pos = joint.y_pos-hitbox.height/2
+          
+          offset_angle = joint_change.rotation/182.0 + 90
+          offset_angle_in_radians = offset_angle * Math::PI / 180
+          x_pos += hitbox.distance*Math.cos(offset_angle_in_radians)
+          y_pos += hitbox.distance*Math.sin(offset_angle_in_radians)
+          
+          hitbox_item = Qt::GraphicsRectItem.new
+          if hitbox.can_damage_player && hitbox.can_take_damage
+            hitbox_item.setPen(RED_PEN)
+          elsif hitbox.can_damage_player
+            hitbox_item.setPen(BLUE_PEN)
+          elsif hitbox.can_take_damage
+            hitbox_item.setPen(GREEN_PEN)
+          else
+            hitbox_item.setPen(WHITE_PEN)
+          end
+          hitbox_item.setRect(x_pos, y_pos, hitbox.width, hitbox.height)
+          hitbox_item.setTransformOriginPoint(hitbox_item.rect.center)
+          rotation_in_degrees = hitbox.rotation/182.0
+          hitbox_item.setRotation(rotation_in_degrees)
+          hitbox_item.setZValue(1)
+          @skeleton_graphics_scene.addItem(hitbox_item)
         end
       end
     end
@@ -128,6 +162,10 @@ class SkeletonEditorDialog < Qt::Dialog
   end
   
   def toggle_show_skeleton(checked)
+    pose_changed(@current_pose_index)
+  end
+  
+  def toggle_show_hitboxes(checked)
     pose_changed(@current_pose_index)
   end
   

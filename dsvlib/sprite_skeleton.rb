@@ -4,6 +4,7 @@ class SpriteSkeleton
               :skeleton_file,
               :joints,
               :poses,
+              :hitboxes,
               :joint_indexes_by_draw_order
   
   def initialize(skeleton_file, fs)
@@ -15,9 +16,7 @@ class SpriteSkeleton
   
   def read_from_rom()
     number_of_joints, number_of_invisible_joints, number_of_visible_joints,
-      number_of_unknown, number_of_joint_animations, number_of_unknown2 = fs.read_by_file(skeleton_file, 0x26, 6).unpack("C*")
-    
-    p ["number_of_joints, number_of_invisible_joints, number_of_visible_joints, number_of_unknown, number_of_joint_animations, number_of_unknown2:", number_of_joints, number_of_invisible_joints, number_of_visible_joints, number_of_unknown, number_of_joint_animations, number_of_unknown2]
+      number_of_hitboxes, number_of_poses, number_of_unknown2, number_of_animations = fs.read_by_file(skeleton_file, 0x26, 7).unpack("C*")
     
     @joints = []
     offset = 0x30
@@ -30,9 +29,8 @@ class SpriteSkeleton
     puts joints.last.frame_id
     
     @poses = []
-    number_of_joint_animations.times do
+    number_of_poses.times do
       offset += 2
-      puts "%08X" % offset
       @poses << []
       @joints.length.times do
         joint_change_data = fs.read_by_file(skeleton_file, offset, 4)
@@ -42,13 +40,12 @@ class SpriteSkeleton
       end
     end
     
-    @unknown = []
-    number_of_unknown.times do
-      data = fs.read_by_file(skeleton_file, offset, 8)
-      @unknown << data.unpack("C*")
+    @hitboxes = []
+    number_of_hitboxes.times do
+      hitbox_data = fs.read_by_file(skeleton_file, offset, 8)
+      @hitboxes << SkeletonHitbox.new(hitbox_data)
       offset += 8
     end
-    p @unknown
     
     @unknown2 = []
     number_of_unknown2.times do
@@ -59,6 +56,22 @@ class SpriteSkeleton
     p @unknown2
     
     @joint_indexes_by_draw_order = fs.read_by_file(skeleton_file, offset, number_of_visible_joints).unpack("C*")
+    offset += number_of_visible_joints
+    
+    @animations = []
+    number_of_animations.times do
+      num_frames = fs.read_by_file(skeleton_file, offset, 1).unpack("C").first
+      offset += 1
+      
+      frames = []
+      num_frames.times do
+        frame_data = fs.read_by_file(skeleton_file, offset, 3)
+        frames << SkeletonFrame.new(frame_data)
+        offset += 3
+      end
+      
+      @animations << SkeletonAnimation.new(frames)
+    end
   end
 end
 
@@ -69,13 +82,15 @@ class Joint
               :palette,
               :parent
   attr_accessor :x_pos,
-                :y_pos
+                :y_pos,
+                :total_rotation
               
   def initialize(joint_data, all_joints)
     @parent_id, @frame_id, @bits, @palette = joint_data.unpack("CCCC")
     if parent_id == 0xFF
       @x_pos = 0
       @y_pos = 0
+      @total_rotation = 0
     else
       @parent = all_joints[@parent_id]
     end
@@ -105,5 +120,45 @@ class JointChange
               
   def initialize(joint_data)
     @rotation, @distance, @new_frame_id = joint_data.unpack("vcC")
+  end
+end
+
+class SkeletonHitbox
+  attr_reader :rotation,
+              :distance,
+              :width,
+              :height,
+              :parent_joint_id,
+              :bits,
+              :unknown3
+              
+  def initialize(hitbox_data)
+    @rotation, @distance, @width, @height, @parent_joint_id, @bits, @unknown3 = hitbox_data.unpack("vcCCCCC")
+  end
+  
+  def can_damage_player
+    @bits & 0x01 > 0
+  end
+  
+  def can_take_damage
+    @bits & 0x02 > 0
+  end
+end
+
+class SkeletonAnimation
+  attr_reader :frames
+  
+  def initialize(frames)
+    @frames = frames
+  end
+end
+
+class SkeletonFrame
+  attr_reader :pose_id,
+              :length_in_frames,
+              :unknown
+              
+  def initialize(frame_data)
+    @pose_id, @length_in_frames, @unknown = frame_data.unpack("CCC")
   end
 end
