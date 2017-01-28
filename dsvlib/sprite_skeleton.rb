@@ -5,6 +5,7 @@ class SpriteSkeleton
               :joints,
               :poses,
               :hitboxes,
+              :points,
               :joint_indexes_by_draw_order
   
   def initialize(skeleton_file, fs)
@@ -26,7 +27,6 @@ class SpriteSkeleton
       @joints << joint
       offset += 4
     end
-    puts joints.last.frame_id
     
     @poses = []
     number_of_poses.times do
@@ -47,13 +47,12 @@ class SpriteSkeleton
       offset += 8
     end
     
-    @unknown2 = []
+    @points = []
     number_of_unknown2.times do
       data = fs.read_by_file(skeleton_file, offset, 4)
-      @unknown2 << data.unpack("C*")
+      @points << SkeletonPoint.new(data)
       offset += 4
     end
-    p @unknown2
     
     @joint_indexes_by_draw_order = fs.read_by_file(skeleton_file, offset, number_of_visible_joints).unpack("C*")
     offset += number_of_visible_joints
@@ -133,7 +132,7 @@ class SkeletonHitbox
               :unknown3
               
   def initialize(hitbox_data)
-    @rotation, @distance, @width, @height, @parent_joint_id, @bits, @unknown3 = hitbox_data.unpack("vcCCCCC")
+    @rotation, @distance, @width, @height, @parent_joint_id, @bits, @unknown3 = hitbox_data.unpack("vCCCCCC")
   end
   
   def can_damage_player
@@ -142,6 +141,16 @@ class SkeletonHitbox
   
   def can_take_damage
     @bits & 0x02 > 0
+  end
+end
+
+class SkeletonPoint
+  attr_reader :rotation,
+              :distance,
+              :parent_joint_id
+              
+  def initialize(point_data)
+    @rotation, @distance, @parent_joint_id = point_data.unpack("vCC")
   end
 end
 
