@@ -82,7 +82,7 @@ Special objects:
     08 From Wizardry Lab. Horizontally moving platform that only starts moving when you stand on it.
     11 From Demon Guest House. Starts in the top-left screen. Moves down, then back.
 15 Rapidly moving clouds background effect used in the very large room in the Dark Chapel.
-16 Moving clouds background effect used in the Condemned Tower.
+16 Moving clouds background effect used in the Condemned Tower & Pinnacle.
 17 Invisible block that becomes visible when a Ghost hovers over it.
   Var A: Which tile graphics to use.
   Var B: Flip bits for the tile graphics.
@@ -160,7 +160,7 @@ Special objects:
   Var B: The event flag for the wall being down. Set to the same as the wall's Var B.
 29 The wall that blocks the path in the Dark Chapel.
   Var B: The event flag for the wall being down. Set to the same as the button's Var B.
-2A The metal gate that seals in the water in the Lost Village.
+2A Flood gate from Lost Village.
   Var B: The event flag for the water being lowered. Set to the same as the lever's Var B.
 2B The destroyable floor in the Lost Village underneath the statues.
   Var A:

@@ -368,6 +368,8 @@ OVERLAY_FILE_FOR_SPECIAL_OBJECT = {
 }
 REUSED_SPECIAL_OBJECT_INFO = {
   0x01 => {init_code: 0x020F4B6C},
+  0x22 => {sprite: 0x022B36E8, gfx_wrapper: 0x020BFF24, palette: 0x022B7660},
+  0x82 => {sprite: 0x022B36E8, gfx_wrapper: 0x020BFF24, palette: 0x022B7660},
   0xB6 => {init_code: 0x0221B9C0},
   0xB7 => {init_code: 0x0221B9D0},
   0xB8 => {init_code: 0x0221B9E0},
@@ -381,6 +383,7 @@ REUSED_SPECIAL_OBJECT_INFO = {
 BEST_SPRITE_FRAME_FOR_SPECIAL_OBJECT = {
   0x01 => 0x0F,
   0x1C => 0x19,
+  0x22 => 0xDF,
   0x32 => 0x09,
   0x39 => 0x01,
   0x43 => 0x0A,
@@ -390,10 +393,13 @@ BEST_SPRITE_FRAME_FOR_SPECIAL_OBJECT = {
   0x6B => 0x04,
   0x79 => 0x07,
   0x7A => 0x07,
+  0x82 => 0xED,
 }
-SPECIAL_OBJECT_FILES_TO_LOAD_LIST = 0x020E19DC # 0x0221F110 #???
+SPECIAL_OBJECT_FILES_TO_LOAD_LIST = 0x020E19DC
 
 OTHER_SPRITES = [
+  {desc: "Common", sprite: 0x022B36E8, gfx_wrapper: 0x020BFF24, palette: 0x022B7660},
+  
   {pointer: 0x0221E7F4, desc: "Jonathan player"},
   {pointer: 0x0221E84C, desc: "Charlotte player"},
   {pointer: 0x0221E8A4, desc: "Stella player"},

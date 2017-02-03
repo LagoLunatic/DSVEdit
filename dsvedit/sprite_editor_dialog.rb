@@ -145,7 +145,7 @@ class SpriteEditor < Qt::Dialog
   def other_sprite_changed(id)
     begin
       @gfx_file_pointers, @palette_pointer, @palette_offset, @sprite_pointer, @skeleton_file =
-        SpriteInfoExtractor.get_gfx_and_palette_and_sprite_from_create_code(OTHER_SPRITES[id][:pointer], @fs, OTHER_SPRITES[id][:overlay], {})
+        SpriteInfoExtractor.get_gfx_and_palette_and_sprite_from_create_code(OTHER_SPRITES[id][:pointer], @fs, OTHER_SPRITES[id][:overlay], OTHER_SPRITES[id])
     rescue StandardError => e
       Qt::MessageBox.warning(self,
         "Sprite extraction failed",

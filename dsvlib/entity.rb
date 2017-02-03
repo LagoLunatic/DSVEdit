@@ -54,12 +54,24 @@ class Entity
     type == 0x02
   end
   
+  def is_candle?
+    type == 0x03
+  end
+  
   def is_pickup?
     type == 0x04
   end
   
+  def is_skill?
+    is_pickup? && PICKUP_SUBTYPES_FOR_SKILLS.include?(subtype)
+  end
+  
   def is_item?
     is_pickup? && ITEM_LOCAL_ID_RANGES.keys.include?(subtype)
+  end
+  
+  def is_magic_seal?
+    GAME == "dos" && is_pickup? && subtype == 2 && (0x3D..0x41).include?(var_b)
   end
   
   def is_glyph?

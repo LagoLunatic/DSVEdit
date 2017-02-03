@@ -6,7 +6,7 @@ class SpriteInfoExtractor
     # It first looks in the list of files to load for that enemy/object (if given).
     # If any are missing after looking there, it then looks in the create code for pointers that look like they could be the pointers we want.
     
-    #puts "create code: %08X" % create_code_pointer
+    #puts "create code: %08X" % create_code_pointer if create_code_pointer
     
     if overlay_to_load.is_a?(Integer)
       fs.load_overlay(overlay_to_load)
@@ -25,6 +25,18 @@ class SpriteInfoExtractor
     palette_offset         = reused_info[:palette_offset] || 0
     palette_list_ptr_index = reused_info[:palette_list_ptr_index] || 0
     sprite_ptr_index       = reused_info[:sprite_ptr_index] || 0
+    ignore_files_to_load   = reused_info[:ignore_files_to_load] || false
+    sprite_file_pointer    = reused_info[:sprite] || nil
+    gfx_file_pointers      = reused_info[:gfx_files] || nil
+    gfx_wrapper            = reused_info[:gfx_wrapper] || nil
+    palette_pointer        = reused_info[:palette] || nil
+    
+    if sprite_file_pointer && gfx_file_pointers && palette_pointer
+      return [gfx_file_pointers, palette_pointer, palette_offset, sprite_file_pointer, nil]
+    elsif sprite_file_pointer && gfx_wrapper && palette_pointer
+      gfx_file_pointers = unpack_gfx_pointer_list(gfx_wrapper, fs)
+      return [gfx_file_pointers, palette_pointer, palette_offset, sprite_file_pointer, nil]
+    end
     
     if init_code_pointer == -1
       raise CreateCodeReadError.new("This entity has no sprite.")
@@ -34,7 +46,7 @@ class SpriteInfoExtractor
     sprite_files_to_load = []
     skeleton_files_to_load = []
     palette_pointer_to_load = nil
-    if ptr_to_ptr_to_files_to_load
+    if ptr_to_ptr_to_files_to_load && !ignore_files_to_load
       pointer_to_start_of_file_index_list = fs.read(ptr_to_ptr_to_files_to_load, 4).unpack("V").first
       
       i = 0
@@ -147,17 +159,9 @@ class SpriteInfoExtractor
         raise CreateCodeReadError.new("Failed to find enough valid enemy gfx pointers to match the reused enemy gfx sheet index. (#{valid_gfx_pointers.length} found, #{gfx_sheet_ptr_index+1} needed.)")
       end
       
-      gfx_pointer = valid_gfx_pointers[gfx_sheet_ptr_index]
+      gfx_wrapper = valid_gfx_pointers[gfx_sheet_ptr_index]
       
-      data = fs.read(gfx_pointer+4, 4).unpack("V").first
-      if data >= 0x02000000 && data < 0x03000000
-        _, _, number_of_gfx_pages, _ = fs.read(gfx_pointer, 4).unpack("C*")
-        pointer_to_list_of_gfx_file_pointers = data
-        
-        gfx_file_pointers = fs.read(pointer_to_list_of_gfx_file_pointers, 4*number_of_gfx_pages).unpack("V*")
-      else
-        gfx_file_pointers = [gfx_pointer]
-      end
+      gfx_file_pointers = unpack_gfx_pointer_list(gfx_wrapper, fs)
     end
     
     
@@ -231,5 +235,19 @@ class SpriteInfoExtractor
     end
     
     return [gfx_file_pointers, palette_pointer, palette_offset, sprite_file_pointer, skeleton_file]
+  end
+  
+  def self.unpack_gfx_pointer_list(gfx_wrapper, fs)
+    data = fs.read(gfx_wrapper+4, 4).unpack("V").first
+    if data >= 0x02000000 && data < 0x03000000
+      _, _, number_of_gfx_pages, _ = fs.read(gfx_wrapper, 4).unpack("C*")
+      pointer_to_list_of_gfx_file_pointers = data
+      
+      gfx_file_pointers = fs.read(pointer_to_list_of_gfx_file_pointers, 4*number_of_gfx_pages).unpack("V*")
+    else
+      gfx_file_pointers = [gfx_wrapper]
+    end
+    
+    return gfx_file_pointers
   end
 end

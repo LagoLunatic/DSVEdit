@@ -385,17 +385,21 @@ OVERLAY_FILE_FOR_SPECIAL_OBJECT = {
   0x66 => 78,
 }
 REUSED_SPECIAL_OBJECT_INFO = {
-  0x02 => {init_code: 0x022B6E98, gfx_sheet_ptr_index: 0, palette_offset: 0, palette_list_ptr_index: 0}, # destructible
-  0x16 => {init_code: 0x0221A408, gfx_sheet_ptr_index: 0, palette_offset: 1, palette_list_ptr_index: 0}, # red chest
-  0x17 => {init_code: 0x0221A408, gfx_sheet_ptr_index: 0, palette_offset: 2, palette_list_ptr_index: 0}, # blue chest
-  0x22 => {init_code:         -1, gfx_sheet_ptr_index: 0, palette_offset: 2, palette_list_ptr_index: 0}, # movement slowing area
-  0x24 => {init_code:         -1, gfx_sheet_ptr_index: 0, palette_offset: 2, palette_list_ptr_index: 0}, # timed boss door opener
-  0x2A => {init_code:         -1, gfx_sheet_ptr_index: 0, palette_offset: 2, palette_list_ptr_index: 0}, # moving platform waypoint
+  0x02 => {init_code: 0x022B6E98}, # destructible
+  0x16 => {init_code: 0x0221A408, palette_offset: 1}, # red chest
+  0x17 => {init_code: 0x0221A408, palette_offset: 2}, # blue chest
+  0x22 => {init_code:         -1}, # movement slowing area
+  0x24 => {init_code:         -1}, # timed boss door opener
+  0x2A => {init_code:         -1}, # moving platform waypoint
+  0x2E => {sprite: 0x020C4E24, gfx_files: [0x020B8788, 0x020B8794, 0x020B87A0, 0x020B87AC, 0x020B87B8, 0x020B87D0, 0x020B8818, 0x020B8824], palette: 0x020C8E50}, # wooden door
+  0x4B => {sprite: 0x020C4E24, gfx_files: [0x020B8788, 0x020B8794, 0x020B87A0, 0x020B87AC, 0x020B87B8, 0x020B87D0, 0x020B8818, 0x020B8824], palette: 0x020C8E50}, # boss door
 }
 BEST_SPRITE_FRAME_FOR_SPECIAL_OBJECT = {
   0x16 => 0x05,
   0x17 => 0x05,
   0x25 => 0x02,
+  0x2E => 0xED,
+  0x4B => 0xDF,
   0x4E => 0x09,
   0x59 => 0x01,
   0x5B => 0x02,
@@ -404,6 +408,8 @@ BEST_SPRITE_FRAME_FOR_SPECIAL_OBJECT = {
 SPECIAL_OBJECT_FILES_TO_LOAD_LIST = 0x020F343C
 
 OTHER_SPRITES = [
+  {desc: "Common", sprite: 0x020C4E24, gfx_files: [0x020B8788, 0x020B8794, 0x020B87A0, 0x020B87AC, 0x020B87B8, 0x020B87D0, 0x020B8818, 0x020B8824], palette: 0x020C8E50},
+  
   {pointer: 0x020EED5C, desc: "Shanoa player"},
   {pointer: 0x020EEDB8, desc: "Arma Felix player"},
   {pointer: 0x020EEE14, desc: "Arma Chiroptera player"},

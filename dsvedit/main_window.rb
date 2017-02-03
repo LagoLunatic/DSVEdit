@@ -121,8 +121,7 @@ class DSVEdit < Qt::MainWindow
     game.initialize_from_rom(rom_path, extract_to_hard_drive = true)
     @game = game
     @renderer = Renderer.new(game.fs)
-    @cached_enemy_pixmaps = {}
-    @cached_special_object_pixmaps = {}
+    @cached_sprite_pixmaps = {}
     
     initialize_dropdowns()
     
@@ -136,8 +135,7 @@ class DSVEdit < Qt::MainWindow
     game.initialize_from_folder(folder_path)
     @game = game
     @renderer = Renderer.new(game.fs)
-    @cached_enemy_pixmaps = {}
-    @cached_special_object_pixmaps = {}
+    @cached_sprite_pixmaps = {}
     
     initialize_dropdowns()
     
@@ -283,7 +281,6 @@ class DSVEdit < Qt::MainWindow
     @room_graphics_scene.clear()
     @room_graphics_scene = Qt::GraphicsScene.new
     @ui.room_graphics_view.setScene(@room_graphics_scene)
-    @room_graphics_scene.setSceneRect(0, 0, @room.max_layer_width*SCREEN_WIDTH_IN_PIXELS, @room.max_layer_height*SCREEN_HEIGHT_IN_PIXELS)
     
     @layers_view_item = Qt::GraphicsRectItem.new
     @room_graphics_scene.addItem(@layers_view_item)
@@ -313,90 +310,11 @@ class DSVEdit < Qt::MainWindow
     @entities_view_item = Qt::GraphicsRectItem.new
     @room_graphics_scene.addItem(@entities_view_item)
     @room.entities.each do |entity|
-      if entity.is_enemy?
-        enemy_id = entity.subtype
-        
-        chunky_frame, min_x, min_y = @cached_enemy_pixmaps[enemy_id] ||= begin
-          gfx_file_pointers, palette, palette_offset, sprite_file = EnemyDNA.new(enemy_id, @game.fs).get_gfx_and_palette_and_sprite_from_init_ai
-          frame_to_render = BEST_SPRITE_FRAME_FOR_ENEMY[enemy_id] || 0
-          
-          sprite = Sprite.new(sprite_file, game.fs)
-          chunky_frames, min_x, min_y = @renderer.render_sprite(gfx_file_pointers, palette, palette_offset, sprite, frame_to_render)
-          if chunky_frames.empty?
-            next
-          end
-          
-          chunky_frame = chunky_frames.first
-          
-          [chunky_frame, min_x, min_y]
-        rescue
-          # Failed to render enemy sprite, put a generic rectangle there instead.
-          graphics_item = EntityRectItem.new(entity, self)
-          graphics_item.setParentItem(@entities_view_item)
-          next
-        end
-        
-        graphics_item = EntityChunkyItem.new(chunky_frame, entity, self)
-        
-        graphics_item.setPos(entity.x_pos+min_x, entity.y_pos+min_y)
-        graphics_item.setParentItem(@entities_view_item)
-      elsif entity.is_item?
-        item_type = entity.subtype
-        item_id = entity.var_b
-        chunky_image = @renderer.render_icon(item_type-2, item_id)
-        
-        graphics_item = EntityChunkyItem.new(chunky_image, entity, self)
-        graphics_item.setPos(entity.x_pos-8, entity.y_pos-16)
-        graphics_item.setParentItem(@entities_view_item)
-      elsif entity.is_glyph?
-        glyph_id = entity.var_b
-        if glyph_id <= 0x36
-          chunky_image = @renderer.render_icon(0, glyph_id-1, mode=:glyph)
-        else
-          chunky_image = @renderer.render_icon(1, glyph_id-1-0x37, mode=:glyph)
-        end
-        
-        graphics_item = EntityChunkyItem.new(chunky_image, entity, self)
-        graphics_item.setPos(entity.x_pos-16, entity.y_pos-16)
-        graphics_item.setParentItem(@entities_view_item)
-      elsif entity.is_special_object?
-        special_object_id = entity.subtype
-        chunky_frame, min_x, min_y = @cached_special_object_pixmaps[special_object_id] ||= begin
-          gfx_file_pointers, palette, palette_offset, sprite_file = SpecialObjectType.new(special_object_id, game.fs).get_gfx_and_palette_and_sprite_from_create_code
-          frame_to_render = BEST_SPRITE_FRAME_FOR_SPECIAL_OBJECT[special_object_id] || 0
-          
-          sprite = Sprite.new(sprite_file, game.fs)
-          chunky_frames, min_x, min_y = @renderer.render_sprite(gfx_file_pointers, palette, palette_offset, sprite, frame_to_render)
-          if chunky_frames.empty?
-            next
-          end
-          
-          chunky_frame = chunky_frames.first
-          
-          [chunky_frame, min_x, min_y]
-        rescue
-          # Failed to render object sprite, put a generic rectangle there instead.
-          graphics_item = EntityRectItem.new(entity, self)
-          graphics_item.setParentItem(@entities_view_item)
-          next
-        end
-        
-        graphics_item = EntityChunkyItem.new(chunky_frame, entity, self)
-        
-        graphics_item.setPos(entity.x_pos+min_x, entity.y_pos+min_y)
-        graphics_item.setParentItem(@entities_view_item)
-      else
-        graphics_item = EntityRectItem.new(entity, self)
-        graphics_item.setParentItem(@entities_view_item)
-      end
+      add_graphics_item_for_entity(entity)
     end
     
     @doors_view_item = Qt::GraphicsRectItem.new
     @room_graphics_scene.addItem(@doors_view_item)
-    min_x = 0
-    min_y = 0
-    max_x = @room.max_layer_width*SCREEN_WIDTH_IN_PIXELS
-    max_y = @room.max_layer_height*SCREEN_HEIGHT_IN_PIXELS
     @room.doors.each_with_index do |door, i|
       x = door.x_pos
       y = door.y_pos
@@ -405,19 +323,104 @@ class DSVEdit < Qt::MainWindow
       x *= SCREEN_WIDTH_IN_PIXELS
       y *= SCREEN_HEIGHT_IN_PIXELS
       
-      min_x = x if x < min_x
-      min_y = y if y < min_y
-      door_right_x = x + 16*16
-      door_bottom_y = y + 12*16
-      max_x = door_right_x if door_right_x > max_x
-      max_y = door_bottom_y if door_bottom_y > max_y
-      
       door_item = DoorItem.new(door, x, y, self)
       door_item.setParentItem(@doors_view_item)
     end
-    @room_graphics_scene.setSceneRect(min_x, min_y, max_x-min_x, max_y-min_y)
+    
+    @room_graphics_scene.setSceneRect(@room_graphics_scene.itemsBoundingRect)
     
     update_visible_view_items()
+  end
+  
+  def add_graphics_item_for_entity(entity)
+    if entity.is_enemy?
+      enemy_id = entity.subtype
+      add_sprite_item_for_entity(entity,
+        EnemyDNA.new(enemy_id, @game.fs).get_gfx_and_palette_and_sprite_from_init_ai,
+        BEST_SPRITE_FRAME_FOR_ENEMY[enemy_id])
+    elsif entity.is_special_object?
+      special_object_id = entity.subtype
+      add_sprite_item_for_entity(entity,
+        SpecialObjectType.new(special_object_id, game.fs).get_gfx_and_palette_and_sprite_from_create_code,
+        BEST_SPRITE_FRAME_FOR_SPECIAL_OBJECT[special_object_id])
+    elsif entity.is_candle?
+      add_sprite_item_for_entity(entity,
+        SpriteInfoExtractor.get_gfx_and_palette_and_sprite_from_create_code(OTHER_SPRITES[0][:pointer], game.fs, OTHER_SPRITES[0][:overlay], OTHER_SPRITES[0]),
+        0xDB)
+    elsif entity.is_magic_seal?
+      add_sprite_item_for_entity(entity,
+        SpriteInfoExtractor.get_gfx_and_palette_and_sprite_from_create_code(OTHER_SPRITES[0][:pointer], game.fs, OTHER_SPRITES[0][:overlay], OTHER_SPRITES[0]),
+        0xCE)
+    elsif entity.is_item?
+      item_type = entity.subtype
+      item_id = entity.var_b
+      chunky_image = @renderer.render_icon_by_item_type(item_type-2, item_id)
+      
+      graphics_item = EntityChunkyItem.new(chunky_image, entity, self)
+      graphics_item.setPos(entity.x_pos-8, entity.y_pos-16)
+      graphics_item.setParentItem(@entities_view_item)
+    elsif entity.is_skill? && GAME == "por"
+      case entity.var_b
+      when 0x00..0x26
+        chunky_image = @renderer.render_icon(64 + 0, 0)
+      when 0x27..0x50
+        chunky_image = @renderer.render_icon(64 + 2, 2)
+      when 0x51..0x5B
+        chunky_image = @renderer.render_icon(64 + 1, 0)
+      else
+        chunky_image = @renderer.render_icon(64 + 3, 0)
+      end
+      
+      graphics_item = EntityChunkyItem.new(chunky_image, entity, self)
+      graphics_item.setPos(entity.x_pos-8, entity.y_pos-16)
+      graphics_item.setParentItem(@entities_view_item)
+    elsif entity.is_glyph?
+      glyph_id = entity.var_b
+      if glyph_id <= 0x36
+        chunky_image = @renderer.render_icon_by_item_type(0, glyph_id-1, mode=:glyph)
+      else
+        chunky_image = @renderer.render_icon_by_item_type(1, glyph_id-1-0x37, mode=:glyph)
+      end
+      
+      graphics_item = EntityChunkyItem.new(chunky_image, entity, self)
+      graphics_item.setPos(entity.x_pos-16, entity.y_pos-16)
+      graphics_item.setParentItem(@entities_view_item)
+    else
+      graphics_item = EntityRectItem.new(entity, self)
+      graphics_item.setParentItem(@entities_view_item)
+    end
+  rescue StandardError => e
+    graphics_item = EntityRectItem.new(entity, self)
+    graphics_item.setParentItem(@entities_view_item)
+  end
+  
+  def add_sprite_item_for_entity(entity, sprite_data, frame_to_render)
+    if frame_to_render == -1
+      # Don't show this entity's sprite in the editor.
+      graphics_item = EntityRectItem.new(entity, self)
+      graphics_item.setParentItem(@entities_view_item)
+      return
+    end
+    
+    gfx_file_pointers, palette_pointer, palette_offset, sprite_pointer = *sprite_data
+    frame_to_render ||= 0
+    
+    chunky_frame, min_x, min_y = @cached_sprite_pixmaps[entity.type*0x100 + entity.subtype] ||= begin
+      sprite = Sprite.new(sprite_pointer, game.fs)
+      chunky_frames, min_x, min_y = @renderer.render_sprite(gfx_file_pointers, palette_pointer, palette_offset, sprite, frame_to_render)
+      if chunky_frames.empty?
+        return
+      end
+      
+      chunky_frame = chunky_frames.first
+      
+      [chunky_frame, min_x, min_y]
+    end
+    
+    graphics_item = EntityChunkyItem.new(chunky_frame, entity, self)
+    
+    graphics_item.setPos(entity.x_pos+min_x, entity.y_pos+min_y)
+    graphics_item.setParentItem(@entities_view_item)
   end
   
   def load_layer(layer, tileset, layer_graphics_item)
