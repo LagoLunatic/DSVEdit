@@ -25,6 +25,7 @@ class NDSFileSystem
       file[:size] = File.size(File.join(@filesystem_directory, file[:file_path]))
       file[:end_offset] = file[:start_offset] + file[:size]
     end
+    get_file_ram_start_offsets_and_file_data_types()
   end
   
   def open_and_extract_rom(input_rom_path, filesystem_directory)
@@ -32,6 +33,7 @@ class NDSFileSystem
     @rom = File.open(input_rom_path, "rb") {|file| file.read}
     read_from_rom()
     extract_to_hard_drive()
+    get_file_ram_start_offsets_and_file_data_types()
   end
   
   def open_rom(input_rom_path)
@@ -39,6 +41,7 @@ class NDSFileSystem
     @rom = File.open(input_rom_path, "rb") {|file| file.read}
     read_from_rom()
     extract_to_memory()
+    get_file_ram_start_offsets_and_file_data_types()
   end
   
   def write_to_rom(output_rom_path)
@@ -250,7 +253,6 @@ private
     CONSTANT_OVERLAYS.each do |overlay_index|
       load_overlay(overlay_index)
     end
-    get_file_ram_start_offsets_and_file_data_types()
   end
   
   def extract_to_hard_drive
