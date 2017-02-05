@@ -1,6 +1,28 @@
+1A Spittle Bone
+  Var A: Which wall to attach to when first initialized.
+    0 Floor
+    1 Ceiling
+    2 Left wall
+    3 Right wall
+  Var B: Movement speed (subpixels per frame).
+28 Hanged Bones
+  Attaches itself to the closest wall it can find.
+  Var A: Length of the bone it swings on.
+  Var B: Unused?
 33 Skeleton Gunman
   Come in threes. First and third are kneeling, the middle one is standing.
   Var b: Distance in pixels between the first and third gunmen. (The middle one is placed halfway between the others.)
+28 Skeleton Tree
+  Attaches itself to the closest wall it can find.
+  Var A: Length of the bone it swings on.
+  Var B: Rotation.
+63 Vice Beetle
+  Var A: Which wall to attach to when first initialized.
+    0 Floor
+    1 Ceiling
+    2 Left wall
+    3 Right wall
+  Var B: Movement speed (subpixels per frame).
 8B Behemoth
   Var b: When 2, the scripted Behemoth that chases you. When 0, normal Behemoth.
 91 Stella

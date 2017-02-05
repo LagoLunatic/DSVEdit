@@ -193,6 +193,12 @@ class Randomizer
     case enemy_dna.name.decoded_string
     when "Bat", "Fleaman"
       dos_adjust_randomized_enemy(enemy, enemy_dna)
+    when "Hanged Bones", "Skeleton Tree"
+      enemy.var_b = 0
+      enemy.y_pos = 0x20
+    when "Spittle Bone", "Vice Beetle"
+      enemy.var_a = rng.rand(0..3) # wall direction
+      enemy.var_b = rng.rand(0x600..0x1200) # speed
     end
   end
   
