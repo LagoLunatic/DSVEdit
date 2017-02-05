@@ -62,6 +62,10 @@ class Entity
     type == 0x04
   end
   
+  def is_hidden_item?
+    type == 0x07 && (GAME == "por" || GAME == "ooe")
+  end
+  
   def is_skill?
     is_pickup? && PICKUP_SUBTYPES_FOR_SKILLS.include?(subtype)
   end

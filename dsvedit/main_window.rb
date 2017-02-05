@@ -351,10 +351,17 @@ class DSVEdit < Qt::MainWindow
       add_sprite_item_for_entity(entity,
         SpriteInfoExtractor.get_gfx_and_palette_and_sprite_from_create_code(OTHER_SPRITES[0][:pointer], game.fs, OTHER_SPRITES[0][:overlay], OTHER_SPRITES[0]),
         0xCE)
-    elsif entity.is_item?
+    elsif entity.is_item? || (entity.is_hidden_item? && GAME == "por")
       item_type = entity.subtype
       item_id = entity.var_b
       chunky_image = @renderer.render_icon_by_item_type(item_type-2, item_id)
+      
+      graphics_item = EntityChunkyItem.new(chunky_image, entity, self)
+      graphics_item.setPos(entity.x_pos-8, entity.y_pos-16)
+      graphics_item.setParentItem(@entities_view_item)
+    elsif entity.is_hidden_item? && GAME == "ooe"
+      item_global_id = entity.var_b - 1
+      chunky_image = @renderer.render_icon_by_global_id(item_global_id)
       
       graphics_item = EntityChunkyItem.new(chunky_image, entity, self)
       graphics_item.setPos(entity.x_pos-8, entity.y_pos-16)

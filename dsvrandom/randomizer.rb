@@ -102,6 +102,22 @@ class Randomizer
       when "ooe"
         randomize_pickup_ooe(entity)
       end
+    when 0x07
+      case GAME
+      when "dos"
+        # Font loader, do nothing
+      when "por"
+        # Item hidden in wall
+        entity.subtype = ITEM_LOCAL_ID_RANGES.keys.sample(random: rng)
+        entity.var_b = rng.rand(ITEM_LOCAL_ID_RANGES[entity.subtype])
+        
+        entity.var_a = get_unique_id()
+      when "ooe"
+        # Item hidden in wall
+        entity.var_b = rng.rand(0x0070..0x0162)
+        
+        entity.var_a = get_unique_id()
+      end
     end
     
     entity.write_to_rom()

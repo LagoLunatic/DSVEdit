@@ -680,6 +680,22 @@ class Renderer
     render_icon(icon_index, palette_index, mode=:item)
   end
   
+  def render_icon_by_global_id(global_id)
+    ITEM_TYPES.each do |item_type|
+      format = item_type[:format]
+      format_length = format.inject(0){|sum, attr| sum += attr[0]}
+      base_pointer = item_type[:list_pointer]
+      item_type[:count].times do |i|
+        pointer = base_pointer+i*format_length
+        item = Item.new(pointer, format, fs)
+        if item["Item ID"] == global_id
+          icon_index, palette_index = EXTRACT_ICON_INDEX_AND_PALETTE_INDEX.call(item["Icon"])
+          return render_icon(icon_index, palette_index, mode=:item)
+        end
+      end
+    end
+  end
+  
   def render_icon(icon_index, palette_index, mode=:item)
     icon_width = mode == :item ? 16 : 32
     icon_height = icon_width

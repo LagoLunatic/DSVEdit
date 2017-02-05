@@ -32,10 +32,10 @@ Byte 6: Entity type.
       Var B: Must be the same as the event's var B. For save rooms, must be the same as the save point's var B.
     PoR: An item hidden within a breakable wall.
       Subtype: The type of item, works the same as item subtype for entity type 04.
-      Var A: Flag for whether this item has been picked up?
+      Var A: Flag for whether this item has been picked up yet.
       Var B: The local ID of the item.
     OoE: If subtype is FF, this is an item hidden within a breakable wall.
-      Var A: ???
+      Var A: Flag for whether this item has been picked up yet.
       Var B: The global ID of the item +1.
   08 ???
     DoS: Unused
