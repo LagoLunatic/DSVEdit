@@ -12,7 +12,7 @@ class Randomizer
     @options = options
     @allow_randomization_between_items_skills_passives = true
     
-    @next_available_item_id = 0
+    @next_available_item_id = 1
     @used_skills = []
     @used_items = []
     
@@ -518,6 +518,7 @@ class Randomizer
       
       if pickup.is_pickup? && pickup.subtype >= 0x08 && [0x5C, 0x5D].include?(pickup.var_b)
         # change cube or call cube
+        pickup.var_a = get_unique_id()
         return
       end
     end
