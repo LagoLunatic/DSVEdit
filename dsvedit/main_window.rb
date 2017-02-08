@@ -303,15 +303,7 @@ class DSVEdit < Qt::MainWindow
       load_layer(layer, tileset, layer_item)
     end
     
-    @collision_view_item = Qt::GraphicsRectItem.new
-    @room_graphics_scene.addItem(@collision_view_item)
-    if @room.layers.length > 0
-      @renderer.ensure_tilesets_exist("cache/#{GAME}/rooms/", @room, collision=true)
-      tileset_filename = "cache/#{GAME}/rooms/#{@room.area_name}/Tilesets/#{@room.layers.first.tileset_filename}_collision.png"
-      tileset = Qt::Image.new(tileset_filename)
-      layer = @room.layers.first
-      load_layer(layer, tileset, @collision_view_item)
-    end
+    load_room_collision_tileset()
     
     @entities_view_item = Qt::GraphicsRectItem.new
     @room_graphics_scene.addItem(@entities_view_item)
@@ -336,6 +328,23 @@ class DSVEdit < Qt::MainWindow
     @room_graphics_scene.setSceneRect(@room_graphics_scene.itemsBoundingRect)
     
     update_visible_view_items()
+  end
+  
+  def load_room_collision_tileset
+    @collision_view_item = Qt::GraphicsRectItem.new
+    @room_graphics_scene.addItem(@collision_view_item)
+    if @room.layers.length > 0
+      @renderer.ensure_tilesets_exist("cache/#{GAME}/rooms/", @room, collision=true)
+      tileset_filename = "cache/#{GAME}/rooms/#{@room.area_name}/Tilesets/#{@room.layers.first.tileset_filename}_collision.png"
+      tileset = Qt::Image.new(tileset_filename)
+      layer = @room.layers.first
+      load_layer(layer, tileset, @collision_view_item)
+    end
+  rescue StandardError => e
+    Qt::MessageBox.warning(self,
+      "Collision tileset loading failed",
+      "Failed to load collision tileset.\n#{e.message}\n\n#{e.backtrace.join("\n")}"
+    )
   end
   
   def add_graphics_item_for_entity(entity)

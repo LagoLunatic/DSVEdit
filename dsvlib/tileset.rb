@@ -20,7 +20,12 @@ class Tileset
     @tiles << tile_class.new(0, 0) # First entry on every tileset is always blank.
     
     (0..LENGTH_OF_TILESET_IN_BLOCKS-1).each do |i|
-      tile_data = fs.read(tileset_ram_pointer + i*4, 4).unpack("V").first
+      begin
+        tile_data = fs.read(tileset_ram_pointer + i*4, 4).unpack("V").first
+      rescue NDSFileSystem::ConversionError
+        # We read past the end of the overlay. This is okay as it just means the rest of the tileset would be empty anyway.
+        break
+      end
       
       @tiles << tile_class.new(tile_data, tileset_ram_pointer + i*4)
     end
