@@ -484,7 +484,7 @@ class Randomizer
         # Replace it with a free glyph.
         entity.type = 4
         entity.subtype = 2
-        entity.var_a = 0x00
+        entity.var_a = get_unique_id()
         entity.var_b = 0x02 # confodere
         entity.x_pos = 0x00B0
         entity.y_pos = 0x0070
@@ -494,7 +494,7 @@ class Randomizer
         # Replace it with a free glyph.
         entity.type = 4
         entity.subtype = 2
-        entity.var_a = 0x00
+        entity.var_a = get_unique_id()
         entity.var_b = 0x39 # magnes
         entity.x_pos = 0x0080
         entity.y_pos = 0x02B0
@@ -589,14 +589,14 @@ class Randomizer
     return if !options[:randomize_souls_relics_and_glyphs] && pickup.is_special_object? && pickup.subtype == 0x02 && pickup.var_a == 0x00 # glyph statue
     return if !options[:randomize_souls_relics_and_glyphs] && pickup.is_pickup? && (2..4).include?(pickup.subtype) # free glyph
     
-    case rng.rand(0..3)
-    when 0
+    case rng.rand(1..100)
+    when 1..40
       # Wooden chest
       pickup.type = 0x02
       pickup.subtype = 0x15
       pickup.var_a = rng.rand(0x00..0x0F)
       pickup.var_b = 0
-    when 1
+    when 41..80
       # Red chest
       pickup.type = 0x02
       pickup.subtype = 0x16
@@ -607,13 +607,13 @@ class Randomizer
         # Blue chest
         pickup.subtype = 0x17
       end
-    when 2
+    when 81..90
       # Glyph statue
       pickup.type = 0x02
       pickup.subtype = 0x02
       pickup.var_a = 0x00
       pickup.var_b = get_random_glyph()
-    when 3
+    when 91..100
       # Free glyph
       pickup.type = 0x04
       pickup.subtype = 0x02
@@ -668,8 +668,12 @@ class Randomizer
         enemy["Item 1 Chance"] = rng.rand(0x01..0x0F)
         enemy["Item 2 Chance"] = rng.rand(0x01..0x0F)
         
-        enemy["Glyph"] = get_random_glyph()
-        enemy["Glyph Chance"] = rng.rand(0x01..0x0F)
+        if rng.rand <= 0.20 # 20% chance to have a glyph drop
+          enemy["Glyph"] = get_random_glyph()
+          enemy["Glyph Chance"] = rng.rand(0x01..0x0F)
+        else
+          enemy["Glyph"] = 0
+        end
       end
       
       enemy.write_to_rom()
