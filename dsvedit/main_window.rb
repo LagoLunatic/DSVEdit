@@ -492,11 +492,7 @@ class DSVEdit < Qt::MainWindow
   def load_map()
     @map_graphics_scene.clear()
     
-    if GAME == "dos"
-      @map = DoSMap.new(@area_index, @sector_index, game.fs)
-    else
-      @map = Map.new(@area_index, @sector_index, game.fs)
-    end
+    @map = game.get_map(@area_index, @sector_index)
     
     chunky_png_img = @renderer.render_map(@map)
     map_pixmap_item = GraphicsChunkyItem.new(chunky_png_img)
@@ -526,7 +522,7 @@ class DSVEdit < Qt::MainWindow
   end
   
   def open_map_editor
-    @map_editor_dialog = MapEditorDialog.new(self, game.fs, @renderer, @area_index, @sector_index)
+    @map_editor_dialog = MapEditorDialog.new(self, game, @renderer, @area_index, @sector_index)
   end
   
   def open_entity_editor(entity)

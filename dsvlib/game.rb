@@ -124,6 +124,14 @@ class Game
     end
   end
   
+  def get_map(area_index, sector_index)
+    if GAME == "dos"
+      DoSMap.new(area_index, sector_index, fs)
+    else
+      Map.new(area_index, sector_index, fs)
+    end
+  end
+  
   def get_transition_rooms
     transition_rooms = []
     
@@ -134,8 +142,9 @@ class Game
         get_room_by_metadata_pointer(pointer)
       end
     else
-      areas.each do |area|
-        area.map.tiles.each do |tile|
+      areas.each_with_index do |area, area_index|
+        map = get_map(area_index, 0)
+        map.tiles.each do |tile|
           if tile.is_transition
             transition_rooms << area.sectors[tile.sector_index].rooms[tile.room_index]
           end

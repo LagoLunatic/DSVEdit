@@ -9,18 +9,14 @@ class MapEditorDialog < Qt::Dialog
   slots "reload_available_tiles(int)"
   slots "button_box_clicked(QAbstractButton*)"
   
-  def initialize(main_window, fs, renderer, area_index, sector_index)
+  def initialize(main_window, game, renderer, area_index, sector_index)
     super(main_window, Qt::WindowTitleHint | Qt::WindowSystemMenuHint)
     @ui = Ui_MapEditor.new
     @ui.setup_ui(self)
     
-    @fs = fs
+    @game = game
     @renderer = renderer
-    if GAME == "dos"
-      @map = DoSMap.new(area_index, sector_index, fs)
-    else
-      @map = Map.new(area_index, sector_index, fs)
-    end
+    @map = game.get_map(area_index, sector_index)
     
     @map_graphics_scene = ClickableGraphicsScene.new
     @map_graphics_scene.setSceneRect(0, 0, 64*4+1, 48*4+1)
