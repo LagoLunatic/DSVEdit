@@ -233,6 +233,13 @@ class Game
       end
       
       text_database.write_to_rom()
+    when "ooe"
+      glyph_name_list_start = TEXT_REGIONS["Item Names"].begin
+      NAMES_FOR_UNNAMED_SKILLS.each do |glyph_id, fixed_name|
+        text_database.text_list[glyph_id + glyph_name_list_start].decoded_string = fixed_name
+      end
+      
+      text_database.write_to_rom()
     end
   end
   
