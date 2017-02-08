@@ -41,6 +41,7 @@ class DSVEdit < Qt::MainWindow
   slots "import_from_tiled()"
   slots "set_current_room_as_starting_room()"
   slots "copy_room_pointer_to_clipboad()"
+  slots "toggle_hide_map()"
   
   def initialize
     super()
@@ -84,8 +85,13 @@ class DSVEdit < Qt::MainWindow
     connect(@ui.set_as_starting_room, SIGNAL("released()"), self, SLOT("set_current_room_as_starting_room()"))
     connect(@ui.copy_room_pointer, SIGNAL("released()"), self, SLOT("copy_room_pointer_to_clipboad()"))
     connect(@ui.edit_map, SIGNAL("released()"), self, SLOT("open_map_editor()"))
+    connect(@ui.toggle_hide_map, SIGNAL("released()"), self, SLOT("toggle_hide_map()"))
     
     load_settings()
+    
+    if @settings[:hide_map]
+      toggle_hide_map()
+    end
     
     self.setWindowState(Qt::WindowMaximized)
     self.setWindowTitle("DSVania Editor #{DSVEDIT_VERSION}")
@@ -561,6 +567,18 @@ class DSVEdit < Qt::MainWindow
   
   def copy_room_pointer_to_clipboad
     $qApp.clipboard.setText("%08X" % @room.room_metadata_ram_pointer)
+  end
+  
+  def toggle_hide_map
+    if !@ui.map_graphics_view.isHidden
+      @ui.map_graphics_view.hide()
+      @ui.toggle_hide_map.text = "Show map"
+      @settings[:hide_map] = true
+    else
+      @ui.map_graphics_view.show()
+      @ui.toggle_hide_map.text = "Hide map"
+      @settings[:hide_map] = false
+    end
   end
   
   def save_files

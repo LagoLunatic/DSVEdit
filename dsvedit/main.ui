@@ -112,6 +112,13 @@
        </widget>
       </item>
       <item>
+       <widget class="QPushButton" name="toggle_hide_map">
+        <property name="text">
+         <string>Hide map</string>
+        </property>
+       </widget>
+      </item>
+      <item>
        <widget class="QGraphicsView" name="map_graphics_view"/>
       </item>
       <item>
