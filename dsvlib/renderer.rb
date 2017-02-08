@@ -675,9 +675,19 @@ class Renderer
     format_length = format.inject(0){|sum, attr| sum += attr[0]}
     pointer = item_type[:list_pointer] + item_id*format_length
     item = Item.new(pointer, format, fs)
-    icon_index, palette_index = EXTRACT_ICON_INDEX_AND_PALETTE_INDEX.call(item["Icon"])
     
-    render_icon(icon_index, palette_index, mode=:item)
+    if mode == :item
+      icon_index, palette_index = EXTRACT_ICON_INDEX_AND_PALETTE_INDEX.call(item["Icon"])
+    else
+      icon_index = item["Icon"]
+      if item_type_index == 0
+        palette_index = 2
+      else
+        palette_index = 1
+      end
+    end
+    
+    render_icon(icon_index, palette_index, mode)
   end
   
   def render_icon_by_global_id(global_id)
@@ -702,16 +712,6 @@ class Renderer
     icons_per_row = 128 / icon_width
     icons_per_column = 128 / icon_height
     icons_per_page = 128*128 / icon_width / icon_width
-    
-    if mode == :item
-      
-    else
-      if item_type_index == 0
-        palette_index = 2
-      else
-        palette_index = 1
-      end
-    end
     
     gfx_page_index = icon_index / icons_per_page
     
