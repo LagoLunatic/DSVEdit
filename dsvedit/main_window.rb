@@ -132,8 +132,8 @@ class DSVEdit < Qt::MainWindow
     initialize_dropdowns()
     
     @settings[:last_used_folder] = game.folder
-  rescue NDSFileSystem::InvalidFileError
-    Qt::MessageBox.warning(self, "Invalid file", "Selected file is not a DSVania")
+  rescue Game::InvalidFileError, NDSFileSystem::InvalidFileError
+    Qt::MessageBox.warning(self, "Invalid file", "Selected ROM file is not a DSVania.")
   end
   
   def open_folder(folder_path)
@@ -146,8 +146,8 @@ class DSVEdit < Qt::MainWindow
     initialize_dropdowns()
     
     @settings[:last_used_folder] = folder_path
-  rescue NDSFileSystem::InvalidFileError
-    Qt::MessageBox.warning(self, "Invalid file", "Selected file is not a DSVania")
+  rescue Game::InvalidFileError, NDSFileSystem::InvalidFileError
+    Qt::MessageBox.warning(self, "Invalid file", "Selected folder is not a DSVania.")
   end
   
   def initialize_dropdowns

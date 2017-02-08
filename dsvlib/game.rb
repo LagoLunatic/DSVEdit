@@ -1,13 +1,13 @@
 
 class Game
-  class InvalidGameError < StandardError ; end
+  class InvalidFileError < StandardError ; end
   
   attr_reader :areas, :fs, :folder, :text_database, :rooms_by_metadata_pointer
   
   def initialize_from_folder(input_folder_path)
     header_path = File.join(input_folder_path, "ftc", "ndsheader.bin")
     unless File.file?(header_path)
-      raise "Header file not present"
+      raise InvalidFileError.new("Header file not present.")
     end
     
     verify_game_and_load_constants(header_path)
@@ -22,7 +22,7 @@ class Game
   
   def initialize_from_rom(input_rom_path, extract_to_hard_drive)
     unless File.file?(input_rom_path)
-      raise "ROM file not present"
+      raise InvalidFileError.new("ROM file not present.")
     end
     
     verify_game_and_load_constants(input_rom_path)
@@ -238,7 +238,7 @@ private
     when "CASTLEVANIA3"
       suppress_warnings { load './constants/ooe_constants.rb' }
     else
-      raise InvalidGameError.new("Specified game is not a DSVania.")
+      raise InvalidFileError.new("Specified game is not a DSVania.")
     end
   end
   
