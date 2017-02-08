@@ -344,6 +344,7 @@ BEST_SPRITE_FRAME_FOR_ENEMY = {
   110 =>   7, # maneater
   112 =>  74, # goliath
   116 =>  29, # wallman
+  117 =>  30, # blackmore
   119 =>  23, # death
   120 =>  56, # dracula
 }
@@ -388,22 +389,38 @@ REUSED_SPECIAL_OBJECT_INFO = {
   0x02 => {init_code: 0x022B6E98}, # destructible
   0x16 => {init_code: 0x0221A408, palette_offset: 1}, # red chest
   0x17 => {init_code: 0x0221A408, palette_offset: 2}, # blue chest
+  0x1A => {init_code:         -1},
+  0x1B => {init_code:         -1},
+  0x1C => {init_code:         -1},
   0x22 => {init_code:         -1}, # movement slowing area
   0x24 => {init_code:         -1}, # timed boss door opener
   0x2A => {init_code:         -1}, # moving platform waypoint
   0x2E => {sprite: 0x020C4E24, gfx_files: [0x020B8788, 0x020B8794, 0x020B87A0, 0x020B87AC, 0x020B87B8, 0x020B87D0, 0x020B8818, 0x020B8824], palette: 0x020C8E50}, # wooden door
+  0x35 => {init_code:         -1},
+  0x36 => {init_code:         -1}, # transition room hider TODO
   0x4B => {sprite: 0x020C4E24, gfx_files: [0x020B8788, 0x020B8794, 0x020B87A0, 0x020B87AC, 0x020B87B8, 0x020B87D0, 0x020B8818, 0x020B8824], palette: 0x020C8E50}, # boss door
+  0x55 => {sprite: 0x021DCAC0, gfx_files: [0x020B838C, 0x020B8398, 0x020B83A4, 0x020B83B0, 0x020B83BC, 0x020B83C8, 0x020B83D4, 0x020B83E0, 0x020B83EC, 0x020B83F8, 0x020B8404, 0x020B8410, 0x020B841C, 0x020B8428], palette: 0x020D73D0}, # area titles
+  0x5C => {init_code:         -1}, # breakable wall TODO
+  0x80 => {init_code:         -1},
+  0x81 => {init_code:         -1},
+  0x82 => {init_code:         -1},
+  0x83 => {init_code:         -1},
+  0x84 => {init_code:         -1},
 }
 BEST_SPRITE_FRAME_FOR_SPECIAL_OBJECT = {
   0x16 => 0x05,
   0x17 => 0x05,
+  0x1D =>   -1,
   0x25 => 0x02,
   0x2E => 0xED,
   0x4B => 0xDF,
   0x4E => 0x09,
+  0x57 =>   -1,
+  0x58 =>   -1,
   0x59 => 0x01,
   0x5B => 0x02,
   0x60 => 0x06,
+  0x87 =>   -1,
 }
 SPECIAL_OBJECT_FILES_TO_LOAD_LIST = 0x020F343C
 

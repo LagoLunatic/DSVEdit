@@ -51,9 +51,10 @@ Special Objects:
   Var A and var B work like red/gold chests.
 18 Does several strange things, overwrites the entities for this room in ram (with level data maybe?) and lags the emulator so much it almost seems frozen
 19 Part of the waterfall in Tristis pass. This object is responsible for making it impossible for Shanoa to jump up the waterfall, and making bubbles appear around Shanoa when she is inside it.
-1A Movement blocker. The area covered by this object will act impassable, both to Shanoa in human form and in Paries form.
-  Var A: Width of the area.
-  Var B: Height of the area.
+1A Movement blocker.
+  The area covered by this object will act impassable, both when Shanoa is in human form and in Paries form.
+  Var A: Width of the area in blocks.
+  Var B: Height of the area in blocks.
 1B Same as 1C?
 1C Background shadow for Shanoa. Var A is the z-index of the shadow (can make the shadow go on top of Shanoa with this). Var B affects what layer the shadow is constrained onto (TODO: figure out specifics).
 1D 
@@ -83,9 +84,14 @@ Special Objects:
   Object 29 will seek out its waypoints and move to them one at a time (in the order the waypoints were placed in the room), and then go back to its starting position and repeat the process.
   Byte 5: Which platform is this waypoint for? This should match the platform's byte 5.
 2B Area exit. touching it puts you back on the world map. extends infinitely vertically. also draws the arrows pointing out.
-2C Wygol door that leads into a house. Vars A and B both do something - they seem to affect the x/y position Shanoa will appear in the house.
-2D crash
-2E Wooden door.
+2C Wygol door that leads into a house.
+  Var A:
+    Low byte: The room index of the house to go into.
+    High byte: 0 to enter the house from the left, 1 to enter from the right.
+  Var B: Y pos to enter the room at.
+2D Wooden door inside houses in Wygol.
+  Var A and B: The X and Y coordinates of the door in town to come out of. Must be the exact coordinates of an object 2C, otherwise Shanoa will appear in the center of town.
+2E Wooden door that connects areas.
 2F Screen goes black and music cuts out, and you lose control of Shanoa. Game doesn't crash as you can still see the top screen map blinking.
 30 Small block that crumbles after Shanoa stands on it for a second.
 31 Moving spike thing from Training Chamber. Changes with var a:
@@ -199,7 +205,9 @@ Special Objects:
   Requires overlay 76.
 51 Cerberus statue from Forsaken Cloister.
   Requires overlay 77.
-52 Fire hazard from Training Chamber. Var a controls... uh, something. Var b also controls... something.
+52 Fire hazard from Training Chamber.
+  Var A: ???
+  Var B: ???
 53 Generator puzzle from Mechanical Tower.
   Requires overlay 72.
 54 Makes the room dark and spawns Vol Umbra glyph. Absorbing the glyph gets rid of the darkness. From Mystery Manor.
