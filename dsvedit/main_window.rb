@@ -372,6 +372,20 @@ class DSVEdit < Qt::MainWindow
       graphics_item = EntityChunkyItem.new(chunky_image, entity, self)
       graphics_item.setPos(entity.x_pos-8, entity.y_pos-16)
       graphics_item.setParentItem(@entities_view_item)
+    elsif entity.is_heart?
+      case GAME
+      when "dos"
+        frame_id = 0xDA
+      when "por", "ooe"
+        frame_id = 0x11D
+      end
+      add_sprite_item_for_entity(entity,
+        SpriteInfoExtractor.get_gfx_and_palette_and_sprite_from_create_code(OTHER_SPRITES[0][:pointer], game.fs, OTHER_SPRITES[0][:overlay], OTHER_SPRITES[0]),
+        frame_id)
+    elsif entity.is_money_bag?
+      add_sprite_item_for_entity(entity,
+        SpriteInfoExtractor.get_gfx_and_palette_and_sprite_from_create_code(OTHER_SPRITES[0][:pointer], game.fs, OTHER_SPRITES[0][:overlay], OTHER_SPRITES[0]),
+        0xEF)
     elsif entity.is_skill? && GAME == "por"
       case entity.var_b
       when 0x00..0x26

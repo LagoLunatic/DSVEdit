@@ -62,6 +62,14 @@ class Entity
     type == 0x04
   end
   
+  def is_heart?
+    is_pickup? && subtype == 0x00
+  end
+  
+  def is_money_bag?
+    is_pickup? && subtype == 0x01
+  end
+  
   def is_hidden_item?
     type == 0x07 && (GAME == "por" || GAME == "ooe")
   end
