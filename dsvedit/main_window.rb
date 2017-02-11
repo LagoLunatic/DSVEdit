@@ -155,6 +155,9 @@ class DSVEdit < Qt::MainWindow
   end
   
   def extract_rom(rom_path)
+    cancelled = confirm_discard_changes()
+    return if cancelled
+    
     game = Game.new
     game.initialize_from_rom(rom_path, extract_to_hard_drive = true)
     @game = game
@@ -169,6 +172,9 @@ class DSVEdit < Qt::MainWindow
   end
   
   def open_folder(folder_path)
+    cancelled = confirm_discard_changes()
+    return if cancelled
+    
     game = Game.new
     game.initialize_from_folder(folder_path)
     @game = game
@@ -577,6 +583,12 @@ class DSVEdit < Qt::MainWindow
   end
   
   def closeEvent(event)
+    cancelled = confirm_discard_changes()
+    if cancelled
+      event.ignore()
+      return
+    end
+    
     puts "Close event triggered."
     File.open(@settings_path, "w") do |f|
       f.write(@settings.to_yaml)
@@ -636,6 +648,19 @@ class DSVEdit < Qt::MainWindow
   
   def save_files
     game.fs.commit_file_changes()
+  end
+  
+  def confirm_discard_changes
+    if game && game.fs.has_uncommitted_files?
+      response = Qt::MessageBox.question(self, "Save changes", "There are files with unsaved changes. Save them now?",
+        Qt::MessageBox::Cancel | Qt::MessageBox::No | Qt::MessageBox::Yes, Qt::MessageBox::Cancel)
+      if response == Qt::MessageBox::Cancel
+        return true
+      elsif response == Qt::MessageBox::Yes
+        save_files()
+      end
+    end
+    return false
   end
   
   def write_to_rom(launch_emulator = false)
