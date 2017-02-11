@@ -158,6 +158,9 @@ class DSVEdit < Qt::MainWindow
     cancelled = confirm_discard_changes()
     return if cancelled
     
+    cancelled = confirm_overwrite_folder(rom_path)
+    return if cancelled
+    
     game = Game.new
     game.initialize_from_rom(rom_path, extract_to_hard_drive = true)
     @game = game
@@ -658,6 +661,20 @@ class DSVEdit < Qt::MainWindow
         return true
       elsif response == Qt::MessageBox::Yes
         save_files()
+      end
+    end
+    return false
+  end
+  
+  def confirm_overwrite_folder(rom_path)
+    folder = File.dirname(rom_path)
+    rom_name = File.basename(rom_path, ".*")
+    folder = File.join(folder, "Extracted files #{rom_name}")
+    if File.directory?(folder)
+      response = Qt::MessageBox.question(self, "Confirm overwrite", "Folder \"#{File.basename(folder)}\" already exists.\nAre you sure you want to overwrite the files in this folder?",
+        Qt::MessageBox::No | Qt::MessageBox::Yes, Qt::MessageBox::No)
+      if response == Qt::MessageBox::No
+        return true
       end
     end
     return false
