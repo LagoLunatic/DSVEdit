@@ -60,6 +60,7 @@ Special objects:
 10 Platform moving up and down.
 11 Fog effect (like in the lost village).
 12 Cog.
+  Byte 5: Unique ID?
   Var A:
     Low byte: Type of cog:
       00 Bright foreground cog you can walk on.
@@ -90,11 +91,12 @@ Special objects:
     Bit 1: Vertical flip.
 18 Long golden platform, always appears at the bottom of the first screen, and locks the screen scrolling to that screen. Used in Gergoth's tower. TODO
 19 Bloody spike that spins around.
-  Byte 5: ?? should be unique id for this spike in the room? giving two spikes in the same room the same id makes the second one disappear.
+  Byte 5: Unique ID?
   Var A: Starting angle. 0000 being right, 4000 being down, etc.
   Var B: Spinning speed. Positive is clockwise, negative is counterclockwise.
 1A Like 19, but the actual spike is broken off so it can't hurt you.
 1B Swinging pendulum.
+  Byte 5: Unique ID?
   Var A: 
     Least significant byte is the type of weight on the pendulum:
       00 - Small weight.
@@ -234,7 +236,7 @@ Special objects:
     01 Axe Armor
     02 Killer Clown
     03 Ukoback
-4A used in dario's garden of madness boss room. no effect?
+4A Visual effect used by Dario when showing off his power.
 4B That puzzle that can be zapped?
 4C A consumable, like regular consumables var B controls which one it is. But why is this a special object?
 4D Trigger to make a secret item (Konami Man/Crown/Bell) appear.
@@ -253,7 +255,7 @@ Special objects:
 5A Transition room hider.
   A big entity that acts as the graphics to transition rooms to hide the fact that they have no tiles.
 5B Alucard event actor.
-5C used in menace's room. no effect?
+5C Flashback images that show after beating Menace.
 === Below are events. Var A may be an identifier for each event to check if it's been seen already or not. Var B is unknown.
 5D Event - Prologue.
 5E Event - Soma walking into the castle and meeting Hammer.
@@ -261,13 +263,13 @@ Special objects:
 60 Event - Yoko talks about magic seals by the door to Flying Armor's room.
 61 Event - Talking with Yoko after killing Flying Armor.
 62 Event - Soma meeting Dario and Dmitrii in Wizardry Lab.
-63 Event - dmitrii and the malachi in the demon guest house.
-64 Event - dario in his the garden of madness.
+63 Event - Dmitrii in the Demon Guest House.
+64 Event - Dario in the Garden of Madness.
 65 Event - Arikado gives Mina's Talisman to Soma.
 66 Event - Talk with Julius about the Mine of Judgement seal.
-67 Event - celia warping in and talking to soma when he enters the clock tower.
+67 Event - Celia warping in and talking to soma when he enters the clock tower.
 68 Event - Julius defeated by Dario in the Silenced Ruins.
-69 Event - throne room.
+69 Event - Throne room.
 6A Event - when celia pretends to kill mina in the center of the castle.
 6B Event - When Julius breaks the Mine of Judgement seal.
 6C Event - menace related

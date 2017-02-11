@@ -40,7 +40,7 @@ Byte 6: Entity type.
   08 ???
     DoS: Unused
     PoR: 
-    OoE: ?? hides certain enemies depending on difficulty?
+    OoE: ?? hides certain enemies depending on difficulty? often uses byte 8
   09 ???
     DoS: Unused
     PoR: 

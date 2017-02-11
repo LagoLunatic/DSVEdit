@@ -10,3 +10,5 @@
 2E Decarabia
   Var A: 0 to 3
   Var B: 0 or 1
+78 Dracula
+  Dracula's palette is stored in overlay 75, the sector overlay for the Final Approach. If you place him in any other sector his palette will appear corrupted.

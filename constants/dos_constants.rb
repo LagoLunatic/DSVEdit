@@ -284,6 +284,7 @@ REUSED_SPECIAL_OBJECT_INFO = {
   0x38 => {init_code:         -1},
   0x47 => {init_code: 0x0222CC10}, # hammer shopkeeper
   0x48 => {init_code: 0x0222CC00}, # yoko shopkeeper
+  0x4A => {init_code:         -1},
   0x4F => {init_code: 0x0222CBE0}, # mina event actor
   0x50 => {init_code: 0x0222CC10}, # hammer event actor
   0x51 => {init_code: 0x0222CBF0}, # arikado event actor
