@@ -96,11 +96,43 @@ class DSVEdit < Qt::MainWindow
     self.setWindowState(Qt::WindowMaximized)
     self.setWindowTitle("DSVania Editor #{DSVEDIT_VERSION}")
     
+    disable_menu_actions()
+    
     self.show()
     
     if @settings[:last_used_folder] && File.directory?(@settings[:last_used_folder])
       open_folder(@settings[:last_used_folder])
     end
+  end
+  
+  def disable_menu_actions
+    @ui.actionSave.setEnabled(false);
+    @ui.actionEntities.setEnabled(false);
+    @ui.actionDoors.setEnabled(false);
+    @ui.actionCollision.setEnabled(false);
+    @ui.actionLayers.setEnabled(false);
+    @ui.actionEnemy_Editor.setEnabled(false);
+    @ui.actionText_Editor.setEnabled(false);
+    @ui.actionSprite_Editor.setEnabled(false);
+    @ui.actionItem_Editor.setEnabled(false);
+    @ui.actionEntity_search.setEnabled(false);
+    @ui.actionBuild.setEnabled(false);
+    @ui.actionBuild_and_Run.setEnabled(false);
+  end
+  
+  def enable_menu_actions
+    @ui.actionSave.setEnabled(true);
+    @ui.actionEntities.setEnabled(true);
+    @ui.actionDoors.setEnabled(true);
+    @ui.actionCollision.setEnabled(true);
+    @ui.actionLayers.setEnabled(true);
+    @ui.actionEnemy_Editor.setEnabled(true);
+    @ui.actionText_Editor.setEnabled(true);
+    @ui.actionSprite_Editor.setEnabled(true);
+    @ui.actionItem_Editor.setEnabled(true);
+    @ui.actionEntity_search.setEnabled(true);
+    @ui.actionBuild.setEnabled(true);
+    @ui.actionBuild_and_Run.setEnabled(true);
   end
   
   def extract_rom_dialog
@@ -142,6 +174,8 @@ class DSVEdit < Qt::MainWindow
     @game = game
     @renderer = Renderer.new(game.fs)
     @cached_sprite_pixmaps = {}
+    
+    enable_menu_actions()
     
     initialize_dropdowns()
     
