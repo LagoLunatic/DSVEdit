@@ -115,9 +115,9 @@ class RandomizerWindow < Qt::Dialog
   end
   
   def randomize
-    if @settings[:seed] =~ /^\d+$/
+    if @settings[:seed].to_s =~ /^\d+$/
       seed = @settings[:seed].to_i
-    elsif @settings[:seed] =~ /^\s*$/
+    elsif @settings[:seed].to_s =~ /^\s*$/
       seed = rand(0..999_999_999)
       @settings[:seed] = seed.to_s
       @ui.seed.text = @settings[:seed]
