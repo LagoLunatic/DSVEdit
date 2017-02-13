@@ -60,7 +60,7 @@ task :build_releases do
     end
     
     FileUtils.rm_f ["../build/#{program_name}/armips", "../build/#{program_name}/asm", "../build/#{program_name}/constants", "../build/#{program_name}/dsvlib", "../build/#{program_name}/images", "../build/#{program_name}/dsvlib.rb", "../build/#{program_name}/version.rb"]
-    FileUtils.cp_r ["./armips", "./asm", "./constants", "./dsvlib", "./images", "dsvlib.rb", "version.rb"], "../build/#{program_name}"
+    FileUtils.cp_r ["./armips", "./asm", "./constants", "./dsvlib", "./images", "dsvlib.rb", "version.rb", "LICENSE.txt"], "../build/#{program_name}"
     
     if program_name == "DSVania Editor"
       FileUtils.rm_f ["../build/#{program_name}/dsvedit", "../build/#{program_name}/dsvedit.rb"]
