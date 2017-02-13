@@ -7,6 +7,13 @@
 3A Malachi
   For a normal Malachi, set var a to 0 and var b to 1.
   For the Malachi that just stands still for Dmitrii's event set var a to 1 and var b to 0.
+60 Stolas
+  Var A:
+    High byte: Chance of first enemy being summoned.
+    Low byte: First enemy ID this Stolas can summon.
+  Var B:
+    High byte: Chance of second enemy being summoned.
+    Low byte: Second enemy ID this Stolas can summon.
 67 Malphas
   Var b: 0 for normal Malphas fight. 1 for a version of Malphas that doesn't require a magic seal on death and doesn't set the flag meaning Malphas is dead.
 68 Dmitrii

@@ -5,5 +5,5 @@
 19-20 021FFFC0 
 21-23 02223E00 Related to wifi?
 24-38 022B73A0 Enemy code.
-39    022B73A0 Wireless mode.
-40-85 022C1FE0 Rooms. (75 also has Dracula's palette.)
+39    022B73A0 Wireless mode code.
+40-85 022C1FE0 Room data. (75 also has Dracula's palette.)
