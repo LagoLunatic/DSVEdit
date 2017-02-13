@@ -167,6 +167,8 @@ class DSVEdit < Qt::MainWindow
     @renderer = Renderer.new(game.fs)
     @cached_sprite_pixmaps = {}
     
+    enable_menu_actions()
+    
     initialize_dropdowns()
     
     @settings[:last_used_folder] = game.folder
