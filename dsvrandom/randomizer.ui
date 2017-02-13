@@ -262,6 +262,13 @@
    <item>
     <layout class="QHBoxLayout" name="horizontalLayout_3">
      <item>
+      <widget class="QPushButton" name="about_button">
+       <property name="text">
+        <string>About</string>
+       </property>
+      </widget>
+     </item>
+     <item>
       <spacer name="horizontalSpacer">
        <property name="orientation">
         <enum>Qt::Horizontal</enum>
@@ -275,7 +282,7 @@
       </spacer>
      </item>
      <item>
-      <widget class="QPushButton" name="submit">
+      <widget class="QPushButton" name="randomize_button">
        <property name="text">
         <string>Randomize</string>
        </property>

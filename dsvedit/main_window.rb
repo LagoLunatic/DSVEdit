@@ -28,6 +28,7 @@ class DSVEdit < Qt::MainWindow
   slots "open_settings()"
   slots "write_to_rom()"
   slots "build_and_run()"
+  slots "open_about()"
   
   slots "cancel_write_to_rom_thread()"
   
@@ -76,6 +77,7 @@ class DSVEdit < Qt::MainWindow
     connect(@ui.actionSettings, SIGNAL("activated()"), self, SLOT("open_settings()"))
     connect(@ui.actionBuild, SIGNAL("activated()"), self, SLOT("write_to_rom()"))
     connect(@ui.actionBuild_and_Run, SIGNAL("activated()"), self, SLOT("build_and_run()"))
+    connect(@ui.actionAbout, SIGNAL("activated()"), self, SLOT("open_about()"))
     
     connect(@ui.area, SIGNAL("activated(int)"), self, SLOT("area_index_changed(int)"))
     connect(@ui.sector, SIGNAL("activated(int)"), self, SLOT("sector_index_changed(int)"))
@@ -733,6 +735,10 @@ class DSVEdit < Qt::MainWindow
   
   def build_and_run
     write_to_rom(launch_emulator = true)
+  end
+  
+  def open_about
+    @about_dialog = Qt::MessageBox::about(self, "DSVania Editor", "DSVania Editor Version #{DSVEDIT_VERSION}\n\nCreated by LagoLunatic\n\nSource code:\nhttps://github.com/LagoLunatic/DSVEdit\n\nReport issues here:\nhttps://github.com/LagoLunatic/DSVEdit/issues")
   end
 end
 

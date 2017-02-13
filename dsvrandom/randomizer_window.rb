@@ -8,6 +8,7 @@ class RandomizerWindow < Qt::Dialog
   slots "browse_for_output_folder()"
   slots "randomize()"
   slots "cancel_write_to_rom_thread()"
+  slots "open_about()"
   
   def initialize
     super()
@@ -37,7 +38,8 @@ class RandomizerWindow < Qt::Dialog
     connect(@ui.fix_first_ability_soul, SIGNAL("stateChanged(int)"), self, SLOT("update_settings()"))
     connect(@ui.open_world_map, SIGNAL("stateChanged(int)"), self, SLOT("update_settings()"))
     
-    connect(@ui.submit, SIGNAL("clicked()"), self, SLOT("randomize()"))
+    connect(@ui.randomize_button, SIGNAL("clicked()"), self, SLOT("randomize()"))
+    connect(@ui.about_button, SIGNAL("clicked()"), self, SLOT("open_about()"))
     
     self.setWindowFlags(Qt::MSWindowsFixedSizeDialogHint)
     self.setWindowTitle("DSVania Randomizer #{DSVRANDOM_VERSION}")
@@ -196,5 +198,9 @@ class RandomizerWindow < Qt::Dialog
     puts "Cancelled."
     @write_to_rom_thread.kill
     @progress_dialog = nil
+  end
+  
+  def open_about
+    @about_dialog = Qt::MessageBox::about(self, "DSVania Randomizer", "DSVania Randomizer Version #{DSVRANDOM_VERSION}\n\nCreated by LagoLunatic\n\nSource code:\nhttps://github.com/LagoLunatic/DSVEdit\n\nReport issues here:\nhttps://github.com/LagoLunatic/DSVEdit/issues")
   end
 end
