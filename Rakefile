@@ -82,9 +82,11 @@ task :build_releases do
     
     version = program_name == "DSVania Editor" ? DSVEDIT_VERSION : DSVRANDOM_VERSION
     
-    FileUtils.rm_f "../build/#{program_name} #{version}.zip"
+    zip_path = "../build/#{program_name}_#{version}.zip".tr(" ", "_")
     
-    Zip::File.open("../build/#{program_name} #{version}.zip", Zip::File::CREATE) do |zipfile|
+    FileUtils.rm_f zip_path
+    
+    Zip::File.open(zip_path, Zip::File::CREATE) do |zipfile|
       Dir.glob("../build/#{program_name}/**/*.*").each do |file_path|
         relative_path = Pathname.new(file_path).relative_path_from(Pathname.new("../build/#{program_name}"))
         zipfile.add(relative_path, file_path)
