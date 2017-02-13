@@ -31,9 +31,11 @@ class IconChooserDialog < Qt::Dialog
     
     if mode == :item
       initial_icon_index, initial_palette_index = EXTRACT_ICON_INDEX_AND_PALETTE_INDEX.call(icon_data)
+      @ui.palette_index.setEnabled(true)
     else
       initial_icon_index = icon_data
       initial_palette_index = 2
+      @ui.palette_index.setEnabled(false)
     end
     
     @icon_width = mode == :item ? 16 : 32
