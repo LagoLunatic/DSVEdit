@@ -231,8 +231,9 @@ Bytes 31-32: Swinging sound effect of the weapon.
 Arm glyph format (OoE):
 32 bytes long.
 Bytes 1-2: Item ID.
-Bytes 3-4: Attack.
+Bytes 3-4: Attack stat.
 Bytes 5-8: Pointer to code run when using the glyph.
+Byte 9: Sprite.
 Byte 12: Mana cost of using this glyph.
 Bytes 21-22: Icon.
   Normal icons go up to 004F. Higher than that and the glyph will be invisible or have bugged graphics.
@@ -252,7 +253,7 @@ Back glyph format (OoE):
 Bytes 1-2: Item ID.
 Bytes 3-4: 
 Bytes 5-8: Pointer to code run when using the glyph.
-Byte 9: GFX?
+Byte 9: Sprite.
 Byte 10:
 Byte 11:
 Byte 12: Mana cost.
@@ -264,6 +265,19 @@ Bytes 21-22: Icon.
 Byte 23: Bitfield?
 Byte 24:
 Bytes 25-28:
+
+Glyph union format (OoE):
+28 bytes long.
+Bytes 1-2: Item ID.
+Bytes 3-4: Attack stat.
+Bytes 5-8: Pointer to code run when using the glyph.
+Byte 9: Sprite.
+Byte 12: Mana cost of using this glyph.
+Bytes 21-22: Icon.
+  Normal icons go up to 004F. Higher than that and the glyph will be invisible or have bugged graphics.
+  But if you increase this value to 3CD0 or higher, the glyph won't appear it all, it won't even be invisible.
+Byte 23: bitfield?
+Byte 25: affects Shanoa's swinging animation?
 
 Relic format (OoE):
 12 bytes long.
