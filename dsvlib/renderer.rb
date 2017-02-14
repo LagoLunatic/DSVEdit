@@ -566,7 +566,7 @@ class Renderer
     return [fill_tile, lines_tile]
   end
   
-  def render_sprite(gfx_file_pointers, palette_pointer, palette_offset, sprite, frame_to_render = nil, render_hitboxes = false)
+  def render_sprite(gfx_file_pointers, palette_pointer, palette_offset, sprite, frame_to_render = nil, render_hitboxes = false, mode=:normal)
     gfx_files_with_blanks = []
     gfx_file_pointers.each do |gfx_file_pointer|
       gfx_file = fs.find_file_by_ram_start_offset(gfx_file_pointer)
@@ -619,7 +619,12 @@ class Renderer
         gfx_page = gfx_files_with_blanks[part.gfx_page_index]
         gfx_file = gfx_page[:file]
         canvas_width = gfx_page[:canvas_width]
-        palette = palettes[part.palette_index+palette_offset]
+        if mode == :weapon
+          # Weapons always use the first palette. Instead the part's palette index value is used to indicate that it should start out partially transparent.
+          palette = palettes.first
+        else
+          palette = palettes[part.palette_index+palette_offset]
+        end
         
         rendered_gfx_files_by_palette[part.palette_index+palette_offset][part.gfx_page_index] ||= render_gfx(gfx_file, palette, 0, 0, canvas_width*8, canvas_width*8, canvas_width=canvas_width*8)
       end

@@ -15,6 +15,7 @@ class SpriteEditor < Qt::Dialog
   slots "tab_changed(int)"
   slots "enemy_changed(int)"
   slots "special_object_changed(int)"
+  slots "weapon_changed(int)"
   slots "other_sprite_changed(int)"
   slots "animation_changed(int)"
   slots "toggle_animation_paused()"
@@ -28,6 +29,7 @@ class SpriteEditor < Qt::Dialog
     @game = game
     @fs = game.fs
     @renderer = renderer
+    @mode = :normal
     
     @ui = Ui_SpriteEditor.new
     @ui.setup_ui(self)
@@ -67,6 +69,41 @@ class SpriteEditor < Qt::Dialog
       @ui.special_object_list.addItem("%02X %s" % [special_object_id, object_name])
     end
     
+    items = []
+    max_weapon_gfx_index = 0
+    ITEM_TYPES.each do |item_type|
+      name = item_type[:name]
+      format_length = item_type[:format].inject(0){|sum, attr| sum += attr[0]}
+      (0..item_type[:count]-1).each do |index|
+        pointer = item_type[:list_pointer] + index*format_length
+        item = Item.new(pointer, item_type[:format], fs)
+        if item["Sprite"] && item["Sprite"] > max_weapon_gfx_index
+          max_weapon_gfx_index = item["Sprite"]
+        end
+        items << item
+      end
+    end
+    if GAME == "ooe"
+      max_weapon_gfx_index -= 1
+    end
+    
+    @weapons = []
+    (0..max_weapon_gfx_index).each do |weapon_gfx_index|
+      weapon = WeaponGfx.new(weapon_gfx_index, fs)
+      @weapons << weapon
+      if GAME == "ooe"
+        item = items.find{|item| item["Sprite"] == weapon_gfx_index+1}
+      else
+        item = items.find{|item| item["Sprite"] == weapon_gfx_index}
+      end
+      if item
+        weapon_name = item.name.decoded_string
+      else
+        weapon_name = ""
+      end
+      @ui.weapon_list.addItem("%02X %s" % [weapon_gfx_index, weapon_name])
+    end
+    
     OTHER_SPRITES.each_with_index do |other_sprite, id|
       @ui.other_sprites_list.addItem("%02X %s" % [id, other_sprite[:desc]])
     end
@@ -76,6 +113,7 @@ class SpriteEditor < Qt::Dialog
     connect(@ui.tabWidget, SIGNAL("currentChanged(int)"), self, SLOT("tab_changed(int)"))
     connect(@ui.enemy_list, SIGNAL("currentRowChanged(int)"), self, SLOT("enemy_changed(int)"))
     connect(@ui.special_object_list, SIGNAL("currentRowChanged(int)"), self, SLOT("special_object_changed(int)"))
+    connect(@ui.weapon_list, SIGNAL("currentRowChanged(int)"), self, SLOT("weapon_changed(int)"))
     connect(@ui.other_sprites_list, SIGNAL("currentRowChanged(int)"), self, SLOT("other_sprite_changed(int)"))
     connect(@ui.frame_index, SIGNAL("activated(int)"), self, SLOT("frame_changed(int)"))
     connect(@ui.seek_slider, SIGNAL("sliderMoved(int)"), self, SLOT("animation_frame_changed(int)"))
@@ -120,6 +158,7 @@ class SpriteEditor < Qt::Dialog
       return
     end
     
+    @mode = :normal
     load_sprite()
     
     @ui.enemy_list.setCurrentRow(enemy_id)
@@ -137,9 +176,32 @@ class SpriteEditor < Qt::Dialog
       return
     end
     
+    @mode = :normal
     load_sprite()
     
     @ui.special_object_list.setCurrentRow(special_object_id)
+  end
+  
+  def weapon_changed(weapon_gfx_index)
+    begin
+      weapon = @weapons[weapon_gfx_index]
+      @gfx_file_pointers = [weapon.gfx_file_pointer]
+      @palette_pointer = weapon.palette_pointer
+      @palette_offset = 0
+      @sprite_pointer = weapon.sprite_file_pointer
+      @skeleton_file = nil
+    rescue StandardError => e
+      Qt::MessageBox.warning(self,
+        "Weapon sprite extraction failed",
+        "Failed to extract gfx or palette data for weapon #{weapon_gfx_index}.\n#{e.message}\n\n#{e.backtrace.join("\n")}"
+      )
+      return
+    end
+    
+    @mode = :weapon
+    load_sprite()
+    
+    @ui.weapon_list.setCurrentRow(weapon_gfx_index)
   end
   
   def other_sprite_changed(id)
@@ -154,6 +216,7 @@ class SpriteEditor < Qt::Dialog
       return
     end
     
+    @mode = :normal
     load_sprite()
     
     @ui.other_sprites_list.setCurrentRow(id)
@@ -164,7 +227,7 @@ class SpriteEditor < Qt::Dialog
       @sprite = Sprite.new(@sprite_pointer, @fs)
       
       @chunky_frames, @min_x, @min_y, rendered_parts, @gfx_files_with_blanks, @palettes, @full_width, @full_height = 
-        @renderer.render_sprite(@gfx_file_pointers, @palette_pointer, @palette_offset, @sprite, frame_to_render = 0)
+        @renderer.render_sprite(@gfx_file_pointers, @palette_pointer, @palette_offset, @sprite, frame_to_render = 0, render_hitboxes = false, mode = @mode)
     rescue StandardError => e
       Qt::MessageBox.warning(self,
         "Sprite rendering failed",
@@ -364,7 +427,12 @@ class SpriteEditor < Qt::Dialog
     
     part = @sprite.parts[i]
     gfx_page_changed(part.gfx_page_index)
-    palette_changed(part.palette_index)
+    if @mode == :weapon
+      # Weapons always use the first palette.
+      palette_changed(0)
+    else
+      palette_changed(part.palette_index)
+    end
   end
   
   def animation_changed(i)
@@ -441,7 +509,7 @@ class SpriteEditor < Qt::Dialog
   
   def open_skeleton_editor
     if @skeleton_file
-      chunky_frames, min_x, min_y, _, _, _, _, _ = @renderer.render_sprite(@gfx_file_pointers, @palette_pointer, @palette_offset, @sprite, frame_to_render = nil)
+      chunky_frames, min_x, min_y, _, _, _, _, _ = @renderer.render_sprite(@gfx_file_pointers, @palette_pointer, @palette_offset, @sprite, frame_to_render = nil, render_hitboxes = false, mode = @mode)
       @skeleton_editor = SkeletonEditorDialog.new(self, game.fs, @skeleton_file, chunky_frames, min_x, min_y)
     end
   end

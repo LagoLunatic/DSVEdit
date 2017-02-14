@@ -425,6 +425,8 @@ BEST_SPRITE_FRAME_FOR_SPECIAL_OBJECT = {
 }
 SPECIAL_OBJECT_FILES_TO_LOAD_LIST = 0x020F343C
 
+WEAPON_GFX_LIST_START = 0x020F3BC0
+
 OTHER_SPRITES = [
   {desc: "Common", sprite: 0x020C4E24, gfx_files: [0x020B8788, 0x020B8794, 0x020B87A0, 0x020B87AC, 0x020B87B8, 0x020B87D0, 0x020B8818, 0x020B8824], palette: 0x020C8E50},
   
@@ -534,7 +536,7 @@ ITEM_TYPES = [
       [2, "Item ID"],
       [2, "Attack"],
       [4, "Code Pointer"],
-      [1, "GFX"],
+      [1, "Sprite"],
       [1, "Unknown 1"],
       [1, "Unknown 2"],
       [1, "Mana"],
@@ -562,7 +564,7 @@ ITEM_TYPES = [
       [2, "Item ID"],
       [2, "Unknown 1"],
       [4, "Code Pointer"],
-      [1, "GFX"],
+      [1, "Sprite"],
       [1, "Unknown 2"],
       [1, "Unknown 3"],
       [1, "Mana"],

@@ -33,6 +33,7 @@ Each part is 16 bytes long.
     Bit 4: Used by some parts in Hanged Bones, Skeleton Tree, and Brauner, but has no apparent effect.
     Bits 5-8: Unused.
   Byte 15: Palette index to use.
+    For weapons, the palette index is always 0. Instead, if this value is greater than 0, it means the part starts out as already somewhat faded out/transparent.
   Byte 16: 0x00.
 
 List of hitboxes:
