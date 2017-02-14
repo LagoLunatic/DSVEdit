@@ -1,5 +1,5 @@
 
-DSVEdit (DSVania Editor) is a work-in-progress editor for the three Castlevania games for the Nintendo DS: Dawn of Sorrow, Portrait of Ruin, and Order of Ecclesia.
+DSVEdit (DSVania Editor) is a work-in-progress editor for the three Castlevania games for the Nintendo DS: Dawn of Sorrow, Portrait of Ruin, and Order of Ecclesia (only compatible with North American versions).
 
 ### Features
 
