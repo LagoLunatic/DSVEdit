@@ -221,6 +221,16 @@
             </property>
            </widget>
           </item>
+          <item>
+           <widget class="QCheckBox" name="skip_magic_seals">
+            <property name="text">
+             <string>Skip Magic Seals</string>
+            </property>
+            <property name="checked">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
          </layout>
         </widget>
        </item>

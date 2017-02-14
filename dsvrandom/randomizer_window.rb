@@ -36,6 +36,7 @@ class RandomizerWindow < Qt::Dialog
     
     connect(@ui.remove_events, SIGNAL("stateChanged(int)"), self, SLOT("update_settings()"))
     connect(@ui.fix_first_ability_soul, SIGNAL("stateChanged(int)"), self, SLOT("update_settings()"))
+    connect(@ui.skip_magic_seals, SIGNAL("stateChanged(int)"), self, SLOT("update_settings()"))
     connect(@ui.open_world_map, SIGNAL("stateChanged(int)"), self, SLOT("update_settings()"))
     
     connect(@ui.randomize_button, SIGNAL("clicked()"), self, SLOT("randomize()"))
@@ -72,6 +73,7 @@ class RandomizerWindow < Qt::Dialog
     
     @ui.remove_events.setChecked(@settings[:remove_events]) unless @settings[:remove_events].nil?
     @ui.fix_first_ability_soul.setChecked(@settings[:fix_first_ability_soul]) unless @settings[:fix_first_ability_soul].nil?
+    @ui.skip_magic_seals.setChecked(@settings[:skip_magic_seals]) unless @settings[:skip_magic_seals].nil?
     @ui.open_world_map.setChecked(@settings[:open_world_map]) unless @settings[:open_world_map].nil?
   end
   
@@ -111,6 +113,7 @@ class RandomizerWindow < Qt::Dialog
     
     @settings[:remove_events] = @ui.remove_events.checked
     @settings[:fix_first_ability_soul] = @ui.fix_first_ability_soul.checked
+    @settings[:skip_magic_seals] = @ui.skip_magic_seals.checked
     @settings[:open_world_map] = @ui.open_world_map.checked
   end
   
@@ -146,6 +149,10 @@ class RandomizerWindow < Qt::Dialog
     
     if @ui.fix_first_ability_soul.checked()
       game.apply_armips_patch("dos_fix_first_ability_soul")
+    end
+    
+    if @ui.fix_first_ability_soul.checked()
+      game.apply_armips_patch("dos_skip_magic_seals")
     end
     
     if @ui.open_world_map.checked()
