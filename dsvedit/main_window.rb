@@ -175,7 +175,7 @@ class DSVEdit < Qt::MainWindow
     
     @settings[:last_used_folder] = game.folder
   rescue Game::InvalidFileError, NDSFileSystem::InvalidFileError
-    Qt::MessageBox.warning(self, "Invalid file", "Selected ROM file is not a DSVania.")
+    Qt::MessageBox.warning(self, "Invalid file", "Selected ROM file is not a DSVania or is not the North American version.")
   end
   
   def open_folder(folder_path)
