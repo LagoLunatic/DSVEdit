@@ -580,8 +580,10 @@ class Renderer
     
     if gfx_files_with_blanks.first[:render_mode] == 1
       palettes = generate_palettes(palette_pointer, 16)
+      dummy_palette = generate_palettes(nil, 16).first
     elsif gfx_files_with_blanks.first[:render_mode] == 2
       palettes = generate_palettes(palette_pointer, 256)
+      dummy_palette = generate_palettes(nil, 256).first
     else
       raise NotImplementedError.new("Unknown render mode.")
     end
@@ -626,7 +628,7 @@ class Renderer
           palette = palettes[part.palette_index+palette_offset]
         end
         
-        rendered_gfx_files_by_palette[part.palette_index+palette_offset][part.gfx_page_index] ||= render_gfx(gfx_file, palette, 0, 0, canvas_width*8, canvas_width*8, canvas_width=canvas_width*8)
+        rendered_gfx_files_by_palette[part.palette_index+palette_offset][part.gfx_page_index] ||= render_gfx(gfx_file, palette || dummy_palette, 0, 0, canvas_width*8, canvas_width*8, canvas_width=canvas_width*8)
       end
       
       rendered_gfx_file = rendered_gfx_files_by_palette[part.palette_index+palette_offset][part.gfx_page_index]
