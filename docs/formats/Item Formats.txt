@@ -108,6 +108,50 @@ Bytes 11-12: Varies by the item type.
   For type 4: No effect.
 Bytes 13-16: Always 00 00 00 00.
 
+Soul format (DoS):
+28 bytes long.
+Bytes 1-4: Code pointer.
+Bytes 5-6: Sprite. Index starts at 1.
+Byte 7: Soul type.
+  0 - Red soul.
+  1 - Blue soul.
+  2 - Yellow soul.
+  3 - Grey soul.
+Byte 8: Bitfield:
+  Least significant bit first.
+  Bit 1: 
+  Bit 5: If set, must hold down R button to keep this soul active. Otherwise, R toggles this soul on/off.
+Bytes 9-10:
+Bytes 11-12: Mana cost.
+Bytes 13-14: 
+Bytes 15-16: 
+Bytes 17-20: 
+Bytes 21-24: 
+Bytes 25-26: Varies depending on the code being run.
+  For 0220900C: 0 for straight punch animation, 1 for uppercut animation.
+  For 021DF7B8: 0 for Manticore tail, 1 for Mushussu tail.
+  For 021DCC98: 0 for fire, 1 for petrifying gas, 2 for poison gas.
+  For 021E04D0/021E04C4: 0 for Barbariccia, 1 for Valkyrie.
+  For 021D5D5C: The stat to increase (integer index).
+  For 021D5CF4: The resistance(s) to grant (bitfield).
+  For 021D5C84: The passive ability to grant (bitfield):
+    0x0001 - Increased EXP gain.
+    0x0002 - Eat rotten food.
+    0x0004 - Increase damage of throwable weapons (not souls).
+    0x0008 - Increase distance of throwable red souls.
+    0x0010 - Use red souls while attacking.
+    0x0020 - Backstab enemies for increased damage.
+    0x0080 - Money drops upon taking damage.
+    0x0100 - Find breakable walls.
+    0x0200 - Increase damage of plant souls.
+    0x0400 - Don't flinch when taking damage.
+    0x0800 - HP regens over time.
+    0x1000 - Increase MP regen.
+    0x2000 - HP regens rapidly when sitting in chairs.
+    0x4000 - Reduce damage taken. Can reduce 1 damage to 0 damage.
+  For 021D5BD4: The stat to increase (integer index). Also always lowers STR, regardless of what this value is.
+Bytes 27-28: 
+
 
 
 Consumable format (PoR):
@@ -225,6 +269,28 @@ Byte 29-30: Bitfield affecting the attack animation and super attack animation.
   Bit 15:
   Bit 16:
 Bytes 31-32: Swinging sound effect of the weapon.
+
+Skill format (PoR):
+24 bytes long.
+Bytes 1-4: Code pointer.
+Byte 5: Sprite.
+Byte 6: Type.
+  0 - Subweapon/Spell.
+  1 - Dual Crush.
+  3 - Relic.
+Byte 7:
+Byte 8: 
+Bytes 9-10: Mana cost.
+Bytes 11-12: 
+Bytes 13-16: 
+Bytes 17-20: bitfield
+  Least significant bit first.
+  Bit 5: If set, this skill cannot be used while in the air.
+Bytes 21-22:
+  For Dual Crushes: Voice file 1 ID.
+Bytes 23-24:
+  For Subweapons/Spells: Which stat or status effect to affect.
+  For Dual Crushes: Voice file 2 ID.
 
 
 

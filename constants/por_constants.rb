@@ -633,6 +633,26 @@ ITEM_TYPES = [
     count: 42,
     format: armor_format # length: 24
   },
+  {
+    name: "Skills",
+    list_pointer: 0x020E3CFC,
+    count: 108,
+    is_skill: true,
+    format: [
+      # length: 24
+      [4, "Code"],
+      [1, "Sprite"],
+      [1, "Type"],
+      [1, "Unknown 1"],
+      [1, "Unknown 2"],
+      [2, "Mana cost"],
+      [2, "Unknown 3"],
+      [4, "Unknown 4"],
+      [4, "Unknown 5"],
+      [2, "Var A"],
+      [2, "Var B"],
+    ]
+  },
 ]
 
 ITEM_BITFIELD_ATTRIBUTES = {

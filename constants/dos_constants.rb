@@ -544,6 +544,27 @@ ITEM_TYPES = [
       [1, "Unknown 3"],
     ]
   },
+  {
+    name: "Souls",
+    list_pointer: 0x0209D190,
+    count: 123,
+    is_skill: true,
+    format: [
+      # length: 28
+      [4, "Code"],
+      [2, "Sprite"],
+      [1, "Type"],
+      [1, "Unknown 1"],
+      [2, "Unknown 2"],
+      [2, "Mana cost"],
+      [2, "Unknown 3"],
+      [2, "Unknown 4"],
+      [4, "Unknown 5"],
+      [4, "Unknown 6"],
+      [2, "Var A"],
+      [2, "Var B"],
+    ]
+  },
 ]
 
 ITEM_BITFIELD_ATTRIBUTES = {

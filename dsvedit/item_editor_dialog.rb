@@ -14,7 +14,7 @@ class ItemEditor < Qt::Dialog
     @fs = fs
     
     ITEM_TYPES.each do |item_type|
-      tab = GenericEditorWidget.new(fs, item_type[:name], item_type[:list_pointer], item_type[:count], item_type[:format])
+      tab = GenericEditorWidget.new(fs, item_type)
       name = item_type[:name]
       @ui.tabWidget.addTab(tab, name)
     end

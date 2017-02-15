@@ -2,6 +2,8 @@
 class Item
   attr_reader :ram_pointer,
               :item_type_format,
+              :index,
+              :is_skill,
               :fs,
               :name,
               :description,
@@ -10,10 +12,13 @@ class Item
               :item_attribute_integer_lengths,
               :item_attribute_bitfields
   
-  def initialize(pointer, format, fs)
+  def initialize(index, item_type, fs)
+    @index = index
     @fs = fs
-    @ram_pointer = pointer
-    @item_type_format = format
+    format_length = item_type[:format].inject(0){|sum, attr| sum += attr[0]}
+    @ram_pointer = item_type[:list_pointer] + index*format_length
+    @item_type_format = item_type[:format]
+    @is_skill = item_type[:is_skill]
     
     read_from_rom()
   end
@@ -43,8 +48,21 @@ class Item
       end
     end
     
-    @name = Text.new(TEXT_REGIONS["Item Names"].begin + self["Item ID"], fs)
-    @description = Text.new(TEXT_REGIONS["Item Descriptions"].begin + self["Item ID"], fs)
+    if is_skill
+      case GAME
+      when "dos"
+        @name = Text.new(TEXT_REGIONS["Soul Names"].begin + index, fs)
+        @description = Text.new(TEXT_REGIONS["Soul Descriptions"].begin + index, fs)
+      when "por"
+        @name = Text.new(TEXT_REGIONS["Skill Names"].begin + index, fs)
+        @description = Text.new(TEXT_REGIONS["Skill Descriptions"].begin + index, fs)
+      when "ooe"
+        raise NotImplementedError.new
+      end
+    else
+      @name = Text.new(TEXT_REGIONS["Item Names"].begin + self["Item ID"], fs)
+      @description = Text.new(TEXT_REGIONS["Item Descriptions"].begin + self["Item ID"], fs)
+    end
   end
   
   def write_to_rom

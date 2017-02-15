@@ -7,20 +7,18 @@ class GenericEditorWidget < Qt::Widget
   slots "item_changed(int)"
   slots "open_icon_chooser()"
   
-  def initialize(fs, name, list_pointer, count, format)
+  def initialize(fs, item_type)
     super()
     @ui = Ui_GenericEditorWidget.new
     @ui.setup_ui(self)
     
     @fs = fs
     
-    @item_type_name = name
+    @item_type_name = item_type[:name]
     
     @items = []
-    format_length = format.inject(0){|sum, attr| sum += attr[0]}
-    (0..count-1).each do |index|
-      pointer = list_pointer + index*format_length
-      item = Item.new(pointer, format, fs)
+    (0..item_type[:count]-1).each do |index|
+      item = Item.new(index, item_type, fs)
       @items << item
       @ui.item_list.addItem("%02X %s" % [index, item.name.decoded_string])
     end
