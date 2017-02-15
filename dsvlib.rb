@@ -20,6 +20,7 @@ require_relative 'dsvlib/special_object_type'
 require_relative 'dsvlib/sprite_info_extractor'
 require_relative 'dsvlib/sprite_skeleton'
 require_relative 'dsvlib/weapon_gfx'
+require_relative 'dsvlib/skill_gfx'
 
 require_relative 'dsvlib/renderer'
 require_relative 'dsvlib/tmx_interface'

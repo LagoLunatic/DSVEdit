@@ -16,6 +16,7 @@ class SpriteEditor < Qt::Dialog
   slots "enemy_changed(int)"
   slots "special_object_changed(int)"
   slots "weapon_changed(int)"
+  slots "skill_changed(int)"
   slots "other_sprite_changed(int)"
   slots "animation_changed(int)"
   slots "toggle_animation_paused()"
@@ -69,39 +70,61 @@ class SpriteEditor < Qt::Dialog
       @ui.special_object_list.addItem("%02X %s" % [special_object_id, object_name])
     end
     
-    items = []
+    weapon_items = []
+    skill_items = []
     max_weapon_gfx_index = 0
+    max_skill_gfx_index = 0
     ITEM_TYPES.each do |item_type|
       name = item_type[:name]
       format_length = item_type[:format].inject(0){|sum, attr| sum += attr[0]}
       (0..item_type[:count]-1).each do |index|
-        pointer = item_type[:list_pointer] + index*format_length
-        item = Item.new(pointer, item_type[:format], fs)
-        if item["Sprite"] && item["Sprite"] > max_weapon_gfx_index
-          max_weapon_gfx_index = item["Sprite"]
+        item = Item.new(index, item_type, fs)
+        if item.is_skill
+          if item["Sprite"] && item["Sprite"] > max_skill_gfx_index
+            max_skill_gfx_index = item["Sprite"]
+          end
+          skill_items << item
+        else
+          if item["Sprite"] && item["Sprite"] > max_weapon_gfx_index
+            max_weapon_gfx_index = item["Sprite"]
+          end
+          weapon_items << item
         end
-        items << item
       end
     end
     if GAME == "ooe"
       max_weapon_gfx_index -= 1
     end
+    max_skill_gfx_index -= 1
     
     @weapons = []
     (0..max_weapon_gfx_index).each do |weapon_gfx_index|
       weapon = WeaponGfx.new(weapon_gfx_index, fs)
       @weapons << weapon
       if GAME == "ooe"
-        item = items.find{|item| item["Sprite"] == weapon_gfx_index+1}
+        items = weapon_items.select{|item| item["Sprite"] == weapon_gfx_index+1}
       else
-        item = items.find{|item| item["Sprite"] == weapon_gfx_index}
+        items = weapon_items.select{|item| item["Sprite"] == weapon_gfx_index}
       end
-      if item
-        weapon_name = item.name.decoded_string
+      if items.any?
+        weapon_name = items.map{|item| item.name.decoded_string}.join(", ")
       else
         weapon_name = ""
       end
       @ui.weapon_list.addItem("%02X %s" % [weapon_gfx_index, weapon_name])
+    end
+    
+    @skills = []
+    (0..max_skill_gfx_index).each do |skill_gfx_index|
+      skill = SkillGfx.new(skill_gfx_index, fs)
+      @skills << skill
+      items = skill_items.select{|item| item["Sprite"] == skill_gfx_index+1}
+      if items.any?
+        skill_name = items.map{|item| item.name.decoded_string}.join(", ")
+      else
+        skill_name = ""
+      end
+      @ui.skill_list.addItem("%02X %s" % [skill_gfx_index, skill_name])
     end
     
     OTHER_SPRITES.each_with_index do |other_sprite, id|
@@ -114,6 +137,7 @@ class SpriteEditor < Qt::Dialog
     connect(@ui.enemy_list, SIGNAL("currentRowChanged(int)"), self, SLOT("enemy_changed(int)"))
     connect(@ui.special_object_list, SIGNAL("currentRowChanged(int)"), self, SLOT("special_object_changed(int)"))
     connect(@ui.weapon_list, SIGNAL("currentRowChanged(int)"), self, SLOT("weapon_changed(int)"))
+    connect(@ui.skill_list, SIGNAL("currentRowChanged(int)"), self, SLOT("skill_changed(int)"))
     connect(@ui.other_sprites_list, SIGNAL("currentRowChanged(int)"), self, SLOT("other_sprite_changed(int)"))
     connect(@ui.frame_index, SIGNAL("activated(int)"), self, SLOT("frame_changed(int)"))
     connect(@ui.seek_slider, SIGNAL("sliderMoved(int)"), self, SLOT("animation_frame_changed(int)"))
@@ -202,6 +226,28 @@ class SpriteEditor < Qt::Dialog
     load_sprite()
     
     @ui.weapon_list.setCurrentRow(weapon_gfx_index)
+  end
+  
+  def skill_changed(skill_gfx_index)
+    begin
+      skill = @skills[skill_gfx_index]
+      @gfx_file_pointers = [skill.gfx_file_pointer]
+      @palette_pointer = skill.palette_pointer
+      @palette_offset = 0
+      @sprite_pointer = skill.sprite_file_pointer
+      @skeleton_file = nil
+    rescue StandardError => e
+      Qt::MessageBox.warning(self,
+        "Skill sprite extraction failed",
+        "Failed to extract gfx or palette data for skill #{skill_gfx_index}.\n#{e.message}\n\n#{e.backtrace.join("\n")}"
+      )
+      return
+    end
+    
+    @mode = :normal
+    load_sprite()
+    
+    @ui.skill_list.setCurrentRow(skill_gfx_index)
   end
   
   def other_sprite_changed(id)

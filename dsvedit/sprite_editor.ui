@@ -26,12 +26,12 @@
        </property>
        <property name="minimumSize">
         <size>
-         <width>340</width>
+         <width>401</width>
          <height>0</height>
         </size>
        </property>
        <property name="currentIndex">
-        <number>0</number>
+        <number>3</number>
        </property>
        <widget class="QWidget" name="tab">
         <attribute name="title">
@@ -65,9 +65,19 @@
        </widget>
        <widget class="QWidget" name="tab_4">
         <attribute name="title">
-         <string>Other</string>
+         <string>Skills</string>
         </attribute>
         <layout class="QHBoxLayout" name="horizontalLayout_9">
+         <item>
+          <widget class="QListWidget" name="skill_list"/>
+         </item>
+        </layout>
+       </widget>
+       <widget class="QWidget" name="tab_5">
+        <attribute name="title">
+         <string>Other</string>
+        </attribute>
+        <layout class="QHBoxLayout" name="horizontalLayout_10">
          <item>
           <widget class="QListWidget" name="other_sprites_list"/>
          </item>
