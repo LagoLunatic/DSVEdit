@@ -444,7 +444,6 @@ class SpriteEditor < Qt::Dialog
     if @current_animation.nil?
       @ui.seek_slider.enabled = false
       @ui.toggle_paused_button.enabled = false
-      set_animation_paused(true)
       return
     end
     
