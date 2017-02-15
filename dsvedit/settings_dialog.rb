@@ -20,8 +20,6 @@ class SettingsDialog < Qt::Dialog
     connect(@ui.emulator_path_browse_button, SIGNAL("clicked()"), self, SLOT("browse_for_emulator_path()"))
     connect(@ui.buttonBox, SIGNAL("clicked(QAbstractButton*)"), self, SLOT("button_pressed(QAbstractButton*)"))
     
-    #self.setWindowFlags(Qt::MSWindowsFixedSizeDialogHint);
-    
     self.show()
   end
   

@@ -35,8 +35,6 @@ class TextEditor < Qt::Dialog
     connect(@ui.text_list, SIGNAL("currentRowChanged(int)"), self, SLOT("string_changed(int)"))
     connect(@ui.buttonBox, SIGNAL("clicked(QAbstractButton*)"), self, SLOT("button_pressed(QAbstractButton*)"))
     
-    #self.setWindowFlags(Qt::MSWindowsFixedSizeDialogHint);
-    
     self.show()
   end
   

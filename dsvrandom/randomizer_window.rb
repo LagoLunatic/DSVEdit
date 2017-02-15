@@ -11,7 +11,7 @@ class RandomizerWindow < Qt::Dialog
   slots "open_about()"
   
   def initialize
-    super()
+    super(nil, Qt::WindowTitleHint | Qt::WindowSystemMenuHint)
     @ui = Ui_Randomizer.new
     @ui.setup_ui(self)
     
@@ -42,7 +42,6 @@ class RandomizerWindow < Qt::Dialog
     connect(@ui.randomize_button, SIGNAL("clicked()"), self, SLOT("randomize()"))
     connect(@ui.about_button, SIGNAL("clicked()"), self, SLOT("open_about()"))
     
-    self.setWindowFlags(Qt::MSWindowsFixedSizeDialogHint)
     self.setWindowTitle("DSVania Randomizer #{DSVRANDOM_VERSION}")
     
     self.show()
