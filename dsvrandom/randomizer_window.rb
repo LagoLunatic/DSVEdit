@@ -154,6 +154,10 @@ class RandomizerWindow < Qt::Dialog
       game.apply_armips_patch("dos_skip_magic_seals")
     end
     
+    if @ui.skip_name_signing.checked()
+      game.apply_armips_patch("dos_skip_name_signing")
+    end
+    
     if @ui.open_world_map.checked()
       game.apply_armips_patch("ooe_open_world_map")
     end

@@ -234,6 +234,16 @@
             </property>
            </widget>
           </item>
+          <item>
+           <widget class="QCheckBox" name="skip_name_signing">
+            <property name="text">
+             <string>Skip name signing</string>
+            </property>
+            <property name="checked">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
          </layout>
         </widget>
        </item>
