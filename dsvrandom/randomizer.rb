@@ -49,14 +49,15 @@ class Randomizer
     end
     
     if options[:remove_events] && GAME == "dos"
-      game.set_starting_room(0, 0, 1) # Start the game in the castle instead of the prologue area.
-      
       @boss_entities.each do |boss_entity|
         if boss_entity.subtype == 0x68 # Dmitrii
           boss_entity.var_a = 0 # Boss rush Dmitrii, doesn't crash when there are no events.
           boss_entity.write_to_rom()
         end
       end
+    end
+    if options[:remove_events] && GAME == "ooe"
+      game.set_starting_room(2, 0, 0) # Start the game in the tutorial room.
     end
     
     if options[:randomize_bosses]
@@ -408,6 +409,8 @@ class Randomizer
   def dos_randomize_special_objects(entity)
     if entity.subtype >= 0x5E && options[:remove_events]
       case entity.subtype 
+      when 0x5D..0x5E # prologue and castle entrance event
+        # Do nothing
       when 0x5F # event with yoko and julius going over the bridge
         # Replace it with magic seal 1
         entity.type = 4
@@ -416,6 +419,8 @@ class Randomizer
         entity.var_b = 0x3D # magic seal 1
         entity.x_pos = 0x0080
         entity.y_pos = 0x0140
+      when 0x62 # event that adds potions to the shop
+        # do nothing
       when 0x65 # mina's talisman event
         # Replace it with mina's talisman
         entity.type = 4
@@ -430,7 +435,7 @@ class Randomizer
         # do nothing
       when 0x6C..0x6E # menace events
         # do nothing
-      when 0x71..0x72 # epilogue
+      when 0x6F..0x74 # various important events
         # do nothing
       else
         # Remove it
