@@ -30,12 +30,14 @@ class Renderer
   def render_room(folder, room, collision = false)
     rendered_layers = []
     
-    room.z_ordered_layers.each do |layer|
-      rendered_layers << render_layer(folder, layer, room, collision)
+    if collision
+      rendered_layers << render_layer(folder, layers.first, room, collision)
+    else
+      room.z_ordered_layers.each do |layer|
+        rendered_layers << render_layer(folder, layer, room, collision)
+      end
     end
     
-    # TODO: find a proper way of determining what the main collision layer is. just looking at the z-index doesn't seem sufficient.
-
     if collision
       bg_color = ChunkyPNG::Color::WHITE
     else
