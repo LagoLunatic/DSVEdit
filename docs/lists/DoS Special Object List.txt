@@ -267,7 +267,7 @@ Special objects:
 64 Event - Dario in the Garden of Madness.
 65 Event - Arikado gives Mina's Talisman to Soma.
 66 Event - Talk with Julius about the Mine of Judgement seal.
-67 Event - Celia warping in and talking to soma when he enters the clock tower.
+67 Event - Celia warping in and talking to Soma when he enters the clock tower.
 68 Event - Julius defeated by Dario in the Silenced Ruins.
 69 Event - Throne room.
 6A Event - when celia pretends to kill mina in the center of the castle.
