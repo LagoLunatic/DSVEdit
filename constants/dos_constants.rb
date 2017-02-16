@@ -274,6 +274,7 @@ REUSED_SPECIAL_OBJECT_INFO = {
   0x0B => {init_code:         -1},
   0x11 => {init_code:         -1},
   0x1D => {sprite: 0x0229EAD8, gfx_wrapper: 0x02079EAC, palette: 0x022B9B04}, # wooden door
+  0x22 => {init_code:         -1},
   0x25 => {sprite: 0x0229EAD8, gfx_wrapper: 0x02079EAC, palette: 0x022B9B04}, # boss door
   0x26 => {init_code: 0x021A8FC8}, # slot machine
   0x27 => {init_code: 0x021A8434}, # condemned tower gate
@@ -282,6 +283,8 @@ REUSED_SPECIAL_OBJECT_INFO = {
   0x2F => {init_code:         -1},
   0x36 => {init_code:         -1},
   0x38 => {init_code:         -1},
+  0x41 => {init_code:         -1},
+  0x4C => {init_code:         -1},
   0x47 => {init_code: 0x0222CC10}, # hammer shopkeeper
   0x48 => {init_code: 0x0222CC00}, # yoko shopkeeper
   0x4A => {init_code:         -1},
@@ -325,13 +328,19 @@ BEST_SPRITE_FRAME_FOR_SPECIAL_OBJECT = {
   0x0D => 0x17,
   0x0F => 0x04,
   0x16 =>   -1,
+  0x1A => 0x03,
   0x1D => 0xED,
   0x25 => 0xDF,
   0x26 => 0x06,
+  0x28 => 0x01,
   0x30 => 0x04,
   0x3A => 0x08,
   0x3B => 0x06,
+  0x3D => 0x01,
   0x3E => 0x01,
+  0x59 => 0x0A,
+  0x5B => 0x10,
+  0x5C =>   -1,
 }
 SPECIAL_OBJECT_FILES_TO_LOAD_LIST = 0x0209B88C
 
@@ -453,7 +462,7 @@ BOSS_ID_TO_BOSS_DOOR_VAR_B = {
 ITEM_LOCAL_ID_RANGES = {
   0x02 => (0x00..0x41), # consumable
   0x03 => (0x01..0x4E), # weapon
-  0x04 => (0x00..0x3C), # body armor
+  0x04 => (0x00..0x3C), # armor
 }
 ITEM_GLOBAL_ID_RANGE = (1..0xCE)
 SOUL_GLOBAL_ID_RANGE = (0..0x7A)
@@ -524,7 +533,7 @@ ITEM_TYPES = [
     ]
   },
   {
-    name: "Body Armor",
+    name: "Armor",
     list_pointer: 0x0209BE88,
     count: 61,
     format: [

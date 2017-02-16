@@ -246,9 +246,9 @@ Special Objects:
   Also spawns the Barlowe that gives you tips when you talk to him.
   Requires overlay 42.
 === Events
-61 Event - starting room of game
+61 Event - Talking to Albus in the first room of the game.
   Also loads graphics for some kind of window?
-62 
+62 Event - Talking to Barlowe in the second room of the game.
 63 event - tutorial room
 64 
 65 

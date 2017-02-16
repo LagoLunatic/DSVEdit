@@ -129,7 +129,7 @@ Special objects:
   Var A: Delay in between bubbles being created.
   Var B: Z-index of the bubbles.
 23 Huge bell you can walk on.
-24 The lever you pull to lower the water level in the Lost Village.
+24 The lever you pull to lower the water level in the Lost Village and the floodgate next to the lever.
   Var B: The event flag for the water being lowered. Set to the same as the water level's Var B.
 25 Boss door.
   Var A is is how the door acts:
@@ -176,7 +176,7 @@ Special objects:
 2D Hanging spikes, disappear when you get near them?
   Var A: 18
   Var B: B1
-2E Unused, crash
+2E Unused, crash.
 2F Applies a visual effect to a layer.
   Var A: The layer to apply the effect to.
   Var B: Which effect to use.
@@ -187,7 +187,7 @@ Special objects:
     1 has a door on the right.
 31 Warp room, works just like save room.
 32 Room that transports you to the abyss.
-33 3D background model for either the Lost Village or the Pinnacle (the model is chosen automatically depending on what sector the room is in).
+33 The 3D background model for either the Lost Village or the Pinnacle (the model is chosen automatically depending on what sector the room is in).
   Var A: Which camera angle to view the model from. 0 to 4.
 34 The 3D background in Condemned Tower.
 35 The 3D background in Mine of Judgement.
@@ -196,7 +196,8 @@ Special objects:
   Var B: ???
 37 The ceiling hatch and button to open it from Demon Guest House.
   Var A: 0 for the button and the hatch and the bottom of the room. 1 for the hatch at the top of the room.
-38 Fades the music out to nothing. The music comes back when you leave the room. This is used in transition rooms.
+38 Fades the music out to nothing. The music comes back when you leave the room.
+  This is used in transition rooms.
 39 Keys of the piano you can play from the Demon Guest House.
 3A The cannon + time pillar that you need Zephyr's soul to get past.
 3B The darkness barrier in the Condemned Tower that you can't get past until late in the game.
@@ -228,8 +229,8 @@ Special objects:
     2 for the ceiling in the Garden of Madness.
     3 for the left wall in the Pinnacle.
     4 for the floor in the Pinnacle.
-47 Hammer (can be used as a shop)
-48 Yoko (can be used for weapon synth, etc)
+47 Hammer shopkeeper.
+48 Yoko shopkeeper.
 49 Red wall with an enemy on it that opens up when you use that enemy's soul against the wall.
   Var A controls which enemy wall it is:
     00 Skeleton
@@ -237,8 +238,10 @@ Special objects:
     02 Killer Clown
     03 Ukoback
 4A Visual effect used by Dario when showing off his power.
-4B That puzzle that can be zapped?
-4C A consumable, like regular consumables var B controls which one it is. But why is this a special object?
+4B Mothman puzzle that can be zapped.
+4C An item. If it's the Chaos Ring, only appears if you have all souls.
+  Var A: Flag for having picked this item up.
+  Var B: Global ID of the item + 1. CE is Chaos Ring. (Different from normal items, where Var B is the local ID of the item.)
 4D Trigger to make a secret item (Konami Man/Crown/Bell) appear.
 4E Mina Hakuba doll (only appears if Aria of Sorrow is in the GBA slot).
 4F Mina event actor.
@@ -248,7 +251,7 @@ Special objects:
 53 Celia event actor.
 54 Dario event actor.
 55 Dmitrii event actor.
-56 Used in prologue room. Force fields?
+56 Force field used in the prologue.
 57 The destroyable ceiling from the long room at the end of Wizardry Lab.
 58 Celia on a cross. Used in Menace's room. Doesn't appear until the event causes it to.
 59 Pillars of flame from the Abyss.
