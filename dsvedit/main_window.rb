@@ -100,6 +100,8 @@ class DSVEdit < Qt::MainWindow
     
     disable_menu_actions()
     
+    clear_cache()
+    
     self.show()
     
     if @settings[:last_used_folder] && File.directory?(@settings[:last_used_folder])
@@ -135,6 +137,12 @@ class DSVEdit < Qt::MainWindow
     @ui.actionEntity_search.setEnabled(true);
     @ui.actionBuild.setEnabled(true);
     @ui.actionBuild_and_Run.setEnabled(true);
+  end
+  
+  def clear_cache
+    Dir.glob("./cache/**/*.{png,tmx}").each do |file_path|
+      FileUtils.rm(file_path)
+    end
   end
   
   def extract_rom_dialog
