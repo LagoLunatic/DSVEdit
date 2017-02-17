@@ -506,7 +506,13 @@ class DSVEdit < Qt::MainWindow
       x_on_level = index_on_level % (layer.width*16)
       y_on_level = index_on_level / (layer.width*16)
       
-      tile_gfx = tileset.copy(x_on_tileset*16, y_on_tileset*16, 16, 16)
+      if (0..tileset.width-1).include?(x_on_tileset*16) && (0..tileset.height-1).include?(y_on_tileset*16)
+        tile_gfx = tileset.copy(x_on_tileset*16, y_on_tileset*16, 16, 16)
+      else
+        # Coordinates are outside the bounds of the tileset, put a red tile there instead.
+        tile_gfx = Qt::Pixmap.new(16, 16)
+        tile_gfx.fill(Qt::Color.new(Qt::red))
+      end
       
       tile_item = Qt::GraphicsPixmapItem.new(tile_gfx)
       tile_item.setPos(x_on_level*16, y_on_level*16)
