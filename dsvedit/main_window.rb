@@ -341,7 +341,7 @@ class DSVEdit < Qt::MainWindow
     @renderer.ensure_tilesets_exist("cache/#{GAME}/rooms/", @room)
     @room.layers.each do |layer|
       tileset_filename = "cache/#{GAME}/rooms/#{@room.area_name}/Tilesets/#{layer.tileset_filename}.png"
-      tileset = Qt::Image.new(tileset_filename)
+      tileset = Qt::Pixmap.new(tileset_filename)
       layer_item = Qt::GraphicsRectItem.new
       layer_item.setZValue(-layer.z_index)
       layer_item.setOpacity(layer.opacity/31.0)
@@ -383,7 +383,7 @@ class DSVEdit < Qt::MainWindow
     if @room.layers.length > 0
       @renderer.ensure_tilesets_exist("cache/#{GAME}/rooms/", @room, collision=true)
       tileset_filename = "cache/#{GAME}/rooms/#{@room.area_name}/Tilesets/#{@room.layers.first.tileset_filename}_collision.png"
-      tileset = Qt::Image.new(tileset_filename)
+      tileset = Qt::Pixmap.new(tileset_filename)
       layer = @room.layers.first
       load_layer(layer, tileset, @collision_view_item)
     end
@@ -515,17 +515,20 @@ class DSVEdit < Qt::MainWindow
       
       tile_gfx = tileset.copy(x_on_tileset*16, y_on_tileset*16, 16, 16)
       
-      if tile.horizontal_flip
-        tile_gfx = tile_gfx.mirrored(horizontal=true, vertical=false)
+      tile_item = Qt::GraphicsPixmapItem.new(tile_gfx)
+      tile_item.setPos(x_on_level*16, y_on_level*16)
+      if tile.horizontal_flip && tile.vertical_flip
+        tile_item.setTransform(Qt::Transform::fromScale(-1, -1))
+        tile_item.x += 16
+        tile_item.y += 16
+      elsif tile.horizontal_flip
+        tile_item.setTransform(Qt::Transform::fromScale(-1, 1))
+        tile_item.x += 16
+      elsif tile.vertical_flip
+        tile_item.setTransform(Qt::Transform::fromScale(1, -1))
+        tile_item.y += 16
       end
-      if tile.vertical_flip
-        tile_gfx = tile_gfx.mirrored(horizontal=false, vertical=true)
-      end
-      
-      tile_gfx = Qt::Pixmap.from_image(tile_gfx)
-      tile_gfx = Qt::GraphicsPixmapItem.new(tile_gfx)
-      tile_gfx.setPos(x_on_level*16, y_on_level*16)
-      tile_gfx.setParentItem(layer_graphics_item)
+      tile_item.setParentItem(layer_graphics_item)
     end
   end
   
