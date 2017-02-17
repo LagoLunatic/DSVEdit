@@ -167,7 +167,6 @@ class DSVEdit < Qt::MainWindow
     game.initialize_from_rom(rom_path, extract_to_hard_drive = true)
     @game = game
     @renderer = Renderer.new(game.fs)
-    @cached_sprite_pixmaps = {}
     
     enable_menu_actions()
     
@@ -186,7 +185,6 @@ class DSVEdit < Qt::MainWindow
     game.initialize_from_folder(folder_path)
     @game = game
     @renderer = Renderer.new(game.fs)
-    @cached_sprite_pixmaps = {}
     
     enable_menu_actions()
     
@@ -488,21 +486,16 @@ class DSVEdit < Qt::MainWindow
     gfx_file_pointers, palette_pointer, palette_offset, sprite_pointer = *sprite_data
     frame_to_render ||= 0
     
-    chunky_frame, min_x, min_y = @cached_sprite_pixmaps[entity.type*0x100 + entity.subtype] ||= begin
-      sprite = Sprite.new(sprite_pointer, game.fs)
-      chunky_frames, min_x, min_y = @renderer.render_sprite(gfx_file_pointers, palette_pointer, palette_offset, sprite, frame_to_render)
-      if chunky_frames.empty?
-        return
-      end
-      
-      chunky_frame = chunky_frames.first
-      
-      [chunky_frame, min_x, min_y]
-    end
+    sprite = Sprite.new(sprite_pointer, game.fs)
+    @renderer.ensure_sprite_exists("cache/#{GAME}/sprites/", gfx_file_pointers, palette_pointer, palette_offset, sprite, frame_to_render)
+    
+    sprite_filename = "%08X %s %08X %02X" % [sprite.sprite_pointer, gfx_file_pointers.map{|ptr| "%08X" % ptr}.join(","), palette_pointer, palette_offset]
+    sprite_filename = "cache/#{GAME}/sprites/#{sprite_filename}_frame#{frame_to_render}.png"
+    chunky_frame = ChunkyPNG::Image.from_file(sprite_filename)
     
     graphics_item = EntityChunkyItem.new(chunky_frame, entity, self)
     
-    graphics_item.setPos(entity.x_pos+min_x, entity.y_pos+min_y)
+    graphics_item.setPos(entity.x_pos+sprite.min_x, entity.y_pos+sprite.min_y)
     graphics_item.setParentItem(@entities_view_item)
   end
   

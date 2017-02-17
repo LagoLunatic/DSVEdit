@@ -1,6 +1,7 @@
 
 class Sprite
   attr_reader :fs,
+              :sprite_pointer,
               :sprite_file,
               :part_list_offset,
               :hitbox_list_offset,
@@ -19,11 +20,12 @@ class Sprite
   def initialize(sprite_pointer, fs)
     @fs = fs
     
+    @sprite_pointer = sprite_pointer
     @sprite_file = fs.find_file_by_ram_start_offset(sprite_pointer)
     if @sprite_file
       read_from_rom_by_sprite_file(@sprite_file)
     else
-      read_from_rom_by_pointer(sprite_pointer)
+      read_from_rom_by_pointer(@sprite_pointer)
     end
   end
   
@@ -154,6 +156,22 @@ class Sprite
     @animations.each do |animation|
       animation.initialize_frame_delays(frame_delays, @frame_delays_by_offset)
     end
+  end
+  
+  def min_x
+    (parts + hitboxes).map{|item| item.x_pos}.min
+  end
+  
+  def min_y
+    (parts + hitboxes).map{|item| item.y_pos}.min
+  end
+  
+  def max_x
+    (parts + hitboxes).map{|item| item.x_pos + item.width}.max
+  end
+  
+  def max_y
+    (parts + hitboxes).map{|item| item.y_pos + item.height}.max
   end
 end
 
