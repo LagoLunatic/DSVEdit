@@ -120,7 +120,7 @@ class Room
     @entities = []
     while true
       entity_pointer = entity_list_ram_pointer + i*12
-      if fs.read(entity_pointer, 12) == "\xFF\x7F\xFF\x7F\x00\x00\x00\x00\x00\x00\x00\x00".b
+      if fs.read(entity_pointer, 2).unpack("v").first == 0x7FFF
         break
       end
       

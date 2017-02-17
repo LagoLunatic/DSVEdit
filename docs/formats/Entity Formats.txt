@@ -1,7 +1,7 @@
 
 Entity list:
 Each entity is 12 bytes long.
-The end of the list for entities in this room is marked by the following 12 bytes: FF 7F FF 7F 00 00 00 00 00 00 00 00
+Stop reading from this list when the first two bytes of an entity are FF 7F. The other ten bytes of this dummy entity don't matter.
 
 Entity:
 Bytes 1-2: Entity's x position in the room, in pixels. (Signed.)
