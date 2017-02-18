@@ -16,4 +16,13 @@ Dir.chdir(File.dirname(__FILE__))
 
 $qApp = Qt::Application.new(ARGV)
 window = DSVEdit.new
-$qApp.exec
+
+begin
+  $qApp.exec
+rescue StandardError => e
+  require 'logger'
+  logger = Logger.new("crashlog.txt")
+  logger.error e
+  
+  raise e
+end
