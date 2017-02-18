@@ -209,7 +209,7 @@ class Renderer
     (0..height-1).each do |i|
       pixels_for_chunky = []
       
-      fs.rom[gfx_file[:start_offset] + offset, bytes_per_requested_row].each_byte do |byte|
+      fs.read_by_file(gfx_file[:file_path], offset, bytes_per_requested_row).each_byte do |byte|
         if pixels_per_byte == 2
           pixels = [byte & 0b00001111, byte >> 4] # get the low 4 bits, then the high 4 bits (it's reversed). each is one pixel, two pixels total inside this byte.
         else
@@ -230,6 +230,9 @@ class Renderer
       offset += bytes_per_full_row
     end
     
+    return rendered_gfx
+  rescue NDSFileSystem::OffsetPastEndOfFileError
+    rendered_gfx = ChunkyPNG::Image.new(width, height, ChunkyPNG::Color.rgba(255, 0, 0, 255))
     return rendered_gfx
   end
   
