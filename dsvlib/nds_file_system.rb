@@ -187,13 +187,17 @@ class NDSFileSystem
     end
   end
   
-  def commit_file_changes
+  def commit_file_changes(base_directory = @filesystem_directory)
     print "Committing changes to filesystem... "
     
     @uncommitted_files.each do |file_path|
       file_data = get_file_data_from_opened_files_cache(file_path)
-      full_path = File.join(@filesystem_directory, file_path)
-      File.open(full_path, "rb+") do |f|
+      full_path = File.join(base_directory, file_path)
+      
+      full_dir = File.dirname(full_path)
+      FileUtils.mkdir_p(full_dir)
+      
+      File.open(full_path, "wb") do |f|
         f.write(file_data)
       end
     end
