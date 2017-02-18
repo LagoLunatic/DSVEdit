@@ -47,24 +47,54 @@ class NDSFileSystem
   def write_to_rom(output_rom_path)
     print "Writing files to #{output_rom_path}... "
     
-    new_start_offset = files_without_dirs[0][:start_offset]
-    
     new_rom = @rom.dup
+    
+    expanded_files = []
+    max_written_address = 0
     
     files_written = 0
     files_without_dirs.sort_by{|id, file| id}.each do |id, file|
       file_data = get_file_data_from_opened_files_cache(file[:file_path])
       new_file_size = file_data.length
       
-      new_end_offset = new_start_offset + new_file_size
-      if (new_start_offset..new_end_offset-1).include?(@arm7_rom_offset) || (new_start_offset..new_end_offset-1).include?(@banner_end_offset)
-        new_start_offset = @banner_end_offset
-        new_end_offset = new_start_offset + new_file_size
+      offset = file[:id]*8
+      old_start_offset, old_end_offset = @rom[@file_allocation_table_offset+offset, 8].unpack("VV")
+      old_size = old_end_offset - old_start_offset
+      if new_file_size > old_size
+        expanded_files << file
+        next
       end
+      
+      new_start_offset = old_start_offset
+      new_end_offset = new_start_offset + new_file_size
       new_rom[new_start_offset,new_file_size] = file_data
       offset = file[:id]*8
       new_rom[@file_allocation_table_offset+offset, 8] = [new_start_offset, new_end_offset].pack("VV")
-      new_start_offset += new_file_size
+      max_written_address = new_end_offset if new_end_offset > max_written_address
+      
+      # Update the lengths of changed overlay files.
+      if file[:overlay_id]
+        offset = file[:overlay_id] * 32
+        new_rom[@arm9_overlay_table_offset+offset+8, 4] = [new_file_size].pack("V")
+      end
+      
+      files_written += 1
+      if block_given?
+        yield(files_written)
+      end
+    end
+    
+    expanded_files.each do |file|
+      file_data = get_file_data_from_opened_files_cache(file[:file_path])
+      new_file_size = file_data.length
+      
+      new_start_offset = max_written_address
+      new_end_offset = new_start_offset + new_file_size
+      
+      new_rom[new_start_offset,new_file_size] = file_data
+      offset = file[:id]*8
+      new_rom[@file_allocation_table_offset+offset, 8] = [new_start_offset, new_end_offset].pack("VV")
+      max_written_address = new_end_offset if new_end_offset > max_written_address
       
       # Update the lengths of changed overlay files.
       if file[:overlay_id]
