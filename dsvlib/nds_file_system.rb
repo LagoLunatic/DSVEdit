@@ -143,13 +143,19 @@ class NDSFileSystem
     file = files_by_path[file_path]
     
     if options[:allow_length_to_exceed_end_of_file]
-      if offset_in_file > file[:size]
-        raise OffsetPastEndOfFileError.new("Offset %08X is past end of file #{file_path} (%08X bytes long)" % [offset_in_file, file[:size]])
-      end
+      max_offset = offset_in_file
     else
-      if offset_in_file + length > file[:size]
-        raise OffsetPastEndOfFileError.new("Offset %08X (length %08X) is past end of file #{file_path} (%08X bytes long)" % [offset_in_file, length, file[:size]])
+      max_offset = offset_in_file + length
+    end
+    if max_offset > file[:size]
+      if options[:allow_reading_into_next_file_in_ram] && file[:ram_start_offset]
+        next_file_in_ram = find_file_by_ram_start_offset(file[:ram_start_offset]+0xC)
+        if next_file_in_ram
+          return read_by_file(next_file_in_ram[:file_path], offset_in_file - file[:size], length, options=options)
+        end
       end
+      
+      raise OffsetPastEndOfFileError.new("Offset %08X (length %08X) is past end of file #{file_path} (%08X bytes long)" % [offset_in_file, length, file[:size]])
     end
     
     file_data = get_file_data_from_opened_files_cache(file_path)
