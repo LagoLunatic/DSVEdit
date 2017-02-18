@@ -24,5 +24,7 @@ rescue StandardError => e
   logger = Logger.new("crashlog.txt")
   logger.error e
   
+  window.save_settings()
+  
   raise e
 end

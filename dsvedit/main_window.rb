@@ -599,6 +599,12 @@ class DSVEdit < Qt::MainWindow
     end
   end
   
+  def save_settings
+    File.open(@settings_path, "w") do |f|
+      f.write(@settings.to_yaml)
+    end
+  end
+  
   def closeEvent(event)
     cancelled = confirm_discard_changes()
     if cancelled
@@ -607,9 +613,7 @@ class DSVEdit < Qt::MainWindow
     end
     
     puts "Close event triggered."
-    File.open(@settings_path, "w") do |f|
-      f.write(@settings.to_yaml)
-    end
+    save_settings()
   end
   
   def open_in_tiled
