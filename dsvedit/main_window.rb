@@ -750,6 +750,13 @@ class DSVEdit < Qt::MainWindow
   def open_about
     @about_dialog = Qt::MessageBox::about(self, "DSVania Editor", "DSVania Editor Version #{DSVEDIT_VERSION}\n\nCreated by LagoLunatic\n\nSource code:\nhttps://github.com/LagoLunatic/DSVEdit\n\nReport issues here:\nhttps://github.com/LagoLunatic/DSVEdit/issues")
   end
+  
+  def inspect
+    # When an error occurs, Ruby tries to call inspect on the object causing the error and print that.
+    # That includes calling inspect on all of the object's instance variables recursively. This takes a long time.
+    # We define inspect as just to_s so it skips recursively examining every object in the whole program and errors don't take so long.
+    to_s
+  end
 end
 
 class DoorItem < Qt::GraphicsRectItem
