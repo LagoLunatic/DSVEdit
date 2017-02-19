@@ -249,13 +249,13 @@ class NDSFileSystem
   def expand_file_and_get_end_of_file_ram_address(ram_address, length_to_expand_by)
     file_path, offset_in_file = convert_ram_address_to_path_and_offset(ram_address)
     file = @currently_loaded_files.values.find{|file| file[:file_path] == file_path}
+    old_size = file[:size]
     file[:size] += length_to_expand_by
     
-    file_data = get_file_data_from_opened_files_cache(file_path)
-    local_end_of_file = file_data.length
-    offset_difference = local_end_of_file - offset_in_file
+    # Expand the actual file data string, and fill it with 0 bytes.
+    write_by_file(file_path, old_size, "\0"*length_to_expand_by)
     
-    return ram_address + offset_difference
+    return file[:ram_start_offset] + old_size
   end
   
   def files_without_dirs

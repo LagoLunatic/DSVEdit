@@ -6,6 +6,7 @@ class Room
               :sector,
               :layers,
               :number_of_doors,
+              :layer_list_ram_pointer,
               :tileset_wrapper_A_ram_pointer,
               :entity_list_ram_pointer,
               :door_list_ram_pointer,
@@ -35,7 +36,7 @@ class Room
   
   def read_from_rom
     room_metadata = fs.read(room_metadata_ram_pointer, 32).unpack("V*")
-    layer_list_ram_pointer = room_metadata[2]
+    @layer_list_ram_pointer = room_metadata[2]
     @tileset_wrapper_A_ram_pointer = room_metadata[3]
     palette_wrapper_ram_pointer = room_metadata[4]
     @entity_list_ram_pointer = room_metadata[5]
@@ -60,7 +61,9 @@ class Room
         break
       end
       
-      @layers << Layer.new(self, layer_list_ram_pointer + i*16, fs)
+      layer = Layer.new(self, layer_list_ram_pointer + i*16, fs)
+      layer.read_from_rom()
+      @layers << layer
       
       i += 1
     end
@@ -234,6 +237,55 @@ class Room
       last_4_bytes |= (@palette_page_index << 23) & 0b00001111_10000000_00000000_00000000
     end
     fs.write(room_metadata_ram_pointer+7*4, [last_4_bytes].pack("V"))
+  end
+  
+  def add_new_layer
+    sector.load_necessary_overlay()
+    
+    if layers.length >= 4
+      raise "Can't add new layer; room already has 4 layers."
+    end
+    
+    overlay_id = AREA_INDEX_TO_OVERLAY_INDEX[sector.area.area_index][sector.sector_index]
+    overlay = fs.overlays[overlay_id]
+    overlay_ram_start = overlay[:ram_start_offset]
+    overlay_ram_end = overlay[:ram_start_offset]+overlay[:size]
+    
+    if layers.length == 0 && layer_list_ram_pointer >= overlay_ram_end
+      # Invalid room where layer list pointer points outside the overlay file. So we expand the file and create a blank layer list.
+      @layer_list_ram_pointer = fs.expand_file_and_get_end_of_file_ram_address(overlay_ram_start, 16*4)
+      fs.write(room_metadata_ram_pointer+2*4, [@layer_list_ram_pointer].pack("V"))
+    end
+    
+    new_layer_i = layers.length
+    new_layer = Layer.new(self, layer_list_ram_pointer + new_layer_i*16, fs)
+    
+    new_layer.z_index = 0x16
+    new_layer.scroll_mode = 0x01
+    new_layer.opacity = 0x1F
+    new_layer.render_type = 0x00
+    
+    new_layer.layer_metadata_ram_pointer = fs.expand_file_and_get_end_of_file_ram_address(overlay_ram_start, 16)
+    
+    main_layer = layers.first
+    if main_layer
+      new_layer.width = main_layer.width
+      new_layer.height = main_layer.height
+      new_layer.ram_pointer_to_tileset_for_layer = main_layer.ram_pointer_to_tileset_for_layer
+      new_layer.collision_tileset_ram_pointer = main_layer.collision_tileset_ram_pointer
+    else
+      # Room that has no layers.
+      new_layer.width = 1
+      new_layer.height = 1
+      new_layer.ram_pointer_to_tileset_for_layer = 0
+      new_layer.collision_tileset_ram_pointer = 0
+    end
+    new_layer.layer_tiledata_ram_start_offset = overlay_ram_start # Just a dummy pointer. Layer#write_to_rom will expand the file and set this to a new pointer.
+    new_layer.tiles = []
+    
+    new_layer.write_to_rom()
+    
+    @layers << new_layer
   end
   
   def z_ordered_layers

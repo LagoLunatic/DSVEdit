@@ -192,7 +192,7 @@
     <addaction name="actionText_Editor"/>
     <addaction name="actionSprite_Editor"/>
     <addaction name="actionItem_Editor"/>
-    <addaction name="actionEntity_search"/>
+    <addaction name="actionEntity_Search"/>
     <addaction name="actionSettings"/>
    </widget>
    <widget class="QMenu" name="menuBuild">
@@ -217,7 +217,14 @@
     </property>
     <addaction name="actionAbout"/>
    </widget>
+   <widget class="QMenu" name="menuEdit">
+    <property name="title">
+     <string>Edit</string>
+    </property>
+    <addaction name="actionAdd_Layer"/>
+   </widget>
    <addaction name="menuFile"/>
+   <addaction name="menuEdit"/>
    <addaction name="menuView"/>
    <addaction name="menuTools"/>
    <addaction name="menuBuild"/>
@@ -306,9 +313,12 @@
     <string>I</string>
    </property>
   </action>
-  <action name="actionEntity_search">
+  <action name="actionEntity_Search">
    <property name="text">
-    <string>Entity search</string>
+    <string>Entity Search</string>
+   </property>
+   <property name="toolTip">
+    <string>Entity Search</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+F</string>
@@ -370,6 +380,11 @@
   <action name="actionAbout">
    <property name="text">
     <string>About</string>
+   </property>
+  </action>
+  <action name="actionAdd_Layer">
+   <property name="text">
+    <string>Add Layer</string>
    </property>
   </action>
  </widget>

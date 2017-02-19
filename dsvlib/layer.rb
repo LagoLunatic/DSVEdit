@@ -4,25 +4,28 @@ class Layer
   SIZE_OF_A_SCREEN_IN_BYTES = 2*16*12
   
   attr_reader :room,
-              :layer_list_entry_ram_pointer,
-              :layer_metadata_ram_pointer,
-              :fs,
-              :layer_tiledata_ram_start_offset
-  attr_accessor :width,
-                :height,
-                :ram_pointer_to_tileset_for_layer,
-                :collision_tileset_ram_pointer,
+              :fs
+              
+  attr_accessor :layer_list_entry_ram_pointer,
+                :layer_metadata_ram_pointer,
                 :z_index,
                 :scroll_mode,
                 :opacity,
                 :render_type,
+                :width,
+                :height,
+                :ram_pointer_to_tileset_for_layer,
+                :collision_tileset_ram_pointer,
+                :layer_tiledata_ram_start_offset,
                 :tiles
   
   def initialize(room, layer_list_entry_ram_pointer, fs)
     @room = room
     @layer_list_entry_ram_pointer = layer_list_entry_ram_pointer
     @fs = fs
-    
+  end
+  
+  def read_from_rom
     read_from_layer_list_entry()
     read_from_layer_metadata()
     read_from_layer_tiledata()
@@ -72,6 +75,7 @@ class Layer
     fs.write(layer_metadata_ram_pointer+4, [ram_pointer_to_tileset_for_layer, collision_tileset_ram_pointer].pack("VV"))
     fs.write(layer_list_entry_ram_pointer, [z_index, scroll_mode, opacity].pack("CCC"))
     fs.write(layer_list_entry_ram_pointer+8, [render_type].pack("C"))
+    fs.write(layer_list_entry_ram_pointer+12, [layer_metadata_ram_pointer].pack("V"))
     tile_data = tiles.map(&:to_tile_data).pack("v*")
     fs.write(layer_tiledata_ram_start_offset, tile_data)
   end

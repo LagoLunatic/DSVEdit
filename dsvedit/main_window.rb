@@ -18,6 +18,7 @@ class DSVEdit < Qt::MainWindow
   slots "extract_rom_dialog()"
   slots "open_folder_dialog()"
   slots "save_files()"
+  slots "add_layer_to_room()"
   slots "update_visible_view_items()"
   slots "open_enemy_dna_dialog()"
   slots "open_text_editor()"
@@ -65,6 +66,7 @@ class DSVEdit < Qt::MainWindow
     connect(@ui.actionOpen_Folder, SIGNAL("activated()"), self, SLOT("open_folder_dialog()"))
     connect(@ui.actionExtract_ROM, SIGNAL("activated()"), self, SLOT("extract_rom_dialog()"))
     connect(@ui.actionSave, SIGNAL("activated()"), self, SLOT("save_files()"))
+    connect(@ui.actionAdd_Layer, SIGNAL("activated()"), self, SLOT("add_layer_to_room()"))
     connect(@ui.actionEntities, SIGNAL("activated()"), self, SLOT("update_visible_view_items()"))
     connect(@ui.actionDoors, SIGNAL("activated()"), self, SLOT("update_visible_view_items()"))
     connect(@ui.actionCollision, SIGNAL("activated()"), self, SLOT("update_visible_view_items()"))
@@ -73,7 +75,7 @@ class DSVEdit < Qt::MainWindow
     connect(@ui.actionText_Editor, SIGNAL("activated()"), self, SLOT("open_text_editor()"))
     connect(@ui.actionSprite_Editor, SIGNAL("activated()"), self, SLOT("open_sprite_editor()"))
     connect(@ui.actionItem_Editor, SIGNAL("activated()"), self, SLOT("open_item_editor()"))
-    connect(@ui.actionEntity_search, SIGNAL("activated()"), self, SLOT("open_entity_search()"))
+    connect(@ui.actionEntity_Search, SIGNAL("activated()"), self, SLOT("open_entity_search()"))
     connect(@ui.actionSettings, SIGNAL("activated()"), self, SLOT("open_settings()"))
     connect(@ui.actionBuild, SIGNAL("activated()"), self, SLOT("write_to_rom()"))
     connect(@ui.actionBuild_and_Run, SIGNAL("activated()"), self, SLOT("build_and_run()"))
@@ -119,7 +121,7 @@ class DSVEdit < Qt::MainWindow
     @ui.actionText_Editor.setEnabled(false);
     @ui.actionSprite_Editor.setEnabled(false);
     @ui.actionItem_Editor.setEnabled(false);
-    @ui.actionEntity_search.setEnabled(false);
+    @ui.actionEntity_Search.setEnabled(false);
     @ui.actionBuild.setEnabled(false);
     @ui.actionBuild_and_Run.setEnabled(false);
   end
@@ -134,7 +136,7 @@ class DSVEdit < Qt::MainWindow
     @ui.actionText_Editor.setEnabled(true);
     @ui.actionSprite_Editor.setEnabled(true);
     @ui.actionItem_Editor.setEnabled(true);
-    @ui.actionEntity_search.setEnabled(true);
+    @ui.actionEntity_Search.setEnabled(true);
     @ui.actionBuild.setEnabled(true);
     @ui.actionBuild_and_Run.setEnabled(true);
   end
@@ -537,6 +539,16 @@ class DSVEdit < Qt::MainWindow
       end
       tile_item.setParentItem(layer_graphics_item)
     end
+  end
+  
+  def add_layer_to_room
+    if @room.layers.size >= 4
+      Qt::MessageBox.warning(self, "Can't add layer", "Can't add any more layers to this room, it already has the maximum of 4 layers.")
+      return
+    end
+    
+    @room.add_new_layer()
+    load_room()
   end
   
   def update_visible_view_items
