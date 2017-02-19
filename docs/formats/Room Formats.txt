@@ -57,3 +57,31 @@ Most significant bit first.
   First bit is whether the tile is flipped vertically.
   Second bit is whether the tile is flipped horizontally.
   Remaining 14 bits are the index of which tile to use from the tileset, 1 meaning the first tile on the tileset, 0 meaning a blank tile.
+
+Entity list:
+Each entity is 12 bytes long.
+Stop reading from this list when the first two bytes of an entity are FF 7F. The other ten bytes of this dummy entity don't matter.
+
+Entity format:
+Bytes 1-2: Entity's x position in the room, in pixels. (Signed.)
+Bytes 3-4: Entity's y position in the room, in pixels. (Signed.)
+Byte 5: ???
+Byte 6: Entity type. See entity type list for details.
+Byte 7: Entity subtype.
+Byte 8: ???
+Bytes 9-10: Entity variable A.
+Bytes 11-12: Entity variable B.
+
+Door list:
+Each door is 16 bytes long.
+The number of doors the room has is stored in the room's metadata.
+
+Door format:
+Bytes 1-4: Pointer to destination room's metadata.
+Byte 5: X position in screens of the loading zone that triggers the transition. A loading zone is the same width and height of a screen. 0xFF means -1 (i.e. off the left edge of the room). 0x80 to 0xFE aren't valid values, the loading zone simply won't appear. The loading zone also won't appear if it would overlap the room itself.
+Byte 6: Y position in screens of the loading zone that triggers the transition. See above.
+Bytes 7-8: Destination X offset in pixels to where the player should be placed. Unused.
+Bytes 9-10: Destination Y offset in pixels to where the player should be placed. Unused.
+Bytes 11-12: Destination X offset again. Acts the same as bytes 7-8. Can be stacked with bytes 7-8 to offset even further. Used.
+Bytes 13-14: Destination Y offset again. Acts the same as bytes 9-10. Can be stacked with bytes 9-10 to offset even further. Used.
+Bytes 15-16: Unused and no apparent effect.

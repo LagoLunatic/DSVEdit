@@ -1,0 +1,74 @@
+Entity types:
+
+00 Nothing.
+
+01 Enemy. Entity subtype determines which enemy. It's equal to ID of enemy in the bestiary, except starting at 0 instead of at 1.
+
+02 Special object. Entity subtype determines which object. See special object list for details on each object.
+
+03 Generic candle. Always drops a heart, even if you don't need one. Unaffected by subtype.
+
+04 Pickup. Subtype:
+  00 Heart.
+    Var A: Flag for having picked up this heart.
+    Var B: The type of heart.
+      00 - Small.
+      01 - Big.
+  01 Money.
+    Var A: Flag for having picked up this money.
+    Var B: The amount of money.
+      00 - 1G.
+      01 - 10G.
+      02 - 50G.
+      03 - 100G.
+      04 - 500G.
+      05 - 1000G.
+      06 - 2000G.
+  02 Item: consumable.
+    Var A: Flag for having picked up this item.
+    Var B: The local ID of the consumable.
+  03 Item: weapon.
+    Var A: Flag for having picked up this item.
+    Var B: The local ID of the weapon.
+  04 Item: body armor.
+    Var A: Flag for having picked up this item.
+    Var B: The local ID of the body armor.
+  05 Item: head armor.
+    Var A: Flag for having picked up this item.
+    Var B: The local ID of the head armor.
+  06 Item: feet armor.
+    Var A: Flag for having picked up this item.
+    Var B: The local ID of the feet armor.
+  07 Item: accessory.
+    Var A: Flag for having picked up this item.
+    Var B: The local ID of the accessory.
+  08+ Skill.
+    The original developers used subtype 8 for subweapons and spells, subtype 9 for dual crushes, and B for relics. But in reality anything 8 or higher works exactly the same, so you don't have to follow that.
+    Var A: Flag for having picked up this skill.
+    Var B: The local ID of the skill.
+
+05 Nothing? Unused?
+
+06 Pickup that only appears once all quests have been completed.
+  Subtype/Var A/Var B work the same as normal pickups.
+  The only other difference from normal pickups is that this pickup won't appear if you already own at least one of the pickup.
+  
+07 Pickup hidden inside a breakable wall.
+  Subtype/Var A/Var B work the same as normal pickups.
+  This should be placed together with special object 3B. Their positions don't need to be exactly the same, but close.
+  If not placed inside a breakable wall, this just acts like a normal pickup not hidden inside a wall.
+
+08 Entity hider.
+  Skips loading a certain number of entities after this one in this room's entity list if a certain condition is met.
+  Byte 8: Low nibble is the number of entities after this one to skip. If 0, all remaining entities are skipped.
+  Var A: The condition.
+    0 - Check if a boss death flag is set. Subtype is the index of the bit. (Bitfield starting at 021119DC.)
+    1 - Check if a miscellaneous flag is set. Subtype is the index of the bit. (Bitfield starting at 02111BA0.)
+    2 - Check if an event flag is set. Subtype is the index of the bit. (Bitfield starting at 02111BB0.)
+    3 - Check if in the middle of a boss fight. (Bit 0x00000002 of bitfield 0211174C.)
+    4 - Checks if subtype equals the current game mode (byte 02111F52 has the current game mode).
+  Var B:
+    0 - Entities will disappear if the condition is NOT met.
+    1 - Entities will disappear if the condition IS met.
+
+09 ???

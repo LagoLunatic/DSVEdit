@@ -421,22 +421,24 @@ class DSVEdit < Qt::MainWindow
       add_sprite_item_for_entity(entity,
         SpriteInfoExtractor.get_gfx_and_palette_and_sprite_from_create_code(OTHER_SPRITES[0][:pointer], game.fs, OTHER_SPRITES[0][:overlay], OTHER_SPRITES[0]),
         0xCE)
-    elsif entity.is_item? || (entity.is_hidden_item? && GAME == "por")
-      item_type = entity.subtype
-      item_id = entity.var_b
-      chunky_image = @renderer.render_icon_by_item_type(item_type-2, item_id)
-      
-      graphics_item = EntityChunkyItem.new(chunky_image, entity, self)
-      graphics_item.setPos(entity.x_pos-8, entity.y_pos-16)
-      graphics_item.setParentItem(@entities_view_item)
-    elsif entity.is_hidden_item? && GAME == "ooe"
-      item_global_id = entity.var_b - 1
-      chunky_image = @renderer.render_icon_by_global_id(item_global_id)
-      
-      graphics_item = EntityChunkyItem.new(chunky_image, entity, self)
-      graphics_item.setPos(entity.x_pos-8, entity.y_pos-16)
-      graphics_item.setParentItem(@entities_view_item)
-    elsif entity.is_heart?
+    elsif entity.is_item? || entity.is_hidden_item?
+      if GAME == "ooe"
+        item_global_id = entity.var_b - 1
+        chunky_image = @renderer.render_icon_by_global_id(item_global_id)
+        
+        graphics_item = EntityChunkyItem.new(chunky_image, entity, self)
+        graphics_item.setPos(entity.x_pos-8, entity.y_pos-16)
+        graphics_item.setParentItem(@entities_view_item)
+      else
+        item_type = entity.subtype
+        item_id = entity.var_b
+        chunky_image = @renderer.render_icon_by_item_type(item_type-2, item_id)
+        
+        graphics_item = EntityChunkyItem.new(chunky_image, entity, self)
+        graphics_item.setPos(entity.x_pos-8, entity.y_pos-16)
+        graphics_item.setParentItem(@entities_view_item)
+      end
+    elsif entity.is_heart? || entity.is_hidden_heart?
       case GAME
       when "dos"
         frame_id = 0xDA
@@ -446,11 +448,11 @@ class DSVEdit < Qt::MainWindow
       add_sprite_item_for_entity(entity,
         SpriteInfoExtractor.get_gfx_and_palette_and_sprite_from_create_code(OTHER_SPRITES[0][:pointer], game.fs, OTHER_SPRITES[0][:overlay], OTHER_SPRITES[0]),
         frame_id)
-    elsif entity.is_money_bag?
+    elsif entity.is_money_bag? || entity.is_hidden_money_bag?
       add_sprite_item_for_entity(entity,
         SpriteInfoExtractor.get_gfx_and_palette_and_sprite_from_create_code(OTHER_SPRITES[0][:pointer], game.fs, OTHER_SPRITES[0][:overlay], OTHER_SPRITES[0]),
         0xEF)
-    elsif entity.is_skill? && GAME == "por"
+    elsif (entity.is_skill? || entity.is_hidden_skill?) && GAME == "por"
       case entity.var_b
       when 0x00..0x26
         chunky_image = @renderer.render_icon(64 + 0, 0)
@@ -465,7 +467,7 @@ class DSVEdit < Qt::MainWindow
       graphics_item = EntityChunkyItem.new(chunky_image, entity, self)
       graphics_item.setPos(entity.x_pos-8, entity.y_pos-16)
       graphics_item.setParentItem(@entities_view_item)
-    elsif entity.is_glyph?
+    elsif entity.is_glyph? || entity.is_hidden_glyph?
       glyph_id = entity.var_b
       if glyph_id <= 0x36
         chunky_image = @renderer.render_icon_by_item_type(0, glyph_id-1, mode=:glyph)

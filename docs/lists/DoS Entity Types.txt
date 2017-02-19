@@ -1,0 +1,61 @@
+Entity types:
+
+00 Nothing.
+
+01 Enemy.
+  Subtype determines which enemy. It's equal to ID of enemy in the bestiary, except starting at 0 instead of at 1.
+
+02 Special object.
+  Subtype determines which object. See special object list for details on each object.
+
+03 Generic candle.
+  Always drops a heart, even if you don't need one. Unaffected by subtype.
+
+04 Pickup. Subtype:
+  00 Heart.
+    Var A: Flag for having picked up this heart.
+    Var B: The type of heart.
+      00 - Small.
+      01 - Big.
+  01 Money.
+    Var A: Flag for having picked up this money.
+    Var B: The amount of money.
+      00 - 1G.
+      01 - 10G.
+      02 - 50G.
+      03 - 100G.
+      04 - 500G.
+      05 - 1000G.
+      06 - 2000G.
+  02 Item: consumable.
+    Var A: Flag for having picked up this item.
+    Var B: The local ID of the consumable.
+  03 Item: weapon.
+    Var A: Flag for having picked up this item.
+    Var B: The local ID of the weapon.
+  04 Item: body armor.
+    Var A: Flag for having picked up this item.
+    Var B: The local ID of the body armor.
+  05+ Free soul.
+    Var A: No effect.
+    Var B: The global ID of the soul.
+
+05 Nothing. Unused.
+
+06 Entity hider.
+  Prematurely stop reading this entity list if a certain condition is met.
+  Entities before this one in the list will load the same as normal, but all ones after it will not appear.
+  Var A: Which type of flag.
+    0 - Check if a boss death flag is set. Subtype is the index of the bit. (Bitfield starting at 020F7038.)
+    1 - Check if a miscellaneous flag is set. Subtype is the index of the bit. (Bitfield starting at 020F7180.)
+    2 - Check if an event flag is set. Subtype is the index of the bit. (Bitfield starting at 020F7188.)
+    3 - Checks if in the middle of a boss fight. (Bit 0x00000002 of bitfield 020F6DFC.)
+    4 - Checks if in Julius mode. (Byte 020F7257).
+  Var B:
+    0 - Entities will disappear if the condition is NOT met.
+    1 - Entities will disappear if the condition IS met.
+
+07 Font loader.
+  Loads font for event text. Without this entity in the room, text will look like garbage.
+  Var A: Event flag to check. If this flag is set, the font won't be loaded. Should be the same the event's var A. This can also just be set to 0 and the font will always be loaded (like for save rooms).
+  Var B: Must be the same as the event's var B. For save rooms, must be the same as the save point's var B.

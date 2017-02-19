@@ -143,8 +143,9 @@ ENTITY_TYPE_DESCRIPTIONS = {
   4 => "Pickup",
   5 => "???",
   6 => "???",
-  7 => "Hidden item",
-  8 => "???",
+  7 => "Hidden pickup",
+  8 => "Entity hider",
+  9 => "???",
 }
 
 CONSTANT_OVERLAYS = [19, 22]
@@ -179,7 +180,7 @@ ITEM_LOCAL_ID_RANGES = {}
 ITEM_GLOBAL_ID_RANGE = (0x70..0x162) # includes relics
 GLYPH_GLOBAL_ID_RANGE = (2..0x50)
 
-PICKUP_SUBTYPES_FOR_ITEMS = (-1..-1) # no items in ooe
+PICKUP_SUBTYPES_FOR_ITEMS = (0xFF..0xFF)
 PICKUP_SUBTYPES_FOR_SKILLS = (0x02..0x04)
 
 ENEMY_IDS = (0x00..0x78)

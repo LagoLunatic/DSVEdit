@@ -94,6 +94,21 @@ class Game
     end
   end
   
+  def entity_type_docs
+    @entity_type_docs ||= begin
+      file_contents = File.read("./docs/lists/#{GAME} Entity Types.txt")
+      entity_type_docs_arr = file_contents.scan(/^(\h\h [^\n]+\n(?:  [^\n]+\n)*)/)
+      
+      entity_type_docs = {}
+      entity_type_docs_arr.each do |desc|
+        id = desc.first[0..1].to_i(16)
+        entity_type_docs[id] = desc.first[3..-1]
+      end
+      
+      entity_type_docs
+    end
+  end
+  
   def enemy_docs
     @enemy_docs ||= begin
       file_contents = File.read("./docs/lists/#{GAME} Enemies.txt")

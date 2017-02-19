@@ -284,9 +284,9 @@ Special Objects:
 82 Event - used in room after Eligor with Arma Custos in it
 83 Event - used in room after Eligor with Arma Custos in it
 84 Event - used in room with the cerberus gate
-85 Event - In Dracula's throne room.
-86 Event - In Dracula's throne room.
-87 Event - In Dracula's throne room.
+85 Event - Shanoa meeting Dracula.
+86 Event - Shanoa defeated Dracula, but needs to use Dominus to kill him.
+87 Event - Dracula is dead, Shanoa talks with Albus.
   Also loads graphics for Shanoa's smile.
 88 Event - ending?
 89 a villager in torpor along with the event associated with them.

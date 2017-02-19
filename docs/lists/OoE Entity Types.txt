@@ -1,0 +1,63 @@
+Entity types:
+
+00 Nothing.
+
+01 Enemy. Entity subtype determines which enemy. It's equal to ID of enemy in the bestiary, except starting at 0 instead of at 1.
+
+02 Special object. Entity subtype determines which object. See special object list for details on each object.
+
+03 Generic candle. Always drops a heart, even if you don't need one. Unaffected by subtype.
+
+04 Pickup. Subtype:
+  00 Heart.
+    Var A: No effect.
+    Var B: The type of heart.
+      00 - Small.
+      01 - Big.
+  01 Money.
+    Var A: Flag for having picked up this money.
+    Var B: The amount of money.
+      00 - 1G.
+      01 - 10G.
+      02 - 50G.
+      03 - 100G.
+      04 - 500G.
+      05 - 1000G.
+      06 - 2000G.
+  02-04 Free glyph.
+    Var A: Flag for having absorbed this glyph.
+    Var B: The global ID of the glyph +1.
+      Can be an item's ID, but the glyph will have garbage graphics.
+      Also, if it's a relic's ID, the relic won't be equipped automatically.
+  05-FE Crash.
+  FF Item.
+    Var A: Flag for having picked up this item.
+    Var B: The global ID of the item +1.
+      Can be a relic's ID, but when the player picks it up, it won't equip automatically.
+      Cannot be a glyph's ID, the item won't appear.
+
+05 Nothing? Unused?
+
+06 Unused, nothing.
+
+07 Pickup hidden inside a breakable wall.
+  Subtype/Var A/Var B work the same as normal pickups.
+  This should be placed together with special object 5C. Their positions don't need to be exactly the same, but close.
+  If not placed inside a breakable wall, this just acts like a normal pickup not hidden inside a wall.
+
+08 Entity hider.
+  Skips loading a certain number of entities after this one in this room's entity list if a certain condition is met.
+  Byte 8: Low nibble is the number of entities after this one to skip. If 0, all remaining entities are skipped.
+  Var A: The condition.
+    0 - Check if a boss death flag is set. Subtype is the index of the bit. (Bitfield starting at 021003E4.)
+    1 - Check if an area title seen flag is set. Subtype is the index of the bit. (Bitfield starting at 02100378.)
+    2 - Check if an event flag is set. Subtype is the index of the bit. (Bitfield starting at 02100388.)
+    3 - Check if in the middle of a boss fight. (Bit 0x00000002 of bitfield 020FFC8C.)
+    4 - Checks if subtype equals the current game mode (byte 02100790 has the current game mode).
+    5 - Checks if subtype equals the current difficulty (byte 02100794 has the current difficulty).
+  Var B:
+    0 - Entities will disappear if the condition is NOT met.
+    1 - Entities will disappear if the condition IS met.
+
+09 ???
+

@@ -728,6 +728,7 @@ class Renderer
         end
       end
     end
+    raise "Could not find item with global ID: %04X" % global_id
   end
   
   def render_icon(icon_index, palette_index, mode=:item)

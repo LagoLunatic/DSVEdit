@@ -120,9 +120,9 @@ ENTITY_TYPE_DESCRIPTIONS = {
   3 => "Candle",
   4 => "Pickup",
   5 => "???",
-  6 => "???",
-  7 => "Hidden item",
-  8 => "???",
+  6 => "All-quests-complete pickup",
+  7 => "Hidden pickup",
+  8 => "Entity hider",
   9 => "???",
 }
 
@@ -568,7 +568,7 @@ ITEM_GLOBAL_ID_RANGE = (1..0x1BB) # regular items end at 150. skills end at 1AB.
 SKILL_GLOBAL_ID_RANGE = (1..0x6B)
 
 PICKUP_SUBTYPES_FOR_ITEMS = (0x02..0x07)
-PICKUP_SUBTYPES_FOR_SKILLS = (0x08..0x09)
+PICKUP_SUBTYPES_FOR_SKILLS = (0x08..0xFF)
 
 # Note: the below are not actually where the original game stores the indexes. All three of those are at 02051F88 (since all three are the same: 00). The three addresses below are free space reused for the purpose of allowing the three values to be different.
 NEW_GAME_STARTING_AREA_INDEX_OFFSET = 0x020BFC00

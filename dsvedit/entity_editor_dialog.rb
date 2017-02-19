@@ -52,15 +52,21 @@ class EntityEditorDialog < Qt::Dialog
         end
       elsif type == 2
         subtype_name = (game.special_object_docs[subtype] || " ").lines.first.strip[0..100]
-      elsif type == 4 || (type == 7 && GAME == "por")
+      elsif type == 4 || (type == 7 && ["por", "ooe"].include?(GAME)) || (type == 6 && GAME == "por")
         if subtype == 0
           subtype_name = "Heart"
         elsif subtype == 1
           subtype_name = "Money"
         elsif PICKUP_SUBTYPES_FOR_ITEMS.include?(subtype)
-          subtype_name = ITEM_TYPES[subtype-2][:name]
+          if GAME == "dos" || GAME == "por"
+            subtype_name = ITEM_TYPES[subtype-2][:name]
+          else
+            subtype_name = "Item"
+          end
         elsif PICKUP_SUBTYPES_FOR_SKILLS.include?(subtype)
           subtype_name = "Skill"
+        else
+          subtype_name = "Crash"
         end
       end
       
@@ -78,7 +84,7 @@ class EntityEditorDialog < Qt::Dialog
     when 2
       @ui.entity_doc.setPlainText(game.special_object_docs[subtype])
     else
-      @ui.entity_doc.setPlainText("")
+      @ui.entity_doc.setPlainText(game.entity_type_docs[@ui.type.currentIndex])
     end
   end
   
