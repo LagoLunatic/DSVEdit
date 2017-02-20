@@ -58,6 +58,12 @@ class Layer
   def write_to_rom
     room.sector.load_necessary_overlay()
     
+    # Clamp width/height to valid values.
+    @width = [@width, 15].min
+    @width = [@width, 1].max
+    @height = [@height, 15].min
+    @height = [@height, 1].max
+    
     old_width, old_height = fs.read(layer_metadata_ram_pointer,2).unpack("C*")
     
     if (width*height) > (old_width*old_height)
