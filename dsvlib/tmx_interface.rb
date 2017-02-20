@@ -212,30 +212,11 @@ class TMXInterface
   end
   
   def from_tmx_level_data(tile_data_string, width, height)
-    tile_rows = tile_data_string.strip.split("\n").map{|row_str| row_str.scan(/\d+/).map{|str| str.to_i}}
-    width_in_blocks = width * 16
-    height_in_blocks = height * 12
-    
-    tile_rows = tile_rows[0, height_in_blocks]
-    if tile_rows.length < height_in_blocks
-      # Pad with empty blocks if the tmx layer is smaller than the game layer should be.
-      tile_rows += [[1] * width_in_blocks] * (height_in_blocks - tile_rows.length)
-    end
-    
-    tile_rows.map! do |row|
-      row = row[0, width_in_blocks]
-      
-      if row.length < width_in_blocks
-        # Pad with empty blocks if the tmx layer is smaller than the game layer should be.
-        row += [1] * (width_in_blocks - row.length)
-      end
-      
-      row
-    end
+    tmx_tiles = tile_data_string.scan(/\d+/).map{|str| str.to_i}
     
     game_tiles = []
     
-    tile_rows.flatten.each do |block|
+    tmx_tiles.each do |block|
       block = 1 if block == 0
       horizontal_flip  = (block & 0x80000000) != 0
       vertical_flip    = (block & 0x40000000) != 0

@@ -221,7 +221,8 @@
     <property name="title">
      <string>Edit</string>
     </property>
-    <addaction name="actionAdd_Layer"/>
+    <addaction name="actionEdit_Layers"/>
+    <addaction name="actionAdd_New_Layer"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuEdit"/>
@@ -382,9 +383,14 @@
     <string>About</string>
    </property>
   </action>
-  <action name="actionAdd_Layer">
+  <action name="actionEdit_Layers">
    <property name="text">
-    <string>Add Layer</string>
+    <string>Edit Layers</string>
+   </property>
+  </action>
+  <action name="actionAdd_New_Layer">
+   <property name="text">
+    <string>Add New Layer</string>
    </property>
   </action>
  </widget>

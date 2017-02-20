@@ -20,6 +20,7 @@ task :build_ui do
   system "rbuic4 dsvedit/map_editor.ui      -o dsvedit/ui_map_editor.rb"
   system "rbuic4 dsvedit/entity_editor.ui   -o dsvedit/ui_entity_editor.rb"
   system "rbuic4 dsvedit/skeleton_editor.ui -o dsvedit/ui_skeleton_editor.rb"
+  system "rbuic4 dsvedit/layers_editor.ui   -o dsvedit/ui_layers_editor.rb"
   
   system "rbuic4 dsvrandom/randomizer.ui   -o dsvrandom/ui_randomizer.rb"
 end

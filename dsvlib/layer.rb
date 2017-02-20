@@ -77,6 +77,45 @@ class Layer
       @layer_tiledata_ram_start_offset = new_tiledata_ram_pointer
     end
     
+    if width != old_width || height != old_height
+      old_width_in_blocks = old_width * 16
+      width_in_blocks = width * 16
+      height_in_blocks = height * 12
+      
+      if old_width_in_blocks == 0
+        # New layer.
+        tile_rows = []
+      else
+        tile_rows = tiles.each_slice(old_width_in_blocks).to_a
+      end
+      
+      # Truncate the layer vertically if the layer's height was decreased.
+      tile_rows = tile_rows[0, height_in_blocks]
+      
+      (height_in_blocks - tile_rows.length).times do
+        # Pad the layer with empty blocks vertically if layer's height was increased.
+        new_row = []
+        width_in_blocks.times do
+          new_row << Tile.new.from_game_data(0)
+        end
+        tile_rows << new_row
+      end
+      
+      tile_rows.map! do |row|
+        # Truncate the layer horizontally if the layer's width was decreased.
+        row = row[0, width_in_blocks]
+        
+        (width_in_blocks - row.length).times do
+          # Pad the layer with empty blocks horizontally if layer's width was increased.
+          row << Tile.new.from_game_data(0)
+        end
+        
+        row
+      end
+      
+      @tiles = tile_rows.flatten
+    end
+    
     fs.write(layer_metadata_ram_pointer, [width, height].pack("CC"))
     fs.write(layer_metadata_ram_pointer+4, [ram_pointer_to_tileset_for_layer, collision_tileset_ram_pointer].pack("VV"))
     fs.write(layer_list_entry_ram_pointer, [z_index, scroll_mode, opacity].pack("CCC"))

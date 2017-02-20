@@ -9,6 +9,7 @@ require_relative 'icon_chooser_dialog'
 require_relative 'map_editor_dialog'
 require_relative 'entity_editor_dialog'
 require_relative 'skeleton_editor_dialog'
+require_relative 'layers_editor_dialog'
 
 require_relative 'ui_main'
 
@@ -18,7 +19,8 @@ class DSVEdit < Qt::MainWindow
   slots "extract_rom_dialog()"
   slots "open_folder_dialog()"
   slots "save_files()"
-  slots "add_layer_to_room()"
+  slots "edit_layers()"
+  slots "add_new_layer()"
   slots "update_visible_view_items()"
   slots "open_enemy_dna_dialog()"
   slots "open_text_editor()"
@@ -66,7 +68,8 @@ class DSVEdit < Qt::MainWindow
     connect(@ui.actionOpen_Folder, SIGNAL("activated()"), self, SLOT("open_folder_dialog()"))
     connect(@ui.actionExtract_ROM, SIGNAL("activated()"), self, SLOT("extract_rom_dialog()"))
     connect(@ui.actionSave, SIGNAL("activated()"), self, SLOT("save_files()"))
-    connect(@ui.actionAdd_Layer, SIGNAL("activated()"), self, SLOT("add_layer_to_room()"))
+    connect(@ui.actionEdit_Layers, SIGNAL("activated()"), self, SLOT("edit_layers()"))
+    connect(@ui.actionAdd_New_Layer, SIGNAL("activated()"), self, SLOT("add_new_layer()"))
     connect(@ui.actionEntities, SIGNAL("activated()"), self, SLOT("update_visible_view_items()"))
     connect(@ui.actionDoors, SIGNAL("activated()"), self, SLOT("update_visible_view_items()"))
     connect(@ui.actionCollision, SIGNAL("activated()"), self, SLOT("update_visible_view_items()"))
@@ -113,6 +116,8 @@ class DSVEdit < Qt::MainWindow
   
   def disable_menu_actions
     @ui.actionSave.setEnabled(false);
+    @ui.actionEdit_Layers.setEnabled(false);
+    @ui.actionAdd_New_Layer.setEnabled(false);
     @ui.actionEntities.setEnabled(false);
     @ui.actionDoors.setEnabled(false);
     @ui.actionCollision.setEnabled(false);
@@ -128,6 +133,8 @@ class DSVEdit < Qt::MainWindow
   
   def enable_menu_actions
     @ui.actionSave.setEnabled(true);
+    @ui.actionEdit_Layers.setEnabled(true);
+    @ui.actionAdd_New_Layer.setEnabled(true);
     @ui.actionEntities.setEnabled(true);
     @ui.actionDoors.setEnabled(true);
     @ui.actionCollision.setEnabled(true);
@@ -549,7 +556,11 @@ class DSVEdit < Qt::MainWindow
     end
   end
   
-  def add_layer_to_room
+  def edit_layers
+    @edit_layers_dialog = LayersEditorDialog.new(self, @room, @renderer)
+  end
+  
+  def add_new_layer
     if @room.layers.size >= 4
       Qt::MessageBox.warning(self, "Can't add layer", "Can't add any more layers to this room, it already has the maximum of 4 layers.")
       return
@@ -557,6 +568,8 @@ class DSVEdit < Qt::MainWindow
     
     @room.add_new_layer()
     load_room()
+    
+    Qt::MessageBox.warning(self, "Layer added", "Successfully added a new layer to room %08X." % @room.room_metadata_ram_pointer)
   end
   
   def update_visible_view_items
