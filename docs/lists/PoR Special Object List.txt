@@ -166,22 +166,46 @@ Special objects:
 4A Hands on the clock from Death's boss room.
   These rotate to match the DS's system time.
 4B Unused
-4C Unused. Blockade, similar to the ones in Dawn of Sorrow.
+4C Blockade, similar to the ones in Dawn of Sorrow. Unused.
+  Var A: Type of blockade:
+    0 - Right-facing blockade.
+    1 - Tall right-facing blockade.
+    2 - Left-facing blockade.
+    3 - Tall left-facing blockade.
 4D Pushable rectangular block.
   Var A: 0 for tall block, 1 for short block.
 4E Pushable and destroyable statue from near the start of the game.
   Requires overlay 79.
 4F Transition room hider for Dracula's Castle.
-50 
-51 
-52 
-53 
-54 
+50 Thunder and rain visual effects from Dark Academy.
+  Requires overlay 109.
+  Var A:
+    0 - Animates thunder lighting up certain backgrounds.
+    1 - Animates rain droplets on certain roofs.
+  Var B: Affects what colors the thunder lights up if var A is 0?
+51 Thunder and rain visual effects from Dark Academy.
+  Requires overlay 110.
+  Var A:
+    0 - Animates thunder lighting up certain backgrounds.
+    1 - Animates rain droplets on certain roofs.
+52 Thunder and rain visual effects from Dark Academy.
+  Requires overlay 111.
+  Var A:
+    0 - Animates thunder lighting up certain backgrounds.
+    1 - Animates rain droplets on certain roofs.
+53 Thunder and rain visual effects from Dark Academy.
+  Requires overlay 112.
+  Var A:
+    0 - Animates thunder lighting up certain backgrounds.
+    1 - Animates rain droplets on certain roofs.
+54 Animates water on backgrounds in Sandy Grave.
+  Requires overlay 91.
 55 Animates water on backgrounds in Sandy Grave.
   Requires overlay 92.
 56 Makes the background flicker in Forgotten City.
   Requires overlay 102.
-57 
+57 Animates water on backgrounds in Forgotten City.
+  Requires overlay 103.
 58 Transition room hider for City of Haze.
 59 Transition room hider for City of Haze.
 5A Transition room hider for City of Haze.
@@ -196,12 +220,18 @@ Special objects:
     02 Door at center left and center right.
     03 Door at center left.
 60 Crumbling block from Great Stairway.
-61 
-62 
-63 
-64 
-65 
-66 
+61 The 3D background from City of Haze.
+  Requires overlay 93.
+62 The 3D pyramid in the background in Sandy Grave.
+  Requires overlay 91.
+63 The 3D tombstones in the background in Forest of Doom.
+  Requires overlay 99.
+64 The 3D indoors background in Forest of Doom.
+  Requires overlay 100.
+65 The 3D background and anatomical model in Dark Academy.
+  Requires overlay 111.
+66 The 3D background in Dark Academy.
+  Requires overlay 112.
 67 The 3D background model of the clock tower, used in the stairway leading up to the throne.
 68 Statue/cross.
   Var A: 0 for the statue of Mary from Nation of Fools. 1 for the cross from 13th Street.

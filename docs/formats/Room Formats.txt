@@ -39,6 +39,7 @@ Bytes 5-6: Unknown.
 Bytes 7-8: Should be equal to the layer's height in screens multipled by 0xC0.
   This is used by the collision checker to tell if the player is standing on a jump-through platform.
   If you set this value too small, for example setting it to C0 in a room 2 screens tall, then the player won't be able to properly stand on jump-through platforms below that point in the level.
+  Note that in PoR and OoE this value is automatically calculated every time you enter a room, so the bug described above can only happen in DoS.
 Byte 9: Render mode of the layer. 00 and 01 are normal 16 color mode. Anything higher is 256 color mode. However different areas require a different, specific value. TODO: Figure out how this works.
 Byte 10: Affects palette somehow?
 Byte 11-12: Affects tileset and palette somehow? Only has an effect when in 256 color mode.
