@@ -37,7 +37,7 @@ Special objects:
     Bits 1-6: Room index of destination room.
     Bits 7-10: Sector index of the destination room.
     Bits 11-16: Nothing.
-1B nothing? used in sandy grave outside rooms
+1B Causes player's feet to kick up sand clouds while walking.
 1C Drawbridge.
   Requires overlay 78.
 1D Save point.
@@ -116,7 +116,19 @@ Special objects:
   Var A: The sprite frame to use for this object. 0-9 are pillars, A-B are platforms, C-D are the steel door at the end of the corridor.
 3B Breakable wall.
   Byte 5: ???
-  Var A: Which wall it is.
+  Var A: Index of this wall in the breakable wall list for this area.
+    The data in that list affects the sprite frame to use as well as the flag for the breakable wall being destroyed.
+  Which sprite/gfx/palette this object uses is hardcoded depending on the area/sector it's in:
+    Area 0, sectors 0-1: bwall2
+    Area 0, sector 2: bwall7
+    Area 0, sector 4: bwall5
+    Area 0, sector 6: bwall2
+    Area 0, sectors 7-8: bwall4
+    Area 0, sectors 9-A: bwall8
+    Areas 1-2: bwall3
+    Areas 5-6: bwall6
+    Areas 7-8: bwall1
+  If you place this object in an area/sector not listed above, nothing will appear.
 3C Large swinging axe.
   Var B: Starting rotation. 4000 rotates it by 90 degrees clockwise. For example:
     0000 Attached to the ceiling.
@@ -160,16 +172,16 @@ Special objects:
 4E Pushable and destroyable statue from near the start of the game.
   Requires overlay 79.
 4F Transition room hider for Dracula's Castle.
-50
-51
-52
-53
-54
+50 
+51 
+52 
+53 
+54 
 55 Animates water on backgrounds in Sandy Grave.
   Requires overlay 92.
 56 Makes the background flicker in Forgotten City.
   Requires overlay 102.
-57
+57 
 58 Transition room hider for City of Haze.
 59 Transition room hider for City of Haze.
 5A Transition room hider for City of Haze.
@@ -184,13 +196,13 @@ Special objects:
     02 Door at center left and center right.
     03 Door at center left.
 60 Crumbling block from Great Stairway.
-61
-62
-63
-64
-65
-66
-67 3D background model of the clock tower, used in the stairway leading up to the throne.
+61 
+62 
+63 
+64 
+65 
+66 
+67 The 3D background model of the clock tower, used in the stairway leading up to the throne.
 68 Statue/cross.
   Var A: 0 for the statue of Mary from Nation of Fools. 1 for the cross from 13th Street.
 69 Transition room hider for Master's Keep.
@@ -205,7 +217,7 @@ Special objects:
 72 Transition room hider for Dark Academy.
 73 Transition room hider for Dark Academy.
 74 Transition room hider for Tower of Death.
-75
+75 used in Lost Gallery?
 76 Portrait to 13th Street, Forgotten City, Burnt Paradise, or Dark Academy. (Uses different picture frame than 1A.)
   Note that it can still bring you to any area you set, but it will only display the right visuals for the above areas.
   Var A: Area index of the destination room.
@@ -215,7 +227,7 @@ Special objects:
     Bits 7-10: Sector index of the destination room.
     Bits 11-16: Nothing.
 77 Studio portrait (sealed with chains).
-78
+78 Cogs and gate that block the way.
 79 Area name shown the first time you enter an area. Var A controls which area it is.
 7A Background effect from Buried Chamber of prisoner shaking the bars of the cell.
 7B ??? from Buried Chamber.
@@ -254,7 +266,8 @@ Special objects:
 89 Button and floor it explodes from Master's Keep.
   Var A: 0 for ceiling. 1 for button and floor.
 8A Studio portrait (burned).
-8B
+8B The 3D sphinx in the background in the Forgotten City.
+  Requires overlay 102.
 8C Switch next to elevator from Tower of Death you have to hit to activate it.
 8D Cycles through palettes for conveyor belt tiles to make gears look like they're turning.
 8E Legion's horizontal boss door and walls that trap you.
@@ -264,21 +277,22 @@ Special objects:
 91 Transition room hider for Nation of Fools and Burnt Paradise.
 92 Transition room hider for Nation of Fools and Burnt Paradise.
 93 Transition room hider for Nation of Fools.
-94
+94 The 3D background from Dark Academy.
+  Requires overlay 109.
 === Events
 95 event in first room of game?
-96
-97
+96 
+97 
 98 used but seems to be nothing
-99
-9A
-9B
-9C
-9D
-9E
-9F
+99 
+9A 
+9B 
+9C 
+9D 
+9E 
+9F 
 A0 event in death's boss room.
-A1
+A1 
 A2 event in the sister's boss room.
 A3 event in the sister's boss room.
 A4 event in the sister's boss room.
@@ -289,14 +303,14 @@ A8 event in dracula's throne room?
 A9 
 AA event in epilogue
 AB event in epilogue
-AC
-AD
+AC 
+AD 
 AE event in the sister's boss room.
 AF event in first room of game?
 B0 event in lost gallery
-B1
-B2
-B3
+B1 
+B2 
+B3 
 B4 event in vincent's room?
 B5 event in wind's room?
 === Event actors

@@ -370,9 +370,14 @@ REUSED_SPECIAL_OBJECT_INFO = {
   0x01 => {init_code: 0x020F4B6C},
   0x03 => {init_code:         -1},
   0x06 => {init_code:         -1},
+  0x1A => {init_code: 0x020F4E84}, # portrait
+  0x1B => {init_code:         -1},
   0x22 => {sprite: 0x022B36E8, gfx_wrapper: 0x020BFF24, palette: 0x022B7660},
   0x23 => {init_code:         -1},
+  0x76 => {init_code: 0x020F4E90}, # portrait
   0x82 => {sprite: 0x022B36E8, gfx_wrapper: 0x020BFF24, palette: 0x022B7660},
+  0x86 => {init_code: 0x020F4E84}, # portrait
+  0x87 => {init_code: 0x020F4E90}, # portrait
   0x95 => {init_code:         -1},
   0x96 => {init_code:         -1},
   0x97 => {init_code:         -1},
@@ -433,6 +438,7 @@ BEST_SPRITE_FRAME_FOR_SPECIAL_OBJECT = {
   0x39 => 0x01,
   0x43 => 0x0A,
   0x45 =>   -1,
+  0x49 =>   -1,
   0x4D => 0x02,
   0x5F => 0x02,
   0x6A => 0x02,
@@ -479,6 +485,15 @@ OTHER_SPRITES = [
   {pointer: 0x020F4EA8, desc: "Portrait painting 1"},
   {pointer: 0x020F4EB4, desc: "Portrait painting ???"}, # broken
   {pointer: 0x020F4EC0, desc: "Portrait painting 3"},
+  
+  {pointer: 0x0206E4C8, desc: "Breakable walls 1", gfx_sheet_ptr_index: 1, palette_list_ptr_index: 1, sprite_ptr_index: 1},
+  {pointer: 0x0206E4C8, desc: "Breakable walls 2", gfx_sheet_ptr_index: 4, palette_list_ptr_index: 4, sprite_ptr_index: 4},
+  {pointer: 0x0206E4C8, desc: "Breakable walls 3", gfx_sheet_ptr_index: 0, palette_list_ptr_index: 0, sprite_ptr_index: 0},
+  {pointer: 0x0206E4C8, desc: "Breakable walls 4", gfx_sheet_ptr_index: 5, palette_list_ptr_index: 5, sprite_ptr_index: 5},
+  {pointer: 0x0206E4C8, desc: "Breakable walls 5", gfx_sheet_ptr_index: 6, palette_list_ptr_index: 6, sprite_ptr_index: 6},
+  {pointer: 0x0206E4C8, desc: "Breakable walls 6", gfx_sheet_ptr_index: 2, palette_list_ptr_index: 2, sprite_ptr_index: 2},
+  {pointer: 0x0206E4C8, desc: "Breakable walls 7", gfx_sheet_ptr_index: 7, palette_list_ptr_index: 7, sprite_ptr_index: 7},
+  {pointer: 0x0206E4C8, desc: "Breakable walls 8", gfx_sheet_ptr_index: 3, palette_list_ptr_index: 3, sprite_ptr_index: 3},
   
   {pointer: 0x022E0700, desc: "Title screen graphics", overlay: 26},
   {pointer: 0x022E0710, desc: "Title screen options", overlay: 26},

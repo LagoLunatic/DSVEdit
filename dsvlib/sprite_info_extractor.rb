@@ -83,15 +83,18 @@ class SpriteInfoExtractor
         i += 1
       end
       
-      if gfx_files_to_load.empty? && sprite_files_to_load.empty?
-        #raise CreateCodeReadError.new("No gfx files or sprite files to load found")
-      end
-      if gfx_files_to_load.empty?
-        #raise CreateCodeReadError.new("No gfx files to load found")
-      end
-      if sprite_files_to_load.empty?
-        #raise CreateCodeReadError.new("No sprite file to load found")
-      end
+      #if gfx_files_to_load.empty? && sprite_files_to_load.empty?
+      #  raise CreateCodeReadError.new("No gfx files or sprite files to load found")
+      #end
+      #if gfx_files_to_load.empty?
+      #  raise CreateCodeReadError.new("No gfx files to load found")
+      #end
+      #if sprite_files_to_load.empty?
+      #  raise CreateCodeReadError.new("No sprite file to load found")
+      #end
+      #if palette_pointer_to_load.nil?
+      #  raise CreateCodeReadError.new("No palette to load found")
+      #end
       
       if gfx_files_to_load.length > 0 && sprite_files_to_load.length > 0 && palette_pointer_to_load
         gfx_file_pointers = gfx_files_to_load.map{|file| file[:file][:ram_start_offset]}
