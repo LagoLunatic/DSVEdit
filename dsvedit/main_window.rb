@@ -517,6 +517,8 @@ class DSVEdit < Qt::MainWindow
   
   def load_layer(layer, tileset, layer_graphics_item)
     layer.tiles.each_with_index do |tile, index_on_level|
+      next if tile.index_on_tileset == 0
+      
       x_on_tileset = tile.index_on_tileset % 16
       y_on_tileset = tile.index_on_tileset / 16
       x_on_level = index_on_level % (layer.width*16)
