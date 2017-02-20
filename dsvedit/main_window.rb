@@ -143,8 +143,12 @@ class DSVEdit < Qt::MainWindow
   
   def clear_cache
     Dir.glob("./cache/**/*.{png,tmx}").each do |file_path|
-      FileUtils.rm(file_path)
+      if File.exist?(file_path)
+        FileUtils.rm(file_path)
+      end
     end
+  rescue StandardError => e
+    # do nothing
   end
   
   def extract_rom_dialog
