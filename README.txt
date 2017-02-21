@@ -24,7 +24,7 @@ If you already extracted the files before, you can instead go to File -> Open Fo
 
 ### How to edit a room's tiles
 
-To edit a room's tiles you must install an external map editor, [Tiled](http://www.mapeditor.org/).
+To edit a room's tiles you must install an external map editor, Tiled: http://www.mapeditor.org/
 Then go to Tools -> Settings and browse for the path where you have Tiled installed.
 
 Now find the room you want to edit. You can use the Area/Sector/Room dropdowns to select it, or you can click on it in the map to the left. You can also right click on one of the purple rectangles (doors) in the current room to enter whichever room the door leads to.
