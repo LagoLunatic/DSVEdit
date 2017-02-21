@@ -2,11 +2,14 @@ Entity types:
 
 00 Nothing.
 
-01 Enemy. Entity subtype determines which enemy. It's equal to ID of enemy in the bestiary, except starting at 0 instead of at 1.
+01 Enemy.
+  Subtype determines which enemy. It's equal to ID of enemy in the bestiary, except starting at 0 instead of at 1.
 
-02 Special object. Entity subtype determines which object. See special object list for details on each object.
+02 Special object.
+  Subtype determines which object. See special object list for details on each object.
 
-03 Generic candle. Always drops a heart, even if you don't need one. Unaffected by subtype.
+03 Generic candle.
+  Unaffected by subtype.
 
 04 Pickup. Subtype:
   00 Heart.

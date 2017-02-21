@@ -9,7 +9,7 @@ Entity types:
   Subtype determines which object. See special object list for details on each object.
 
 03 Generic candle.
-  Always drops a heart, even if you don't need one. Unaffected by subtype.
+  Unaffected by subtype.
 
 04 Pickup. Subtype:
   00 Heart.
