@@ -125,7 +125,7 @@ Bytes 9-10:
 Bytes 11-12: Mana cost.
 Bytes 13-14: 
 Bytes 15-16: 
-Bytes 17-20: 
+Bytes 17-20: Bitfield for what elemental damage types this soul does.
 Bytes 21-24: 
 Bytes 25-26: Varies depending on the code being run.
   For 0220900C: 0 for straight punch animation, 1 for uppercut animation.
@@ -282,7 +282,7 @@ Byte 7:
 Byte 8: 
 Bytes 9-10: Mana cost.
 Bytes 11-12: 
-Bytes 13-16: 
+Bytes 13-16: Bitfield for what elemental damage types this skill does.
 Bytes 17-20: bitfield
   Least significant bit first.
   Bit 5: If set, this skill cannot be used while in the air.
