@@ -262,7 +262,9 @@ ENEMY_FILES_TO_LOAD_LIST = 0x0208CA90
 SPECIAL_OBJECT_IDS = (0..0x75)
 SPECIAL_OBJECT_CREATE_CODE_LIST = 0x0222C714
 SPECIAL_OBJECT_UPDATE_CODE_LIST = 0x0222C8F0
-OVERLAY_FILE_FOR_SPECIAL_OBJECT = {}
+OVERLAY_FILE_FOR_SPECIAL_OBJECT = {
+  0x2E => 25
+}
 REUSED_SPECIAL_OBJECT_INFO = {
   0x00 => {sprite: 0x0229EAD8, gfx_wrapper: 0x02079EAC, palette: 0x022B9B04}, # ice block
   0x01 => {init_code: 0x0222BAB8, ignore_files_to_load: true}, # destructible
@@ -281,6 +283,7 @@ REUSED_SPECIAL_OBJECT_INFO = {
   0x27 => {init_code: 0x021A8434}, # condemned tower gate
   0x29 => {init_code: 0x021A7FC4}, # dark chapel gate
   0x2A => {init_code: 0x021A7B44}, # flood gate
+  0x2E => {init_code: 0x02304B98}, # iron maiden
   0x2F => {init_code:         -1},
   0x36 => {init_code:         -1},
   0x38 => {init_code:         -1},
@@ -329,12 +332,13 @@ BEST_SPRITE_FRAME_FOR_SPECIAL_OBJECT = {
   0x0D => 0x17,
   0x0F => 0x04,
   0x16 =>   -1,
+  0x18 => 0x11,
   0x1A => 0x03,
   0x1D => 0xED,
   0x25 => 0xDF,
   0x26 => 0x06,
   0x28 => 0x01,
-  0x30 => 0x04,
+  0x30 => 0x06,
   0x3A => 0x08,
   0x3B => 0x06,
   0x3D => 0x01,
@@ -384,8 +388,6 @@ OTHER_SPRITES = [
   {pointer: 0x02049078, desc: "Enemy set mode menu"},
   {pointer: 0x0204908C, desc: "Enemy set retry/complete"},
   {pointer: 0x020490A0, desc: "Wi-fi menu"},
-  
-  {pointer: 0x02304B98, desc: "Iron maiden", overlay: 25},
 ]
 
 OVERLAY_FILES_WITH_SPRITE_DATA = [2]

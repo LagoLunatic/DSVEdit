@@ -89,7 +89,10 @@ Special objects:
   Var B: Flip bits for the tile graphics.
     Bit 0: Horizontal flip.
     Bit 1: Vertical flip.
-18 Long golden platform, always appears at the bottom of the first screen, and locks the screen scrolling to that screen. Used in Gergoth's tower. TODO
+18 Floors from Gergoth's tower.
+  Vertically positions itself to the odd-numbered screen closest to where Soma is when he enters the room.
+  Horizontally positions itself at the left of the room.
+  Also locks the screen scrolling.
 19 Bloody spike that spins around.
   Byte 5: Unique ID?
   Var A: Starting angle. 0000 being right, 4000 being down, etc.
@@ -176,7 +179,9 @@ Special objects:
 2D Hanging spikes, disappear when you get near them?
   Var A: 18
   Var B: B1
-2E Unused, crash.
+2E Iron maiden used in Puppet Master fight.
+  Requires overlay 25.
+  Cannot be placed normally, the game will crash. Must be spawned by Puppet Master.
 2F Applies a visual effect to a layer.
   Var A: The layer to apply the effect to.
   Var B: Which effect to use.
