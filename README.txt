@@ -11,8 +11,6 @@ DSVEdit (DSVania Editor) is a work-in-progress editor for the three Castlevania 
 * Viewing and editing area maps
 * Viewing enemy sprites
 
-Also included in this repository is DSVRandom, a program that randomizes items, enemies, etc, in the games automatically.
-
 ### Requirements
 
 Install Visual C++ Redistributable for Visual Studio 2015: https://www.microsoft.com/en-us/download/details.aspx?id=48145
@@ -34,7 +32,10 @@ Now find the room you want to edit. You can use the Area/Sector/Room dropdowns t
 Next you can click on "Open in Tiled". This will open up Tiled with the room you want to edit.
 After you're finished editing the room, make sure you press Ctrl+S in Tiled to save your changes. Then go back to DSVEdit and click "Import from Tiled". You should see the changes you made reflected in DSVEdit if you did it right.
 
-Now to test it in game. Press F5 or go to Build -> Build to create a modified ROM file. After its finished you can open the ROM in an emulator to test it.
+### Building a ROM with your changes
+
+After editing the game you will need to build a modified ROM in order to actually play it. Press F5 or go to Build -> Build to create a modified ROM file.
+After it's finished building the ROM will be placed in the same folder as all the game's files, and will have a name like "built_rom_dos.nds".
 
 If you want the changes you made to be saved to the filesystem, don't forget to press Ctrl+S in DSVEdit too! Otherwise the changes you made will be gone the next time you open up DSVEdit.
 
@@ -43,6 +44,12 @@ If you want the changes you made to be saved to the filesystem, don't forget to 
 Right click on the entity you want to edit in the room and an entity editor window will pop up. Here you can edit the entity's type/subtype/variables/etc.
 The bottom half of the window will display documentation on the specific entity selected (if available). This explains exactly what this entity does, and how its variables affect this.
 
+### Editing enemies, items, text, and maps
+
+You can access the Enemy Editor, Item Editor, Text Editor, and Map Editor in the Tools menu.
+
+Using them is pretty straightforward, but note that all numbers are in hexadecimal, not decimal.
+
 ### Running from source
 
-To run DSVEdit from source, you must have Ruby 2.0.0 or higher and Qt 4.8.6 installed.
+If you want to run DSVEdit from source you must have Ruby 2.0.0 or higher and Qt 4.8.6 installed.
