@@ -25,7 +25,12 @@ class ItemEditor < Qt::Dialog
   end
   
   def button_pressed(button)
-    if @ui.buttonBox.standardButton(button) == Qt::DialogButtonBox::Apply
+    if @ui.buttonBox.standardButton(button) == Qt::DialogButtonBox::Ok
+      @ui.tabWidget.currentWidget.save_current_item()
+      self.close()
+    elsif @ui.buttonBox.standardButton(button) == Qt::DialogButtonBox::Cancel
+      self.close()
+    elsif @ui.buttonBox.standardButton(button) == Qt::DialogButtonBox::Apply
       @ui.tabWidget.currentWidget.save_current_item()
     end
   end

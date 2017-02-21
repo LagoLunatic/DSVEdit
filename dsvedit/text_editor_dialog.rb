@@ -47,7 +47,12 @@ class TextEditor < Qt::Dialog
   end
   
   def button_pressed(button)
-    if @ui.buttonBox.standardButton(button) == Qt::DialogButtonBox::Apply
+    if @ui.buttonBox.standardButton(button) == Qt::DialogButtonBox::Ok
+      save_current_text()
+      self.close()
+    elsif @ui.buttonBox.standardButton(button) == Qt::DialogButtonBox::Cancel
+      self.close()
+    elsif @ui.buttonBox.standardButton(button) == Qt::DialogButtonBox::Apply
       save_current_text()
     end
   end
