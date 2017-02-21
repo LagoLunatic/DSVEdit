@@ -293,7 +293,7 @@ class Room
   end
   
   def filename
-    "room_a#{area_index}-#{sector_index}-#{room_index}_%08X_x#{room_xpos_on_map}_y#{room_ypos_on_map}_w#{main_layer_width}_h#{main_layer_height}" % room_metadata_ram_pointer
+    "room_%02X-%02X-%02X_%08X" % [area_index, sector_index, room_index, room_metadata_ram_pointer]
   end
   
   def area_name
