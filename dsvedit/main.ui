@@ -189,9 +189,10 @@
      <string>Tools</string>
     </property>
     <addaction name="actionEnemy_Editor"/>
+    <addaction name="actionItem_Editor"/>
+    <addaction name="actionMap_Editor"/>
     <addaction name="actionText_Editor"/>
     <addaction name="actionSprite_Editor"/>
-    <addaction name="actionItem_Editor"/>
     <addaction name="actionEntity_Search"/>
     <addaction name="actionSettings"/>
    </widget>
@@ -391,6 +392,14 @@
   <action name="actionAdd_New_Layer">
    <property name="text">
     <string>Add New Layer</string>
+   </property>
+  </action>
+  <action name="actionMap_Editor">
+   <property name="text">
+    <string>Map Editor</string>
+   </property>
+   <property name="shortcut">
+    <string>M</string>
    </property>
   </action>
  </widget>
