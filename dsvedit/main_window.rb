@@ -127,6 +127,7 @@ class DSVEdit < Qt::MainWindow
     @ui.actionText_Editor.setEnabled(false);
     @ui.actionSprite_Editor.setEnabled(false);
     @ui.actionItem_Editor.setEnabled(false);
+    @ui.actionMap_Editor.setEnabled(false);
     @ui.actionEntity_Search.setEnabled(false);
     @ui.actionBuild.setEnabled(false);
     @ui.actionBuild_and_Run.setEnabled(false);
@@ -144,9 +145,22 @@ class DSVEdit < Qt::MainWindow
     @ui.actionText_Editor.setEnabled(true);
     @ui.actionSprite_Editor.setEnabled(true);
     @ui.actionItem_Editor.setEnabled(true);
+    @ui.actionMap_Editor.setEnabled(true);
     @ui.actionEntity_Search.setEnabled(true);
     @ui.actionBuild.setEnabled(true);
     @ui.actionBuild_and_Run.setEnabled(true);
+  end
+  
+  def close_open_dialogs
+    @edit_layers_dialog.close() if @edit_layers_dialog
+    @enemy_dialog.close() if @enemy_dialog
+    @text_editor.close() if @text_editor
+    @sprite_editor.close() if @sprite_editor
+    @item_editor.close() if @item_editor
+    @entity_search_dialog.close() if @entity_search_dialog
+    @map_editor_dialog.close() if @map_editor_dialog
+    @entity_editor.close() if @entity_editor
+    @settings_dialog.close() if @settings_dialog
   end
   
   def clear_cache
@@ -185,6 +199,8 @@ class DSVEdit < Qt::MainWindow
     cancelled = confirm_overwrite_folder(rom_path)
     return if cancelled
     
+    close_open_dialogs()
+    
     game = Game.new
     game.initialize_from_rom(rom_path, extract_to_hard_drive = true)
     @game = game
@@ -202,6 +218,8 @@ class DSVEdit < Qt::MainWindow
   def open_folder(folder_path)
     cancelled = confirm_discard_changes()
     return if cancelled
+    
+    close_open_dialogs()
     
     game = Game.new
     game.initialize_from_folder(folder_path)
@@ -558,6 +576,7 @@ class DSVEdit < Qt::MainWindow
   end
   
   def edit_layers
+    return if @edit_layers_dialog && @edit_layers_dialog.visible?
     @edit_layers_dialog = LayersEditorDialog.new(self, @room, @renderer)
   end
   
@@ -593,34 +612,42 @@ class DSVEdit < Qt::MainWindow
   end
   
   def open_enemy_dna_dialog
+    return if @enemy_dialog && @enemy_dialog.visible?
     @enemy_dialog = EnemyEditor.new(self, game.fs)
   end
   
   def open_text_editor
+    return if @text_editor && @text_editor.visible?
     @text_editor = TextEditor.new(self, game.fs)
   end
   
   def open_sprite_editor
+    return if @sprite_editor && @sprite_editor.visible?
     @sprite_editor = SpriteEditor.new(self, game, @renderer)
   end
     
   def open_item_editor
+    return if @item_editor && @item_editor.visible?
     @item_editor = ItemEditor.new(self, game.fs)
   end
   
   def open_entity_search
+    return if @entity_search_dialog && @entity_search_dialog.visible?
     @entity_search_dialog = EntitySearchDialog.new(self)
   end
   
   def open_map_editor
+    return if @map_editor_dialog && @map_editor_dialog.visible?
     @map_editor_dialog = MapEditorDialog.new(self, game, @renderer, @area_index, @sector_index)
   end
   
   def open_entity_editor(entity)
+    return if @entity_editor && @entity_editor.visible?
     @entity_editor = EntityEditorDialog.new(self, entity)
   end
   
   def open_settings
+    return if @settings_dialog && @settings_dialog.visible?
     @settings_dialog = SettingsDialog.new(self, @settings)
   end
   
