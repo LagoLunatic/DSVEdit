@@ -1,6 +1,7 @@
 require 'Qt'
 require 'fileutils'
 require 'yaml'
+require 'logger'
 
 require_relative 'dsvlib'
 
@@ -20,7 +21,6 @@ window = DSVEdit.new
 begin
   $qApp.exec
 rescue StandardError => e
-  require 'logger'
   logger = Logger.new("crashlog.txt")
   logger.error e
   
