@@ -3,7 +3,7 @@ require 'nokogiri'
 
 class TMXInterface
   def read(filename, room)
-    match = File.basename(filename).match(/^room_a\d+-\d+-\d+_(\h+)_x\d+_y\d+_w\d+_h\d+\.tmx$/)
+    match = File.basename(filename).match(/^room_\h+-\h+-\h+_(\h+)\.tmx$/)
     room_metadata_ram_pointer = match[1].to_i(16)
     
     tiled_room = File.read(filename)
