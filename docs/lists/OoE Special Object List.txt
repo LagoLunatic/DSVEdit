@@ -246,7 +246,31 @@ Special Objects:
   Var A:
     00 Single gate.
     01 Large row of many gates.
-5F ??? barrels in wygol (only when var a is 5)
+5F Spawns villagers, events, and barrels in Wygol Village.
+  Var A: Which villager to spawn:
+    0 - In Eugen and Aeon's house.
+      Spawns Eugen if event flag 38 is set.
+      Spawns Aeon if event flag 3C is set.
+    1 - In Daniela's house.
+      Spawns Daniela if event flag 57 is set.
+    2 - In Laura's house.
+      Spawns Laura if event flag 32 is set.
+    3 - In Jacob's house.
+      Spawns Jacob if event flag 2A is set.
+    4 - In Anna and Irina's house.
+      Spawns Anna if event flag 4B is set.
+      Spawns Irina if event flag 53 is set.
+    5 - Outdoors.
+      Always spawns barrels.
+      Spawns event 67 if event flag 6 is set.
+      Spawns Nikolai inside Torpor if event flag 7 is set.
+      Spawns Nikolai if event flags 7 and 8 are set.
+      Spawns event 6E if event flag C is set.
+      Spawns George if event flag D is set.
+      Spawns Abram if event flag 2D is set.
+      Spawns Marcel if event flag 40 is set.
+      Spawns Serge if event flag 47 is set.
+      Spawns Monica if event flag 4F is set.
 60 Dracula's soul vessel in Ecclesia.
   Also spawns the Barlowe that gives you tips when you talk to him.
   Requires overlay 42.
@@ -260,9 +284,15 @@ Special Objects:
 66 Event - Meeting Albus in the Monastery.
   Requires overlay 78.
   Also loads graphics for the map that Albus marks the village on.
-67 Event - 
+67 Event - First time entering Wygol Village and finding Nikolai trapped in Torpor.
 68 Event - 
 69 Event - 
+6A Event - 
+6B Event - 
+6C Event - 
+6D Event - 
+6E Event - Nikolai telling you Albus came and took their blood.
+6F Event - 
 70 Event - 
 71 Event - 
 72 Event - 
@@ -271,6 +301,7 @@ Special Objects:
 75 Event - 
 76 Event - 
 77 Event - 
+78 Event - 
 79 Event - 
 7A Event - 
 7B Event - 
