@@ -6,8 +6,10 @@ Bytes 00-03: Magic bytes, always 0xBEEFF00D.
 Bytes 04-07: Offset within this file to the start of the list of sprite parts. Always 0x40.
 Bytes 08-0B: Offset within this file to the start of the list of hitboxes.
 Bytes 0C-0F: Offset within this file to the start of the list of the sprite's frames.
-Bytes 10-13: Offset within this file to the start of the list of frame delays. This list doesn't exist for enemies like Golem, so the pointer is just 0 in that case.
-Bytes 14-17: Offset within this file to the start of the list of animations. This list doesn't exist for enemies like Golem, so the pointer is just 0 in that case.
+Bytes 10-13: Offset within this file to the start of the list of frame delays.
+  This list doesn't exist for enemies with a skeleton file, so the pointer is just 0 in that case.
+Bytes 14-17: Offset within this file to the start of the list of animations.
+  This list doesn't exist for enemies with a skeleton file, so the pointer is just 0 in that case.
 Bytes 18-1B: 0x00.
 Bytes 1C-1F: 0x00.
 Bytes 20-23: Offset within this file to the start of the file footer.
@@ -15,6 +17,12 @@ Bytes 24-27: Number of frames this sprite has.
 Bytes 28-2B: Number of animations this sprite has.
 Bytes 2C-2F: Length of this file in bytes.
 Bytes 30-3F: 0x00.
+
+Some sprites don't have their own file. Instead they are all stored together in an overlay file (overlay 2 in DoS). These sprites without individual files work slightly different from sprite files. Mainly they just have absolute pointers instead of pointers that are relative within the sprite file. Also, these don't have a full header - instead the pointer to the sprite points to a mini-header with this format:
+Bytes 1-2: Number of frames this sprite has.
+Bytes 3-4: Number of animations this sprite has.
+Bytes 5-8: Absolute pointer to the start of the list of the sprite's frames.
+Bytes 9-12: Absolute pointer to the start of the list of the sprite's animations.
 
 List of sprite parts:
 Each part is 16 bytes long.
@@ -45,22 +53,26 @@ Each hitbox is 8 bytes long.
 
 List of sprite frames:
 Each frame is 12 bytes long.
-  Bytes 1-2: ??
-  Byte 3: The number of hitboxes this frame has. The first hitbox for this frame is whatever the first unused hitbox for this sprite is.
+  Bytes 1-2: 00 00
+  Byte 3: The number of hitboxes this frame has.
   Byte 4: The number of parts this frame has.
-  Bytes 5-8: 0 if this frame has 0 hitboxes. Otherwise it's equal to the index of this frame multiplied by 8. This is NOT the offset to the first hitbox to use. This value seems to have no purpose, as changing it doesn't affect the hitbox at all. (However, at runtime, this number gets replaced with a pointer to the first hitbox for this frame. This pointer does matter, and getting rid of it will cause this frame to not have a hitbox.)
-  Bytes 9-12: Pointer to the first part to use. Multiple of 0x10 since each part is 0x10 bytes long. These pointers are relative to the start of the part list initially (meaning 0 refers to the first part). But at runtime, the game replaces these relative pointers to ram pointers after 1 frame, presumably as a performance optimization.
+  Bytes 5-8: Varies depending on whether this is a sprite file or a sprite without an individual file:
+    For sprite files: This value is useless; it's just the index of this frame multiplied by 8. Or, if this frame has no hitboxes, this value will be 0. This is NOT a pointer to the first hitbox to use. However, at runtime, the game replaces this with an absolute pointer to the first hitbox for this frame, which is used. Instead, the first hitbox for this frame is simply the next hitbox in the hitbox list after the last frame's last hitbox.
+    For sprites without files: Absolute pointer to the first hitbox to use. 0 if this frame has 0 hitboxes.
+  Bytes 9-12: Pointer to the first part to use.
+    Inside the sprite file, this pointer is relative to the start of the part list initially (meaning 0 refers to the first part).
+    But at runtime, the game replaces it with an absolute pointer after 1 frame, presumably as a performance optimization.
 
 List of frame delays:
 Each frame delay is 8 bytes long.
-This list doesn't exist for enemies like Golem.
+This list doesn't exist for enemies with a skeleton file.
   Bytes 1-2: Frame index to use.
   Bytes 3-4: Delay (in frames) for this frame to be displayed.
   Bytes 5-8: Unknown. Normally 0, sometimes 0x40.
 
 List of animations:
 Each entry is 8 bytes long.
-This list doesn't exist for enemies like Golem.
+This list doesn't exist for enemies with a skeleton file.
   Bytes 1-4: Number of frames this animation has.
   Bytes 5-8: Pointer to the first frame delay for this animation, relative to the start of the list of frame delays. Meaning 0x00 is the first frame delay, 0x08 is the second frame delay, etc. (At runtime the game engine converts this to a ram pointer, probably as a performance optimization.)
 
