@@ -462,6 +462,8 @@ BEST_SPRITE_FRAME_FOR_SPECIAL_OBJECT = {
   0x59 => 0x01,
   0x5B => 0x02,
   0x60 => 0x06,
+  0x61 =>   -1,
+  0x66 =>   -1,
   0x87 =>   -1,
 }
 SPECIAL_OBJECT_FILES_TO_LOAD_LIST = 0x020F343C

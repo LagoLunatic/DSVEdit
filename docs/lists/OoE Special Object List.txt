@@ -272,11 +272,11 @@ Special Objects:
       Spawns Serge if event flag 47 is set.
       Spawns Monica if event flag 4F is set.
 60 Dracula's soul vessel in Ecclesia.
-  Also spawns the Barlowe that gives you tips when you talk to him.
   Requires overlay 42.
+  Also spawns the Barlowe that gives you tips when you talk to him.
 === Below are events. Var A is the event flag set upon completing this event. Var B is the prerequisite event flag before this event will appear.
 61 Event - Talking to Albus in the first room of the game.
-  Also loads graphics for some kind of window?
+  Also loads graphics for the flash of light through the windows when Albus is talking to himself.
 62 Event - Talking to Barlowe in the second room of the game.
 63 Event - First tutorial.
 64 Event - Second tutorial, fight vs skeletons.
