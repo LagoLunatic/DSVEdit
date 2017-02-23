@@ -53,7 +53,7 @@ Entity types:
   Byte 8: Low nibble is the number of entities after this one to skip. If 0, all remaining entities are skipped.
   Var A: The condition.
     0 - Check if a boss death flag is set. Subtype is the index of the bit. (Bitfield starting at 021003E4.)
-    1 - Check if an area title seen flag is set. Subtype is the index of the bit. (Bitfield starting at 02100378.)
+    1 - Check if a miscellaneous flag is set. Subtype is the index of the bit. (Bitfield starting at 02100378.)
     2 - Check if an event flag is set. Subtype is the index of the bit. (Bitfield starting at 02100388.)
     3 - Check if in the middle of a boss fight. (Bit 0x00000002 of bitfield 020FFC8C.)
     4 - Checks if subtype equals the current game mode (byte 02100790 has the current game mode).

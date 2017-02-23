@@ -309,7 +309,7 @@ Special objects:
 93 Transition room hider for Nation of Fools.
 94 The 3D background from Dark Academy.
   Requires overlay 109.
-=== Events
+=== Below are events. Var A is the event flag set upon completing this event. Var B is the prerequisite event flag before this event will appear.
 95 event in first room of game?
 96 
 97 

@@ -264,7 +264,7 @@ Special objects:
   A big entity that acts as the graphics to transition rooms to hide the fact that they have no tiles.
 5B Alucard event actor.
 5C Flashback images that show after beating Menace.
-=== Below are events. Var A may be an identifier for each event to check if it's been seen already or not. Var B is unknown.
+=== Below are events. Var A is the event flag set upon completing this event. Var B is the prerequisite event flag before this event will appear.
 5D Event - Prologue.
 5E Event - Soma walking into the castle and meeting Hammer.
 5F Event - Julius leaves Yoko at the drawbridge.

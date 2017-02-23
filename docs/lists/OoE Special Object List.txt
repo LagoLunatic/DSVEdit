@@ -274,54 +274,54 @@ Special Objects:
 60 Dracula's soul vessel in Ecclesia.
   Also spawns the Barlowe that gives you tips when you talk to him.
   Requires overlay 42.
-=== Events
+=== Below are events. Var A is the event flag set upon completing this event. Var B is the prerequisite event flag before this event will appear.
 61 Event - Talking to Albus in the first room of the game.
   Also loads graphics for some kind of window?
 62 Event - Talking to Barlowe in the second room of the game.
-63 Event - tutorial room
-64 Event - 
-65 Event - 
+63 Event - First tutorial.
+64 Event - Second tutorial, fight vs skeletons.
+65 Event - Third tutorial.
 66 Event - Meeting Albus in the Monastery.
   Requires overlay 78.
   Also loads graphics for the map that Albus marks the village on.
 67 Event - First time entering Wygol Village and finding Nikolai trapped in Torpor.
-68 Event - 
-69 Event - 
+68 Event - Nikolai trapped in Torpor (not the first time entering Wygol).
+69 Event - Albus in Minera Prison Island.
 6A Event - 
-6B Event - 
-6C Event - 
-6D Event - 
+6B Event - At end of Lighthouse.
+6C Event - Albus in Skeleton Cave.
+6D Event - Saving George from Torpor in Skeleton Cave.
 6E Event - Nikolai telling you Albus came and took their blood.
-6F Event - 
+6F Event - Albus in Giant's Dwelling.
 70 Event - 
-71 Event - 
-72 Event - 
+71 Event - Room before Albus in Oblivion Ridge when Shanoa senses Dominus.
+72 Event - Albus in Oblivion Ridge.
 73 Event - 
-74 Event - 
-75 Event - 
-76 Event - 
+74 Event - At the start of Mystery Manor when Shanoa senses Albus.
+75 Event - ? in Albus's boss room in Mystery Manor.
+76 Event - ? in Albus's boss room in Mystery Manor.
 77 Event - 
 78 Event - 
-79 Event - 
+79 Event - ? in Albus's boss room in Mystery Manor.
 7A Event - 
 7B Event - 
-7C Event - 
+7C Event - Bad ending.
 7D Event - 
-7E Event - 
+7E Event - ? at the Castle Entrance.
   Requires overlay 67?
-7F Event - 
-80 Event - used in room with the cerberus gate
-81 Event - used in room after Eligor with Arma Custos in it
-82 Event - used in room after Eligor with Arma Custos in it
-83 Event - used in room after Eligor with Arma Custos in it
-84 Event - used in room with the cerberus gate
+7F Event - ? at the Castle Entrance.
+80 Event - Finding the Cerberus Gate for the first time.
+81 Event - Used in all three rooms that have Cerberus glyphs in them.
+82 Event - Used in all three rooms that have Cerberus glyphs in them.
+83 Event - Used in all three rooms that have Cerberus glyphs in them.
+84 Event - This must be present for the Cerberus Statue to respond to being hit by the Cerberus glyphs.
 85 Event - Shanoa meeting Dracula.
 86 Event - Shanoa defeated Dracula, but needs to use Dominus to kill him.
 87 Event - Dracula is dead, Shanoa talks with Albus.
   Also loads graphics for Shanoa's smile.
-88 Event - ending?
-89 a villager in torpor along with the event associated with them.
-  var a: which villager.
+88 Event - Good ending.
+89 Event - A villager trapped in Torpor.
+  Var A: In addition to being the event flag set by this event, it also controls which villager appears. Hardcoded values:
     2A Jacob
     2D Abram
     32 Laura
@@ -333,7 +333,6 @@ Special Objects:
     4F Monica
     53 Irina
     57 Daniela
-  var b: does something, can make the villager disappear. usually 0.
-8A - magnes glyph with event
+8A Event - Magnes glyph and tutorial.
 8B Event - 
 8C Event - ending.
