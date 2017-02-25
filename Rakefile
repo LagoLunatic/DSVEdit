@@ -34,32 +34,14 @@ task :build_installers do
   
   # OCRA normally places all the source files in the /src directory. In order to make it place them in the base directory open up /bin/ocra and change line 204 from SRCDIR = Pathname.new('src') to SRCDIR = Pathname.new('.').
 
-  system "ruby ocra-1.3.6/bin/ocra dsvedit.rb --output DSVEdit.exe --no-lzma --chdir-first --innosetup setup_dsvedit.iss --windows --icon ./images/dsvedit_icon.ico"
-  system "ruby ocra-1.3.6/bin/ocra dsvrandom.rb --output DSVRandom.exe --no-lzma --chdir-first --innosetup setup_dsvrandom.iss --windows --icon ./images/dsvrandom_icon.ico"
+  system "ruby ocra-1.3.6/bin/ocra dsvedit.rb --output DSVEdit.exe --no-lzma --chdir-first --innosetup setup_dsvedit.iss --icon ./images/dsvedit_icon.ico"
+  system "ruby ocra-1.3.6/bin/ocra dsvrandom.rb --output DSVRandom.exe --no-lzma --chdir-first --innosetup setup_dsvrandom.iss --icon ./images/dsvrandom_icon.ico"
 end
 
 task :build_releases do
   # Updates the executable builds with any changes to the code, delete unnecessary files, and then pack everything into zip files.
   
   ["DSVania Editor", "DSVania Randomizer"].each do |program_name|
-    # Delete unnecessary libraries that bloat the filesize.
-    FileUtils.rm_rf "../build/#{program_name}/lib/ruby/gems/2.2.0/gems/chunky_png-1.3.5/spec"
-    FileUtils.rm_rf "../build/#{program_name}/lib/ruby/gems/2.2.0/gems/nokogiri-1.6.7.2-x86-mingw32/test"
-    FileUtils.rm_rf "../build/#{program_name}/lib/ruby/gems/2.2.0/gems/nokogiri-1.6.7.2-x86-mingw32/lib/nokogiri/1.9"
-    FileUtils.rm_rf "../build/#{program_name}/lib/ruby/gems/2.2.0/gems/nokogiri-1.6.7.2-x86-mingw32/lib/nokogiri/2.0"
-    FileUtils.rm_rf "../build/#{program_name}/lib/ruby/gems/2.2.0/gems/nokogiri-1.6.7.2-x86-mingw32/lib/nokogiri/2.1"
-    FileUtils.rm_rf "../build/#{program_name}/lib/ruby/gems/2.2.0/gems/qtbindings-4.8.6.2-x86-mingw32/bin"
-    FileUtils.rm_rf "../build/#{program_name}/lib/ruby/gems/2.2.0/gems/qtbindings-4.8.6.2-x86-mingw32/examples"
-    FileUtils.rm_rf "../build/#{program_name}/lib/ruby/gems/2.2.0/gems/qtbindings-4.8.6.2-x86-mingw32/lib/2.0"
-    FileUtils.rm_rf "../build/#{program_name}/lib/ruby/gems/2.2.0/gems/qtbindings-4.8.6.2-x86-mingw32/lib/2.1"
-    FileUtils.rm_rf "../build/#{program_name}/lib/ruby/gems/2.2.0/gems/qtbindings-qt-4.8.6-x86-mingw32/qtbin/plugins"
-    %w(libgcc_s_dw2-1.dll libstdc++-6.dll phonon4.dll Qt3Support4.dll QtCLucene4.dll QtDBus4.dll QtDeclarative4.dll QtDesigner4.dll QtDesignerComponents4.dll QtHelp4.dll QtMultimedia4.dll QtScript4.dll QtScriptTools4.dll QtTest4.dll QtWebKit4.dll QtXmlPatterns4.dll).each do |filename|
-      FileUtils.rm_f "../build/#{program_name}/lib/ruby/gems/2.2.0/gems/qtbindings-qt-4.8.6-x86-mingw32/qtbin/#{filename}"
-    end
-    %w(libsmokeqtdeclarative.dll libsmokeqthelp.dll libsmokeqtmultimedia.dll libsmokeqtscript.dll libsmokeqttest.dll libsmokeqtuitools.dll libsmokeqtwebkit.dll libsmokeqtxmlpatterns.dll).each do |filename|
-      FileUtils.rm_f "../build/#{program_name}/lib/ruby/gems/2.2.0/gems/qtbindings-4.8.6.2-x86-mingw32/lib/2.2/#{filename}"
-    end
-    
     FileUtils.rm_f ["../build/#{program_name}/armips", "../build/#{program_name}/asm", "../build/#{program_name}/constants", "../build/#{program_name}/dsvlib", "../build/#{program_name}/images", "../build/#{program_name}/dsvlib.rb", "../build/#{program_name}/version.rb"]
     FileUtils.cp_r ["./armips", "./asm", "./constants", "./dsvlib", "./images", "dsvlib.rb", "version.rb", "LICENSE.txt"], "../build/#{program_name}"
     
