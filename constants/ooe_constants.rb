@@ -697,7 +697,7 @@ ITEM_TYPES = [
     format: armor_format # length: 20
   },
   {
-    name: "Weapons",
+    name: "Weapons (Unused)",
     list_pointer: 0x020EF48C,
     count: 2,
     format: [

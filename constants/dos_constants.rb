@@ -570,10 +570,10 @@ ITEM_TYPES = [
       [1, "Unknown 1"],
       [2, "Unknown 2"],
       [2, "Mana cost"],
+      [2, "Attack"],
       [2, "Unknown 3"],
-      [2, "Unknown 4"],
       [4, "Effects", :bitfield],
-      [4, "Unknown 5"],
+      [4, "Unwanted States"],
       [2, "Var A"],
       [2, "Var B"],
     ]
