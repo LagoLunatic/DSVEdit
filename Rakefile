@@ -49,11 +49,15 @@ task :build_releases do
       FileUtils.rm_f ["../build/#{program_name}/dsvedit", "../build/#{program_name}/dsvedit.rb"]
       FileUtils.cp_r ["./dsvedit", "dsvedit.rb"], "../build/#{program_name}"
       FileUtils.cp "README.txt", "../build/#{program_name}/README.txt"
+      FileUtils.cp "images/dsvedit_icon.ico", "../build/#{program_name}/images/dsvedit_icon.ico"
+      FileUtils.rm_f "../build/#{program_name}/images/dsvrandom_icon.ico"
       FileUtils.rm_f "../build/#{program_name}/settings.yml"
     else
       FileUtils.rm_f ["../build/#{program_name}/dsvrandom", "../build/#{program_name}/dsvrandom.rb"]
       FileUtils.cp_r ["./dsvrandom", "dsvrandom.rb"], "../build/#{program_name}"
       FileUtils.cp "README_RANDOMIZER.txt", "../build/#{program_name}/README.txt"
+      FileUtils.cp "images/dsvrandom_icon.ico", "../build/#{program_name}/images/dsvrandom_icon.ico"
+      FileUtils.rm_f "../build/#{program_name}/images/dsvedit_icon.ico"
       FileUtils.rm_f "../build/#{program_name}/randomizer_settings.yml"
     end
     
