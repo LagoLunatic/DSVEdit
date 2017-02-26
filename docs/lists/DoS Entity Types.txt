@@ -45,12 +45,12 @@ Entity types:
 06 Entity hider.
   Prematurely stop reading this entity list if a certain condition is met.
   Entities before this one in the list will load the same as normal, but all ones after it will not appear.
-  Var A: Which type of flag.
+  Var A: The condition.
     0 - Check if a boss death flag is set. Subtype is the index of the bit. (Bitfield starting at 020F7038.)
     1 - Check if a miscellaneous flag is set. Subtype is the index of the bit. (Bitfield starting at 020F7180.)
     2 - Check if an event flag is set. Subtype is the index of the bit. (Bitfield starting at 020F7188.)
     3 - Checks if in the middle of a boss fight. (Bit 0x00000002 of bitfield 020F6DFC.)
-    4 - Checks if in Julius mode. (Byte 020F7257).
+    4 - Checks if in Julius mode. (Byte 020F7257.)
   Var B:
     0 - Entities will disappear if the condition is NOT met.
     1 - Entities will disappear if the condition IS met.

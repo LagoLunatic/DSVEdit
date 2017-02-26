@@ -69,9 +69,12 @@ Entity types:
     1 - Check if a miscellaneous flag is set. Subtype is the index of the bit. (Bitfield starting at 02111BA0.)
     2 - Check if an event flag is set. Subtype is the index of the bit. (Bitfield starting at 02111BB0.)
     3 - Check if in the middle of a boss fight. (Bit 0x00000002 of bitfield 0211174C.)
-    4 - Checks if subtype equals the current game mode (byte 02111F52 has the current game mode).
+    4 - Checks if subtype equals the current game mode (Byte 02111F52 has the current game mode.)
   Var B:
     0 - Entities will disappear if the condition is NOT met.
     1 - Entities will disappear if the condition IS met.
 
-09 ???
+09 Font loader.
+  Loads font for event text. Without this entity in the room, text will look like garbage.
+  Var A: Event flag to check. If this flag is set, the font won't be loaded. Should be the same the event's var A. This can also just be set to 0 and the font will always be loaded (like for save rooms).
+  Var B: Must be the same as the event's var B. For save rooms, must be the same as the save point's var B.

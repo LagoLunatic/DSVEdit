@@ -247,7 +247,14 @@ Special objects:
 72 Transition room hider for Dark Academy.
 73 Transition room hider for Dark Academy.
 74 Transition room hider for Tower of Death.
-75 used in Lost Gallery?
+75 Portrait to the Throne Room.
+  Note that it can still bring you to any area you set, but it will only display the right visuals for the above area.
+  Var A: Area index of the destination room.
+  Var B:
+    Least significant bit first.
+    Bits 1-6: Room index of destination room.
+    Bits 7-10: Sector index of the destination room.
+    Bits 11-16: Nothing.
 76 Portrait to 13th Street, Forgotten City, Burnt Paradise, or Dark Academy. (Uses different picture frame than 1A.)
   Note that it can still bring you to any area you set, but it will only display the right visuals for the above areas.
   Var A: Area index of the destination room.
@@ -260,7 +267,7 @@ Special objects:
 78 Cogs and gate that block the way.
 79 Area name shown the first time you enter an area. Var A controls which area it is.
 7A Background effect from Buried Chamber of prisoner shaking the bars of the cell.
-7B ??? from Buried Chamber.
+7B Rushing water in the foreground.
 7C Transition room hider for Dracula's Castle (connects Great Stairway to other Great Stairway sector).
 7D Transition room hider for Dracula's Castle (connects Great Stairway to Keremet).
 7E Small waterfall.
@@ -310,39 +317,39 @@ Special objects:
 94 The 3D background from Dark Academy.
   Requires overlay 109.
 === Below are events. Var A is the event flag set upon completing this event. Var B is the prerequisite event flag before this event will appear.
-95 event in first room of game?
-96 
-97 
-98 used but seems to be nothing
-99 
-9A 
-9B 
-9C 
-9D 
-9E 
-9F 
-A0 event in death's boss room.
-A1 
-A2 event in the sister's boss room.
-A3 event in the sister's boss room.
-A4 event in the sister's boss room.
-A5 event in lost gallery
-A6 event in lost gallery
-A7 event in the stairway leading up to the throne room
-A8 event in dracula's throne room?
-A9 
-AA event in epilogue
-AB event in epilogue
-AC 
-AD 
-AE event in the sister's boss room.
-AF event in first room of game?
-B0 event in lost gallery
-B1 
-B2 
-B3 
-B4 event in vincent's room?
-B5 event in wind's room?
+95 Event - In first room of the game.
+96 Event - 
+97 Event - 
+98 Event - In front of the portrait to City of Haze.
+99 Event - In first room of City of Haze.
+9A Event - After killing Dullahan.
+9B Event - Meeting Death for the first time.
+9C Event - 
+9D Event - Stella in her boss room.
+9E Event - 
+9F Event - 
+A0 Event - Death in his boss room.
+A1 Event - At the barrier that blocks the way to the Throne Room.
+A2 Event - in the sister's boss room.
+A3 Event - in the sister's boss room.
+A4 Event - in the sister's boss room.
+A5 Event - in lost gallery
+A6 Event - in lost gallery
+A7 Event - in the stairway leading up to the throne room
+A8 Event - in dracula's throne room?
+A9 Event - 
+AA Event - in epilogue
+AB Event - in epilogue
+AC Event - 
+AD Event - 
+AE Event - in the sister's boss room.
+AF Event - in first room of game?
+B0 Event - in lost gallery
+B1 Event - 
+B2 Event - 
+B3 Event - 
+B4 Event - in vincent's room?
+B5 Event - in wind's room?
 === Event actors
 B6 Wind event actor.
 B7 Vincent event actor.
