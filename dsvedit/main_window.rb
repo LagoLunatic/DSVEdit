@@ -590,6 +590,8 @@ class DSVEdit < Qt::MainWindow
     load_room()
     
     Qt::MessageBox.warning(self, "Layer added", "Successfully added a new layer to room %08X." % @room.room_metadata_ram_pointer)
+  rescue NDSFileSystem::FileExpandError => e
+    Qt::MessageBox.warning(self, "Cannot add layer", e.message)
   end
   
   def update_visible_view_items
@@ -706,6 +708,10 @@ class DSVEdit < Qt::MainWindow
     
     @tiled.read(tmx_path, @room)
     load_room()
+  rescue NDSFileSystem::FileExpandError => e
+    @room.read_from_rom() # Reload room to get rid of the failed changes.
+    load_room()
+    Qt::MessageBox.warning(self, "Cannot add layer", e.message)
   end
   
   def set_current_room_as_starting_room

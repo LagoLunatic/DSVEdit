@@ -5,8 +5,7 @@ class NDSFileSystem
   class InvalidFileError < StandardError ; end
   class ConversionError < StandardError ; end
   class OffsetPastEndOfFileError < StandardError ; end
-  class GFXPointerError < StandardError ; end
-  class SpritePointerError < StandardError ; end
+  class FileExpandError < StandardError ; end
   
   attr_reader :files,
               :files_by_path,
@@ -249,6 +248,11 @@ class NDSFileSystem
   def expand_file_and_get_end_of_file_ram_address(ram_address, length_to_expand_by)
     file_path, offset_in_file = convert_ram_address_to_path_and_offset(ram_address)
     file = @currently_loaded_files.values.find{|file| file[:file_path] == file_path}
+    
+    if file[:overlay_id] && ROOM_OVERLAYS.include?(file[:overlay_id]) && file[:size] + length_to_expand_by > MAX_ALLOWABLE_ROOM_OVERLAY_SIZE
+      raise FileExpandError.new("Failed to expand room overlay #{file[:overlay_id]} to #{file[:size] + length_to_expand_by} bytes because that is larger than the maximum size a room overlay can be (#{MAX_ALLOWABLE_ROOM_OVERLAY_SIZE} bytes).")
+    end
+    
     old_size = file[:size]
     file[:size] += length_to_expand_by
     
