@@ -269,7 +269,7 @@ class Renderer
     (0..256-1).each do |block_num|
       pixels_for_chunky = []
       
-      fs.rom[gfx_file[:start_offset] + offset, bytes_per_block].each_byte do |byte|
+      fs.read_by_file(gfx_file[:file_path], offset, bytes_per_block, allow_reading_into_next_file_in_ram: true).each_byte do |byte|
         if pixels_per_byte == 2
           pixels = [byte & 0b00001111, byte >> 4] # get the low 4 bits, then the high 4 bits (it's reversed). each is one pixel, two pixels total inside this byte.
         else
