@@ -183,6 +183,7 @@ class SpriteEditor < Qt::Dialog
     end
     
     @mode = :normal
+    @one_dimensional_render_mode = false
     load_sprite()
     
     @ui.enemy_list.setCurrentRow(enemy_id)
@@ -201,6 +202,7 @@ class SpriteEditor < Qt::Dialog
     end
     
     @mode = :normal
+    @one_dimensional_render_mode = false
     load_sprite()
     
     @ui.special_object_list.setCurrentRow(special_object_id)
@@ -223,6 +225,7 @@ class SpriteEditor < Qt::Dialog
     end
     
     @mode = :weapon
+    @one_dimensional_render_mode = false
     load_sprite()
     
     @ui.weapon_list.setCurrentRow(weapon_gfx_index)
@@ -245,6 +248,7 @@ class SpriteEditor < Qt::Dialog
     end
     
     @mode = :normal
+    @one_dimensional_render_mode = false
     load_sprite()
     
     @ui.skill_list.setCurrentRow(skill_gfx_index)
@@ -263,6 +267,7 @@ class SpriteEditor < Qt::Dialog
     end
     
     @mode = :normal
+    @one_dimensional_render_mode = OTHER_SPRITES[id][:one_dimensional_mode]
     load_sprite()
     
     @ui.other_sprites_list.setCurrentRow(id)
@@ -273,7 +278,7 @@ class SpriteEditor < Qt::Dialog
       @sprite = Sprite.new(@sprite_pointer, @fs)
       
       @chunky_frames, @min_x, @min_y, rendered_parts, @gfx_files_with_blanks, @palettes, @full_width, @full_height = 
-        @renderer.render_sprite(@gfx_file_pointers, @palette_pointer, @palette_offset, @sprite, frame_to_render = 0, render_hitboxes = false, mode = @mode)
+        @renderer.render_sprite(@gfx_file_pointers, @palette_pointer, @palette_offset, @sprite, frame_to_render = 0, render_hitboxes = false, mode = @mode, one_dimensional_mode = @one_dimensional_render_mode)
     rescue StandardError => e
       Qt::MessageBox.warning(self,
         "Sprite rendering failed",
@@ -365,7 +370,11 @@ class SpriteEditor < Qt::Dialog
       else
         gfx_file = gfx_page[:file]
         canvas_width = gfx_page[:canvas_width]
-        chunky_image = @renderer.render_gfx(gfx_file, @palettes[palette_index], 0, 0, canvas_width*8, canvas_width*8, canvas_width=canvas_width*8)
+        if @one_dimensional_render_mode
+          chunky_image = @renderer.render_gfx_1_dimensional_mode(gfx_file, @palettes[palette_index])
+        else
+          chunky_image = @renderer.render_gfx(gfx_file, @palettes[palette_index], 0, 0, canvas_width*8, canvas_width*8, canvas_width=canvas_width*8)
+        end
         
         pixmap = Qt::Pixmap.new
         blob = chunky_image.to_blob

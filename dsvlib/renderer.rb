@@ -585,7 +585,7 @@ class Renderer
     return output_path
   end
   
-  def render_sprite(gfx_file_pointers, palette_pointer, palette_offset, sprite, frame_to_render = nil, render_hitboxes = false, mode=:normal)
+  def render_sprite(gfx_file_pointers, palette_pointer, palette_offset, sprite, frame_to_render = nil, render_hitboxes = false, mode = :normal, one_dimensional_mode = false)
     gfx_files_with_blanks = []
     gfx_file_pointers.each do |gfx_file_pointer|
       gfx_file = fs.find_file_by_ram_start_offset(gfx_file_pointer)
@@ -647,7 +647,11 @@ class Renderer
           palette = palettes[part.palette_index+palette_offset]
         end
         
-        rendered_gfx_files_by_palette[part.palette_index+palette_offset][part.gfx_page_index] ||= render_gfx(gfx_file, palette || dummy_palette, 0, 0, canvas_width*8, canvas_width*8, canvas_width=canvas_width*8)
+        if one_dimensional_mode
+          rendered_gfx_files_by_palette[part.palette_index+palette_offset][part.gfx_page_index] ||= render_gfx_1_dimensional_mode(gfx_file, palette || dummy_palette)
+        else
+          rendered_gfx_files_by_palette[part.palette_index+palette_offset][part.gfx_page_index] ||= render_gfx(gfx_file, palette || dummy_palette, 0, 0, canvas_width*8, canvas_width*8, canvas_width=canvas_width*8)
+        end
       end
       
       rendered_gfx_file = rendered_gfx_files_by_palette[part.palette_index+palette_offset][part.gfx_page_index]
