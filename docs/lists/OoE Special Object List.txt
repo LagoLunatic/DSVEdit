@@ -1,6 +1,11 @@
 Special Objects:
 00 Nothing.
 01 Magnes grapple point.
+  Var A:
+    0 Doesn't move.
+    1 Moves horizontally.
+    2 Moves vertically.
+  Var B: Distance in pixels away from its starting point it should move right/down before turning around and heading back left/up to its starting point.
 02 Destructible.
   Var A:
     00 A statue that yields a glyph when destroyed. Var B controls what glyph it is, it's the global ID of the glyph + 1.
@@ -45,7 +50,7 @@ Special Objects:
     10 Spiked balls (Training Chamber)
   Var B is the number of blocks wide the spikes span.
 15 Wooden/green chest.
-  Var A controls the item in it?
+  Var A controls the item in it? TODO
 16 Red/gold chest.
   Var A controls what item is inside it, it's the global ID of the item + 1. 0 means the chest won't appear. If you put a glyph in the chest nothing will appear when you open it. If the ID belongs to a relic the chest will automatically appear as gold instead of red.
   Var B is the flag for whether you've opened this chest yet or not.
@@ -62,7 +67,11 @@ Special Objects:
 1C Background shadow for Shanoa. Var A is the z-index of the shadow (can make the shadow go on top of Shanoa with this). Var B affects what layer the shadow is constrained onto (TODO: figure out specifics).
 1D Background from outdside the Castle Entrance.
 1E Fog near the ground.
-1F crash
+1F Foreground candles from Underground Labyrinth.
+  Requires overlay 68.
+  Var A:
+    0 Small candles.
+    1 Large candles.
 20 The ring of flaming heads with a magnes point in the center.
   Var B: The speed it rotates at.
 21 foreground pillar used in arms depot?
@@ -79,7 +88,9 @@ Special Objects:
 26 Rat running around.
 27 Iron maiden trap.
   Requires overlay 51.
-28 crash, used in brachyura's room
+28 Lighthouse elevator.
+  Requires overlay 53.
+  Also spawns the platforms and ceilings Brachyura destroys.
 29 Moving platform.
   Byte 5: Which waypoints are for this platform? (See below.) This should match all of the waypoints byte 5s.
   Var A: Sprite animation to use.
@@ -96,7 +107,11 @@ Special Objects:
 2D Wooden door inside houses in Wygol.
   Var A and B: The X and Y coordinates of the door in town to come out of. Must be the exact coordinates of an object 2C, otherwise Shanoa will appear in the center of town.
 2E Wooden door that connects areas.
-2F Screen goes black and music cuts out, and you lose control of Shanoa. Game doesn't crash as you can still see the top screen map blinking.
+2F Rotating lamp at the top of the Lighthouse.
+  Requires overlay 53.
+  Var A:
+    0 Spawns a Luminatio glyph on top of the lamp that you can absorb to stop the light.
+    1 Does not spawn Luminatio.
 30 Small block that crumbles after Shanoa stands on it for a second.
 31 Moving spike thing from Training Chamber.
   Var A:
@@ -238,8 +253,8 @@ Special Objects:
   Requires overlay 46.
   Var A is which entity 5A to be linked to, set to the same as 5A's var A.
 5C Breakable wall.
-  Var A: Affects the graphic to use. TODO
-  Var B: Affects the graphic to use. TODO
+  Var A: Which breakable wall sprite to use (index in list 022B6C54).
+  Var B: Which wall data in this area's breakable wall list to use (index in one of 022B6BF4's lists).
 5D Castle in the distance during the ending sequence.
   Requires overlay 84.
 5E Metal gate with a button to the right of it to unlock it.
@@ -247,7 +262,7 @@ Special Objects:
     00 Single gate.
     01 Large row of many gates.
 5F Spawns villagers, events, and barrels in Wygol Village.
-  Var A: Which villager to spawn:
+  Var A: Which of Wygol's rooms to spawn entities for:
     0 - In Eugen and Aeon's house.
       Spawns Eugen if event flag 38 is set.
       Spawns Aeon if event flag 3C is set.
@@ -271,9 +286,9 @@ Special Objects:
       Spawns Marcel if event flag 40 is set.
       Spawns Serge if event flag 47 is set.
       Spawns Monica if event flag 4F is set.
-60 Dracula's soul vessel in Ecclesia.
+60 Spawns Barlowe, events, and Dracula's soul vessel in Barlowe's room in Ecclesia.
   Requires overlay 42.
-  Also spawns the Barlowe that gives you tips when you talk to him.
+  Which entities it spawns depend on certain event flags. TODO
 === Below are events. Var A is the event flag set upon completing this event. Var B is the prerequisite event flag before this event will appear.
 61 Event - Talking to Albus in the first room of the game.
   Also loads graphics for the flash of light through the windows when Albus is talking to himself.
