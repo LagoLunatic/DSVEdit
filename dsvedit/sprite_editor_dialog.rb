@@ -66,7 +66,10 @@ class SpriteEditor < Qt::Dialog
       special_object = SpecialObjectType.new(special_object_id, fs)
       @special_objects << special_object
       object_name = game.special_object_docs[special_object_id] || " "
-      object_name = object_name.lines.first.strip[0..25]
+      object_name = object_name.lines.first.strip[0..40]
+      if object_name != game.special_object_docs[special_object_id].lines.first.strip
+        object_name << "..."
+      end
       @ui.special_object_list.addItem("%02X %s" % [special_object_id, object_name])
     end
     
@@ -107,9 +110,15 @@ class SpriteEditor < Qt::Dialog
         items = weapon_items.select{|item| item["Sprite"] == weapon_gfx_index}
       end
       if items.any?
-        weapon_name = items.map{|item| item.name.decoded_string}.join(", ")
+        weapon_name = items.map do |item|
+          if item.name.decoded_string.empty?
+            "..."
+          else
+            item.name.decoded_string
+          end
+        end.join(", ")
       else
-        weapon_name = ""
+        weapon_name = "Unused"
       end
       @ui.weapon_list.addItem("%02X %s" % [weapon_gfx_index, weapon_name])
     end
@@ -120,9 +129,15 @@ class SpriteEditor < Qt::Dialog
       @skills << skill
       items = skill_items.select{|item| item["Sprite"] == skill_gfx_index+1}
       if items.any?
-        skill_name = items.map{|item| item.name.decoded_string}.join(", ")
+        skill_name = items.map do |item|
+          if item.name.decoded_string.empty?
+            "..."
+          else
+            item.name.decoded_string
+          end
+        end.join(", ")
       else
-        skill_name = ""
+        skill_name = "Unused"
       end
       @ui.skill_list.addItem("%02X %s" % [skill_gfx_index, skill_name])
     end
