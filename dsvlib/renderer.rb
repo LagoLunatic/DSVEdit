@@ -572,7 +572,7 @@ class Renderer
   end
   
   def ensure_sprite_exists(folder, gfx_file_pointers, palette_pointer, palette_offset, sprite, frame_to_render)
-    sprite_filename = "%08X %s %08X %02X" % [sprite.sprite_pointer, gfx_file_pointers.map{|ptr| "%08X" % ptr}.join(","), palette_pointer, palette_offset]
+    sprite_filename = "%08X %08X %08X %02X" % [sprite.sprite_pointer, gfx_file_pointers.first, palette_pointer, palette_offset]
     output_path = "#{folder}/#{sprite_filename}_frame#{frame_to_render}.png"
     
     if !File.exist?(output_path)
@@ -581,6 +581,8 @@ class Renderer
       rendered_frames.first.save(output_path, :fast_rgba)
       puts "Wrote #{output_path}"
     end
+    
+    return output_path
   end
   
   def render_sprite(gfx_file_pointers, palette_pointer, palette_offset, sprite, frame_to_render = nil, render_hitboxes = false, mode=:normal)

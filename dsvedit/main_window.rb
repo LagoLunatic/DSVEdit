@@ -529,10 +529,7 @@ class DSVEdit < Qt::MainWindow
     frame_to_render ||= 0
     
     sprite = Sprite.new(sprite_pointer, game.fs)
-    @renderer.ensure_sprite_exists("cache/#{GAME}/sprites/", gfx_file_pointers, palette_pointer, palette_offset, sprite, frame_to_render)
-    
-    sprite_filename = "%08X %s %08X %02X" % [sprite.sprite_pointer, gfx_file_pointers.map{|ptr| "%08X" % ptr}.join(","), palette_pointer, palette_offset]
-    sprite_filename = "cache/#{GAME}/sprites/#{sprite_filename}_frame#{frame_to_render}.png"
+    sprite_filename = @renderer.ensure_sprite_exists("cache/#{GAME}/sprites/", gfx_file_pointers, palette_pointer, palette_offset, sprite, frame_to_render)
     chunky_frame = ChunkyPNG::Image.from_file(sprite_filename)
     
     graphics_item = EntityChunkyItem.new(chunky_frame, entity, self)
