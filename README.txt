@@ -18,6 +18,8 @@ Report issues here: https://github.com/LagoLunatic/DSVEdit/issues
 
 Install Visual C++ Redistributable for Visual Studio 2015: https://www.microsoft.com/en-us/download/details.aspx?id=48145
 
+The path where DSVEdit is located must only have ASCII characters in it - the program will not launch if there are any unicode characters in it.
+
 ### How to open a game ROM
 
 Go to File -> Extract ROM and select the .nds file you want to open. DSVEdit will then extract all the files from the game, which can take a minute. The files will be placed in a folder with the same name as the .nds file (e.g. "Dawn of Sorrow.nds" extracts to "Dawn of Sorrow".)
