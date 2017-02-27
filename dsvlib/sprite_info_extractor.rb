@@ -110,9 +110,7 @@ class SpriteInfoExtractor
     gfx_page_pointer = nil
     list_of_gfx_page_pointers_wrapper_pointer = nil
     possible_palette_pointers = []
-    palette_pointer = nil
     possible_sprite_pointers = []
-    sprite_file_pointer = nil
     
     data = fs.read(init_code_pointer, 4*1000, allow_length_to_exceed_end_of_file: true)
     
@@ -155,14 +153,16 @@ class SpriteInfoExtractor
     possible_palette_pointers -= valid_gfx_pointers
     
     if gfx_files_to_load.empty?
-      if valid_gfx_pointers.empty?
-        raise CreateCodeReadError.new("Failed to find any valid enemy gfx pointers.")
+      if gfx_wrapper.nil?
+        if valid_gfx_pointers.empty?
+          raise CreateCodeReadError.new("Failed to find any valid enemy gfx pointers.")
+        end
+        if gfx_sheet_ptr_index >= valid_gfx_pointers.length
+          raise CreateCodeReadError.new("Failed to find enough valid enemy gfx pointers to match the reused enemy gfx sheet index. (#{valid_gfx_pointers.length} found, #{gfx_sheet_ptr_index+1} needed.)")
+        end
+        
+        gfx_wrapper = valid_gfx_pointers[gfx_sheet_ptr_index]
       end
-      if gfx_sheet_ptr_index >= valid_gfx_pointers.length
-        raise CreateCodeReadError.new("Failed to find enough valid enemy gfx pointers to match the reused enemy gfx sheet index. (#{valid_gfx_pointers.length} found, #{gfx_sheet_ptr_index+1} needed.)")
-      end
-      
-      gfx_wrapper = valid_gfx_pointers[gfx_sheet_ptr_index]
       
       gfx_file_pointers = unpack_gfx_pointer_list(gfx_wrapper, fs)
     end
@@ -189,7 +189,7 @@ class SpriteInfoExtractor
     
     
     
-    if sprite_files_to_load.empty?
+    if sprite_files_to_load.empty? && sprite_file_pointer.nil?
       all_sprite_pointers = fs.files.select do |id, file|
         file[:type] == :file && file[:file_path] =~ /^\/so\/p_/
       end.map do |id, file|

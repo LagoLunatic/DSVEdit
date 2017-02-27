@@ -365,6 +365,8 @@ SPECIAL_OBJECT_UPDATE_CODE_LIST = 0x020F3940
 OVERLAY_FILE_FOR_SPECIAL_OBJECT = {
   0x25 => 62,
   0x27 => 51,
+  0x28 => 53,
+  0x2F => 53,
   0x38 => 46,
   0x3A => 46,
   0x3B => 55,
@@ -409,7 +411,7 @@ REUSED_SPECIAL_OBJECT_INFO = {
   0x36 => {init_code:         -1}, # transition room hider TODO
   0x4B => {sprite: 0x020C4E24, gfx_files: [0x020B8788, 0x020B8794, 0x020B87A0, 0x020B87AC, 0x020B87B8, 0x020B87D0, 0x020B8818, 0x020B8824], palette: 0x020C8E50}, # boss door
   0x55 => {sprite: 0x021DCAC0, gfx_files: [0x020B838C, 0x020B8398, 0x020B83A4, 0x020B83B0, 0x020B83BC, 0x020B83C8, 0x020B83D4, 0x020B83E0, 0x020B83EC, 0x020B83F8, 0x020B8404, 0x020B8410, 0x020B841C, 0x020B8428], palette: 0x020D73D0}, # area titles
-  0x5C => {init_code:         -1}, # breakable wall TODO
+  0x5C => {sprite: 0x021DCD34, gfx_files: [0x020BA300], palette: 0x020D151C}, # breakable wall
   0x62 => {init_code:         -1},
   0x63 => {init_code:         -1},
   0x64 => {init_code:         -1},
@@ -458,6 +460,7 @@ BEST_SPRITE_FRAME_FOR_SPECIAL_OBJECT = {
   0x17 => 0x05,
   0x1D =>   -1,
   0x25 => 0x02,
+  0x28 => 0x06,
   0x2B =>   -1,
   0x2E => 0xED,
   0x3D =>   -1,
@@ -479,12 +482,30 @@ SKILL_GFX_LIST_START = nil
 
 OTHER_SPRITES = [
   {desc: "Common", sprite: 0x020C4E24, gfx_files: [0x020B8788, 0x020B8794, 0x020B87A0, 0x020B87AC, 0x020B87B8, 0x020B87D0, 0x020B8818, 0x020B8824], palette: 0x020C8E50},
+  {desc: "Explosion", sprite: 0x021DD02C, gfx_files: [0x020B8830], palette: 0x020C8E50},
   
   {pointer: 0x020EED5C, desc: "Shanoa player"},
   {pointer: 0x020EEDB8, desc: "Arma Felix player"},
   {pointer: 0x020EEE14, desc: "Arma Chiroptera player"},
   {pointer: 0x020EEE70, desc: "Arma Machina player"},
   {pointer: 0x020EEECC, desc: "Albus player"},
+  
+  {desc: "Albus event actor", sprite: 0x021DCCC4, palette: 0x020D4F3C, gfx_wrapper: 0x022A5CCC},
+  {desc: "Barlowe event actor", sprite: 0x021DCCC0, palette: 0x020D4F60, gfx_wrapper: 0x022A5CD4},
+  {desc: "Nikolai event actor", sprite: 0x021DCCBC, palette: 0x020D4FC4, gfx_wrapper: 0x022A5CE4},
+  {desc: "Jacob event actor", sprite: 0x021DCCB8, palette: 0x020D4FE8, gfx_wrapper: 0x022A5CF4},
+  {desc: "Abram event actor", sprite: 0x021DCCB4, palette: 0x020D500C, gfx_wrapper: 0x022A5D0C},
+  {desc: "Laura event actor", sprite: 0x021DCCB0, palette: 0x020D5030, gfx_wrapper: 0x022A5D14},
+  {desc: "Eugen event actor", sprite: 0x021DCCAC, palette: 0x020D5054, gfx_wrapper: 0x022A5D24},
+  {desc: "Aeon event actor", sprite: 0x021DCCA8, palette: 0x020D5078, gfx_wrapper: 0x022A5CB4},
+  {desc: "Marcel event actor", sprite: 0x021DCCA4, palette: 0x020D509C, gfx_wrapper: 0x022A5CC4},
+  {desc: "George event actor", sprite: 0x021DCCA0, palette: 0x020D50C0, gfx_wrapper: 0x022A5CDC},
+  {desc: "Serge event actor", sprite: 0x021DCC9C, palette: 0x020D50E4, gfx_wrapper: 0x022A5CFC},
+  {desc: "Anna event actor", sprite: 0x021DCC98, palette: 0x020D5108, gfx_wrapper: 0x022A5D1C},
+  {desc: "Monica event actor", sprite: 0x021DCC94, palette: 0x020D512C, gfx_wrapper: 0x022A5CBC},
+  {desc: "Irina event actor", sprite: 0x021DCC90, palette: 0x020D5150, gfx_wrapper: 0x022A5CEC},
+  {desc: "Daniela event actor", sprite: 0x021DCC8C, palette: 0x020D5174, gfx_wrapper: 0x022A5D2C},
+  {desc: "Dracula event actor", sprite: 0x021DCAC8, palette: 0x022CEA40, gfx_wrapper: 0x022A5D04, overlay: 75},
   
   {pointer: 0x022B6DA8, desc: "Glyph statue"},
   {pointer: 0x022B6DBC, desc: "Destructibles 0"},
@@ -500,6 +521,16 @@ OTHER_SPRITES = [
   {pointer: 0x022B6E84, desc: "Destructibles 10"},
   {pointer: 0x022B6E98, desc: "Destructibles 11"},
   {pointer: 0x022B6EAC, desc: "Destructibles 12"},
+  
+  {desc: "Breakable walls 0", sprite: 0x021DCD4C, gfx_files: [0x020BA2B8], palette: 0x020D0F44},
+  {desc: "Breakable walls 1", sprite: 0x021DCD48, gfx_files: [0x020BA2C4], palette: 0x020D10C8},
+  {desc: "Breakable walls 2", sprite: 0x021DCD44, gfx_files: [0x020BA2D0], palette: 0x020D120C},
+  {desc: "Breakable walls 3", sprite: 0x021DCD40, gfx_files: [0x020BA2DC], palette: 0x020D1270},
+  {desc: "Breakable walls 4", sprite: 0x021DCD40, gfx_files: [0x020BA2DC], palette: 0x020D1270},
+  {desc: "Breakable walls 5", sprite: 0x021DCD3C, gfx_files: [0x020BA2E8], palette: 0x020D13D4},
+  {desc: "Breakable walls 6", sprite: 0x021DCD3C, gfx_files: [0x020BA2E8], palette: 0x020D13D4},
+  {desc: "Breakable walls 7", sprite: 0x021DCD38, gfx_files: [0x020BA2F4], palette: 0x020D1458},
+  {desc: "Breakable walls 8", sprite: 0x021DCD34, gfx_files: [0x020BA300], palette: 0x020D151C},
 ]
 
 OVERLAY_FILES_WITH_SPRITE_DATA = []
