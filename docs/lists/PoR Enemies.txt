@@ -1,3 +1,32 @@
+Enemies:
+00 Zombie
+01 Bat
+02 Skeleton
+03 Axe Armor
+04 Death Mask
+05 Zacchino
+06 Student Witch
+07 Slinger
+08 Mini Devil
+09 Mud Man
+0A Merman
+0B Une
+0C Skull Archer
+0D Ukoback
+0E Forneus
+0F Peeping Eye
+10 Skull Bartender
+11 Wight
+12 Frozen Shade
+13 Andras
+  Requires overlay 72.
+14 Invisible Man
+15 Golem
+  Requires overlay 76.
+16 Persephone
+17 Mimic
+18 Larva
+19 Lerajie
 1A Spittle Bone
   Var A: Which wall to attach to when first initialized.
     0 Floor
@@ -5,17 +34,99 @@
     2 Left wall
     3 Right wall
   Var B: Movement speed (subpixels per frame).
+1B Ghost
+1C Red Skeleton
+1D Armor Knight
+1E Ectoplasm
+1F Bone Pillar
+20 Fleaman
+21 Great Armor
+  Requires overlay 44.
+22 Catoblepas
+  Requires overlay 48.
+23 Slime
+24 Mummy
+25 Dragon Zombie
+  Requires overlay 68.
+26 Killer Clown
+27 Coppelia
 28 Hanged Bones
   Attaches itself to the closest wall it can find.
   Var A: Length of the bone it swings on.
   Var B: Unused?
+29 Flying Skull
+2A Sand Worm
+  Requires overlay 69.
+2B White Dragon
+2C Amphisbaena
+  Requires overlay 62.
+2D Elgiza
+  Requires overlay 54.
+2E Great Ghost
+2F Devil Wheel
+30 Crossbow Armor
+31 Lilith
+32 Skeleton Flail
 33 Skeleton Gunman
   Come in threes. First and third are kneeling, the middle one is standing.
-  Var b: Distance in pixels between the first and third gunmen. (The middle one is placed halfway between the others.)
-28 Skeleton Tree
+  Var B: Distance in pixels between the first and third gunmen. (The middle one is placed halfway between the others.)
+34 Hill Guard
+35 Imp
+36 Harpy
+37 Corpseweed
+38 Medusa Head
+39 Skelerang
+3A Gaibon
+3B Slogra
+3C Flying Armor
+3D Blue Crow
+3E Frog
+3F Killer Doll
+40 Killer Bee
+41 Dogether
+42 Bee Hive
+43 Moldy Corpse
+44 Tombstone
+45 Treant
+  Requires overlay 45.
+46 Red Axe Armor
+47 Maneating Plant
+48 Skeleton Blaze
+49 Razor Bat
+4A Wyvern
+4B Malachi
+4C Spin Devil
+4D Succubus
+4E Flame Demon
+  Requires overlay 47.
+4F Dead Crusader
+50 Heavy Armor
+51 Malphas
+  Requires overlay 46.
+52 Final Guard
+  Requires overlay 44.
+53 Glasya Labolas
+54 Ghoul
+55 Ruler's Sword
+  Requires overlay 71.
+56 Witch
+57 Skeleton Tree
   Attaches itself to the closest wall it can find.
   Var A: Length of the bone it swings on.
   Var B: Rotation.
+58 Buster Armor
+59 Armored Fleaman
+5A Amalaric Sniper
+  Requires overlay 77.
+5B Old Axe Armor
+5C Gorgon
+  Requires overlay 48.
+5D Jack O'Bones
+5E Tanjelly
+5F Dead Warrior
+60 Toad
+61 Aliorumnas
+62 Dodo
 63 Vice Beetle
   Var A: Which wall to attach to when first initialized.
     0 Floor
@@ -23,13 +134,94 @@
     2 Left wall
     3 Right wall
   Var B: Movement speed (subpixels per frame).
+64 Alura Une
+  Requires overlay 73.
+65 Lightkeeper
+66 Black Crow
+67 Mandragora
+68 Wakwak Tree
+69 Guillotiner
+6A Nyx
+6B Minotaur
+6C Mothman
+6D Laura
+6E Yorick
+6F Dragonfly
+70 Quetzalcoatl
+71 Ripper
+72 Poison Worm
+  Requires overlay 69.
+73 Ghost Dancer
+74 Demon Head
+75 Lesser Demon
+76 Ghoul King
+77 Vapula
+78 Iron Golem
+  Requires overlay 45.
+79 DoubleAxe Armor
+7A Demon
+  Requires overlay 47.
+7B Bone Ark
+7C Skeleton Farmer
+7D Alastor
+  Requires overlay 75.
+7E Gold Skeleton
+7F Cave Troll
+80 Amducias
+81 Balore
+  Requires overlay 43.
+82 Gergoth
+  Requires overlay 50.
+83 Zephyr
+  Requires overlay 49.
+84 Aguni
+  Requires overlay 67.
+85 Abaddon
+  Requires overlay 51.
+86 Doppelganger
+87 Fake Trevor
+  Requires overlay 70.
+88 Fake Grant
+  Requires overlay 70.
+89 Fake Sypha
+  Requires overlay 70.
+8A Dullahan
+  Requires overlay 58.
 8B Behemoth
-  Var b: When 2, the scripted Behemoth that chases you. When 0, normal Behemoth.
+  Requires overlay 53.
+  Var B: When 2, the scripted Behemoth that chases you. When 0, normal Behemoth.
+8C Keremet
+  Requires overlay 56.
+8D Astarte
+  Requires overlay 74.
+8E Legion
+  Requires overlay 52.
+8F Dagon
+  Requires overlay 59.
+90 Death
+  Requires overlay 64.
 91 Stella
-  Var a: 0 for just Stella. 1 for the double fight with both Stella and Loretta.
-  Var b: 0 for boss rush. 1 for normal.
+  Requires overlay 63.
+  Var A: 0 for just Stella. 1 for the double fight with both Stella and Loretta.
+  Var B: 0 for boss rush. 1 for normal.
 92 Loretta
+  Requires overlay 63.
   Doesn't do anything but bob up and down if placed. Should instead by spawned by Stella.
-  Var b: Normally 0. If greater than 0, then Loretta doesn't bob up and down or animate at all, she's just frozen completely still.
+  Var B: Normally 0. If greater than 0, then Loretta doesn't bob up and down or animate at all, she's just frozen completely still.
+93 Brauner
+  Requires overlay 55.
 94 The Creature
-  Var a: 1 for boss rush. 0 for normal.
+  Requires overlay 60.
+  Var A: 1 for boss rush. 0 for normal.
+95 Werewolf
+  Requires overlay 57.
+96 Medusa
+  Requires overlay 61.
+97 Mummy Man
+  Requires overlay 66.
+98 Whip's Memory
+  Requires overlay 25.
+99 Dracula
+  Requires overlay 64.
+9A True Dracula
+  Requires overlay 65.

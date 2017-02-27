@@ -1,14 +1,151 @@
+Enemies:
+00 Bat
+01 Zombie
+02 Skeleton
 03 Ghost
   Spawner.
   Var A: Maximum number of Ghosts that can be on screen at once. 0 means no limit.
+04 Banshee
+05 Bone Scimitar
+06 Sea Stinger
+07 Nominon
+08 Axe Knight
+09 Une
+0A Merman
+0B Necromancer
+0C Bone Archer
+0D Spear Guard
+0E Invisible Man
+0F Gelso
+10 Needles
+11 Demon
+12 Fishhead
+13 Dark Octopus
+14 Killer Fish
+15 Forneus
+16 The Creature
+  Requires overlay 38.
+17 Black Crow
+18 Skull Spider
+19 Scarecrow
+1A Sea Demon
+1B Winged Guard
+1C Nightmare
+1D Rock Knight
+1E Fire Demon
+1F Bitterfly
+20 Specter
+21 Grave Digger
+22 Werebat
+23 Black Fomor
+24 Enkidu
+25 Bone Pillar
+26 Skeleton Frisky
+27 Skeleton Hero
+28 Dullahan
+29 Skeleton Rex
+2A White Dragon
 2B Saint Elmo
   Spawner.
   Var A: 1 or 2 or 3?
   Var B: Always 78?
+2C Lorelai
 2D Edimmu
   Var A: 0 or 1
 2E Decarabia
   Var A: 0 to 3
   Var B: 0 or 1
+2F Merman
+30 Ladycat
+31 Ectoplasm
+32 Curse Diva
+33 Miss Murder
+34 Automaton ZX26
+35 Skeleton Beast
+36 Balloon
+37 Arachne
+38 Lizardman
+39 Armored Beast
+3A Yeti
+3B Thunder Demon
+3C Owl
+  Requires overlay 38.
+3D Werewolf
+3E Altair
+3F Mandragora
+40 Jersey Devil
+41 Owl Knight
+  Requires overlay 38.
+42 Chosen Une
+43 Stone Rose
+44 Mad Butcher
+45 White Fomor
+46 Evil Force
+47 Flea Man
+48 Ghoul
+49 Peeping Eye
+4A Gargoyle
+4B Blood Skeleton
+4C Black Panther
+4D Mimic
+4E Draculina
+  Requires overlay 38.
+4F Tin Man
+50 Polkir
+51 Nova Skeleton
+52 Gashida
+53 Devil
+54 Gurkha Master
+55 Red Smasher
+56 Cave Troll
+57 Blade Master
+58 Lilith
+59 Lizardman Blade
+5A Hammer Shaker
+5B Rebuild
+5C Imp
+5D Bugbear
+5E Spectral Sword
+  Requires overlay 38.
+5F Automaton ZX27
+60 Medusa Head
+61 Gorgon Head
+62 Mad Snatcher
+63 Great Knight
+64 King Skeleton
+65 Winged Skeleton
+66 Final Knight
+  Requires overlay 36.
+67 Jiang Shi
+  Requires overlay 29.
+68 Demon Lord
+69 Double Hammer
+6A Weapon Master
+6B Giant Skeleton
+6C Arthroverta
+  Requires overlay 24.
+6D Brachyura
+  Requires overlay 30.
+6E Maneater
+  Requires overlay 26.
+6F Rusalka
+  Requires overlay 27.
+70 Goliath
+  Requires overlay 32.
+71 Gravedorcus
+  Requires overlay 33.
+72 Albus
+  Requires overlay 36.
+73 Barlowe
+  Requires overlay 37.
+74 Wallman
+  Requires overlay 28.
+75 Blackmore
+  Requires overlay 35.
+76 Eligor
+  Requires overlay 31.
+77 Death
+  Requires overlay 25.
 78 Dracula
+  Requires overlay 34.
   Dracula's palette is stored in overlay 75, the sector overlay for the Final Approach. If you place him in any other sector his palette will appear corrupted.
