@@ -55,12 +55,12 @@ Special Objects:
     10 Spiked balls (Training Chamber)
   Var B is the number of blocks wide the spikes span.
 15 Wooden/green chest.
-  The contents of this chest is randomized when you enter the area from the world map.
+  The item in this chest is randomized when you enter the area from the world map.
   Will appear as a sparkling green chest if the item inside is was selected from a rare item pool.
   Var A: The unique ID of this chest in the area. Can be from 0-B.
   For item pools 8 and 9, chest 0 is guaranteed to be a rare chest.
   For item pool A, no chests can be rare chests.
-  Otherwise the chance for a rare chance is:
+  Otherwise, the chance for a rare chest is:
     10% + 0.1%*luck
   Or, if you have the Treasure Hat equipped:
     30% + 0.1%*luck
