@@ -50,22 +50,28 @@ Special Objects:
     10 Spiked balls (Training Chamber)
   Var B is the number of blocks wide the spikes span.
 15 Wooden/green chest.
-  Var A controls the item in it? TODO
+  Var A: The unique ID of this chest in the area. Can be from 0-B.
 16 Red/gold chest.
   Var A controls what item is inside it, it's the global ID of the item + 1. 0 means the chest won't appear. If you put a glyph in the chest nothing will appear when you open it. If the ID belongs to a relic the chest will automatically appear as gold instead of red.
   Var B is the flag for whether you've opened this chest yet or not.
 17 Blue chest.
   Hidden in the floor, you must stand over it and crouch to reveal it.
   Var A and var B work like red/gold chests.
-18 Does several strange things, overwrites the entities for this room in ram (with level data maybe?) and lags the emulator so much it almost seems frozen
+18 Moving clouds background from Barracks.
+  Requires overlay 71.
 19 Part of the waterfall in Tristis pass. This object is responsible for making it impossible for Shanoa to jump up the waterfall, and making bubbles appear around Shanoa when she is inside it.
 1A Movement blocker.
   The area covered by this object will act impassable, both when Shanoa is in human form and in Paries form.
   Var A: Width of the area in blocks.
   Var B: Height of the area in blocks.
-1B Same as 1C?
-1C Background shadow for Shanoa. Var A is the z-index of the shadow (can make the shadow go on top of Shanoa with this). Var B affects what layer the shadow is constrained onto (TODO: figure out specifics).
-1D Background from outdside the Castle Entrance.
+1B Background shadow for all entities in the room.
+  Var A: Z-index for the shadows to be drawn at.
+  Var B: If set to the index of the layer farthest in the background, the shadow will not appear on that layer.
+    If set to 4, the shadow will appear on all layers.
+    If set to the index of a layer other than the one farthest in the background it won't succeed at hiding the shadow on that layer, and instead just set that layer's opacity to 1E.
+1C Background shadow for all entities in the room.
+  Works exactly the same as 1B.
+1D Background from outside the Castle Entrance.
 1E Fog near the ground.
 1F Foreground candles from Underground Labyrinth.
   Requires overlay 68.
@@ -148,10 +154,13 @@ Special Objects:
 3C Something in Kalidus channel?
 3D Pages that fly out whenever you land on the ground.
   Requires overlay 69.
-3E Darkness overlay from Minera Prison Island.
-  If var A is 0 the searchlights are on. If it's 1 they're off.
-  If var A is 1 and the Giant Skeleton isn't dead yet then the searchlights take control away from the player and wait for the Giant Skeleton to do its thing (if he's not in the room the game will softlock).
-  TODO: look into how enemies are spawned by searchlights.
+3E Searchlights.
+  Also puts a dark blue overlay over the whole room.
+  Var A:
+    0 Spawns four Spear Guards if the player gets caught.
+    1 Takes control away from the player and wakes up the Giant Skeleton. (If he's not in the room the game will softlock.)
+    2 Spawns a Tin Man if the player gets caught.
+    3 Spawns an Evil Force if the player gets caught.
 3F Cat.
   Var A: Which cat it is:
     00 Tofu (white)
@@ -170,8 +179,12 @@ Special Objects:
   02 Red ball
   03 Rubber ducky
 42 A trap from Minera Prison Island.
-  When var A is 0, it's a guillotine. Var B is the delay in frames between each time it comes down.
-  When var A is greater than 0, it's a swinging axe. Var A controls the length of the axe's chain. Var B is the speed at which it swings.
+  When var A is 0, it's a guillotine.
+    In normal mode it will wait for the player to get close to it and come down.
+    In hard mode it comes down automatically, var B is the delay in frames between each time it comes down.
+  When var A is greater than 0, it's a swinging axe.
+    Var A controls the length of the axe's chain.
+    Var B is the speed at which it swings.
 43 Pair of large curtains in the background.
   Requires overlay 65.
 44 Lapiste glyph and the boulder trap that comes with it.
