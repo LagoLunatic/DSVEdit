@@ -11,14 +11,15 @@ Report issues here: https://github.com/LagoLunatic/DSVEdit/issues
 * Viewing and editing enemy DNA (max HP, attack, items dropped, etc.)
 * Viewing and editing text
 * Viewing and editing items
+* Viewing and editing random chest item pools
 * Viewing and editing area maps
 * Viewing enemy sprites
 
 ### Requirements
 
-Install Visual C++ Redistributable for Visual Studio 2015: https://www.microsoft.com/en-us/download/details.aspx?id=48145
-
 The path where DSVEdit is located must only have ASCII characters in it - the program will not launch if there are any unicode characters in it.
+
+Install Visual C++ Redistributable for Visual Studio 2015: https://www.microsoft.com/en-us/download/details.aspx?id=48145
 
 ### How to open a game ROM
 
@@ -48,6 +49,8 @@ If you want the changes you made to be saved to the filesystem, don't forget to 
 
 Right click on the entity you want to edit in the room and an entity editor window will pop up. Here you can edit the entity's type/subtype/variables/etc.
 The bottom half of the window will display documentation on the specific entity selected (if available). This explains exactly what this entity does, and how its variables affect this.
+
+You can add a new entity to a room by right clicking on the background of a room and selecting Add Entity.
 
 ### Editing enemies, items, text, and maps
 
