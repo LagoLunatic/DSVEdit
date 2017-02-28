@@ -165,6 +165,23 @@
           <widget class="QComboBox" name="animation_index"/>
          </item>
          <item>
+          <widget class="QLabel" name="label_14">
+           <property name="text">
+            <string>Frame delay</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLineEdit" name="frame_delay">
+           <property name="maximumSize">
+            <size>
+             <width>40</width>
+             <height>16777215</height>
+            </size>
+           </property>
+          </widget>
+         </item>
+         <item>
           <widget class="QLabel" name="label_8">
            <property name="text">
             <string>Loop</string>

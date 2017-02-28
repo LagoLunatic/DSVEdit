@@ -541,6 +541,7 @@ class SpriteEditor < Qt::Dialog
     frame_delay = @current_animation.frame_delays[@current_animation_frame_index]
     frame_changed(frame_delay.frame_index)
     @ui.seek_slider.value = @current_animation_frame_index
+    @ui.frame_delay.text = "%04X" % frame_delay.delay
   end
   
   def set_animation_paused(paused)
