@@ -250,7 +250,7 @@ class NDSFileSystem
     file = @currently_loaded_files.values.find{|file| file[:file_path] == file_path}
     
     if file[:overlay_id] && ROOM_OVERLAYS.include?(file[:overlay_id]) && file[:size] + length_to_expand_by > MAX_ALLOWABLE_ROOM_OVERLAY_SIZE
-      raise FileExpandError.new("Failed to expand room overlay #{file[:overlay_id]} to #{file[:size] + length_to_expand_by} bytes because that is larger than the maximum size a room overlay can be (#{MAX_ALLOWABLE_ROOM_OVERLAY_SIZE} bytes).")
+      raise FileExpandError.new("Failed to expand room overlay #{file[:overlay_id]} to #{file[:size] + length_to_expand_by} bytes because that is larger than the maximum size a room overlay can be in this game (#{MAX_ALLOWABLE_ROOM_OVERLAY_SIZE} bytes).")
     end
     
     old_size = file[:size]
