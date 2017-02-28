@@ -1,10 +1,13 @@
 Enemies:
 00 Bat
 01 Zombie
+  Spawner.
+  Var A: Maximum number of Zombies this spawner can have in the room at once.
+  Var B: Maximum horizontal distance in pixels away from the spawner the Zombies can spawn.
 02 Skeleton
 03 Ghost
   Spawner.
-  Var A: Maximum number of Ghosts that can be on screen at once. 0 means no limit.
+  Var A: Maximum number of Ghosts this spawner can have in the room at once.
 04 Banshee
 05 Bone Scimitar
 06 Sea Stinger
@@ -20,6 +23,7 @@ Enemies:
 10 Needles
 11 Demon
 12 Fishhead
+  Var A: Number of them stacked on top of each other.
 13 Dark Octopus
 14 Killer Fish
 15 Forneus
@@ -40,6 +44,7 @@ Enemies:
 23 Black Fomor
 24 Enkidu
 25 Bone Pillar
+  Var A: Number of them stacked on top of each other.
 26 Skeleton Frisky
 27 Skeleton Hero
 28 Dullahan
@@ -54,7 +59,9 @@ Enemies:
   Var A: 0 or 1
 2E Decarabia
   Var A: 0 to 3
-  Var B: 0 or 1
+  Var B:
+    0 Moves right.
+    1 Moves left.
 2F Merman
 30 Ladycat
 31 Ectoplasm
@@ -83,6 +90,9 @@ Enemies:
 46 Evil Force
 47 Flea Man
 48 Ghoul
+  Spawner.
+  Var A: Maximum number of Ghouls this spawner can have in the room at once.
+  Var B: Maximum horizontal distance in pixels away from the spawner the Ghouls can spawn.
 49 Peeping Eye
 4A Gargoyle
   Var A:
