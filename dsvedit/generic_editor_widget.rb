@@ -50,16 +50,16 @@ class GenericEditorWidget < Qt::Widget
     
     @items.first.item_attribute_bitfields.keys.each_with_index do |attribute_name, col|
       (0..15).each do |row|
-        item = @ui.treeWidget.topLevelItem(row)
-        if item.nil?
-          item = Qt::TreeWidgetItem.new(@ui.treeWidget)
+        tree_row_item = @ui.treeWidget.topLevelItem(row)
+        if tree_row_item.nil?
+          tree_row_item = Qt::TreeWidgetItem.new(@ui.treeWidget)
         end
         
         @ui.treeWidget.headerItem.setText(col, attribute_name)
         
         bitfield_attribute_names = ITEM_BITFIELD_ATTRIBUTES[attribute_name]
         
-        item.setText(col, bitfield_attribute_names[row])
+        tree_row_item.setText(col, bitfield_attribute_names[row])
       end
       @ui.treeWidget.setColumnWidth(col, 150)
     end
@@ -94,12 +94,12 @@ class GenericEditorWidget < Qt::Widget
     
     item.item_attribute_bitfields.values.each_with_index do |value, col|
       (0..15).each do |row|
-        item = @ui.treeWidget.topLevelItem(row)
+        tree_row_item = @ui.treeWidget.topLevelItem(row)
         
         if value[row]
-          item.setCheckState(col, Qt::Checked)
+          tree_row_item.setCheckState(col, Qt::Checked)
         else
-          item.setCheckState(col, Qt::Unchecked)
+          tree_row_item.setCheckState(col, Qt::Unchecked)
         end
       end
     end
@@ -116,9 +116,9 @@ class GenericEditorWidget < Qt::Widget
     
     item.item_attribute_bitfields.keys.each_with_index do |attribute_name, col|
       (0..15).each do |row|
-        item = @ui.treeWidget.topLevelItem(row)
+        tree_row_item = @ui.treeWidget.topLevelItem(row)
         
-        if item.checkState(col) == Qt::Checked
+        if tree_row_item.checkState(col) == Qt::Checked
           item.item_attribute_bitfields[attribute_name][row] = true
         else
           item.item_attribute_bitfields[attribute_name][row] = false
