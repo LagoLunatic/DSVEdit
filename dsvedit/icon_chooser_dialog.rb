@@ -147,6 +147,7 @@ class IconChooserDialog < Qt::Dialog
   end
   
   def change_icon_by_page_x_and_y(x, y, button)
+    return unless (0..127).include?(x) && (0..127).include?(y)
     new_icon_index = @ui.gfx_page_index.currentIndex*@icons_per_page + (y / @icon_height)*@icons_per_row + (x / @icon_width)
     icon_changed(new_icon_index)
   end

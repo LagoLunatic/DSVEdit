@@ -199,6 +199,7 @@ class MapEditorDialog < Qt::Dialog
   end
   
   def select_tile(x, y, button)
+    return unless @available_tiles_graphics_scene.sceneRect.contains(x, y)
     i = x/8 + y/8*16
     @selected_map_tile = @available_tiles[i]
     load_selected_map_tile()

@@ -22,6 +22,7 @@ class DSVEdit < Qt::MainWindow
   slots "save_files()"
   slots "edit_layers()"
   slots "add_new_layer()"
+  slots "add_new_entity()"
   slots "update_visible_view_items()"
   slots "open_enemy_dna_dialog()"
   slots "open_text_editor()"
@@ -42,6 +43,7 @@ class DSVEdit < Qt::MainWindow
   slots "room_index_changed(int)"
   slots "sector_and_room_indexes_changed(int, int)"
   slots "change_room_by_metadata(int)"
+  slots "room_clicked(int, int, const Qt::MouseButton&)"
   slots "change_room_by_map_x_and_y(int, int, const Qt::MouseButton&)"
   slots "open_in_tiled()"
   slots "import_from_tiled()"
@@ -54,10 +56,11 @@ class DSVEdit < Qt::MainWindow
     @ui = Ui_MainWindow.new
     @ui.setup_ui(self)
     
-    @room_graphics_scene = Qt::GraphicsScene.new
+    @room_graphics_scene = ClickableGraphicsScene.new
     @ui.room_graphics_view.setScene(@room_graphics_scene)
     @ui.room_graphics_view.setDragMode(Qt::GraphicsView::ScrollHandDrag)
     self.setStyleSheet("QGraphicsView { background-color: transparent; }");
+    connect(@room_graphics_scene, SIGNAL("clicked(int, int, const Qt::MouseButton&)"), self, SLOT("room_clicked(int, int, const Qt::MouseButton&)"))
     
     @map_graphics_scene = ClickableGraphicsScene.new
     @map_graphics_scene.setSceneRect(0, 0, 64*4+1, 48*4+1)
@@ -72,6 +75,7 @@ class DSVEdit < Qt::MainWindow
     connect(@ui.actionSave, SIGNAL("activated()"), self, SLOT("save_files()"))
     connect(@ui.actionEdit_Layers, SIGNAL("activated()"), self, SLOT("edit_layers()"))
     connect(@ui.actionAdd_New_Layer, SIGNAL("activated()"), self, SLOT("add_new_layer()"))
+    connect(@ui.actionAdd_Entity, SIGNAL("activated()"), self, SLOT("add_new_entity()"))
     connect(@ui.actionEntities, SIGNAL("activated()"), self, SLOT("update_visible_view_items()"))
     connect(@ui.actionDoors, SIGNAL("activated()"), self, SLOT("update_visible_view_items()"))
     connect(@ui.actionCollision, SIGNAL("activated()"), self, SLOT("update_visible_view_items()"))
@@ -358,6 +362,22 @@ class DSVEdit < Qt::MainWindow
     change_room(room.room_index, force=true)
   end
   
+  def room_clicked(x, y, button)
+    return unless button == Qt::RightButton
+    
+    item = @room_graphics_scene.itemAt(x, y)
+    if item && (item.is_a?(EntityChunkyItem) || item.is_a?(EntityRectItem))
+      open_entity_editor(item.entity)
+    elsif item && item.is_a?(DoorItem)
+      change_room_by_metadata(item.door.destination_room_metadata_ram_pointer)
+    else
+      global_pos = @ui.room_graphics_view.mapToGlobal(@ui.room_graphics_view.mapFromScene(x, y))
+      menu = Qt::Menu.new(self)
+      menu.addAction(@ui.actionAdd_Entity)
+      menu.exec(global_pos)
+    end
+  end
+  
   def change_room_by_map_x_and_y(x, y, button)
     x = x / 4
     y = y / 4
@@ -375,8 +395,9 @@ class DSVEdit < Qt::MainWindow
   
   def load_room
     @room_graphics_scene.clear()
-    @room_graphics_scene = Qt::GraphicsScene.new
+    @room_graphics_scene = ClickableGraphicsScene.new
     @ui.room_graphics_view.setScene(@room_graphics_scene)
+    connect(@room_graphics_scene, SIGNAL("clicked(int, int, const Qt::MouseButton&)"), self, SLOT("room_clicked(int, int, const Qt::MouseButton&)"))
     
     @layers_view_item = Qt::GraphicsRectItem.new
     @room_graphics_scene.addItem(@layers_view_item)
@@ -411,7 +432,7 @@ class DSVEdit < Qt::MainWindow
       x *= SCREEN_WIDTH_IN_PIXELS
       y *= SCREEN_HEIGHT_IN_PIXELS
       
-      door_item = DoorItem.new(door, x, y, self)
+      door_item = DoorItem.new(door, x, y)
       door_item.setParentItem(@doors_view_item)
     end
     
@@ -461,7 +482,7 @@ class DSVEdit < Qt::MainWindow
         item_global_id = entity.var_b - 1
         chunky_image = @renderer.render_icon_by_global_id(item_global_id)
         
-        graphics_item = EntityChunkyItem.new(chunky_image, entity, self)
+        graphics_item = EntityChunkyItem.new(chunky_image, entity)
         graphics_item.setPos(entity.x_pos-8, entity.y_pos-16)
         graphics_item.setParentItem(@entities_view_item)
       else
@@ -469,7 +490,7 @@ class DSVEdit < Qt::MainWindow
         item_id = entity.var_b
         chunky_image = @renderer.render_icon_by_item_type(item_type-2, item_id)
         
-        graphics_item = EntityChunkyItem.new(chunky_image, entity, self)
+        graphics_item = EntityChunkyItem.new(chunky_image, entity)
         graphics_item.setPos(entity.x_pos-8, entity.y_pos-16)
         graphics_item.setParentItem(@entities_view_item)
       end
@@ -499,7 +520,7 @@ class DSVEdit < Qt::MainWindow
         chunky_image = @renderer.render_icon(64 + 3, 0)
       end
       
-      graphics_item = EntityChunkyItem.new(chunky_image, entity, self)
+      graphics_item = EntityChunkyItem.new(chunky_image, entity)
       graphics_item.setPos(entity.x_pos-8, entity.y_pos-16)
       graphics_item.setParentItem(@entities_view_item)
     elsif entity.is_glyph? || entity.is_hidden_glyph?
@@ -510,22 +531,22 @@ class DSVEdit < Qt::MainWindow
         chunky_image = @renderer.render_icon_by_item_type(1, glyph_id-1-0x37, mode=:glyph)
       end
       
-      graphics_item = EntityChunkyItem.new(chunky_image, entity, self)
+      graphics_item = EntityChunkyItem.new(chunky_image, entity)
       graphics_item.setPos(entity.x_pos-16, entity.y_pos-16)
       graphics_item.setParentItem(@entities_view_item)
     else
-      graphics_item = EntityRectItem.new(entity, self)
+      graphics_item = EntityRectItem.new(entity)
       graphics_item.setParentItem(@entities_view_item)
     end
   rescue StandardError => e
-    graphics_item = EntityRectItem.new(entity, self)
+    graphics_item = EntityRectItem.new(entity)
     graphics_item.setParentItem(@entities_view_item)
   end
   
   def add_sprite_item_for_entity(entity, sprite_data, frame_to_render)
     if frame_to_render == -1
       # Don't show this entity's sprite in the editor.
-      graphics_item = EntityRectItem.new(entity, self)
+      graphics_item = EntityRectItem.new(entity)
       graphics_item.setParentItem(@entities_view_item)
       return
     end
@@ -537,7 +558,7 @@ class DSVEdit < Qt::MainWindow
     sprite_filename = @renderer.ensure_sprite_exists("cache/#{GAME}/sprites/", gfx_file_pointers, palette_pointer, palette_offset, sprite, frame_to_render)
     chunky_frame = ChunkyPNG::Image.from_file(sprite_filename)
     
-    graphics_item = EntityChunkyItem.new(chunky_frame, entity, self)
+    graphics_item = EntityChunkyItem.new(chunky_frame, entity)
     
     graphics_item.setPos(entity.x_pos+sprite.min_x, entity.y_pos+sprite.min_y)
     graphics_item.setParentItem(@entities_view_item)
@@ -593,6 +614,24 @@ class DSVEdit < Qt::MainWindow
     
     Qt::MessageBox.warning(self, "Layer added", "Successfully added a new layer to room %08X." % @room.room_metadata_ram_pointer)
   rescue NDSFileSystem::FileExpandError => e
+    Qt::MessageBox.warning(self, "Cannot add layer", e.message)
+  end
+  
+  def add_new_entity
+    entity = Entity.new(@room, game.fs)
+    scene_pos = @ui.room_graphics_view.mapToScene(@ui.room_graphics_view.mapFromGlobal(Qt::Cursor.pos))
+    entity.x_pos = scene_pos.x
+    entity.y_pos = scene_pos.y
+    entity.type = 1
+    @room.entities << entity
+    @room.write_entities_to_rom()
+    
+    load_room()
+    
+    open_entity_editor(entity)
+  rescue NDSFileSystem::FileExpandError => e
+    @room.read_from_rom() # Reload room to get rid of the failed changes.
+    load_room()
     Qt::MessageBox.warning(self, "Cannot add layer", e.message)
   end
   
@@ -844,20 +883,13 @@ end
 class DoorItem < Qt::GraphicsRectItem
   BRUSH = Qt::Brush.new(Qt::Color.new(200, 0, 200, 50))
   
-  def initialize(door, x, y, window)
+  attr_reader :door
+  
+  def initialize(door, x, y)
     super(x, y, 16*16, 12*16)
     
     self.setBrush(BRUSH)
     @door = door
-    @window = window
-  end
-  
-  def mousePressEvent(event)
-    if event.button == Qt::RightButton
-      @window.change_room_by_metadata(@door.destination_room_metadata_ram_pointer)
-    else
-      super(event)
-    end
   end
 end
 
@@ -868,15 +900,17 @@ class ClickableGraphicsScene < Qt::GraphicsScene
   def mousePressEvent(event)
     x = event.scenePos().x.to_i
     y = event.scenePos().y.to_i
-    return unless (0..width-1).include?(x) && (0..height-1).include?(y)
     emit clicked(x, y, event.buttons)
+    
+    super(event)
   end
   
   def mouseMoveEvent(event)
     x = event.scenePos().x.to_i
     y = event.scenePos().y.to_i
-    return unless (0..width-1).include?(x) && (0..height-1).include?(y)
     emit moved(x, y, event.buttons)
+    
+    super(event)
   end
 end
 
@@ -890,19 +924,12 @@ class GraphicsChunkyItem < Qt::GraphicsPixmapItem
 end
 
 class EntityChunkyItem < GraphicsChunkyItem
-  def initialize(chunky_image, entity, window)
+  attr_reader :entity
+  
+  def initialize(chunky_image, entity)
     super(chunky_image)
     
     @entity = entity
-    @window = window
-  end
-  
-  def mousePressEvent(event)
-    if event.button == Qt::RightButton
-      @window.open_entity_editor(@entity)
-    else
-      super(event)
-    end
   end
 end
 
@@ -913,7 +940,9 @@ class EntityRectItem < Qt::GraphicsRectItem
   CANDLE_BRUSH         = Qt::Brush.new(Qt::Color.new(200, 200, 0, 150))
   OTHER_BRUSH          = Qt::Brush.new(Qt::Color.new(200, 0, 200, 150))
   
-  def initialize(entity, window)
+  attr_reader :entity
+  
+  def initialize(entity)
     super(entity.x_pos-8, entity.y_pos-8, 16, 16)
     
     case entity.type
@@ -929,14 +958,5 @@ class EntityRectItem < Qt::GraphicsRectItem
       self.setBrush(OTHER_BRUSH)
     end
     @entity = entity
-    @window = window
-  end
-  
-  def mousePressEvent(event)
-    if event.button == Qt::RightButton
-      @window.open_entity_editor(@entity)
-    else
-      super(event)
-    end
   end
 end

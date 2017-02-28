@@ -14,6 +14,7 @@ class Entity
   def initialize(room, fs)
     @room = room
     @fs = fs
+    @x_pos = @y_pos = @byte_5 = @type = @subtype = @byte_8 = @var_a = @var_b = 0
   end
   
   def read_from_rom(entity_ram_pointer)
