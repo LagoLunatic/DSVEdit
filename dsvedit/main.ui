@@ -193,6 +193,7 @@
     <addaction name="actionMap_Editor"/>
     <addaction name="actionText_Editor"/>
     <addaction name="actionSprite_Editor"/>
+    <addaction name="actionItem_Pool_Editor"/>
     <addaction name="actionEntity_Search"/>
     <addaction name="actionSettings"/>
    </widget>
@@ -400,6 +401,11 @@
    </property>
    <property name="shortcut">
     <string>M</string>
+   </property>
+  </action>
+  <action name="actionItem_Pool_Editor">
+   <property name="text">
+    <string>Item Pool Editor</string>
    </property>
   </action>
  </widget>

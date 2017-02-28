@@ -139,6 +139,20 @@ class Game
     end
   end
   
+  def items
+    @items ||= begin
+      items = []
+      
+      ITEM_TYPES.each do |item_type|
+        (0..item_type[:count]-1).each do |index|
+          items << Item.new(index, item_type, fs)
+        end
+      end
+      
+      items
+    end
+  end
+  
   def get_map(area_index, sector_index)
     if GAME == "dos"
       DoSMap.new(area_index, sector_index, fs)
