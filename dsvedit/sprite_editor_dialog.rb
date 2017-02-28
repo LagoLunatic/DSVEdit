@@ -78,8 +78,6 @@ class SpriteEditor < Qt::Dialog
     max_weapon_gfx_index = 0
     max_skill_gfx_index = 0
     ITEM_TYPES.each do |item_type|
-      name = item_type[:name]
-      format_length = item_type[:format].inject(0){|sum, attr| sum += attr[0]}
       (0..item_type[:count]-1).each do |index|
         item = Item.new(index, item_type, fs)
         if item.is_skill
@@ -179,6 +177,14 @@ class SpriteEditor < Qt::Dialog
       return if id == -1
       special_object_changed(id)
     when 2
+      id = @ui.weapon_list.currentRow
+      return if id == -1
+      weapon_changed(id)
+    when 3
+      id = @ui.skill_list.currentRow
+      return if id == -1
+      skill_changed(id)
+    when 4
       id = @ui.other_sprites_list.currentRow
       return if id == -1
       other_sprite_changed(id)
