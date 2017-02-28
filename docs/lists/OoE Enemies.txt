@@ -85,6 +85,9 @@ Enemies:
 48 Ghoul
 49 Peeping Eye
 4A Gargoyle
+  Var A:
+    0 The Gargoyle wakes up when the player get close to it.
+    1 The Gargoyle is just a background decoration.
 4B Blood Skeleton
 4C Black Panther
 4D Mimic
@@ -109,7 +112,17 @@ Enemies:
   Requires overlay 38.
 5F Automaton ZX27
 60 Medusa Head
+  Spawner.
+  Var A: Maximum number of Medusa Heads this spawner can have in the room at once.
+  Var B:
+    0 Spawns blue Medusa Heads.
+    1 Spawns yellow Medusa Heads that can petrify the player.
+  If var A is 0, it's not a spawner, instead it's just a single blue Medusa Head.
 61 Gorgon Head
+  Spawner.
+  Spawns Gorgon Heads at random intervals, with var A being the minimum number of frames between spawns, and (var A + var B) being the maximum number of frames.
+  If var B is 0, it uses the default values of var A being 0x168 and var B being 0x78.
+  If var A is 0, it's not a spawner, instead it's just a single blue Medusa Head (but it has the stats and drops of a Gorgon Head).
 62 Mad Snatcher
 63 Great Knight
 64 King Skeleton
