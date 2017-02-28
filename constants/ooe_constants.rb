@@ -397,8 +397,10 @@ OVERLAY_FILE_FOR_SPECIAL_OBJECT = {
   0x66 => 78,
 }
 REUSED_SPECIAL_OBJECT_INFO = {
+  0x00 => {init_code:         -1},
   0x01 => {sprite: 0x020C4E24, gfx_files: [0x020B8788, 0x020B8794, 0x020B87A0, 0x020B87AC, 0x020B87B8, 0x020B87D0, 0x020B8818, 0x020B8824], palette: 0x020C8E50}, # magnes point
   0x02 => {init_code: 0x022B6E98}, # destructible
+  0x03 => {init_code:         -1},
   0x16 => {init_code: 0x0221A408, palette_offset: 1}, # red chest
   0x17 => {init_code: 0x0221A408, palette_offset: 2}, # blue chest
   0x1A => {init_code:         -1},

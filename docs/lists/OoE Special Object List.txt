@@ -11,9 +11,14 @@ Special Objects:
     00 A statue that yields a glyph when destroyed. Var B controls what glyph it is, it's the global ID of the glyph + 1.
     01-1E A candle.
     1F+ Buggy, it looks like a glyph statue but has a messed up palette, and it may yield either a glyph or money like a candle.
-03 Unused and no apparent effect.
-04 large block with spikes on its right side that shanoa can push. part of an unused puzzle?
-05 Stone block that shanoa can push and it breaks if it falls.
+03 Nothing.
+04 Large yellow block with spikes on its right side that the player can push.
+  Part of an unused puzzle?
+  The spikes damage both the player and enemies.
+05 Stone block that the player can push.
+  Can be pushed off an edge and falls. Breaks if it hits the ground.
+  If it falls into water at least 8 pixels deep it won't break.
+  If it falls into water at least 0x11 pixels deep it will raise water level up by 0x30 pixels.
 06 Water level.
 07 Paries entry point.
   Var A:
