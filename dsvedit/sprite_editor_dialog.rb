@@ -65,9 +65,11 @@ class SpriteEditor < Qt::Dialog
     SPECIAL_OBJECT_IDS.each do |special_object_id|
       special_object = SpecialObjectType.new(special_object_id, fs)
       @special_objects << special_object
-      object_name = game.special_object_docs[special_object_id] || " "
-      object_name = object_name.lines.first.strip[0..40]
-      if object_name != game.special_object_docs[special_object_id].lines.first.strip
+      object_name = game.special_object_docs[special_object_id]
+      object_name = " " if object_name.nil? || object_name.empty?
+      object_name = object_name.lines.first.strip
+      if object_name.length > 41
+        object_name = object_name[0..40]
         object_name << "..."
       end
       @ui.special_object_list.addItem("%02X %s" % [special_object_id, object_name])
