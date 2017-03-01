@@ -8,12 +8,12 @@ Report issues here: https://github.com/LagoLunatic/DSVEdit/issues
 
 * Viewing and editing rooms (tiles, entities, and doors)
 * Resizing rooms, and adding and removing entities and doors. Files are automatically expanded as necessary to avoid overwriting other data.
-* Viewing and editing enemy DNA (max HP, attack, items dropped, etc.)
+* Viewing and editing enemies (max HP, attack, items dropped, etc.)
 * Viewing and editing text
 * Viewing and editing items
 * Viewing and editing random chest item pools
 * Viewing and editing area maps
-* Viewing enemy sprites
+* Viewing sprites (enemies, objects, weapons, etc)
 
 ### Requirements
 
