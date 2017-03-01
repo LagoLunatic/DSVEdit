@@ -1,5 +1,6 @@
 Special objects:
 00 Nothing.
+  Seems to have leftover code from DoS's Balore blocks, but the part that spawns the blocks is commented out, so this does nothing.
 01 Candle or other destructible piece of scenery. Var A controls the type:
   00-0D Normal objects.
   0E-0F Money chests.
@@ -8,9 +9,11 @@ Special objects:
 02 Unused
 03 Changes gravity for enemies, used in Nation of Fools/Burnt Paradise. Only works for certain enemies specifically coded to do this.
   Var A is 0000 in rooms with the floor on the right, 8000 with the floor on the left, C000 with the floor on the top.
-04 starts boss rush?
-05 ends boss rush?
-06 used in all nest of evil rooms with common enemies. maybe opens the doors after a set amount of time?
+04 Starts boss rush.
+  Puts a timer on the screen.
+05 Ends boss rush?
+06 Opens boss doors after a full minute has passed.
+  Only opens boss doors that have Var A = 1 (the type that usually opens when there are no enemies left in the room).
 07 Unused
 08 Unused
 09 Unused
@@ -53,8 +56,8 @@ Special objects:
 22 Boss door.
   Var A is is how the door acts:
     00 Door outside the boss room that opens when you touch it.
-    01 Door inside the boss room that opens when the boss is killed.
-    02 Door inside the boss room that doesn't open when the boss is killed (e.g. the door you enter from in Nest of Evil rooms or Dracula's throne room).
+    01 Door inside the boss room that opens when there are no enemies left in the room.
+    02 Never opens once it's closed. Used in Nest of Evil and Dracula's throne room.
   Var B is the boss this door is for:
     00 N/A (Never permanently disappears)
     01 Dullahan
@@ -77,7 +80,10 @@ Special objects:
 24 Makes various food particles fly when the player lands on certain platforms. It's hardcoded to activate only when the player lands on tile 9E. In the appropriate tileset (City of Haze) this is an invisible tile that acts as a platform you can jump through. In order to make the platform visible, place visible platform tiles on a separate, non-collision layer.
 25 Cash register from City of Haze that gives you different pastries depending on how much money you drop into it.
 26 Pushable cart.
-  Var A: ???
+  Var A: Affects which miscellaneous flag to set after pushing this cart out of the way.
+    0 - Misc flag 5.
+    1 - Misc flag 7.
+    2+ - Doesn't set a flag, cart will always move back to its original position when you re-enter the room.
 27 Dark Academy background and rain overlay and sound effects.
   Var A: Affects what sound effects the rain plays.
 28 Train you need to slow down to a stop?
