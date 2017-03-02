@@ -82,14 +82,14 @@ class Joint
               :parent
   attr_accessor :x_pos,
                 :y_pos,
-                :total_rotation
+                :inherited_rotation
               
   def initialize(joint_data, all_joints)
     @parent_id, @frame_id, @bits, @palette = joint_data.unpack("CCCC")
     if parent_id == 0xFF
       @x_pos = 0
       @y_pos = 0
-      @total_rotation = 0
+      @inherited_rotation = 0
     else
       @parent = all_joints[@parent_id]
     end

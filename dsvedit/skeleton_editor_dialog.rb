@@ -70,12 +70,12 @@ class SkeletonEditorDialog < Qt::Dialog
       
       joint.x_pos = parent_joint.x_pos
       joint.y_pos = parent_joint.y_pos
-      joint.total_rotation = parent_joint_change.rotation
+      joint.inherited_rotation = parent_joint_change.rotation
       
       if parent_joint.copy_parent_visual_rotation && parent_joint.parent_id != 0xFF
-        joint.total_rotation += parent_joint.total_rotation
+        joint.inherited_rotation += parent_joint.inherited_rotation
       end
-      connected_rotation_in_degrees = joint.total_rotation/182.0
+      connected_rotation_in_degrees = joint.inherited_rotation / 182.0
       
       offset_angle = connected_rotation_in_degrees
       offset_angle += 90 * joint.positional_rotation
@@ -94,7 +94,7 @@ class SkeletonEditorDialog < Qt::Dialog
       
       rotation = joint_change.rotation
       if joint.parent_id != 0xFF && joint.copy_parent_visual_rotation
-        rotation += joint.total_rotation
+        rotation += joint.inherited_rotation
       end
       rotation_in_degrees = rotation/182.0
       
@@ -145,7 +145,7 @@ class SkeletonEditorDialog < Qt::Dialog
         
         offset_angle = hitbox.rotation + joint_change.rotation
         if joint.copy_parent_visual_rotation
-          offset_angle += joint.total_rotation
+          offset_angle += joint.inherited_rotation
         end
         offset_angle_in_degrees = offset_angle / 182.0
         offset_angle_in_radians = offset_angle_in_degrees * Math::PI / 180
@@ -179,7 +179,11 @@ class SkeletonEditorDialog < Qt::Dialog
         x_pos = joint.x_pos
         y_pos = joint.y_pos
         
-        offset_angle_in_degrees = (joint_change.rotation + point.rotation) / 182.0
+        offset_angle = point.rotation + joint_change.rotation
+        if joint.copy_parent_visual_rotation
+          offset_angle += joint.inherited_rotation
+        end
+        offset_angle_in_degrees = offset_angle / 182.0
         offset_angle_in_radians = offset_angle_in_degrees * Math::PI / 180
         x_pos += point.distance*Math.cos(offset_angle_in_radians)
         y_pos += point.distance*Math.sin(offset_angle_in_radians)
