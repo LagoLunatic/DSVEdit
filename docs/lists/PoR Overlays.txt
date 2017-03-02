@@ -5,7 +5,7 @@
 3-4    0222C840 
 5      022B2A80 Sprite data that isn't stored in individual files. (Unused?)
 6      022B2AE0 Sprite data that isn't stored in individual files. (Unused?)
-7      022B7660 
+7      022B7660 Various data including palettes and GFX wrappers.
 8      022D0F40 
 9-24   022D7500 
 25     022D7900 Enemy code for Whip's Memory.

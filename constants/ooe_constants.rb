@@ -540,7 +540,7 @@ OTHER_SPRITES = [
 
 OVERLAY_FILES_WITH_SPRITE_DATA = []
 
-TEXT_LIST_START_OFFSET = 0x021FACC0
+TEXT_LIST_START_OFFSET = 0x021FACC0 # 0x021FE000 for French text.
 TEXT_RANGE = (0..0x764)
 TEXT_REGIONS = {
   "Character Names" => (0..0x15),
@@ -553,6 +553,7 @@ TEXT_REGIONS = {
   "Events" => (0x660..0x764)
 }
 TEXT_REGIONS_OVERLAYS = {
+  # French text uses overlay 1 instead of 0.
   "Character Names" => 0,
   "Item Names" => 0,
   "Item Descriptions" => 0,
