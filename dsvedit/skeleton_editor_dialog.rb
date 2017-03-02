@@ -140,10 +140,14 @@ class SkeletonEditorDialog < Qt::Dialog
         joint = @skeleton.joints[hitbox.parent_joint_id]
         joint_change = pose[hitbox.parent_joint_id]
         
-        x_pos = joint.x_pos-hitbox.width/2
-        y_pos = joint.y_pos-hitbox.height/2
+        x_pos = joint.x_pos
+        y_pos = joint.y_pos
         
-        offset_angle_in_degrees = (joint_change.rotation + hitbox.rotation) / 182.0
+        offset_angle = hitbox.rotation + joint_change.rotation
+        if joint.copy_parent_visual_rotation
+          offset_angle += joint.total_rotation
+        end
+        offset_angle_in_degrees = offset_angle / 182.0
         offset_angle_in_radians = offset_angle_in_degrees * Math::PI / 180
         x_pos += hitbox.distance*Math.cos(offset_angle_in_radians)
         y_pos += hitbox.distance*Math.sin(offset_angle_in_radians)
@@ -158,9 +162,9 @@ class SkeletonEditorDialog < Qt::Dialog
         else
           hitbox_item.setPen(WHITE_PEN)
         end
-        hitbox_item.setRect(x_pos, y_pos, hitbox.width, hitbox.height)
+        hitbox_item.setRect(x_pos-hitbox.width/2, y_pos-hitbox.height/2, hitbox.width, hitbox.height)
         hitbox_item.setTransformOriginPoint(hitbox_item.rect.center)
-        rotation_in_degrees = hitbox.rotation/182.0
+        rotation_in_degrees = hitbox.rotation / 182.0
         hitbox_item.setRotation(rotation_in_degrees)
         hitbox_item.setZValue(1)
         @skeleton_graphics_scene.addItem(hitbox_item)
