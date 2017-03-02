@@ -151,7 +151,8 @@ class RandomizerWindow < Qt::Dialog
     end
     
     if @ui.fix_first_ability_soul.checked()
-      game.apply_armips_patch("dos_skip_magic_seals")
+      game.apply_armips_patch("dos_skip_boss_door_seals")
+      game.apply_armips_patch("dos_skip_drawing_seals")
     end
     
     if @ui.skip_name_signing.checked()
