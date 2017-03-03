@@ -119,9 +119,17 @@ Byte 7: Soul type.
   3 - Grey soul.
 Byte 8: Bitfield:
   Least significant bit first.
-  Bit 1: 
+  Bit 1: ?
   Bit 5: If set, must hold down R button to keep this soul active. Otherwise, R toggles this soul on/off.
-Bytes 9-10:
+  Bit 6: Must hold R (same as bit 5).
+  Bit 7: Must hold R (same as bit 5).
+  Bit 8: Must hold R (same as bit 5).
+Bytes 9-10: Affects how many levels of scaling this soul has for when you get duplicates.
+  0 - 1 level.
+  1 - 2 levels.
+  2 - 3 levels.
+  3 - 5 levels.
+  4 - 9 levels.
 Bytes 11-12: Mana cost.
 Bytes 13-14: Attack stat.
 Bytes 15-16: 
@@ -347,7 +355,6 @@ Byte 23-24: Varies depending on the code being run.
     2 Arma Chiroptera
     3 Arma Machina
     4 Albus
-  
 Bytes 25-28:
 
 Glyph union format (OoE):
