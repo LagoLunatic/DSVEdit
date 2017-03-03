@@ -10,7 +10,8 @@ class Item
               :item_attributes,
               :item_attribute_integers,
               :item_attribute_integer_lengths,
-              :item_attribute_bitfields
+              :item_attribute_bitfields,
+              :item_attribute_bitfield_lengths
   
   def initialize(index, item_type, fs)
     @index = index
@@ -28,6 +29,7 @@ class Item
     @item_attribute_integers = {}
     @item_attribute_integer_lengths = []
     @item_attribute_bitfields = {}
+    @item_attribute_bitfield_lengths = []
     
     attributes = fs.read(ram_pointer, item_format_length).unpack(attribute_format_string)
     item_type_format.each do |attribute_length, attribute_name, attribute_type|
@@ -39,6 +41,7 @@ class Item
       when :bitfield
         val = Bitfield.new(attributes.shift)
         @item_attribute_bitfields[attribute_name] = val
+        @item_attribute_bitfield_lengths << attribute_length
         @item_attributes[attribute_name] = val
       else
         val = attributes.shift

@@ -49,7 +49,9 @@ class GenericEditorWidget < Qt::Widget
     end
     
     @items.first.item_attribute_bitfields.keys.each_with_index do |attribute_name, col|
-      (0..15).each do |row|
+      attribute_length = @items.first.item_attribute_bitfield_lengths[col]
+      
+      (0..attribute_length*8-1).each do |row|
         tree_row_item = @ui.treeWidget.topLevelItem(row)
         if tree_row_item.nil?
           tree_row_item = Qt::TreeWidgetItem.new(@ui.treeWidget)
@@ -93,7 +95,9 @@ class GenericEditorWidget < Qt::Widget
     end
     
     item.item_attribute_bitfields.values.each_with_index do |value, col|
-      (0..15).each do |row|
+      attribute_length = item.item_attribute_bitfield_lengths[col]
+      
+      (0..attribute_length*8-1).each do |row|
         tree_row_item = @ui.treeWidget.topLevelItem(row)
         
         if value[row]
@@ -115,7 +119,9 @@ class GenericEditorWidget < Qt::Widget
     end
     
     item.item_attribute_bitfields.keys.each_with_index do |attribute_name, col|
-      (0..15).each do |row|
+      attribute_length = item.item_attribute_bitfield_lengths[col]
+      
+      (0..attribute_length*8-1).each do |row|
         tree_row_item = @ui.treeWidget.topLevelItem(row)
         
         if tree_row_item.checkState(col) == Qt::Checked
