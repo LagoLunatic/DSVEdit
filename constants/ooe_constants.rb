@@ -1,5 +1,6 @@
 
 GAME = "ooe"
+REGION = :usa
 LONG_GAME_NAME = "Order of Ecclesia"
 
 AREA_LIST_RAM_START_OFFSET = 0x020ECDDC

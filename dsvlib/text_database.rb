@@ -28,6 +28,12 @@ class TextDatabase
     
     # For PoR, the strings are split across two different overlay files, so we have to handle those separately.
     
+    if REGION == :jp
+      header_footer_length = 4
+    else
+      header_footer_length = 3
+    end
+    
     overlays = TEXT_REGIONS_OVERLAYS.values.uniq
     overlays.each do |overlay|
       fs.load_overlay(overlay)
@@ -37,7 +43,7 @@ class TextDatabase
       next_string_ram_pointer = STRING_DATABASE_START_OFFSET
       should_write_to_end_of_file = false
       text_list_for_overlay.each do |text|
-        if next_string_ram_pointer + text.encoded_string.length + 3 > STRING_DATABASE_ALLOWABLE_END_OFFSET
+        if next_string_ram_pointer + text.encoded_string.length + header_footer_length > STRING_DATABASE_ALLOWABLE_END_OFFSET
           # Writing strings past this point would result in something being overwritten, so raise an error.
           
           raise StringDatabaseTooLargeError.new
@@ -45,11 +51,11 @@ class TextDatabase
         
         region_name = TEXT_REGIONS.find{|name, range| range.include?(text.text_id)}[0]
         
-        if GAME == "ooe" && next_string_ram_pointer + text.encoded_string.length + 3 >= STRING_DATABASE_ORIGINAL_END_OFFSET
+        if GAME == "ooe" && next_string_ram_pointer + text.encoded_string.length + header_footer_length >= STRING_DATABASE_ORIGINAL_END_OFFSET
           # Reached the end of where strings were in the original game, but in OoE we can expand the file.
           
           should_write_to_end_of_file = true
-          next_string_ram_pointer = fs.expand_file_and_get_end_of_file_ram_address(text.string_ram_pointer, text.encoded_string.length + 3)
+          next_string_ram_pointer = fs.expand_file_and_get_end_of_file_ram_address(text.string_ram_pointer, text.encoded_string.length + header_footer_length)
         end
         
         # Misc strings must be aligned to the nearest 4 bytes or they won't be displayed.
@@ -62,9 +68,9 @@ class TextDatabase
         text.write_to_rom()
         
         if should_write_to_end_of_file
-          next_string_ram_pointer = fs.expand_file_and_get_end_of_file_ram_address(text.string_ram_pointer, text.encoded_string.length + 3)
+          next_string_ram_pointer = fs.expand_file_and_get_end_of_file_ram_address(text.string_ram_pointer, text.encoded_string.length + header_footer_length)
         else
-          next_string_ram_pointer += text.encoded_string.length + 3
+          next_string_ram_pointer += text.encoded_string.length + header_footer_length
         end
       end
     end

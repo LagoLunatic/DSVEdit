@@ -1,5 +1,6 @@
 
 GAME = "por"
+REGION = :usa
 LONG_GAME_NAME = "Portrait of Ruin"
 
 AREA_LIST_RAM_START_OFFSET = 0x020DF36C

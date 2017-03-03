@@ -1,5 +1,6 @@
 
 GAME = "dos"
+REGION = :usa
 LONG_GAME_NAME = "Dawn of Sorrow"
 
 AREA_LIST_RAM_START_OFFSET = 0x02006FC4 # Technically not a list, this points to code that has the the area hard coded, since DoS only has one area.
