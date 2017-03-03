@@ -695,7 +695,7 @@ class DSVEdit < Qt::MainWindow
   
   def open_entity_editor(entity)
     return if @entity_editor && @entity_editor.visible?
-    @entity_editor = EntityEditorDialog.new(self, entity)
+    @entity_editor = EntityEditorDialog.new(self, @room.entities, entity)
   end
   
   def open_settings

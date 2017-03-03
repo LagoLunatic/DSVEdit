@@ -4,11 +4,12 @@ require_relative 'ui_entity_editor'
 class EntityEditorDialog < Qt::Dialog
   attr_reader :game
   
+  slots "entity_changed(int)"
   slots "type_changed(int)"
   slots "subtype_changed(int)"
   slots "button_box_clicked(QAbstractButton*)"
   
-  def initialize(main_window, entity)
+  def initialize(main_window, entities, entity)
     super(main_window, Qt::WindowTitleHint | Qt::WindowSystemMenuHint)
     @ui = Ui_EntityEditor.new
     @ui.setup_ui(self)
@@ -20,24 +21,42 @@ class EntityEditorDialog < Qt::Dialog
       @ui.type.addItem("%02X %s" % [i, description])
     end
     
+    @entities = entities
     @entity = entity
     
-    @ui.pointer.text = "%08X" % entity.entity_ram_pointer
-    @ui.x_pos.text = "%04X" % [entity.x_pos].pack("s").unpack("v").first
-    @ui.y_pos.text = "%04X" % [entity.y_pos].pack("s").unpack("v").first
-    @ui.byte_5.text = "%02X" % entity.byte_5
-    @ui.type.setCurrentIndex(entity.type)
-    type_changed(entity.type)
-    @ui.byte_8.text = "%02X" % entity.byte_8
-    subtype_changed(entity.subtype)
-    @ui.var_a.text = "%04X" % entity.var_a
-    @ui.var_b.text = "%04X" % entity.var_b
+    @entities.each_index do |i|
+      @ui.entity_index.addItem("%02X" % i)
+    end
     
+    entity_index = @entities.index(@entity)
+    if entity_index.nil?
+      return
+    end
+    entity_changed(entity_index)
+    
+    connect(@ui.entity_index, SIGNAL("activated(int)"), self, SLOT("entity_changed(int)"))
     connect(@ui.type, SIGNAL("activated(int)"), self, SLOT("type_changed(int)"))
     connect(@ui.subtype, SIGNAL("activated(int)"), self, SLOT("subtype_changed(int)"))
     connect(@ui.buttonBox, SIGNAL("clicked(QAbstractButton*)"), self, SLOT("button_box_clicked(QAbstractButton*)"))
     
     self.show()
+  end
+  
+  def entity_changed(entity_index)
+    @entity = @entities[entity_index]
+    
+    @ui.pointer.text = "%08X" % @entity.entity_ram_pointer
+    @ui.x_pos.text = "%04X" % [@entity.x_pos].pack("s").unpack("v").first
+    @ui.y_pos.text = "%04X" % [@entity.y_pos].pack("s").unpack("v").first
+    @ui.byte_5.text = "%02X" % @entity.byte_5
+    @ui.type.setCurrentIndex(@entity.type)
+    type_changed(@entity.type)
+    @ui.byte_8.text = "%02X" % @entity.byte_8
+    subtype_changed(@entity.subtype)
+    @ui.var_a.text = "%04X" % @entity.var_a
+    @ui.var_b.text = "%04X" % @entity.var_b
+    
+    @ui.entity_index.setCurrentIndex(entity_index)
   end
   
   def type_changed(type)
