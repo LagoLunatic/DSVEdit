@@ -133,6 +133,7 @@ class GfxEditorDialog < Qt::Dialog
         "GFX import error",
         e.message
       )
+      return
     end
     
     load_palettes(@colors_per_palette)
@@ -156,6 +157,7 @@ class GfxEditorDialog < Qt::Dialog
         "Palette generation error",
         e.message
       )
+      return
     end
     
     load_palettes(@colors_per_palette)
@@ -176,6 +178,7 @@ class GfxEditorDialog < Qt::Dialog
         "Palette generation error",
         e.message
       )
+      return
     end
     
     @renderer.save_palette(colors, @palette_pointer, @palette_index, @colors_per_palette)
