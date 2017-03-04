@@ -325,19 +325,18 @@ class Renderer
     (0..number_of_palettes-1).each do |palette_index| # todo: cache palettes
       palette_data = fs.read(palette_data_start_offset + (2*color_offsets_per_palette_index)*palette_index, colors_per_palette*2, allow_length_to_exceed_end_of_file: true)
       
-      palette = palette_data.scan(/.{2}/m).map do |color|
-        color = color.unpack("v*").first
-        # these two bytes hold the rgb data for the color in this format:
+      palette = palette_data.unpack("v*").map do |color|
+        # These two bytes hold the rgb data for the color in this format:
         # ?bbbbbgggggrrrrr
         # the ? is unknown.
-        #unknown_bit = (color >> 15) & 0b0000_0000_0000_0001
-        blue_bits   = (color >> 10) & 0b0000_0000_0001_1111
-        green_bits  = (color >> 5)  & 0b0000_0000_0001_1111
-        red_bits    =  color        & 0b0000_0000_0001_1111
+        #unknown_bit = (color & 0b1000_0000_0000_0000) >> 15
+        blue_bits   = (color & 0b0111_1100_0000_0000) >> 10
+        green_bits  = (color & 0b0000_0011_1110_0000) >> 5
+        red_bits    =  color & 0b0000_0000_0001_1111
         
-        red = (red_bits / 32.0 * 255).to_i
-        green = (green_bits / 32.0 * 255).to_i
-        blue = (blue_bits / 32.0 * 255).to_i
+        red = red_bits << 3
+        green = green_bits << 3
+        blue = blue_bits << 3
         alpha = 255
         ChunkyPNG::Color.rgba(red, green, blue, alpha)
       end
