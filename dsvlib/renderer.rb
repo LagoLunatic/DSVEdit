@@ -405,8 +405,14 @@ class Renderer
     return colors
   end
   
-  def save_palette(colors, palette_list_pointer, palette_index)
-    specific_palette_pointer = palette_list_pointer + 4 + 32*palette_index # TODO 256
+  def save_palette(colors, palette_list_pointer, palette_index, colors_per_palette)
+    if colors_per_palette == 256
+      color_offsets_per_palette_index = COLOR_OFFSETS_PER_256_PALETTE_INDEX
+    else
+      color_offsets_per_palette_index = 16
+    end
+    
+    specific_palette_pointer = palette_list_pointer + 4 + (2*color_offsets_per_palette_index)*palette_index
     new_palette_data = convert_chunky_color_list_to_palette_data(colors)
     fs.write(specific_palette_pointer, new_palette_data)
   end

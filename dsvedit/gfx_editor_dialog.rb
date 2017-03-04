@@ -150,7 +150,7 @@ class GfxEditorDialog < Qt::Dialog
     
     begin
       colors = @renderer.import_palette_from_palette_swatches_file(palette_file_path, @colors_per_palette)
-      @renderer.save_palette(colors, @palette_pointer, @palette_index)
+      @renderer.save_palette(colors, @palette_pointer, @palette_index, @colors_per_palette)
     rescue Renderer::GFXImportError => e
       Qt::MessageBox.warning(self,
         "Palette generation error",
@@ -178,7 +178,7 @@ class GfxEditorDialog < Qt::Dialog
       )
     end
     
-    @renderer.save_palette(colors, @palette_pointer, @palette_index)
+    @renderer.save_palette(colors, @palette_pointer, @palette_index, @colors_per_palette)
     
     load_palettes(@colors_per_palette)
     load_gfx()
