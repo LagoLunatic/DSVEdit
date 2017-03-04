@@ -213,6 +213,11 @@ class SpriteEditor < Qt::Dialog
   end
   
   def special_object_changed(special_object_id)
+    if (REUSED_SPECIAL_OBJECT_INFO[special_object_id] || {})[:init_code] == -1
+      load_blank_sprite()
+      return
+    end
+    
     begin
       @gfx_file_pointers, @palette_pointer, @palette_offset, @sprite_pointer, @skeleton_file =
         SpecialObjectType.new(special_object_id, @fs).get_gfx_and_palette_and_sprite_from_create_code
@@ -294,6 +299,32 @@ class SpriteEditor < Qt::Dialog
     load_sprite()
     
     @ui.other_sprites_list.setCurrentRow(id)
+  end
+  
+  def load_blank_sprite
+    @ui.view_skeleton_button.enabled = false
+    @ui.sprite_file_name.text = ""
+    @ui.gfx_pointer.text = ""
+    @ui.frame_index.clear()
+    @ui.gfx_page_index.clear()
+    @ui.palette_pointer.text = ""
+    @ui.palette_index.clear()
+    @ui.part_index.clear()
+    @ui.frame_first_part.text = ""
+    @ui.frame_number_of_parts.text = ""
+    @ui.gfx_file_name.text = ""
+    @ui.show_hitbox.enabled = false
+    @ui.seek_slider.enabled = false
+    @ui.toggle_paused_button.enabled = false
+    @ui.frame_delay.text = ""
+    
+    @gfx_page_pixmaps_by_palette = {}
+    @part_pixmaps_for_part_view = []
+    @part_pixmaps_for_frame_view = []
+    @ui.animation_index.clear()
+    @frame_graphics_scene.clear()
+    @part_graphics_scene.clear()
+    @gfx_file_graphics_scene.clear()
   end
   
   def load_sprite
