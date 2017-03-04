@@ -193,6 +193,7 @@
     <addaction name="actionMap_Editor"/>
     <addaction name="actionText_Editor"/>
     <addaction name="actionSprite_Editor"/>
+    <addaction name="actionGFX_Editor"/>
     <addaction name="actionItem_Pool_Editor"/>
     <addaction name="actionEntity_Search"/>
     <addaction name="actionSettings"/>
@@ -411,6 +412,14 @@
   <action name="actionItem_Pool_Editor">
    <property name="text">
     <string>Item Pool Editor</string>
+   </property>
+  </action>
+  <action name="actionGFX_Editor">
+   <property name="text">
+    <string>GFX Editor</string>
+   </property>
+   <property name="shortcut">
+    <string>G</string>
    </property>
   </action>
  </widget>

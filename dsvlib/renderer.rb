@@ -8,6 +8,8 @@ class Renderer
   COLLISION_WATER_COLOR = ChunkyPNG::Color.rgba(32, 32, 208, 255)
   COLLISION_CONVEYOR_COLOR = ChunkyPNG::Color.rgba(32, 208, 32, 255)
   
+  class GFXImportError < StandardError ; end
+  
   attr_reader :fs,
               :fill_color,
               :save_fill_color,
@@ -344,6 +346,122 @@ class Renderer
     end
     
     palette_list
+  end
+  
+  def export_palette_to_palette_swatches_file(palette, file_path)
+    image = ChunkyPNG::Image.new(16, palette.size/16)
+    palette.each_with_index do |color, i|
+      x = i % 16
+      y = i / 16
+      image[x,y] = color
+    end
+    image.resample_nearest_neighbor!(image.width*16, image.height*16) # Make the color swatches 16 by 16 instead of a single pixel.
+    image.save(file_path)
+  end
+  
+  def import_palette_from_palette_swatches_file(file_path, colors_per_palette)
+    image = ChunkyPNG::Image.from_file(file_path)
+    if image.width != 16*16 || image.height != colors_per_palette
+      raise GFXImportError.new("The palette file #{file_path} is not the right size, it must be a palette exported by DSVEdit.\n\nIf you want to generate a palette from an arbitrary file use \"Generate palette from file(s)\" instead.")
+    end
+    
+    colors = []
+    (0..image.width-1).step(16) do |x|
+      (0..image.height-1).step(16) do |y|
+        colors << image[x,y]
+      end
+    end
+    if colors.size > colors_per_palette
+      raise GFXImportError.new("The number of colors in this file (#{file_path}) is greater than #{colors_per_palette}. Cannot import.")
+    end
+    
+    return colors
+  end
+  
+  def import_palette_from_file(file_path, colors_per_palette)
+    image = ChunkyPNG::Image.from_file(file_path)
+    colors = [ChunkyPNG::Color::TRANSPARENT]
+    image.pixels.each do |pixel|
+      colors << pixel unless colors.include?(pixel)
+    end
+    if colors.size > colors_per_palette
+      raise GFXImportError.new("The number of colors in this file (#{file_path}) is greater than #{colors_per_palette}. Cannot import.")
+    end
+    
+    return colors
+  end
+  
+  def import_palette_from_multiple_files(file_paths, colors_per_palette)
+    colors = []
+    file_paths.each do |file_path|
+      colors += import_palette_from_file(file_path, colors_per_palette)
+    end
+    colors.uniq!
+    
+    if colors.size > colors_per_palette
+      raise GFXImportError.new("The combined number of unique colors in these files is greater than #{colors_per_palette}. Cannot import.")
+    end
+    
+    return colors
+  end
+  
+  def save_palette(colors, palette_list_pointer, palette_index)
+    specific_palette_pointer = palette_list_pointer + 4 + 32*palette_index # TODO 256
+    new_palette_data = convert_chunky_color_list_to_palette_data(colors)
+    fs.write(specific_palette_pointer, new_palette_data)
+  end
+  
+  def convert_chunky_color_list_to_palette_data(chunky_colors)
+    game_colors = []
+    chunky_colors.each do |chunky_color|
+      red = ChunkyPNG::Color.r(chunky_color)
+      green = ChunkyPNG::Color.g(chunky_color)
+      blue = ChunkyPNG::Color.b(chunky_color)
+      
+      red_bits   = red >> 3
+      green_bits = green >> 3
+      blue_bits  = blue >> 3
+      
+      bits = (blue_bits << 10) | (green_bits << 5) | red_bits
+      
+      game_colors << bits
+    end
+    
+    return game_colors.pack("v*")
+  end
+  
+  def import_gfx_page(input_filename, gfx_file, palette_list_pointer, colors_per_palette, palette_index)
+    input_image = ChunkyPNG::Image.from_file(input_filename)
+    
+    colors = generate_palettes(palette_list_pointer, colors_per_palette)[palette_index]
+    colors[0] = ChunkyPNG::Color::TRANSPARENT
+    
+    colors = colors.map{|color| color & 0b11111000111110001111100000000000} # Get rid of unnecessary bits so equality checks work correctly.
+    
+    gfx_data_bytes = []
+    input_image.pixels.each_with_index do |pixel, i|
+      if pixel & 0xFF == 0 # Transparent
+        color_index = 0
+      else
+        pixel &= 0b11111000111110001111100000000000
+        color_index = colors.index(pixel)
+        
+        if color_index.nil?
+          raise GFXImportError.new("The imported image uses different colors than the existing palette. Cannot import.")
+        end
+        if color_index < 0 || color_index > colors_per_palette-1
+          raise GFXImportError.new("Invalid color (this error shouldn't happen)")
+        end
+      end
+      
+      if i.even? || colors_per_palette == 256
+        gfx_data_bytes << color_index
+      else
+        gfx_data_bytes[-1] = (gfx_data_bytes[-1] | color_index << 4)
+      end
+    end
+    
+    fs.write_by_file(gfx_file[:file_path], 0, gfx_data_bytes.pack("C*"))
   end
   
   def render_collision_tileset(collision_tileset_offset, output_filename=nil)

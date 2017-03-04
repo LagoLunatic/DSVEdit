@@ -11,6 +11,7 @@ require_relative 'entity_editor_dialog'
 require_relative 'skeleton_editor_dialog'
 require_relative 'layers_editor_dialog'
 require_relative 'item_pool_editor_dialog'
+require_relative 'gfx_editor_dialog'
 
 require_relative 'ui_main'
 
@@ -28,6 +29,7 @@ class DSVEdit < Qt::MainWindow
   slots "open_text_editor()"
   slots "open_sprite_editor()"
   slots "open_item_editor()"
+  slots "open_gfx_editor()"
   slots "open_item_pool_editor()"
   slots "open_entity_search()"
   slots "open_map_editor()"
@@ -84,6 +86,7 @@ class DSVEdit < Qt::MainWindow
     connect(@ui.actionText_Editor, SIGNAL("activated()"), self, SLOT("open_text_editor()"))
     connect(@ui.actionSprite_Editor, SIGNAL("activated()"), self, SLOT("open_sprite_editor()"))
     connect(@ui.actionItem_Editor, SIGNAL("activated()"), self, SLOT("open_item_editor()"))
+    connect(@ui.actionGFX_Editor, SIGNAL("activated()"), self, SLOT("open_gfx_editor()"))
     connect(@ui.actionItem_Pool_Editor, SIGNAL("activated()"), self, SLOT("open_item_pool_editor()"))
     connect(@ui.actionMap_Editor, SIGNAL("activated()"), self, SLOT("open_map_editor()"))
     connect(@ui.actionEntity_Search, SIGNAL("activated()"), self, SLOT("open_entity_search()"))
@@ -134,6 +137,7 @@ class DSVEdit < Qt::MainWindow
     @ui.actionText_Editor.setEnabled(false);
     @ui.actionSprite_Editor.setEnabled(false);
     @ui.actionItem_Editor.setEnabled(false);
+    @ui.actionGFX_Editor.setEnabled(false);
     @ui.actionItem_Pool_Editor.setEnabled(false);
     @ui.actionMap_Editor.setEnabled(false);
     @ui.actionEntity_Search.setEnabled(false);
@@ -153,6 +157,7 @@ class DSVEdit < Qt::MainWindow
     @ui.actionText_Editor.setEnabled(true);
     @ui.actionSprite_Editor.setEnabled(true);
     @ui.actionItem_Editor.setEnabled(true);
+    @ui.actionGFX_Editor.setEnabled(true);
     @ui.actionItem_Pool_Editor.setEnabled(true);
     @ui.actionMap_Editor.setEnabled(true);
     @ui.actionEntity_Search.setEnabled(true);
@@ -165,7 +170,9 @@ class DSVEdit < Qt::MainWindow
     @enemy_dialog.close() if @enemy_dialog
     @text_editor.close() if @text_editor
     @sprite_editor.close() if @sprite_editor
+    @gfx_editor.close() if @gfx_editor
     @item_editor.close() if @item_editor
+    @item_pool_editor.close() if @item_pool_editor
     @entity_search_dialog.close() if @entity_search_dialog
     @map_editor_dialog.close() if @map_editor_dialog
     @entity_editor.close() if @entity_editor
@@ -672,6 +679,11 @@ class DSVEdit < Qt::MainWindow
   def open_item_editor
     return if @item_editor && @item_editor.visible?
     @item_editor = ItemEditor.new(self, game.fs)
+  end
+  
+  def open_gfx_editor
+    return if @gfx_editor && @gfx_editor.visible?
+    @gfx_editor = GfxEditorDialog.new(self, game.fs, @renderer)
   end
   
   def open_item_pool_editor
