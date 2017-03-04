@@ -436,14 +436,14 @@ class Renderer
     colors = generate_palettes(palette_list_pointer, colors_per_palette)[palette_index]
     colors[0] = ChunkyPNG::Color::TRANSPARENT
     
-    colors = colors.map{|color| color & 0b11111000111110001111100000000000} # Get rid of unnecessary bits so equality checks work correctly.
+    colors = colors.map{|color| color & 0b11111000111110001111100011111111} # Get rid of unnecessary bits so equality checks work correctly.
     
     gfx_data_bytes = []
     input_image.pixels.each_with_index do |pixel, i|
       if pixel & 0xFF == 0 # Transparent
         color_index = 0
       else
-        pixel &= 0b11111000111110001111100000000000
+        pixel &= 0b11111000111110001111100011111111
         color_index = colors.index(pixel)
         
         if color_index.nil?
