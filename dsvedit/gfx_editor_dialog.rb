@@ -55,6 +55,7 @@ class GfxEditorDialog < Qt::Dialog
     
     @gfx_file = gfx_file
     @colors_per_palette = colors_per_palette
+    @canvas_width = canvas_width
     
     load_gfx()
     
@@ -84,7 +85,7 @@ class GfxEditorDialog < Qt::Dialog
   end
   
   def load_gfx
-    chunky_image = @renderer.render_gfx_page(@gfx_file, @palettes[@palette_index])
+    chunky_image = @renderer.render_gfx_page(@gfx_file, @palettes[@palette_index], @canvas_width)
     
     pixmap = Qt::Pixmap.new
     blob = chunky_image.to_blob
@@ -105,7 +106,7 @@ class GfxEditorDialog < Qt::Dialog
   def export_file
     return if @gfx_file.nil? || @palettes.nil? || @palette_index.nil?
     
-    chunky_image = @renderer.render_gfx_page(@gfx_file, @palettes[@palette_index])
+    chunky_image = @renderer.render_gfx_page(@gfx_file, @palettes[@palette_index], @canvas_width)
     file_basename = File.basename(@gfx_file[:name], ".*")
     gfx_file_path = "#{@output_folder}/#{file_basename}.png"
     chunky_image.save(gfx_file_path)

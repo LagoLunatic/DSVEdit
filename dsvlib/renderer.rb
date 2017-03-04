@@ -177,8 +177,8 @@ class Renderer
     render_gfx(graphic_tile_data_file, palette, x=x_block_on_tileset*16, y=y_block_on_tileset*16, width=16, height=16)
   end
   
-  def render_gfx_page(gfx_file, palette)
-    render_gfx(gfx_file, palette, x=0, y=0, width=128, height=128)
+  def render_gfx_page(gfx_file, palette, canvas_width=16)
+    render_gfx(gfx_file, palette, x=0, y=0, width=canvas_width*8, height=canvas_width*8, canvas_width=canvas_width*8)
   end
   
   def render_gfx(gfx_file, palette, x, y, width, height, canvas_width=128)
