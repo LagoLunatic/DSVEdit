@@ -1,16 +1,16 @@
 
-0      021CDF60 
-1      0221F680 Strings for everything except character names and events.
-2      0221F680 Strings for character names and events.
-3-4    0222C840 
-5      022B2A80 Sprite data that isn't stored in individual files. (Unused?)
-6      022B2AE0 Sprite data that isn't stored in individual files. (Unused?)
-7      022B7660 Various data including palettes and GFX wrappers.
-8      022D0F40 
-9-24   022D7500 
-25     022D7900 Enemy code for Whip's Memory.
-26-39  022E01A0
-40-42  022D7900 
-43-77  022D7900 Enemy code.
-78-117 022E8820 Rooms. (except 116?)
-118    022E04A0 Rooms for area 13, an unused area.
+0       021CDF60-0221F41F  
+1       0221F680-0222C83F  Strings for everything except character names and events.
+2       0221F680-0222C83F  Strings for character names and events.
+3-4     0222C840-022B2A5F  
+5       022B2A80-022B2ADF  Sprite data that isn't stored in individual files. (Unused?)
+6       022B2AE0-022B765F  Sprite data that isn't stored in individual files. (Unused?)
+7       022B7660-022D0F3F  Various data including palettes and GFX wrappers.
+8       022D0F40-022D74FF  
+9-24    022D7500-022D78FF  
+25      022D7900-022E881F  Enemy code for Whip's Memory.
+26-39   022E01A0-022E4F5F  
+40-42   022D7900-022E881F  
+43-77   022D7900-022E881F  Enemy code.
+78-117  022E8820-02308E9F  Rooms. (except 116?)
+118     022E04A0-022E3ABF  Rooms for area 13, an unused area.
