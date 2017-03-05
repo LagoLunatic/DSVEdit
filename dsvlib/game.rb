@@ -220,6 +220,20 @@ class Game
     fs.write(pointer, [song_index].pack("C"))
   end
   
+  def read_song_index_by_bgm_index(bgm_index)
+    raise "DoS and OoE don't have a list of available BGMs." unless GAME == "por"
+    
+    pointer = AVAILABLE_BGM_POOL_START_OFFSET + bgm_index*2
+    return fs.read(pointer, 2).unpack("v").first
+  end
+  
+  def write_song_index_by_bgm_index(song_index, bgm_index)
+    raise "DoS and OoE don't have a list of available BGMs." unless GAME == "por"
+    
+    pointer = AVAILABLE_BGM_POOL_START_OFFSET + bgm_index*2
+    return fs.write(pointer, [song_index].pack("v"))
+  end
+  
   def fix_top_screen_on_new_game
     return unless GAME == "ooe" && REGION == :usa
     
