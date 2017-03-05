@@ -6,7 +6,8 @@ Special objects:
   0E-0F Money chests.
   10-19 More normal objects.
   1A+ Nothing.
-02 Unused
+02 Invisible pushable block.
+  Has a red outline around it, but is otherwise invisible.
 03 Changes gravity for enemies, used in Nation of Fools/Burnt Paradise. Only works for certain enemies specifically coded to do this.
   Var A is 0000 in rooms with the floor on the right, 8000 with the floor on the left, C000 with the floor on the top.
 04 Starts boss rush.
@@ -86,18 +87,21 @@ Special objects:
     2+ - Doesn't set a flag, cart will always move back to its original position when you re-enter the room.
 27 Dark Academy background and rain overlay and sound effects.
   Var A: Affects what sound effects the rain plays.
-28 Train you need to slow down to a stop?
+28 Train you need to slow down to a stop.
+  Requires overlay 104.
 29 Background from 13th Street.
 2A Background from 13th Street.
 2B Red moon background from Forgotten City.
 2C Transition room hider for Sandy Grave.
 2D Transition room hider for Forgotten City.
-2E motorcycles?
-2F pushable grave from forest of doom? might require a certain overlay
+2E Motorcycles.
+  Requires overlay 86.
+2F Pushable grave from Forest of Doom.
+  Requires overlay 101.
 30 Breakable ceiling from Dark Academy that lets rain through after it's broken.
 31 The drill cart that breaks a wall in City of Haze.
   Requires overlay 94.
-32 pushable block from sandy grave?
+32 Pushable block from Sandy Grave.
   Requires overlay 91.
 33 Falling boulder.
   Var A:
