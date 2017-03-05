@@ -14,6 +14,8 @@ Report issues here: https://github.com/LagoLunatic/DSVEdit/issues
 * Viewing and editing random chest item pools
 * Viewing and editing area maps
 * Viewing sprites (enemies, objects, weapons, etc)
+* Viewing and editing GFX and palettes
+* Viewing and editing which songs play in which areas
 
 ### Requirements
 
@@ -57,6 +59,24 @@ You can add a new entity to a room by right clicking on the background of a room
 You can access the Enemy Editor, Item Editor, Text Editor, and Map Editor in the Tools menu.
 
 Using them is pretty straightforward, but note that all numbers are in hexadecimal, not decimal.
+
+### How to edit GFX and palettes
+
+The GFX/palette editor is in Tools -> GFX Editor.
+You need two things in order to use it: the file path of the GFX to edit (e.g. /sc/f_zombie1.dat) and the RAM pointer to the palette list (e.g. 022B7F4C).
+You can edit just the GFX, just the palette, or completely replace both the GFX and palette.
+
+Editing just the GFX:
+Click Export, then edit the exported image. You can only use the colors already in the palette. When you're done click Import GFX.
+
+Editing just the palette:
+Click Export, then edit the exported palette image. You can't increase the total number of colors in the palette. The first color of every palette is always rendered as transparent, so don't bother changing it to anything else. When you're done click Import Palette.
+
+Replacing both the GFX and the palette:
+First you need to find all GFX files that use the palette you want to edit. Go through all of those and export them one by one. If you miss any GFX files that use this palette, then the ones you missed will wind up having a messed up palette when you're done.
+Then you can edit these images however you want, but remember the total number of colors shared throughout these images can't be more than the size of the palette.
+When you're done editing them click Generate palette from file(s), hold down Ctrl or Shift and select all the files you exported. This will make a new palette from the colors used in these edited images.
+Finally go through each of the GFX files one by one and click Import GFX.
 
 ### Running from source
 
