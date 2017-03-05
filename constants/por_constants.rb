@@ -149,6 +149,29 @@ MAP_DOOR_COLOR = [216, 216, 216, 255]
 MAP_DOOR_CENTER_PIXEL_COLOR = [0, 0, 0, 0]
 MAP_SECRET_DOOR_COLOR = [248, 248, 0, 255]
 
+AREA_MUSIC_LIST_START_OFFSET = 0x020DF2A4
+SECTOR_MUSIC_LIST_START_OFFSET = 0x020DF2B4
+NUMBER_OF_SONGS = 16
+# PoR actually has more songs than this, but the list of songs that can be played as area BGMs only has 16 songs in it. TODO: Allow editing this other list too?
+SONG_INDEX_TO_TEXT_INDEX = [
+  0x5FE,
+  0x5FF,
+  0x600,
+  0x601,
+  0x602,
+  0x60E,
+  0x61E,
+  0x60C,
+  0x604,
+  0x609,
+  0x603,
+  0x607,
+  0x606,
+  0x60B,
+  0x605,
+  0x60A,
+]
+
 LIST_OF_FILE_RAM_LOCATIONS_START_OFFSET = 0x020CDAFC
 LIST_OF_FILE_RAM_LOCATIONS_END_OFFSET = 0x020DF15B
 LIST_OF_FILE_RAM_LOCATIONS_ENTRY_LENGTH = 0x20

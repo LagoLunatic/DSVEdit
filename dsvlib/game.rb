@@ -186,6 +186,40 @@ class Game
     transition_rooms
   end
   
+  def read_song_index_by_area_and_sector(area_index, sector_index)
+    case GAME
+    when "por"
+      list_entry_length = 1
+    else
+      list_entry_length = 4
+    end
+    
+    if area_index == 0
+      pointer = SECTOR_MUSIC_LIST_START_OFFSET + sector_index*list_entry_length
+    else
+      pointer = AREA_MUSIC_LIST_START_OFFSET + area_index*list_entry_length
+    end
+    
+    return fs.read(pointer, 1).unpack("C").first # Only read the first byte since the other 3 in DoS/OoE don't seem to matter.
+  end
+  
+  def write_song_index_by_area_and_sector(song_index, area_index, sector_index)
+    case GAME
+    when "por"
+      list_entry_length = 1
+    else
+      list_entry_length = 4
+    end
+    
+    if area_index == 0
+      pointer = SECTOR_MUSIC_LIST_START_OFFSET + sector_index*list_entry_length
+    else
+      pointer = AREA_MUSIC_LIST_START_OFFSET + area_index*list_entry_length
+    end
+    
+    fs.write(pointer, [song_index].pack("C"))
+  end
+  
   def fix_top_screen_on_new_game
     return unless GAME == "ooe" && REGION == :usa
     

@@ -194,6 +194,7 @@
     <addaction name="actionText_Editor"/>
     <addaction name="actionSprite_Editor"/>
     <addaction name="actionGFX_Editor"/>
+    <addaction name="actionMusic_Editor"/>
     <addaction name="actionItem_Pool_Editor"/>
     <addaction name="actionEntity_Search"/>
     <addaction name="actionSettings"/>
@@ -420,6 +421,11 @@
    </property>
    <property name="shortcut">
     <string>G</string>
+   </property>
+  </action>
+  <action name="actionMusic_Editor">
+   <property name="text">
+    <string>Music Editor</string>
    </property>
   </action>
  </widget>
