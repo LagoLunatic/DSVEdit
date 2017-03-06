@@ -36,7 +36,7 @@ Each is 4 bytes long.
 List of poses:
   Byte 1: Joint ID for something? FF means the next byte is ignored.
   Byte 2: Distance in pixels to offset this pose upwards?
-  Then a list of each joint change in this configuration. These joints are in the same order as in the list of joints.
+  Then a list of each joint change in this pose. These joints are in the same order as in the list of joints.
   Each joint change is 4 bytes long:
     Bytes 1-2: Rotation. Every 0x4000 corresponds to 90 degrees.
     Byte 3: Distance in pixels to position this part relative to the part its connected to. (Signed.)

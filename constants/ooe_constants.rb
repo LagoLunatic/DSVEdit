@@ -565,6 +565,7 @@ BEST_SPRITE_FRAME_FOR_SPECIAL_OBJECT = {
   0x2B => 0x135,
   0x2E => 0xED,
   0x3D =>   -1,
+  0x3F => 0x01,
   0x42 => 0x02,
   0x4B => 0xDF,
   0x4E => 0x09,
@@ -693,7 +694,83 @@ PACK_ICON_INDEX_AND_PALETTE_INDEX = Proc.new do |icon_index, palette_index|
   icon_data
 end
 
-armor_format = [
+ARM_GLYPH_FORMAT = [
+  # length: 32
+  [2, "Item ID"],
+  [2, "Attack"],
+  [4, "Code Pointer"],
+  [1, "Sprite"],
+  [1, "Unknown 1"],
+  [1, "Unknown 2"],
+  [1, "Mana"],
+  [4, "Effects", :bitfield],
+  [4, "Unwanted States"],
+  [2, "Icon"],
+  [1, "Unknown 4"],
+  [1, "Unknown 5"],
+  [1, "Unknown 6"],
+  [1, "Unknown 7"],
+  [1, "Unknown 8"],
+  [1, "Delay"],
+  [1, "Swing Sound"],
+  [1, "Unknown 9"],
+  [1, "Unknown 10"],
+  [1, "Unknown 11"],
+]
+BACK_GLYPH_FORMAT = [
+  # length: 28
+  [2, "Item ID"],
+  [2, "Attack"],
+  [4, "Code Pointer"],
+  [1, "Sprite"],
+  [1, "Unknown 2"],
+  [1, "Unknown 3"],
+  [1, "Mana"],
+  [4, "Effects", :bitfield],
+  [4, "Unwanted States"],
+  [2, "Icon"],
+  [2, "Var A"],
+  [1, "Unknown 5"],
+  [1, "Unknown 6"],
+  [1, "Unknown 7"],
+  [1, "Unknown 8"],
+]
+GLYPH_UNION_FORMAT = [
+  # length: 28
+  [2, "Item ID"],
+  [2, "Attack"],
+  [4, "Code Pointer"],
+  [1, "Sprite"],
+  [1, "Unknown 1"],
+  [1, "Unknown 2"],
+  [1, "Mana"],
+  [4, "Effects", :bitfield],
+  [4, "Unwanted States"],
+  [2, "Icon"],
+  [1, "Unknown 4"],
+  [1, "Unknown 5"],
+  [1, "Unknown 6"],
+  [1, "Unknown 7"],
+  [1, "Unknown 8"],
+  [1, "Unknown 9"],
+]
+RELIC_FORMAT = [
+  # length: 12
+  [2, "Item ID"],
+  [2, "Icon"],
+  [4, "Unknown 1"],
+  [4, "Unknown 2"],
+]
+CONSUMABLE_FORMAT = [
+  # length: 12
+  [2, "Item ID"],
+  [2, "Icon"],
+  [4, "Price"],
+  [1, "Type"],
+  [1, "Unknown 1"],
+  [2, "Var A"],
+]
+ARMOR_FORMAT = [
   # length: 20
   [2, "Item ID"],
   [2, "Icon"],
@@ -708,156 +785,87 @@ armor_format = [
   [1, "Luck"],
   [4, "Resistances", :bitfield],
 ]
+WEAPON_FORMAT = [
+  # length: 28
+  [2, "Item ID"],
+  [2, "Icon"],
+  [4, "Price"],
+  [1, "Unknown 1"],
+  [1, "Attack"],
+  [1, "Defense"],
+  [1, "Strength"],
+  [1, "Constitution"],
+  [1, "Intelligence"],
+  [1, "Mind"],
+  [1, "Luck"],
+  [4, "Effects", :bitfield],
+  [1, "GFX"],
+  [1, "Palette"],
+  [2, "Unknown 4"],
+  [2, "Swing Modifiers", :bitfield],
+  [2, "Unknown 5"],
+]
+
 ITEM_TYPES = [
   {
     name: "Arm Glyphs",
     list_pointer: 0x020F0A08,
     count: 55,
-    format: [
-      # length: 32
-      [2, "Item ID"],
-      [2, "Attack"],
-      [4, "Code Pointer"],
-      [1, "Sprite"],
-      [1, "Unknown 1"],
-      [1, "Unknown 2"],
-      [1, "Mana"],
-      [4, "Effects", :bitfield],
-      [4, "Unwanted States"],
-      [2, "Icon"],
-      [1, "Unknown 4"],
-      [1, "Unknown 5"],
-      [1, "Unknown 6"],
-      [1, "Unknown 7"],
-      [1, "Unknown 8"],
-      [1, "Delay"],
-      [1, "Swing Sound"],
-      [1, "Unknown 9"],
-      [1, "Unknown 10"],
-      [1, "Unknown 11"],
-    ]
+    format: ARM_GLYPH_FORMAT
   },
   {
     name: "Back Glyphs",
     list_pointer: 0x020EF8CC,
     count: 25,
-    format: [
-      # length: 28
-      [2, "Item ID"],
-      [2, "Attack"],
-      [4, "Code Pointer"],
-      [1, "Sprite"],
-      [1, "Unknown 2"],
-      [1, "Unknown 3"],
-      [1, "Mana"],
-      [4, "Effects", :bitfield],
-      [4, "Unwanted States"],
-      [2, "Icon"],
-      [2, "Var A"],
-      [1, "Unknown 5"],
-      [1, "Unknown 6"],
-      [1, "Unknown 7"],
-      [1, "Unknown 8"],
-    ]
+    format: BACK_GLYPH_FORMAT
   },
   {
     name: "Glyph Unions",
     list_pointer: 0x020F0164,
     count: 31,
-    format: [
-      # length: 28
-      [2, "Item ID"],
-      [2, "Attack"],
-      [4, "Code Pointer"],
-      [1, "Sprite"],
-      [1, "Unknown 1"],
-      [1, "Unknown 2"],
-      [1, "Mana"],
-      [4, "Effects", :bitfield],
-      [4, "Unwanted States"],
-      [2, "Icon"],
-      [1, "Unknown 4"],
-      [1, "Unknown 5"],
-      [1, "Unknown 6"],
-      [1, "Unknown 7"],
-      [1, "Unknown 8"],
-      [1, "Unknown 9"],
-    ]
+    format: GLYPH_UNION_FORMAT
   },
   {
     name: "Relics",
     list_pointer: 0x020EF4C4,
     count: 6,
-    format: [
-      # length: 12
-      [2, "Item ID"],
-      [2, "Icon"],
-      [4, "Unknown 1"],
-      [4, "Unknown 2"],
-    ]
+    format: RELIC_FORMAT
   },
   {
     name: "Consumables",
     list_pointer: 0x020F04C8,
     count: 112,
-    format: [
-      # length: 12
-      [2, "Item ID"],
-      [2, "Icon"],
-      [4, "Price"],
-      [1, "Type"],
-      [1, "Unknown 1"],
-      [2, "Var A"],
-    ]
+    format: CONSUMABLE_FORMAT
   },
   {
     name: "Body Armor",
     list_pointer: 0x020EF6B0,
     count: 27,
-    format: armor_format # length: 20
+    format: ARMOR_FORMAT
   },
   {
     name: "Head Armor",
     list_pointer: 0x020EFB88,
     count: 36,
-    format: armor_format # length: 20
+    format: ARMOR_FORMAT
   },
   {
     name: "Leg Armor",
     list_pointer: 0x020EF50C,
     count: 21,
-    format: armor_format # length: 20
+    format: ARMOR_FORMAT
   },
   {
     name: "Accessories",
     list_pointer: 0x020EFE58,
     count: 39,
-    format: armor_format # length: 20
+    format: ARMOR_FORMAT
   },
   {
     name: "Weapons (Unused)",
     list_pointer: 0x020EF48C,
     count: 2,
-    format: [
-      # length: 28
-      [2, "Item ID"],
-      [2, "Icon"],
-      [4, "Price"],
-      [1, "Unknown 1"],
-      [1, "Attack"],
-      [1, "Defense"],
-      [1, "Strength"],
-      [1, "Constitution"],
-      [1, "Intelligence"],
-      [1, "Mind"],
-      [1, "Luck"],
-      [4, "Effects", :bitfield],
-      [1, "GFX"],
-      [1, "Palette"],
-      [2, "Unknown 4"],
-      [2, "Swing Modifiers", :bitfield],
-      [2, "Unknown 5"],
-    ]
+    format: WEAPON_FORMAT
   },
 ]
 

@@ -55,7 +55,7 @@ Special Objects:
     10 Spiked balls (Training Chamber)
   Var B is the number of blocks wide the spikes span.
 15 Wooden/green chest.
-  The item in this chest is randomized when you enter the area from the world map.
+  The item in this chest is randomized when you enter the area from the world map. The item pool used for each area can be changed in the Item Pool Editor.
   Will appear as a sparkling green chest if the item inside is was selected from a rare item pool.
   Var A: The unique ID of this chest in the area. Can be from 0-B.
   For item pools 8 and 9, chest 0 is guaranteed to be a rare chest.
@@ -83,7 +83,10 @@ Special Objects:
     If set to 4, the shadow will appear on all layers.
     If set to the index of a layer other than the one farthest in the background it won't succeed at hiding the shadow on that layer, and instead just set that layer's opacity to 1E.
 1C Background shadow for all entities in the room.
-  Works exactly the same as 1B.
+  Var A: Z-index for the shadows to be drawn at.
+  Var B: If set to the index of the layer farthest in the background, the shadow will not appear on that layer.
+    If set to 4, the shadow will appear on all layers.
+    If set to the index of a layer other than the one farthest in the background it won't succeed at hiding the shadow on that layer, and instead just set that layer's opacity to 1E.
 1D Background from outside the Castle Entrance.
 1E Fog near the ground.
 1F Foreground candles from Underground Labyrinth.
