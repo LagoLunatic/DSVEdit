@@ -5,6 +5,7 @@ Enemies:
   Var A: Maximum number of Zombies this spawner can have in the room at once.
   Var B: Maximum horizontal distance in pixels away from the spawner the Zombies can spawn.
 02 Skeleton
+  Var A: If bit 0x1 is set this Skeleton can jump back away from the player.
 03 Ghost
   Spawner.
   Var A: Maximum number of Ghosts this spawner can have in the room at once.
@@ -15,6 +16,9 @@ Enemies:
 08 Axe Knight
 09 Une
 0A Merman
+  Var A:
+    0 Swims in the water when in water, otherwise walks on the ground.
+    1 Always walks on the ground, even in water.
 0B Necromancer
 0C Bone Archer
 0D Spear Guard
@@ -28,12 +32,18 @@ Enemies:
 14 Killer Fish
 15 Forneus
 16 The Creature
-  Requires overlay 38.
+  Requires enemy overlay 38.
 17 Black Crow
+  Var A:
+    0 Will spawn exactly where you place it.
+    1+ Will spawn on the closest floor below where you place it.
+  Var B: The developers set this to 0 1 or 2, but it's not actually used by anything.
 18 Skull Spider
 19 Scarecrow
 1A Sea Demon
 1B Winged Guard
+  Spawner.
+  Var A: Maximum number of Winged Guards this spawner can have in the room at once.
 1C Nightmare
 1D Rock Knight
 1E Fire Demon
@@ -52,11 +62,13 @@ Enemies:
 2A White Dragon
 2B Saint Elmo
   Spawner.
-  Var A: 1 or 2 or 3?
-  Var B: Always 78?
+  Var A: Maximum number of Saint Elmos this spawner can have in the room at once.
+  Var B: Should be 78. If anything other than 78, this spawner will use a max of 4 Saint Elmos, ignoring var A.
 2C Lorelai
 2D Edimmu
-  Var A: 0 or 1
+  Var A: Affects the z-index it appears on.
+    0 Equivalent to z-index 4.
+    1 Equivalent to z-index 11.
 2E Decarabia
   Var A: 0 to 3
   Var B:
@@ -76,19 +88,25 @@ Enemies:
 3A Yeti
 3B Thunder Demon
 3C Owl
-  Requires overlay 38.
+  Requires enemy overlay 38.
 3D Werewolf
 3E Altair
+  Var A:
+    0 Altairs will carry Flea Men.
+    1 Altairs will have no Flea Men, and instead swoop down to attack you.
+  Var B: An Altair will spawn every (var B/2) frames.
+    If 0, will use the default var B of 0xB4 instead.
 3F Mandragora
 40 Jersey Devil
 41 Owl Knight
-  Requires overlay 38.
+  Requires enemy overlay 38.
 42 Chosen Une
 43 Stone Rose
 44 Mad Butcher
 45 White Fomor
 46 Evil Force
 47 Flea Man
+  Var B: Should be 0. If not 0 the Flea Man will just be frozen and not move at all.
 48 Ghoul
   Spawner.
   Var A: Maximum number of Ghouls this spawner can have in the room at once.
@@ -102,7 +120,7 @@ Enemies:
 4C Black Panther
 4D Mimic
 4E Draculina
-  Requires overlay 38.
+  Requires enemy overlay 38.
 4F Tin Man
 50 Polkir
 51 Nova Skeleton
@@ -119,7 +137,7 @@ Enemies:
 5C Imp
 5D Bugbear
 5E Spectral Sword
-  Requires overlay 38.
+  Requires enemy overlay 38.
 5F Automaton ZX27
 60 Medusa Head
   Spawner.
@@ -138,37 +156,44 @@ Enemies:
 64 King Skeleton
 65 Winged Skeleton
 66 Final Knight
-  Requires overlay 36.
+  Requires enemy overlay 36.
 67 Jiang Shi
-  Requires overlay 29.
+  Requires enemy overlay 29.
 68 Demon Lord
 69 Double Hammer
 6A Weapon Master
 6B Giant Skeleton
+  Var A:
+    0 Common enemy Giant Skeleton.
+    1 Boss Giant Skeleton. Disappears once the corresponding boss death flag is set. Also spawns the magnes points and chest containing the boss medal.
+  Var B:
+    0 Face towards the direction the player was in when they first entered the room.
+    1 Always face left.
+    2 Always face right.
 6C Arthroverta
-  Requires overlay 24.
+  Requires enemy overlay 24.
 6D Brachyura
-  Requires overlay 30.
+  Requires enemy overlay 30.
 6E Maneater
-  Requires overlay 26.
+  Requires enemy overlay 26.
 6F Rusalka
-  Requires overlay 27.
+  Requires enemy overlay 27.
 70 Goliath
-  Requires overlay 32.
+  Requires enemy overlay 32.
 71 Gravedorcus
-  Requires overlay 33.
+  Requires enemy overlay 33.
 72 Albus
-  Requires overlay 36.
+  Requires enemy overlay 36.
 73 Barlowe
-  Requires overlay 37.
+  Requires enemy overlay 37.
 74 Wallman
-  Requires overlay 28.
+  Requires enemy overlay 28.
 75 Blackmore
-  Requires overlay 35.
+  Requires enemy overlay 35.
 76 Eligor
-  Requires overlay 31.
+  Requires enemy overlay 31.
 77 Death
-  Requires overlay 25.
+  Requires enemy overlay 25.
 78 Dracula
-  Requires overlay 34.
-  Dracula's palette is stored in overlay 75, the sector overlay for the Final Approach. If you place him in any other sector his palette will appear corrupted.
+  Requires enemy overlay 34.
+  Dracula's palette is stored in sector overlay 75, the sector overlay for the Final Approach. If you place him in any other sector his palette will appear corrupted.

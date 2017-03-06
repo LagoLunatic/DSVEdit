@@ -16,10 +16,12 @@ Enemies:
 0C Slaughterer
 0D Bomber Armor
 0E Golem
+  Requires enemy overlay 28.
 0F Slime
 10 Une
 11 Skeleton Ape
 12 Manticore
+  Requires enemy overlay 27.
 13 Mollusca
 14 Rycuda
 15 Mandragora
@@ -27,6 +29,7 @@ Enemies:
 17 Skeleton Farmer
 18 The Creature
 19 Catoblepas
+  Requires enemy overlay 32.
 1A Ghoul
 1B Corpseweed
 1C Yeti
@@ -36,9 +39,11 @@ Enemies:
 20 Mini Devil
 21 Quetzalcoatl
 22 Treant
+  Requires enemy overlay 28.
 23 Amalaric Sniper
 24 Valkyrie
 25 Great Armor
+  Requires enemy overlay 24.
 26 Killer Doll
 27 Waiter Skeleton
 28 Persephone
@@ -50,6 +55,7 @@ Enemies:
 2E Fleaman
   Var A: Number of fleamen to spawn. (They only spawn once when you enter the room, not infinitely.) If this is 0, then 1 fleaman spawns instead.
 2F Devil
+  Requires enemy overlay 31.
 30 Guillotiner
 31 Draghignazzo
 32 Needles
@@ -82,10 +88,12 @@ Enemies:
 4B Procel
 4C Bone Ark
 4D Gorgon
+  Requires enemy overlay 32.
 4E Alura Une
 4F Great Axe Armor
 50 Mothman
 51 Mushussu
+  Requires enemy overlay 27.
 52 Dead Crusader
 53 Dead Warrior
 54 Erinys
@@ -96,8 +104,10 @@ Enemies:
 59 Giant Slug
 5A Werewolf
 5B Flame Demon
+  Requires enemy overlay 31.
 5C Tanjelly
 5D Arc Demon
+  Requires enemy overlay 31.
 5E Gaibon
 5F Slogra
 60 Stolas
@@ -108,33 +118,49 @@ Enemies:
     High byte: Chance of second enemy being summoned.
     Low byte: Second enemy ID this Stolas can summon.
 61 Final Guard
+  Requires enemy overlay 24.
 62 Malacoda
 63 Alastor
 64 Iron Golem
+  Requires enemy overlay 28.
 65 Flying Armor
+  Requires enemy overlay 30.
 66 Balore
+  Requires enemy overlay 23.
 67 Malphas
+  Requires enemy overlay 29.
   Var B: 0 for normal Malphas fight. 1 for a version of Malphas that doesn't require a magic seal on death and doesn't set the flag meaning Malphas is dead.
 68 Dmitrii
+  Requires enemy overlay 40.
   Var A: 1 for normal Dmitrii fight, this seems to crash the game when he dies if the events are in his room. 0 for boss rush Dmitrii.
 69 Dario
+  Requires enemy overlay 25.
   Var B: 0 for normal Dario fight. 1 for Dario in the throne room with Aguni.
 6A Puppet Master
+  Requires enemy overlay 25.
   Var A: 1 for normal Puppet Master fight, cuts off the left edge of the room. 0 for boss rush Puppet Master fight, doesn't cut off the left edge of the room.
 6B Rahab
+  Requires enemy overlay 26.
 6C Gergoth
+  Requires enemy overlay 36.
   Var A: 1 and Gergoth will fall down the tower after when his health gets low, 0 and he'll never fall (for boss rush).
   Var B: 0
 6D Zephyr
+  Requires enemy overlay 33.
 6E Bat Company
+  Requires enemy overlay 37.
 6F Paranoia
+  Requires enemy overlay 35.
   Var A: 2 for normal paranoia fight, 1 for mini paranoia fight, 0 for boss rush paranoia fight.
   Var B: 0
 70 Aguni
 71 Death
+  Requires enemy overlay 34.
   Both var A and var B are 1 for normal death fight, 0 for boss rush.
 72 Abaddon
+  Requires enemy overlay 39.
 73 Menace
+  Requires enemy overlay 38.
   For the first phase, Menace locks the camera to the bottom edge of the room, one screen away from the left edge of the room. However, Menace himself appears where you set his x/y positions.
   For the second phase, Menace needs a very large room to fit in and move around.
 74 Soma

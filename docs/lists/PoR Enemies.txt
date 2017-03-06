@@ -19,10 +19,10 @@ Enemies:
 11 Wight
 12 Frozen Shade
 13 Andras
-  Requires overlay 72.
+  Requires enemy overlay 72.
 14 Invisible Man
 15 Golem
-  Requires overlay 76.
+  Requires enemy overlay 76.
 16 Persephone
 17 Mimic
 18 Larva
@@ -41,13 +41,13 @@ Enemies:
 1F Bone Pillar
 20 Fleaman
 21 Great Armor
-  Requires overlay 44.
+  Requires enemy overlay 44.
 22 Catoblepas
-  Requires overlay 48.
+  Requires enemy overlay 48.
 23 Slime
 24 Mummy
 25 Dragon Zombie
-  Requires overlay 68.
+  Requires enemy overlay 68.
 26 Killer Clown
 27 Coppelia
 28 Hanged Bones
@@ -56,12 +56,12 @@ Enemies:
   Var B: Unused?
 29 Flying Skull
 2A Sand Worm
-  Requires overlay 69.
+  Requires enemy overlay 69.
 2B White Dragon
 2C Amphisbaena
-  Requires overlay 62.
+  Requires enemy overlay 62.
 2D Elgiza
-  Requires overlay 54.
+  Requires enemy overlay 54.
 2E Great Ghost
 2F Devil Wheel
 30 Crossbow Armor
@@ -88,7 +88,7 @@ Enemies:
 43 Moldy Corpse
 44 Tombstone
 45 Treant
-  Requires overlay 45.
+  Requires enemy overlay 45.
 46 Red Axe Armor
 47 Maneating Plant
 48 Skeleton Blaze
@@ -98,17 +98,17 @@ Enemies:
 4C Spin Devil
 4D Succubus
 4E Flame Demon
-  Requires overlay 47.
+  Requires enemy overlay 47.
 4F Dead Crusader
 50 Heavy Armor
 51 Malphas
-  Requires overlay 46.
+  Requires enemy overlay 46.
 52 Final Guard
-  Requires overlay 44.
+  Requires enemy overlay 44.
 53 Glasya Labolas
 54 Ghoul
 55 Ruler's Sword
-  Requires overlay 71.
+  Requires enemy overlay 71.
 56 Witch
 57 Skeleton Tree
   Attaches itself to the closest wall it can find.
@@ -117,10 +117,10 @@ Enemies:
 58 Buster Armor
 59 Armored Fleaman
 5A Amalaric Sniper
-  Requires overlay 77.
+  Requires enemy overlay 77.
 5B Old Axe Armor
 5C Gorgon
-  Requires overlay 48.
+  Requires enemy overlay 48.
 5D Jack O'Bones
 5E Tanjelly
 5F Dead Warrior
@@ -135,7 +135,7 @@ Enemies:
     3 Right wall
   Var B: Movement speed (subpixels per frame).
 64 Alura Une
-  Requires overlay 73.
+  Requires enemy overlay 73.
 65 Lightkeeper
 66 Black Crow
 67 Mandragora
@@ -150,78 +150,78 @@ Enemies:
 70 Quetzalcoatl
 71 Ripper
 72 Poison Worm
-  Requires overlay 69.
+  Requires enemy overlay 69.
 73 Ghost Dancer
 74 Demon Head
 75 Lesser Demon
 76 Ghoul King
 77 Vapula
 78 Iron Golem
-  Requires overlay 45.
+  Requires enemy overlay 45.
 79 DoubleAxe Armor
 7A Demon
-  Requires overlay 47.
+  Requires enemy overlay 47.
 7B Bone Ark
 7C Skeleton Farmer
 7D Alastor
-  Requires overlay 75.
+  Requires enemy overlay 75.
 7E Gold Skeleton
 7F Cave Troll
 80 Amducias
 81 Balore
-  Requires overlay 43.
+  Requires enemy overlay 43.
 82 Gergoth
-  Requires overlay 50.
+  Requires enemy overlay 50.
 83 Zephyr
-  Requires overlay 49.
+  Requires enemy overlay 49.
 84 Aguni
-  Requires overlay 67.
+  Requires enemy overlay 67.
 85 Abaddon
-  Requires overlay 51.
+  Requires enemy overlay 51.
 86 Doppelganger
 87 Fake Trevor
-  Requires overlay 70.
+  Requires enemy overlay 70.
 88 Fake Grant
-  Requires overlay 70.
+  Requires enemy overlay 70.
 89 Fake Sypha
-  Requires overlay 70.
+  Requires enemy overlay 70.
 8A Dullahan
-  Requires overlay 58.
+  Requires enemy overlay 58.
 8B Behemoth
-  Requires overlay 53.
+  Requires enemy overlay 53.
   Var B: When 2, the scripted Behemoth that chases you. When 0, normal Behemoth.
 8C Keremet
-  Requires overlay 56.
+  Requires enemy overlay 56.
 8D Astarte
-  Requires overlay 74.
+  Requires enemy overlay 74.
 8E Legion
-  Requires overlay 52.
+  Requires enemy overlay 52.
 8F Dagon
-  Requires overlay 59.
+  Requires enemy overlay 59.
 90 Death
-  Requires overlay 64.
+  Requires enemy overlay 64.
 91 Stella
-  Requires overlay 63.
+  Requires enemy overlay 63.
   Var A: 0 for just Stella. 1 for the double fight with both Stella and Loretta.
   Var B: 0 for boss rush. 1 for normal.
 92 Loretta
-  Requires overlay 63.
+  Requires enemy overlay 63.
   Doesn't do anything but bob up and down if placed. Should instead by spawned by Stella.
   Var B: Normally 0. If greater than 0, then Loretta doesn't bob up and down or animate at all, she's just frozen completely still.
 93 Brauner
-  Requires overlay 55.
+  Requires enemy overlay 55.
 94 The Creature
-  Requires overlay 60.
+  Requires enemy overlay 60.
   Var A: 1 for boss rush. 0 for normal.
 95 Werewolf
-  Requires overlay 57.
+  Requires enemy overlay 57.
 96 Medusa
-  Requires overlay 61.
+  Requires enemy overlay 61.
 97 Mummy Man
-  Requires overlay 66.
+  Requires enemy overlay 66.
 98 Whip's Memory
-  Requires overlay 25.
+  Requires enemy overlay 25.
 99 Dracula
-  Requires overlay 64.
+  Requires enemy overlay 64.
 9A True Dracula
-  Requires overlay 65.
+  Requires enemy overlay 65.
