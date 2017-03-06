@@ -117,7 +117,8 @@ Special Objects:
 2A Moving platform waypoint.
   Object 29 will seek out its waypoints and move to them one at a time (in the order the waypoints were placed in the room), and then go back to its starting position and repeat the process.
   Byte 5: Which platform is this waypoint for? This should match the platform's byte 5.
-2B Area exit. touching it puts you back on the world map. extends infinitely vertically. also draws the arrows pointing out.
+2B Area exit.
+  Touching it puts you back on the world map. Extends infinitely vertically. Also draws the arrow pointing out.
 2C Wygol door that leads into a house.
   Var A:
     Low byte: The room index of the house to go into.
@@ -145,8 +146,8 @@ Special Objects:
 34 Warp point.
   Var A: Affects the background reflected in the floating water. Can be 00-0A.
   Var B: Affects the background reflected in the floating water. Can be 00-01.
-35 ??? used in a large number of rooms
-  Var A: ??? 0-8
+35 Cycles through palettes.
+  Var A: Which palette cycling to use. (List 022B6998.)
 36 Transition room hider.
   Var A is which room graphics to use:
     00 underwater. Bubbles come out of Shanoa's mouth as if she was underwater.
