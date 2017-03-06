@@ -52,6 +52,13 @@
     </layout>
    </item>
    <item>
+    <widget class="QCheckBox" name="one_dimensional_mode">
+     <property name="text">
+      <string>One dimensional mode</string>
+     </property>
+    </widget>
+   </item>
+   <item>
     <widget class="QLabel" name="info_label">
      <property name="text">
       <string/>

@@ -470,6 +470,49 @@ class Renderer
     fs.write_by_file(gfx_file[:file_path], 0, gfx_data_bytes.pack("C*"))
   end
   
+  def import_gfx_page_1_dimensional_mode(input_filename, gfx_file, palette_list_pointer, colors_per_palette, palette_index)
+    input_image = ChunkyPNG::Image.from_file(input_filename)
+    
+    colors = generate_palettes(palette_list_pointer, colors_per_palette)[palette_index]
+    colors[0] = ChunkyPNG::Color::TRANSPARENT
+    
+    colors = colors.map{|color| color & 0b11111000111110001111100011111111} # Get rid of unnecessary bits so equality checks work correctly.
+    
+    gfx_data_bytes = []
+    (0..256-1).each do |block_num|
+      (0..64-1).each do |pixel_num|
+        block_x = (block_num % 16) * 8
+        block_y = (block_num / 16) * 8
+        pixel_x = (pixel_num % 8) + block_x
+        pixel_y = (pixel_num / 8) + block_y
+        
+        pixel = input_image[pixel_x,pixel_y]
+        
+        if pixel & 0xFF == 0 # Transparent
+          color_index = 0
+        else
+          pixel &= 0b11111000111110001111100011111111
+          color_index = colors.index(pixel)
+          
+          if color_index.nil?
+            raise GFXImportError.new("The imported image uses different colors than the existing palette. Cannot import.")
+          end
+          if color_index < 0 || color_index > colors_per_palette-1
+            raise GFXImportError.new("Invalid color (this error shouldn't happen)")
+          end
+        end
+        
+        if pixel_num.even? || colors_per_palette == 256
+          gfx_data_bytes << color_index
+        else
+          gfx_data_bytes[-1] = (gfx_data_bytes[-1] | color_index << 4)
+        end
+      end
+    end
+    
+    fs.write_by_file(gfx_file[:file_path], 0, gfx_data_bytes.pack("C*"))
+  end
+  
   def render_collision_tileset(collision_tileset_offset, output_filename=nil)
     if output_filename && File.exist?(output_filename)
       return ChunkyPNG::Image.from_file(output_filename)

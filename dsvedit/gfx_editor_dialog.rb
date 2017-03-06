@@ -85,7 +85,11 @@ class GfxEditorDialog < Qt::Dialog
   end
   
   def load_gfx
-    chunky_image = @renderer.render_gfx_page(@gfx_file, @palettes[@palette_index], @canvas_width)
+    if @ui.one_dimensional_mode.checked
+      chunky_image = @renderer.render_gfx_1_dimensional_mode(@gfx_file, @palettes[@palette_index])
+    else
+      chunky_image = @renderer.render_gfx_page(@gfx_file, @palettes[@palette_index], @canvas_width)
+    end
     
     pixmap = Qt::Pixmap.new
     blob = chunky_image.to_blob
@@ -106,7 +110,11 @@ class GfxEditorDialog < Qt::Dialog
   def export_file
     return if @gfx_file.nil? || @palettes.nil? || @palette_index.nil?
     
-    chunky_image = @renderer.render_gfx_page(@gfx_file, @palettes[@palette_index], @canvas_width)
+    if @ui.one_dimensional_mode.checked
+      chunky_image = @renderer.render_gfx_1_dimensional_mode(@gfx_file, @palettes[@palette_index])
+    else
+      chunky_image = @renderer.render_gfx_page(@gfx_file, @palettes[@palette_index], @canvas_width)
+    end
     file_basename = File.basename(@gfx_file[:name], ".*")
     gfx_file_path = "#{@output_folder}/#{file_basename}.png"
     chunky_image.save(gfx_file_path)
@@ -127,7 +135,11 @@ class GfxEditorDialog < Qt::Dialog
     end
     
     begin
-      @renderer.import_gfx_page(file_path, @gfx_file, @palette_pointer, @colors_per_palette, @palette_index)
+      if @ui.one_dimensional_mode.checked
+        @renderer.import_gfx_page_1_dimensional_mode(file_path, @gfx_file, @palette_pointer, @colors_per_palette, @palette_index)
+      else
+        @renderer.import_gfx_page(file_path, @gfx_file, @palette_pointer, @colors_per_palette, @palette_index)
+      end
     rescue Renderer::GFXImportError => e
       Qt::MessageBox.warning(self,
         "GFX import error",
