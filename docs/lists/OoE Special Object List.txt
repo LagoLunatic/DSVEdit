@@ -60,7 +60,7 @@ Special Objects:
   Var A: The unique ID of this chest in the area. Can be from 0-B.
   For item pools 8 and 9, chest 0 is guaranteed to be a rare chest.
   For item pool A, no chests can be rare chests.
-  Otherwise, the chance for a rare chest is:
+  Otherwise, the chance for each chest to be rare is:
     10% + 0.1%*luck
   Or, if you have the Treasure Hat equipped:
     30% + 0.1%*luck
@@ -122,6 +122,12 @@ Special Objects:
   Byte 5: Which platform is this waypoint for? This should match the platform's byte 5.
 2B Area exit.
   Touching it puts you back on the world map. Extends infinitely vertically. Also draws the arrow pointing out.
+  Var A: The area index of the area to unlock when exiting via this exit.
+    0 does not unlock Dracula's Castle, it unlocks no area.
+  Var B:
+    0 Doesn't do anything extra.
+    1 Also unlocks the lower right entrance to Kalidus Channel. This should only be done after the player has visited at least one of the other entrances to Kalidus Channel, otherwise the game will crash when they enter Kalidus Channel.
+    2 Also unlocks the Large Cavern.
 2C Wygol door that leads into a house.
   Var A:
     Low byte: The room index of the house to go into.
@@ -289,8 +295,8 @@ Special Objects:
   Requires overlay 84.
 5E Metal gate with a button to the right of it to unlock it.
   Var A:
-    00 Single gate.
-    01 Large row of many gates.
+    0 Single gate.
+    1 Large row of many gates.
 5F Spawns villagers, events, and barrels in Wygol Village.
   Var A: Which of Wygol's rooms to spawn entities for:
     0 - In Eugen and Aeon's house.

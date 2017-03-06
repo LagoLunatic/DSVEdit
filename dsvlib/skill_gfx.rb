@@ -17,12 +17,10 @@ class SkillGfx
     case GAME
     when "dos"
       unknown, @gfx_file_pointer, @sprite_file_pointer, @palette_pointer = fs.read(SKILL_GFX_LIST_START + skill_gfx_index*16, 16).unpack("VVVV")
-    when "por"
+    when "por", "ooe"
       gfx_file_index, sprite_file_index, gfx_pointer, unknown, @palette_pointer = fs.read(SKILL_GFX_LIST_START + skill_gfx_index*16, 16).unpack("vvVVV")
       @gfx_file_pointer = fs.files_by_index[gfx_file_index][:ram_start_offset]
       @sprite_file_pointer = fs.files_by_index[sprite_file_index][:ram_start_offset]
-    when "ooe"
-      raise NotImplementedError.new
     end
   end
   

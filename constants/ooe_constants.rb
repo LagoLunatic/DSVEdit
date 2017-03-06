@@ -580,8 +580,8 @@ BEST_SPRITE_FRAME_FOR_SPECIAL_OBJECT = {
 }
 SPECIAL_OBJECT_FILES_TO_LOAD_LIST = 0x020F343C
 
-WEAPON_GFX_LIST_START = 0x020F3BC0
-SKILL_GFX_LIST_START = nil
+WEAPON_GFX_LIST_START = nil
+SKILL_GFX_LIST_START = 0x020F3BC0
 
 OTHER_SPRITES = [
   {desc: "Common", sprite: 0x020C4E24, gfx_files: [0x020B8788, 0x020B8794, 0x020B87A0, 0x020B87AC, 0x020B87B8, 0x020B87D0, 0x020B8818, 0x020B8824], palette: 0x020C8E50},
@@ -706,10 +706,8 @@ ARM_GLYPH_FORMAT = [
   [4, "Effects", :bitfield],
   [4, "Unwanted States"],
   [2, "Icon"],
-  [1, "Unknown 4"],
-  [1, "Unknown 5"],
-  [1, "Unknown 6"],
-  [1, "Unknown 7"],
+  [2, "Unknown 4"],
+  [2, "Var A"],
   [1, "Unknown 8"],
   [1, "Delay"],
   [1, "Swing Sound"],
@@ -811,18 +809,21 @@ ITEM_TYPES = [
     name: "Arm Glyphs",
     list_pointer: 0x020F0A08,
     count: 55,
+    is_skill: true,
     format: ARM_GLYPH_FORMAT
   },
   {
     name: "Back Glyphs",
     list_pointer: 0x020EF8CC,
     count: 25,
+    is_skill: true,
     format: BACK_GLYPH_FORMAT
   },
   {
     name: "Glyph Unions",
     list_pointer: 0x020F0164,
     count: 31,
+    is_skill: true,
     format: GLYPH_UNION_FORMAT
   },
   {
@@ -922,7 +923,7 @@ ITEM_BITFIELD_ATTRIBUTES = {
     "Effect 15",
     "Effect 16",
     "Effect 17",
-    "Effect 18",
+    "Shield",
     "Effect 19",
     "Effect 20",
     "Effect 21",

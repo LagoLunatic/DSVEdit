@@ -60,7 +60,8 @@ class Item
         @name = Text.new(TEXT_REGIONS["Skill Names"].begin + index, fs)
         @description = Text.new(TEXT_REGIONS["Skill Descriptions"].begin + index, fs)
       when "ooe"
-        raise NotImplementedError.new
+        @name = Text.new(TEXT_REGIONS["Item Names"].begin + self["Item ID"], fs)
+        @description = Text.new(TEXT_REGIONS["Item Descriptions"].begin + self["Item ID"], fs)
       end
     else
       @name = Text.new(TEXT_REGIONS["Item Names"].begin + self["Item ID"], fs)

@@ -306,8 +306,11 @@ Bytes 1-2: Item ID.
 Bytes 3-4: Attack stat.
 Bytes 5-8: Pointer to code run when using the glyph.
 Byte 9: Sprite.
-Byte 10: Bitfield?
-  0x2 - If set, the player doesn't play a swinging animation when using this glyph.
+Byte 10:
+  Bit 1: ?
+  Bit 2: If set, the player doesn't play a swinging animation when using this glyph.
+  Bits 3-8: Glyph union type. This value for both arms is used by function 0206E610 to determine what glyph union to use.
+Byte 11: 
 Byte 12: Mana cost of using this glyph.
 Bytes 13-16: Bitfield for what elemental damage types this glyph does.
 Bytes 17-20: Bitfield of player state booleans that must be false in order to use this glyph. Checks bitfield 021098F0 (the player's current state booleans). 0 means it can be used in any state.
@@ -318,7 +321,12 @@ Bytes 23-24: Bitfield.
   Least significant bit first.
   Bit 2: Makes the swinging sound effect and Shanoa's shouts come from off the left of the screen instead of the center.
   Bit 5: On for melee glyphs. Off for projectile glyphs. Effect unknown.
-Bytes 25-26: 
+  Bit 7: If on, sprite part palette indexes will be used as palette indexes, unlike many weapons, where it's used as an indicator that the part should be partially transparent.
+Bytes 25-26: Varies by code pointer.
+  For melee weapons: Animation Shanoa plays when swinging this weapon.
+    3 Overhead swing.
+  For shields: ?
+Byte 27: ? 18
 Byte 28: Delay in frames before you're allowed to use this glyph again after you use it once.
 Byte 29: Swing sound.
 Byte 30: 
@@ -369,7 +377,7 @@ Bytes 17-20: Bitfield of player state booleans that must be false in order to us
 Bytes 21-22: Icon.
   Normal icons go up to 004F. Higher than that and the glyph will be invisible or have bugged graphics.
   But if you increase this value to 3CD0 or higher, the glyph won't appear it all, it won't even be invisible.
-Byte 23: bitfield?
+Bytes 23-24: Bitfield
 Byte 25: affects Shanoa's swinging animation?
 
 Relic format (OoE):

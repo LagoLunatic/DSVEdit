@@ -61,4 +61,8 @@
 .org 0x0207C924
   nop
 
+; TODO being petrified while in paries form will untransform you and can put you out of bounds. make the player immune to petrification while in paries form.
+
+; TODO there are still some walls the player can get trapped in, like in wygol next to nikolai
+
 .close
