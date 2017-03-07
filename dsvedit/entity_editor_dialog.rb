@@ -8,6 +8,7 @@ class EntityEditorDialog < Qt::Dialog
   slots "type_changed(int)"
   slots "subtype_changed(int)"
   slots "button_box_clicked(QAbstractButton*)"
+  slots "delete_entity()"
   
   def initialize(main_window, entities, entity)
     super(main_window, Qt::WindowTitleHint | Qt::WindowSystemMenuHint)
@@ -38,6 +39,7 @@ class EntityEditorDialog < Qt::Dialog
     connect(@ui.type, SIGNAL("activated(int)"), self, SLOT("type_changed(int)"))
     connect(@ui.subtype, SIGNAL("activated(int)"), self, SLOT("subtype_changed(int)"))
     connect(@ui.buttonBox, SIGNAL("clicked(QAbstractButton*)"), self, SLOT("button_box_clicked(QAbstractButton*)"))
+    connect(@ui.delete_entity_button, SIGNAL("released()"), self, SLOT("delete_entity()"))
     
     self.show()
   end
@@ -105,6 +107,13 @@ class EntityEditorDialog < Qt::Dialog
     else
       @ui.entity_doc.setPlainText(game.entity_type_docs[@ui.type.currentIndex])
     end
+  end
+  
+  def delete_entity
+    @entities.delete(@entity)
+    @entity.room.write_entities_to_rom()
+    parent.load_room()
+    self.close()
   end
   
   def save_entity
