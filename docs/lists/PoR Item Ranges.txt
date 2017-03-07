@@ -1,8 +1,0 @@
-
-Global ID (Local ID)
-00-5F (00-5F): Consumables + Magic Seals
-60-A8 (00-48): Weapons
-A9-E2 (00-39): Body armor
-E3-108 (00-25): Head armor
-109-125 (00-1C): Leg armor
-126-14F (00-29): Accessories

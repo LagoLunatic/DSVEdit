@@ -124,7 +124,7 @@ ENTITY_TYPE_DESCRIPTIONS = {
   6 => "All-quests-complete pickup",
   7 => "Hidden pickup",
   8 => "Entity hider",
-  9 => "???",
+  9 => "Font loader",
 }
 
 CONSTANT_OVERLAYS = [0, 5, 6, 7, 8]

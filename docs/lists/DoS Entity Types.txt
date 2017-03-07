@@ -40,7 +40,7 @@ Entity types:
     Var A: No effect.
     Var B: The global ID of the soul.
 
-05 Nothing. Unused.
+05 Nothing? Unused?
 
 06 Entity hider.
   Prematurely stop reading this entity list if a certain condition is met.
