@@ -39,6 +39,12 @@ class GfxEditorDialog < Qt::Dialog
   def load_gfx_file_and_palette_list
     gfx_file = @fs.files_by_path[@ui.gfx_file_name.text.strip]
     if gfx_file.nil?
+      possible_ram_pointer = @ui.gfx_file_name.text.to_i(16)
+      if possible_ram_pointer >= 0x02000000 && possible_ram_pointer < 0x03000000
+        gfx_file = @fs.find_file_by_ram_start_offset(possible_ram_pointer)
+      end
+    end
+    if gfx_file.nil?
       Qt::MessageBox.warning(self, "Not a file", "Couldn't find file with path: #{@ui.gfx_file_name.text}")
       return
     end
@@ -65,6 +71,9 @@ class GfxEditorDialog < Qt::Dialog
     @palettes.each_index do |i|
       @ui.palette_index.addItem("%02X" % i)
     end
+    
+    @ui.gfx_file_name.text = @gfx_file[:file_path]
+    @ui.palette_pointer.text = "%08X" % @palette_pointer
   end
   
   def load_palettes(colors_per_palette)
