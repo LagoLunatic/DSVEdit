@@ -4,6 +4,7 @@ require_relative 'ui_gfx_editor.rb'
 class GfxEditorDialog < Qt::Dialog
   slots "load_gfx_file_and_palette_list()"
   slots "palette_changed(int)"
+  slots "toggle_one_dimensional_mapping_mode(int)"
   slots "export_file()"
   slots "import_gfx()"
   slots "import_palette()"
@@ -26,6 +27,7 @@ class GfxEditorDialog < Qt::Dialog
     
     connect(@ui.view_button, SIGNAL("clicked()"), self, SLOT("load_gfx_file_and_palette_list()"))
     connect(@ui.palette_index, SIGNAL("activated(int)"), self, SLOT("palette_changed(int)"))
+    connect(@ui.one_dimensional_mode, SIGNAL("stateChanged(int)"), self, SLOT("toggle_one_dimensional_mapping_mode(int)"))
     connect(@ui.export_button, SIGNAL("clicked()"), self, SLOT("export_file()"))
     connect(@ui.import_gfx_button, SIGNAL("clicked()"), self, SLOT("import_gfx()"))
     connect(@ui.import_palette_button, SIGNAL("clicked()"), self, SLOT("import_palette()"))
@@ -105,6 +107,10 @@ class GfxEditorDialog < Qt::Dialog
     load_gfx()
     
     @ui.palette_index.setCurrentIndex(palette_index)
+  end
+  
+  def toggle_one_dimensional_mapping_mode(checked)
+    load_gfx()
   end
   
   def export_file
