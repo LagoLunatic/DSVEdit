@@ -253,7 +253,7 @@ class Renderer
     if palette.nil?
       # Invalid palette, use a dummy palette instead.
       
-      palette = generate_palettes(nil, 256).first
+      palette = generate_palettes(nil, 16).first
     end
     
     if palette.length == 16
