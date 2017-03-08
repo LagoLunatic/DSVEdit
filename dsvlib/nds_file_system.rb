@@ -217,6 +217,10 @@ class NDSFileSystem
   end
   
   def find_file_by_ram_start_offset(ram_start_offset)
+    unless ram_start_offset >= 0x02000000 && ram_start_offset < 0x03000000
+      raise "RAM start offset %08X is invalid." % ram_start_offset
+    end
+    
     files.values.find do |file|
       file[:type] == :file && file[:ram_start_offset] == ram_start_offset
     end
@@ -431,7 +435,9 @@ private
       file_path = file_path.delete("\x00") # Remove null bytes padding the end of the string
       file = files_by_path[file_path]
       
-      file[:ram_start_offset] = ram_start_offset
+      if ram_start_offset != 0
+        file[:ram_start_offset] = ram_start_offset
+      end
       file[:file_data_type] = file_data_type
       
       @files_by_index << file
@@ -443,7 +449,7 @@ private
       # Richter's gfx files don't have a ram offset stored in the normal place.
       i = 0
       files.values.each do |file|
-        if file[:ram_start_offset] == 0 && file[:file_path] =~ /\/sc2\/s0_ri_..\.dat/
+        if file[:ram_start_offset] == nil && file[:file_path] =~ /\/sc2\/s0_ri_..\.dat/
           file[:ram_start_offset] = read(RICHTERS_LIST_OF_GFX_POINTERS + i*4, 4).unpack("V").first
           i += 1
         end
