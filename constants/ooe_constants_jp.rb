@@ -1,101 +1,40 @@
 
-GAME = "ooe"
-REGION = :jp
-LONG_GAME_NAME = "Order of Ecclesia"
+# This file is loaded after the USA constants file. It only needs to specify things that are different from the USA version.
 
-AREA_LIST_RAM_START_OFFSET = 0x020D8FC4
+REGION = :jp
+
+# Overlays in the Japanese version of OoE are shifted down by 1 compared to the US version.
+# This is because the US version uses overlay 0 for English text and overlay 1 for French text, but the Japanese version only has one text overlay: overlay 0.
+# So we need to shift all overlay ids down by 1 (except for 0).
 
 # Overlays 39 to 84.
-AREA_INDEX_TO_OVERLAY_INDEX = {
-  0 => { 
-    0 => 64,
-    1 => 65,
-    2 => 67,
-    3 => 68,
-    4 => 69,
-    5 => 70,
-    6 => 71,
-    7 => 72,
-    8 => 75,
-    9 => 76,
-    10 =>73,
-    11 => 74,
-    12 => 66,
-  },     
-  1 => { 
-    0 => 39,
-    1 => 40,
-  },     
-  2 => { 
-    0 => 41,
-  },     
-  3 => { 
-    0 => 42,
-  },     
-  4 => { 
-    0 => 43,
-  },     
-  5 => { 
-    0 => 44,
-  },     
-  6 => { 
-    0 => 45,
-    1 => 46,
-  },     
-  7 => { 
-    0 => 47,
-    1 => 48,
-  },     
-  8 => { 
-    0 => 49,
-    1 => 50,
-    2 => 51,
-  },     
-  9 => { 
-    0 => 52,
-  },     
-  10 => {
-    0 => 53,
-    1 => 54,
-  },     
-  11 => {
-    0 => 55,
-    1 => 56,
-  },     
-  12 => {
-    0 => 57,
-  },     
-  13 => {
-    0 => 58,
-  },     
-  14 => {
-    0 => 59,
-  },     
-  15 => {
-    0 => 60,
-  },     
-  16 => {
-    0 => 61,
-    1 => 62,
-  },     
-  17 => {
-    0 => 63,
-  },     
-  18 => {
-    0 => 77,
-    1 => 78,
-  },     
-  19 => {
-    0 => 79,
-    1 => 80,
-    2 => 81,
-    3 => 82,
-    4 => 83,
-    5 => 84,
-  }
-}
+AREA_INDEX_TO_OVERLAY_INDEX = AREA_INDEX_TO_OVERLAY_INDEX.map do |area_index, old_hash|
+  new_hash = old_hash.map do |sector_index, overlay|
+    [sector_index, overlay-1]
+  end.to_h
+  [area_index, new_hash]
+end.to_h
 
-CONSTANT_OVERLAYS = [18, 21]
+CONSTANT_OVERLAYS = CONSTANT_OVERLAYS.map{|overlay| overlay-1}
+
+# Overlays 23 to 37 are used for enemies.
+OVERLAY_FILE_FOR_ENEMY_AI = OVERLAY_FILE_FOR_ENEMY_AI.map do |enemy_id, overlay|
+  if overlay.is_a?(Array)
+    [enemy_id, overlay.map{|overlay| overlay-1}]
+  else
+    [enemy_id, overlay-1]
+  end
+end.to_h
+
+OVERLAY_FILE_FOR_SPECIAL_OBJECT = OVERLAY_FILE_FOR_SPECIAL_OBJECT.map do |object_id, overlay|
+  if overlay.is_a?(Array)
+    [object_id, overlay.map{|overlay| overlay-1}]
+  else
+    [object_id, overlay-1]
+  end
+end.to_h
+
+AREA_LIST_RAM_START_OFFSET = 0x020D8FC4
 
 MAP_TILE_METADATA_LIST_START_OFFSET = 0x020D906C
 MAP_TILE_LINE_DATA_LIST_START_OFFSET = 0x020D90C0
@@ -107,33 +46,9 @@ SECTOR_MUSIC_LIST_START_OFFSET = 0x020D7554
 
 LIST_OF_FILE_RAM_LOCATIONS_START_OFFSET = 0x020DA694
 LIST_OF_FILE_RAM_LOCATIONS_END_OFFSET = 0x020EE3B3
-LIST_OF_FILE_RAM_LOCATIONS_ENTRY_LENGTH = 0x20
 
 ENEMY_DNA_RAM_START_OFFSET = 0x020B63D4
 
-# Overlays 23 to 37 are used for enemies.
-OVERLAY_FILE_FOR_ENEMY_AI = {
-  0x16 => 37, # the creature
-  0x3C => 37, # owl
-  0x41 => 37, # owl knight
-  0x4E => 37, # draculina
-  0x5E => 37, # spectral sword
-  0x66 => 35, # final knight
-  0x67 => 28, # jiang shi
-  0x6C => 23, # arthroverta
-  0x6D => 29, # brachyura
-  0x6E => 25, # maneater
-  0x6F => 26, # rusalka
-  0x70 => 31, # goliath
-  0x71 => 32, # gravedorcus
-  0x72 => 35, # albus
-  0x73 => 36, # barlowe
-  0x74 => 27, # wallman
-  0x75 => 34, # blackmore
-  0x76 => 30, # eligor
-  0x77 => 24, # death
-  0x78 => [33, 74], # dracula. His palette is actually stored in one of the area overlays (75) instead of his enemy overlay (34).
-}
 REUSED_ENEMY_INFO[0x23] = {init_code: 0x022502A0, gfx_sheet_ptr_index: 1, palette_offset: 0, palette_list_ptr_index: 1} # black fomor -> white fomor
 REUSED_ENEMY_INFO[0x34] = {init_code: 0x0228CF30, gfx_sheet_ptr_index: 0, palette_offset: 0, palette_list_ptr_index: 0} # automaton zx26
 REUSED_ENEMY_INFO[0x48] = {init_code: 0x0224E15C, gfx_sheet_ptr_index: 1, palette_offset: 0, palette_list_ptr_index: 1} # ghoul -> zombie
@@ -145,37 +60,6 @@ ENEMY_FILES_TO_LOAD_LIST = 0x020F31C8
 
 SPECIAL_OBJECT_CREATE_CODE_LIST = 0x020F40C0
 SPECIAL_OBJECT_UPDATE_CODE_LIST = 0x020F42F4
-OVERLAY_FILE_FOR_SPECIAL_OBJECT = {
-  0x25 => 61,
-  0x27 => 50,
-  0x38 => 45,
-  0x3A => 45,
-  0x3B => 54,
-  0x3D => 68,
-  0x40 => 77,
-  0x43 => 64,
-  0x44 => 67,
-  0x45 => 54,
-  0x47 => 56,
-  0x48 => 56,
-  0x49 => 56,
-  0x4A => 56,
-  0x4C => 51,
-  0x4E => 41,
-  0x4F => 62,
-  0x50 => 75,
-  0x51 => 76,
-  0x53 => 71,
-  0x54 => 59,
-  0x57 => 71,
-  0x58 => 40,
-  0x59 => 65,
-  0x5A => 45,
-  0x5B => 45,
-  0x5D => 83,
-  0x60 => 41,
-  0x66 => 77,
-}
 REUSED_SPECIAL_OBJECT_INFO[0x01] = {sprite: 0x020C4E94, gfx_files: [0x020B87F8, 0x020B8804, 0x020B8810, 0x020B881C, 0x020B8828, 0x020B8840, 0x020B8888, 0x020B8894], palette: 0x020C8EC0} # magnes point
 REUSED_SPECIAL_OBJECT_INFO[0x02] = {init_code: 0x022B6A60} # destructible
 #  0x16 => {init_code: 0x0221A408, palette_offset: 1}, # red chest
@@ -243,27 +127,6 @@ OTHER_SPRITES = [
 ]
 
 TEXT_LIST_START_OFFSET = 0x021FDDA0
-TEXT_RANGE = (0..0x764)
-TEXT_REGIONS = {
-  "Character Names" => (0..0x15),
-  "Item Names" => (0x16..0x177),
-  "Item Descriptions" => (0x178..0x2D9),
-  "Enemy Names" => (0x2DA..0x352),
-  "Enemy Descriptions" => (0x353..0x3CB),
-  "Misc" => (0x3CC..0x407),
-  "Menus" => (0x408..0x65F),
-  "Events" => (0x660..0x764)
-}
-TEXT_REGIONS_OVERLAYS = {
-  "Character Names" => 0,
-  "Item Names" => 0,
-  "Item Descriptions" => 0,
-  "Enemy Names" => 0,
-  "Enemy Descriptions" => 0,
-  "Misc" => 0,
-  "Menus" => 0,
-  "Events" => 0
-}
 STRING_DATABASE_START_OFFSET = 0x021DCEA0
 STRING_DATABASE_ORIGINAL_END_OFFSET = 0x021FDD88
 STRING_DATABASE_ALLOWABLE_END_OFFSET = STRING_DATABASE_ORIGINAL_END_OFFSET
@@ -286,18 +149,21 @@ ITEM_TYPES = [
     name: "Arm Glyphs",
     list_pointer: 0x020F14D8,
     count: 55,
+    is_skill: true,
     format: ARM_GLYPH_FORMAT
   },
   {
     name: "Back Glyphs",
     list_pointer: 0x020F039C,
     count: 25,
+    is_skill: true,
     format: BACK_GLYPH_FORMAT
   },
   {
     name: "Glyph Unions",
     list_pointer: 0x020F0C34,
     count: 31,
+    is_skill: true,
     format: GLYPH_UNION_FORMAT
   },
   {
@@ -346,4 +212,3 @@ ITEM_TYPES = [
 
 ITEM_POOLS_LIST_POINTER = 0x02223880
 ITEM_POOL_INDEXES_FOR_AREAS_LIST_POINTER = 0x02223868
-NUMBER_OF_ITEM_POOLS = 0xB
