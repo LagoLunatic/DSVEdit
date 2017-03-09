@@ -495,6 +495,12 @@ class DSVEdit < Qt::MainWindow
         item_global_id = entity.var_b - 1
         chunky_image = @renderer.render_icon_by_global_id(item_global_id)
         
+        if chunky_image.nil?
+          graphics_item = EntityRectItem.new(entity)
+          graphics_item.setParentItem(@entities_view_item)
+          return
+        end
+        
         graphics_item = EntityChunkyItem.new(chunky_image, entity)
         graphics_item.setPos(entity.x_pos-8, entity.y_pos-16)
         graphics_item.setParentItem(@entities_view_item)
@@ -502,6 +508,12 @@ class DSVEdit < Qt::MainWindow
         item_type = entity.subtype
         item_id = entity.var_b
         chunky_image = @renderer.render_icon_by_item_type(item_type-2, item_id)
+        
+        if chunky_image.nil?
+          graphics_item = EntityRectItem.new(entity)
+          graphics_item.setParentItem(@entities_view_item)
+          return
+        end
         
         graphics_item = EntityChunkyItem.new(chunky_image, entity)
         graphics_item.setPos(entity.x_pos-8, entity.y_pos-16)
@@ -533,15 +545,27 @@ class DSVEdit < Qt::MainWindow
         chunky_image = @renderer.render_icon(64 + 3, 0)
       end
       
+      if chunky_image.nil?
+        graphics_item = EntityRectItem.new(entity)
+        graphics_item.setParentItem(@entities_view_item)
+        return
+      end
+      
       graphics_item = EntityChunkyItem.new(chunky_image, entity)
       graphics_item.setPos(entity.x_pos-8, entity.y_pos-16)
       graphics_item.setParentItem(@entities_view_item)
-    elsif entity.is_glyph? || entity.is_hidden_glyph?
-      glyph_id = entity.var_b
+    elsif (entity.is_glyph? || entity.is_hidden_glyph?) && entity.var_b > 0
+      glyph_id = entity.var_b - 1
       if glyph_id <= 0x36
-        chunky_image = @renderer.render_icon_by_item_type(0, glyph_id-1, mode=:glyph)
+        chunky_image = @renderer.render_icon_by_item_type(0, glyph_id, mode=:glyph)
       else
-        chunky_image = @renderer.render_icon_by_item_type(1, glyph_id-1-0x37, mode=:glyph)
+        chunky_image = @renderer.render_icon_by_item_type(1, glyph_id-0x37, mode=:glyph)
+      end
+      
+      if chunky_image.nil?
+        graphics_item = EntityRectItem.new(entity)
+        graphics_item.setParentItem(@entities_view_item)
+        return
       end
       
       graphics_item = EntityChunkyItem.new(chunky_image, entity)

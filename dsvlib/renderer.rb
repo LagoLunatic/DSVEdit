@@ -904,6 +904,8 @@ class Renderer
   end
   
   def render_icon(icon_index, palette_index, mode=:item)
+    return nil if icon_index == 0
+    
     icon_width = mode == :item ? 16 : 32
     icon_height = icon_width
     icons_per_row = 128 / icon_width
