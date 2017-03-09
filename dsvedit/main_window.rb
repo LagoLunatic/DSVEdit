@@ -353,14 +353,18 @@ class DSVEdit < Qt::MainWindow
     @room = room
     @ui.room.setCurrentIndex(@room_index)
     
+    update_room_position_indicator()
+    
+    load_room()
+  end
+  
+  def update_room_position_indicator
     @position_indicator.setPos(@room.room_xpos_on_map*4 + 2.25, @room.room_ypos_on_map*4 + 2.25)
     if @room.layers.length > 0
       @position_indicator.setRect(-2, -2, 4*@room.main_layer_width, 4*@room.main_layer_height)
     else
       @position_indicator.setRect(-2, -2, 4, 4)
     end
-    
-    load_room()
   end
   
   def sector_and_room_indexes_changed(new_sector_index, new_room_index)
@@ -689,6 +693,9 @@ class DSVEdit < Qt::MainWindow
     @map_graphics_scene.addItem(map_pixmap_item)
     
     @position_indicator = @map_graphics_scene.addRect(-2, -2, 4, 4, Qt::Pen.new(Qt::NoPen), Qt::Brush.new(Qt::Color.new(255, 255, 128, 128)))
+    if @room
+      update_room_position_indicator()
+    end
   end
   
   def open_enemy_dna_dialog
