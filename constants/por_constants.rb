@@ -212,7 +212,7 @@ ENEMY_DNA_FORMAT = [
   [1, "Unknown 2"],
   [1, "Attack"],
   [1, "Defense"],
-  [1, "Unknown 3"],
+  [1, "Magic Defense"],
   [1, "Item 1 Chance"],
   [1, "Item 2 Chance"],
   [4, "Weaknesses", :bitfield],

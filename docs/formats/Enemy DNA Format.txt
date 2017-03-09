@@ -21,6 +21,7 @@ Byte 21: Chance to drop its soul.
     (this_number*2 + 0.125) / (512 - luck/8)
 Byte 22: Attack stat.
 Byte 23: Defense stat.
+  Doubles as magical defense.
 Byte 24: Chance to drop an item.
   The formula for calculating item drop chance is as follows:
     (this_number*3) / (1024 - luck)
@@ -83,7 +84,7 @@ Bytes 17-18: EXP.
 Byte 19: ???
 Byte 20: Attack stat.
 Byte 21: Defense stat.
-Byte 22: ???
+Byte 22: Magical defense stat.
 Byte 23: Chance to drop item 1
 Byte 24: Chance to drop item 2
 Bytes 25-28: Weaknesses
@@ -103,12 +104,12 @@ Byte 19: ???
 Byte 20: ???
 Bytes 21-22: Glyph
 Byte 23: Chance to drop glyph
-Byte 24: Attack
-Byte 25: ???
-Byte 26: ???
+Byte 24: Attack.
+Byte 25: Defense.
+Byte 26: Magical defense.
 Byte 27: Chance to drop item 1
 Byte 28: Chance to drop item 2
 Bytes 29-32: Weaknesses
-  Bit 26: Enemy takes extra damage (117 -> 176)
+  Bit 26: Enemy takes extra damage? (117 -> 176)
 Bytes 33-36: Resistances
   Bit 32: Can cause the enemy to have corrupted graphics and palette?

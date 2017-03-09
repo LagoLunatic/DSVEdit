@@ -15,9 +15,9 @@ Byte 9: Animation Soma plays when swinging the weapon.
   07: Japanese sword.
   08: Punch.
   09: Firing a pistol.
-  0A: Fast Japanese sword.
+  0A: Throwing weapon.
   0B: Firing a rocket launcher.
-  0C: Stab.
+  0C: Whip.
   0D+: Not weapon animations, just animations like Soma walking or standing.
 Byte 10: 
 Byte 11: Attack stat.
@@ -411,4 +411,35 @@ Byte 20:
 
 Consumable format (OoE):
 12 bytes long.
-Same as PoR.
+12 bytes long.
+Bytes 1-2: Item ID.
+Bytes 3-4:
+  Least significant bit first.
+  Bits 1-11: Icon.
+  Bits 12-13: Icon palette.
+  Bits 14-16: Unused?
+Bytes 5-8: Store price of the item.
+Byte 9: Type of the consumable.
+  0 Restores HP.
+    Var A: Amount of HP to restore.
+  1 Restores MP.
+    Var A: Amount of MP to restore.
+  2 Restores hearts.
+    Var A: Number of hearts to restore.
+  3 Cures a status effect.
+    Var A: 1 for poison, 2 for curse, 4 for petrify.
+  4 HP Max Up
+  5 MP Max Up
+  6 HEART Max Up
+  7 Subtracts HP.
+    Var A: Amount of HP to subtract.
+  8 Not a usable item.
+  9 Record.
+    The song to play is automatically calculated depending on the global ID of this item. The song ID to play will be global ID - 0x6F.
+  A Magical ticket.
+  B Increases attribute points.
+    Var A: The amount of attribute points to give.
+    Which type of attribute points to give is automatically calculated depending on the global ID of this item. It will increase attribute global ID - 0x9C.
+Byte 10: Always 00, no effect.
+Bytes 11-12: Var A.
+  See above for what this does depending on the consumable type.

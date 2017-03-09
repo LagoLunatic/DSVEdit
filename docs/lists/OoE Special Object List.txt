@@ -253,6 +253,7 @@ Special Objects:
 4C Electricity hazard from Minera Prison Island.
   Requires overlay 52.
 4D Wooden door in Ecclesia. Unlike a regular wooden door (2E), this one will be locked at the beginning of the game.
+  Requires overlay 42.
 4E Ecclesia door.
   Requires overlay 42.
 4F The ground and rocks from Gravedorcus's room.

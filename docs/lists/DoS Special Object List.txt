@@ -15,7 +15,20 @@ Special objects:
   Var B: Height in pixels.
 04 Large water splashing visual and sound effects, used at the bottom of the large waterfall.
 05 Used in rooms with quicksand. TODO
-06 Area name shown the first time you enter an area. Var A controls which area it is.
+06 Area name shown the first time you enter an area.
+  Var A controls which area it is:
+    0 The Lost Village
+    1 Wizardry Lab
+    2 Garden of Madness
+    3 The Dark Chapel
+    4 Demon Guest House
+    5 Condemned Tower
+    6 Mine of Judgement
+    7 Cursed Clock Tower
+    8 Subterranean Hell
+    9 Silenced Ruins
+    A The Pinnacle
+    B The Abyss
 07 Starts enemy set mode.
   Var A:
     00 Starts enemy set mode.
