@@ -7,7 +7,7 @@
 ; This makes it so that all melee weapons can break balore blocks, not just Julius's whip.
 
 .org 0x02212AB0 ; Branch of a switch statement taken for all melee weapons except Julius's whip.
-  b 02212D64h ; Instead take the branch taken for Julius's whip.
+  b 02212D64h ; Instead take the branch for Julius's whip.
 
 ; Next we need to make sure the player has Balore's soul.
 
@@ -27,8 +27,8 @@
   beq @DestroyBaloreBlocks ; Destroy blocks if it is.
   ldr r0,=020F740Eh
   ldrb r0, [r0]
-  cmp r0, 1h ; Otherwise check if the current player character is Julius.
-  beq @DestroyBaloreBlocks ; Destroy blocks if it is.
+  cmp r0, 1h ; Otherwise check the current player character.
+  bge @DestroyBaloreBlocks ; Destroy blocks if it's Julius/Alucard.
   b 02212E98h ; Didn't meet either condition, so return without destroying them.
 @DestroyBaloreBlocks:
   mov r0, r5
