@@ -134,7 +134,7 @@ class MapEditorDialog < Qt::Dialog
   end
   
   def edit_map_tile(x, y, button)
-    return unless (0..@map_graphics_scene.width-1-4).include?(x) && (0..@map_graphics_scene.height-1-4).include?(y)
+    return unless (0..@map_graphics_scene.width-1-5).include?(x) && (0..@map_graphics_scene.height-1-5).include?(y)
     
     x = x / 4
     y = y / 4
