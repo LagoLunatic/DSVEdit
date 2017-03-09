@@ -17,6 +17,7 @@ class MapEditorDialog < Qt::Dialog
     @game = game
     @renderer = renderer
     @map = game.get_map(area_index, sector_index)
+    @area = game.areas[area_index]
     
     @map_graphics_scene = ClickableGraphicsScene.new
     @map_graphics_scene.setSceneRect(0, 0, 64*4+1, 48*4+1)
@@ -166,8 +167,7 @@ class MapEditorDialog < Qt::Dialog
     # In PoR/OoE, add a tile where there wasn't one before.
     if @map.tiles.length < @map.number_of_tiles
       new_tile = @selected_map_tile.dup
-      new_tile.sector_index = 0 # TODO
-      new_tile.room_index = 0 # TODO
+      new_tile.sector_index, new_tile.room_index = @area.get_sector_and_room_indexes_from_map_x_y(x, y)
       new_tile.y_pos = y
       new_tile.x_pos = x
       @map.tiles << new_tile

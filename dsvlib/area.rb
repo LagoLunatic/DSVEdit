@@ -32,4 +32,18 @@ class Area
       sector_index += 1
     end
   end
+  
+  def get_sector_and_room_indexes_from_map_x_y(x, y)
+    sectors.each_with_index do |sector, sector_index|
+      sector.rooms.each_with_index do |room, room_index|
+        xrange = (room.room_xpos_on_map..room.room_xpos_on_map+room.main_layer_width-1)
+        yrange = (room.room_ypos_on_map..room.room_ypos_on_map+room.main_layer_height-1)
+        if xrange.include?(x) && yrange.include?(y)
+          return [sector_index, room_index]
+        end
+      end
+    end
+    
+    return [0, 0]
+  end
 end
