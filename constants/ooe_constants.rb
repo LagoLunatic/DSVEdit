@@ -635,6 +635,10 @@ OTHER_SPRITES = [
   {desc: "Breakable walls 6", sprite: 0x021DCD3C, gfx_files: [0x020BA2E8], palette: 0x020D13D4},
   {desc: "Breakable walls 7", sprite: 0x021DCD38, gfx_files: [0x020BA2F4], palette: 0x020D1458},
   {desc: "Breakable walls 8", sprite: 0x021DCD34, gfx_files: [0x020BA300], palette: 0x020D151C},
+  
+  {pointer: 0x0221BBB0, desc: "Title screen 1", overlay: 20},
+  {pointer: 0x0221BBC8, desc: "Title screen 2", overlay: 20},
+  {pointer: 0x0221BBE0, desc: "Title screen 3", overlay: 20},
 ]
 
 OVERLAY_FILES_WITH_SPRITE_DATA = []
