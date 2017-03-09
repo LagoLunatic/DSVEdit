@@ -119,6 +119,7 @@ class GfxEditorDialog < Qt::Dialog
   end
   
   def toggle_one_dimensional_mapping_mode(checked)
+    return if @gfx_file.nil? || @palettes.nil? || @palette_index.nil?
     load_gfx()
   end
   
