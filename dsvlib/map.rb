@@ -53,6 +53,8 @@ class Map
   end
   
   def write_to_rom
+    @tiles = @tiles.sort_by{|tile| [tile.y_pos, tile.x_pos]}
+    
     (0..number_of_tiles-1).each do |i|
       tile_line_data, tile_metadata = @tiles[i].to_data
       
