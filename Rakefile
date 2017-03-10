@@ -24,6 +24,7 @@ task :build_ui do
   system "rbuic4 dsvedit/item_pool_editor.ui    -o dsvedit/ui_item_pool_editor.rb"
   system "rbuic4 dsvedit/gfx_editor.ui          -o dsvedit/ui_gfx_editor.rb"
   system "rbuic4 dsvedit/music_editor.ui        -o dsvedit/ui_music_editor.rb"
+  system "rbuic4 dsvedit/tileset_editor.ui      -o dsvedit/ui_tileset_editor.rb"
   
   system "rbuic4 dsvrandom/randomizer.ui        -o dsvrandom/ui_randomizer.rb"
 end

@@ -17,7 +17,7 @@ class Tileset
   
   def read_from_rom
     @tiles = []
-    @tiles << tile_class.new(0, 0) # First entry on every tileset is always blank.
+    @tiles << tile_class.new(0) # First entry on every tileset is always blank.
     
     (0..LENGTH_OF_TILESET_IN_BLOCKS-1).each do |i|
       begin
@@ -27,7 +27,7 @@ class Tileset
         break
       end
       
-      @tiles << tile_class.new(tile_data, tileset_ram_pointer + i*4)
+      @tiles << tile_class.new(tile_data)
     end
   end
   
@@ -37,25 +37,15 @@ class Tileset
 end
 
 class TilesetTile
-  attr_reader :ram_location,
-              :index_on_tile_page,
-              :unknown_1,
-              :tile_page,
-              :horizontal_flip,
-              :vertical_flip,
-              :unknown_2,
-              :palette_index,
-              :is_blank
+  attr_accessor :index_on_tile_page,
+                :unknown_1,
+                :tile_page,
+                :horizontal_flip,
+                :vertical_flip,
+                :unknown_2,
+                :palette_index
               
-  def initialize(tile_data, ram_location)
-    @ram_location = ram_location
-    
-    if tile_data == 0
-      # This indicates the tile is completely blank, no graphics or collision.
-      @is_blank = true
-      return
-    end
-    
+  def initialize(tile_data)
     @index_on_tile_page = (tile_data & 0b00000000_00000000_00000000_00111111)
     @unknown_1          = (tile_data & 0b00000000_00000000_00001111_11000000) >> 6
     @tile_page          = (tile_data & 0b00000000_00000001_11110000_00000000) >> 12
@@ -66,6 +56,11 @@ class TilesetTile
     
     # Unknown 1 and unknown 2 aren't used, they only sometimes seem to be used because of reading garbage data past the end of the actual tilset.
   end
+  
+  def is_blank
+    # This indicates the tile is completely blank, no graphics or collision.
+    index_on_tile_page == 0 && tile_page == 0
+  end
 end
 
 class CollisionTileset < Tileset
@@ -75,8 +70,7 @@ class CollisionTileset < Tileset
 end
 
 class CollisionTile
-  attr_reader :ram_location,
-              :tile_data,
+  attr_reader :tile_data,
               :unknown_1,
               :unknown_2,
               :unknown_3,
@@ -88,9 +82,8 @@ class CollisionTile
               :is_water,
               :block_shape
               
-  def initialize(tile_data, ram_location)
+  def initialize(tile_data)
     @tile_data = tile_data
-    @ram_location = ram_location
     
     collision_data     = (tile_data & 0x000000FF)
     @unknown_1         = (tile_data & 0x0000FF00) >> 8
@@ -121,4 +114,3 @@ class CollisionTile
     end
   end
 end
-

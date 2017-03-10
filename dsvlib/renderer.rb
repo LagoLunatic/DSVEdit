@@ -611,8 +611,6 @@ class Renderer
         x_offset = (tile.block_shape-12)*16
       else
         puts "Unknown block shape: #{tile.block_shape}"
-        p tile
-        puts "%08X" % tile.ram_location
         graphic_tile.rect(1, 1, 14, 14, stroke_color = color, fill_color = ChunkyPNG::Color.rgba(0, 255, 0, 255))
         return graphic_tile
       end

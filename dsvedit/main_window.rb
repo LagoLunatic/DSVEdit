@@ -13,6 +13,7 @@ require_relative 'layers_editor_dialog'
 require_relative 'item_pool_editor_dialog'
 require_relative 'gfx_editor_dialog'
 require_relative 'music_editor_dialog'
+require_relative 'tileset_editor_dialog'
 
 require_relative 'ui_main'
 
@@ -33,6 +34,7 @@ class DSVEdit < Qt::MainWindow
   slots "open_gfx_editor()"
   slots "open_music_editor()"
   slots "open_item_pool_editor()"
+  slots "open_tileset_editor()"
   slots "open_entity_search()"
   slots "open_map_editor()"
   slots "open_settings()"
@@ -91,6 +93,7 @@ class DSVEdit < Qt::MainWindow
     connect(@ui.actionGFX_Editor, SIGNAL("activated()"), self, SLOT("open_gfx_editor()"))
     connect(@ui.actionMusic_Editor, SIGNAL("activated()"), self, SLOT("open_music_editor()"))
     connect(@ui.actionItem_Pool_Editor, SIGNAL("activated()"), self, SLOT("open_item_pool_editor()"))
+    connect(@ui.actionTileset_Editor, SIGNAL("activated()"), self, SLOT("open_tileset_editor()"))
     connect(@ui.actionMap_Editor, SIGNAL("activated()"), self, SLOT("open_map_editor()"))
     connect(@ui.actionEntity_Search, SIGNAL("activated()"), self, SLOT("open_entity_search()"))
     connect(@ui.actionSettings, SIGNAL("activated()"), self, SLOT("open_settings()"))
@@ -143,6 +146,7 @@ class DSVEdit < Qt::MainWindow
     @ui.actionGFX_Editor.setEnabled(false);
     @ui.actionMusic_Editor.setEnabled(false);
     @ui.actionItem_Pool_Editor.setEnabled(false);
+    @ui.actionTileset_Editor.setEnabled(false);
     @ui.actionMap_Editor.setEnabled(false);
     @ui.actionEntity_Search.setEnabled(false);
     @ui.actionBuild.setEnabled(false);
@@ -164,6 +168,7 @@ class DSVEdit < Qt::MainWindow
     @ui.actionGFX_Editor.setEnabled(true);
     @ui.actionMusic_Editor.setEnabled(true);
     @ui.actionItem_Pool_Editor.setEnabled(true);
+    @ui.actionTileset_Editor.setEnabled(true);
     @ui.actionMap_Editor.setEnabled(true);
     @ui.actionEntity_Search.setEnabled(true);
     @ui.actionBuild.setEnabled(true);
@@ -179,6 +184,7 @@ class DSVEdit < Qt::MainWindow
     @music_editor.close() if @music_editor
     @item_editor.close() if @item_editor
     @item_pool_editor.close() if @item_pool_editor
+    @tileset_editor.close() if @tileset_editor
     @map_editor_dialog.close() if @map_editor_dialog
     @entity_search_dialog.close() if @entity_search_dialog
     @entity_editor.close() if @entity_editor
@@ -735,6 +741,11 @@ class DSVEdit < Qt::MainWindow
     else
       Qt::MessageBox.warning(self, "Can't edit item pools", "DoS and PoR have no random chest item pools to edit.")
     end
+  end
+  
+  def open_tileset_editor
+    return if @tileset_editor && @tileset_editor.visible?
+    @tileset_editor = TilesetEditorDialog.new(self, game.fs, @renderer, @room)
   end
   
   def open_entity_search
