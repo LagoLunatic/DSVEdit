@@ -27,7 +27,7 @@ begin
     
     window.save_settings()
     
-    if window.game.fs.has_uncommitted_files?
+    if window.game && window.game.fs.has_uncommitted_files?
       backup_dir = File.join(window.game.folder, "backup")
       window.game.fs.commit_file_changes(base_directory = backup_dir)
       puts "Wrote backup of unsaved files to #{backup_dir}"
