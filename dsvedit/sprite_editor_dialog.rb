@@ -22,6 +22,8 @@ class SpriteEditor < Qt::Dialog
   slots "toggle_animation_paused()"
   slots "advance_frame()"
   slots "open_skeleton_editor()"
+  slots "click_gfx_scene(int, int, const Qt::MouseButton&)"
+  slots "drag_gfx_scene(int, int, const Qt::MouseButton&)"
   slots "button_box_clicked(QAbstractButton*)"
   
   def initialize(main_window, game, renderer)
@@ -45,8 +47,12 @@ class SpriteEditor < Qt::Dialog
     
     @frame_graphics_scene = Qt::GraphicsScene.new
     @ui.frame_graphics_view.setScene(@frame_graphics_scene)
-    @gfx_file_graphics_scene = Qt::GraphicsScene.new
+    
+    @gfx_file_graphics_scene = ClickableGraphicsScene.new
     @ui.gfx_file_graphics_view.setScene(@gfx_file_graphics_scene)
+    connect(@gfx_file_graphics_scene, SIGNAL("clicked(int, int, const Qt::MouseButton&)"), self, SLOT("click_gfx_scene(int, int, const Qt::MouseButton&)"))
+    connect(@gfx_file_graphics_scene, SIGNAL("moved(int, int, const Qt::MouseButton&)"), self, SLOT("drag_gfx_scene(int, int, const Qt::MouseButton&)"))
+    
     @part_graphics_scene = Qt::GraphicsScene.new
     @ui.part_graphics_view.setScene(@part_graphics_scene)
     
@@ -505,10 +511,10 @@ class SpriteEditor < Qt::Dialog
     @ui.gfx_page_index.setCurrentIndex(gfx_page_index)
     
     part = @sprite.parts[@current_part_index]
-    selection_rectangle = Qt::GraphicsRectItem.new
-    selection_rectangle.setPen(RED_PEN_COLOR)
-    selection_rectangle.setRect(part.gfx_x_offset, part.gfx_y_offset, part.width, part.height)
-    @gfx_file_graphics_scene.addItem(selection_rectangle)
+    @selection_rectangle = Qt::GraphicsRectItem.new
+    @selection_rectangle.setPen(RED_PEN_COLOR)
+    @selection_rectangle.setRect(part.gfx_x_offset, part.gfx_y_offset, part.width, part.height)
+    @gfx_file_graphics_scene.addItem(@selection_rectangle)
   end
   
   def palette_changed(palette_index, force=false)
@@ -639,6 +645,45 @@ class SpriteEditor < Qt::Dialog
     @sprite_info = SpriteInfo.new(gfx_file_pointers, palette_pointer, @sprite_info.palette_offset, sprite_pointer, @sprite_info.skeleton_file, @fs)
     
     load_sprite()
+  end
+  
+  def click_gfx_scene(mouse_x, mouse_y, button)
+    # Start selecting part on gfx page.
+    
+    return unless @selection_rectangle
+    
+    max_w = @gfx_file_graphics_scene.width-1
+    max_h = @gfx_file_graphics_scene.height-1
+    mouse_x = [mouse_x, 0].max
+    mouse_y = [mouse_y, 0].max
+    mouse_x = [mouse_x, max_w].min
+    mouse_y = [mouse_y, max_h].min
+    
+    @selection_origin = Qt::PointF.new(mouse_x, mouse_y)
+    x = mouse_x
+    y = mouse_y
+    w = 0
+    h = 0
+    @selection_rectangle.setRect(x, y, w, h)
+  end
+  
+  def drag_gfx_scene(mouse_x, mouse_y, button)
+    # Resize part selection on gfx page.
+    
+    return unless @selection_rectangle
+    
+    max_w = @gfx_file_graphics_scene.width-1
+    max_h = @gfx_file_graphics_scene.height-1
+    mouse_x = [mouse_x, 0].max
+    mouse_y = [mouse_y, 0].max
+    mouse_x = [mouse_x, max_w].min
+    mouse_y = [mouse_y, max_h].min
+    
+    x = [mouse_x, @selection_origin.x].min
+    y = [mouse_y, @selection_origin.y].min
+    w = [mouse_x, @selection_origin.x].max - x
+    h = [mouse_y, @selection_origin.y].max - y
+    @selection_rectangle.setRect(x, y, w, h)
   end
   
   def inspect; to_s; end
