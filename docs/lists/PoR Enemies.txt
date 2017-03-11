@@ -1,5 +1,10 @@
 Enemies:
 00 Zombie
+  Var A:
+    If 0, it's a single Zombie.
+    Otherwise it's a spawner.
+      Var A is the maximum number of zombies that this spawner can have in the room at once.
+      The spawner spawns one zombie every 0x40 frames.
 01 Bat
 02 Skeleton
 03 Axe Armor
@@ -69,7 +74,19 @@ Enemies:
 32 Skeleton Flail
 33 Skeleton Gunman
   Come in threes. First and third are kneeling, the middle one is standing.
+  Var A:
+    Lowest nibble (000F):
+      0 - Three gunmen. First and third are kneeling, middle one is standing.
+      1 - A single kneeling gunman. Somewhat buggy, not intended to be placed manually.
+      2 - A single standing gunman. Somewhat buggy, not intended to be placed manually.
+    High byte (FF00):
+      00 - Always facing left.
+      01-FF - Always facing right.
+    If var A is FFFF:
+      Spawns three gunmen, and they face whichever direction the player was in when first entering the room.
   Var B: Distance in pixels between the first and third gunmen. (The middle one is placed halfway between the others.)
+    If var B is 0 it will use the default value of 30 instead.
+    The speed they move at when switching positions is relative to the distance between them.
 34 Hill Guard
 35 Imp
 36 Harpy

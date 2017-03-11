@@ -44,7 +44,7 @@ Special objects:
     Bits 11-16: Nothing.
 1B Causes player's feet to kick up sand clouds while walking.
 1C Drawbridge.
-  Requires overlay 78.
+  Requires sector overlay 78.
 1D Save point.
 1E Warp point.
 1F Large falling spiked block trap used in Sandy Grave.
@@ -88,21 +88,21 @@ Special objects:
 27 Dark Academy background and rain overlay and sound effects.
   Var A: Affects what sound effects the rain plays.
 28 Train you need to slow down to a stop.
-  Requires overlay 104.
+  Requires sector overlay 104.
 29 Background from 13th Street.
 2A Background from 13th Street.
 2B Red moon background from Forgotten City.
 2C Transition room hider for Sandy Grave.
 2D Transition room hider for Forgotten City.
 2E Motorcycles.
-  Requires overlay 86.
+  Requires sector overlay 86.
 2F Pushable grave from Forest of Doom.
-  Requires overlay 101.
+  Requires sector overlay 101.
 30 Breakable ceiling from Dark Academy that lets rain through after it's broken.
 31 The drill cart that breaks a wall in City of Haze.
-  Requires overlay 94.
+  Requires sector overlay 94.
 32 Pushable block from Sandy Grave.
-  Requires overlay 91.
+  Requires sector overlay 91.
 33 Falling boulder.
   Var A:
     00 Rolls left.
@@ -120,9 +120,9 @@ Special objects:
 38 Wall and bell that lowers it.
   Var A: ?
 39 Large windmill blades spinning in the background.
-  Requires overlay 86.
+  Requires sector overlay 86.
 3A Various objects from corridor where Behemoth chases you.
-  Requires overlay 79.
+  Requires sector overlay 79.
   Byte 5: If this is between 14-29 or FE-FF, the object will no longer appear after Behemoth chased you.
   Var A: The sprite frame to use for this object. 0-9 are pillars, A-B are platforms, C-D are the steel door at the end of the corridor.
 3B Breakable wall.
@@ -163,7 +163,8 @@ Special objects:
 43 Crumbling block from Tower of Death.
 44 Sand falling from the ceiling.
 45 Background with the moon and mountains used in the Master's Keep and Throne Room.
-46 Fast mechanical elevator from Tower of Death. Requires overlay 85.
+46 Fast mechanical elevator from Tower of Death.
+  Requires sector overlay 85.
 47 Ghosts from Dark Academy.
   Var A:
     0 Stairs?
@@ -172,7 +173,8 @@ Special objects:
     3 Anatomical model.
     4 Bloody handprints on the blackboard.
     5 Ghost man that only appears when you're close to him.
-48 Waterwheel platforms elevator from Tower of Death. Requires overlay 86.
+48 Waterwheel platforms elevator from Tower of Death.
+  Requires sector overlay 86.
 49 Rapidly moving clouds background effect used in the Master's Keep and Throne Room.
 4A Hands on the clock from Death's boss room.
   These rotate to match the DS's system time.
@@ -186,37 +188,37 @@ Special objects:
 4D Pushable rectangular block.
   Var A: 0 for tall block, 1 for short block.
 4E Pushable and destroyable statue from near the start of the game.
-  Requires overlay 79.
+  Requires sector overlay 79.
 4F Transition room hider for Dracula's Castle.
 50 Thunder and rain visual effects from Dark Academy.
-  Requires overlay 109.
+  Requires sector overlay 109.
   Var A:
     0 - Animates thunder lighting up certain backgrounds.
     1 - Animates rain droplets on certain roofs.
   Var B: Affects what colors the thunder lights up if var A is 0?
 51 Thunder and rain visual effects from Dark Academy.
-  Requires overlay 110.
+  Requires sector overlay 110.
   Var A:
     0 - Animates thunder lighting up certain backgrounds.
     1 - Animates rain droplets on certain roofs.
 52 Thunder and rain visual effects from Dark Academy.
-  Requires overlay 111.
+  Requires sector overlay 111.
   Var A:
     0 - Animates thunder lighting up certain backgrounds.
     1 - Animates rain droplets on certain roofs.
 53 Thunder and rain visual effects from Dark Academy.
-  Requires overlay 112.
+  Requires sector overlay 112.
   Var A:
     0 - Animates thunder lighting up certain backgrounds.
     1 - Animates rain droplets on certain roofs.
 54 Animates water on backgrounds in Sandy Grave.
-  Requires overlay 91.
+  Requires sector overlay 91.
 55 Animates water on backgrounds in Sandy Grave.
-  Requires overlay 92.
+  Requires sector overlay 92.
 56 Makes the background flicker in Forgotten City.
-  Requires overlay 102.
+  Requires sector overlay 102.
 57 Animates water on backgrounds in Forgotten City.
-  Requires overlay 103.
+  Requires sector overlay 103.
 58 Transition room hider for City of Haze.
 59 Transition room hider for City of Haze.
 5A Transition room hider for City of Haze.
@@ -232,17 +234,17 @@ Special objects:
     03 Door at center left.
 60 Crumbling block from Great Stairway.
 61 The 3D background from City of Haze.
-  Requires overlay 93.
+  Requires sector overlay 93.
 62 The 3D pyramid in the background in Sandy Grave.
-  Requires overlay 91.
+  Requires sector overlay 91.
 63 The 3D tombstones in the background in Forest of Doom.
-  Requires overlay 99.
+  Requires sector overlay 99.
 64 The 3D indoors background in Forest of Doom.
-  Requires overlay 100.
+  Requires sector overlay 100.
 65 The 3D background and anatomical model in Dark Academy.
-  Requires overlay 111.
+  Requires sector overlay 111.
 66 The 3D background in Dark Academy.
-  Requires overlay 112.
+  Requires sector overlay 112.
 67 The 3D background model of the clock tower, used in the stairway leading up to the throne.
 68 Statue/cross.
   Var A: 0 for the statue of Mary from Nation of Fools. 1 for the cross from 13th Street.
@@ -282,16 +284,17 @@ Special objects:
 7C Transition room hider for Dracula's Castle (connects Great Stairway to other Great Stairway sector).
 7D Transition room hider for Dracula's Castle (connects Great Stairway to Keremet).
 7E Small waterfall.
-  check if Requires overlay 86.
+  Requires sector overlay 86.
   Var A: 0 for the top of the waterfall. 1 for the long midsection of the waterfall.
 7F the meat you hit for that one quest?
-  Requires overlay 93.
+  Requires sector overlay 93.
 80 Transition room hider for Dracula's Castle (connects Great Stairway to other Great Stairway sector).
 81 Barrier blocking the way to the Throne Room.
   The blocking effect extends all the way down the left edge of the screen, but the visuals only appear on the top-left screen.
 82 Wooden door separating areas.
 83 Button and wall it lowers from Great Stairway.
-84 requires overlay 99?
+84 Many crows in a tree that disperse when you get near.
+  Requires sector overlay 99.
 85 used in tower of death, motorcycle room and stella fight room
   Var A: 1 or 0
 86 Portrait to Dracula's Castle or Nest of Evil.
@@ -315,18 +318,18 @@ Special objects:
   Var A: 0 for ceiling. 1 for button and floor.
 8A Studio portrait (burned).
 8B The 3D sphinx in the background in the Forgotten City.
-  Requires overlay 102.
+  Requires sector overlay 102.
 8C Switch next to elevator from Tower of Death you have to hit to activate it.
 8D Cycles through palettes for conveyor belt tiles to make gears look like they're turning.
 8E Legion's horizontal boss door and walls that trap you.
-  Requires overlay 98.
+  Requires sector overlay 98.
 8F in the sister's boss room
 90 Transition room hider for Nation of Fools.
 91 Transition room hider for Nation of Fools and Burnt Paradise.
 92 Transition room hider for Nation of Fools and Burnt Paradise.
 93 Transition room hider for Nation of Fools.
 94 The 3D background from Dark Academy.
-  Requires overlay 109.
+  Requires sector overlay 109.
 === Below are events. Var A is the event flag set upon completing this event. Var B is the prerequisite event flag before this event will appear.
 95 Event - In first room of the game.
 96 Event - 

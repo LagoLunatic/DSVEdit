@@ -193,7 +193,7 @@ Special objects:
   Var A: 18
   Var B: B1
 2E Iron maiden used in Puppet Master fight.
-  Requires overlay 25.
+  Requires enemy overlay 25.
   Cannot be placed normally, the game will crash. Must be spawned by Puppet Master.
 2F Applies a visual effect to a layer.
   Var A: The layer to apply the effect to.

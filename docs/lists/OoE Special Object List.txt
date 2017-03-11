@@ -71,7 +71,7 @@ Special Objects:
   Hidden in the floor, you must stand over it and crouch to reveal it.
   Var A and var B work like red/gold chests.
 18 Moving clouds background from Barracks.
-  Requires overlay 71.
+  Requires sector overlay 71.
 19 Part of the waterfall in Tristis pass. This object is responsible for making it impossible for Shanoa to jump up the waterfall, and making bubbles appear around Shanoa when she is inside it.
 1A Movement blocker.
   The area covered by this object will act impassable, both when Shanoa is in human form and in Paries form.
@@ -90,7 +90,7 @@ Special Objects:
 1D Background from outside the Castle Entrance.
 1E Fog near the ground.
 1F Foreground candles from Underground Labyrinth.
-  Requires overlay 68.
+  Requires sector overlay 68.
   Var A:
     0 Small candles.
     1 Large candles.
@@ -100,18 +100,18 @@ Special Objects:
 22 Area that slows the player's movement significantly.
   Var A: Width in pixels for the area to extend.
 23 Volaticus blocker.
-  Requires overlay 43.
+  Requires sector overlay 43.
   Prevents using Volaticus in rooms that have this object in them.
   Var A: 0 for normal. 1 to display the message saying that Volaticus cannot be used. This message will appear every time you exit and re-enter the Training Hall.
 24 Opens boss doors after a full minute has passed.
   Only opens boss doors that have Var A = 1 (the type that usually opens when there are no enemies left in the room).
 25 Cross.
-  Requires overlay 62.
+  Requires sector overlay 62.
 26 Rat running around.
 27 Iron maiden trap.
-  Requires overlay 51.
+  Requires sector overlay 51.
 28 Lighthouse elevator.
-  Requires overlay 53.
+  Requires sector overlay 53.
   Also spawns the platforms and ceilings Brachyura destroys.
 29 Moving platform.
   Byte 5: Which waypoints are for this platform? (See below.) This should match all of the waypoints byte 5s.
@@ -137,7 +137,7 @@ Special Objects:
   Var A and B: The X and Y coordinates of the door in town to come out of. Must be the exact coordinates of an object 2C, otherwise Shanoa will appear in the center of town.
 2E Wooden door that connects areas.
 2F Rotating lamp at the top of the Lighthouse.
-  Requires overlay 53.
+  Requires sector overlay 53.
   Var A:
     0 Spawns a Luminatio glyph on top of the lamp that you can absorb to stop the light.
     1 Does not spawn Luminatio.
@@ -165,18 +165,18 @@ Special Objects:
   Var A: Which graphic to use for the clouds. Can be 0-7.
   Var B: Speed in subpixels per frame for the clouds to move left.
 38 Waves in the background of Kalidus Channel.
-  Requires overlay 46.
+  Requires sector overlay 46.
 39 Water level.
   Var A: Vertical distance in pixels for the waves to move the water level up or down. For example, a value of 0x20 means at its highest point the water level will be 2 blocks above the position you placed it at, and at its lowest point the water level will be 2 blocks below the position you placed it at. 0 means the water level does not move up or down.
   Var B: If Var A is 0, this is the z-index for the water level to be drawn on.
     Otherwise, it's the speed for the water level to move up and down at. This is relative to the total distance the water level needs to travel, so for larger values of Var A the water level will move faster even if Var B is the same.
 3A 3D boat in the background of Kalidus channel.
-  Requires overlay 46.
+  Requires sector overlay 46.
 3B Pneuma glyph and the wind puzzle around it.
-  Requires overlay 55.
+  Requires sector overlay 55.
 3C Something in Kalidus channel?
 3D Pages that fly out whenever you land on the ground.
-  Requires overlay 69.
+  Requires sector overlay 69.
 3E Searchlights.
   Also puts a dark blue overlay over the whole room.
   Var A:
@@ -195,7 +195,7 @@ Special Objects:
     01 Jumping up trying to free its master.
     02 Crouched/standing, meowing. Can be picked up.
 40 The falling block puzzle from the Monastery.
-  Requires overlay 78.
+  Requires sector overlay 78.
 41 Object that floats (supposed to be in the water). Var A changes what it is:
   00 Log platform
   01 Crate platform
@@ -209,11 +209,11 @@ Special Objects:
     Var A controls the length of the axe's chain.
     Var B is the speed at which it swings.
 43 Pair of large curtains in the background.
-  Requires overlay 65.
+  Requires sector overlay 65.
 44 Lapiste glyph and the boulder trap that comes with it.
-  Requires overlay 68.
+  Requires sector overlay 68.
 45 Rock stalactite.
-  Requires overlay 55.
+  Requires sector overlay 55.
   Var A: Which graphic of stalactite to use. 0-5.
   Var B:
     0 Hanging on the ceiling. Will fall down to the floor when Shanoa gets near it, damaging her if it hits her.
@@ -221,13 +221,13 @@ Special Objects:
 46 Save point.
   Obeys the x pos you set but ignores the y pos. Instead it decides its y pos by placing itself on the highest point of solid ground at the given x pos (excluding the ceiling).
 47 used in the upper frozen waterfall room with Vol Grando.
-  Requires overlay 57.
+  Requires sector overlay 57.
 48 used in the lower frozen waterfall room.
-  Requires overlay 57.
+  Requires sector overlay 57.
 49 used in the upper frozen waterfall room with Vol Grando.
-  Requires overlay 57.
+  Requires sector overlay 57.
 4A used in the lower frozen waterfall room.
-  Requires overlay 57.
+  Requires sector overlay 57.
 4B Boss door.
   Var A is is how the door acts. Values:
     00 Door outside the boss room that opens when you touch it.
@@ -251,24 +251,24 @@ Special Objects:
     0E ??? TODO
     0F Dracula
 4C Electricity hazard from Minera Prison Island.
-  Requires overlay 52.
+  Requires sector overlay 52.
 4D Wooden door in Ecclesia. Unlike a regular wooden door (2E), this one will be locked at the beginning of the game.
-  Requires overlay 42.
+  Requires sector overlay 42.
 4E Ecclesia door.
-  Requires overlay 42.
+  Requires sector overlay 42.
 4F The ground and rocks from Gravedorcus's room.
-  Requires overlay 63.
+  Requires sector overlay 63.
 50 Background torches in Eligor's room.
-  Requires overlay 76.
+  Requires sector overlay 76.
 51 Cerberus statue from Forsaken Cloister.
-  Requires overlay 77.
+  Requires sector overlay 77.
 52 Fire hazard from Training Chamber.
   Var A: ???
   Var B: ???
 53 Generator puzzle from Mechanical Tower.
-  Requires overlay 72.
+  Requires sector overlay 72.
 54 Makes the room dark and spawns Vol Umbra glyph. Absorbing the glyph gets rid of the darkness. From Mystery Manor.
-  Requires overlay 60.
+  Requires sector overlay 60.
 55 Area name shown the first time you enter an area.
   Var A: Controls which area it is.
   Var B: Flag for the player seeing this area name.
@@ -277,23 +277,23 @@ Special Objects:
     00 Clockwise
     01 Counter-clockwise
 57 Background from Mechanical Tower.
-  Requires overlay 72.
+  Requires sector overlay 72.
 58 Wygol's sky background.
 59 Wall that blocks the way with a switch to the right of it that lowers the wall.
-  Requires overlay 66.
+  Requires sector overlay 66.
 5A Rocks and sea mines that blow up the rocks.
-  Requires overlay 46.
+  Requires sector overlay 46.
   Var A affects the position of the rocks:
     0 Leftmost screen.
     1 Two screens from the left.
 5B Floors in Kalidus Channel that disappear when the rocks below them are blown up.
-  Requires overlay 46.
+  Requires sector overlay 46.
   Var A is which entity 5A to be linked to, set to the same as 5A's var A.
 5C Breakable wall.
   Var A: Which breakable wall sprite to use (index in list 022B6C54).
   Var B: Which wall data in this area's breakable wall list to use (index in one of 022B6BF4's lists).
 5D Castle in the distance during the ending sequence.
-  Requires overlay 84.
+  Requires sector overlay 84.
 5E Metal gate with a button to the right of it to unlock it.
   Var A:
     0 Single gate.
@@ -324,7 +324,7 @@ Special Objects:
       Spawns Serge if event flag 47 is set.
       Spawns Monica if event flag 4F is set.
 60 Spawns Barlowe, events, and Dracula's soul vessel in Barlowe's room in Ecclesia.
-  Requires overlay 42.
+  Requires sector overlay 42.
   Which entities it spawns depend on certain event flags. TODO
 === Below are events. Var A is the event flag set upon completing this event. Var B is the prerequisite event flag before this event will appear.
 61 Event - Talking to Albus in the first room of the game.
@@ -334,7 +334,7 @@ Special Objects:
 64 Event - Second tutorial, fight vs skeletons.
 65 Event - Third tutorial.
 66 Event - Meeting Albus in the Monastery.
-  Requires overlay 78.
+  Requires sector overlay 78.
   Also loads graphics for the map that Albus marks the village on.
 67 Event - First time entering Wygol Village and finding Nikolai trapped in Torpor.
 68 Event - Nikolai trapped in Torpor (not the first time entering Wygol).
@@ -360,7 +360,7 @@ Special Objects:
 7C Event - Bad ending.
 7D Event - 
 7E Event - ? at the Castle Entrance.
-  Requires overlay 67?
+  Requires sector overlay 67?
 7F Event - ? at the Castle Entrance.
 80 Event - Finding the Cerberus Gate for the first time.
 81 Event - Used in all three rooms that have Cerberus glyphs in them.
