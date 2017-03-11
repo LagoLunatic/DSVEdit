@@ -14,19 +14,10 @@ Entity types:
 04 Pickup. Subtype:
   00 Heart.
     Var A: Flag for having picked up this heart.
-    Var B: The type of heart.
-      00 - Small.
-      01 - Big.
+    Var B: The type of heart. 0: Small, 1: Big.
   01 Money.
     Var A: Flag for having picked up this money.
-    Var B: The amount of money.
-      00 - 1G.
-      01 - 10G.
-      02 - 50G.
-      03 - 100G.
-      04 - 500G.
-      05 - 1000G.
-      06 - 2000G.
+    Var B: The amount of money. From 0 to 6: 1G 10G 50G 100G 500G 1000G 2000G.
   02 Item: consumable.
     Var A: Flag for having picked up this item.
     Var B: The local ID of the consumable.
