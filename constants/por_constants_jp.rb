@@ -7,8 +7,6 @@ AREA_LIST_RAM_START_OFFSET = 0x020D3B78
 
 MAX_ALLOWABLE_ROOM_OVERLAY_SIZE = 132672
 
-#INVALID_ROOMS = [0x020E5AD0, 0x020E62E0, 0x020E6300, 0x020E5BA0, 0x020E6320, 0x020E6610, 0x020E7388, 0x020E7780, 0x020E7850]
-
 MAP_TILE_METADATA_LIST_START_OFFSET = 0x020D3BF0
 MAP_TILE_LINE_DATA_LIST_START_OFFSET = 0x020D3C2C
 MAP_LENGTH_DATA_START_OFFSET = 0x020B3B58
@@ -18,7 +16,7 @@ AREA_MUSIC_LIST_START_OFFSET = 0x020D416C
 SECTOR_MUSIC_LIST_START_OFFSET = 0x020D417C
 AVAILABLE_BGM_POOL_START_OFFSET = 0x020D4A40
 # sound test data at: 022D3DFC
-SONG_INDEX_TO_TEXT_INDEX = [ # TODO
+SONG_INDEX_TO_TEXT_INDEX = [
   "Silence",
   0x5EE,
   0x5EF,
@@ -63,106 +61,99 @@ LIST_OF_FILE_RAM_LOCATIONS_END_OFFSET = 0x020D399B
 
 ENEMY_DNA_RAM_START_OFFSET = 0x020B27AC
 
-#REUSED_ENEMY_INFO = {
-#  0x31 => {palette_offset: 2}, # lilith
-#  0x46 => {init_code: 0x02297320, palette_offset: 3}, # red axe armor -> axe armor
-#  0x4E => {init_code: 0x022D7930}, # flame demon
-#  0x54 => {palette_offset: 1}, # ghoul and zombie
-#  0x58 => {init_code: 0x022744DC, gfx_sheet_ptr_index: 1, palette_list_ptr_index: 1}, # buster armor -> crossbow armor
-#  0x5C => {init_code: 0x022D7918, palette_list_ptr_index: 1},
-#  0x5E => {init_code: 0x02259EE4}, # tanjelly -> slime
-#  0x63 => {init_code: 0x022630F8}, # vice beetle -> spittle bone
-#  0x72 => {init_code: 0x022D7900, gfx_sheet_ptr_index: 1, palette_list_ptr_index: 1, sprite_ptr_index: 1}, # poison worm -> sand worm
-#  0x79 => {init_code: 0x02297320, gfx_sheet_ptr_index: 1, palette_list_ptr_index: 1, sprite_ptr_index: 1}, # double axe armor -> axe armor
-#  0x7A => {init_code: 0x022D7930, gfx_sheet_ptr_index: 1, palette_list_ptr_index: 1, sprite_ptr_index: 1}, # demon
-#  0x7E => {palette_offset: 1}, # golden skeleton and skeleton
-#  0x98 => {init_code: 0x0221E954} # whip's memory. for some reason his pointers are off in some random place not near his init code.
-#}
+REUSED_ENEMY_INFO[0x46] = {init_code: 0x0228C510, palette_offset: 3} # red axe armor -> axe armor
+#REUSED_ENEMY_INFO[0x4E] = {init_code: 0x022D7930} # flame demon
+#REUSED_ENEMY_INFO[0x58] = {init_code: 0x022744DC, gfx_sheet_ptr_index: 1, palette_list_ptr_index: 1} # buster armor -> crossbow armor
+#REUSED_ENEMY_INFO[0x5C] = {init_code: 0x022D7918, palette_list_ptr_index: 1}
+#REUSED_ENEMY_INFO[0x5E] = {init_code: 0x02259EE4} # tanjelly -> slime
+#REUSED_ENEMY_INFO[0x63] = {init_code: 0x022630F8} # vice beetle -> spittle bone
+#REUSED_ENEMY_INFO[0x72] = {init_code: 0x022D7900, gfx_sheet_ptr_index: 1, palette_list_ptr_index: 1, sprite_ptr_index: 1} # poison worm -> sand worm
+REUSED_ENEMY_INFO[0x79] = {init_code: 0x0228C510, gfx_sheet_ptr_index: 1, palette_list_ptr_index: 1, sprite_ptr_index: 1} # double axe armor -> axe armor
+#REUSED_ENEMY_INFO[0x7A] = {init_code: 0x022D7930, gfx_sheet_ptr_index: 1, palette_list_ptr_index: 1, sprite_ptr_index: 1} # demon
+#REUSED_ENEMY_INFO[0x98] = {init_code: 0x0221E954} # whip's memory. for some reason his pointers are off in some random place not near his init code.
 RICHTERS_LIST_OF_GFX_POINTERS = 0x02217DD8
 
 ENEMY_FILES_TO_LOAD_LIST = 0x020C210C
 
 SPECIAL_OBJECT_CREATE_CODE_LIST = 0x02217288
 SPECIAL_OBJECT_UPDATE_CODE_LIST = 0x02217598
-#REUSED_SPECIAL_OBJECT_INFO = {
-#  0x00 => {init_code: 0x020F4B6C},
-#  0x01 => {init_code: 0x020F4B6C},
-#  0x1A => {init_code: 0x020F4E84}, # portrait
-#  0x22 => {sprite: 0x022B36E8, gfx_wrapper: 0x020BFF24, palette: 0x022B7660},
-#  0x76 => {init_code: 0x020F4E90}, # portrait
-#  0x82 => {sprite: 0x022B36E8, gfx_wrapper: 0x020BFF24, palette: 0x022B7660},
-#  0x86 => {init_code: 0x020F4E84}, # portrait
-#  0x87 => {init_code: 0x020F4E90}, # portrait
-#  0xB6 => {init_code: 0x0221B9C0},
-#  0xB7 => {init_code: 0x0221B9D0},
-#  0xB8 => {init_code: 0x0221B9E0},
-#  0xB9 => {init_code: 0x0221B9F0},
-#  0xBA => {init_code: 0x0221BA00},
-#  0xBB => {init_code: 0x0221BA10},
-#  0xBC => {init_code: 0x0221BA20},
-#  0xBD => {init_code: 0x0221BA30},
-#  0xBE => {init_code: 0x0221BA40},
-#}
+#REUSED_SPECIAL_OBJECT_INFO[0x00] = {init_code: 0x020F4B6C}
+#REUSED_SPECIAL_OBJECT_INFO[0x01] = {init_code: 0x020F4B6C}
+#REUSED_SPECIAL_OBJECT_INFO[0x1A] = {init_code: 0x020F4E84} # portrait
+#REUSED_SPECIAL_OBJECT_INFO[0x22] = {sprite: 0x022B36E8, gfx_wrapper: 0x020BFF24, palette: 0x022B7660}
+#REUSED_SPECIAL_OBJECT_INFO[0x76] = {init_code: 0x020F4E90} # portrait
+#REUSED_SPECIAL_OBJECT_INFO[0x82] = {sprite: 0x022B36E8, gfx_wrapper: 0x020BFF24, palette: 0x022B7660}
+#REUSED_SPECIAL_OBJECT_INFO[0x86] = {init_code: 0x020F4E84} # portrait
+#REUSED_SPECIAL_OBJECT_INFO[0x87] = {init_code: 0x020F4E90} # portrait
+#REUSED_SPECIAL_OBJECT_INFO[0xB6] = {init_code: 0x0221B9C0}
+#REUSED_SPECIAL_OBJECT_INFO[0xB7] = {init_code: 0x0221B9D0}
+#REUSED_SPECIAL_OBJECT_INFO[0xB8] = {init_code: 0x0221B9E0}
+#REUSED_SPECIAL_OBJECT_INFO[0xB9] = {init_code: 0x0221B9F0}
+#REUSED_SPECIAL_OBJECT_INFO[0xBA] = {init_code: 0x0221BA00}
+#REUSED_SPECIAL_OBJECT_INFO[0xBB] = {init_code: 0x0221BA10}
+#REUSED_SPECIAL_OBJECT_INFO[0xBC] = {init_code: 0x0221BA20}
+#REUSED_SPECIAL_OBJECT_INFO[0xBD] = {init_code: 0x0221BA30}
+#REUSED_SPECIAL_OBJECT_INFO[0xBE] = {init_code: 0x0221BA40}
 SPECIAL_OBJECT_FILES_TO_LOAD_LIST = 0x020D6218
 
 WEAPON_GFX_LIST_START = 0x02218A98
 SKILL_GFX_LIST_START = 0x022186A0
 
-#OTHER_SPRITES = [
-#  {desc: "Common", sprite: 0x022B36E8, gfx_wrapper: 0x020BFF24, palette: 0x022B7660},
-#  
-#  {pointer: 0x0221E7F4, desc: "Jonathan player"},
-#  {pointer: 0x0221E84C, desc: "Charlotte player"},
-#  {pointer: 0x0221E8A4, desc: "Stella player"},
-#  {pointer: 0x0221E8FC, desc: "Loretta player"},
-#  {pointer: 0x0221E950, desc: "Richter player"},
-#  {pointer: 0x0221E9AC, desc: "Maria player"},
-#  {pointer: 0x0221EA04, desc: "Old Axe Armor player"},
-#  
-#  {pointer: 0x020F4B58, desc: "Destructibles 0"},
-#  {pointer: 0x020F4B6C, desc: "Destructibles 1"},
-#  {pointer: 0x020F4B80, desc: "Destructibles 2"},
-#  {pointer: 0x020F4B94, desc: "Destructibles 3"},
-#  {pointer: 0x020F4BA8, desc: "Destructibles 4"},
-#  {pointer: 0x020F4BBC, desc: "Destructibles 5"},
-#  {pointer: 0x020F4BD0, desc: "Destructibles 6"},
-#  {pointer: 0x020F4BE4, desc: "Destructibles 7"},
-#  {pointer: 0x020F4BF8, desc: "Destructibles 8"},
-#  {pointer: 0x020F4C0C, desc: "Destructibles 9"},
-#  {pointer: 0x020F4C20, desc: "Destructibles 10"},
-#  {pointer: 0x020F4C34, desc: "Destructibles 11"},
-#  {pointer: 0x020F4C48, desc: "Destructibles 12"},
-#  {pointer: 0x020F4C5C, desc: "Destructibles 13"},
-#  {pointer: 0x020F4C70, desc: "Destructibles 14"},
-#  {pointer: 0x020F4C84, desc: "Destructibles 15"},
-#  {pointer: 0x020F4E84, desc: "Portrait frame 0"},
-#  {pointer: 0x020F4E90, desc: "Portrait frame 1"},
-#  {pointer: 0x020F4E9C, desc: "Portrait painting 0"},
-#  {pointer: 0x020F4EA8, desc: "Portrait painting 1"},
-#  {pointer: 0x020F4EB4, desc: "Portrait painting ???"}, # broken
-#  {pointer: 0x020F4EC0, desc: "Portrait painting 3"},
-#  
-#  {pointer: 0x0206E4C8, desc: "Breakable walls 1", gfx_sheet_ptr_index: 1, palette_list_ptr_index: 1, sprite_ptr_index: 1},
-#  {pointer: 0x0206E4C8, desc: "Breakable walls 2", gfx_sheet_ptr_index: 4, palette_list_ptr_index: 4, sprite_ptr_index: 4},
-#  {pointer: 0x0206E4C8, desc: "Breakable walls 3", gfx_sheet_ptr_index: 0, palette_list_ptr_index: 0, sprite_ptr_index: 0},
-#  {pointer: 0x0206E4C8, desc: "Breakable walls 4", gfx_sheet_ptr_index: 5, palette_list_ptr_index: 5, sprite_ptr_index: 5},
-#  {pointer: 0x0206E4C8, desc: "Breakable walls 5", gfx_sheet_ptr_index: 6, palette_list_ptr_index: 6, sprite_ptr_index: 6},
-#  {pointer: 0x0206E4C8, desc: "Breakable walls 6", gfx_sheet_ptr_index: 2, palette_list_ptr_index: 2, sprite_ptr_index: 2},
-#  {pointer: 0x0206E4C8, desc: "Breakable walls 7", gfx_sheet_ptr_index: 7, palette_list_ptr_index: 7, sprite_ptr_index: 7},
-#  {pointer: 0x0206E4C8, desc: "Breakable walls 8", gfx_sheet_ptr_index: 3, palette_list_ptr_index: 3, sprite_ptr_index: 3},
-#  
-#  {pointer: 0x022E0700, desc: "Title screen graphics", overlay: 26},
-#  {pointer: 0x022E0710, desc: "Title screen options", overlay: 26},
-#  {pointer: 0x022DA15C, desc: "Select data menu", overlay: 25},
-#  {pointer: 0x022DAAE0, desc: "Name entry menu", overlay: 25},
-#  {pointer: 0x022DEE20, desc: "Co-op mode start menu", overlay: 25},
-#  {pointer: 0x022DC9AC, desc: "Co-op mode end menu", overlay: 25},
-#  {pointer: 0x0203BCBC, desc: "Equip menu", one_dimensional_mode: true},
-#  
+OTHER_SPRITES = [
+  {desc: "Common", sprite: 0x022A9B64, gfx_wrapper: 0x020B4170, palette: 0x022AA460},
+  
+  {pointer: 0x02217F1C, desc: "Jonathan player"},
+  {pointer: 0x02217F70, desc: "Charlotte player"},
+  {pointer: 0x02217FC8, desc: "Stella player"},
+  {pointer: 0x02218018, desc: "Loretta player"},
+  {pointer: 0x02218070, desc: "Richter player"},
+  {pointer: 0x022180C8, desc: "Maria player"},
+  {pointer: 0x02218120, desc: "Old Axe Armor player"},
+  
+  {pointer: 0x020E9390, desc: "Destructibles 0"},
+  {pointer: 0x020E93A4, desc: "Destructibles 1"},
+  {pointer: 0x020E93B8, desc: "Destructibles 2"},
+  {pointer: 0x020E93CC, desc: "Destructibles 3"},
+  {pointer: 0x020E93E0, desc: "Destructibles 4"},
+  {pointer: 0x020E93F4, desc: "Destructibles 5"},
+  {pointer: 0x020E9408, desc: "Destructibles 6"},
+  {pointer: 0x020E941C, desc: "Destructibles 7"},
+  {pointer: 0x020E9430, desc: "Destructibles 8"},
+  {pointer: 0x020E9444, desc: "Destructibles 9"},
+  {pointer: 0x020E9458, desc: "Destructibles 10"},
+  {pointer: 0x020E946C, desc: "Destructibles 11"},
+  {pointer: 0x020E9480, desc: "Destructibles 12"},
+  {pointer: 0x020E9494, desc: "Destructibles 13"},
+  {pointer: 0x020E94A8, desc: "Destructibles 14"},
+  {pointer: 0x020E94BC, desc: "Destructibles 15"},
+  {pointer: 0x020E969C, desc: "Portrait frame 0"},
+  {pointer: 0x020E96A8, desc: "Portrait frame 1"},
+  {pointer: 0x020E96B4, desc: "Portrait painting 0"},
+  {pointer: 0x020E96C0, desc: "Portrait painting 1"},
+  {pointer: 0x020E96CC, desc: "Portrait painting ???"}, # broken
+  {pointer: 0x020E96D8, desc: "Portrait painting 3"},
+  
+  {pointer: 0x020693A0, desc: "Breakable walls 1", gfx_sheet_ptr_index: 1, palette_list_ptr_index: 1, sprite_ptr_index: 1},
+  {pointer: 0x020693A0, desc: "Breakable walls 2", gfx_sheet_ptr_index: 4, palette_list_ptr_index: 4, sprite_ptr_index: 4},
+  {pointer: 0x020693A0, desc: "Breakable walls 3", gfx_sheet_ptr_index: 0, palette_list_ptr_index: 0, sprite_ptr_index: 0},
+  {pointer: 0x020693A0, desc: "Breakable walls 4", gfx_sheet_ptr_index: 5, palette_list_ptr_index: 5, sprite_ptr_index: 5},
+  {pointer: 0x020693A0, desc: "Breakable walls 5", gfx_sheet_ptr_index: 6, palette_list_ptr_index: 6, sprite_ptr_index: 6},
+  {pointer: 0x020693A0, desc: "Breakable walls 6", gfx_sheet_ptr_index: 2, palette_list_ptr_index: 2, sprite_ptr_index: 2},
+  {pointer: 0x020693A0, desc: "Breakable walls 7", gfx_sheet_ptr_index: 7, palette_list_ptr_index: 7, sprite_ptr_index: 7},
+  {pointer: 0x020693A0, desc: "Breakable walls 8", gfx_sheet_ptr_index: 3, palette_list_ptr_index: 3, sprite_ptr_index: 3},
+  
+  {pointer: 0x022D3DA0, desc: "Title screen graphics", overlay: 26},
+  {pointer: 0x022D3DB0, desc: "Title screen options", overlay: 26},
+  {pointer: 0x022CA6C0, desc: "Select data menu", overlay: 25},
+  {pointer: 0x022CEF90, desc: "Name entry menu", overlay: 25},
+  {pointer: 0x022CF380, desc: "Co-op mode start menu", overlay: 25},
+  {pointer: 0x022D1584, desc: "Co-op mode end menu", overlay: 25},
+  {pointer: 0x02033AE8, desc: "Equip menu", one_dimensional_mode: true},
+  
 #  {pointer: 0x022D7CBC, desc: "Brauner inside mirror portrait", overlay: 55},
 #  {pointer: 0x022D7C98, desc: "Brauner curse beast", overlay: 55},
-#]
-#
+]
+
 TEXT_LIST_START_OFFSET = 0x02215410
 TEXT_RANGE = (0..0x738)
 TEXT_REGIONS = {
@@ -188,7 +179,7 @@ TEXT_REGIONS = {
 #NEW_GAME_STARTING_SECTOR_INDEX_OFFSET = 0x020BFC08
 #NEW_GAME_STARTING_ROOM_INDEX_OFFSET = 0x020BFC0C
 
-#FAKE_TRANSITION_ROOMS = [0x020E7F18] # This room is marked as a transition room, but it's not actually.
+FAKE_TRANSITION_ROOMS = [0x020DC754] # This room is marked as a transition room, but it's not actually.
 
 ITEM_ICONS_PALETTE_POINTER = 0x022B58D0
 
