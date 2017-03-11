@@ -62,9 +62,7 @@ class SpriteInfoExtractor
           file = fs.files_by_index[file_index]
           
           if file_data_type == 1
-            render_mode = fs.read(file[:ram_start_offset]+1, 1).unpack("C").first
-            canvas_width = fs.read(file[:ram_start_offset]+2, 1).unpack("C").first
-            gfx_files_to_load << {file: file, render_mode: render_mode, canvas_width: canvas_width}
+            gfx_files_to_load << GfxWrapper.new(file[:ram_start_offset], fs)
           elsif file_data_type == 2
             if file[:file_path] =~ /\/so2?\/.+\.dat/
               sprite_files_to_load << file
@@ -97,7 +95,7 @@ class SpriteInfoExtractor
       #end
       
       if gfx_files_to_load.length > 0 && sprite_files_to_load.length > 0 && palette_pointer_to_load
-        gfx_file_pointers = gfx_files_to_load.map{|file| file[:file][:ram_start_offset]}
+        gfx_file_pointers = gfx_files_to_load.map{|gfx| gfx.file[:ram_start_offset]}
         sprite_file_pointer = sprite_files_to_load.first[:ram_start_offset]
         
         return [gfx_file_pointers, palette_pointer_to_load, palette_offset, sprite_file_pointer, skeleton_files_to_load.first]
@@ -224,7 +222,7 @@ class SpriteInfoExtractor
     
     if ptr_to_ptr_to_files_to_load
       if gfx_files_to_load.length > 0
-        gfx_file_pointers = gfx_files_to_load.map{|file| file[:file][:ram_start_offset]}
+        gfx_file_pointers = gfx_files_to_load.map{|gfx| gfx.file[:ram_start_offset]}
       end
       if palette_pointer_to_load
         palette_pointer = palette_pointer_to_load

@@ -750,21 +750,19 @@ class Renderer
   end
   
   def render_sprite(gfx_file_pointers, palette_pointer, palette_offset, sprite, frame_to_render = nil, render_hitboxes = false, mode = :normal, one_dimensional_mode = false)
-    gfx_files_with_blanks = []
+    gfx_with_blanks = []
     gfx_file_pointers.each do |gfx_file_pointer|
-      gfx_file = fs.find_file_by_ram_start_offset(gfx_file_pointer)
-      _, render_mode, canvas_width, _ = fs.read(gfx_file_pointer, 4).unpack("C*")
-      gfx_file = {file: gfx_file, render_mode: render_mode, canvas_width: canvas_width}
+      gfx = GfxWrapper.new(gfx_file_pointer, fs)
       
-      gfx_files_with_blanks << gfx_file
-      blanks_needed = (gfx_file[:canvas_width]/0x10 - 1) * 3
-      gfx_files_with_blanks += [nil]*blanks_needed
+      gfx_with_blanks << gfx
+      blanks_needed = (gfx.canvas_width/0x10 - 1) * 3
+      gfx_with_blanks += [nil]*blanks_needed
     end
     
-    if gfx_files_with_blanks.first[:render_mode] == 1
+    if gfx_with_blanks.first.render_mode == 1
       palettes = generate_palettes(palette_pointer, 16)
       dummy_palette = generate_palettes(nil, 16).first
-    elsif gfx_files_with_blanks.first[:render_mode] == 2
+    elsif gfx_with_blanks.first.render_mode == 2
       palettes = generate_palettes(palette_pointer, 256)
       dummy_palette = generate_palettes(nil, 256).first
     else
@@ -794,16 +792,16 @@ class Renderer
     full_height = max_y - min_y
     
     sprite.parts.each_with_index do |part, part_index|
-      if part.gfx_page_index >= gfx_files_with_blanks.length
-        puts "GFX page index too large (#{part.gfx_page_index+1} pages needed, have #{gfx_files_with_blanks.length})"
+      if part.gfx_page_index >= gfx_with_blanks.length
+        puts "GFX page index too large (#{part.gfx_page_index+1} pages needed, have #{gfx_with_blanks.length})"
         
         # Invalid gfx page index, so just render a big red square.
-        first_canvas_width = gfx_files_with_blanks.first[:canvas_width]
+        first_canvas_width = gfx_with_blanks.first.canvas_width
         rendered_gfx_files_by_palette[part.palette_index+palette_offset][part.gfx_page_index] ||= render_gfx(nil, nil, 0, 0, first_canvas_width*8, first_canvas_width*8, canvas_width=first_canvas_width*8)
       else
-        gfx_page = gfx_files_with_blanks[part.gfx_page_index]
-        gfx_file = gfx_page[:file]
-        canvas_width = gfx_page[:canvas_width]
+        gfx_page = gfx_with_blanks[part.gfx_page_index]
+        gfx_file = gfx_page.file
+        canvas_width = gfx_page.canvas_width
         if mode == :weapon
           # Weapons always use the first palette. Instead the part's palette index value is used to indicate that it should start out partially transparent.
           palette = palettes.first
@@ -848,7 +846,7 @@ class Renderer
       rendered_frames << rendered_frame
     end
     
-    return [rendered_frames, min_x, min_y, rendered_parts, gfx_files_with_blanks, palettes, full_width, full_height]
+    return [rendered_frames, min_x, min_y, rendered_parts, gfx_with_blanks, palettes, full_width, full_height]
   end
   
   def render_sprite_part(part, rendered_gfx_file)
@@ -932,4 +930,6 @@ class Renderer
     
     return item_image
   end
+  
+  def inspect; to_s; end
 end

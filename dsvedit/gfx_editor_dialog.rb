@@ -49,21 +49,14 @@ class GfxEditorDialog < Qt::Dialog
       return
     end
     
-    _, render_mode, canvas_width, _ = @fs.read(gfx_file[:ram_start_offset], 4).unpack("C*")
-    if render_mode == 1
-      colors_per_palette = 16
-    else
-      colors_per_palette = 256
-    end
+    gfx = GfxWrapper.new(gfx_file[:ram_start_offset], @fs)
     
-    success = load_palettes(colors_per_palette)
+    success = load_palettes(gfx.colors_per_palette)
     return unless success
     
     @palette_index = 0
     
-    @gfx_file = gfx_file
-    @colors_per_palette = colors_per_palette
-    @canvas_width = canvas_width
+    @gfx = gfx
     
     load_gfx()
     
@@ -72,7 +65,7 @@ class GfxEditorDialog < Qt::Dialog
       @ui.palette_index.addItem("%02X" % i)
     end
     
-    @ui.gfx_file_name.text = @gfx_file[:file_path]
+    @ui.gfx_file_name.text = @gfx.file[:file_path]
     @ui.palette_pointer.text = "%08X" % @palette_pointer
   end
   
@@ -97,9 +90,9 @@ class GfxEditorDialog < Qt::Dialog
   
   def load_gfx
     if @ui.one_dimensional_mode.checked
-      chunky_image = @renderer.render_gfx_1_dimensional_mode(@gfx_file, @palettes[@palette_index])
+      chunky_image = @renderer.render_gfx_1_dimensional_mode(@gfx.file, @palettes[@palette_index])
     else
-      chunky_image = @renderer.render_gfx_page(@gfx_file, @palettes[@palette_index], @canvas_width)
+      chunky_image = @renderer.render_gfx_page(@gfx.file, @palettes[@palette_index], @gfx.canvas_width)
     end
     
     pixmap = Qt::Pixmap.new
@@ -119,19 +112,19 @@ class GfxEditorDialog < Qt::Dialog
   end
   
   def toggle_one_dimensional_mapping_mode(checked)
-    return if @gfx_file.nil? || @palettes.nil? || @palette_index.nil?
+    return if @gfx.nil? || @palettes.nil? || @palette_index.nil?
     load_gfx()
   end
   
   def export_file
-    return if @gfx_file.nil? || @palettes.nil? || @palette_index.nil?
+    return if @gfx.nil? || @palettes.nil? || @palette_index.nil?
     
     if @ui.one_dimensional_mode.checked
-      chunky_image = @renderer.render_gfx_1_dimensional_mode(@gfx_file, @palettes[@palette_index])
+      chunky_image = @renderer.render_gfx_1_dimensional_mode(@gfx.file, @palettes[@palette_index])
     else
-      chunky_image = @renderer.render_gfx_page(@gfx_file, @palettes[@palette_index], @canvas_width)
+      chunky_image = @renderer.render_gfx_page(@gfx.file, @palettes[@palette_index], @gfx.canvas_width)
     end
-    file_basename = File.basename(@gfx_file[:name], ".*")
+    file_basename = File.basename(@gfx.file[:name], ".*")
     gfx_file_path = "#{@output_folder}/#{file_basename}.png"
     chunky_image.save(gfx_file_path)
     palette_file_path = "#{@output_folder}/palette_%08X-%02X.png" % [@palette_pointer, @palette_index]
@@ -141,9 +134,9 @@ class GfxEditorDialog < Qt::Dialog
   end
   
   def import_gfx
-    return if @gfx_file.nil? || @palettes.nil? || @palette_index.nil?
+    return if @gfx.nil? || @palettes.nil? || @palette_index.nil?
     
-    file_basename = File.basename(@gfx_file[:name], ".*")
+    file_basename = File.basename(@gfx.file[:name], ".*")
     file_path = "#{@output_folder}/#{file_basename}.png"
     unless File.file?(file_path)
       Qt::MessageBox.warning(self, "No file", "Could not find file #{file_path} to import.")
@@ -152,9 +145,9 @@ class GfxEditorDialog < Qt::Dialog
     
     begin
       if @ui.one_dimensional_mode.checked
-        @renderer.import_gfx_page_1_dimensional_mode(file_path, @gfx_file, @palette_pointer, @colors_per_palette, @palette_index)
+        @renderer.import_gfx_page_1_dimensional_mode(file_path, @gfx.file, @palette_pointer, @gfx.colors_per_palette, @palette_index)
       else
-        @renderer.import_gfx_page(file_path, @gfx_file, @palette_pointer, @colors_per_palette, @palette_index)
+        @renderer.import_gfx_page(file_path, @gfx.file, @palette_pointer, @gfx.colors_per_palette, @palette_index)
       end
     rescue Renderer::GFXImportError => e
       Qt::MessageBox.warning(self,
@@ -164,12 +157,12 @@ class GfxEditorDialog < Qt::Dialog
       return
     end
     
-    load_palettes(@colors_per_palette)
+    load_palettes(@gfx.colors_per_palette)
     load_gfx()
   end
   
   def import_palette
-    return if @gfx_file.nil? || @palettes.nil? || @palette_index.nil?
+    return if @gfx.nil? || @palettes.nil? || @palette_index.nil?
     
     palette_file_path = "#{@output_folder}/palette_%08X-%02X.png" % [@palette_pointer, @palette_index]
     unless File.file?(palette_file_path)
@@ -178,8 +171,8 @@ class GfxEditorDialog < Qt::Dialog
     end
     
     begin
-      colors = @renderer.import_palette_from_palette_swatches_file(palette_file_path, @colors_per_palette)
-      @renderer.save_palette(colors, @palette_pointer, @palette_index, @colors_per_palette)
+      colors = @renderer.import_palette_from_palette_swatches_file(palette_file_path, @gfx.colors_per_palette)
+      @renderer.save_palette(colors, @palette_pointer, @palette_index, @gfx.colors_per_palette)
     rescue Renderer::GFXImportError => e
       Qt::MessageBox.warning(self,
         "Palette generation error",
@@ -188,19 +181,19 @@ class GfxEditorDialog < Qt::Dialog
       return
     end
     
-    load_palettes(@colors_per_palette)
+    load_palettes(@gfx.colors_per_palette)
     load_gfx()
   end
   
   def generate_palette_from_multiple_files
-    return if @gfx_file.nil? || @palettes.nil? || @palette_index.nil?
+    return if @gfx.nil? || @palettes.nil? || @palette_index.nil?
     
     default_dir = @output_folder
     filenames = Qt::FileDialog.getOpenFileNames(self, "Select gfx file(s)", default_dir, "PNG Files (*.png)")
     return if filenames.empty?
     
     begin
-      colors = @renderer.import_palette_from_multiple_files(filenames, @colors_per_palette)
+      colors = @renderer.import_palette_from_multiple_files(filenames, @gfx.colors_per_palette)
     rescue Renderer::GFXImportError => e
       Qt::MessageBox.warning(self,
         "Palette generation error",
@@ -209,9 +202,9 @@ class GfxEditorDialog < Qt::Dialog
       return
     end
     
-    @renderer.save_palette(colors, @palette_pointer, @palette_index, @colors_per_palette)
+    @renderer.save_palette(colors, @palette_pointer, @palette_index, @gfx.colors_per_palette)
     
-    load_palettes(@colors_per_palette)
+    load_palettes(@gfx.colors_per_palette)
     load_gfx()
   end
 end

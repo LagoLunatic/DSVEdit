@@ -331,7 +331,7 @@ class SpriteEditor < Qt::Dialog
     begin
       @sprite = Sprite.new(@sprite_pointer, @fs)
       
-      @chunky_frames, @min_x, @min_y, rendered_parts, @gfx_files_with_blanks, @palettes, @full_width, @full_height = 
+      @chunky_frames, @min_x, @min_y, rendered_parts, @gfx_pages_with_blanks, @palettes, @full_width, @full_height = 
         @renderer.render_sprite(@gfx_file_pointers, @palette_pointer, @palette_offset, @sprite, frame_to_render = 0, render_hitboxes = false, mode = @mode, one_dimensional_mode = @one_dimensional_render_mode)
     rescue StandardError => e
       Qt::MessageBox.warning(self,
@@ -373,7 +373,7 @@ class SpriteEditor < Qt::Dialog
     @ui.gfx_pointer.text = @gfx_file_pointers.map{|ptr| "%08X" % ptr}.join(", ")
     
     @ui.gfx_page_index.clear()
-    @gfx_files_with_blanks.each_with_index do |gfx_page, i|
+    @gfx_pages_with_blanks.each_with_index do |gfx_page, i|
       @ui.gfx_page_index.addItem(i.to_s)
     end
     @ui.gfx_page_index.setCurrentIndex(0)
@@ -418,16 +418,15 @@ class SpriteEditor < Qt::Dialog
   end
   
   def load_gfx_pages(palette_index)
-    @gfx_page_pixmaps_by_palette[palette_index] ||= @gfx_files_with_blanks.map do |gfx_page|
-      if gfx_page.nil?
+    @gfx_page_pixmaps_by_palette[palette_index] ||= @gfx_pages_with_blanks.map do |gfx|
+      if gfx.nil?
         nil
       else
-        gfx_file = gfx_page[:file]
-        canvas_width = gfx_page[:canvas_width]
+        canvas_width = gfx_page.canvas_width
         if @one_dimensional_render_mode
           chunky_image = @renderer.render_gfx_1_dimensional_mode(gfx_file, @palettes[palette_index])
         else
-          chunky_image = @renderer.render_gfx(gfx_file, @palettes[palette_index], 0, 0, canvas_width*8, canvas_width*8, canvas_width=canvas_width*8)
+          chunky_image = @renderer.render_gfx(gfx.file, @palettes[palette_index], 0, 0, canvas_width*8, canvas_width*8, canvas_width=canvas_width*8)
         end
         
         pixmap = Qt::Pixmap.new
@@ -498,7 +497,7 @@ class SpriteEditor < Qt::Dialog
       @ui.gfx_file_name.text = "Invalid (gfx page index #{gfx_page_index})"
     else
       @gfx_file_graphics_scene.addItem(pixmap)
-      @ui.gfx_file_name.text = @gfx_files_with_blanks[gfx_page_index][:file][:file_path]
+      @ui.gfx_file_name.text = @gfx_pages_with_blanks[gfx_page_index].file[:file_path]
     end
     
     @ui.gfx_page_index.setCurrentIndex(gfx_page_index)

@@ -3,7 +3,7 @@
 1      02230A00-0229A91F  
 2      0229A920-0229E5FF  Sprite data that isn't stored in individual files.
 3      0229E600-022B98FF  
-4      022B9900-022D6E7F  
+4      022B9900-022D6E7F  GFX wrappers.
 5      022D6E80-022DA49F  
 6-22   022DA4A0-022FF9BF  Rooms.
 23-40  022FF9C0-0230891F  Enemy code.
