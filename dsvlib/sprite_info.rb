@@ -141,7 +141,7 @@ class SpriteInfo
     
     
     if possible_gfx_pointers.empty? && gfx_files_to_load.empty?
-      raise CreateCodeReadError.new("Failed to find any possible enemy gfx pointers.")
+      raise CreateCodeReadError.new("Failed to find any possible sprite gfx pointers.")
     end
     
     valid_gfx_pointers = possible_gfx_pointers.select do |pointer|
@@ -171,10 +171,10 @@ class SpriteInfo
     if gfx_files_to_load.empty?
       if gfx_wrapper.nil?
         if valid_gfx_pointers.empty?
-          raise CreateCodeReadError.new("Failed to find any valid enemy gfx pointers.")
+          raise CreateCodeReadError.new("Failed to find any valid sprite gfx pointers.")
         end
         if gfx_sheet_ptr_index >= valid_gfx_pointers.length
-          raise CreateCodeReadError.new("Failed to find enough valid enemy gfx pointers to match the reused enemy gfx sheet index. (#{valid_gfx_pointers.length} found, #{gfx_sheet_ptr_index+1} needed.)")
+          raise CreateCodeReadError.new("Failed to find enough valid sprite gfx pointers to match the reused sprite gfx sheet index. (#{valid_gfx_pointers.length} found, #{gfx_sheet_ptr_index+1} needed.)")
         end
         
         gfx_wrapper = valid_gfx_pointers[gfx_sheet_ptr_index]
@@ -186,7 +186,7 @@ class SpriteInfo
     
     
     if possible_palette_pointers.empty?
-      raise CreateCodeReadError.new("Failed to find any possible enemy palette pointers.")
+      raise CreateCodeReadError.new("Failed to find any possible sprite palette pointers.")
     end
     
     valid_palette_pointers = possible_palette_pointers.select do |pointer|
@@ -195,10 +195,10 @@ class SpriteInfo
     end
     
     if valid_palette_pointers.empty?
-      raise CreateCodeReadError.new("Failed to find any valid enemy palette pointers.")
+      raise CreateCodeReadError.new("Failed to find any valid sprite palette pointers.")
     end
     if palette_list_ptr_index >= valid_palette_pointers.length
-      raise CreateCodeReadError.new("Failed to find enough valid enemy palette pointers to match the reused enemy palette list index. (#{valid_palette_pointers.length} found, #{palette_list_ptr_index+1} needed.)")
+      raise CreateCodeReadError.new("Failed to find enough valid sprite palette pointers to match the reused sprite palette list index. (#{valid_palette_pointers.length} found, #{palette_list_ptr_index+1} needed.)")
     end
     
     palette_pointer = valid_palette_pointers[palette_list_ptr_index]
@@ -224,11 +224,11 @@ class SpriteInfo
         end
       end
       if valid_sprite_pointers.empty?
-        raise CreateCodeReadError.new("Failed to find any valid enemy sprite pointers.")
+        raise CreateCodeReadError.new("Failed to find any valid sprite pointers.")
       end
       
       if sprite_ptr_index >= valid_sprite_pointers.length
-        raise CreateCodeReadError.new("Failed to find enough valid enemy sprite pointers to match the reused enemy sprite index. (#{valid_sprite_pointers.length} found, #{sprite_ptr_index+1} needed.)")
+        raise CreateCodeReadError.new("Failed to find enough valid sprite pointers to match the reused sprite index. (#{valid_sprite_pointers.length} found, #{sprite_ptr_index+1} needed.)")
       end
       sprite_file_pointer = valid_sprite_pointers[sprite_ptr_index]
       if sprite_file_pointer.nil?
