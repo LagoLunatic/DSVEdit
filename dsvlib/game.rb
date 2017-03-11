@@ -336,6 +336,9 @@ private
       suppress_warnings { load './constants/por_constants.rb' }
     when "CASTLEVANIA3YR9E"
       suppress_warnings { load './constants/ooe_constants.rb' }
+    when "CASTLEVANIA2ACBJ"
+      suppress_warnings { load './constants/por_constants.rb' }
+      suppress_warnings { load './constants/por_constants_jp.rb' }
     when "CASTLEVANIA3YR9J"
       suppress_warnings { load './constants/ooe_constants.rb' }
       suppress_warnings { load './constants/ooe_constants_jp.rb' }

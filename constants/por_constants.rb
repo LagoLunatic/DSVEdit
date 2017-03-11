@@ -611,8 +611,7 @@ TEXT_REGIONS = {
   "Enemy Descriptions" => (0x349..0x3E5),
   "Skill Names" => (0x3E6..0x451),
   "Skill Descriptions" => (0x452..0x4BD),
-  "Area Names (Unused)" => (0x4BE..0x4C9),
-  "Music Names (Unused)" => (0x4CA..0x4E6),
+  "Music Names (Unused)" => (0x4BE..0x4E6),
   "Misc" => (0x4E7..0x51F),
   "Menus" => (0x520..0x6BD),
   "Events" => (0x6BE..0x747),
@@ -626,7 +625,6 @@ TEXT_REGIONS_OVERLAYS = {
   "Enemy Descriptions" => 1,
   "Skill Names" => 1,
   "Skill Descriptions" => 1,
-  "Area Names (Unused)" => 1,
   "Music Names (Unused)" => 1,
   "Misc" => 1,
   "Menus" => 1,
@@ -699,7 +697,40 @@ PACK_ICON_INDEX_AND_PALETTE_INDEX = Proc.new do |icon_index, palette_index|
   icon_data
 end
 
-armor_format = [
+CONSUMABLE_FORMAT = [
+  # length: 12
+  [2, "Item ID"],
+  [2, "Icon"],
+  [4, "Price"],
+  [1, "Type"],
+  [1, "Unknown 1"],
+  [2, "Var A"],
+]
+WEAPON_FORMAT = [
+  # length: 32
+  [2, "Item ID"],
+  [2, "Icon"],
+  [4, "Price"],
+  [1, "Swing Anim"],
+  [1, "Graphical Effect"],
+  [1, "Unknown 1"],
+  [1, "Attack"],
+  [1, "Defense"],
+  [1, "Strength"],
+  [1, "Constitution"],
+  [1, "Intelligence"],
+  [1, "Mind"],
+  [1, "Luck"],
+  [1, "Unknown 2"],
+  [1, "Unknown 3"],
+  [4, "Effects", :bitfield],
+  [1, "Sprite"],
+  [1, "Palette"],
+  [2, "Unknown 5"],
+  [2, "Swing Modifiers", :bitfield],
+  [2, "Swing Sound"],
+]
+ARMOR_FORMAT = [
   # length: 24
   [2, "Item ID"],
   [2, "Icon"],
@@ -718,93 +749,63 @@ armor_format = [
   [1, "Unknown 3"],
   [4, "Resistances", :bitfield],
 ]
+SKILL_FORMAT = [
+  # length: 24
+  [4, "Code"],
+  [1, "Sprite"],
+  [1, "Type"],
+  [1, "Unknown 1"],
+  [1, "Unknown 2"],
+  [2, "Mana cost"],
+  [2, "Attack"],
+  [4, "Effects", :bitfield],
+  [4, "Unwanted States"],
+  [2, "Var A"],
+  [2, "Var B"],
+]
 ITEM_TYPES = [
   {
     name: "Consumables",
     list_pointer: 0x020E2724,
     count: 96,
-    format: [
-      # length: 12
-      [2, "Item ID"],
-      [2, "Icon"],
-      [4, "Price"],
-      [1, "Type"],
-      [1, "Unknown 1"],
-      [2, "Var A"],
-    ]
+    format: CONSUMABLE_FORMAT # length: 12
   },
   {
     name: "Weapons",
     list_pointer: 0x020E3114,
     count: 73,
-    format: [
-      # length: 32
-      [2, "Item ID"],
-      [2, "Icon"],
-      [4, "Price"],
-      [1, "Swing Anim"],
-      [1, "Graphical Effect"],
-      [1, "Unknown 1"],
-      [1, "Attack"],
-      [1, "Defense"],
-      [1, "Strength"],
-      [1, "Constitution"],
-      [1, "Intelligence"],
-      [1, "Mind"],
-      [1, "Luck"],
-      [1, "Unknown 2"],
-      [1, "Unknown 3"],
-      [4, "Effects", :bitfield],
-      [1, "Sprite"],
-      [1, "Palette"],
-      [2, "Unknown 5"],
-      [2, "Swing Modifiers", :bitfield],
-      [2, "Swing Sound"],
-    ]
+    format: WEAPON_FORMAT # length: 32
   },
   {
     name: "Body Armor",
     list_pointer: 0x020E2BA4,
     count: 58,
-    format: armor_format # length: 24
+    format: ARMOR_FORMAT # length: 24
   },
   {
     name: "Head Armor",
     list_pointer: 0x020E1FA4,
     count: 38,
-    format: armor_format # length: 24
+    format: ARMOR_FORMAT # length: 24
   },
   {
     name: "Leg Armor",
     list_pointer: 0x020E1CEC,
     count: 29,
-    format: armor_format # length: 24
+    format: ARMOR_FORMAT # length: 24
   },
   {
     name: "Accessories",
     list_pointer: 0x020E2334,
     count: 42,
-    format: armor_format # length: 24
+    format: ARMOR_FORMAT # length: 24
   },
   {
     name: "Skills",
     list_pointer: 0x020E3CFC,
     count: 108,
     is_skill: true,
-    format: [
-      # length: 24
-      [4, "Code"],
-      [1, "Sprite"],
-      [1, "Type"],
-      [1, "Unknown 1"],
-      [1, "Unknown 2"],
-      [2, "Mana cost"],
-      [2, "Attack"],
-      [4, "Effects", :bitfield],
-      [4, "Unwanted States"],
-      [2, "Var A"],
-      [2, "Var B"],
-    ]
+    format: SKILL_FORMAT # length: 24
   },
 ]
 
