@@ -735,13 +735,13 @@ class Renderer
     return [fill_tile, lines_tile]
   end
   
-  def ensure_sprite_exists(folder, gfx_file_pointers, palette_pointer, palette_offset, sprite, frame_to_render)
-    sprite_filename = "%08X %08X %08X %02X" % [sprite.sprite_pointer, gfx_file_pointers.first, palette_pointer, palette_offset]
+  def ensure_sprite_exists(folder, sprite_info, frame_to_render)
+    sprite_filename = "%08X %08X %08X %02X" % [sprite_info.sprite.sprite_pointer, sprite_info.gfx_file_pointers.first, sprite_info.palette_pointer, sprite_info.palette_offset]
     output_path = "#{folder}/#{sprite_filename}_frame#{frame_to_render}.png"
     
     if !File.exist?(output_path)
       FileUtils::mkdir_p(File.dirname(output_path))
-      rendered_frames, _ = render_sprite(gfx_file_pointers, palette_pointer, palette_offset, sprite, frame_to_render)
+      rendered_frames, _ = render_sprite(sprite_info, frame_to_render)
       rendered_frames.first.save(output_path, :fast_rgba)
       puts "Wrote #{output_path}"
     end
@@ -749,7 +749,12 @@ class Renderer
     return output_path
   end
   
-  def render_sprite(gfx_file_pointers, palette_pointer, palette_offset, sprite, frame_to_render = nil, render_hitboxes = false, mode = :normal, one_dimensional_mode = false)
+  def render_sprite(sprite_info, frame_to_render = nil, render_hitboxes = false, mode = :normal, one_dimensional_mode = false)
+    gfx_file_pointers = sprite_info.gfx_file_pointers
+    palette_pointer = sprite_info.palette_pointer
+    palette_offset = sprite_info.palette_offset
+    sprite = sprite_info.sprite
+    
     gfx_with_blanks = []
     gfx_file_pointers.each do |gfx_file_pointer|
       gfx = GfxWrapper.new(gfx_file_pointer, fs)

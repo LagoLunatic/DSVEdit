@@ -18,12 +18,12 @@ class SpecialObjectType
     @update_code_pointer = fs.read(SPECIAL_OBJECT_UPDATE_CODE_LIST + special_object_id*4, 4).unpack("V").first
   end
   
-  def get_gfx_and_palette_and_sprite_from_create_code
+  def extract_gfx_and_palette_and_sprite_from_create_code
     overlay_to_load = OVERLAY_FILE_FOR_SPECIAL_OBJECT[special_object_id]
     reused_info = REUSED_SPECIAL_OBJECT_INFO[special_object_id] || {}
     ptr_to_ptr_to_files_to_load = SPECIAL_OBJECT_FILES_TO_LOAD_LIST + special_object_id*4
     
-    return SpriteInfoExtractor.get_gfx_and_palette_and_sprite_from_create_code(create_code_pointer, fs, overlay_to_load, reused_info, ptr_to_ptr_to_files_to_load)
+    return SpriteInfo.extract_gfx_and_palette_and_sprite_from_create_code(create_code_pointer, fs, overlay_to_load, reused_info, ptr_to_ptr_to_files_to_load)
   end
   
   def write_to_rom

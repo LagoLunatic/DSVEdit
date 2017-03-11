@@ -195,8 +195,7 @@ class SpriteEditor < Qt::Dialog
   
   def enemy_changed(enemy_id)
     begin
-      @gfx_file_pointers, @palette_pointer, @palette_offset, @sprite_pointer, @skeleton_file =
-        EnemyDNA.new(enemy_id, @fs).get_gfx_and_palette_and_sprite_from_init_ai
+      @sprite_info = EnemyDNA.new(enemy_id, @fs).extract_gfx_and_palette_and_sprite_from_init_ai
     rescue StandardError => e
       Qt::MessageBox.warning(self,
         "Enemy sprite extraction failed",
@@ -219,8 +218,7 @@ class SpriteEditor < Qt::Dialog
     end
     
     begin
-      @gfx_file_pointers, @palette_pointer, @palette_offset, @sprite_pointer, @skeleton_file =
-        SpecialObjectType.new(special_object_id, @fs).get_gfx_and_palette_and_sprite_from_create_code
+      @sprite_info = SpecialObjectType.new(special_object_id, @fs).extract_gfx_and_palette_and_sprite_from_create_code
     rescue StandardError => e
       Qt::MessageBox.warning(self,
         "Special object sprite extraction failed",
@@ -239,11 +237,14 @@ class SpriteEditor < Qt::Dialog
   def weapon_changed(weapon_gfx_index)
     begin
       weapon = @weapons[weapon_gfx_index]
-      @gfx_file_pointers = [weapon.gfx_file_pointer]
-      @palette_pointer = weapon.palette_pointer
-      @palette_offset = 0
-      @sprite_pointer = weapon.sprite_file_pointer
-      @skeleton_file = nil
+      
+      gfx_file_pointers = [weapon.gfx_file_pointer]
+      palette_pointer = weapon.palette_pointer
+      palette_offset = 0
+      sprite_pointer = weapon.sprite_file_pointer
+      skeleton_file = nil
+      
+      @sprite_info = SpriteInfo.new(gfx_file_pointers, palette_pointer, palette_offset, sprite_pointer, skeleton_file, @fs)
     rescue StandardError => e
       Qt::MessageBox.warning(self,
         "Weapon sprite extraction failed",
@@ -262,11 +263,14 @@ class SpriteEditor < Qt::Dialog
   def skill_changed(skill_gfx_index)
     begin
       skill = @skills[skill_gfx_index]
-      @gfx_file_pointers = [skill.gfx_file_pointer]
-      @palette_pointer = skill.palette_pointer
-      @palette_offset = 0
-      @sprite_pointer = skill.sprite_file_pointer
-      @skeleton_file = nil
+      
+      gfx_file_pointers = [skill.gfx_file_pointer]
+      palette_pointer = skill.palette_pointer
+      palette_offset = 0
+      sprite_pointer = skill.sprite_file_pointer
+      skeleton_file = nil
+      
+      @sprite_info = SpriteInfo.new(gfx_file_pointers, palette_pointer, palette_offset, sprite_pointer, skeleton_file, @fs)
     rescue StandardError => e
       Qt::MessageBox.warning(self,
         "Skill sprite extraction failed",
@@ -284,8 +288,7 @@ class SpriteEditor < Qt::Dialog
   
   def other_sprite_changed(id)
     begin
-      @gfx_file_pointers, @palette_pointer, @palette_offset, @sprite_pointer, @skeleton_file =
-        SpriteInfoExtractor.get_gfx_and_palette_and_sprite_from_create_code(OTHER_SPRITES[id][:pointer], @fs, OTHER_SPRITES[id][:overlay], OTHER_SPRITES[id])
+      @sprite_info = SpriteInfo.extract_gfx_and_palette_and_sprite_from_create_code(OTHER_SPRITES[id][:pointer], @fs, OTHER_SPRITES[id][:overlay], OTHER_SPRITES[id])
     rescue StandardError => e
       Qt::MessageBox.warning(self,
         "Sprite extraction failed",
@@ -329,10 +332,10 @@ class SpriteEditor < Qt::Dialog
   
   def load_sprite
     begin
-      @sprite = Sprite.new(@sprite_pointer, @fs)
+      @sprite = @sprite_info.sprite
       
       @chunky_frames, @min_x, @min_y, rendered_parts, @gfx_pages_with_blanks, @palettes, @full_width, @full_height = 
-        @renderer.render_sprite(@gfx_file_pointers, @palette_pointer, @palette_offset, @sprite, frame_to_render = 0, render_hitboxes = false, mode = @mode, one_dimensional_mode = @one_dimensional_render_mode)
+        @renderer.render_sprite(@sprite_info, frame_to_render = 0, render_hitboxes = false, mode = @mode, one_dimensional_mode = @one_dimensional_render_mode)
     rescue StandardError => e
       Qt::MessageBox.warning(self,
         "Sprite rendering failed",
@@ -341,7 +344,7 @@ class SpriteEditor < Qt::Dialog
       return
     end
     
-    if @skeleton_file
+    if @sprite_info.skeleton_file
       @ui.view_skeleton_button.enabled = true
     else
       @ui.view_skeleton_button.enabled = false
@@ -353,13 +356,12 @@ class SpriteEditor < Qt::Dialog
     @current_frame_index = 0
     @current_part_index = 0
     
-    sprite_file_text = "%08X" % @sprite_pointer
-    sprite_file = @fs.find_file_by_ram_start_offset(@sprite_pointer)
-    if sprite_file
-      sprite_file_text += " (#{sprite_file[:file_path]})"
+    sprite_file_text = "%08X" % @sprite_info.sprite_file_pointer
+    if @sprite_info.sprite_file
+      sprite_file_text += " (#{@sprite_info.sprite_file[:file_path]})"
     end
-    if @skeleton_file
-      sprite_file_text += ", #{@skeleton_file[:file_path]}"
+    if @sprite_info.skeleton_file
+      sprite_file_text += ", #{@sprite_info.skeleton_file[:file_path]}"
     end
     @ui.sprite_file_name.text = sprite_file_text
     
@@ -370,7 +372,7 @@ class SpriteEditor < Qt::Dialog
     
     @gfx_page_pixmaps_by_palette = {}
     
-    @ui.gfx_pointer.text = @gfx_file_pointers.map{|ptr| "%08X" % ptr}.join(", ")
+    @ui.gfx_pointer.text = @sprite_info.gfx_file_pointers.map{|ptr| "%08X" % ptr}.join(", ")
     
     @ui.gfx_page_index.clear()
     @gfx_pages_with_blanks.each_with_index do |gfx_page, i|
@@ -378,7 +380,7 @@ class SpriteEditor < Qt::Dialog
     end
     @ui.gfx_page_index.setCurrentIndex(0)
     
-    @ui.palette_pointer.text = "%08X" % @palette_pointer
+    @ui.palette_pointer.text = "%08X" % @sprite_info.palette_pointer
     
     @ui.palette_index.clear()
     @palettes.each_with_index do |palette, i|
@@ -422,7 +424,7 @@ class SpriteEditor < Qt::Dialog
       if gfx.nil?
         nil
       else
-        canvas_width = gfx_page.canvas_width
+        canvas_width = gfx.canvas_width
         if @one_dimensional_render_mode
           chunky_image = @renderer.render_gfx_1_dimensional_mode(gfx_file, @palettes[palette_index])
         else
@@ -616,9 +618,9 @@ class SpriteEditor < Qt::Dialog
   end
   
   def open_skeleton_editor
-    if @skeleton_file
-      chunky_frames, min_x, min_y, _, _, _, _, _ = @renderer.render_sprite(@gfx_file_pointers, @palette_pointer, @palette_offset, @sprite, frame_to_render = nil, render_hitboxes = false, mode = @mode)
-      @skeleton_editor = SkeletonEditorDialog.new(self, game.fs, @skeleton_file, chunky_frames, min_x, min_y)
+    if @sprite_info.skeleton_file
+      chunky_frames, min_x, min_y, _, _, _, _, _ = @renderer.render_sprite(@sprite_info, frame_to_render = nil, render_hitboxes = false, mode = @mode)
+      @skeleton_editor = SkeletonEditorDialog.new(self, game.fs, @sprite_info.skeleton_file, chunky_frames, min_x, min_y)
     end
   end
   
@@ -629,11 +631,15 @@ class SpriteEditor < Qt::Dialog
   end
   
   def reload_sprite
-    @gfx_file_pointers = @ui.gfx_pointer.text.split(/,\s*/).map{|ptr| ptr.to_i(16)}
-    @palette_pointer = @ui.palette_pointer.text.to_i(16)
-    @sprite_file = @fs.files_by_path[@ui.sprite_file_name.text]
-    @sprite_pointer = @ui.sprite_file_name.text.to_i(16)
+    gfx_file_pointers = @ui.gfx_pointer.text.split(/,\s*/).map{|ptr| ptr.to_i(16)}
+    palette_pointer = @ui.palette_pointer.text.to_i(16)
+    sprite_file = @fs.files_by_path[@ui.sprite_file_name.text]
+    sprite_pointer = @ui.sprite_file_name.text.to_i(16)
+    
+    @sprite_info = SpriteInfo.new(gfx_file_pointers, palette_pointer, @sprite_info.palette_offset, sprite_pointer, @sprite_info.skeleton_file, @fs)
     
     load_sprite()
   end
+  
+  def inspect; to_s; end
 end

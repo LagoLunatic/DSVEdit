@@ -484,22 +484,18 @@ class DSVEdit < Qt::MainWindow
   def add_graphics_item_for_entity(entity)
     if entity.is_enemy?
       enemy_id = entity.subtype
-      add_sprite_item_for_entity(entity,
-        EnemyDNA.new(enemy_id, @game.fs).get_gfx_and_palette_and_sprite_from_init_ai,
-        BEST_SPRITE_FRAME_FOR_ENEMY[enemy_id])
+      sprite_info = EnemyDNA.new(enemy_id, @game.fs).extract_gfx_and_palette_and_sprite_from_init_ai
+      add_sprite_item_for_entity(entity, sprite_info, BEST_SPRITE_FRAME_FOR_ENEMY[enemy_id])
     elsif entity.is_special_object?
       special_object_id = entity.subtype
-      add_sprite_item_for_entity(entity,
-        SpecialObjectType.new(special_object_id, game.fs).get_gfx_and_palette_and_sprite_from_create_code,
-        BEST_SPRITE_FRAME_FOR_SPECIAL_OBJECT[special_object_id])
+      sprite_info = SpecialObjectType.new(special_object_id, game.fs).extract_gfx_and_palette_and_sprite_from_create_code
+      add_sprite_item_for_entity(entity, sprite_info, BEST_SPRITE_FRAME_FOR_SPECIAL_OBJECT[special_object_id])
     elsif entity.is_candle?
-      add_sprite_item_for_entity(entity,
-        SpriteInfoExtractor.get_gfx_and_palette_and_sprite_from_create_code(OTHER_SPRITES[0][:pointer], game.fs, OTHER_SPRITES[0][:overlay], OTHER_SPRITES[0]),
-        0xDB)
+      sprite_info = SpriteInfo.extract_gfx_and_palette_and_sprite_from_create_code(OTHER_SPRITES[0][:pointer], game.fs, OTHER_SPRITES[0][:overlay], OTHER_SPRITES[0])
+      add_sprite_item_for_entity(entity, sprite_info, 0xDB)
     elsif entity.is_magic_seal?
-      add_sprite_item_for_entity(entity,
-        SpriteInfoExtractor.get_gfx_and_palette_and_sprite_from_create_code(OTHER_SPRITES[0][:pointer], game.fs, OTHER_SPRITES[0][:overlay], OTHER_SPRITES[0]),
-        0xCE)
+      sprite_info = SpriteInfo.extract_gfx_and_palette_and_sprite_from_create_code(OTHER_SPRITES[0][:pointer], game.fs, OTHER_SPRITES[0][:overlay], OTHER_SPRITES[0])
+      add_sprite_item_for_entity(entity, sprite_info, 0xCE)
     elsif entity.is_item? || entity.is_hidden_item?
       if GAME == "ooe"
         item_global_id = entity.var_b - 1
@@ -536,13 +532,11 @@ class DSVEdit < Qt::MainWindow
       when "por", "ooe"
         frame_id = 0x11D
       end
-      add_sprite_item_for_entity(entity,
-        SpriteInfoExtractor.get_gfx_and_palette_and_sprite_from_create_code(OTHER_SPRITES[0][:pointer], game.fs, OTHER_SPRITES[0][:overlay], OTHER_SPRITES[0]),
-        frame_id)
+      sprite_info = SpriteInfo.extract_gfx_and_palette_and_sprite_from_create_code(OTHER_SPRITES[0][:pointer], game.fs, OTHER_SPRITES[0][:overlay], OTHER_SPRITES[0])
+      add_sprite_item_for_entity(entity, sprite_info, frame_id)
     elsif entity.is_money_bag? || entity.is_hidden_money_bag?
-      add_sprite_item_for_entity(entity,
-        SpriteInfoExtractor.get_gfx_and_palette_and_sprite_from_create_code(OTHER_SPRITES[0][:pointer], game.fs, OTHER_SPRITES[0][:overlay], OTHER_SPRITES[0]),
-        0xEF)
+      sprite_info = SpriteInfo.extract_gfx_and_palette_and_sprite_from_create_code(OTHER_SPRITES[0][:pointer], game.fs, OTHER_SPRITES[0][:overlay], OTHER_SPRITES[0])
+      add_sprite_item_for_entity(entity, sprite_info, 0xEF)
     elsif (entity.is_skill? || entity.is_hidden_skill?) && GAME == "por"
       case entity.var_b
       when 0x00..0x26
@@ -590,7 +584,7 @@ class DSVEdit < Qt::MainWindow
     graphics_item.setParentItem(@entities_view_item)
   end
   
-  def add_sprite_item_for_entity(entity, sprite_data, frame_to_render)
+  def add_sprite_item_for_entity(entity, sprite_info, frame_to_render)
     if frame_to_render == -1
       # Don't show this entity's sprite in the editor.
       graphics_item = EntityRectItem.new(entity)
@@ -598,16 +592,14 @@ class DSVEdit < Qt::MainWindow
       return
     end
     
-    gfx_file_pointers, palette_pointer, palette_offset, sprite_pointer = *sprite_data
     frame_to_render ||= 0
     
-    sprite = Sprite.new(sprite_pointer, game.fs)
-    sprite_filename = @renderer.ensure_sprite_exists("cache/#{GAME}/sprites/", gfx_file_pointers, palette_pointer, palette_offset, sprite, frame_to_render)
+    sprite_filename = @renderer.ensure_sprite_exists("cache/#{GAME}/sprites/", sprite_info, frame_to_render)
     chunky_frame = ChunkyPNG::Image.from_file(sprite_filename)
     
     graphics_item = EntityChunkyItem.new(chunky_frame, entity)
     
-    graphics_item.setPos(entity.x_pos+sprite.min_x, entity.y_pos+sprite.min_y)
+    graphics_item.setPos(entity.x_pos+sprite_info.sprite.min_x, entity.y_pos+sprite_info.sprite.min_y)
     graphics_item.setParentItem(@entities_view_item)
   end
   

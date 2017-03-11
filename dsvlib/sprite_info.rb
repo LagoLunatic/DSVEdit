@@ -1,7 +1,25 @@
-class SpriteInfoExtractor
+class SpriteInfo
   class CreateCodeReadError < StandardError ; end
   
-  def self.get_gfx_and_palette_and_sprite_from_create_code(create_code_pointer, fs, overlay_to_load, reused_info, ptr_to_ptr_to_files_to_load=nil)
+  attr_reader :gfx_file_pointers,
+              :palette_pointer,
+              :palette_offset,
+              :sprite_file_pointer,
+              :skeleton_file,
+              :sprite_file,
+              :sprite
+  
+  def initialize(gfx_file_pointers, palette_pointer, palette_offset, sprite_file_pointer, skeleton_file, fs)
+    @gfx_file_pointers = gfx_file_pointers
+    @palette_pointer = palette_pointer
+    @palette_offset = palette_offset
+    @sprite_file_pointer = sprite_file_pointer
+    @skeleton_file = skeleton_file
+    @sprite_file = fs.find_file_by_ram_start_offset(sprite_file_pointer)
+    @sprite = Sprite.new(sprite_file_pointer, fs)
+  end
+  
+  def self.extract_gfx_and_palette_and_sprite_from_create_code(create_code_pointer, fs, overlay_to_load, reused_info, ptr_to_ptr_to_files_to_load=nil)
     # This function attempts to find the enemy/object's gfx files, palette pointer, and sprite file.
     # It first looks in the list of files to load for that enemy/object (if given).
     # If any are missing after looking there, it then looks in the create code for pointers that look like they could be the pointers we want.
@@ -32,10 +50,10 @@ class SpriteInfoExtractor
     palette_pointer        = reused_info[:palette] || nil
     
     if sprite_file_pointer && gfx_file_pointers && palette_pointer
-      return [gfx_file_pointers, palette_pointer, palette_offset, sprite_file_pointer, nil]
+      return SpriteInfo.new(gfx_file_pointers, palette_pointer, palette_offset, sprite_file_pointer, nil, fs)
     elsif sprite_file_pointer && gfx_wrapper && palette_pointer
       gfx_file_pointers = unpack_gfx_pointer_list(gfx_wrapper, fs)
-      return [gfx_file_pointers, palette_pointer, palette_offset, sprite_file_pointer, nil]
+      return SpriteInfo.new(gfx_file_pointers, palette_pointer, palette_offset, sprite_file_pointer, nil, fs)
     end
     
     if init_code_pointer == -1
@@ -98,7 +116,7 @@ class SpriteInfoExtractor
         gfx_file_pointers = gfx_files_to_load.map{|gfx| gfx.file[:ram_start_offset]}
         sprite_file_pointer = sprite_files_to_load.first[:ram_start_offset]
         
-        return [gfx_file_pointers, palette_pointer_to_load, palette_offset, sprite_file_pointer, skeleton_files_to_load.first]
+        return SpriteInfo.new(gfx_file_pointers, palette_pointer_to_load, palette_offset, sprite_file_pointer, skeleton_files_to_load.first, fs)
       end
     end
     
@@ -235,7 +253,7 @@ class SpriteInfoExtractor
       end
     end
     
-    return [gfx_file_pointers, palette_pointer, palette_offset, sprite_file_pointer, skeleton_file]
+    return SpriteInfo.new(gfx_file_pointers, palette_pointer, palette_offset, sprite_file_pointer, skeleton_file, fs)
   end
   
   def self.unpack_gfx_pointer_list(gfx_wrapper, fs)
