@@ -12,8 +12,8 @@ class TextEditor < Qt::Dialog
     @ui.setup_ui(self)
     
     # rbuic4 is bugged and ignores stretch values, so they must be manually set.
-    @ui.horizontalLayout_2.setStretch(0, 1)
-    @ui.horizontalLayout_2.setStretch(1, 2)
+    @ui.horizontalLayout_2.setStretch(0, 2)
+    @ui.horizontalLayout_2.setStretch(1, 3)
     
     @fs = fs
     
@@ -63,5 +63,7 @@ class TextEditor < Qt::Dialog
     text.decoded_string = @ui.textEdit.toPlainText()
     
     @text_database.write_to_rom()
+  rescue Text::TextEncodeError => e
+    Qt::MessageBox.warning(self, "Error encoding text", e.message)
   end
 end
