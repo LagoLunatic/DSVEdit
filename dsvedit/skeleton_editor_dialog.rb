@@ -52,6 +52,46 @@ class SkeletonEditorDialog < Qt::Dialog
     pose_changed(0)
   end
   
+  def initialize_joint_states(pose)
+    joint_states_for_pose = []
+    
+    @skeleton.joints.each_with_index do |joint, joint_index|
+      joint_change = pose[joint_index]
+      joint_state = JointState.new
+      joint_states_for_pose << joint_state
+      
+      if joint.parent_id == 0xFF
+        joint_state.x_pos = 0
+        joint_state.y_pos = 0
+        joint_state.inherited_rotation = 0
+        next
+      end
+      
+      parent_joint = @skeleton.joints[joint.parent_id]
+      parent_joint_change = pose[joint.parent_id]
+      parent_joint_state = joint_states_for_pose[joint.parent_id]
+      
+      joint_state.x_pos = parent_joint_state.x_pos
+      joint_state.y_pos = parent_joint_state.y_pos
+      joint_state.inherited_rotation = parent_joint_change.rotation
+      
+      if parent_joint.copy_parent_visual_rotation && parent_joint.parent_id != 0xFF
+        joint_state.inherited_rotation += parent_joint_state.inherited_rotation
+      end
+      connected_rotation_in_degrees = joint_state.inherited_rotation / 182.0
+      
+      offset_angle = connected_rotation_in_degrees
+      offset_angle += 90 * joint.positional_rotation
+      
+      offset_angle_in_radians = offset_angle * Math::PI / 180
+      
+      joint_state.x_pos += joint_change.distance*Math.cos(offset_angle_in_radians)
+      joint_state.y_pos += joint_change.distance*Math.sin(offset_angle_in_radians)
+    end
+    
+    joint_states_for_pose
+  end
+  
   def pose_changed(i)
     @current_pose_index = i
     @skeleton_graphics_scene.items.each do |item|
@@ -59,42 +99,18 @@ class SkeletonEditorDialog < Qt::Dialog
     end
     
     pose = @skeleton.poses[@current_pose_index]
-    
-    @skeleton.joints.each_with_index do |joint, joint_index|
-      next if joint.parent_id == 0xFF
-      
-      joint_change = pose[joint_index]
-      
-      parent_joint = @skeleton.joints[joint.parent_id]
-      parent_joint_change = pose[joint.parent_id]
-      
-      joint.x_pos = parent_joint.x_pos
-      joint.y_pos = parent_joint.y_pos
-      joint.inherited_rotation = parent_joint_change.rotation
-      
-      if parent_joint.copy_parent_visual_rotation && parent_joint.parent_id != 0xFF
-        joint.inherited_rotation += parent_joint.inherited_rotation
-      end
-      connected_rotation_in_degrees = joint.inherited_rotation / 182.0
-      
-      offset_angle = connected_rotation_in_degrees
-      offset_angle += 90 * joint.positional_rotation
-      
-      offset_angle_in_radians = offset_angle * Math::PI / 180
-      
-      joint.x_pos += joint_change.distance*Math.cos(offset_angle_in_radians)
-      joint.y_pos += joint_change.distance*Math.sin(offset_angle_in_radians)
-    end
+    @current_pose_joint_states = initialize_joint_states(pose)
     
     @skeleton.joint_indexes_by_draw_order.each do |joint_index|
       joint = @skeleton.joints[joint_index]
       joint_change = pose[joint_index]
+      joint_state = @current_pose_joint_states[joint_index]
       
       next if joint.frame_id == 0xFF
       
       rotation = joint_change.rotation
       if joint.parent_id != 0xFF && joint.copy_parent_visual_rotation
-        rotation += joint.inherited_rotation
+        rotation += joint_state.inherited_rotation
       end
       rotation_in_degrees = rotation/182.0
       
@@ -115,7 +131,7 @@ class SkeletonEditorDialog < Qt::Dialog
       pixmap.loadFromData(blob, blob.length)
       graphics_item = Qt::GraphicsPixmapItem.new(pixmap)
       graphics_item.setOffset(@min_x, @min_y)
-      graphics_item.setPos(joint.x_pos, joint.y_pos)
+      graphics_item.setPos(joint_state.x_pos, joint_state.y_pos)
       graphics_item.setRotation(rotation_in_degrees)
       @skeleton_graphics_scene.addItem(graphics_item)
     end
@@ -124,6 +140,7 @@ class SkeletonEditorDialog < Qt::Dialog
       @skeleton.joints.each_index do |joint_index|
         joint = @skeleton.joints[joint_index]
         joint_change = pose[joint_index]
+        joint_state = @current_pose_joint_states[joint_index]
         
         ellipse = @skeleton_graphics_scene.addEllipse(joint.x_pos-1, joint.y_pos-1, 3, 3, GREY_PEN)
         ellipse.setZValue(1)
@@ -139,13 +156,14 @@ class SkeletonEditorDialog < Qt::Dialog
       @skeleton.hitboxes.each do |hitbox|
         joint = @skeleton.joints[hitbox.parent_joint_id]
         joint_change = pose[hitbox.parent_joint_id]
+        joint_state = @current_pose_joint_states[hitbox.parent_joint_id]
         
-        x_pos = joint.x_pos
-        y_pos = joint.y_pos
+        x_pos = joint_state.x_pos
+        y_pos = joint_state.y_pos
         
         offset_angle = hitbox.rotation + joint_change.rotation
         if joint.copy_parent_visual_rotation
-          offset_angle += joint.inherited_rotation
+          offset_angle += joint_state.inherited_rotation
         end
         offset_angle_in_degrees = offset_angle / 182.0
         offset_angle_in_radians = offset_angle_in_degrees * Math::PI / 180
@@ -175,13 +193,14 @@ class SkeletonEditorDialog < Qt::Dialog
       @skeleton.points.each do |point|
         joint = @skeleton.joints[point.parent_joint_id]
         joint_change = pose[point.parent_joint_id]
+        joint_state = @current_pose_joint_states[point.parent_joint_id]
         
-        x_pos = joint.x_pos
-        y_pos = joint.y_pos
+        x_pos = joint_state.x_pos
+        y_pos = joint_state.y_pos
         
         offset_angle = point.rotation + joint_change.rotation
         if joint.copy_parent_visual_rotation
-          offset_angle += joint.inherited_rotation
+          offset_angle += joint_state.inherited_rotation
         end
         offset_angle_in_degrees = offset_angle / 182.0
         offset_angle_in_radians = offset_angle_in_degrees * Math::PI / 180
@@ -213,4 +232,10 @@ class SkeletonEditorDialog < Qt::Dialog
       
     end
   end
+end
+
+class JointState
+  attr_accessor :x_pos,
+                :y_pos,
+                :inherited_rotation
 end
