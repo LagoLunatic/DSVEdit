@@ -6,7 +6,8 @@ class SpriteSkeleton
               :poses,
               :hitboxes,
               :points,
-              :joint_indexes_by_draw_order
+              :joint_indexes_by_draw_order,
+              :animations
   
   def initialize(skeleton_file, fs)
     @fs = fs
@@ -59,17 +60,17 @@ class SpriteSkeleton
     
     @animations = []
     number_of_animations.times do
-      num_frames = fs.read_by_file(skeleton_file, offset, 1).unpack("C").first
+      num_keyframes = fs.read_by_file(skeleton_file, offset, 1).unpack("C").first
       offset += 1
       
-      frames = []
-      num_frames.times do
-        frame_data = fs.read_by_file(skeleton_file, offset, 3)
-        frames << SkeletonFrame.new(frame_data)
+      keyframes = []
+      num_keyframes.times do
+        keyframe_data = fs.read_by_file(skeleton_file, offset, 3)
+        keyframes << SkeletonKeyframe.new(keyframe_data)
         offset += 3
       end
       
-      @animations << SkeletonAnimation.new(frames)
+      @animations << SkeletonAnimation.new(keyframes)
     end
   end
 end
@@ -146,14 +147,14 @@ class SkeletonPoint
 end
 
 class SkeletonAnimation
-  attr_reader :frames
+  attr_reader :keyframes
   
-  def initialize(frames)
-    @frames = frames
+  def initialize(keyframes)
+    @keyframes = keyframes
   end
 end
 
-class SkeletonFrame
+class SkeletonKeyframe
   attr_reader :pose_id,
               :length_in_frames,
               :unknown

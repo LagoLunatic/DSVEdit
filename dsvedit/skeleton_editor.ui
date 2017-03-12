@@ -36,56 +36,101 @@
     </layout>
    </item>
    <item>
+    <layout class="QHBoxLayout" name="horizontalLayout_2">
+     <item>
+      <widget class="QLabel" name="label_3">
+       <property name="text">
+        <string>Animation</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QComboBox" name="animation_index"/>
+     </item>
+     <item>
+      <widget class="QLabel" name="label_4">
+       <property name="text">
+        <string>Loop</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QCheckBox" name="loop_animation">
+       <property name="text">
+        <string/>
+       </property>
+       <property name="checked">
+        <bool>true</bool>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="toggle_paused_button">
+       <property name="text">
+        <string>Play</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QSlider" name="seek_slider">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+   <item>
     <layout class="QFormLayout" name="formLayout_3">
      <property name="fieldGrowthPolicy">
       <enum>QFormLayout::AllNonFixedFieldsGrow</enum>
      </property>
-     <item row="0" column="0">
+     <item row="1" column="0">
       <widget class="QLabel" name="label_6">
        <property name="text">
         <string>Pose</string>
        </property>
       </widget>
      </item>
-     <item row="0" column="1">
+     <item row="1" column="1">
       <widget class="QComboBox" name="pose_index"/>
      </item>
-     <item row="1" column="0">
+     <item row="2" column="0">
       <widget class="QLabel" name="label_5">
        <property name="text">
         <string>Show skeleton</string>
        </property>
       </widget>
      </item>
-     <item row="1" column="1">
+     <item row="2" column="1">
       <widget class="QCheckBox" name="show_skeleton">
        <property name="text">
         <string/>
        </property>
       </widget>
      </item>
-     <item row="2" column="0">
+     <item row="3" column="0">
       <widget class="QLabel" name="label">
        <property name="text">
         <string>Show hitboxes</string>
        </property>
       </widget>
      </item>
-     <item row="2" column="1">
+     <item row="3" column="1">
       <widget class="QCheckBox" name="show_hitboxes">
        <property name="text">
         <string/>
        </property>
       </widget>
      </item>
-     <item row="3" column="0">
+     <item row="4" column="0">
       <widget class="QLabel" name="label_2">
        <property name="text">
         <string>Show points</string>
        </property>
       </widget>
      </item>
-     <item row="3" column="1">
+     <item row="4" column="1">
       <widget class="QCheckBox" name="show_points">
        <property name="text">
         <string/>
