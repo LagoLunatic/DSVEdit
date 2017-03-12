@@ -741,7 +741,7 @@ class Renderer
     
     if !File.exist?(output_path)
       FileUtils::mkdir_p(File.dirname(output_path))
-      rendered_frames, _ = render_sprite(sprite_info, frame_to_render)
+      rendered_frames, _ = render_sprite(sprite_info, frame_to_render: frame_to_render)
       rendered_frames.first.save(output_path, :fast_rgba)
       puts "Wrote #{output_path}"
     end
@@ -749,7 +749,7 @@ class Renderer
     return output_path
   end
   
-  def render_sprite(sprite_info, frame_to_render = nil, render_hitboxes = false, mode = :normal, one_dimensional_mode = false)
+  def render_sprite(sprite_info, frame_to_render: nil, render_hitboxes: false, override_part_palette_index: nil, one_dimensional_mode: false)
     gfx_file_pointers = sprite_info.gfx_file_pointers
     palette_pointer = sprite_info.palette_pointer
     palette_offset = sprite_info.palette_offset
@@ -807,9 +807,9 @@ class Renderer
         gfx_page = gfx_with_blanks[part.gfx_page_index]
         gfx_file = gfx_page.file
         canvas_width = gfx_page.canvas_width
-        if mode == :weapon
-          # Weapons always use the first palette. Instead the part's palette index value is used to indicate that it should start out partially transparent.
-          palette = palettes.first
+        if override_part_palette_index
+          # For weapons (which always use the first palette) and skeletally animated enemies (which have their palette specified in the skeleton file).
+          palette = palettes[override_part_palette_index+palette_offset]
         else
           palette = palettes[part.palette_index+palette_offset]
         end

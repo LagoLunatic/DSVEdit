@@ -31,7 +31,8 @@ Each is 4 bytes long.
     Bit 4: Horizontally flip this joint, visually.
     Bit 5: Vertically flip this joint, visually.
     Bits 6-8: ?
-  Byte 4: Palette?
+  Byte 4: Palette index.
+    Might override part's palette index? TODO
 
 List of poses:
   Byte 1: Joint ID for something? FF means the next byte is ignored.

@@ -19,19 +19,13 @@ class SkeletonEditorDialog < Qt::Dialog
   slots "advance_tweenframe()"
   slots "button_box_clicked(QAbstractButton*)"
   
-  def initialize(parent, fs, skeleton_file, chunky_frames, min_x, min_y)
+  def initialize(parent, sprite_info, fs, renderer)
     super(parent, Qt::WindowTitleHint | Qt::WindowSystemMenuHint)
     
-    @skeleton = SpriteSkeleton.new(skeleton_file, fs)
-    @chunky_frames = chunky_frames
-    @pixmap_frames = @chunky_frames.map do |chunky_image|
-      pixmap = Qt::Pixmap.new
-      blob = chunky_image.to_blob
-      pixmap.loadFromData(blob, blob.length)
-      pixmap
-    end
-    @min_x = min_x
-    @min_y = min_y
+    
+    @sprite_info = sprite_info
+    @fs = fs
+    @renderer = renderer
     
     @ui = Ui_SkeletonEditor.new
     @ui.setup_ui(self)
@@ -59,6 +53,16 @@ class SkeletonEditorDialog < Qt::Dialog
   end
   
   def load_skeleton
+    @skeleton = SpriteSkeleton.new(@sprite_info.skeleton_file, @fs)
+    
+    chunky_frames, @min_x, @min_y, _, _, _, _, _ = @renderer.render_sprite(@sprite_info)
+    @pixmap_frames = chunky_frames.map do |chunky_image|
+      pixmap = Qt::Pixmap.new
+      blob = chunky_image.to_blob
+      pixmap.loadFromData(blob, blob.length)
+      pixmap
+    end
+    
     @ui.skeleton_file_name.text = @skeleton.skeleton_file
     
     @ui.pose_index.clear()

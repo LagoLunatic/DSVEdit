@@ -32,7 +32,7 @@ class SpriteEditor < Qt::Dialog
     @game = game
     @fs = game.fs
     @renderer = renderer
-    @mode = :normal
+    @override_part_palette_index = nil
     
     @ui = Ui_SpriteEditor.new
     @ui.setup_ui(self)
@@ -210,7 +210,7 @@ class SpriteEditor < Qt::Dialog
       return
     end
     
-    @mode = :normal
+    @override_part_palette_index = nil
     @one_dimensional_render_mode = false
     load_sprite()
     
@@ -233,7 +233,7 @@ class SpriteEditor < Qt::Dialog
       return
     end
     
-    @mode = :normal
+    @override_part_palette_index = nil
     @one_dimensional_render_mode = false
     load_sprite()
     
@@ -259,7 +259,7 @@ class SpriteEditor < Qt::Dialog
       return
     end
     
-    @mode = :weapon
+    @override_part_palette_index = 0 # Weapons always use the first palette. Instead the part's palette index value is used to indicate that it should start out partially transparent.
     @one_dimensional_render_mode = false
     load_sprite()
     
@@ -285,7 +285,7 @@ class SpriteEditor < Qt::Dialog
       return
     end
     
-    @mode = :normal
+    @override_part_palette_index = nil
     @one_dimensional_render_mode = false
     load_sprite()
     
@@ -303,7 +303,7 @@ class SpriteEditor < Qt::Dialog
       return
     end
     
-    @mode = :normal
+    @override_part_palette_index = nil
     @one_dimensional_render_mode = OTHER_SPRITES[id][:one_dimensional_mode]
     load_sprite()
     
@@ -341,7 +341,7 @@ class SpriteEditor < Qt::Dialog
       @sprite = @sprite_info.sprite
       
       @chunky_frames, @min_x, @min_y, rendered_parts, @gfx_pages_with_blanks, @palettes, @full_width, @full_height = 
-        @renderer.render_sprite(@sprite_info, frame_to_render = 0, render_hitboxes = false, mode = @mode, one_dimensional_mode = @one_dimensional_render_mode)
+        @renderer.render_sprite(@sprite_info, frame_to_render: 0, override_part_palette_index: @override_part_palette_index, one_dimensional_mode: @one_dimensional_render_mode)
     rescue StandardError => e
       Qt::MessageBox.warning(self,
         "Sprite rendering failed",
@@ -543,9 +543,8 @@ class SpriteEditor < Qt::Dialog
     
     part = @sprite.parts[i]
     gfx_page_changed(part.gfx_page_index)
-    if @mode == :weapon
-      # Weapons always use the first palette.
-      palette_changed(0)
+    if @override_part_palette_index
+      palette_changed(@override_part_palette_index)
     else
       palette_changed(part.palette_index)
     end
@@ -625,8 +624,7 @@ class SpriteEditor < Qt::Dialog
   
   def open_skeleton_editor
     if @sprite_info.skeleton_file
-      chunky_frames, min_x, min_y, _, _, _, _, _ = @renderer.render_sprite(@sprite_info, frame_to_render = nil, render_hitboxes = false, mode = @mode)
-      @skeleton_editor = SkeletonEditorDialog.new(self, game.fs, @sprite_info.skeleton_file, chunky_frames, min_x, min_y)
+      @skeleton_editor = SkeletonEditorDialog.new(self, @sprite_info, game.fs, @renderer)
     end
   end
   
