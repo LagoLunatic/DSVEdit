@@ -75,6 +75,12 @@ Enemies:
 3E Merman
 3F Fish Head
 40 Medusa Head
+  Spawner.
+  Var A: Maximum number of Medusa Heads this spawner can have in the room at once.
+  Var B:
+    0 Spawns blue Medusa Heads.
+    1 Spawns yellow Medusa Heads that can petrify the player.
+  If var A is 0, it's not a spawner, instead it's just a single blue Medusa Head.
 41 Ukoback
 42 Killer Fish
 43 Mimic

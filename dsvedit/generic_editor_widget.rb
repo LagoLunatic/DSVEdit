@@ -12,6 +12,11 @@ class GenericEditorWidget < Qt::Widget
     @ui = Ui_GenericEditorWidget.new
     @ui.setup_ui(self)
     
+    # rbuic4 is bugged and ignores stretch values, so they must be manually set.
+    @ui.horizontalLayout.setStretch(0, 1)
+    @ui.horizontalLayout.setStretch(1, 2)
+    @ui.horizontalLayout.setStretch(2, 3)
+    
     @fs = fs
     
     @item_type_name = item_type[:name]

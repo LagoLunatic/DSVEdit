@@ -29,6 +29,10 @@ Enemies:
 15 Golem
   Requires enemy overlay 76.
 16 Persephone
+  Var A:
+    0 No vacuum.
+    1 Vacuum, only starts moving when you get close to her.
+    2 Vacuum, starts moving immediately.
 17 Mimic
 18 Larva
 19 Lerajie
@@ -88,17 +92,35 @@ Enemies:
     If var B is 0 it will use the default value of 30 instead.
     The speed they move at when switching positions is relative to the distance between them.
 34 Hill Guard
+  Var B:
+    0 Faces down-left.
+    1 Faces down-right.
 35 Imp
 36 Harpy
 37 Corpseweed
 38 Medusa Head
+  Spawner.
+  Var A: Maximum number of Medusa Heads this spawner can have in the room at once.
+  Var B:
+    0 Spawns blue Medusa Heads.
+    1 Spawns yellow Medusa Heads that can petrify the player.
+  If var A is 0, it's not a spawner, instead it's just a single blue Medusa Head.
 39 Skelerang
+  Var A:
+    2 Faces right
+  Var B: ?
 3A Gaibon
 3B Slogra
 3C Flying Armor
 3D Blue Crow
 3E Frog
 3F Killer Doll
+  Var A: ? 0 or 1
+  Var B:
+    0 Faces left.
+    1 Faces right.
+    2 On ceiling, faces left.
+    3 On ceiling, faces right.
 40 Killer Bee
 41 Dogether
 42 Bee Hive
@@ -135,11 +157,17 @@ Enemies:
 59 Armored Fleaman
 5A Amalaric Sniper
   Requires enemy overlay 77.
+  Var A: ? 0 or 20
 5B Old Axe Armor
 5C Gorgon
   Requires enemy overlay 48.
 5D Jack O'Bones
 5E Tanjelly
+  Var A:
+    0 On floor.
+    1 On ceiling.
+    2 On left wall.
+    3 On right wall.
 5F Dead Warrior
 60 Toad
 61 Aliorumnas
@@ -169,6 +197,11 @@ Enemies:
 72 Poison Worm
   Requires enemy overlay 69.
 73 Ghost Dancer
+  Var A: Which palette to use.
+    0 Purple and white.
+    1 Blue and green.
+    2 Red.
+    10 ??
 74 Demon Head
 75 Lesser Demon
 76 Ghoul King

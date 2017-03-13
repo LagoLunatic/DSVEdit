@@ -240,7 +240,10 @@ Byte 10: Graphical effect.
   06: Illusion Fist.
   07: Tori (throw the weapon diagonally upwards, then it comes back to you).
   08+: Crash.
-Byte 11: ?
+Byte 11: Bitfield for who can equip this item.
+  Least significant bit first.
+  Bit 1: Jonathan can equip the item.
+  Bit 2: Charlotte can equip the item.
 Byte 12: Attack stat.
 Byte 13: Defense stat.
 Byte 14: Strength stat (signed).

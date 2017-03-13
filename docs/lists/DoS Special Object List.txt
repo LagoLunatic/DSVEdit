@@ -52,7 +52,7 @@ Special objects:
     09 Purple chair (slightly different shading than 04).
     0A+ Invisible chair.
   Var B is the orientation:
-    00 Right-facing
+    00 Right-facing.
     01 Left-facing.
 0A Mirror.
   There should also be an object 0B in the room too, or the mirror won't work correctly.

@@ -730,7 +730,7 @@ WEAPON_FORMAT = [
   [4, "Price"],
   [1, "Swing Anim"],
   [1, "Graphical Effect"],
-  [1, "Unknown 1"],
+  [1, "Equippable by", :bitfield],
   [1, "Attack"],
   [1, "Defense"],
   [1, "Strength"],
@@ -754,7 +754,7 @@ ARMOR_FORMAT = [
   [4, "Price"],
   [1, "Type"],
   [1, "Unknown 1"],
-  [1, "Equippable by"],
+  [1, "Equippable by", :bitfield],
   [1, "Attack"],
   [1, "Defense"],
   [1, "Strength"],
@@ -913,6 +913,16 @@ ITEM_BITFIELD_ATTRIBUTES = {
     "Modifier 15",
     "Modifier 16",
   ],
+  "Equippable by" => [
+    "Jonathan",
+    "Charlotte",
+    "Unused 3",
+    "Unused 4",
+    "Unused 5",
+    "Unused 6",
+    "Unused 7",
+    "Unused 8",
+  ]
 }
 
 ITEM_POOLS_LIST_POINTER = nil
