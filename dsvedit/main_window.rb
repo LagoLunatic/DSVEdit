@@ -383,6 +383,11 @@ class DSVEdit < Qt::MainWindow
     change_area(room.area_index)
     change_sector(room.sector_index, force=true)
     change_room(room.room_index, force=true)
+  rescue Game::RoomFindError => e
+    Qt::MessageBox.warning(self,
+      "Could not find room",
+      "Could not find any room with pointer %08X" % room_metadata_ram_pointer
+    )
   end
   
   def room_clicked(x, y, button)
@@ -819,6 +824,10 @@ class DSVEdit < Qt::MainWindow
     @room.read_from_rom() # Reload room to get rid of the failed changes.
     load_room()
     Qt::MessageBox.warning(self, "Cannot add layer", e.message)
+  rescue TMXInterface::ImportError => e
+    @room.read_from_rom() # Reload room to get rid of the failed changes.
+    load_room()
+    Qt::MessageBox.warning(self, "Error importing from Tiled", e.message)
   end
   
   def set_current_room_as_starting_room

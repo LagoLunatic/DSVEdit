@@ -2,6 +2,8 @@
 require 'nokogiri'
 
 class TMXInterface
+  class ImportError < StandardError ; end
+  
   def read(filename, room)
     match = File.basename(filename).match(/^room_\h+-\h+-\h+_(\h+)\.tmx$/)
     room_metadata_ram_pointer = match[1].to_i(16)
@@ -10,6 +12,7 @@ class TMXInterface
     xml = Nokogiri::XML(tiled_room)
     
     room_props = extract_properties(xml)
+    validate_properties(room_props, "Room", %w(map_x map_y))
     room.room_xpos_on_map = room_props["map_x"]
     room.room_ypos_on_map = room_props["map_y"]
     room.write_last_4_bytes_to_rom()
@@ -19,6 +22,7 @@ class TMXInterface
     tiled_layers = xml.css("layer")
     tiled_layers.each do |tmx_layer|
       props = extract_properties(tmx_layer)
+      validate_properties(props, "Layer", %w(layer_width layer_height tileset collision_tileset z_index scroll_mode render_type))
       
       layer_list_entry_ram_pointer = tmx_layer.attr("name").match(/^layer (\h+)$/)[1].to_i(16)
       possible_layers = room.layers.select{|layer| layer.layer_list_entry_ram_pointer == layer_list_entry_ram_pointer}
@@ -43,6 +47,7 @@ class TMXInterface
     room.entities = []
     tiled_entities.each do |tmx_entity|
       props = extract_properties(tmx_entity)
+      validate_properties(props, "Entity", ["05", "06 (type)", "07 (subtype)", "08", "09 (var_a)", "11 (var_b)"])
       
       entity = Entity.new(room, room.fs)
       
@@ -63,6 +68,7 @@ class TMXInterface
     room.doors = []
     tiled_doors.each do |tiled_door|
       props = extract_properties(tiled_door)
+      validate_properties(props, "Door", %w(dest_x dest_y dest_x_unused dest_y_unused destination_room))
       
       door = Door.new(room, room.game)
       
@@ -245,5 +251,13 @@ private
     end
     
     return props
+  end
+  
+  def validate_properties(props, object_name, required_props)
+    required_props.each do |required_prop|
+      if props[required_prop].nil?
+        raise ImportError.new("Import error: #{object_name} is missing required property '#{required_prop}'.")
+      end
+    end
   end
 end

@@ -1,6 +1,7 @@
 
 class Game
   class InvalidFileError < StandardError ; end
+  class RoomFindError < StandardError ; end
   
   attr_reader :areas, :fs, :folder, :text_database, :rooms_by_metadata_pointer
   
@@ -76,6 +77,9 @@ class Game
   
   def get_room_by_metadata_pointer(room_metadata_pointer)
     sector = @sectors_by_room_metadata_pointer[room_metadata_pointer]
+    if sector.nil?
+      raise RoomFindError.new("Error: %08X does not point to a valid room." % room_metadata_pointer)
+    end
     index = sector.room_pointers.index(room_metadata_pointer)
     room = sector.rooms[index]
     room
