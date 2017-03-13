@@ -17,7 +17,7 @@ class NDSFileSystem
     @filesystem_directory = filesystem_directory
     input_rom_path = "#{@filesystem_directory}/ftc/rom.nds"
     @rom = File.open(input_rom_path, "rb") {|file| file.read}
-    read_from_rom()
+    read_from_rom(read_header_and_tables_from_hard_drive = true)
     @files.each do |id, file|
       next unless file[:type] == :file
       
@@ -107,14 +107,22 @@ class NDSFileSystem
       end
     end
     
-    # Update arm9
-    file = @extra_files.find{|file| file[:name] == "arm9.bin"}
-    file_data = get_file_data_from_opened_files_cache(file[:file_path])
-    new_file_size = file_data.length
-    if @arm9_size != new_file_size
-      raise "ARM9 changed size"
+    # Update arm9, header, and tables
+    [
+      "arm9.bin",
+      "ndsheader.bin",
+      "arm9_overlay_table.bin",
+      #"fat.bin", # Already handled by above code, don't overwrite
+      "fnt.bin"
+    ].each do |filename|
+      file = @extra_files.find{|file| file[:name] == filename}
+      file_data = get_file_data_from_opened_files_cache(file[:file_path])
+      new_file_size = file_data.length
+      if filename == "arm9.bin" && @arm9_size != new_file_size
+        raise "ARM9 changed size"
+      end
+      new_rom[file[:start_offset], file[:size]] = file_data
     end
-    new_rom[file[:start_offset], file[:size]] = file_data
     
     File.open(output_rom_path, "wb") do |f|
       f.write(new_rom)
@@ -240,6 +248,7 @@ class NDSFileSystem
         f.write(file_data)
       end
     end
+    
     @uncommitted_files = []
     
     puts "Done."
@@ -266,27 +275,91 @@ class NDSFileSystem
     return file[:ram_start_offset] + old_size
   end
   
+  def expand_file(file, length_to_expand_by)
+    file_path = file[:file_path]
+    
+    old_size = file[:size]
+    file[:size] += length_to_expand_by
+    
+    # Expand the actual file data string, and fill it with 0 bytes.
+    write_by_file(file_path, old_size, "\0"*length_to_expand_by)
+  end
+  
+  def add_new_overlay_file
+    overlay_id = @overlays.length
+    ram_pointer = 0x02328F00 + 0x100
+    file_size = 0x2000 + 4
+    bss_size = 0
+    static_initializer_start = 0#ram_pointer + file_size - 4
+    static_initializer_end = 0#ram_pointer + file_size
+    file_id = @files.keys.select{|key| key < 0xF000}.max + 1
+    
+    file_name = "overlay9_#{overlay_id}"
+    file_path = File.join("/ftc", file_name)
+    
+    # write_to_rom will calculate new rom offsets for this file anyway, we don't need to set these here.
+    rom_start_offset = 0
+    rom_end_offset = 0
+    
+    new_file = {:name => file_name, :type => :file, :id => file_id, :overlay_id => overlay_id, :ram_start_offset => ram_pointer, :size => file_size, :start_offset => rom_start_offset, :end_offset => rom_end_offset}
+    @overlays << new_file
+    @files[file_id] = new_file
+    
+    path = File.join(@filesystem_directory, file_path)
+    @opened_files_cache[file_path] = "\0"*file_size
+    @uncommitted_files << file_path
+    
+    new_overlay_table_entry = [overlay_id, ram_pointer, file_size, bss_size, static_initializer_start, static_initializer_end, file_id, 0].pack("V*")
+    arm9_overlay_table_file = files_by_path["/ftc/arm9_overlay_table.bin"]
+    arm9_overlay_table_file[:size] = overlay_id*32 + 32
+    write_by_file("/ftc/arm9_overlay_table.bin", overlay_id*32, new_overlay_table_entry)
+    @uncommitted_files << "/ftc/arm9_overlay_table.bin"
+    
+    new_file_allocation_table_entry = [rom_start_offset, rom_end_offset].pack("VV")
+    file_allocation_table_file = files_by_path["/ftc/fat.bin"]
+    file_allocation_table_file[:size] = file_id*8 + 8
+    write_by_file("/ftc/fat.bin", file_id*8, new_file_allocation_table_entry)
+    @uncommitted_files << "/ftc/fat.bin"
+    
+    write_new_table_sizes_to_header()
+  end
+  
+  def write_new_table_sizes_to_header
+    file_name_table_size = files_by_path["/ftc/fnt.bin"][:size]
+    write_by_file("/ftc/ndsheader.bin", 0x44, [file_name_table_size].pack("V"))
+    file_allocation_table_size = files_by_path["/ftc/fat.bin"][:size]
+    write_by_file("/ftc/ndsheader.bin", 0x4C, [file_allocation_table_size].pack("V"))
+    arm9_overlay_table_size = files_by_path["/ftc/arm9_overlay_table.bin"][:size]
+    write_by_file("/ftc/ndsheader.bin", 0x54, [arm9_overlay_table_size].pack("V"))
+  end
+  
   def files_without_dirs
     files.select{|id, file| file[:type] == :file}
   end
   
 private
   
-  def read_from_rom
-    @game_name = @rom[0x00,12]
+  def read_from_rom(read_header_and_tables_from_hard_drive = false)
+    if read_header_and_tables_from_hard_drive
+      header = read_header_or_table_data_from_hard_drive("ndsheader.bin")
+    else
+      header = @rom[0, 0x4000]
+    end
+    
+    @game_name = header[0x00,12]
     raise InvalidFileError.new("Not a DSVania") unless %w(CASTLEVANIA1 CASTLEVANIA2 CASTLEVANIA3).include?(@game_name)
-    @game_code = @rom[0x0C,4]
+    @game_code = header[0x0C,4]
     raise InvalidFileError.new("This region is not supported") unless %w(ACVE ACBE YR9E ACBJ YR9J).include?(@game_code)
     
-    @arm9_rom_offset, @arm9_entry_address, @arm9_ram_offset, @arm9_size = @rom[0x20,16].unpack("VVVV")
-    @arm7_rom_offset, @arm7_entry_address, @arm7_ram_offset, @arm7_size = @rom[0x30,16].unpack("VVVV")
+    @arm9_rom_offset, @arm9_entry_address, @arm9_ram_offset, @arm9_size = header[0x20,16].unpack("VVVV")
+    @arm7_rom_offset, @arm7_entry_address, @arm7_ram_offset, @arm7_size = header[0x30,16].unpack("VVVV")
     
-    @file_name_table_offset, @file_name_table_size, @file_allocation_table_offset, @file_allocation_table_size = @rom[0x40,16].unpack("VVVV")
+    @file_name_table_offset, @file_name_table_size, @file_allocation_table_offset, @file_allocation_table_size = header[0x40,16].unpack("VVVV")
     
-    @arm9_overlay_table_offset, @arm9_overlay_table_size = @rom[0x50,8].unpack("VV")
-    @arm7_overlay_table_offset, @arm7_overlay_table_size = @rom[0x58,8].unpack("VV")
+    @arm9_overlay_table_offset, @arm9_overlay_table_size = header[0x50,8].unpack("VV")
+    @arm7_overlay_table_offset, @arm7_overlay_table_size = header[0x58,8].unpack("VV")
     
-    @banner_start_offset = @rom[0x68,4].unpack("V").first
+    @banner_start_offset = header[0x68,4].unpack("V").first
     @banner_end_offset = @banner_start_offset + 0x840 # ??
     
     @files = {}
@@ -295,10 +368,19 @@ private
     @opened_files_cache = {}
     @uncommitted_files = []
     
-    get_file_name_table()
-    get_overlay_table()
-    get_file_allocation_table()
     get_extra_files()
+    if read_header_and_tables_from_hard_drive
+      file_name_table_data = read_header_or_table_data_from_hard_drive("fnt.bin")
+      overlay_table_data = read_header_or_table_data_from_hard_drive("arm9_overlay_table.bin")
+      file_allocation_table_data = read_header_or_table_data_from_hard_drive("fat.bin")
+    else
+      file_name_table_data = @rom[@file_name_table_offset, @file_name_table_size]
+      overlay_table_data = @rom[@arm9_overlay_table_offset, @arm9_overlay_table_size]
+      file_allocation_table_data = @rom[@file_allocation_table_offset, @file_allocation_table_size]
+    end
+    get_file_name_table(file_name_table_data)
+    get_overlay_table(overlay_table_data)
+    get_file_allocation_table(file_allocation_table_data)
     generate_file_paths()
     CONSTANT_OVERLAYS.each do |overlay_index|
       load_overlay(overlay_index)
@@ -353,34 +435,32 @@ private
     return file_data
   end
   
-  def get_file_name_table
-    file_name_table_data = @rom[@file_name_table_offset, @file_name_table_size]
-    
+  def get_file_name_table(file_name_table_data)
     subtable_offset, subtable_first_file_id, number_of_dirs = file_name_table_data[0x00,8].unpack("Vvv")
-    get_file_name_subtable(subtable_offset, subtable_first_file_id, 0xF000)
+    get_file_name_subtable(file_name_table_data, subtable_offset, subtable_first_file_id, 0xF000)
     
     i = 1
     while i < number_of_dirs
       subtable_offset, subtable_first_file_id, parent_dir_id = file_name_table_data[0x00+i*8,8].unpack("Vvv")
-      get_file_name_subtable(subtable_offset, subtable_first_file_id, 0xF000 + i)
+      get_file_name_subtable(file_name_table_data, subtable_offset, subtable_first_file_id, 0xF000 + i)
       i += 1
     end
   end
   
-  def get_file_name_subtable(subtable_offset, subtable_first_file_id, parent_dir_id)
+  def get_file_name_subtable(file_name_table_data, subtable_offset, subtable_first_file_id, parent_dir_id)
     i = 0
-    offset = @file_name_table_offset + subtable_offset
+    offset = subtable_offset
     next_file_id = subtable_first_file_id
     
     while true
-      length = @rom[offset,1].unpack("C*").first
+      length = file_name_table_data[offset,1].unpack("C*").first
       offset += 1
       
       case length
       when 0x01..0x7F
         type = :file
         
-        name = @rom[offset,length]
+        name = file_name_table_data[offset,length]
         offset += length
         
         id = next_file_id
@@ -389,10 +469,10 @@ private
         type = :subdir
         
         length = length & 0x7F
-        name = @rom[offset,length]
+        name = file_name_table_data[offset,length]
         offset += length
         
-        id = @rom[offset,2].unpack("v").first
+        id = file_name_table_data[offset,2].unpack("v").first
         offset += 2
       when 0x00
         # end of subtable
@@ -407,9 +487,7 @@ private
     end
   end
   
-  def get_overlay_table
-    overlay_table_data = @rom[@arm9_overlay_table_offset, @arm9_overlay_table_size]
-    
+  def get_overlay_table(overlay_table_data)
     offset = 0x00
     while offset < @arm9_overlay_table_size
       overlay_id, overlay_ram_address, overlay_size, _, _, _, file_id, _ = overlay_table_data[0x00+offset,32].unpack("V*")
@@ -457,9 +535,7 @@ private
     end
   end
   
-  def get_file_allocation_table
-    file_allocation_table_data = @rom[@file_allocation_table_offset, @file_allocation_table_size]
-    
+  def get_file_allocation_table(file_allocation_table_data)
     id = 0x00
     offset = 0x00
     while offset < @file_allocation_table_size
@@ -473,15 +549,15 @@ private
   
   def get_extra_files
     @extra_files = []
-    @extra_files << {:name => "ndsheader.bin", :type => :file, :start_offset => 0x0, :end_offset => 0x4000}
+    @extra_files << {:name => "ndsheader.bin", :type => :file, :start_offset => 0x0, :end_offset => 0x4000, :size => 0x4000}
     arm9_file = {:name => "arm9.bin", :type => :file, :start_offset => @arm9_rom_offset, :end_offset => @arm9_rom_offset + @arm9_size, :ram_start_offset => @arm9_ram_offset, :size => @arm9_size}
     @extra_files << arm9_file
     load_file(arm9_file)
-    @extra_files << {:name => "arm7.bin", :type => :file, :start_offset => @arm7_rom_offset, :end_offset => @arm7_rom_offset + @arm7_size}
-    @extra_files << {:name => "arm9_overlay_table.bin", :type => :file, :start_offset => @arm9_overlay_table_offset, :end_offset => @arm9_overlay_table_offset + @arm9_overlay_table_size}
-    @extra_files << {:name => "arm7_overlay_table.bin", :type => :file, :start_offset => @arm7_overlay_table_offset, :end_offset => @arm7_overlay_table_offset + @arm7_overlay_table_size}
-    @extra_files << {:name => "fnt.bin", :type => :file, :start_offset => @file_name_table_offset, :end_offset => @file_name_table_offset + @file_name_table_size}
-    @extra_files << {:name => "fat.bin", :type => :file, :start_offset => @file_allocation_table_offset, :end_offset => @file_allocation_table_offset + @file_allocation_table_size}
+    @extra_files << {:name => "arm7.bin", :type => :file, :start_offset => @arm7_rom_offset, :end_offset => @arm7_rom_offset + @arm7_size, :size => @arm7_size}
+    @extra_files << {:name => "arm9_overlay_table.bin", :type => :file, :start_offset => @arm9_overlay_table_offset, :end_offset => @arm9_overlay_table_offset + @arm9_overlay_table_size, :size => @arm9_overlay_table_size}
+    @extra_files << {:name => "arm7_overlay_table.bin", :type => :file, :start_offset => @arm7_overlay_table_offset, :end_offset => @arm7_overlay_table_offset + @arm7_overlay_table_size, :size => @arm7_overlay_table_size}
+    @extra_files << {:name => "fnt.bin", :type => :file, :start_offset => @file_name_table_offset, :end_offset => @file_name_table_offset + @file_name_table_size, :size => @file_name_table_size}
+    @extra_files << {:name => "fat.bin", :type => :file, :start_offset => @file_allocation_table_offset, :end_offset => @file_allocation_table_offset + @file_allocation_table_size, :size => @file_allocation_table_size}
     @extra_files << {:name => "banner.bin", :type => :file, :start_offset => @banner_start_offset, :end_offset => @banner_end_offset}
     @extra_files << {:name => "rom.nds", :type => :file, :start_offset => 0, :end_offset => @rom.length}
   end
@@ -500,5 +576,20 @@ private
       
       @files_by_path[file[:file_path]] = file
     end
+  end
+  
+  def read_header_or_table_data_from_hard_drive(file_name)
+    if @filesystem_directory.nil?
+      raise "No folder to read table data from"
+    end
+    
+    file_path = File.join(@filesystem_directory, "ftc", file_name)
+    unless File.file?(file_path)
+      raise "Not a file: #{file_path}"
+    end
+    
+    file_data = File.open(file_path, "rb") {|file| file.read}
+    
+    return file_data
   end
 end
