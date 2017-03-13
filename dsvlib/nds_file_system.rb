@@ -349,7 +349,7 @@ private
     @game_name = header[0x00,12]
     raise InvalidFileError.new("Not a DSVania") unless %w(CASTLEVANIA1 CASTLEVANIA2 CASTLEVANIA3).include?(@game_name)
     @game_code = header[0x0C,4]
-    raise InvalidFileError.new("This region is not supported") unless %w(ACVE ACBE YR9E ACBJ YR9J).include?(@game_code)
+    raise InvalidFileError.new("This region is not supported") unless %w(ACVE ACBE YR9E ACVJ ACBJ YR9J).include?(@game_code)
     
     @arm9_rom_offset, @arm9_entry_address, @arm9_ram_offset, @arm9_size = header[0x20,16].unpack("VVVV")
     @arm7_rom_offset, @arm7_entry_address, @arm7_ram_offset, @arm7_size = header[0x30,16].unpack("VVVV")

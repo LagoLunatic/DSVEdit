@@ -579,87 +579,91 @@ PACK_ICON_INDEX_AND_PALETTE_INDEX = Proc.new do |icon_index, palette_index|
   icon_data
 end
 
+CONSUMABLE_FORMAT = [
+  # length: 16
+  [2, "Item ID"],
+  [2, "Icon"],
+  [4, "Price"],
+  [1, "Type"],
+  [1, "Unknown 1"],
+  [2, "Var A"],
+  [4, "Unused"],
+]
+WEAPON_FORMAT = [
+  # length: 28
+  [2, "Item ID"],
+  [2, "Icon"],
+  [4, "Price"],
+  [1, "Swing Anim"],
+  [1, "Unknown 1"],
+  [1, "Attack"],
+  [1, "Defense"],
+  [1, "Strength"],
+  [1, "Constitution"],
+  [1, "Intelligence"],
+  [1, "Luck"],
+  [4, "Effects", :bitfield],
+  [1, "Sprite"],
+  [1, "Super Anim"],
+  [2, "Unknown 4"],
+  [2, "Swing Modifiers", :bitfield],
+  [2, "Swing Sound"],
+]
+ARMOR_FORMAT = [
+  # length: 20
+  [2, "Item ID"],
+  [2, "Icon"],
+  [4, "Price"],
+  [1, "Type"],
+  [1, "Unknown 1"],
+  [1, "Attack"],
+  [1, "Defense"],
+  [1, "Strength"],
+  [1, "Constitution"],
+  [1, "Intelligence"],
+  [1, "Luck"],
+  [4, "Resistances", :bitfield],
+]
+SOUL_FORMAT = [
+  # length: 28
+  [4, "Code"],
+  [2, "Sprite"],
+  [1, "Type"],
+  [1, "Input flags", :bitfield],
+  [2, "Soul Scaling"],
+  [2, "Mana cost"],
+  [2, "Attack"],
+  [2, "Unknown 3"],
+  [4, "Effects", :bitfield],
+  [4, "Unwanted States"],
+  [2, "Var A"],
+  [2, "Var B"],
+]
 ITEM_TYPES = [
   {
     name: "Consumables",
     list_pointer: 0x0209BA68,
     count: 66,
-    format: [
-      # length: 16
-      [2, "Item ID"],
-      [2, "Icon"],
-      [4, "Price"],
-      [1, "Type"],
-      [1, "Unknown 1"],
-      [2, "Var A"],
-      [4, "Unused"],
-    ]
+    format: CONSUMABLE_FORMAT # length: 16
   },
   {
     name: "Weapons",
     list_pointer: 0x0209C34C,
     count: 79,
-    format: [
-      # length: 28
-      [2, "Item ID"],
-      [2, "Icon"],
-      [4, "Price"],
-      [1, "Swing Anim"],
-      [1, "Unknown 1"],
-      [1, "Attack"],
-      [1, "Defense"],
-      [1, "Strength"],
-      [1, "Constitution"],
-      [1, "Intelligence"],
-      [1, "Luck"],
-      [4, "Effects", :bitfield],
-      [1, "Sprite"],
-      [1, "Super Anim"],
-      [2, "Unknown 4"],
-      [2, "Swing Modifiers", :bitfield],
-      [2, "Swing Sound"],
-    ]
+    format: WEAPON_FORMAT # length: 28
   },
   {
     name: "Armor",
     list_pointer: 0x0209BE88,
     count: 61,
-    format: [
-      # length: 20
-      [2, "Item ID"],
-      [2, "Icon"],
-      [4, "Price"],
-      [1, "Type"],
-      [1, "Unknown 1"],
-      [1, "Attack"],
-      [1, "Defense"],
-      [1, "Strength"],
-      [1, "Constitution"],
-      [1, "Intelligence"],
-      [1, "Luck"],
-      [4, "Resistances", :bitfield],
-    ]
+    format: ARMOR_FORMAT # length: 20
   },
   {
     name: "Souls",
     list_pointer: 0x0209D190,
     count: 123,
     is_skill: true,
-    format: [
-      # length: 28
-      [4, "Code"],
-      [2, "Sprite"],
-      [1, "Type"],
-      [1, "Input flags", :bitfield],
-      [2, "Soul Scaling"],
-      [2, "Mana cost"],
-      [2, "Attack"],
-      [2, "Unknown 3"],
-      [4, "Effects", :bitfield],
-      [4, "Unwanted States"],
-      [2, "Var A"],
-      [2, "Var B"],
-    ]
+    format: SOUL_FORMAT # length: 28
   },
 ]
 
