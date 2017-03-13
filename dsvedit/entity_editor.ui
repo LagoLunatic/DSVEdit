@@ -117,11 +117,7 @@
       <widget class="QLineEdit" name="var_b"/>
      </item>
      <item row="1" column="1">
-      <widget class="QLineEdit" name="pointer">
-       <property name="readOnly">
-        <bool>true</bool>
-       </property>
-      </widget>
+      <widget class="QLineEdit" name="pointer"/>
      </item>
     </layout>
    </item>
