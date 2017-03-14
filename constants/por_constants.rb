@@ -781,6 +781,12 @@ SKILL_FORMAT = [
   [2, "Var A"],
   [2, "Var B"],
 ]
+SKILL_EXTRA_DATA_FORMAT = [
+  # length: 6
+  [2, "Max at once/Spell charge"],
+  [2, "SP to Master"],
+  [2, "Unknown 1"],
+]
 ITEM_TYPES = [
   {
     name: "Consumables",
@@ -824,6 +830,13 @@ ITEM_TYPES = [
     count: 108,
     is_skill: true,
     format: SKILL_FORMAT # length: 24
+  },
+  {
+    name: "Skills (extra data)",
+    list_pointer: 0x020E3B14,
+    count: 81,
+    is_skill: true,
+    format: SKILL_EXTRA_DATA_FORMAT # length: 6
   },
 ]
 

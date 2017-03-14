@@ -161,6 +161,11 @@ Bytes 25-26: Varies depending on the code being run.
   For 021D5BD4: The stat to increase (integer index). Also always lowers STR, regardless of what this value is.
 Bytes 27-28: 
 
+Extra soul data format (DoS):
+2 bytes long.
+Byte 1: Maximum number of this projectile you can have in the room at once.
+Byte 2: Bonus maximum per additional duplicate soul scaling level you have for this soul.
+
 
 
 Consumable format (PoR):
@@ -306,6 +311,15 @@ Bytes 21-22:
 Bytes 23-24:
   For Subweapons/Spells: Which stat or status effect to affect.
   For Dual Crushes: Voice file 2 ID.
+
+Extra skill data format (PoR):
+6 bytes long.
+Bytes 1-2:
+  Bits 1-4: Maximum number of this projectile you can have in the room at once.
+  Bits 5-16: (For subweapons) Additional max you get when you've mastered this subweapon.
+  Bits 5-16: (For spells) Number of frames this spell takes to charge up.
+Bytes 3-4: Number of SP points this subweapon takes to master.
+Bytes 5-6: ??
 
 
 

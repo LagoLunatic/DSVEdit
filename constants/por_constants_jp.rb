@@ -227,4 +227,11 @@ ITEM_TYPES = [
     is_skill: true,
     format: SKILL_FORMAT # length: 24
   },
+  {
+    name: "Skills (extra data)",
+    list_pointer: 0x020D8350,
+    count: 81,
+    is_skill: true,
+    format: SKILL_EXTRA_DATA_FORMAT # length: 6
+  },
 ]

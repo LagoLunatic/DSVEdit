@@ -640,6 +640,11 @@ SOUL_FORMAT = [
   [2, "Var A"],
   [2, "Var B"],
 ]
+SOUL_EXTRA_DATA_FORMAT = [
+  # length: 2
+  [1, "Max at once"],
+  [1, "Bonus max at once"],
+]
 ITEM_TYPES = [
   {
     name: "Consumables",
@@ -665,6 +670,13 @@ ITEM_TYPES = [
     count: 123,
     is_skill: true,
     format: SOUL_FORMAT # length: 28
+  },
+  {
+    name: "Souls (extra data)",
+    list_pointer: 0x0209D124,
+    count: 53,
+    is_skill: true,
+    format: SOUL_EXTRA_DATA_FORMAT # length: 2
   },
 ]
 
