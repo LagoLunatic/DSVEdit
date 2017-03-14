@@ -171,7 +171,7 @@ class TilesetEditorDialog < Qt::Dialog
       yscale = -1
     end
     tile_pixmap_item.setOffset(-8, -8)
-    tile_pixmap_item.scale(xscale, yscale)
+    tile_pixmap_item.setTransform(Qt::Transform::fromScale(xscale, yscale))
   end
   
   def load_selected_tile
