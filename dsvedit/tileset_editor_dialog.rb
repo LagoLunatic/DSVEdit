@@ -105,12 +105,56 @@ class TilesetEditorDialog < Qt::Dialog
     
     palette_changed(0)
     
-    chunky_tileset = @renderer.render_tileset(@tileset_pointer, @room.palette_offset, @room.graphic_tilesets_for_room, @colors_per_palette, @layer.collision_tileset_ram_pointer)
-    pixmap = Qt::Pixmap.new
-    blob = chunky_tileset.to_blob
-    pixmap.loadFromData(blob, blob.length)
-    tileset_pixmap_item = Qt::GraphicsPixmapItem.new(pixmap)
-    @tileset_graphics_scene.addItem(tileset_pixmap_item)
+    update_rendered_tileset()
+  end
+  
+  def update_rendered_tileset
+    @tileset_graphics_scene.clear()
+    
+    @tileset.tiles.each_with_index do |tile, index_on_tileset|
+      if tile.is_blank
+        next
+      end
+      
+      graphic_tile_data_file = @room.graphic_tilesets_for_room[tile.tile_page]
+      if graphic_tile_data_file.nil?
+        next # TODO: figure out why this sometimes happens.
+      end
+      
+      if tile.palette_index == 0xFF # TODO. 255 seems to have some special meaning besides an actual palette index.
+        puts "Palette index is 0xFF, tileset %08X" % @tileset_pointer
+        next
+      end
+      palette = @palettes[tile.palette_index]
+      if palette.nil?
+        puts "Palette index #{tile.palette_index} out of range, tileset %08X" % @tileset_pointer
+        next # TODO: figure out why this sometimes happens.
+      end
+      
+      chunky_tile = @renderer.render_graphic_tile(graphic_tile_data_file, palette, tile.index_on_tile_page)
+      
+      pixmap = Qt::Pixmap.new
+      blob = chunky_tile.to_blob
+      pixmap.loadFromData(blob, blob.length)
+      tile_pixmap_item = Qt::GraphicsPixmapItem.new(pixmap)
+      
+      xscale = 1
+      yscale = 1
+      if tile.horizontal_flip
+        xscale = -1
+      end
+      if tile.vertical_flip
+        yscale = -1
+      end
+      tile_pixmap_item.setOffset(-8, -8)
+      tile_pixmap_item.scale(xscale, yscale)
+      
+      x_on_tileset = index_on_tileset % 16
+      y_on_tileset = index_on_tileset / 16
+      tile_pixmap_item.setPos(x_on_tileset*16 + 8, y_on_tileset*16 + 8)
+      
+      @tileset_graphics_scene.addItem(tile_pixmap_item)
+    end
   end
   
   def load_selected_tile
@@ -158,12 +202,14 @@ class TilesetEditorDialog < Qt::Dialog
     @gfx_page_graphics_scene.addItem(@selection_rectangle)
     
     load_selected_tile()
+    update_rendered_tileset()
   end
   
   def palette_changed(palette_index)
     @selected_tile.palette_index = palette_index
     gfx_page_changed(@selected_tile.tile_page || 0)
     load_selected_tile()
+    update_rendered_tileset()
   end
   
   def select_tile_by_x_y(x, y, button)
@@ -178,7 +224,8 @@ class TilesetEditorDialog < Qt::Dialog
   def select_tile(tile_index)
     old_selected_tile = @selected_tile
     
-    @selected_tile = @tileset.tiles[tile_index].dup
+    @selected_tile_index = tile_index
+    @selected_tile = @tileset.tiles[tile_index]
     
     @ui.gfx_page_index.setCurrentIndex(@selected_tile.tile_page)
     @ui.palette_index.setCurrentIndex(@selected_tile.palette_index)
@@ -198,12 +245,14 @@ class TilesetEditorDialog < Qt::Dialog
     @selected_tile.index_on_tile_page = i
     
     load_selected_tile()
+    update_rendered_tileset()
   end
   
   def toggle_flips(checked)
     @selected_tile.horizontal_flip = @ui.horizontal_flip.checked
     @selected_tile.vertical_flip = @ui.vertical_flip.checked
     load_selected_tile()
+    update_rendered_tileset()
   end
   
   def save_tileset
