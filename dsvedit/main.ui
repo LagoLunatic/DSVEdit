@@ -228,6 +228,7 @@
     </property>
     <addaction name="actionEdit_Layers"/>
     <addaction name="actionAdd_New_Layer"/>
+    <addaction name="actionAdd_Entity"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuEdit"/>
@@ -409,6 +410,9 @@
   <action name="actionAdd_Entity">
    <property name="text">
     <string>Add Entity</string>
+   </property>
+   <property name="shortcut">
+    <string>A</string>
    </property>
   </action>
   <action name="actionItem_Pool_Editor">

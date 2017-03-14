@@ -398,11 +398,6 @@ class DSVEdit < Qt::MainWindow
       open_entity_editor(item.entity)
     elsif item && item.is_a?(DoorItem)
       change_room_by_metadata(item.door.destination_room_metadata_ram_pointer)
-    else
-      global_pos = @ui.room_graphics_view.mapToGlobal(@ui.room_graphics_view.mapFromScene(x, y))
-      menu = Qt::Menu.new(self)
-      menu.addAction(@ui.actionAdd_Entity)
-      menu.exec(global_pos)
     end
   end
   
@@ -664,8 +659,10 @@ class DSVEdit < Qt::MainWindow
   def add_new_entity
     entity = Entity.new(@room, game.fs)
     scene_pos = @ui.room_graphics_view.mapToScene(@ui.room_graphics_view.mapFromGlobal(Qt::Cursor.pos))
-    entity.x_pos = scene_pos.x
-    entity.y_pos = scene_pos.y
+    if @room_graphics_scene.sceneRect.contains(scene_pos)
+      entity.x_pos = scene_pos.x
+      entity.y_pos = scene_pos.y
+    end
     entity.type = 1
     @room.entities << entity
     @room.write_entities_to_rom()
