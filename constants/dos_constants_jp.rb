@@ -33,16 +33,16 @@ REUSED_SPECIAL_OBJECT_INFO[0x25] = {sprite: 0x0229DB78, gfx_wrapper: 0x02079EA8,
 #REUSED_SPECIAL_OBJECT_INFO[0x29] = {init_code: 0x021A7FC4} # dark chapel gate
 #REUSED_SPECIAL_OBJECT_INFO[0x2A] = {init_code: 0x021A7B44} # flood gate
 #REUSED_SPECIAL_OBJECT_INFO[0x2E] = {init_code: 0x02304B98} # iron maiden
-#REUSED_SPECIAL_OBJECT_INFO[0x47] = {init_code: 0x0222CC10} # hammer shopkeeper
-#REUSED_SPECIAL_OBJECT_INFO[0x48] = {init_code: 0x0222CC00} # yoko shopkeeper
-#REUSED_SPECIAL_OBJECT_INFO[0x4F] = {init_code: 0x0222CBE0} # mina event actor
-#REUSED_SPECIAL_OBJECT_INFO[0x50] = {init_code: 0x0222CC10} # hammer event actor
-#REUSED_SPECIAL_OBJECT_INFO[0x51] = {init_code: 0x0222CBF0} # arikado event actor
-#REUSED_SPECIAL_OBJECT_INFO[0x52] = {init_code: 0x0222CC20} # julius event actor
-#REUSED_SPECIAL_OBJECT_INFO[0x53] = {init_code: 0x0222CC30} # celia event actor
-#REUSED_SPECIAL_OBJECT_INFO[0x54] = {init_code: 0x0222CC40} # dario event actor
-#REUSED_SPECIAL_OBJECT_INFO[0x55] = {init_code: 0x0222CC50} # dmitrii event actor
-#REUSED_SPECIAL_OBJECT_INFO[0x5B] = {init_code: 0x0222CC60} # alucard event actor
+REUSED_SPECIAL_OBJECT_INFO[0x47] = {init_code: 0x0222BCC0} # hammer shopkeeper
+REUSED_SPECIAL_OBJECT_INFO[0x48] = {init_code: 0x0222BCB0} # yoko shopkeeper
+REUSED_SPECIAL_OBJECT_INFO[0x4F] = {init_code: 0x0222BC90} # mina event actor
+REUSED_SPECIAL_OBJECT_INFO[0x50] = {init_code: 0x0222BCC0} # hammer event actor
+REUSED_SPECIAL_OBJECT_INFO[0x51] = {init_code: 0x0222BCA0} # arikado event actor
+REUSED_SPECIAL_OBJECT_INFO[0x52] = {init_code: 0x0222BCD0} # julius event actor
+REUSED_SPECIAL_OBJECT_INFO[0x53] = {init_code: 0x0222BCE0} # celia event actor
+REUSED_SPECIAL_OBJECT_INFO[0x54] = {init_code: 0x0222BCF0} # dario event actor
+REUSED_SPECIAL_OBJECT_INFO[0x55] = {init_code: 0x0222BD00} # dmitrii event actor
+REUSED_SPECIAL_OBJECT_INFO[0x5B] = {init_code: 0x0222BD10} # alucard event actor
 SPECIAL_OBJECT_FILES_TO_LOAD_LIST = 0x0209B79C
 
 WEAPON_GFX_LIST_START = 0x0222DED4
@@ -56,15 +56,15 @@ OTHER_SPRITES = [
   {pointer: 0x0222D5D4, desc: "Yoko player"},
   {pointer: 0x0222D62C, desc: "Alucard player"},
   
-#  {pointer: 0x0222BAAC, desc: "Destructibles 0"},
-#  {pointer: 0x0222BAB8, desc: "Destructibles 1"},
-#  {pointer: 0x0222BAC4, desc: "Destructibles 2"},
-#  {pointer: 0x0222BAD0, desc: "Destructibles 3"},
-#  {pointer: 0x0222BADC, desc: "Destructibles 4"},
-#  {pointer: 0x0222BAE8, desc: "Destructibles 5"},
-#  {pointer: 0x0222BAF4, desc: "Destructibles 6"},
-#  {pointer: 0x0222BB00, desc: "Destructibles 7"},
-#  {pointer: 0x0222BB0C, desc: "Destructibles 8"},
+  {pointer: 0x0222AB4C, desc: "Destructibles 0"},
+  {pointer: 0x0222AB58, desc: "Destructibles 1"},
+  {pointer: 0x0222AB64, desc: "Destructibles 2"},
+  {pointer: 0x0222AB70, desc: "Destructibles 3"},
+  {pointer: 0x0222AB7C, desc: "Destructibles 4"},
+  {pointer: 0x0222AB88, desc: "Destructibles 5"},
+  {pointer: 0x0222AB94, desc: "Destructibles 6"},
+  {pointer: 0x0222ABA0, desc: "Destructibles 7"},
+  {pointer: 0x0222ABAC, desc: "Destructibles 8"},
   {pointer: 0x0222ADA4, desc: "Chair 1"},
   {pointer: 0x0222ADB0, desc: "Chair 2"},
   {pointer: 0x0222ADBC, desc: "Chair 3"},
