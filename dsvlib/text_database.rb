@@ -65,13 +65,21 @@ class TextDatabase
         end
         
         text.string_ram_pointer = next_string_ram_pointer
-        text.write_to_rom()
         
         if should_write_to_end_of_file
           next_string_ram_pointer = fs.expand_file_and_get_end_of_file_ram_address(text.string_ram_pointer, text.encoded_string.length + header_footer_length)
         else
           next_string_ram_pointer += text.encoded_string.length + header_footer_length
         end
+      end
+    end
+    
+    overlays.each do |overlay|
+      fs.load_overlay(overlay)
+      
+      text_list_for_overlay = text_list.select{|text| text.overlay_id == overlay}
+      text_list_for_overlay.each do |text|
+        text.write_to_rom()
       end
     end
   end

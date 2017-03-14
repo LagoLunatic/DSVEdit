@@ -65,5 +65,7 @@ class TextEditor < Qt::Dialog
     @text_database.write_to_rom()
   rescue Text::TextEncodeError => e
     Qt::MessageBox.warning(self, "Error encoding text", e.message)
+  rescue TextDatabase::StringDatabaseTooLargeError => e
+    Qt::MessageBox.warning(self, "Not enough free space", "Not enough room to fit all expanded strings")
   end
 end
