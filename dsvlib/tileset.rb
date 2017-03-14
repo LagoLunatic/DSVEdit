@@ -31,6 +31,14 @@ class Tileset
     end
   end
   
+  def write_to_rom
+    @tiles[1..-1].each_with_index do |tile, i|
+      pointer = tileset_ram_pointer + i*4
+      tile_data = tile.to_data
+      fs.write(pointer, tile_data)
+    end
+  end
+  
   def tile_class
     TilesetTile
   end
@@ -55,6 +63,18 @@ class TilesetTile
     @palette_index      = (tile_data & 0b11111111_00000000_00000000_00000000) >> 24
     
     # Unknown 1 and unknown 2 aren't used, they only sometimes seem to be used because of reading garbage data past the end of the actual tilset.
+  end
+  
+  def to_data
+    tile_data = 0
+    tile_data |= (@index_on_tile_page      ) & 0b00000000_00000000_00000000_00111111
+    tile_data |= (@unknown_1          <<  6) & 0b00000000_00000000_00001111_11000000
+    tile_data |= (@tile_page          << 12) & 0b00000000_00000001_11110000_00000000
+    tile_data |=                               0b00000000_00000010_00000000_00000000 if @horizontal_flip
+    tile_data |=                               0b00000000_00000100_00000000_00000000 if @vertical_flip
+    tile_data |= (@unknown_2          << 19) & 0b00000000_11111000_00000000_00000000
+    tile_data |= (@palette_index      << 24) & 0b11111111_00000000_00000000_00000000
+    [tile_data].pack("V")
   end
   
   def is_blank
@@ -112,5 +132,9 @@ class CollisionTile
         end
       end
     end
+  end
+  
+  def to_data
+    raise NotImplementedError.new
   end
 end
