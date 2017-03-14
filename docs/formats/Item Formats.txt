@@ -55,8 +55,9 @@ Byte 22: Super attack animation.
   0D: Explosion?
   0E: Claimh Solais' huge sword overhead swing.
   0F+: Crash.
-Byte 23: 
-Byte 24: 
+Byte 23: Which sprite animation to use.
+  This value only gets used by throwing weapons (weapons with swing anim 0A).
+Byte 24: IFrames. An enemy hit by this weapon will be invulnerable to weapons for this number of frames.
 Byte 25-26: Bitfield affecting the attack animation and super attack animation.
   Least significant bit first.
   Bit 1: Animation doesn't get interrupted when Soma lands.
@@ -260,7 +261,8 @@ Bytes 23-24: Bitfield.
   Bit 20: Can kill Red Skeletons/Axe Armors.
 Byte 25: Sprite to use for the weapon when you swing it. Doesn't just effect visuals, also hitboxes.
 Byte 26: Palette offset to use for the weapon when you swing it.
-Bytes 27-28: ?
+Byte 27: IFrames. An enemy hit by this weapon will be invulnerable to weapons for this number of frames.
+Byte 28: 
 Byte 29-30: Bitfield affecting the attack animation and super attack animation.
   Least significant bit first.
   Bit 1: Animation doesn't get interrupted when the player lands.
@@ -317,7 +319,7 @@ Byte 10:
   Bit 1: ?
   Bit 2: If set, the player doesn't play a swinging animation when using this glyph.
   Bits 3-8: Glyph union type. This value for both arms is used by function 0206E610 to determine what glyph union to use.
-Byte 11: 
+Byte 11: Maximum number of this projectile you can have in the room at once (per arm).
 Byte 12: Mana cost of using this glyph.
 Bytes 13-16: Bitfield for what elemental damage types this glyph does.
 Bytes 17-20: Bitfield of player state booleans that must be false in order to use this glyph. Checks bitfield 021098F0 (the player's current state booleans). 0 means it can be used in any state.
@@ -333,7 +335,7 @@ Bytes 25-26: Varies by code pointer.
   For melee weapons: Animation Shanoa plays when swinging this weapon.
     3 Overhead swing.
   For shields: ?
-Byte 27: ? 18
+Byte 27: IFrames. An enemy hit by this glyph will be invulnerable to glyphs on the arm you used for this number of frames.
 Byte 28: Delay in frames before you're allowed to use this glyph again after you use it once.
 Byte 29: Swing sound.
 Byte 30: 
@@ -347,7 +349,7 @@ Bytes 3-4: Attack stat.
 Bytes 5-8: Pointer to code run when using the glyph.
 Byte 9: Sprite.
 Byte 10:
-Byte 11:
+Byte 11: Maximum number of this projectile you can have in the room at once.
 Byte 12: Mana cost.
 Bytes 13-16: Bitfield for what elemental damage types this glyph does.
 Bytes 17-20: Bitfield of player state booleans that must be false in order to use this glyph. Checks bitfield 021098F0 (the player's current state booleans). 0 means it can be used in any state.
@@ -378,6 +380,8 @@ Bytes 1-2: Item ID.
 Bytes 3-4: Attack stat.
 Bytes 5-8: Pointer to code run when using the glyph.
 Byte 9: Sprite.
+Byte 10: 
+Byte 11: Maximum number of this projectile you can have in the room at once.
 Byte 12: Mana cost of using this glyph.
 Bytes 13-16: Bitfield for what elemental damage types this glyph does.
 Bytes 17-20: Bitfield of player state booleans that must be false in order to use this glyph. Checks bitfield 021098F0 (the player's current state booleans). 0 means it can be used in any state.
@@ -386,6 +390,7 @@ Bytes 21-22: Icon.
   But if you increase this value to 3CD0 or higher, the glyph won't appear it all, it won't even be invisible.
 Bytes 23-24: Bitfield
 Byte 25: affects Shanoa's swinging animation?
+Bytes 26-28: ?
 
 Relic format (OoE):
 12 bytes long.
@@ -417,7 +422,6 @@ Byte 19:
 Byte 20:
 
 Consumable format (OoE):
-12 bytes long.
 12 bytes long.
 Bytes 1-2: Item ID.
 Bytes 3-4:

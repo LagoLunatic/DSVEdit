@@ -743,7 +743,8 @@ WEAPON_FORMAT = [
   [4, "Effects", :bitfield],
   [1, "Sprite"],
   [1, "Palette"],
-  [2, "Unknown 5"],
+  [1, "IFrames"],
+  [1, "Unknown 5"],
   [2, "Swing Modifiers", :bitfield],
   [2, "Swing Sound"],
 ]
