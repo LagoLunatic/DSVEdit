@@ -71,12 +71,6 @@ class NDSFileSystem
       new_rom[@file_allocation_table_offset+offset, 8] = [new_start_offset, new_end_offset].pack("VV")
       max_written_address = new_end_offset if new_end_offset > max_written_address
       
-      # Update the lengths of changed overlay files.
-      if file[:overlay_id]
-        offset = file[:overlay_id] * 32
-        new_rom[@arm9_overlay_table_offset+offset+8, 4] = [new_file_size].pack("V")
-      end
-      
       files_written += 1
       if block_given?
         yield(files_written)
@@ -94,12 +88,6 @@ class NDSFileSystem
       offset = file[:id]*8
       new_rom[@file_allocation_table_offset+offset, 8] = [new_start_offset, new_end_offset].pack("VV")
       max_written_address = new_end_offset if new_end_offset > max_written_address
-      
-      # Update the lengths of changed overlay files.
-      if file[:overlay_id]
-        offset = file[:overlay_id] * 32
-        new_rom[@arm9_overlay_table_offset+offset+8, 4] = [new_file_size].pack("V")
-      end
       
       files_written += 1
       if block_given?
@@ -269,6 +257,11 @@ class NDSFileSystem
     old_size = file[:size]
     file[:size] += length_to_expand_by
     
+    if file[:overlay_id]
+      # Update length of changed overlay
+      write_by_file("/ftc/arm9_overlay_table.bin", file[:overlay_id]*32 + 8, [file[:size]].pack("V"))
+    end
+    
     # Expand the actual file data string, and fill it with 0 bytes.
     write_by_file(file_path, old_size, "\0"*length_to_expand_by)
     
@@ -280,6 +273,11 @@ class NDSFileSystem
     
     old_size = file[:size]
     file[:size] += length_to_expand_by
+    
+    if file[:overlay_id]
+      # Update length of changed overlay
+      write_by_file("/ftc/arm9_overlay_table.bin", file[:overlay_id]*32 + 8, [file[:size]].pack("V"))
+    end
     
     # Expand the actual file data string, and fill it with 0 bytes.
     write_by_file(file_path, old_size, "\0"*length_to_expand_by)
