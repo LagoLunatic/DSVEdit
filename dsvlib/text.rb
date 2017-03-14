@@ -152,18 +152,29 @@ class Text
   end
   
   def decode_string_usa(string)
+    data_format_string = "0x%02X"
     previous_byte = nil
     multipart = false
+    skip_next = false
+    i = 0
     decoded_string = string.each_char.map do |char|
       byte = char.unpack("C").first
       
-      char = if multipart
+      char = if skip_next
+        ""
+      elsif multipart
         multipart = false
         command_number = previous_byte - 0xE0
-        decode_multipart_command(command_number, byte)
+        if command_number == 1 # ENDCHOICE
+          # Needs halfword data even in the US version. The halfword data is big endian.
+          skip_next = true
+          decode_multipart_command(command_number, string[i,2].unpack("n"), "0x%04X")
+        else
+          decode_multipart_command(command_number, byte, data_format_string)
+        end
       elsif byte >= 0xE0
         command_number = byte - 0xE0
-        command = decode_command(command_number)
+        command = decode_command(command_number, data_format_string)
         if command == :multipart
           multipart = true
           ""
@@ -180,19 +191,20 @@ class Text
           char
         when 0x5F
           "・"
-        when 0x60..0xBF
-          "¡¢£¨©®°±´¸¿ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖ×ØÙÚÛÜÝßàáâãäåæçèéêëìíîïðñòóôõö÷øùúûüýŒœ"[byte-0x60]
         when 0xAF
           "'"
         when 0xB1
           '"'
+        #when 0x60..0xBF
+        #  "¡¢£¨©®°±´¸¿ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖ×ØÙÚÛÜÝßàáâãäåæçèéêëìíîïðñòóôõö÷øùúûüýŒœ"[byte-0x60]
         else
-          puts "text id %04X" % text_id
-          "{RAW 0x%02X}" % byte
+          "{RAW #{data_format_string}}" % byte
         end
       end
       
       previous_byte = byte
+      
+      i += 1
       
       char
     end.join
@@ -201,6 +213,7 @@ class Text
   end
   
   def decode_string_jp(string)
+    data_format_string = "0x%04X"
     previous_halfword = nil
     multipart = false
     decoded_string = string.unpack("v*").map do |char|
@@ -209,10 +222,10 @@ class Text
       char = if multipart
         multipart = false
         command_number = previous_halfword & 0x00FF
-        decode_multipart_command(command_number, halfword)
+        decode_multipart_command(command_number, halfword, data_format_string)
       elsif halfword & 0xFF00 == 0xF000
         command_number = halfword & 0x00FF
-        command = decode_command(command_number)
+        command = decode_command(command_number, data_format_string)
         if command == :multipart
           multipart = true
           ""
@@ -223,8 +236,7 @@ class Text
         shift_jis = font_character_mapping_jp(halfword)
         shift_jis.chr(Encoding::SHIFT_JIS).encode("UTF-8")
       else
-        puts "text id %04X" % text_id
-        "{RAW 0x%04X}" % halfword
+        "{RAW #{data_format_string}}" % halfword
       end
       
       previous_halfword = halfword
@@ -235,12 +247,11 @@ class Text
     return decoded_string
   end
   
-  def decode_command(command_number)
+  def decode_command(command_number, data_format_string)
     case command_number
     when 0x00
-      puts "text id %04X" % text_id
-      "{RAW 0x%04X}" % command_number
-    when 0x02, 0x03, 0x07, 0x08
+      "{RAW #{data_format_string}}" % command_number
+    when 0x01, 0x02, 0x03, 0x07, 0x08
       :multipart
     when 0x04
       "{NEWCHAR}"
@@ -254,35 +265,38 @@ class Text
       button = %w(L R A B X Y LEFT RIGHT UP DOWN)[command_number-0x0B]
       "{BUTTON #{button}}"
     when 0x15..0x1A
-      "{BUTTON 0x%04X}" % command_number
+      "{BUTTON #{data_format_string}}" % command_number
     else
-      puts "text id %04X" % text_id
-      "{RAW 0x%04X}" % command_number
+      "{RAW #{data_format_string}}" % command_number
     end
   end
   
-  def decode_multipart_command(command_number, data)
+  def decode_multipart_command(command_number, data, data_format_string)
     case command_number
+    when 0x01
+      "{ENDCHOICE #{data_format_string}}" % data
     when 0x02
       case data
       when 0x01
         "{NEXTACTION}"
+      when 0x03
+        "{CHOICE}" % data
       else
-        "{COMMAND2 0x%04X}" % data
+        "{COMMAND2 #{data_format_string}}" % data
       end
     when 0x03
-      "{PORTRAIT 0x%04X}" % data
+      "{PORTRAIT #{data_format_string}}" % data
     when 0x07
-      "{NAME 0x%04X}" % data
+      "{NAME #{data_format_string}}" % data
     when 0x08
       color_name = TEXT_COLOR_NAMES[data]
       if color_name.nil?
-        "{TEXTCOLOR %04X}" % data
+        "{TEXTCOLOR #{data_format_string}}" % data
       else
         "{TEXTCOLOR %s}" % color_name
       end
     else
-      raise TextDecodeError.new("Failed to decode command: %02X %02X" % [command_number, data])
+      raise TextDecodeError.new("Failed to decode command: #{data_format_string} #{data_format_string}" % [command_number, data])
     end
   end
   
@@ -313,12 +327,20 @@ class Text
     when "SAMECHAR"
       [0xE9].pack("C")
     when "WAITINPUT"
-      [0xE5].pack("v")
+      [0xE5].pack("C")
     when "NAME"
       byte = data.to_i(16)
       [0xE7, byte].pack("CC")
     when "NEXTACTION"
       [0xE2, 0x01].pack("CC")
+    when "CHOICE"
+      [0xE2, 0x03].pack("CC")
+    when "COMMAND2"
+      byte = data.to_i(16)
+      [0xE2, byte].pack("CC")
+    when "ENDCHOICE"
+      byte = data.to_i(16)
+      [0xE1, byte].pack("CC")
     when "TEXTCOLOR"
       color_name = data
       byte = TEXT_COLOR_NAMES.key(color_name)
@@ -366,6 +388,14 @@ class Text
       [0xF007, halfword].pack("vv")
     when "NEXTACTION"
       [0xF002, 0x0001].pack("vv")
+    when "CHOICE"
+      [0xF002, 0x0003].pack("CC")
+    when "COMMAND2"
+      halfword = data.to_i(16)
+      [0xF002, halfword].pack("vv")
+    when "ENDCHOICE"
+      halfword = data.to_i(16)
+      [0xF001, halfword].pack("vv")
     when "TEXTCOLOR"
       color_name = data
       halfword = TEXT_COLOR_NAMES.key(color_name)
