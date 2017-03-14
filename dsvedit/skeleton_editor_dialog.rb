@@ -10,11 +10,12 @@ class SkeletonEditorDialog < Qt::Dialog
   
   attr_reader :game, :fs
   
-  slots "pose_changed(int)"
+  slots "pose_changed_no_tween(int)"
   slots "toggle_show_skeleton(int)"
   slots "toggle_show_hitboxes(int)"
   slots "toggle_show_points(int)"
   slots "animation_changed(int)"
+  slots "animation_keyframe_changed_no_tween(int)"
   slots "toggle_animation_paused()"
   slots "advance_tweenframe()"
   slots "button_box_clicked(QAbstractButton*)"
@@ -39,11 +40,12 @@ class SkeletonEditorDialog < Qt::Dialog
     
     set_animation_paused(true)
     
-    connect(@ui.pose_index, SIGNAL("activated(int)"), self, SLOT("pose_changed(int)"))
+    connect(@ui.pose_index, SIGNAL("activated(int)"), self, SLOT("pose_changed_no_tween(int)"))
     connect(@ui.show_skeleton, SIGNAL("stateChanged(int)"), self, SLOT("toggle_show_skeleton(int)"))
     connect(@ui.show_hitboxes, SIGNAL("stateChanged(int)"), self, SLOT("toggle_show_hitboxes(int)"))
     connect(@ui.show_points, SIGNAL("stateChanged(int)"), self, SLOT("toggle_show_points(int)"))
     connect(@ui.animation_index, SIGNAL("activated(int)"), self, SLOT("animation_changed(int)"))
+    connect(@ui.seek_slider, SIGNAL("sliderMoved(int)"), self, SLOT("animation_keyframe_changed_no_tween(int)"))
     connect(@ui.toggle_paused_button, SIGNAL("clicked()"), self, SLOT("toggle_animation_paused()"))
     connect(@ui.buttonBox, SIGNAL("clicked(QAbstractButton*)"), self, SLOT("button_box_clicked(QAbstractButton*)"))
     
@@ -79,6 +81,18 @@ class SkeletonEditorDialog < Qt::Dialog
     animation_changed(0)
   end
   
+  def pose_changed_no_tween(i)
+    @current_pose_index = i
+    pose = @skeleton.poses[@current_pose_index]
+    @current_pose_joint_states = initialize_joint_states(pose)
+    @tweening_progress = 0.0
+    @previous_pose = nil
+    
+    update_drawn_joints()
+    
+    @ui.pose_index.setCurrentIndex(i)
+  end
+  
   def pose_changed(i)
     if @current_pose_joint_states
       @previous_pose = @skeleton.poses[@current_pose_index]
@@ -105,11 +119,13 @@ class SkeletonEditorDialog < Qt::Dialog
   end
   
   def animation_changed(i)
+    @current_animation_index = i
+    
     @animation_timer.stop()
     @ui.seek_slider.value = 0
     @current_animation_keyframe_index = 0
     
-    @current_animation = @skeleton.animations[i]
+    @current_animation = @skeleton.animations[@current_animation_index]
     if @current_animation.nil?
       @ui.seek_slider.enabled = false
       @ui.toggle_paused_button.enabled = false
@@ -211,6 +227,18 @@ class SkeletonEditorDialog < Qt::Dialog
     @animation_timer.start(millisecond_delay)
   end
   
+  def animation_keyframe_changed_no_tween(i)
+    @current_animation_keyframe_index = i
+    @current_animation_tweenframe_index = 0
+    @current_keyframe = @current_animation.keyframes[@current_animation_keyframe_index]
+    pose_changed_no_tween(@current_keyframe.pose_id)
+    animation_tweenframe_changed(0)
+    @ui.seek_slider.value = @current_animation_keyframe_index
+    
+    millisecond_delay = (1 / 60.0 * 1000).round
+    @animation_timer.start(millisecond_delay)
+  end
+  
   def animation_tweenframe_changed(i)
     @current_animation_tweenframe_index = i
     @tweening_progress = @current_animation_tweenframe_index.to_f / @current_keyframe.length_in_frames
@@ -243,7 +271,8 @@ class SkeletonEditorDialog < Qt::Dialog
   end
   
   def start_animation
-    advance_keyframe()
+    millisecond_delay = (1 / 60.0 * 1000).round
+    @animation_timer.start(millisecond_delay)
   end
   
   def toggle_animation_paused
@@ -271,7 +300,12 @@ class SkeletonEditorDialog < Qt::Dialog
     
     next_pose = @skeleton.poses[@current_pose_index]
     
-    @current_tweened_joint_states, pose = tween_poses(@previous_pose, next_pose, @tweening_progress)
+    if @previous_pose
+      @current_tweened_joint_states, pose = tween_poses(@previous_pose, next_pose, @tweening_progress)
+    else
+      @current_tweened_joint_states = @current_pose_joint_states
+      pose = next_pose
+    end
     
     @skeleton.joint_indexes_by_draw_order.each do |joint_index|
       joint = @skeleton.joints[joint_index]
