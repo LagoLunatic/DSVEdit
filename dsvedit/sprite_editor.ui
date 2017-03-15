@@ -141,6 +141,19 @@
           </widget>
          </item>
          <item>
+          <widget class="QPushButton" name="reload_button">
+           <property name="maximumSize">
+            <size>
+             <width>60</width>
+             <height>16777215</height>
+            </size>
+           </property>
+           <property name="text">
+            <string>Reload</string>
+           </property>
+          </widget>
+         </item>
+         <item>
           <widget class="QPushButton" name="view_skeleton_button">
            <property name="enabled">
             <bool>false</bool>
@@ -353,7 +366,7 @@
       <enum>Qt::Horizontal</enum>
      </property>
      <property name="standardButtons">
-      <set>QDialogButtonBox::Apply|QDialogButtonBox::Cancel</set>
+      <set>QDialogButtonBox::Apply|QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
      </property>
     </widget>
    </item>

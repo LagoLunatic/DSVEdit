@@ -21,6 +21,7 @@ class SpriteEditor < Qt::Dialog
   slots "animation_changed(int)"
   slots "toggle_animation_paused()"
   slots "advance_frame()"
+  slots "reload_sprite()"
   slots "open_skeleton_editor()"
   slots "click_gfx_scene(int, int, const Qt::MouseButton&)"
   slots "drag_gfx_scene(int, int, const Qt::MouseButton&)"
@@ -168,6 +169,7 @@ class SpriteEditor < Qt::Dialog
     connect(@ui.part_index, SIGNAL("activated(int)"), self, SLOT("part_changed(int)"))
     connect(@ui.animation_index, SIGNAL("activated(int)"), self, SLOT("animation_changed(int)"))
     connect(@ui.toggle_paused_button, SIGNAL("clicked()"), self, SLOT("toggle_animation_paused()"))
+    connect(@ui.reload_button, SIGNAL("clicked()"), self, SLOT("reload_sprite()"))
     connect(@ui.view_skeleton_button, SIGNAL("clicked()"), self, SLOT("open_skeleton_editor()"))
     connect(@ui.buttonBox, SIGNAL("clicked(QAbstractButton*)"), self, SLOT("button_box_clicked(QAbstractButton*)"))
     
@@ -628,9 +630,18 @@ class SpriteEditor < Qt::Dialog
     end
   end
   
+  def save_sprite
+    # TODO
+  end
+  
   def button_box_clicked(button)
-    if @ui.buttonBox.standardButton(button) == Qt::DialogButtonBox::Apply
-      reload_sprite()
+    if @ui.buttonBox.standardButton(button) == Qt::DialogButtonBox::Ok
+      save_sprite()
+      self.close()
+    elsif @ui.buttonBox.standardButton(button) == Qt::DialogButtonBox::Cancel
+      self.close()
+    elsif @ui.buttonBox.standardButton(button) == Qt::DialogButtonBox::Apply
+      save_sprite()
     end
   end
   
