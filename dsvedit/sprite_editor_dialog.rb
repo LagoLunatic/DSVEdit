@@ -538,16 +538,16 @@ class SpriteEditor < Qt::Dialog
     end
     @palette_index = palette_index
     
-    part = @sprite.parts[@current_part_index]
-    if part && part.palette_index != @palette_index
-      part.palette_index = @palette_index
-      reload_current_part()
-    end
-    
     old_gfx_page_index = @gfx_page_index
     old_gfx_page_index = 0 if old_gfx_page_index.nil?
     load_gfx_pages(palette_index)
     gfx_page_changed(old_gfx_page_index)
+    
+    part = @sprite.parts[@current_part_index]
+    if part && part.palette_index != @palette_index && !force
+      part.palette_index = @palette_index
+      reload_current_part()
+    end
     
     @ui.palette_index.setCurrentIndex(palette_index)
   end
