@@ -57,28 +57,6 @@ class TilesetEditorDialog < Qt::Dialog
     self.show()
   end
   
-  def create_tile_pixmap_item(tile)
-    return if tile.is_blank
-    
-    gfx = @room.gfx_pages[tile.tile_page]
-    palette_list = @renderer.generate_palettes(@room.palette_offset, gfx.colors_per_palette)
-    palette = palette_list[tile.palette_index]
-    chunky_tile = @renderer.render_graphic_tile(gfx.file, palette, tile.index_on_tile_page)
-    if tile.horizontal_flip
-      chunky_tile.mirror!
-    end
-    if tile.vertical_flip
-      chunky_tile.flip!
-    end
-    
-    pixmap = Qt::Pixmap.new()
-    blob = chunky_tile.to_blob
-    pixmap.loadFromData(blob, blob.length)
-    tile_item = Qt::GraphicsPixmapItem.new(pixmap)
-    
-    return tile_item
-  end
-  
   def load_tileset
     @tileset_graphics_scene.clear()
     
@@ -90,14 +68,20 @@ class TilesetEditorDialog < Qt::Dialog
     
     @tileset = Tileset.new(@tileset_pointer, @fs)
     
+    @gfx_pages = GfxWrapper.from_gfx_list_pointer(@gfx_list_pointer, @fs)
+    
     @palettes = @renderer.generate_palettes(@palette_list_pointer, 16)
-    if @room.gfx_pages.any?{|gfx| gfx.colors_per_palette == 256}
+    if @gfx_pages.any?{|gfx| gfx.colors_per_palette == 256}
       @palettes_256 = @renderer.generate_palettes(@palette_list_pointer, 256)
     end
     
     @ui.gfx_page_index.clear()
-    @room.gfx_pages.each_with_index do |gfx_page, i|
-      @ui.gfx_page_index.addItem("%02X" % i)
+    @gfx_pages.each_with_index do |gfx_page, i|
+      if gfx_page.colors_per_palette == 16
+        @ui.gfx_page_index.addItem("%02X" % i)
+      else
+        @ui.gfx_page_index.addItem("%02X (256 colors)" % i)
+      end
     end
     @ui.gfx_page_index.setCurrentIndex(0)
     
@@ -149,7 +133,11 @@ class TilesetEditorDialog < Qt::Dialog
       @tileset_pixmap_items[tile_index] = tile_pixmap_item
     end
     
-    gfx = @room.gfx_pages[tile.tile_page]
+    render_tile(tile, tile_pixmap_item)
+  end
+  
+  def render_tile(tile, tile_pixmap_item)
+    gfx = @gfx_pages[tile.tile_page]
     if gfx.nil?
       return # TODO: figure out why this sometimes happens.
     end
@@ -194,10 +182,9 @@ class TilesetEditorDialog < Qt::Dialog
     @ui.horizontal_flip.checked = @selected_tile.horizontal_flip
     @ui.vertical_flip.checked = @selected_tile.vertical_flip
     
-    tile_pixmap_item = create_tile_pixmap_item(@selected_tile)
-    if tile_pixmap_item
-      @selected_tile_graphics_scene.addItem(tile_pixmap_item)
-    end
+    selected_tile_pixmap_item = Qt::GraphicsPixmapItem.new
+    render_tile(@selected_tile, selected_tile_pixmap_item)
+    @selected_tile_graphics_scene.addItem(selected_tile_pixmap_item)
     
     tile_x_pos_on_page = @selected_tile.index_on_tile_page % 8
     tile_y_pos_on_page = @selected_tile.index_on_tile_page / 8
@@ -215,9 +202,13 @@ class TilesetEditorDialog < Qt::Dialog
     
     @gfx_page_graphics_scene.clear()
     
-    gfx = @room.gfx_pages[@selected_tile.tile_page]
+    gfx = @gfx_pages[@selected_tile.tile_page]
     @ui.gfx_file.text = gfx.file[:file_path]
-    palette = @palettes[@selected_tile.palette_index]
+    if gfx.colors_per_palette == 16
+      palette = @palettes[@selected_tile.palette_index]
+    else
+      palette = @palettes_256[@selected_tile.palette_index]
+    end
     
     chunky_image = @renderer.render_gfx_page(gfx.file, palette)
     
