@@ -412,12 +412,8 @@ class SpriteEditor < Qt::Dialog
       blob = chunky_image.to_blob
       pixmap.loadFromData(blob, blob.length)
       
-      part_pixmap_item_for_part_view = Qt::GraphicsPixmapItem.new(pixmap)
-      part_pixmap_item_for_part_view.setOffset(part.x_pos, part.y_pos)
-      @part_pixmaps_for_part_view << part_pixmap_item_for_part_view
-      part_pixmap_item_for_frame_view = Qt::GraphicsPixmapItem.new(pixmap)
-      part_pixmap_item_for_frame_view.setOffset(part.x_pos, part.y_pos)
-      @part_pixmaps_for_frame_view << part_pixmap_item_for_frame_view
+      @part_pixmaps_for_part_view << PartItem.new(self, part, part_index, pixmap)
+      @part_pixmaps_for_frame_view << PartItem.new(self, part, part_index, pixmap)
       
       @ui.part_index.addItem("%02X" % part_index)
     end
@@ -690,8 +686,8 @@ class SpriteEditor < Qt::Dialog
     
     return unless @selection_rectangle
     
-    max_w = @gfx_file_graphics_scene.width-1
-    max_h = @gfx_file_graphics_scene.height-1
+    max_w = @gfx_file_graphics_scene.width
+    max_h = @gfx_file_graphics_scene.height
     mouse_x = [mouse_x, 0].max
     mouse_y = [mouse_y, 0].max
     mouse_x = [mouse_x, max_w].min
@@ -710,8 +706,8 @@ class SpriteEditor < Qt::Dialog
     
     return unless @selection_rectangle
     
-    max_w = @gfx_file_graphics_scene.width-1
-    max_h = @gfx_file_graphics_scene.height-1
+    max_w = @gfx_file_graphics_scene.width
+    max_h = @gfx_file_graphics_scene.height
     mouse_x = [mouse_x, 0].max
     mouse_y = [mouse_y, 0].max
     mouse_x = [mouse_x, max_w].min
@@ -744,7 +740,7 @@ class SpriteEditor < Qt::Dialog
     if x < 0 || x >= @gfx_file_graphics_scene.width || y < 0 || y >= @gfx_file_graphics_scene.height
       return
     end
-    if x+w < 0 || x+w >= @gfx_file_graphics_scene.width || y+h < 0 || y+h >= @gfx_file_graphics_scene.height
+    if x+w < 0 || x+w > @gfx_file_graphics_scene.width || y+h < 0 || y+h > @gfx_file_graphics_scene.height
       return
     end
     
@@ -773,16 +769,78 @@ class SpriteEditor < Qt::Dialog
     blob = chunky_part.to_blob
     pixmap.loadFromData(blob, blob.length)
     
-    part_pixmap_item_for_part_view = Qt::GraphicsPixmapItem.new(pixmap)
-    part_pixmap_item_for_part_view.setOffset(part.x_pos, part.y_pos)
-    @part_pixmaps_for_part_view[@current_part_index] = part_pixmap_item_for_part_view
-    part_pixmap_item_for_frame_view = Qt::GraphicsPixmapItem.new(pixmap)
-    part_pixmap_item_for_frame_view.setOffset(part.x_pos, part.y_pos)
-    @part_pixmaps_for_frame_view[@current_part_index] = part_pixmap_item_for_frame_view
+    @part_pixmaps_for_part_view[@current_part_index] = PartItem.new(self, part, @current_part_index, pixmap)
+    @part_pixmaps_for_frame_view[@current_part_index] = PartItem.new(self, part, @current_part_index, pixmap)
     
     part_changed(@current_part_index)
     frame_changed(@current_frame_index, do_not_change_current_part: true)
   end
   
+  def update_part_position(part_index)
+    part = @sprite.parts[part_index]
+    @part_pixmaps_for_part_view[part_index].setPos(part.x_pos, part.y_pos)
+    @part_pixmaps_for_frame_view[part_index].setPos(part.x_pos, part.y_pos)
+  end
+  
   def inspect; to_s; end
+end
+
+class PartItem < Qt::GraphicsPixmapItem
+  def initialize(sprite_editor, part, part_index, pixmap)
+    super(pixmap)
+    setPos(part.x_pos, part.y_pos)
+    
+    @sprite_editor = sprite_editor
+    @part = part
+    @part_index = part_index
+    
+    setFlag(Qt::GraphicsItem::ItemIsMovable)
+    setFlag(Qt::GraphicsItem::ItemSendsGeometryChanges)
+    setFlag(Qt::GraphicsItem::ItemIsFocusable)
+  end
+  
+  def itemChange(change, value)
+    if change == ItemPositionChange && scene()
+      new_pos = value.toPointF()
+      x = new_pos.x
+      y = new_pos.y
+      #x = [x, scene().sceneRect.right].min
+      #x = [x, scene().sceneRect.left].max
+      #y = [y, scene().sceneRect.bottom].min
+      #y = [y, scene().sceneRect.top].max
+      new_pos.setX(x)
+      new_pos.setY(y)
+      
+      @part.x_pos = x.round
+      @part.y_pos = y.round
+      
+      return super(change, Qt::Variant.new(new_pos))
+    end
+    
+    return super(change, value)
+  end
+  
+  def keyPressEvent(event)
+    case event.key
+    when Qt::Key_Up
+      setPos(pos.x, pos.y-1)
+      @sprite_editor.update_part_position(@part_index)
+    when Qt::Key_Down
+      setPos(pos.x, pos.y+1)
+      @sprite_editor.update_part_position(@part_index)
+    when Qt::Key_Left
+      setPos(pos.x-1, pos.y)
+      @sprite_editor.update_part_position(@part_index)
+    when Qt::Key_Right
+      setPos(pos.x+1, pos.y)
+      @sprite_editor.update_part_position(@part_index)
+    end
+    
+    super(event)
+  end
+  
+  def mouseReleaseEvent(event)
+    @sprite_editor.update_part_position(@part_index)
+    super(event)
+  end
 end
