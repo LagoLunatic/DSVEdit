@@ -26,4 +26,19 @@ class GfxWrapper
       raise "Unknown render mode: %02X" % render_mode
     end
   end
+  
+  def self.from_gfx_list_pointer(gfx_list_pointer, fs)
+    offset = gfx_list_pointer
+    gfx_wrappers = []
+    while true
+      gfx_pointer, unknown = fs.read(offset, 8).unpack("VV")
+      break if gfx_pointer == 0
+      
+      gfx_wrappers << GfxWrapper.new(gfx_pointer, fs)
+      
+      offset += 8
+    end
+    
+    return gfx_wrappers
+  end
 end

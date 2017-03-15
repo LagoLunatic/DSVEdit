@@ -7,10 +7,10 @@ class Room
               :layers,
               :number_of_doors,
               :layer_list_ram_pointer,
-              :tileset_wrapper_A_ram_pointer,
+              :gfx_list_pointer,
               :entity_list_ram_pointer,
               :door_list_ram_pointer,
-              :graphic_tilesets_for_room,
+              :gfx_pages,
               :palette_pages,
               :palette_page_index,
               :area_index,
@@ -37,7 +37,7 @@ class Room
   def read_from_rom
     room_metadata = fs.read(room_metadata_ram_pointer, 32).unpack("V*")
     @layer_list_ram_pointer = room_metadata[2]
-    @tileset_wrapper_A_ram_pointer = room_metadata[3]
+    @gfx_list_pointer = room_metadata[3]
     palette_wrapper_ram_pointer = room_metadata[4]
     @entity_list_ram_pointer = room_metadata[5]
     @door_list_ram_pointer = room_metadata[6]
@@ -45,7 +45,7 @@ class Room
     
     read_last_4_bytes_from_rom(last_4_bytes)
     read_layer_list_from_rom(layer_list_ram_pointer) rescue NDSFileSystem::ConversionError
-    read_graphic_tilesets_from_rom(tileset_wrapper_A_ram_pointer)
+    read_graphic_tilesets_from_rom(gfx_list_pointer)
     read_palette_pages_from_rom(palette_wrapper_ram_pointer)
     read_entity_list_from_rom(entity_list_ram_pointer)
     read_door_list_from_rom(door_list_ram_pointer)
@@ -56,7 +56,7 @@ class Room
     i = 0
     while true
       is_a_pointer_check = fs.read(layer_list_ram_pointer + i*16 + 15).unpack("C*").first
-      break if i == 4 # maximum 4 layers per room. TODO: check if this is also true in dos and por
+      break if i == 4 # Maximum of 4 layers per room.
       if is_a_pointer_check != 0x02
         break
       end
@@ -73,30 +73,12 @@ class Room
     end
   end
   
-  def read_graphic_tilesets_from_rom(tileset_wrapper_A_ram_pointer)
-    i = 0
-    @graphic_tilesets_for_room = []
-    while true
-      tileset_wrapper_B_ram_pointer = fs.read(tileset_wrapper_A_ram_pointer + i*8, 4).unpack("V*").first # we're not going to actually follow tileset wrapper b pointer. we're just using it to identify the tileset.
-      unknown_data = fs.read(tileset_wrapper_A_ram_pointer + i*8 + 4, 4).unpack("V*").first
-      #puts "u%08X" % unknown_data
-      break if tileset_wrapper_B_ram_pointer == 0
-      #unknown_data2 = rom[tileset_wrapper_B_pointer, 4].unpack("V*").first # TODO
-      #unknown_data3 = rom[tileset_wrapper_B_pointer+4, 4].unpack("V*").first
-      #puts "u%08X" % unknown_data2
-      #puts "u%08X" % unknown_data3
-      file = fs.files.values.find{|file| file[:ram_start_offset] == tileset_wrapper_B_ram_pointer}
-      if file.nil?
-        puts "Couldn't find tileset. Possible transition room? wrapper B ram %08X. wrapper A ram: %08X" % [tileset_wrapper_B_ram_pointer, tileset_wrapper_A_ram_pointer]
-        break
-      end
-      @graphic_tilesets_for_room << file
-      i += 1
-    end
+  def read_graphic_tilesets_from_rom(gfx_list_pointer)
+    @gfx_pages = GfxWrapper.from_gfx_list_pointer(gfx_list_pointer, fs)
   rescue NDSFileSystem::ConversionError => e
-    # When tileset_wrapper_A_ram_pointer is like this (e.g. 0x02195984), it just points to 00s instead of actual data.
-    # What this means is that the room doesn't load a tileset. Instead it just keeps whatever tileset the previous room had loaded.
-    @graphic_tilesets_for_room = nil
+    # When gfx_list_pointer is like this (e.g. 0x02195984), it just points to 00s instead of actual data.
+    # What this means is that the room doesn't load any gfx pages. Instead it just keeps whatever gfx pages the previous room had loaded.
+    @gfx_pages = nil
   end
   
   def read_palette_pages_from_rom(palette_wrapper_ram_pointer)
@@ -263,7 +245,7 @@ class Room
     new_layer.z_index = 0x16
     new_layer.scroll_mode = 0x01
     new_layer.opacity = 0x1F
-    new_layer.render_type = 0x00
+    new_layer.main_gfx_page_index = 0x00
     
     new_layer.layer_metadata_ram_pointer = fs.expand_file_and_get_end_of_file_ram_address(overlay_ram_start, 16)
     

@@ -10,6 +10,7 @@ class TilesetEditorDialog < Qt::Dialog
   slots "gfx_page_changed(int)"
   slots "palette_changed(int)"
   slots "toggle_flips(int)"
+  slots "load_tileset()"
   slots "button_box_clicked(QAbstractButton*)"
   
   def initialize(main_window, fs, renderer, room)
@@ -41,8 +42,7 @@ class TilesetEditorDialog < Qt::Dialog
     @selected_tile_graphics_scene.setBackgroundBrush(BACKGROUND_BRUSH)
     
     @ui.tileset_pointer.text = "%08X" % @layer.ram_pointer_to_tileset_for_layer
-    @ui.colors_per_palette.text = "%02X" % @layer.colors_per_palette
-    @ui.gfx_list_pointer.text = "%08X" % @room.tileset_wrapper_A_ram_pointer
+    @ui.gfx_list_pointer.text = "%08X" % @room.gfx_list_pointer
     @ui.palette_list_pointer.text = "%08X" % @room.palette_offset
     load_tileset()
     
@@ -50,6 +50,7 @@ class TilesetEditorDialog < Qt::Dialog
     connect(@ui.palette_index, SIGNAL("activated(int)"), self, SLOT("palette_changed(int)"))
     connect(@ui.horizontal_flip, SIGNAL("stateChanged(int)"), self, SLOT("toggle_flips(int)"))
     connect(@ui.vertical_flip, SIGNAL("stateChanged(int)"), self, SLOT("toggle_flips(int)"))
+    connect(@ui.reload_button, SIGNAL("released()"), self, SLOT("load_tileset()"))
     
     connect(@ui.buttonBox, SIGNAL("clicked(QAbstractButton*)"), self, SLOT("button_box_clicked(QAbstractButton*)"))
     
@@ -59,10 +60,10 @@ class TilesetEditorDialog < Qt::Dialog
   def create_tile_pixmap_item(tile)
     return if tile.is_blank
     
-    graphic_tile_data_file = @room.graphic_tilesets_for_room[tile.tile_page]
-    palette_list = @renderer.generate_palettes(@room.palette_offset, @layer.colors_per_palette)
+    gfx = @room.gfx_pages[tile.tile_page]
+    palette_list = @renderer.generate_palettes(@room.palette_offset, gfx.colors_per_palette)
     palette = palette_list[tile.palette_index]
-    chunky_tile = @renderer.render_graphic_tile(graphic_tile_data_file, palette, tile.index_on_tile_page)
+    chunky_tile = @renderer.render_graphic_tile(gfx.file, palette, tile.index_on_tile_page)
     if tile.horizontal_flip
       chunky_tile.mirror!
     end
@@ -82,16 +83,20 @@ class TilesetEditorDialog < Qt::Dialog
     @tileset_graphics_scene.clear()
     
     @tileset_pointer = @ui.tileset_pointer.text.to_i(16)
-    @colors_per_palette = @ui.colors_per_palette.text.to_i(16)
+    @gfx_list_pointer = @ui.gfx_list_pointer.text.to_i(16)
+    @palette_list_pointer = @ui.palette_list_pointer.text.to_i(16)
     
-    return if @tileset_pointer == 0 || @colors_per_palette == 0
+    return if @tileset_pointer == 0 || @gfx_list_pointer == 0 || @palette_list_pointer == 0
     
     @tileset = Tileset.new(@tileset_pointer, @fs)
     
-    @palettes = @renderer.generate_palettes(@room.palette_offset, @colors_per_palette)
+    @palettes = @renderer.generate_palettes(@palette_list_pointer, 16)
+    if @room.gfx_pages.any?{|gfx| gfx.colors_per_palette == 256}
+      @palettes_256 = @renderer.generate_palettes(@palette_list_pointer, 256)
+    end
     
     @ui.gfx_page_index.clear()
-    @room.graphic_tilesets_for_room.each_with_index do |gfx_page, i|
+    @room.gfx_pages.each_with_index do |gfx_page, i|
       @ui.gfx_page_index.addItem("%02X" % i)
     end
     @ui.gfx_page_index.setCurrentIndex(0)
@@ -139,9 +144,13 @@ class TilesetEditorDialog < Qt::Dialog
     end
     
     tile_pixmap_item = @tileset_pixmap_items[tile_index]
+    if tile_pixmap_item.nil?
+      tile_pixmap_item = Qt::GraphicsPixmapItem.new
+      @tileset_pixmap_items[tile_index] = tile_pixmap_item
+    end
     
-    graphic_tile_data_file = @room.graphic_tilesets_for_room[tile.tile_page]
-    if graphic_tile_data_file.nil?
+    gfx = @room.gfx_pages[tile.tile_page]
+    if gfx.nil?
       return # TODO: figure out why this sometimes happens.
     end
     
@@ -149,13 +158,18 @@ class TilesetEditorDialog < Qt::Dialog
       puts "Palette index is 0xFF, tileset %08X" % @tileset_pointer
       return
     end
-    palette = @palettes[tile.palette_index]
+    
+    if gfx.colors_per_palette == 16
+      palette = @palettes[tile.palette_index]
+    else
+      palette = @palettes_256[tile.palette_index]
+    end
     if palette.nil?
       puts "Palette index #{tile.palette_index} out of range, tileset %08X" % @tileset_pointer
       return # TODO: figure out why this sometimes happens.
     end
     
-    chunky_tile = @renderer.render_graphic_tile(graphic_tile_data_file, palette, tile.index_on_tile_page)
+    chunky_tile = @renderer.render_graphic_tile(gfx.file, palette, tile.index_on_tile_page)
     
     pixmap = Qt::Pixmap.new
     blob = chunky_tile.to_blob
@@ -201,11 +215,11 @@ class TilesetEditorDialog < Qt::Dialog
     
     @gfx_page_graphics_scene.clear()
     
-    gfx_file = @room.graphic_tilesets_for_room[@selected_tile.tile_page]
-    @ui.gfx_file.text = gfx_file[:file_path]
+    gfx = @room.gfx_pages[@selected_tile.tile_page]
+    @ui.gfx_file.text = gfx.file[:file_path]
     palette = @palettes[@selected_tile.palette_index]
     
-    chunky_image = @renderer.render_gfx_page(gfx_file, palette)
+    chunky_image = @renderer.render_gfx_page(gfx.file, palette)
     
     pixmap = Qt::Pixmap.new()
     blob = chunky_image.to_blob

@@ -70,7 +70,7 @@ class Renderer
       tileset_filename = "#{folder}/#{room.area_name}/Tilesets/#{layer.tileset_filename}_collision.png"
       tileset = render_collision_tileset(layer.collision_tileset_ram_pointer, tileset_filename)
     else
-      tileset = get_tileset(layer.ram_pointer_to_tileset_for_layer, room.palette_offset, room.graphic_tilesets_for_room, layer.colors_per_palette, layer.collision_tileset_ram_pointer, tileset_filename)
+      tileset = get_tileset(layer.ram_pointer_to_tileset_for_layer, room.palette_offset, room.gfx_pages, layer.colors_per_palette, layer.collision_tileset_ram_pointer, tileset_filename)
     end
     
     layer.tiles.each_with_index do |tile, index_on_level|
@@ -95,11 +95,11 @@ class Renderer
     return rendered_layer
   end
   
-  def get_tileset(pointer_to_tileset_for_layer, palette_offset, graphic_tilesets_for_room, colors_per_palette, collision_tileset_offset, tileset_filename)
+  def get_tileset(pointer_to_tileset_for_layer, palette_offset, gfx_pages, colors_per_palette, collision_tileset_offset, tileset_filename)
     if File.exist?(tileset_filename)
       ChunkyPNG::Image.from_file(tileset_filename)
     else
-      render_tileset(pointer_to_tileset_for_layer, palette_offset, graphic_tilesets_for_room, colors_per_palette, collision_tileset_offset, tileset_filename)
+      render_tileset(pointer_to_tileset_for_layer, palette_offset, gfx_pages, colors_per_palette, collision_tileset_offset, tileset_filename)
     end
   end
   
@@ -107,7 +107,7 @@ class Renderer
     room.layers.each do |layer|
       tileset_filename = "#{folder}/#{room.area_name}/Tilesets/#{layer.tileset_filename}.png"
       if !File.exist?(tileset_filename)
-        render_tileset(layer.ram_pointer_to_tileset_for_layer, room.palette_offset, room.graphic_tilesets_for_room, layer.colors_per_palette, layer.collision_tileset_ram_pointer, tileset_filename)
+        render_tileset(layer.ram_pointer_to_tileset_for_layer, room.palette_offset, room.gfx_pages, layer.colors_per_palette, layer.collision_tileset_ram_pointer, tileset_filename)
       end
       
       if collision
@@ -120,22 +120,25 @@ class Renderer
     end
   end
   
-  def render_tileset(tileset_offset, palette_offset, graphic_tilesets_for_room, colors_per_palette, collision_tileset_offset, output_filename=nil)
-    if graphic_tilesets_for_room.nil?
+  def render_tileset(tileset_offset, palette_offset, gfx_pages, colors_per_palette, collision_tileset_offset, output_filename=nil)
+    if gfx_pages.nil?
       return render_collision_tileset(collision_tileset_offset, output_filename)
     end
     
     tileset = Tileset.new(tileset_offset, fs)
     rendered_tileset = ChunkyPNG::Image.new(Tileset::TILESET_WIDTH_IN_BLOCKS*16, Tileset::TILESET_HEIGHT_IN_BLOCKS*16, ChunkyPNG::Color::TRANSPARENT)
-    palette_list = generate_palettes(palette_offset, colors_per_palette)
+    palette_list = generate_palettes(palette_offset, 16)
+    if gfx_pages.any?{|gfx| gfx.colors_per_palette == 256}
+      palette_list_256 = generate_palettes(palette_offset, 256)
+    end
 
     tileset.tiles.each_with_index do |tile, index_on_tileset|
       if tile.is_blank
         next
       end
       
-      graphic_tile_data_file = graphic_tilesets_for_room[tile.tile_page]
-      if graphic_tile_data_file.nil?
+      gfx = gfx_pages[tile.tile_page]
+      if gfx.nil?
         next # TODO: figure out why this sometimes happens.
       end
       
@@ -143,13 +146,18 @@ class Renderer
         puts "Palette index is 0xFF, tileset #{output_filename}"
         next
       end
-      palette = palette_list[tile.palette_index]
+      
+      if gfx.colors_per_palette == 16
+        palette = palette_list[tile.palette_index]
+      else
+        palette = palette_list_256[tile.palette_index]
+      end
       if palette.nil?
         puts "Palette index #{tile.palette_index} out of range, tileset #{output_filename}"
         next # TODO: figure out why this sometimes happens.
       end
       
-      graphic_tile = render_graphic_tile(graphic_tile_data_file, palette, tile.index_on_tile_page)
+      graphic_tile = render_graphic_tile(gfx.file, palette, tile.index_on_tile_page)
       
       if tile.horizontal_flip
         graphic_tile.mirror!
@@ -171,10 +179,10 @@ class Renderer
     return rendered_tileset
   end
   
-  def render_graphic_tile(graphic_tile_data_file, palette, tile_index_on_page)
+  def render_graphic_tile(gfx_file, palette, tile_index_on_page)
     x_block_on_tileset = tile_index_on_page % 8
     y_block_on_tileset = tile_index_on_page / 8
-    render_gfx(graphic_tile_data_file, palette, x=x_block_on_tileset*16, y=y_block_on_tileset*16, width=16, height=16)
+    render_gfx(gfx_file, palette, x=x_block_on_tileset*16, y=y_block_on_tileset*16, width=16, height=16)
   end
   
   def render_gfx_page(gfx_file, palette, canvas_width=16)

@@ -11,7 +11,7 @@ class Layer
                 :z_index,
                 :scroll_mode,
                 :opacity,
-                :render_type,
+                :main_gfx_page_index,
                 :width,
                 :height,
                 :ram_pointer_to_tileset_for_layer,
@@ -33,7 +33,7 @@ class Layer
   
   def read_from_layer_list_entry
     @z_index, @scroll_mode, @opacity, _, _, 
-      @render_type, _, _, _,
+      @main_gfx_page_index, _, _, _,
       @layer_metadata_ram_pointer = fs.read(layer_list_entry_ram_pointer, 16).unpack("CCCCVCCCCV")
   end
   
@@ -120,28 +120,29 @@ class Layer
     fs.write(layer_metadata_ram_pointer+4, [ram_pointer_to_tileset_for_layer, collision_tileset_ram_pointer].pack("VV"))
     fs.write(layer_list_entry_ram_pointer, [z_index, scroll_mode, opacity].pack("CCC"))
     fs.write(layer_list_entry_ram_pointer+6, [height*0xC0].pack("v")) if GAME == "dos"
-    fs.write(layer_list_entry_ram_pointer+8, [render_type].pack("C"))
+    fs.write(layer_list_entry_ram_pointer+8, [main_gfx_page_index].pack("C"))
     fs.write(layer_list_entry_ram_pointer+12, [layer_metadata_ram_pointer].pack("V"))
     tile_data = tiles.map(&:to_tile_data).pack("v*")
     fs.write(layer_tiledata_ram_start_offset, tile_data)
   end
   
   def colors_per_palette
-    colors = 16
-    if render_type > 1
-      colors = 256
-    end
+    main_gfx_page = room.gfx_pages[main_gfx_page_index]
     
-    return colors
+    if main_gfx_page
+      main_gfx_page.colors_per_palette
+    else
+      16
+    end
   end
   
   def tileset_filename
-    if room.graphic_tilesets_for_room
-      tileset_gfx_file_ids = room.graphic_tilesets_for_room.map{|file| file[:id]}.join(",")
+    if room.gfx_pages
+      tileset_gfx_file_ids = room.gfx_pages.map{|gfx| gfx.file[:id]}.join(",")
     else
       tileset_gfx_file_ids = "none"
     end
-    "tileset_%08X_%08X_%s_%d" % [ram_pointer_to_tileset_for_layer, room.palette_offset || 0, tileset_gfx_file_ids, colors_per_palette]
+    "tileset_%08X_%08X_%s" % [ram_pointer_to_tileset_for_layer, room.palette_offset || 0, tileset_gfx_file_ids]
   end
 end
 

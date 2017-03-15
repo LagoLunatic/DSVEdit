@@ -15,7 +15,7 @@ Each block in the tileset is 4 bytes long.
 Starts from the first real tile, not the blank tile.
 Byte 1: The collision of this tile. See Tile collision values.
 Byte 2: 00
-Byte 3: 0B
+Byte 3: 0B or ED
 Byte 4: 3C
 
 Tile collision values:

@@ -27,16 +27,6 @@
       <widget class="QLineEdit" name="tileset_pointer"/>
      </item>
      <item>
-      <widget class="QLabel" name="label_6">
-       <property name="text">
-        <string>Colors per palette</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QLineEdit" name="colors_per_palette"/>
-     </item>
-     <item>
       <widget class="QLabel" name="label_9">
        <property name="text">
         <string>GFX list pointer</string>
@@ -55,6 +45,26 @@
      </item>
      <item>
       <widget class="QLineEdit" name="palette_list_pointer"/>
+     </item>
+     <item>
+      <spacer name="horizontalSpacer">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>40</width>
+         <height>20</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+     <item>
+      <widget class="QPushButton" name="reload_button">
+       <property name="text">
+        <string>Reload</string>
+       </property>
+      </widget>
      </item>
     </layout>
    </item>

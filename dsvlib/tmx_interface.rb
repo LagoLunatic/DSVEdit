@@ -22,7 +22,7 @@ class TMXInterface
     tiled_layers = xml.css("layer")
     tiled_layers.each do |tmx_layer|
       props = extract_properties(tmx_layer)
-      validate_properties(props, "Layer", %w(layer_width layer_height tileset collision_tileset z_index scroll_mode render_type))
+      validate_properties(props, "Layer", %w(layer_width layer_height tileset collision_tileset z_index scroll_mode main_gfx_page_index))
       
       layer_list_entry_ram_pointer = tmx_layer.attr("name").match(/^layer (\h+)$/)[1].to_i(16)
       possible_layers = room.layers.select{|layer| layer.layer_list_entry_ram_pointer == layer_list_entry_ram_pointer}
@@ -37,7 +37,7 @@ class TMXInterface
       game_layer.z_index = props["z_index"]
       game_layer.scroll_mode = props["scroll_mode"]
       game_layer.opacity = ((tmx_layer.attr("opacity")||1.0).to_f*31).to_i
-      game_layer.render_type = props["render_type"]
+      game_layer.main_gfx_page_index = props["main_gfx_page_index"]
       game_layer.tiles = from_tmx_level_data(tmx_layer.css("data").text, game_layer.width, game_layer.height)
       
       game_layer.write_to_rom()
@@ -127,14 +127,14 @@ class TMXInterface
                     :opacity => layer.opacity/31.0) {
             
             xml.properties {
-              xml.property(:name => "layer_width",        :value => "%02X" % layer.width)
-              xml.property(:name => "layer_height",       :value => "%02X" % layer.height)
-              xml.property(:name => "z_index",            :value => "%02X" % layer.z_index)
-              xml.property(:name => "colors_per_palette", :value => "%02X" % layer.colors_per_palette)
-              xml.property(:name => "render_type",        :value => "%02X" % layer.render_type)
-              xml.property(:name => "scroll_mode",        :value => "%02X" % layer.scroll_mode)
-              xml.property(:name => "tileset",            :value => "%08X" % layer.ram_pointer_to_tileset_for_layer)
-              xml.property(:name => "collision_tileset",  :value => "%08X" % layer.collision_tileset_ram_pointer)
+              xml.property(:name => "layer_width",         :value => "%02X" % layer.width)
+              xml.property(:name => "layer_height",        :value => "%02X" % layer.height)
+              xml.property(:name => "z_index",             :value => "%02X" % layer.z_index)
+              xml.property(:name => "colors_per_palette",  :value => "%02X" % layer.colors_per_palette)
+              xml.property(:name => "main_gfx_page_index", :value => "%02X" % layer.main_gfx_page_index)
+              xml.property(:name => "scroll_mode",         :value => "%02X" % layer.scroll_mode)
+              xml.property(:name => "tileset",             :value => "%08X" % layer.ram_pointer_to_tileset_for_layer)
+              xml.property(:name => "collision_tileset",   :value => "%08X" % layer.collision_tileset_ram_pointer)
             }
             
             xml.data(to_tmx_level_data(layer.tiles, layer.width, get_block_offset_for_tileset(layer.tileset_filename, all_tilesets_for_room)), :encoding => "csv")
