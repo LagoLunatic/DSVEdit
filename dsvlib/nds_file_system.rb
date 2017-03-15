@@ -212,6 +212,13 @@ class NDSFileSystem
     @uncommitted_files << file_path
   end
   
+  def overwrite_file(file_path, new_data)
+    file = files_by_path[file_path]
+    @opened_files_cache[file_path] = new_data
+    file[:size] = new_data.size
+    @uncommitted_files << file_path
+  end
+  
   def find_file_by_ram_start_offset(ram_start_offset)
     unless ram_start_offset >= 0x02000000 && ram_start_offset < 0x03000000
       raise "RAM start offset %08X is invalid." % ram_start_offset

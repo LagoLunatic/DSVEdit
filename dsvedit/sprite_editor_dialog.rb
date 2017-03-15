@@ -561,6 +561,7 @@ class SpriteEditor < Qt::Dialog
     if @current_animation.nil?
       @ui.seek_slider.enabled = false
       @ui.toggle_paused_button.enabled = false
+      @ui.frame_delay.text = ""
       return
     end
     
@@ -631,7 +632,12 @@ class SpriteEditor < Qt::Dialog
   end
   
   def save_sprite
-    # TODO
+    @sprite.write_to_rom()
+  rescue Sprite::SaveError => e
+    Qt::MessageBox.warning(self,
+      "Failed to save sprite",
+      e.message
+    )
   end
   
   def button_box_clicked(button)

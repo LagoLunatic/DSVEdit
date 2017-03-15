@@ -1,5 +1,7 @@
 
 class Sprite
+  class SaveError < StandardError ; end
+  
   attr_reader :fs,
               :sprite_pointer,
               :sprite_file,
@@ -59,11 +61,12 @@ class Sprite
     
     @frames = []
     offset = frame_list_offset
+    disposable_hitbox_list = hitboxes.dup
     number_of_frames.times do
       frame_data = fs.read_by_file(sprite_file[:file_path], offset, 12)
       frame = Frame.new(frame_data)
       frame.initialize_parts(parts, @parts_by_offset)
-      frame.initialize_hitboxes_from_sprite_file(hitboxes)
+      frame.initialize_hitboxes_from_sprite_file(disposable_hitbox_list)
       @frames << frame
       
       offset += 12
@@ -158,6 +161,84 @@ class Sprite
     end
   end
   
+  def write_to_rom
+    if @sprite_file
+      write_to_rom_by_sprite_file()
+    else
+      write_to_rom_by_pointer()
+    end
+  end
+  
+  def write_to_rom_by_sprite_file
+    new_data = "\0"*0x40
+    
+    offset = 0x40
+    @part_list_offset = offset
+    @parts.each do |part|
+      new_data << part.to_data
+      offset += 16
+    end
+    
+    @hitbox_list_offset = offset
+    @hitboxes.each do |hitbox|
+      new_data << hitbox.to_data
+      offset += 8
+    end
+    
+    @frame_list_offset = offset
+    @number_of_frames = @frames.length
+    @frames.each do |frame|
+      new_data << frame.to_data
+      offset += 12
+    end
+    
+    @frame_delay_list_offset = offset
+    @frame_delays.each do |frame_delay|
+      new_data << frame_delay.to_data
+      offset += 8
+    end
+    
+    @animation_list_offset = offset
+    @number_of_animations = @animations.length
+    @animations.each do |animation|
+      new_data << animation.to_data
+      offset += 8
+    end
+    
+    new_file_size = new_data.length + 16
+    
+    file_footer_offset = offset
+    file_footer = [
+      @number_of_frames,
+      @number_of_animations,
+      new_file_size,
+      new_file_size,
+      0
+    ].pack("vvVVV")
+    new_data << file_footer
+    
+    new_data[0, 0x30] = [
+      0xBEEFF00D,
+      @part_list_offset,
+      @hitbox_list_offset,
+      @frame_list_offset,
+      @frame_delay_list_offset,
+      @animation_list_offset,
+      0,
+      0,
+      file_footer_offset, # file footer offset
+      @number_of_frames,
+      @number_of_animations,
+      new_file_size,
+    ].pack("V*")
+    
+    fs.overwrite_file(sprite_file[:file_path], new_data)
+  end
+  
+  def write_to_rom_by_pointer
+    raise SaveError.new("Sprites without a sprite file cannot currently be saved.")
+  end
+  
   def min_x
     (parts + hitboxes).map{|item| item.x_pos}.min
   end
@@ -185,17 +266,37 @@ class Part
               :gfx_page_index,
               :vertical_flip,
               :horizontal_flip,
-              :palette_index
+              :palette_index,
+              :unused
   
   def initialize(part_data)
     @x_pos, @y_pos,
       @gfx_x_offset, @gfx_y_offset,
       @width, @height,
       @gfx_page_index, flip_bits,
-      @palette_index, unused = part_data.unpack("s<s<vvvvCCCC")
+      @palette_index, @unused = part_data.unpack("s<s<vvvvCCCC")
     
     @vertical_flip   = (flip_bits & 0b00000001) > 0
     @horizontal_flip = (flip_bits & 0b00000010) > 0
+  end
+  
+  def to_data
+    flip_bits = 0
+    flip_bits |= 0b00000001 if @vertical_flip
+    flip_bits |= 0b00000010 if @horizontal_flip
+    
+    [
+      @x_pos,
+      @y_pos,
+      @gfx_x_offset,
+      @gfx_y_offset,
+      @width,
+      @height,
+      @gfx_page_index,
+      flip_bits,
+      @palette_index,
+      @unused
+    ].pack("s<s<vvvvCCCC")
   end
 end
 
@@ -208,10 +309,15 @@ class Hitbox
   def initialize(hitbox_data)
     @x_pos, @y_pos, @width, @height = hitbox_data.unpack("s<s<vv")
   end
+  
+  def to_data
+    [@x_pos, @y_pos, @width, @height].pack("s<s<vv")
+  end
 end
 
 class Frame
-  attr_reader :number_of_hitboxes,
+  attr_reader :unknown,
+              :number_of_hitboxes,
               :number_of_parts,
               :first_hitbox_offset,
               :first_part_offset,
@@ -223,7 +329,7 @@ class Frame
               :hitboxes
   
   def initialize(frame_data)
-    unk1, unk2, @number_of_hitboxes, @number_of_parts, @first_hitbox_offset, @first_part_offset = frame_data.unpack("CCCCVV")
+    @unknown, @number_of_hitboxes, @number_of_parts, @first_hitbox_offset, @first_part_offset = frame_data.unpack("vCCVV")
   end
   
   def initialize_parts(all_sprite_parts, all_sprite_parts_by_offset)
@@ -247,14 +353,29 @@ class Frame
     end
     @hitbox_indexes = @hitboxes.map{|part| all_sprite_hitboxes.index(part)}
   end
+  
+  def to_data
+    [
+      @unknown,
+      @number_of_hitboxes,
+      @number_of_parts,
+      @first_hitbox_offset,
+      @first_part_offset
+    ].pack("vCCVV")
+  end
 end
 
 class FrameDelay
   attr_reader :frame_index,
-              :delay
+              :delay,
+              :unknown
               
   def initialize(frame_delay_data)
-    @frame_index, @delay, unknown = frame_delay_data.unpack("vvV")
+    @frame_index, @delay, @unknown = frame_delay_data.unpack("vvV")
+  end
+  
+  def to_data
+    [@frame_index, @delay, @unknown].pack("vvV")
   end
 end
 
@@ -272,5 +393,9 @@ class Animation
     @frame_delay_offsets = (@first_frame_delay_offset..@first_frame_delay_offset+@number_of_frames*0x08-1).step(0x08).to_a
     @frame_delays = @frame_delay_offsets.map{|offset| all_frame_delays_by_offset[offset]}
     @frame_delay_indexes = @frame_delays.map{|frame_delay| all_frame_delays.index(frame_delay)}
+  end
+  
+  def to_data
+    [@number_of_frames, @first_frame_delay_offset].pack("VV")
   end
 end
