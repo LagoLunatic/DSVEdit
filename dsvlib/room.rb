@@ -78,7 +78,7 @@ class Room
   rescue NDSFileSystem::ConversionError => e
     # When gfx_list_pointer is like this (e.g. 0x02195984), it just points to 00s instead of actual data.
     # What this means is that the room doesn't load any gfx pages. Instead it just keeps whatever gfx pages the previous room had loaded.
-    @gfx_pages = nil
+    @gfx_pages = []
   end
   
   def read_palette_pages_from_rom(palette_wrapper_ram_pointer)
