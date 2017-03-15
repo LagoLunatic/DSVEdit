@@ -205,7 +205,15 @@ class Sprite
       offset += 8
     end
     
-    new_file_size = new_data.length + 16
+    new_file_size = new_data.length
+    new_file_size += 0x14 # Footer size.
+    
+    padding = ""
+    if new_file_size % 0x10 != 0
+      amount_to_pad = 0x10 - (new_file_size % 0x10)
+      padding = "\0"*amount_to_pad
+      new_file_size += amount_to_pad
+    end
     
     file_footer_offset = offset
     file_footer = [
@@ -213,9 +221,12 @@ class Sprite
       @number_of_animations,
       new_file_size,
       new_file_size,
+      0,
       0
-    ].pack("vvVVV")
+    ].pack("vvVVVV")
     new_data << file_footer
+    
+    new_data << padding
     
     new_data[0, 0x30] = [
       0xBEEFF00D,
