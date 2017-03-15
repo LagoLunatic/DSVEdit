@@ -574,6 +574,8 @@ class SpriteEditor < Qt::Dialog
   
   def animation_changed(i)
     @animation_timer.stop()
+    @current_animation_index = i
+    @ui.animation_index.setCurrentIndex(i)
     @ui.seek_slider.value = 0
     @current_animation_frame_index = 0
     
@@ -663,7 +665,6 @@ class SpriteEditor < Qt::Dialog
   
   def save_sprite
     @sprite.write_to_rom()
-    load_sprite()
   rescue Sprite::SaveError => e
     Qt::MessageBox.warning(self,
       "Failed to save sprite",
