@@ -150,7 +150,7 @@ class SpriteEditor < Qt::Dialog
       else
         skill_name = "Unused"
       end
-      @ui.skill_list.addItem("%02X %s" % [skill_gfx_index, skill_name])
+      @ui.skill_list.addItem("%02X %s" % [skill_gfx_index + 1, skill_name])
     end
     
     OTHER_SPRITES.each_with_index do |other_sprite, id|
