@@ -254,6 +254,10 @@ class NDSFileSystem
       raise FileExpandError.new("Failed to expand room overlay #{file[:overlay_id]} to #{file[:size] + length_to_expand_by} bytes because that is larger than the maximum size a room overlay can be in this game (#{MAX_ALLOWABLE_ROOM_OVERLAY_SIZE} bytes).")
     end
     
+    if file_path == "/ftc/arm9.bin"
+      raise FileExpandError.new("Cannot expand arm9.")
+    end
+    
     old_size = file[:size]
     file[:size] += length_to_expand_by
     
@@ -270,6 +274,10 @@ class NDSFileSystem
   
   def expand_file(file, length_to_expand_by)
     file_path = file[:file_path]
+    
+    if file_path == "/ftc/arm9.bin"
+      raise FileExpandError.new("Cannot expand arm9.")
+    end
     
     old_size = file[:size]
     file[:size] += length_to_expand_by

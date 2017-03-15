@@ -65,6 +65,9 @@ class LayersEditorDialog < Qt::Dialog
     layer.write_to_rom()
     
     layer_changed(@ui.layer_index.currentIndex)
+  rescue NDSFileSystem::FileExpandError => e
+    @room.layers[@ui.layer_index.currentIndex].read_from_rom() # Reload layer
+    Qt::MessageBox.warning(self, "Cannot expand layer", e.message)
   end
   
   def button_box_clicked(button)
