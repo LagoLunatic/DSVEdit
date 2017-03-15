@@ -247,7 +247,29 @@ class Sprite
   end
   
   def write_to_rom_by_pointer
-    raise SaveError.new("Sprites without a sprite file cannot currently be saved.")
+    @parts_by_offset.each do |offset, part|
+      fs.write(offset, part.to_data)
+    end
+    
+    @hitboxes_by_offset.each do |offset, hitbox|
+      fs.write(offset, hitbox.to_data)
+    end
+    
+    offset = @frame_list_offset
+    @frames.each do |frame|
+      fs.write(offset, frame.to_data)
+      offset += 12
+    end
+    
+    @frame_delays_by_offset.each do |offset, frame_delay|
+      fs.write(offset, frame_delay.to_data)
+    end
+    
+    offset = @animation_list_offset
+    @animations.each do |animation|
+      fs.write(offset, animation.to_data)
+      offset += 8
+    end
   end
   
   def min_x
