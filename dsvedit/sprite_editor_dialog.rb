@@ -780,6 +780,13 @@ class SpriteEditor < Qt::Dialog
     part = @sprite.parts[part_index]
     @part_pixmaps_for_part_view[part_index].setPos(part.x_pos, part.y_pos)
     @part_pixmaps_for_frame_view[part_index].setPos(part.x_pos, part.y_pos)
+    
+    min_x = @sprite.min_x
+    min_y = @sprite.min_y
+    full_width = @sprite.full_width
+    full_height = @sprite.full_height
+    @frame_graphics_scene.setSceneRect(min_x, min_y, full_width, full_height)
+    @part_graphics_scene.setSceneRect(min_x, min_y, full_width, full_height)
   end
   
   def inspect; to_s; end
@@ -804,10 +811,6 @@ class PartItem < Qt::GraphicsPixmapItem
       new_pos = value.toPointF()
       x = new_pos.x
       y = new_pos.y
-      #x = [x, scene().sceneRect.right].min
-      #x = [x, scene().sceneRect.left].max
-      #y = [y, scene().sceneRect.bottom].min
-      #y = [y, scene().sceneRect.top].max
       new_pos.setX(x)
       new_pos.setY(y)
       

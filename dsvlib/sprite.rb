@@ -254,6 +254,14 @@ class Sprite
   def max_y
     (parts + hitboxes).map{|item| item.y_pos + item.height}.max
   end
+  
+  def full_width
+    max_x - min_x
+  end
+  
+  def full_height
+    max_y - min_y
+  end
 end
 
 class Part
