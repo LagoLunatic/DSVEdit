@@ -121,7 +121,7 @@ class Renderer
   end
   
   def render_tileset(tileset_offset, palette_offset, gfx_pages, colors_per_palette, collision_tileset_offset, output_filename=nil)
-    if gfx_pages.nil?
+    if gfx_pages.empty?
       return render_collision_tileset(collision_tileset_offset, output_filename)
     end
     

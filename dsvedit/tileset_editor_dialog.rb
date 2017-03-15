@@ -90,11 +90,11 @@ class TilesetEditorDialog < Qt::Dialog
       @ui.palette_index.addItem("%02X" % i)
     end
     
+    render_tileset()
+    
     select_tile(0)
     
     palette_changed(0)
-    
-    render_tileset()
   end
   
   def render_tileset
@@ -102,7 +102,7 @@ class TilesetEditorDialog < Qt::Dialog
     
     @tileset_pixmap_items = []
     @tileset.tiles.each_with_index do |tile, index_on_tileset|
-      if tile.is_blank
+      if index_on_tileset == 0
         @tileset_pixmap_items << nil
         next
       end
@@ -129,8 +129,7 @@ class TilesetEditorDialog < Qt::Dialog
     
     tile_pixmap_item = @tileset_pixmap_items[tile_index]
     if tile_pixmap_item.nil?
-      tile_pixmap_item = Qt::GraphicsPixmapItem.new
-      @tileset_pixmap_items[tile_index] = tile_pixmap_item
+      return
     end
     
     render_tile(tile, tile_pixmap_item)
