@@ -19,6 +19,7 @@ class SpriteEditor < Qt::Dialog
   slots "skill_changed(int)"
   slots "other_sprite_changed(int)"
   slots "animation_changed(int)"
+  slots "frame_delay_changed()"
   slots "toggle_animation_paused()"
   slots "advance_frame()"
   slots "reload_sprite()"
@@ -171,6 +172,7 @@ class SpriteEditor < Qt::Dialog
     connect(@ui.palette_index, SIGNAL("activated(int)"), self, SLOT("palette_changed(int)"))
     connect(@ui.part_index, SIGNAL("activated(int)"), self, SLOT("part_changed(int)"))
     connect(@ui.animation_index, SIGNAL("activated(int)"), self, SLOT("animation_changed(int)"))
+    connect(@ui.frame_delay, SIGNAL("editingFinished()"), self, SLOT("frame_delay_changed()"))
     connect(@ui.part_horizontal_flip, SIGNAL("stateChanged(int)"), self, SLOT("toggle_part_flips(int)"))
     connect(@ui.part_vertical_flip, SIGNAL("stateChanged(int)"), self, SLOT("toggle_part_flips(int)"))
     connect(@ui.toggle_paused_button, SIGNAL("clicked()"), self, SLOT("toggle_animation_paused()"))
@@ -641,6 +643,16 @@ class SpriteEditor < Qt::Dialog
       millisecond_delay = (frame_delay.delay / 60.0 * 1000).round
       @animation_timer.start(millisecond_delay)
     end
+  end
+  
+  def frame_delay_changed
+    return if @current_animation.nil?
+    frame_delay = @current_animation.frame_delays[@current_animation_frame_index]
+    return if frame_delay.nil?
+    delay_num = @ui.frame_delay.text.to_i(16)
+    delay_num = [delay_num, 1].max
+    frame_delay.delay = delay_num
+    @ui.frame_delay.text = "%04X" % frame_delay.delay
   end
   
   def open_skeleton_editor

@@ -374,9 +374,9 @@ class Frame
 end
 
 class FrameDelay
-  attr_reader :frame_index,
-              :delay,
-              :unknown
+  attr_accessor :frame_index,
+                :delay,
+                :unknown
               
   def initialize(frame_delay_data)
     @frame_index, @delay, @unknown = frame_delay_data.unpack("vvV")
