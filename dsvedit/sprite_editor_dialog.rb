@@ -633,6 +633,7 @@ class SpriteEditor < Qt::Dialog
   
   def save_sprite
     @sprite.write_to_rom()
+    load_sprite()
   rescue Sprite::SaveError => e
     Qt::MessageBox.warning(self,
       "Failed to save sprite",
