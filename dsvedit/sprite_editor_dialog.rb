@@ -25,6 +25,8 @@ class SpriteEditor < Qt::Dialog
   slots "open_skeleton_editor()"
   slots "click_gfx_scene(int, int, const Qt::MouseButton&)"
   slots "drag_gfx_scene(int, int, const Qt::MouseButton&)"
+  slots "stop_dragging_gfx_scene(int, int, const Qt::MouseButton&)"
+  slots "toggle_part_flips(int)"
   slots "button_box_clicked(QAbstractButton*)"
   
   def initialize(main_window, game, renderer)
@@ -53,6 +55,7 @@ class SpriteEditor < Qt::Dialog
     @ui.gfx_file_graphics_view.setScene(@gfx_file_graphics_scene)
     connect(@gfx_file_graphics_scene, SIGNAL("clicked(int, int, const Qt::MouseButton&)"), self, SLOT("click_gfx_scene(int, int, const Qt::MouseButton&)"))
     connect(@gfx_file_graphics_scene, SIGNAL("moved(int, int, const Qt::MouseButton&)"), self, SLOT("drag_gfx_scene(int, int, const Qt::MouseButton&)"))
+    connect(@gfx_file_graphics_scene, SIGNAL("released(int, int, const Qt::MouseButton&)"), self, SLOT("stop_dragging_gfx_scene(int, int, const Qt::MouseButton&)"))
     
     @part_graphics_scene = Qt::GraphicsScene.new
     @ui.part_graphics_view.setScene(@part_graphics_scene)
@@ -168,6 +171,8 @@ class SpriteEditor < Qt::Dialog
     connect(@ui.palette_index, SIGNAL("activated(int)"), self, SLOT("palette_changed(int)"))
     connect(@ui.part_index, SIGNAL("activated(int)"), self, SLOT("part_changed(int)"))
     connect(@ui.animation_index, SIGNAL("activated(int)"), self, SLOT("animation_changed(int)"))
+    connect(@ui.part_horizontal_flip, SIGNAL("stateChanged(int)"), self, SLOT("toggle_part_flips(int)"))
+    connect(@ui.part_vertical_flip, SIGNAL("stateChanged(int)"), self, SLOT("toggle_part_flips(int)"))
     connect(@ui.toggle_paused_button, SIGNAL("clicked()"), self, SLOT("toggle_animation_paused()"))
     connect(@ui.reload_button, SIGNAL("clicked()"), self, SLOT("reload_sprite()"))
     connect(@ui.view_skeleton_button, SIGNAL("clicked()"), self, SLOT("open_skeleton_editor()"))
@@ -329,7 +334,7 @@ class SpriteEditor < Qt::Dialog
     @ui.toggle_paused_button.enabled = false
     @ui.frame_delay.text = ""
     
-    @gfx_page_pixmaps_by_palette = {}
+    @rendered_gfx_pages_by_palette = {}
     @part_pixmaps_for_part_view = []
     @part_pixmaps_for_frame_view = []
     @ui.animation_index.clear()
@@ -378,7 +383,7 @@ class SpriteEditor < Qt::Dialog
       @ui.frame_index.addItem("%02X" % i)
     end
     
-    @gfx_page_pixmaps_by_palette = {}
+    @rendered_gfx_pages_by_palette = {}
     
     @ui.gfx_pointer.text = @sprite_info.gfx_file_pointers.map{|ptr| "%08X" % ptr}.join(", ")
     
@@ -427,8 +432,8 @@ class SpriteEditor < Qt::Dialog
     animation_changed(0)
   end
   
-  def load_gfx_pages(palette_index)
-    @gfx_page_pixmaps_by_palette[palette_index] ||= @gfx_pages_with_blanks.map do |gfx|
+  def ensure_gfx_pages_for_palette_exist(palette_index)
+    @rendered_gfx_pages_by_palette[palette_index] ||= @gfx_pages_with_blanks.map do |gfx|
       if gfx.nil?
         nil
       else
@@ -439,18 +444,18 @@ class SpriteEditor < Qt::Dialog
           chunky_image = @renderer.render_gfx(gfx.file, @palettes[palette_index], 0, 0, canvas_width*8, canvas_width*8, canvas_width=canvas_width*8)
         end
         
-        pixmap = Qt::Pixmap.new
-        blob = chunky_image.to_blob
-        pixmap.loadFromData(blob, blob.length)
-        gfx_page_pixmap_item = Qt::GraphicsPixmapItem.new(pixmap)
-        gfx_page_pixmap_item
+        chunky_image
       end
     end
-    
-    @gfx_file_graphics_scene.setSceneRect(0, 0, @gfx_page_pixmaps_by_palette[palette_index].first.pixmap.width, @gfx_page_pixmaps_by_palette[palette_index].first.pixmap.height)
   end
   
-  def frame_changed(i)
+  def load_gfx_pages(palette_index)
+    ensure_gfx_pages_for_palette_exist(palette_index)
+    
+    @gfx_file_graphics_scene.setSceneRect(0, 0, @rendered_gfx_pages_by_palette[palette_index].first.width, @rendered_gfx_pages_by_palette[palette_index].first.height)
+  end
+  
+  def frame_changed(i, do_not_change_current_part: false)
     @current_frame_index = i
     @frame_graphics_scene.items.each do |item|
       @frame_graphics_scene.removeItem(item)
@@ -476,7 +481,9 @@ class SpriteEditor < Qt::Dialog
     
     if frame.part_indexes.first
       @ui.frame_first_part.text = "%02X" % frame.part_indexes.first
-      part_changed(frame.part_indexes.first)
+      unless do_not_change_current_part
+        part_changed(frame.part_indexes.first)
+      end
     else
       @ui.frame_first_part.text = ""
     end
@@ -502,21 +509,27 @@ class SpriteEditor < Qt::Dialog
     end
     @gfx_page_index = gfx_page_index
     
-    pixmap = @gfx_page_pixmaps_by_palette[@palette_index][gfx_page_index]
-    if pixmap.nil?
+    chunky_gfx_page = @rendered_gfx_pages_by_palette[@palette_index][gfx_page_index]
+    if chunky_gfx_page.nil?
       @ui.gfx_file_name.text = "Invalid (gfx page index #{gfx_page_index})"
     else
-      @gfx_file_graphics_scene.addItem(pixmap)
+      pixmap = Qt::Pixmap.new
+      blob = chunky_gfx_page.to_blob
+      pixmap.loadFromData(blob, blob.length)
+      gfx_page_pixmap_item = Qt::GraphicsPixmapItem.new(pixmap)
+      @gfx_file_graphics_scene.addItem(gfx_page_pixmap_item)
       @ui.gfx_file_name.text = @gfx_pages_with_blanks[gfx_page_index].file[:file_path]
     end
     
     @ui.gfx_page_index.setCurrentIndex(gfx_page_index)
     
     part = @sprite.parts[@current_part_index]
-    @selection_rectangle = Qt::GraphicsRectItem.new
-    @selection_rectangle.setPen(RED_PEN_COLOR)
-    @selection_rectangle.setRect(part.gfx_x_offset, part.gfx_y_offset, part.width, part.height)
-    @gfx_file_graphics_scene.addItem(@selection_rectangle)
+    if part.gfx_page_index == @gfx_page_index
+      @selection_rectangle = Qt::GraphicsRectItem.new
+      @selection_rectangle.setPen(RED_PEN_COLOR)
+      @selection_rectangle.setRect(part.gfx_x_offset, part.gfx_y_offset, part.width, part.height)
+      @gfx_file_graphics_scene.addItem(@selection_rectangle)
+    end
   end
   
   def palette_changed(palette_index, force=false)
@@ -524,6 +537,12 @@ class SpriteEditor < Qt::Dialog
       return
     end
     @palette_index = palette_index
+    
+    part = @sprite.parts[@current_part_index]
+    if part && part.palette_index != @palette_index
+      part.palette_index = @palette_index
+      reload_current_part()
+    end
     
     old_gfx_page_index = @gfx_page_index
     old_gfx_page_index = 0 if old_gfx_page_index.nil?
@@ -550,6 +569,9 @@ class SpriteEditor < Qt::Dialog
     else
       palette_changed(part.palette_index)
     end
+    
+    @ui.part_horizontal_flip.setChecked(part.horizontal_flip)
+    @ui.part_vertical_flip.setChecked(part.vertical_flip)
   end
   
   def animation_changed(i)
@@ -700,6 +722,66 @@ class SpriteEditor < Qt::Dialog
     w = [mouse_x, @selection_origin.x].max - x
     h = [mouse_y, @selection_origin.y].max - y
     @selection_rectangle.setRect(x, y, w, h)
+  end
+  
+  def stop_dragging_gfx_scene(mouse_x, mouse_y, button)
+    update_current_part()
+  end
+  
+  def toggle_part_flips(checked)
+    update_current_part()
+  end
+  
+  def update_current_part
+    x = @selection_rectangle.rect.x
+    y = @selection_rectangle.rect.y
+    w = @selection_rectangle.rect.width
+    h = @selection_rectangle.rect.height
+    
+    if w == 0 || h == 0
+      return
+    end
+    if x < 0 || x >= @gfx_file_graphics_scene.width || y < 0 || y >= @gfx_file_graphics_scene.height
+      return
+    end
+    if x+w < 0 || x+w >= @gfx_file_graphics_scene.width || y+h < 0 || y+h >= @gfx_file_graphics_scene.height
+      return
+    end
+    
+    part = @sprite.parts[@current_part_index]
+    part.gfx_x_offset = x.to_i
+    part.gfx_y_offset = y.to_i
+    part.width        = w.to_i
+    part.height       = h.to_i
+    
+    part.gfx_page_index = @gfx_page_index
+    part.palette_index = @palette_index
+    
+    part.horizontal_flip = @ui.part_horizontal_flip.checked
+    part.vertical_flip = @ui.part_vertical_flip.checked
+    
+    reload_current_part()
+  end
+  
+  def reload_current_part
+    part = @sprite.parts[@current_part_index]
+    ensure_gfx_pages_for_palette_exist(@palette_index)
+    chunky_gfx_page = @rendered_gfx_pages_by_palette[@palette_index][@gfx_page_index]
+    chunky_part = @renderer.render_sprite_part(part, chunky_gfx_page)
+    
+    pixmap = Qt::Pixmap.new
+    blob = chunky_part.to_blob
+    pixmap.loadFromData(blob, blob.length)
+    
+    part_pixmap_item_for_part_view = Qt::GraphicsPixmapItem.new(pixmap)
+    part_pixmap_item_for_part_view.setOffset(part.x_pos, part.y_pos)
+    @part_pixmaps_for_part_view[@current_part_index] = part_pixmap_item_for_part_view
+    part_pixmap_item_for_frame_view = Qt::GraphicsPixmapItem.new(pixmap)
+    part_pixmap_item_for_frame_view.setOffset(part.x_pos, part.y_pos)
+    @part_pixmaps_for_frame_view[@current_part_index] = part_pixmap_item_for_frame_view
+    
+    part_changed(@current_part_index)
+    frame_changed(@current_frame_index, do_not_change_current_part: true)
   end
   
   def inspect; to_s; end

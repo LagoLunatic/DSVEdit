@@ -257,17 +257,17 @@ class Sprite
 end
 
 class Part
-  attr_reader :x_pos,
-              :y_pos,
-              :gfx_x_offset,
-              :gfx_y_offset,
-              :width,
-              :height,
-              :gfx_page_index,
-              :vertical_flip,
-              :horizontal_flip,
-              :palette_index,
-              :unused
+  attr_accessor :x_pos,
+                :y_pos,
+                :gfx_x_offset,
+                :gfx_y_offset,
+                :width,
+                :height,
+                :gfx_page_index,
+                :vertical_flip,
+                :horizontal_flip,
+                :palette_index,
+                :unused
   
   def initialize(part_data)
     @x_pos, @y_pos,
