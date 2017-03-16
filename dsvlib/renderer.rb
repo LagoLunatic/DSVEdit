@@ -886,7 +886,7 @@ class Renderer
     format = item_type[:format]
     format_length = format.inject(0){|sum, attr| sum += attr[0]}
     pointer = item_type[:list_pointer] + item_index*format_length
-    item = Item.new(item_index, item_type, fs)
+    item = GenericEditable.new(item_index, item_type, fs)
     
     if mode == :item
       icon_index, palette_index = EXTRACT_ICON_INDEX_AND_PALETTE_INDEX.call(item["Icon"])
@@ -909,7 +909,7 @@ class Renderer
       base_pointer = item_type[:list_pointer]
       item_type[:count].times do |item_index|
         pointer = base_pointer+item_index*format_length
-        item = Item.new(item_index, item_type, fs)
+        item = GenericEditable.new(item_index, item_type, fs)
         if item["Item ID"] == global_id
           icon_index, palette_index = EXTRACT_ICON_INDEX_AND_PALETTE_INDEX.call(item["Icon"])
           return render_icon(icon_index, palette_index, mode=:item)
