@@ -778,7 +778,7 @@ SKILL_FORMAT = [
   [1, "Unknown 1"],
   [1, "Unknown 2"],
   [2, "Mana cost"],
-  [2, "Attack"],
+  [2, "DMG multiplier"],
   [4, "Effects", :bitfield],
   [4, "Unwanted States"],
   [2, "Var A"],

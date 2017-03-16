@@ -34,7 +34,8 @@ Byte 24: Chance to drop an item.
     (this_number*3*2) / (1024 - luck)
 Bytes 25-26: ???
 Byte 27: ID of soul this enemy drops (see soul ID list). FF means no soul.
-Byte 28: ???
+Byte 28: This is the number of points/slots this enemy's soul costs to place in enemy set mode.
+  00 means it can't be placed in enemy set mode.
 Byte 29-32: Which elements this enemy is weak to. Bitfield.
   Least significant bit first.
   Bit 1: Clubs

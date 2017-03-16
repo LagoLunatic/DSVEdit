@@ -127,13 +127,13 @@ Skill format:
     1 - Dual Crush.
     3 - Relic.
   Byte 7:
-    Bit 1:
+    Bit 1: Affects damage calculation somehow?
     Bit 2:
     Bit 3: Is a chargeable spell.
     Bits 5-8: Unused?
   Byte 8: 
   Bytes 9-10: Mana cost.
-  Bytes 11-12: Attack stat.
+  Bytes 11-12: Damage multiplier.
   Bytes 13-16: Bitfield for what elemental damage types this skill does.
   Bytes 17-20: Bitfield of player state booleans that must be false in order to use this skill. Checks bitfield 020FCB80/020FCCB0 (the player's current state booleans, first is for player 1, second is for player 2). 0 means it can be used in any state.
   Bytes 21-22:

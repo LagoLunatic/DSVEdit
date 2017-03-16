@@ -132,7 +132,7 @@ Soul format:
     3 - 5 levels.
     4 - 9 levels.
   Bytes 11-12: Mana cost.
-  Bytes 13-14: Attack stat.
+  Bytes 13-14: Damage multiplier.
   Bytes 15-16: 
   Bytes 17-20: Bitfield for what elemental damage types this soul does.
   Bytes 21-24: Bitfield of player state booleans that must be false in order to use this glyph. Checks bitfield 020CAA00 (the player's current state booleans). 0 means it can be used in any state.

@@ -718,7 +718,7 @@ end
 ARM_GLYPH_FORMAT = [
   # length: 32
   [2, "Item ID"],
-  [2, "Attack"],
+  [2, "DMG multiplier"],
   [4, "Code Pointer"],
   [1, "Sprite"],
   [1, "Unknown 1"],
@@ -739,7 +739,7 @@ ARM_GLYPH_FORMAT = [
 BACK_GLYPH_FORMAT = [
   # length: 28
   [2, "Item ID"],
-  [2, "Attack"],
+  [2, "DMG multiplier"],
   [4, "Code Pointer"],
   [1, "Sprite"],
   [1, "Unknown 2"],
@@ -757,7 +757,7 @@ BACK_GLYPH_FORMAT = [
 GLYPH_UNION_FORMAT = [
   # length: 28
   [2, "Item ID"],
-  [2, "Attack"],
+  [2, "DMG multiplier"],
   [4, "Code Pointer"],
   [1, "Sprite"],
   [1, "Unknown 1"],

@@ -153,7 +153,7 @@ ENEMY_DNA_FORMAT = [
   [1, "Item Chance"],
   [2, "Unknown 3"],
   [1, "Soul"],
-  [1, "Unknown 4"],
+  [1, "Enemy Set Cost"],
   [4, "Weaknesses", :bitfield],
   [4, "Resistances", :bitfield],
 ]
@@ -633,7 +633,7 @@ SOUL_FORMAT = [
   [1, "Input flags", :bitfield],
   [2, "Soul Scaling"],
   [2, "Mana cost"],
-  [2, "Attack"],
+  [2, "DMG multiplier"],
   [2, "Unknown 3"],
   [4, "Effects", :bitfield],
   [4, "Unwanted States", :bitfield],

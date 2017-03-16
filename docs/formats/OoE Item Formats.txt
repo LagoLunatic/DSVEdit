@@ -1,7 +1,7 @@
 Arm glyph format:
   32 bytes long.
   Bytes 1-2: Item ID.
-  Bytes 3-4: Attack stat.
+  Bytes 3-4: Damage multiplier.
   Bytes 5-8: Pointer to code run when using the glyph.
   Byte 9: Sprite.
   Byte 10:
@@ -11,6 +11,8 @@ Arm glyph format:
   Byte 11: Maximum number of this projectile you can have in the room at once (per arm).
   Byte 12: Mana cost of using this glyph.
   Bytes 13-16: Bitfield for what elemental damage types this glyph does.
+    If it does either Strike or Slash damage, it will use the player's strength for damage calculation.
+    If it does neither Strike nor Slash then it uses the player's intelligence.
   Bytes 17-20: Bitfield of player state booleans that must be false in order to use this glyph. Checks bitfield 021098F0 (the player's current state booleans). 0 means it can be used in any state.
   Bytes 21-22: Icon.
     Normal icons go up to 004F. Higher than that and the glyph will be invisible or have bugged graphics.
@@ -34,13 +36,15 @@ Arm glyph format:
 Back glyph format:
   28 bytes long.
   Bytes 1-2: Item ID.
-  Bytes 3-4: Attack stat.
+  Bytes 3-4: Damage multiplier.
   Bytes 5-8: Pointer to code run when using the glyph.
   Byte 9: Sprite.
   Byte 10:
   Byte 11: Maximum number of this projectile you can have in the room at once.
   Byte 12: Mana cost.
   Bytes 13-16: Bitfield for what elemental damage types this glyph does.
+    If it does either Strike or Slash damage, it will use the player's strength for damage calculation.
+    If it does neither Strike nor Slash then it uses the player's intelligence.
   Bytes 17-20: Bitfield of player state booleans that must be false in order to use this glyph. Checks bitfield 021098F0 (the player's current state booleans). 0 means it can be used in any state.
   Bytes 21-22: Icon.
     Normal icons go up to 004F. Higher than that and the glyph will be invisible or have bugged graphics.
@@ -66,13 +70,15 @@ Back glyph format:
 Glyph union format:
   28 bytes long.
   Bytes 1-2: Item ID.
-  Bytes 3-4: Attack stat.
+  Bytes 3-4: Damage multiplier.
   Bytes 5-8: Pointer to code run when using the glyph.
   Byte 9: Sprite.
   Byte 10: 
   Byte 11: Maximum number of this projectile you can have in the room at once.
   Byte 12: Mana cost of using this glyph.
   Bytes 13-16: Bitfield for what elemental damage types this glyph does.
+    If it does either Strike or Slash damage, it will use the player's strength for damage calculation.
+    If it does neither Strike nor Slash then it uses the player's intelligence.
   Bytes 17-20: Bitfield of player state booleans that must be false in order to use this glyph. Checks bitfield 021098F0 (the player's current state booleans). 0 means it can be used in any state.
   Bytes 21-22: Icon.
     Normal icons go up to 004F. Higher than that and the glyph will be invisible or have bugged graphics.
