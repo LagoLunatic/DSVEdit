@@ -182,6 +182,7 @@ class SpriteInfo
       
       gfx_file_pointers = unpack_gfx_pointer_list(gfx_wrapper, fs)
     end
+    possible_palette_pointers -= gfx_files_to_load.map{|gfx| gfx.gfx_pointer}
     
     
     
