@@ -14,7 +14,7 @@ class EnemyEditor < Qt::Dialog
     
     enemy_type = {
       name: "Enemies",
-      list_pointer: 0x020BE568,
+      list_pointer: ENEMY_DNA_RAM_START_OFFSET,
       count: ENEMY_IDS.size,
       kind: :enemy,
       format: ENEMY_DNA_FORMAT
