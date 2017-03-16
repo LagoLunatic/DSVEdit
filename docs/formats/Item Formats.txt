@@ -276,14 +276,14 @@ Byte 29-30: Bitfield affecting the attack animation and super attack animation.
   Bit 4: The player doesn't play a swinging animation.
   Bit 5: No trailing slash effect on the weapon.
   Bit 6: ??? Used for Heaven's Sword.
-  Bit 7: ???
+  Bit 7: ? Used for all whips. The only one it seems to affect is the unlocked Vampire killer, turning it off for that disables the palette cycling it does.
   Bit 8: Gives weapon a shaky echo effect.
   Bit 9: If combined with bit 4, the weapon stops swinging immediately. Basically this is the inverse of how it worked in DoS.
   Bit 10:
   Bit 11:
   Bit 12: Weapon persists even when the player's swing animation end.
   Bit 13: Whip cannot be dangled.
-  Bit 14:
+  Bit 14: Can whip diagonally downward (if you have Whip Skill 2 relic).
   Bit 15:
   Bit 16:
 Bytes 31-32: Swinging sound effect of the weapon.
