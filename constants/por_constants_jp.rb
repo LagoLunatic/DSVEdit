@@ -224,14 +224,14 @@ ITEM_TYPES = [
     name: "Skills",
     list_pointer: 0x020D8538,
     count: 108,
-    is_skill: true,
+    kind: :skill,
     format: SKILL_FORMAT # length: 24
   },
   {
     name: "Skills (extra data)",
     list_pointer: 0x020D8350,
     count: 81,
-    is_skill: true,
+    kind: :skill,
     format: SKILL_EXTRA_DATA_FORMAT # length: 6
   },
 ]

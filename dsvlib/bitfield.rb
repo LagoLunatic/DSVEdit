@@ -1,9 +1,11 @@
 
 class Bitfield
-  attr_reader :value
+  attr_reader :value,
+              :names
   
-  def initialize(value)
+  def initialize(value, names)
     @value = value
+    @names = names
   end
   
   def [](index)

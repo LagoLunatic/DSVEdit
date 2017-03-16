@@ -149,21 +149,21 @@ ITEM_TYPES = [
     name: "Arm Glyphs",
     list_pointer: 0x020F14D8,
     count: 55,
-    is_skill: true,
+    kind: :skill,
     format: ARM_GLYPH_FORMAT
   },
   {
     name: "Back Glyphs",
     list_pointer: 0x020F039C,
     count: 25,
-    is_skill: true,
+    kind: :skill,
     format: BACK_GLYPH_FORMAT
   },
   {
     name: "Glyph Unions",
     list_pointer: 0x020F0C34,
     count: 31,
-    is_skill: true,
+    kind: :skill,
     format: GLYPH_UNION_FORMAT
   },
   {

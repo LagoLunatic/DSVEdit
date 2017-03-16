@@ -92,8 +92,8 @@ class SpriteEditor < Qt::Dialog
     max_skill_gfx_index = 0
     ITEM_TYPES.each do |item_type|
       (0..item_type[:count]-1).each do |index|
-        item = Item.new(index, item_type, fs)
-        if item.is_skill
+        item = GenericEditable.new(index, item_type, fs)
+        if item.kind == :skill
           if item["Sprite"] && item["Sprite"] > max_skill_gfx_index
             max_skill_gfx_index = item["Sprite"]
           end

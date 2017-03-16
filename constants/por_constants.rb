@@ -197,8 +197,8 @@ LIST_OF_FILE_RAM_LOCATIONS_ENTRY_LENGTH = 0x20
 COLOR_OFFSETS_PER_256_PALETTE_INDEX = 256
 
 ENEMY_DNA_RAM_START_OFFSET = 0x020BE568
-ENEMY_DNA_LENGTH = 32
 ENEMY_DNA_FORMAT = [
+  # length: 32
   [4, "Init AI"],
   [4, "Running AI"],
   [2, "Item 1"],
@@ -831,14 +831,14 @@ ITEM_TYPES = [
     name: "Skills",
     list_pointer: 0x020E3CFC,
     count: 108,
-    is_skill: true,
+    kind: :skill,
     format: SKILL_FORMAT # length: 24
   },
   {
     name: "Skills (extra data)",
     list_pointer: 0x020E3B14,
     count: 81,
-    is_skill: true,
+    kind: :skill,
     format: SKILL_EXTRA_DATA_FORMAT # length: 6
   },
 ]

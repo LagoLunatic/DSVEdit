@@ -149,7 +149,7 @@ class Game
       
       ITEM_TYPES.each do |item_type|
         (0..item_type[:count]-1).each do |index|
-          items << Item.new(index, item_type, fs)
+          items << GenericEditable.new(index, item_type, fs)
         end
       end
       

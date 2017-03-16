@@ -121,14 +121,14 @@ ITEM_TYPES = [
     name: "Souls",
     list_pointer: 0x0209D0A0,
     count: 123,
-    is_skill: true,
+    kind: :skill,
     format: SOUL_FORMAT # length: 28
   },
   {
     name: "Souls (extra data)",
     list_pointer: 0x0209D034,
     count: 53,
-    is_skill: true,
+    kind: :skill,
     format: SOUL_EXTRA_DATA_FORMAT # length: 2
   },
 ]

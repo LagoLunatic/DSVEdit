@@ -274,8 +274,8 @@ BOSS_ID_TO_BOSS_DOOR_VAR_B = {
 }
 
 ENEMY_DNA_RAM_START_OFFSET = 0x020B6364
-ENEMY_DNA_LENGTH = 36
 ENEMY_DNA_FORMAT = [
+  # length: 36
   [4, "Init AI"],
   [4, "Running AI"],
   [2, "Item 1"],
@@ -830,21 +830,21 @@ ITEM_TYPES = [
     name: "Arm Glyphs",
     list_pointer: 0x020F0A08,
     count: 55,
-    is_skill: true,
+    kind: :skill,
     format: ARM_GLYPH_FORMAT
   },
   {
     name: "Back Glyphs",
     list_pointer: 0x020EF8CC,
     count: 25,
-    is_skill: true,
+    kind: :skill,
     format: BACK_GLYPH_FORMAT
   },
   {
     name: "Glyph Unions",
     list_pointer: 0x020F0164,
     count: 31,
-    is_skill: true,
+    kind: :skill,
     format: GLYPH_UNION_FORMAT
   },
   {
