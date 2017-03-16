@@ -1,21 +1,21 @@
 
-DSVEdit (DSVania Editor) is a work-in-progress editor for the three Castlevania games for the Nintendo DS: Dawn of Sorrow, Portrait of Ruin, and Order of Ecclesia (only compatible with North American versions).
+DSVEdit (DSVania Editor) is a work-in-progress editor for the three Castlevania games for the Nintendo DS: Dawn of Sorrow, Portrait of Ruin, and Order of Ecclesia. It's currently compatible with the North American and Japanese versions.
 
 Source code: https://github.com/LagoLunatic/DSVEdit
 Report issues here: https://github.com/LagoLunatic/DSVEdit/issues
 
 ### Features
 
-* Viewing and editing rooms (tiles, entities, and doors)
+* Editing rooms (tiles, entities, and doors)
 * Resizing rooms, and adding and removing entities and doors. Files are automatically expanded as necessary to avoid overwriting other data.
-* Viewing and editing enemies (max HP, attack, items dropped, etc.)
-* Viewing and editing text
-* Viewing and editing items
-* Viewing and editing random chest item pools
-* Viewing and editing area maps
-* Viewing sprites (enemies, objects, weapons, etc)
-* Viewing and editing GFX and palettes
-* Viewing and editing which songs play in which areas
+* Editing enemies (max HP, attack, items dropped, etc.)
+* Editing items
+* Editing GFX and palettes
+* Editing sprites (enemies, objects, weapons, etc)
+* Editing area maps
+* Editing text
+* Editing which songs play in which areas
+* Editing random chest item pools
 
 ### Requirements
 
@@ -52,7 +52,7 @@ If you want the changes you made to be saved to the filesystem, don't forget to 
 Right click on the entity you want to edit in the room and an entity editor window will pop up. Here you can edit the entity's type/subtype/variables/etc.
 The bottom half of the window will display documentation on the specific entity selected (if available). This explains exactly what this entity does, and how its variables affect this.
 
-You can add a new entity to a room by right clicking on the background of a room and selecting Add Entity.
+You can add a new entity to a room by putting your mouse over the place you want the entity and pressing A.
 
 ### Editing enemies, items, text, and maps
 
