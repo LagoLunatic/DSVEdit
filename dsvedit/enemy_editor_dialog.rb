@@ -2,7 +2,6 @@
 require_relative 'ui_enemy_editor'
 
 class EnemyEditor < Qt::Dialog
-  slots "enemy_changed(int)"
   slots "button_pressed(QAbstractButton*)"
   
   def initialize(main_window, fs)
@@ -19,9 +18,22 @@ class EnemyEditor < Qt::Dialog
       kind: :enemy,
       format: ENEMY_DNA_FORMAT
     }
-    editor_widget = GenericEditorWidget.new(fs, enemy_type, main_window.game.enemy_format_doc)
-    @ui.horizontalLayout.addWidget(editor_widget)
+    @editor_widget = GenericEditorWidget.new(fs, enemy_type, main_window.game.enemy_format_doc)
+    @ui.horizontalLayout.addWidget(@editor_widget)
+    
+    connect(@ui.buttonBox, SIGNAL("clicked(QAbstractButton*)"), self, SLOT("button_pressed(QAbstractButton*)"))
     
     self.show()
+  end
+  
+  def button_pressed(button)
+    if @ui.buttonBox.standardButton(button) == Qt::DialogButtonBox::Ok
+      @editor_widget.save_current_item()
+      self.close()
+    elsif @ui.buttonBox.standardButton(button) == Qt::DialogButtonBox::Cancel
+      self.close()
+    elsif @ui.buttonBox.standardButton(button) == Qt::DialogButtonBox::Apply
+      @editor_widget.save_current_item()
+    end
   end
 end
