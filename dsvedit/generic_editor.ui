@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>1180</width>
-    <height>500</height>
+    <height>720</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -17,7 +17,14 @@
    <item>
     <layout class="QHBoxLayout" name="horizontalLayout" stretch="3,5,8">
      <item>
-      <widget class="QListWidget" name="item_list"/>
+      <widget class="QListWidget" name="item_list">
+       <property name="minimumSize">
+        <size>
+         <width>0</width>
+         <height>420</height>
+        </size>
+       </property>
+      </widget>
      </item>
      <item>
       <layout class="QVBoxLayout" name="verticalLayout_2">
@@ -170,6 +177,9 @@
       </widget>
      </item>
     </layout>
+   </item>
+   <item>
+    <widget class="QPlainTextEdit" name="format_doc"/>
    </item>
   </layout>
  </widget>

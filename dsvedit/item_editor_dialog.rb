@@ -14,7 +14,35 @@ class ItemEditor < Qt::Dialog
     @fs = fs
     
     ITEM_TYPES.each do |item_type|
-      tab = GenericEditorWidget.new(fs, item_type)
+      doc_name = case item_type[:name]
+      when "Consumables"
+        "Consumable format"
+      when "Weapons", "Weapons (Unused)"
+        "Weapon format"
+      when "Skills"
+        "Skill format"
+      when "Skills (extra data)"
+        "Extra skill data format"
+      when "Relics"
+        "Relic format"
+      when "Arm Glyphs"
+        "Arm glyph format"
+      when "Back Glyphs"
+        "Back glyph format"
+      when "Glyph Unions"
+        "Glyph union format"
+      when "Armor"
+        "Body armor and Accessory format"
+      when "Body Armor", "Head Armor", "Leg Armor", "Accessories"
+        "Armor format"
+      when "Souls"
+        "Soul format"
+      when "Souls (extra data)"
+        "Extra soul data format"
+      end
+      doc = main_window.game.item_format_docs[doc_name]
+      
+      tab = GenericEditorWidget.new(fs, item_type, doc)
       name = item_type[:name]
       @ui.tabWidget.addTab(tab, name)
     end

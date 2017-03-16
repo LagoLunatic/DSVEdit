@@ -1,0 +1,22 @@
+OoE Enemy DNA (36 bytes long):
+Bytes 1-4: Enemy init code.
+Bytes 5-8: Enemy running AI.
+Bytes 9-10: Item 1
+Bytes 11-12: Item 2
+Byte 13: ???
+Byte 14: ???
+Bytes 15-16: Max HP
+Bytes 17-18: EXP
+Byte 19: ???
+Byte 20: ???
+Bytes 21-22: Glyph
+Byte 23: Chance to drop glyph
+Byte 24: Attack.
+Byte 25: Defense.
+Byte 26: Magical defense.
+Byte 27: Chance to drop item 1
+Byte 28: Chance to drop item 2
+Bytes 29-32: Weaknesses
+  Bit 26: Enemy takes extra damage? (117 -> 176)
+Bytes 33-36: Resistances
+  Bit 32: Can cause the enemy to have corrupted graphics and palette?

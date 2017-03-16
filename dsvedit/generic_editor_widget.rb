@@ -7,7 +7,7 @@ class GenericEditorWidget < Qt::Widget
   slots "item_changed(int)"
   slots "open_icon_chooser()"
   
-  def initialize(fs, item_type)
+  def initialize(fs, item_type, format_doc)
     super()
     @ui = Ui_GenericEditorWidget.new
     @ui.setup_ui(self)
@@ -73,6 +73,8 @@ class GenericEditorWidget < Qt::Widget
       # If there are no bitfields then blank out the tree widget, otherwise it defaults to showing just a "1".
       @ui.treeWidget.headerItem.setText(0, "")
     end
+    
+    @ui.format_doc.setPlainText(format_doc)
     
     item_changed(0)
   end

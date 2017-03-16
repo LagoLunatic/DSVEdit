@@ -1,0 +1,152 @@
+Consumable format:
+  12 bytes long.
+  Bytes 1-2: Item ID.
+  Bytes 3-4:
+    Least significant bit first.
+    Bits 1-11: Icon.
+    Bits 12-13: Icon palette.
+    Bits 14-16: Unused?
+  Bytes 5-8: Store price of the item.
+  Byte 9: Type of the item. 0 restores HP, 1 restores MP, 2 is special, 3 subtracts HP, 4 cannot be used.
+  Byte 10: Always 00, no effect.
+  Bytes 11-12: Varies by the item type.
+    For type 0: Amount of HP to restore.
+    For type 1: Amount of MP to restore.
+    For type 2:
+      00: Cannot be used.
+      01: Cures poison.
+      02: Nullifies curse.
+    For type 3: Amount of HP to subtract.
+    For type 4: No effect.
+
+Armor format:
+  24 bytes long.
+  Bytes 1-2: Item ID.
+  Bytes 3-4:
+    Least significant bit first.
+    Bits 1-11: Icon.
+    Bits 12-13: Icon palette.
+    Bits 14-16: Unused?
+  Bytes 5-8: Store price of the item.
+  Byte 9: 02 for accessories, 01 for other types of armor.
+  Byte 10: 
+  Byte 11: Bitfield for who can equip this item.
+    Least significant bit first.
+    Bit 1: Jonathan can equip the item.
+    Bit 2: Charlotte can equip the item.
+  Byte 12: Attack stat? Unused for rings/body armor
+  Byte 13: Defense stat.
+  Byte 14: Strength stat (signed).
+  Byte 15: Constitution stat (signed).
+  Byte 16: Intelligence stat (signed).
+  Byte 17: Mind stat (signed).
+  Byte 18: Luck stat (signed).
+  Byte 19:
+  Byte 20:
+  Bytes 21-22: Bitfield for what elemental resistances this armor gives you.
+  Byte 23:
+  Byte 24:
+
+Weapon format:
+  32 bytes long.
+  Bytes 1-2: Item ID.
+  Bytes 3-4:
+    Least significant bit first.
+    Bits 1-11: Icon.
+    Bits 12-13: Icon palette.
+    Bits 14-16: Unused?
+  Bytes 5-8: Store price of the item.
+  Byte 9: Animation the player character plays when swinging the weapon.
+    00: Fast stab.
+    02: Slash.
+    03: Fast overhead swing.
+    04: Far forward stab.
+    05: Slow overhead swing.
+    06: Slow overhead swing, same as 05?
+    07: Punch.
+    08: Whip.
+    09: Book.
+  Byte 10: Graphical effect.
+    00: No effect.
+    01: Nebula.
+    02: Flame Whip.
+    03: Rahab's Frost.
+    04: Agni's Flame.
+    05: Heaven's Sword (throw the weapon straight in front of you, then it comes back to you).
+    06: Illusion Fist.
+    07: Tori (throw the weapon diagonally upwards, then it comes back to you).
+    08+: Crash.
+  Byte 11: Bitfield for who can equip this item.
+    Least significant bit first.
+    Bit 1: Jonathan can equip the item.
+    Bit 2: Charlotte can equip the item.
+  Byte 12: Attack stat.
+  Byte 13: Defense stat.
+  Byte 14: Strength stat (signed).
+  Byte 15: Constitution stat (signed).
+  Byte 16: Intelligence stat (signed).
+  Byte 17: Mind stat (signed).
+  Byte 18: Luck stat (signed).
+  Byte 19: ?
+  Byte 20: ?
+  Bytes 21-22: Bitfield for the elemental damage types this weapon deals.
+  Bytes 23-24: Bitfield.
+    Least significant bit first.
+    Bit 16: Unknown, set for all fist weapons (except the default fists you get when nothing is equipped).
+    Bit 20: Can kill Red Skeletons/Axe Armors.
+  Byte 25: Sprite to use for the weapon when you swing it. Doesn't just effect visuals, also hitboxes.
+  Byte 26: Palette offset to use for the weapon when you swing it.
+  Byte 27: IFrames. An enemy hit by this weapon will be invulnerable to weapons for this number of frames.
+  Byte 28: 
+  Byte 29-30: Bitfield affecting the attack animation and super attack animation.
+    Least significant bit first.
+    Bit 1: Animation doesn't get interrupted when the player lands.
+    Bit 2: Weapon doesn't follow the player, it floats in the air where the player started swinging it.
+    Bit 3: Unused.
+    Bit 4: The player doesn't play a swinging animation.
+    Bit 5: No trailing slash effect on the weapon.
+    Bit 6: ??? Used for Heaven's Sword.
+    Bit 7: ? Used for all whips. The only one it seems to affect is the unlocked Vampire killer, turning it off for that disables the palette cycling it does.
+    Bit 8: Gives weapon a shaky echo effect.
+    Bit 9: If combined with bit 4, the weapon stops swinging immediately. Basically this is the inverse of how it worked in DoS.
+    Bit 10:
+    Bit 11:
+    Bit 12: Weapon persists even when the player's swing animation end.
+    Bit 13: Whip cannot be dangled.
+    Bit 14: Can whip diagonally downward (if you have Whip Skill 2 relic).
+    Bit 15:
+    Bit 16:
+  Bytes 31-32: Swinging sound effect of the weapon.
+
+Skill format:
+  24 bytes long.
+  Bytes 1-4: Code pointer.
+  Byte 5: Sprite.
+  Byte 6: Type.
+    0 - Subweapon/Spell.
+    1 - Dual Crush.
+    3 - Relic.
+  Byte 7:
+    Bit 1:
+    Bit 2:
+    Bit 3: Is a chargeable spell.
+    Bits 5-8: Unused?
+  Byte 8: 
+  Bytes 9-10: Mana cost.
+  Bytes 11-12: Attack stat.
+  Bytes 13-16: Bitfield for what elemental damage types this skill does.
+  Bytes 17-20: Bitfield of player state booleans that must be false in order to use this skill. Checks bitfield 020FCB80/020FCCB0 (the player's current state booleans, first is for player 1, second is for player 2). 0 means it can be used in any state.
+  Bytes 21-22:
+    For Dual Crushes: Voice file 1 ID.
+  Bytes 23-24:
+    For Subweapons/Spells: Which stat or status effect to affect.
+    For Dual Crushes: Voice file 2 ID.
+
+Extra skill data format:
+  6 bytes long.
+  Bytes 1-2:
+    Bits 1-4: Maximum number of this projectile you can have in the room at once.
+    Bits 5-16: (For subweapons) Additional max you get when you've mastered this subweapon.
+    Bits 5-16: (For spells) Number of frames this spell takes to charge up.
+  Bytes 3-4: Number of SP points this subweapon takes to master.
+  Bytes 5-6: ??

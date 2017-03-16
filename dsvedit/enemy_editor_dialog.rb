@@ -19,7 +19,7 @@ class EnemyEditor < Qt::Dialog
       kind: :enemy,
       format: ENEMY_DNA_FORMAT
     }
-    editor_widget = GenericEditorWidget.new(fs, enemy_type)
+    editor_widget = GenericEditorWidget.new(fs, enemy_type, main_window.game.enemy_format_doc)
     @ui.horizontalLayout.addWidget(editor_widget)
     
     self.show()

@@ -1,0 +1,145 @@
+Arm glyph format:
+  32 bytes long.
+  Bytes 1-2: Item ID.
+  Bytes 3-4: Attack stat.
+  Bytes 5-8: Pointer to code run when using the glyph.
+  Byte 9: Sprite.
+  Byte 10:
+    Bit 1: ?
+    Bit 2: If set, the player doesn't play a swinging animation when using this glyph.
+    Bits 3-8: Glyph union type. This value for both arms is used by function 0206E610 to determine what glyph union to use.
+  Byte 11: Maximum number of this projectile you can have in the room at once (per arm).
+  Byte 12: Mana cost of using this glyph.
+  Bytes 13-16: Bitfield for what elemental damage types this glyph does.
+  Bytes 17-20: Bitfield of player state booleans that must be false in order to use this glyph. Checks bitfield 021098F0 (the player's current state booleans). 0 means it can be used in any state.
+  Bytes 21-22: Icon.
+    Normal icons go up to 004F. Higher than that and the glyph will be invisible or have bugged graphics.
+    But if you increase this value to 3CD0 or higher, the glyph won't appear it all, it won't even be invisible.
+  Bytes 23-24: Bitfield.
+    Least significant bit first.
+    Bit 2: Makes the swinging sound effect and Shanoa's shouts come from off the left of the screen instead of the center.
+    Bit 5: On for melee glyphs. Off for projectile glyphs. Effect unknown.
+    Bit 7: If on, sprite part palette indexes will be used as palette indexes, unlike many weapons, where it's used as an indicator that the part should be partially transparent.
+  Bytes 25-26: Varies by code pointer.
+    For melee weapons: Animation Shanoa plays when swinging this weapon.
+      3 Overhead swing.
+    For shields: ?
+  Byte 27: IFrames. An enemy hit by this glyph will be invulnerable to glyphs on the arm you used for this number of frames.
+  Byte 28: Delay in frames before you're allowed to use this glyph again after you use it once.
+  Byte 29: Swing sound.
+  Byte 30: 
+  Byte 31: 
+  Byte 32: 
+
+Back glyph format:
+  28 bytes long.
+  Bytes 1-2: Item ID.
+  Bytes 3-4: Attack stat.
+  Bytes 5-8: Pointer to code run when using the glyph.
+  Byte 9: Sprite.
+  Byte 10:
+  Byte 11: Maximum number of this projectile you can have in the room at once.
+  Byte 12: Mana cost.
+  Bytes 13-16: Bitfield for what elemental damage types this glyph does.
+  Bytes 17-20: Bitfield of player state booleans that must be false in order to use this glyph. Checks bitfield 021098F0 (the player's current state booleans). 0 means it can be used in any state.
+  Bytes 21-22: Icon.
+    Normal icons go up to 004F. Higher than that and the glyph will be invisible or have bugged graphics.
+    But if you increase this value to 3CD0 or higher, the glyph won't appear it all, it won't even be invisible.
+  Byte 23-24: Varies depending on the code being run.
+    For 0207F6B4: Which stat to temporarily boost:
+      0 Doesn't affect any stats, but "HP Max Up" text appears.
+      1 Doesn't affect any stats, but "MP Max Up" text appears.
+      2 STR
+      3 CON
+      4 INT
+      5 MND
+      6 LCK
+      7 Money received from enemies.
+    For 0207D0C8: Which player character to transform into:
+      0 Shanoa
+      1 Arma Felix
+      2 Arma Chiroptera
+      3 Arma Machina
+      4 Albus
+  Bytes 25-28:
+
+Glyph union format:
+  28 bytes long.
+  Bytes 1-2: Item ID.
+  Bytes 3-4: Attack stat.
+  Bytes 5-8: Pointer to code run when using the glyph.
+  Byte 9: Sprite.
+  Byte 10: 
+  Byte 11: Maximum number of this projectile you can have in the room at once.
+  Byte 12: Mana cost of using this glyph.
+  Bytes 13-16: Bitfield for what elemental damage types this glyph does.
+  Bytes 17-20: Bitfield of player state booleans that must be false in order to use this glyph. Checks bitfield 021098F0 (the player's current state booleans). 0 means it can be used in any state.
+  Bytes 21-22: Icon.
+    Normal icons go up to 004F. Higher than that and the glyph will be invisible or have bugged graphics.
+    But if you increase this value to 3CD0 or higher, the glyph won't appear it all, it won't even be invisible.
+  Bytes 23-24: Bitfield
+  Byte 25: affects Shanoa's swinging animation?
+  Bytes 26-28: ?
+
+Relic format:
+  12 bytes long.
+  Bytes 1-2: Item ID.
+  Bytes 3-4: Icon.
+    Normal icons go up to 004F. Higher than that and the glyph will be invisible or have bugged graphics.
+    But if you increase this value to 3CD0 or higher, the glyph won't appear it all, it won't even be invisible.
+  Bytes 5-12: Always 0.
+
+Armor format:
+  20 bytes long.
+  Bytes 1-2: Item ID.
+  Bytes 3-4:
+    Least significant bit first.
+    Bits 1-11: Icon.
+    Bits 12-13: Icon palette.
+    Bits 14-16: Unused?
+  Bytes 5-8: Store price of the item.
+  Byte 9: 02 for accessories, 01 for other types of armor.
+  Byte 10: ???
+  Byte 11: Defense stat.
+  Byte 12: Strength stat (signed).
+  Byte 13: Constitution stat (signed).
+  Byte 14: Intelligence stat (signed).
+  Byte 15: Mind stat (signed).
+  Byte 16: Luck stat (signed).
+  Bytes 17-18: Bitfield for what elemental resistances this armor gives you.
+  Byte 19:
+  Byte 20:
+
+Consumable format:
+  12 bytes long.
+  Bytes 1-2: Item ID.
+  Bytes 3-4:
+    Least significant bit first.
+    Bits 1-11: Icon.
+    Bits 12-13: Icon palette.
+    Bits 14-16: Unused?
+  Bytes 5-8: Store price of the item.
+  Byte 9: Type of the consumable.
+    0 Restores HP.
+      Var A: Amount of HP to restore.
+    1 Restores MP.
+      Var A: Amount of MP to restore.
+    2 Restores hearts.
+      Var A: Number of hearts to restore.
+    3 Cures a status effect.
+      Var A: 1 for poison, 2 for curse, 4 for petrify.
+    4 HP Max Up
+    5 MP Max Up
+    6 HEART Max Up
+    7 Subtracts HP.
+      Var A: Amount of HP to subtract.
+    8 Not a usable item.
+    9 Record.
+      The song to play is automatically calculated depending on the global ID of this item. The song ID to play will be global ID - 0x6F.
+    A Magical ticket.
+    B Increases attribute points.
+      Var A: The amount of attribute points to give.
+      Which type of attribute points to give is automatically calculated depending on the global ID of this item. It will increase attribute global ID - 0x9C.
+  Byte 10: Always 00, no effect.
+  Bytes 11-12: Var A.
+    See above for what this does depending on the consumable type.

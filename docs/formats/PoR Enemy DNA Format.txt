@@ -1,0 +1,18 @@
+PoR Enemy DNA (32 bytes long):
+Bytes 1-4: Enemy init code.
+Bytes 5-8: Enemy running AI.
+Bytes 9-10: Item 1
+Bytes 11-12: Item 2
+Byte 13: ???
+Byte 14: SP.
+Bytes 15-16: Max HP.
+Bytes 17-18: EXP.
+Byte 19: ???
+Byte 20: Attack stat.
+Byte 21: Defense stat.
+Byte 22: Magical defense stat.
+Byte 23: Chance to drop item 1
+Byte 24: Chance to drop item 2
+Bytes 25-28: Weaknesses
+Bytes 29-32: Resistances
+  Bit 32: Can cause the enemy to have corrupted graphics and palette?

@@ -143,6 +143,29 @@ class Game
     end
   end
   
+  def enemy_format_doc
+    @enemy_format_docs ||= begin
+      file_contents = File.read("./docs/formats/#{GAME} Enemy DNA Format.txt")
+      
+      file_contents
+    end
+  end
+  
+  def item_format_docs
+    @item_format_docs ||= begin
+      file_contents = File.read("./docs/formats/#{GAME} Item Formats.txt")
+      item_format_docs_arr = file_contents.scan(/^(\S[^\n]+\n(?:  [^\n]+\n)*)/)
+      
+      item_format_docs = {}
+      item_format_docs_arr.each_with_index do |desc, index|
+        name = desc.first.lines.first.strip[0..-2]
+        item_format_docs[name] = desc.first
+      end
+      
+      item_format_docs
+    end
+  end
+  
   def items
     @items ||= begin
       items = []
