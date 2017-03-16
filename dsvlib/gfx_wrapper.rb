@@ -4,9 +4,9 @@ class GfxWrapper
               :fs,
               :file,
               :unknown_1,
-              :render_mode,
-              :canvas_width,
               :unknown_2
+  attr_accessor :render_mode,
+                :canvas_width
               
   def initialize(gfx_pointer, fs)
     @gfx_pointer = gfx_pointer
@@ -14,6 +14,11 @@ class GfxWrapper
     
     @file = fs.find_file_by_ram_start_offset(gfx_pointer)
     @unknown_1, @render_mode, @canvas_width, @unknown_2 = fs.read(gfx_pointer, 4).unpack("C*")
+  end
+  
+  def write_to_rom
+    fs.write(gfx_pointer, [@unknown_1, @render_mode, @canvas_width, @unknown_2].pack("CCCC"))
+    fs.write(gfx_pointer + 4, [@canvas_width].pack("V"))
   end
   
   def colors_per_palette

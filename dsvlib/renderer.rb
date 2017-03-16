@@ -444,8 +444,12 @@ class Renderer
     return game_colors.pack("v*")
   end
   
-  def import_gfx_page(input_filename, gfx_file, palette_list_pointer, colors_per_palette, palette_index)
+  def import_gfx_page(input_filename, gfx, palette_list_pointer, colors_per_palette, palette_index)
     input_image = ChunkyPNG::Image.from_file(input_filename)
+    
+    if input_image.width != input_image.height || ![128, 256].include?(input_image.width)
+      raise GFXImportError.new("Invalid image size. Image must be 128x128 or 256x256.")
+    end
     
     colors = generate_palettes(palette_list_pointer, colors_per_palette)[palette_index]
     colors[0] = ChunkyPNG::Color::TRANSPARENT
@@ -475,7 +479,10 @@ class Renderer
       end
     end
     
-    fs.write_by_file(gfx_file[:file_path], 0, gfx_data_bytes.pack("C*"))
+    fs.overwrite_file(gfx.file[:file_path], gfx_data_bytes.pack("C*"))
+    
+    gfx.canvas_width = input_image.width/8
+    gfx.write_to_rom()
   end
   
   def import_gfx_page_1_dimensional_mode(input_filename, gfx_file, palette_list_pointer, colors_per_palette, palette_index)

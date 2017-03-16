@@ -101,6 +101,7 @@ class GfxEditorDialog < Qt::Dialog
     gfx_page_pixmap_item = Qt::GraphicsPixmapItem.new(pixmap)
     @gfx_file_graphics_scene.clear()
     @gfx_file_graphics_scene.addItem(gfx_page_pixmap_item)
+    @gfx_file_graphics_scene.setSceneRect(0, 0, @gfx.canvas_width*8, @gfx.canvas_width*8)
   end
   
   def palette_changed(palette_index)
@@ -147,7 +148,7 @@ class GfxEditorDialog < Qt::Dialog
       if @ui.one_dimensional_mode.checked
         @renderer.import_gfx_page_1_dimensional_mode(file_path, @gfx.file, @palette_pointer, @gfx.colors_per_palette, @palette_index)
       else
-        @renderer.import_gfx_page(file_path, @gfx.file, @palette_pointer, @gfx.colors_per_palette, @palette_index)
+        @renderer.import_gfx_page(file_path, @gfx, @palette_pointer, @gfx.colors_per_palette, @palette_index)
       end
     rescue Renderer::GFXImportError => e
       Qt::MessageBox.warning(self,
