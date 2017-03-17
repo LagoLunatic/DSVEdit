@@ -10,7 +10,7 @@ Player format:
   18,4: First jump force.
   1C,4: Second jump force.
   20,4: Slide force.
-  24,4: Bitfield of what special moves the player can do.
+  24,4: Bitfield of what actions the player can do.
     Bit  1: Can slide.
     Bit  2: Can attack with weapons.
     Bit  6: Can jumpkick.
@@ -26,6 +26,8 @@ Player format:
   34,2: Number of frames for a backdash to last.
   36,
   38,4: Elemental damage types that apply to this player's slides and jumpkicks.
+    Bit 18: This player takes reduced damage? And certain projectiles will just bounce off instead of dealing any damage.
+    Bit 19: If this bit is off, the player can't be hit at all. Can still hit enemies.
   3C,4: 
   40,2: 
   42,2:

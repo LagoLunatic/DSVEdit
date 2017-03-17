@@ -1039,7 +1039,7 @@ PLAYER_LIST_FORMAT = [
   [4, "Jump force"],
   [4, "Double jump force"],
   [4, "Slide force"],
-  [4, "Special moves", :bitfield],
+  [4, "Actions", :bitfield],
   [4, "??? bitfield"],
   [4, "Backdash force"],
   [4, "Backdash friction"],
@@ -1056,7 +1056,7 @@ PLAYER_LIST_FORMAT = [
   [4, "Unknown 23"],
 ]
 PLAYER_BITFIELD_ATTRIBUTES = {
-  "Special moves" => [
+  "Actions" => [
     "Can slide",
     "Can use weapons",
     "Unknown 3",
@@ -1108,8 +1108,8 @@ PLAYER_BITFIELD_ATTRIBUTES = {
     "Unknown 15",
     "Unknown 16",
     "Unknown 17",
-    "Unknown 18",
-    "Unknown 19",
+    "Take reduced damage?",
+    "Can be hit",
     "Unknown 20",
     "Unknown 21",
     "Unknown 22",
