@@ -177,7 +177,7 @@ class Randomizer
   end
   
   def dos_adjust_randomized_enemy(enemy, enemy_dna)
-    case enemy_dna.name.decoded_string
+    case enemy_dna.name
     when "Bat"
       # 50% chance to be a single bat, 50% chance to be a spawner.
       if rng.rand <= 0.5
@@ -191,7 +191,7 @@ class Randomizer
   end
   
   def por_adjust_randomized_enemy(enemy, enemy_dna)
-    case enemy_dna.name.decoded_string
+    case enemy_dna.name
     when "Bat", "Fleaman"
       dos_adjust_randomized_enemy(enemy, enemy_dna)
     when "Hanged Bones", "Skeleton Tree"
@@ -204,7 +204,7 @@ class Randomizer
   end
   
   def ooe_adjust_randomized_enemy(enemy, enemy_dna)
-    case enemy_dna.name.decoded_string
+    case enemy_dna.name
     when "Bat", "Fleaman"
       dos_adjust_randomized_enemy(enemy, enemy_dna)
     when "Ghost"
@@ -279,7 +279,7 @@ class Randomizer
   end
   
   def dos_adjust_randomized_boss(boss_entity, old_boss_id, new_boss_id, old_boss, new_boss)
-    case old_boss.name.decoded_string
+    case old_boss.name
     when "Balore"
       if boss_entity.var_a == 2
         # Not actually Balore, this is the wall of ice blocks right before Balore.
@@ -296,7 +296,7 @@ class Randomizer
       end
     end
     
-    case new_boss.name.decoded_string
+    case new_boss.name
     when "Flying Armor"
       boss_entity.x_pos = boss_entity.room.main_layer_width * SCREEN_WIDTH_IN_PIXELS / 2
       boss_entity.y_pos = 80
@@ -304,7 +304,7 @@ class Randomizer
       boss_entity.x_pos = 16
       boss_entity.y_pos = 176
       
-      if old_boss.name.decoded_string == "Puppet Master"
+      if old_boss.name == "Puppet Master"
         boss_entity.x_pos += 144
       end
     when "Malphas"
@@ -347,7 +347,7 @@ class Randomizer
   end
   
   def por_adjust_randomized_boss(boss_entity, old_boss_id, new_boss_id, old_boss, new_boss)
-    case old_boss.name.decoded_string
+    case old_boss.name
     when "Behemoth"
       if boss_entity.var_b == 0x02
         # Scripted Behemoth that chases you down the hallway.
@@ -359,14 +359,14 @@ class Randomizer
       dos_adjust_randomized_boss(boss_entity, old_boss_id, new_boss_id, old_boss, new_boss)
     end
     
-    case new_boss.name.decoded_string
+    case new_boss.name
     when "Stella"
       boss_entity.var_a = 0 # Just Stella, we don't want Stella&Loretta.
     end
   end
   
   def ooe_adjust_randomized_boss(boss_entity, old_boss_id, new_boss_id, old_boss, new_boss)
-    case old_boss.name.decoded_string
+    case old_boss.name
     when "Brachyura"
       boss_entity.x_pos = 0x0080
       boss_entity.y_pos = 0x0A20
@@ -377,7 +377,7 @@ class Randomizer
       end
     end
     
-    if new_boss.name.decoded_string != "Giant Skeleton"
+    if new_boss.name != "Giant Skeleton"
       boss_entity.room.entities.each do |entity|
         if entity.type == 0x02 && entity.subtype == 0x3E && entity.var_a == 0x01
           # Searchlights in Giant Skeleton's boss room. These will soft lock the game if Giant Skeleton isn't here, so we need to tweak it a bit.
@@ -387,7 +387,7 @@ class Randomizer
       end
     end
     
-    case new_boss.name.decoded_string
+    case new_boss.name
     when "Wallman"
       # We don't want Wallman to be offscreen because then he's impossible to defeat.
       boss_entity.x_pos = 0xCC
