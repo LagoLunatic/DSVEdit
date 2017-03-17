@@ -337,6 +337,7 @@ class SpriteEditor < Qt::Dialog
     @ui.frame_delay.text = ""
     
     @rendered_gfx_pages_by_palette = {}
+    @gfx_page_pixmap_items_by_palette = {}
     @part_pixmaps_for_part_view = []
     @part_pixmaps_for_frame_view = []
     @ui.animation_index.clear()
@@ -386,6 +387,7 @@ class SpriteEditor < Qt::Dialog
     end
     
     @rendered_gfx_pages_by_palette = {}
+    @gfx_page_pixmap_items_by_palette = {}
     
     @ui.gfx_pointer.text = @sprite_info.gfx_file_pointers.map{|ptr| "%08X" % ptr}.join(", ")
     
@@ -444,6 +446,15 @@ class SpriteEditor < Qt::Dialog
         
         chunky_image
       end
+    end
+    
+    @gfx_page_pixmap_items_by_palette[palette_index] ||= @rendered_gfx_pages_by_palette[palette_index].map do |chunky_image|
+      pixmap = Qt::Pixmap.new
+      blob = chunky_image.to_blob
+      pixmap.loadFromData(blob, blob.length)
+      gfx_page_pixmap_item = Qt::GraphicsPixmapItem.new(pixmap)
+      
+      gfx_page_pixmap_item
     end
   end
   
@@ -507,14 +518,10 @@ class SpriteEditor < Qt::Dialog
     end
     @gfx_page_index = gfx_page_index
     
-    chunky_gfx_page = @rendered_gfx_pages_by_palette[@palette_index][gfx_page_index]
-    if chunky_gfx_page.nil?
+    gfx_page_pixmap_item = @gfx_page_pixmap_items_by_palette[@palette_index][gfx_page_index]
+    if gfx_page_pixmap_item.nil?
       @ui.gfx_file_name.text = "Invalid (gfx page index #{gfx_page_index})"
     else
-      pixmap = Qt::Pixmap.new
-      blob = chunky_gfx_page.to_blob
-      pixmap.loadFromData(blob, blob.length)
-      gfx_page_pixmap_item = Qt::GraphicsPixmapItem.new(pixmap)
       @gfx_file_graphics_scene.addItem(gfx_page_pixmap_item)
       @ui.gfx_file_name.text = @gfx_pages_with_blanks[gfx_page_index].file[:file_path]
     end
