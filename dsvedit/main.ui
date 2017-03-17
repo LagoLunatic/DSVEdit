@@ -443,6 +443,9 @@
    <property name="text">
     <string>Player Editor</string>
    </property>
+   <property name="shortcut">
+    <string>L</string>
+   </property>
   </action>
  </widget>
  <resources/>
