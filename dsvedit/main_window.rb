@@ -492,6 +492,14 @@ class DSVEdit < Qt::MainWindow
       enemy_id = entity.subtype
       sprite_info = EnemyDNA.new(enemy_id, @game.fs).extract_gfx_and_palette_and_sprite_from_init_ai
       add_sprite_item_for_entity(entity, sprite_info, BEST_SPRITE_FRAME_FOR_ENEMY[enemy_id])
+    elsif GAME == "dos" && entity.is_special_object? && entity.subtype == 0x01 && entity.var_a == 0 # soul candle
+      pointer = OTHER_SPRITES.find{|spr| spr[:desc] == "Destructibles 0"}[:pointer]
+      sprite_info = SpriteInfo.extract_gfx_and_palette_and_sprite_from_create_code(pointer, game.fs, nil, {})
+      add_sprite_item_for_entity(entity, sprite_info, 0)
+    elsif GAME == "ooe" && entity.is_special_object? && entity.subtype == 0x02 && entity.var_a == 0 # glyph statue
+      pointer = OTHER_SPRITES.find{|spr| spr[:desc] == "Glyph statue"}[:pointer]
+      sprite_info = SpriteInfo.extract_gfx_and_palette_and_sprite_from_create_code(pointer, game.fs, nil, {})
+      add_sprite_item_for_entity(entity, sprite_info, 0)
     elsif entity.is_special_object?
       special_object_id = entity.subtype
       sprite_info = SpecialObjectType.new(special_object_id, game.fs).extract_gfx_and_palette_and_sprite_from_create_code
