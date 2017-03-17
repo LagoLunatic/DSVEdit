@@ -69,7 +69,7 @@ class EntityEditorDialog < Qt::Dialog
       
       if type == 1
         if subtype < @game.enemy_dnas.length
-         subtype_name = @game.enemy_dnas[subtype].name.decoded_string
+          subtype_name = @game.enemy_dnas[subtype].name
         end
       elsif type == 2
         subtype_name = (game.special_object_docs[subtype] || " ").lines.first.strip[0..100]

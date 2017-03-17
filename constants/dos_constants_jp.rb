@@ -132,3 +132,5 @@ ITEM_TYPES = [
     format: SOUL_EXTRA_DATA_FORMAT # length: 2
   },
 ]
+
+PLAYER_LIST_POINTER = 0x0222D524

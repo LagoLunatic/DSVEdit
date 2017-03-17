@@ -195,6 +195,7 @@
     <addaction name="actionSprite_Editor"/>
     <addaction name="actionGFX_Editor"/>
     <addaction name="actionMusic_Editor"/>
+    <addaction name="actionPlayer_Editor"/>
     <addaction name="actionItem_Pool_Editor"/>
     <addaction name="actionTileset_Editor"/>
     <addaction name="actionEntity_Search"/>
@@ -436,6 +437,11 @@
   <action name="actionTileset_Editor">
    <property name="text">
     <string>Tileset Editor</string>
+   </property>
+  </action>
+  <action name="actionPlayer_Editor">
+   <property name="text">
+    <string>Player Editor</string>
    </property>
   </action>
  </widget>

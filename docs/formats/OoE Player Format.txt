@@ -1,0 +1,37 @@
+Player format:
+  0x5C bytes long.
+  00,4: GFX list pointer.
+  04,4: Sprite pointer.
+  08,4: Palette list pointer.
+  0C,4: Pointer to list of which sprite animation to use for what state.
+  10,2: File index of first GFX file.
+  12,2: File index of sprite file.
+  14,4: Walking speed.
+  18,4: First jump force.
+  1C,4: Second jump force.
+  20,4: Slide force.
+  24,4: Bitfield of what special moves the player can do.
+    Bit  1: Can slide.
+    Bit  2: Can attack with weapons.
+    Bit  6: Can jumpkick.
+    Bit  7: Can up+L superjump (Griffon Wing).
+    Bit  8: During a slide the player can press B again to slidejump.
+    Bit 14: 
+    Bit 19: Can absorb glyphs.
+    Bit 22: Can hold up to do a pose.
+  28,4: Bitfield of ?
+    Bit 1: Player's sprite is horizontally flipped.
+  2C,4: Backdash force.
+  30,4: Backdash friction.
+  34,2: Number of frames for a backdash to last.
+  36,
+  38,4: Elemental damage types that apply to this player's slides and jumpkicks.
+  3C,4: 
+  40,2: 
+  42,2:
+  44,2: 
+  48,
+  4C,4:
+  50,2:
+  52,2: 
+  54,

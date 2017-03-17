@@ -14,6 +14,7 @@ require_relative 'item_pool_editor_dialog'
 require_relative 'gfx_editor_dialog'
 require_relative 'music_editor_dialog'
 require_relative 'tileset_editor_dialog'
+require_relative 'player_editor_dialog'
 
 require_relative 'ui_main'
 
@@ -37,6 +38,7 @@ class DSVEdit < Qt::MainWindow
   slots "open_tileset_editor()"
   slots "open_entity_search()"
   slots "open_map_editor()"
+  slots "open_player_editor()"
   slots "open_settings()"
   slots "write_to_rom()"
   slots "build_and_run()"
@@ -95,6 +97,7 @@ class DSVEdit < Qt::MainWindow
     connect(@ui.actionItem_Pool_Editor, SIGNAL("activated()"), self, SLOT("open_item_pool_editor()"))
     connect(@ui.actionTileset_Editor, SIGNAL("activated()"), self, SLOT("open_tileset_editor()"))
     connect(@ui.actionMap_Editor, SIGNAL("activated()"), self, SLOT("open_map_editor()"))
+    connect(@ui.actionPlayer_Editor, SIGNAL("activated()"), self, SLOT("open_player_editor()"))
     connect(@ui.actionEntity_Search, SIGNAL("activated()"), self, SLOT("open_entity_search()"))
     connect(@ui.actionSettings, SIGNAL("activated()"), self, SLOT("open_settings()"))
     connect(@ui.actionBuild, SIGNAL("activated()"), self, SLOT("write_to_rom()"))
@@ -148,6 +151,7 @@ class DSVEdit < Qt::MainWindow
     @ui.actionItem_Pool_Editor.setEnabled(false);
     @ui.actionTileset_Editor.setEnabled(false);
     @ui.actionMap_Editor.setEnabled(false);
+    @ui.actionPlayer_Editor.setEnabled(false);
     @ui.actionEntity_Search.setEnabled(false);
     @ui.actionBuild.setEnabled(false);
     @ui.actionBuild_and_Run.setEnabled(false);
@@ -170,6 +174,7 @@ class DSVEdit < Qt::MainWindow
     @ui.actionItem_Pool_Editor.setEnabled(true);
     @ui.actionTileset_Editor.setEnabled(true);
     @ui.actionMap_Editor.setEnabled(true);
+    @ui.actionPlayer_Editor.setEnabled(true);
     @ui.actionEntity_Search.setEnabled(true);
     @ui.actionBuild.setEnabled(true);
     @ui.actionBuild_and_Run.setEnabled(true);
@@ -186,6 +191,7 @@ class DSVEdit < Qt::MainWindow
     @item_pool_editor.close() if @item_pool_editor
     @tileset_editor.close() if @tileset_editor
     @map_editor_dialog.close() if @map_editor_dialog
+    @player_editor_dialog.close() if @player_editor_dialog
     @entity_search_dialog.close() if @entity_search_dialog
     @entity_editor.close() if @entity_editor
     @settings_dialog.close() if @settings_dialog
@@ -750,6 +756,11 @@ class DSVEdit < Qt::MainWindow
   def open_map_editor
     return if @map_editor_dialog && @map_editor_dialog.visible?
     @map_editor_dialog = MapEditorDialog.new(self, game, @renderer, @area_index, @sector_index)
+  end
+  
+  def open_player_editor
+    return if @player_editor_dialog && @player_editor_dialog.visible?
+    @player_editor_dialog = PlayerEditor.new(self, game.fs)
   end
   
   def open_entity_editor(entity)

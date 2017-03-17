@@ -25,7 +25,7 @@ class GenericEditorWidget < Qt::Widget
     (0..item_type[:count]-1).each do |index|
       item = GenericEditable.new(index, item_type, fs)
       @items << item
-      @ui.item_list.addItem("%02X %s" % [index, item.name.decoded_string])
+      @ui.item_list.addItem("%02X %s" % [index, item.name])
     end
     connect(@ui.item_list, SIGNAL("currentRowChanged(int)"), self, SLOT("item_changed(int)"))
     
@@ -67,7 +67,7 @@ class GenericEditorWidget < Qt::Widget
         
         tree_row_item.setText(col, bitfield.names[row])
       end
-      @ui.treeWidget.setColumnWidth(col, 150)
+      @ui.treeWidget.setColumnWidth(col, 180)
     end
     if @items.first.attribute_bitfields.empty?
       # If there are no bitfields then blank out the tree widget, otherwise it defaults to showing just a "1".
@@ -82,9 +82,9 @@ class GenericEditorWidget < Qt::Widget
   def item_changed(index)
     item = @items[index]
     
-    @ui.item_name.setText(item.name.decoded_string)
+    @ui.item_name.setText(item.name)
     @ui.item_pointer.setText("%08X" % item.ram_pointer)
-    @ui.item_desc.setPlainText(item.description.decoded_string)
+    @ui.item_desc.setPlainText(item.description)
     
     item.attribute_integers.values.each_with_index do |value, i|
       if i.even?

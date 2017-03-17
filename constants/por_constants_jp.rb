@@ -235,3 +235,5 @@ ITEM_TYPES = [
     format: SKILL_EXTRA_DATA_FORMAT # length: 6
   },
 ]
+
+PLAYER_LIST_POINTER = 0x02217F1C

@@ -34,10 +34,10 @@ class ItemPoolEditor < Qt::Dialog
     @ui.item_3.addItem("0000")
     @ui.item_4.addItem("0000")
     @game.items.each_with_index do |item, item_id|
-      @ui.item_1.addItem("%04X %s" % [item_id+1, item.name.decoded_string])
-      @ui.item_2.addItem("%04X %s" % [item_id+1, item.name.decoded_string])
-      @ui.item_3.addItem("%04X %s" % [item_id+1, item.name.decoded_string])
-      @ui.item_4.addItem("%04X %s" % [item_id+1, item.name.decoded_string])
+      @ui.item_1.addItem("%04X %s" % [item_id+1, item.name])
+      @ui.item_2.addItem("%04X %s" % [item_id+1, item.name])
+      @ui.item_3.addItem("%04X %s" % [item_id+1, item.name])
+      @ui.item_4.addItem("%04X %s" % [item_id+1, item.name])
     end
     
     @pool_indexes_for_areas = []

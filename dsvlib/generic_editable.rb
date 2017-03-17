@@ -25,6 +25,8 @@ class GenericEditable
     @bitfield_docs = case @kind
     when :enemy
       ENEMY_DNA_BITFIELD_ATTRIBUTES
+    when :player
+      PLAYER_BITFIELD_ATTRIBUTES
     else
       ITEM_BITFIELD_ATTRIBUTES
     end
@@ -62,23 +64,26 @@ class GenericEditable
     
     case kind
     when :enemy
-      @name = Text.new(TEXT_REGIONS["Enemy Names"].begin + index, fs)
-      @description = Text.new(TEXT_REGIONS["Enemy Descriptions"].begin + index, fs)
+      @name = Text.new(TEXT_REGIONS["Enemy Names"].begin + index, fs).decoded_string
+      @description = Text.new(TEXT_REGIONS["Enemy Descriptions"].begin + index, fs).decoded_string
     when :skill
       case GAME
       when "dos"
-        @name = Text.new(TEXT_REGIONS["Soul Names"].begin + index, fs)
-        @description = Text.new(TEXT_REGIONS["Soul Descriptions"].begin + index, fs)
+        @name = Text.new(TEXT_REGIONS["Soul Names"].begin + index, fs).decoded_string
+        @description = Text.new(TEXT_REGIONS["Soul Descriptions"].begin + index, fs).decoded_string
       when "por"
-        @name = Text.new(TEXT_REGIONS["Skill Names"].begin + index, fs)
-        @description = Text.new(TEXT_REGIONS["Skill Descriptions"].begin + index, fs)
+        @name = Text.new(TEXT_REGIONS["Skill Names"].begin + index, fs).decoded_string
+        @description = Text.new(TEXT_REGIONS["Skill Descriptions"].begin + index, fs).decoded_string
       when "ooe"
-        @name = Text.new(TEXT_REGIONS["Item Names"].begin + self["Item ID"], fs)
-        @description = Text.new(TEXT_REGIONS["Item Descriptions"].begin + self["Item ID"], fs)
+        @name = Text.new(TEXT_REGIONS["Item Names"].begin + self["Item ID"], fs).decoded_string
+        @description = Text.new(TEXT_REGIONS["Item Descriptions"].begin + self["Item ID"], fs).decoded_string
       end
+    when :player
+      @name = PLAYER_NAMES[index]
+      @description = ""
     else # item
-      @name = Text.new(TEXT_REGIONS["Item Names"].begin + self["Item ID"], fs)
-      @description = Text.new(TEXT_REGIONS["Item Descriptions"].begin + self["Item ID"], fs)
+      @name = Text.new(TEXT_REGIONS["Item Names"].begin + self["Item ID"], fs).decoded_string
+      @description = Text.new(TEXT_REGIONS["Item Descriptions"].begin + self["Item ID"], fs).decoded_string
     end
   end
   

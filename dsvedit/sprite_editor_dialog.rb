@@ -69,7 +69,7 @@ class SpriteEditor < Qt::Dialog
     ENEMY_IDS.each do |enemy_id|
       enemy = EnemyDNA.new(enemy_id, fs)
       @enemies << enemy
-      @ui.enemy_list.addItem("%02X %s" % [enemy_id, enemy.name.decoded_string])
+      @ui.enemy_list.addItem("%02X %s" % [enemy_id, enemy.name])
     end
     
     @special_objects = []
@@ -122,10 +122,10 @@ class SpriteEditor < Qt::Dialog
       end
       if items.any?
         weapon_name = items.map do |item|
-          if item.name.decoded_string.empty?
+          if item.name.empty?
             "..."
           else
-            item.name.decoded_string
+            item.name
           end
         end.join(", ")
       else
@@ -141,10 +141,10 @@ class SpriteEditor < Qt::Dialog
       items = skill_items.select{|item| item["Sprite"] == skill_gfx_index+1}
       if items.any?
         skill_name = items.map do |item|
-          if item.name.decoded_string.empty?
+          if item.name.empty?
             "..."
           else
-            item.name.decoded_string
+            item.name
           end
         end.join(", ")
       else
