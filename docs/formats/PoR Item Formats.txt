@@ -95,7 +95,29 @@ Weapon format:
     Bit 16: Unknown, set for all fist weapons (except the default fists you get when nothing is equipped).
     Bit 20: Can kill Red Skeletons/Axe Armors.
   Byte 25: Sprite to use for the weapon when you swing it. Doesn't just effect visuals, also hitboxes.
-  Byte 26: Palette offset to use for the weapon when you swing it.
+  Byte 26: Palette offset/critical type.
+    Bits 1-6: Critical type. Affects critical animation, MP cost, and what code is run for the critical. This is an index in the list at 0221F070.
+      00 No crit.
+      01 Normal crit.
+      02 Fast crit.
+      03 "Backstab" crit (Cinquedea).
+      04 Jump up above the screen and then attack downwards (axes).
+      05 Triple stab (for spears).
+      06 ??
+      07 Crit that shoots out ice clouds.
+      08 Crit that creates a flame explosion.
+      09 Nebula crit.
+      0A Crit with double damage and fire attribute.
+      0B Series of very fast crits (fists).
+      0C Jump up above the screen and then attack downwards (Alucard's Spear).
+      0D Teleports you to all enemies in the room and hits them (Stellar Sword).
+      0E Spinning art?
+      0F Martial art?
+      10 Martial art?
+      11 Martial art?
+      12 Spinning art?
+      13 Spinning art?
+    Bits 7-8: Palette offset.
   Byte 27: IFrames. An enemy hit by this weapon will be invulnerable to weapons for this number of frames.
   Byte 28: 
   Byte 29-30: Bitfield affecting the attack animation and super attack animation.

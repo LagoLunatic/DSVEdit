@@ -745,7 +745,7 @@ WEAPON_FORMAT = [
   [1, "Unknown 3"],
   [4, "Effects", :bitfield],
   [1, "Sprite"],
-  [1, "Palette"],
+  [1, "Crit type/Palette"],
   [1, "IFrames"],
   [1, "Unknown 5"],
   [2, "Swing Modifiers", :bitfield],
