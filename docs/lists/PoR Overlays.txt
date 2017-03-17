@@ -8,7 +8,7 @@
 7       022B7660-022D0F3F  Various data including palettes and GFX wrappers.
 8       022D0F40-022D74FF  
 9-24    022D7500-022D78FF  
-25      022D7900-022E881F  Enemy code for Whip's Memory.
+25      022D7900-022E881F  Menu code and enemy code for Whip's Memory.
 26-39   022E01A0-022E4F5F  
 40-42   022D7900-022E881F  
 43-77   022D7900-022E881F  Enemy code.
