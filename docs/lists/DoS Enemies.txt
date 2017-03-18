@@ -1,6 +1,8 @@
 Enemies:
 00 Zombie
-  Var A: When 0, it's a single zombie. When greater than 0 it's a spawner that infinitely creates zombie. Var a might also control the rate at which they spawn?
+  Var A:
+    When 0, it's a single Zombie.
+    When greater than 0 it's a spawner that infinitely creates Zombie. Var A is the maximum number of zombies this spawner can have in the room at once. It will spawn a Zombie once every 0x40 frames up to the max.
 01 Bat
   Var A: When 0, it's a single bat that hangs on the ceiling. When greater than 0, it's a spawner for bats that flying from the sides of the screen. Var a controls the delay in frames between each bat spawning, so lower values cause bats to spawn more quickly.
 02 Ghost
@@ -9,6 +11,7 @@ Enemies:
 05 Peeping Eye
 06 Axe Armor
 07 Skull Archer
+  Var A: Affects the movement speed of the arrows it shoots.
 08 Warg
 09 Spin Devil
 0A Armor Knight
@@ -18,6 +21,11 @@ Enemies:
 0E Golem
   Requires enemy overlay 28.
 0F Slime
+  Var A:
+    0 On floor.
+    1 On ceiling.
+    2 On left wall.
+    3 On right wall.
 10 Une
 11 Skeleton Ape
 12 Manticore
@@ -31,6 +39,9 @@ Enemies:
 19 Catoblepas
   Requires enemy overlay 32.
 1A Ghoul
+  Var A:
+    When 0, it's a single Ghoul.
+    When greater than 0 it's a spawner that infinitely creates Ghoul. Var A is the maximum number of zombies this spawner can have in the room at once. It will spawn a Ghoul once every 0x40 frames up to the max.
 1B Corpseweed
 1C Yeti
 1D Tombstone
@@ -45,17 +56,22 @@ Enemies:
 25 Great Armor
   Requires enemy overlay 24.
 26 Killer Doll
+  Var B:
+    0 Faces left.
+    1 Faces right.
 27 Waiter Skeleton
 28 Persephone
 29 Witch
 2A Buer
 2B Lilith
 2C Killer Clown
+  Var B: 0 or 1
 2D Skelerang
 2E Fleaman
   Var A: Number of fleamen to spawn. (They only spawn once when you enter the room, not infinitely.) If this is 0, then 1 fleaman spawns instead.
 2F Devil
   Requires enemy overlay 31.
+  Var B: 0 or 1
 30 Guillotiner
 31 Draghignazzo
 32 Needles
@@ -107,22 +123,28 @@ Enemies:
 56 Ripper
 57 Black Panther
 58 Mud Demon
+  Var B: ?
 59 Giant Slug
 5A Werewolf
 5B Flame Demon
   Requires enemy overlay 31.
 5C Tanjelly
+  Var A:
+    0 On floor.
+    1 On ceiling.
+    2 On left wall.
+    3 On right wall.
 5D Arc Demon
   Requires enemy overlay 31.
 5E Gaibon
 5F Slogra
 60 Stolas
   Var A:
-    High byte: Chance of first enemy being summoned.
     Low byte: First enemy ID this Stolas can summon.
+    High byte: Chance of first enemy being summoned.
   Var B:
-    High byte: Chance of second enemy being summoned.
     Low byte: Second enemy ID this Stolas can summon.
+    High byte: Chance of second enemy being summoned.
 61 Final Guard
   Requires enemy overlay 24.
 62 Malacoda
