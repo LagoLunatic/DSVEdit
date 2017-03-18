@@ -449,12 +449,16 @@ class SpriteEditor < Qt::Dialog
     end
     
     @gfx_page_pixmap_items_by_palette[palette_index] ||= @rendered_gfx_pages_by_palette[palette_index].map do |chunky_image|
-      pixmap = Qt::Pixmap.new
-      blob = chunky_image.to_blob
-      pixmap.loadFromData(blob, blob.length)
-      gfx_page_pixmap_item = Qt::GraphicsPixmapItem.new(pixmap)
-      
-      gfx_page_pixmap_item
+      if chunky_image.nil?
+        nil
+      else
+        pixmap = Qt::Pixmap.new
+        blob = chunky_image.to_blob
+        pixmap.loadFromData(blob, blob.length)
+        gfx_page_pixmap_item = Qt::GraphicsPixmapItem.new(pixmap)
+        
+        gfx_page_pixmap_item
+      end
     end
   end
   
