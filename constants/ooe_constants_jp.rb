@@ -62,12 +62,12 @@ SPECIAL_OBJECT_CREATE_CODE_LIST = 0x020F40C0
 SPECIAL_OBJECT_UPDATE_CODE_LIST = 0x020F42F4
 REUSED_SPECIAL_OBJECT_INFO[0x01] = {sprite: 0x020C4E94, gfx_files: [0x020B87F8, 0x020B8804, 0x020B8810, 0x020B881C, 0x020B8828, 0x020B8840, 0x020B8888, 0x020B8894], palette: 0x020C8EC0} # magnes point
 REUSED_SPECIAL_OBJECT_INFO[0x02] = {init_code: 0x022B6A60} # destructible
-#  0x16 => {init_code: 0x0221A408, palette_offset: 1}, # red chest
-#  0x17 => {init_code: 0x0221A408, palette_offset: 2}, # blue chest
+REUSED_SPECIAL_OBJECT_INFO[0x16] = {init_code: 0x0221A158, palette_offset: 1} # red chest
+REUSED_SPECIAL_OBJECT_INFO[0x17] = {init_code: 0x0221A158, palette_offset: 2} # blue chest
 REUSED_SPECIAL_OBJECT_INFO[0x2E] = {sprite: 0x020C4E94, gfx_files: [0x020B87F8, 0x020B8804, 0x020B8810, 0x020B881C, 0x020B8828, 0x020B8840, 0x020B8888, 0x020B8894], palette: 0x020C8EC0} # wooden door
-#  0x36 => {init_code:         -1}, # transition room hider TODO
 REUSED_SPECIAL_OBJECT_INFO[0x4B] = {sprite: 0x020C4E94, gfx_files: [0x020B87F8, 0x020B8804, 0x020B8810, 0x020B881C, 0x020B8828, 0x020B8840, 0x020B8888, 0x020B8894], palette: 0x020C8EC0} # boss door
-#  0x55 => {sprite: 0x021DCAC0, gfx_files: [0x020B838C, 0x020B8398, 0x020B83A4, 0x020B83B0, 0x020B83BC, 0x020B83C8, 0x020B83D4, 0x020B83E0, 0x020B83EC, 0x020B83F8, 0x020B8404, 0x020B8410, 0x020B841C, 0x020B8428], palette: 0x020D73D0}, # area titles
+REUSED_SPECIAL_OBJECT_INFO[0x55] = {sprite: 0x021DC6E0, gfx_files: [0x020B8354, 0x020B8360, 0x020B836C, 0x020B8378, 0x020B8384, 0x020B8390, 0x020B839C, 0x020B83A8, 0x020B83B4, 0x020B83C0, 0x020B83CC, 0x020B83D8, 0x020B83E4, 0x020B83F0], palette: 0x020D723C} # area titles
+REUSED_SPECIAL_OBJECT_INFO[0x5C] = {sprite: 0x021DC954, gfx_files: [0x020BA370], palette: 0x020D158C} # breakable wall
 
 SPECIAL_OBJECT_FILES_TO_LOAD_LIST = 0x020F3DF0
 
@@ -83,22 +83,22 @@ OTHER_SPRITES = [
   {pointer: 0x020D94B0, desc: "Arma Machina player"},
   {pointer: 0x020D950C, desc: "Albus player"},
   
-  #{desc: "Albus event actor", sprite: 0x021DCCC4, palette: 0x020D4F3C, gfx_wrapper: 0x022A5CCC},
-  #{desc: "Barlowe event actor", sprite: 0x021DCCC0, palette: 0x020D4F60, gfx_wrapper: 0x022A5CD4},
-  #{desc: "Nikolai event actor", sprite: 0x021DCCBC, palette: 0x020D4FC4, gfx_wrapper: 0x022A5CE4},
-  #{desc: "Jacob event actor", sprite: 0x021DCCB8, palette: 0x020D4FE8, gfx_wrapper: 0x022A5CF4},
-  #{desc: "Abram event actor", sprite: 0x021DCCB4, palette: 0x020D500C, gfx_wrapper: 0x022A5D0C},
-  #{desc: "Laura event actor", sprite: 0x021DCCB0, palette: 0x020D5030, gfx_wrapper: 0x022A5D14},
-  #{desc: "Eugen event actor", sprite: 0x021DCCAC, palette: 0x020D5054, gfx_wrapper: 0x022A5D24},
-  #{desc: "Aeon event actor", sprite: 0x021DCCA8, palette: 0x020D5078, gfx_wrapper: 0x022A5CB4},
-  #{desc: "Marcel event actor", sprite: 0x021DCCA4, palette: 0x020D509C, gfx_wrapper: 0x022A5CC4},
-  #{desc: "George event actor", sprite: 0x021DCCA0, palette: 0x020D50C0, gfx_wrapper: 0x022A5CDC},
-  #{desc: "Serge event actor", sprite: 0x021DCC9C, palette: 0x020D50E4, gfx_wrapper: 0x022A5CFC},
-  #{desc: "Anna event actor", sprite: 0x021DCC98, palette: 0x020D5108, gfx_wrapper: 0x022A5D1C},
-  #{desc: "Monica event actor", sprite: 0x021DCC94, palette: 0x020D512C, gfx_wrapper: 0x022A5CBC},
-  #{desc: "Irina event actor", sprite: 0x021DCC90, palette: 0x020D5150, gfx_wrapper: 0x022A5CEC},
-  #{desc: "Daniela event actor", sprite: 0x021DCC8C, palette: 0x020D5174, gfx_wrapper: 0x022A5D2C},
-  #{desc: "Dracula event actor", sprite: 0x021DCAC8, palette: 0x022CEA40, gfx_wrapper: 0x022A5D04, overlay: 75},
+  {desc: "Albus event actor", sprite: 0x021DC8E4, palette: 0x020D4FAC, gfx_wrapper: 0x022A588C},
+  {desc: "Barlowe event actor", sprite: 0x021DC8E0, palette: 0x020D4FD0, gfx_wrapper: 0x022A5894},
+  {desc: "Nikolai event actor", sprite: 0x021DC8DC, palette: 0x020D5034, gfx_wrapper: 0x022A58A4},
+  {desc: "Jacob event actor", sprite: 0x021DC8D8, palette: 0x020D5058, gfx_wrapper: 0x022A58B4},
+  {desc: "Abram event actor", sprite: 0x021DC8D4, palette: 0x020D507C, gfx_wrapper: 0x022A58CC},
+  {desc: "Laura event actor", sprite: 0x021DC8D0, palette: 0x020D50A0, gfx_wrapper: 0x022A58D4},
+  {desc: "Eugen event actor", sprite: 0x021DC8CC, palette: 0x020D50C4, gfx_wrapper: 0x022A58E4},
+  {desc: "Aeon event actor", sprite: 0x021DC8C8, palette: 0x020D50E8, gfx_wrapper: 0x022A5874},
+  {desc: "Marcel event actor", sprite: 0x021DC8C4, palette: 0x020D510C, gfx_wrapper: 0x022A5884},
+  {desc: "George event actor", sprite: 0x021DC8C0, palette: 0x020D5130, gfx_wrapper: 0x022A589C},
+  {desc: "Serge event actor", sprite: 0x021DC8BC, palette: 0x020D5154, gfx_wrapper: 0x022A58BC},
+  {desc: "Anna event actor", sprite: 0x021DC8B8, palette: 0x020D5178, gfx_wrapper: 0x022A58DC},
+  {desc: "Monica event actor", sprite: 0x021DC8B4, palette: 0x020D519C, gfx_wrapper: 0x022A587C},
+  {desc: "Irina event actor", sprite: 0x021DC8B0, palette: 0x020D51C0, gfx_wrapper: 0x022A58AC},
+  {desc: "Daniela event actor", sprite: 0x021DC8AC, palette: 0x020D51E4, gfx_wrapper: 0x022A58EC},
+  {desc: "Dracula event actor", sprite: 0x021DC6E8, palette: 0x022CE604, gfx_wrapper: 0x022A58C4, overlay: 75-1},
   
   {pointer: 0x022B6970, desc: "Glyph statue"},
   {pointer: 0x022B6984, desc: "Destructibles 0"},
