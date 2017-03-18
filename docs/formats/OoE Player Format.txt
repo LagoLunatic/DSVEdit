@@ -26,7 +26,9 @@ Player format:
   34,2: Number of frames for a backdash to last.
   36,
   38,4: Elemental damage types that apply to this player's slides and jumpkicks.
-    Bit 18: This player takes reduced damage? And certain projectiles will just bounce off instead of dealing any damage.
+    Bit 18: Take half damage and reflect projectiles.
+      All damage will be exactly halved. There's no minimum of 1 damage here, so 1 damage gets halved to 0.
+      Most projectiles will be destroyed on contact with you, dealing no damage. Projectiles that can't be destroyed will simply pass through you. However, Dracula's projectiles will still do damage to you.
     Bit 19: If this bit is off, the player can't be hit at all. Can still hit enemies.
   3C,4: 
   40,2: 

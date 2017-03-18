@@ -1040,7 +1040,7 @@ PLAYER_BITFIELD_ATTRIBUTES = {
     "Unknown 15",
     "Unknown 16",
     "Unknown 17",
-    "Take reduced damage?",
+    "Take half damage & Reflect projectiles",
     "Can be hit",
     "Unknown 20",
     "Unknown 21",
