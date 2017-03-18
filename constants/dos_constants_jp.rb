@@ -15,10 +15,10 @@ LIST_OF_FILE_RAM_LOCATIONS_END_OFFSET = 0x02099FD3
 
 ENEMY_DNA_RAM_START_OFFSET = 0x02078CA8
 
-#REUSED_ENEMY_INFO[0x1A] = {init_code: 0x0223266C, gfx_sheet_ptr_index: 0, palette_offset: 2, palette_list_ptr_index: 0} # ghoul and zombie
-#REUSED_ENEMY_INFO[0x54] = {init_code: 0x02270704, gfx_sheet_ptr_index: 0, palette_offset: 1, palette_list_ptr_index: 0, sprite_ptr_index: 1} # erinys and valkyrie
-#REUSED_ENEMY_INFO[0x5C] = {init_code: 0x02288FBC, gfx_sheet_ptr_index: 0, palette_offset: 0, palette_list_ptr_index: 0} # tanjelly and slime
-#REUSED_ENEMY_INFO[0x5B] = {init_code: 0x022FF9F0, gfx_sheet_ptr_index: 1, palette_offset: 0, palette_list_ptr_index: 1, sprite_ptr_index: 1} # flame demon and devil
+REUSED_ENEMY_INFO[0x1A] = {init_code: 0x0223170C, gfx_sheet_ptr_index: 0, palette_offset: 2, palette_list_ptr_index: 0} # ghoul and zombie
+REUSED_ENEMY_INFO[0x54] = {init_code: 0x0226F79C, gfx_sheet_ptr_index: 0, palette_offset: 1, palette_list_ptr_index: 0, sprite_ptr_index: 1} # erinys and valkyrie
+REUSED_ENEMY_INFO[0x5C] = {init_code: 0x02288054, gfx_sheet_ptr_index: 0, palette_offset: 0, palette_list_ptr_index: 0} # tanjelly and slime
+REUSED_ENEMY_INFO[0x5B] = {init_code: 0x022FEA30, gfx_sheet_ptr_index: 1, palette_offset: 0, palette_list_ptr_index: 1, sprite_ptr_index: 1} # flame demon and devil
 
 SPECIAL_OBJECT_CREATE_CODE_LIST = 0x0222B7B4
 SPECIAL_OBJECT_UPDATE_CODE_LIST = 0x0222B990
@@ -28,11 +28,11 @@ REUSED_SPECIAL_OBJECT_INFO[0x06] = {sprite: 0x02299A9C, gfx_files: [0x022C9534, 
 REUSED_SPECIAL_OBJECT_INFO[0x09] = {init_code: 0x0222ADA4} # chair
 REUSED_SPECIAL_OBJECT_INFO[0x1D] = {sprite: 0x0229DB78, gfx_wrapper: 0x02079EA8, palette: 0x022B8BA4} # wooden door
 REUSED_SPECIAL_OBJECT_INFO[0x25] = {sprite: 0x0229DB78, gfx_wrapper: 0x02079EA8, palette: 0x022B8BA4} # boss door
-#REUSED_SPECIAL_OBJECT_INFO[0x26] = {init_code: 0x021A8FC8} # slot machine
-#REUSED_SPECIAL_OBJECT_INFO[0x27] = {init_code: 0x021A8434} # condemned tower gate
-#REUSED_SPECIAL_OBJECT_INFO[0x29] = {init_code: 0x021A7FC4} # dark chapel gate
-#REUSED_SPECIAL_OBJECT_INFO[0x2A] = {init_code: 0x021A7B44} # flood gate
-#REUSED_SPECIAL_OBJECT_INFO[0x2E] = {init_code: 0x02304B98} # iron maiden
+REUSED_SPECIAL_OBJECT_INFO[0x26] = {init_code: 0x021A9048} # slot machine
+REUSED_SPECIAL_OBJECT_INFO[0x27] = {init_code: 0x021A84B4} # condemned tower gate
+REUSED_SPECIAL_OBJECT_INFO[0x29] = {init_code: 0x021A8044} # dark chapel gate
+REUSED_SPECIAL_OBJECT_INFO[0x2A] = {init_code: 0x021A7BC4} # flood gate
+REUSED_SPECIAL_OBJECT_INFO[0x2E] = {init_code: 0x02303BD8} # iron maiden
 REUSED_SPECIAL_OBJECT_INFO[0x47] = {init_code: 0x0222BCC0} # hammer shopkeeper
 REUSED_SPECIAL_OBJECT_INFO[0x48] = {init_code: 0x0222BCB0} # yoko shopkeeper
 REUSED_SPECIAL_OBJECT_INFO[0x4F] = {init_code: 0x0222BC90} # mina event actor
@@ -70,20 +70,20 @@ OTHER_SPRITES = [
   {pointer: 0x0222ADBC, desc: "Chair 3"},
   {pointer: 0x0222ADC8, desc: "Chair 4"},
   
-#  {pointer: 0x0203D4A0, desc: "Nintendo splash screen"},
-#  {pointer: 0x0203D564, desc: "Konami splash screen"},
-#  {pointer: 0x0203D8A8, desc: "Main menu"},
-#  {pointer: 0x0203DAB0, desc: "Castlevania logo"},
-#  {pointer: 0x0203ED3C, desc: "Credits"},
-#  {pointer: 0x0203ED58, desc: "Characters used during credits"},
-#  {pointer: 0x0203ED70, desc: "BGs used during credits"},
-#  {pointer: 0x0203F410, desc: "Game over screen"},
-#  {pointer: 0x02046714, desc: "Name signing screen"},
-#  {pointer: 0x02046ACC, desc: "File select menu"},
-#  {pointer: 0x020489A4, desc: "Choose course - unused?"},
-#  {pointer: 0x02049078, desc: "Enemy set mode menu"},
-#  {pointer: 0x0204908C, desc: "Enemy set retry/complete"},
-#  {pointer: 0x020490A0, desc: "Wi-fi menu"},
+#  {pointer: 0x0203D4A0, desc: "Nintendo splash screen"}, # Does not exist in the Japanese version
+  {pointer: 0x0203D584, desc: "Konami splash screen"},
+  {pointer: 0x0203D8C8, desc: "Main menu"},
+  {pointer: 0x0203DAD0, desc: "Castlevania logo"},
+  {pointer: 0x0203ED54, desc: "Credits"},
+  {pointer: 0x0203ED78, desc: "Characters used during credits"},
+  {pointer: 0x0203ED80, desc: "BGs used during credits"},
+  {pointer: 0x0203F430, desc: "Game over screen"},
+  {pointer: 0x02046734, desc: "Name signing screen"},
+  {pointer: 0x02046AEC, desc: "File select menu"},
+  {pointer: 0x020489C4, desc: "Choose course - unused?"},
+  {pointer: 0x02049098, desc: "Enemy set mode menu"},
+  {pointer: 0x020490AC, desc: "Enemy set retry/complete"},
+  {pointer: 0x020490C0, desc: "Wi-fi menu"},
 ]
 
 TEXT_LIST_START_OFFSET = 0x0222E3B0
