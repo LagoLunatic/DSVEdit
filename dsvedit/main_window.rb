@@ -25,6 +25,7 @@ class DSVEdit < Qt::MainWindow
   slots "open_folder_dialog()"
   slots "save_files()"
   slots "edit_layers()"
+  slots "open_entity_editor()"
   slots "add_new_layer()"
   slots "add_new_entity()"
   slots "update_visible_view_items()"
@@ -82,6 +83,7 @@ class DSVEdit < Qt::MainWindow
     connect(@ui.actionExtract_ROM, SIGNAL("activated()"), self, SLOT("extract_rom_dialog()"))
     connect(@ui.actionSave, SIGNAL("activated()"), self, SLOT("save_files()"))
     connect(@ui.actionEdit_Layers, SIGNAL("activated()"), self, SLOT("edit_layers()"))
+    connect(@ui.actionEdit_Entities, SIGNAL("activated()"), self, SLOT("open_entity_editor()"))
     connect(@ui.actionAdd_New_Layer, SIGNAL("activated()"), self, SLOT("add_new_layer()"))
     connect(@ui.actionAdd_Entity, SIGNAL("activated()"), self, SLOT("add_new_entity()"))
     connect(@ui.actionEntities, SIGNAL("activated()"), self, SLOT("update_visible_view_items()"))
@@ -137,6 +139,7 @@ class DSVEdit < Qt::MainWindow
   def disable_menu_actions
     @ui.actionSave.setEnabled(false);
     @ui.actionEdit_Layers.setEnabled(false);
+    @ui.actionEdit_Entities.setEnabled(false);
     @ui.actionAdd_New_Layer.setEnabled(false);
     @ui.actionEntities.setEnabled(false);
     @ui.actionDoors.setEnabled(false);
@@ -160,6 +163,7 @@ class DSVEdit < Qt::MainWindow
   def enable_menu_actions
     @ui.actionSave.setEnabled(true);
     @ui.actionEdit_Layers.setEnabled(true);
+    @ui.actionEdit_Entities.setEnabled(true);
     @ui.actionAdd_New_Layer.setEnabled(true);
     @ui.actionEntities.setEnabled(true);
     @ui.actionDoors.setEnabled(true);
@@ -687,7 +691,11 @@ class DSVEdit < Qt::MainWindow
   rescue NDSFileSystem::FileExpandError => e
     @room.read_from_rom() # Reload room to get rid of the failed changes.
     load_room()
-    Qt::MessageBox.warning(self, "Cannot add layer", e.message)
+    Qt::MessageBox.warning(self, "Cannot add entity", e.message)
+  rescue Room::WriteError => e
+    @room.read_from_rom() # Reload room to get rid of the failed changes.
+    load_room()
+    Qt::MessageBox.warning(self, "Cannot add entity", e.message)
   end
   
   def update_visible_view_items
@@ -771,8 +779,12 @@ class DSVEdit < Qt::MainWindow
     @player_editor_dialog = PlayerEditor.new(self, game.fs)
   end
   
-  def open_entity_editor(entity)
+  def open_entity_editor(entity = nil)
     return if @entity_editor && @entity_editor.visible?
+    if @room.entities.empty?
+      Qt::MessageBox.warning(self, "No entities to edit", "This room has no entities.\nYou can add one by going to Edit -> Add Entity or pressing A.")
+      return
+    end
     @entity_editor = EntityEditorDialog.new(self, @room.entities, entity)
   end
   

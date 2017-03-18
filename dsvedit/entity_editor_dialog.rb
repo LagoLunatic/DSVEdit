@@ -24,6 +24,9 @@ class EntityEditorDialog < Qt::Dialog
     
     @entities = entities
     @entity = entity
+    if @entity.nil?
+      @entity = @entities.first
+    end
     
     @entities.each_index do |i|
       @ui.entity_index.addItem("%02X" % i)

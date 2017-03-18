@@ -1,6 +1,7 @@
 
 class Room
   class RoomReadError < StandardError ; end
+  class WriteError < StandardError ; end
   
   attr_reader :room_metadata_ram_pointer,
               :sector,
@@ -164,6 +165,10 @@ class Room
       # Entities are originally stored in the arm9 file, but we can't expand that. Instead put them into an overlay file, which can be expanded.
       # We use the same overlay that the the room's layers are stored on.
       
+      if layers.empty?
+        raise WriteError.new("Cannot add new entities to a room with no layers. Add a new layer first.")
+      end
+      
       length_to_expand_by = (entities.length+1)*12
       new_entity_list_pointer = fs.expand_file_and_get_end_of_file_ram_address(layers.first.layer_metadata_ram_pointer, length_to_expand_by)
       @entity_list_ram_pointer = new_entity_list_pointer
@@ -187,6 +192,10 @@ class Room
       # Repoint the door list so there's room for more doors without overwriting anything.
       # Doors are originally stored in the arm9 file, but we can't expand that. Instead put them into an overlay file, which can be expanded.
       # We use the same overlay that the the room's layers are stored on.
+      
+      if layers.empty?
+        raise WriteError.new("Cannot add new doors to a room with no layers. Add a new layer first.")
+      end
       
       length_to_expand_by = doors.length*16
       new_door_list_pointer = fs.expand_file_and_get_end_of_file_ram_address(layers.first.layer_metadata_ram_pointer, length_to_expand_by)
@@ -228,7 +237,6 @@ class Room
       raise "Can't add new layer; room already has 4 layers."
     end
     
-    overlay_id = AREA_INDEX_TO_OVERLAY_INDEX[sector.area.area_index][sector.sector_index]
     overlay = fs.overlays[overlay_id]
     overlay_ram_start = overlay[:ram_start_offset]
     overlay_ram_end = overlay[:ram_start_offset]+overlay[:size]
@@ -268,6 +276,10 @@ class Room
     new_layer.write_to_rom()
     
     @layers << new_layer
+  end
+  
+  def overlay_id
+    AREA_INDEX_TO_OVERLAY_INDEX[sector.area.area_index][sector.sector_index]
   end
   
   def z_ordered_layers

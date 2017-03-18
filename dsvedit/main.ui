@@ -228,6 +228,7 @@
      <string>Edit</string>
     </property>
     <addaction name="actionEdit_Layers"/>
+    <addaction name="actionEdit_Entities"/>
     <addaction name="actionAdd_New_Layer"/>
     <addaction name="actionAdd_Entity"/>
    </widget>
@@ -445,6 +446,11 @@
    </property>
    <property name="shortcut">
     <string>L</string>
+   </property>
+  </action>
+  <action name="actionEdit_Entities">
+   <property name="text">
+    <string>Edit Entities</string>
    </property>
   </action>
  </widget>
