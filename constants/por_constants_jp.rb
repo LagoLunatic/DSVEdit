@@ -175,9 +175,9 @@ STRING_DATABASE_ORIGINAL_END_OFFSET = 0x02224786 # ?? doesn't seem to work
 STRING_DATABASE_ALLOWABLE_END_OFFSET = STRING_DATABASE_ORIGINAL_END_OFFSET
 
 ## Note: the below are not actually where the original game stores the indexes. All three of those are at 02051F88 (since all three are the same: 00). The three addresses below are free space reused for the purpose of allowing the three values to be different.
-#NEW_GAME_STARTING_AREA_INDEX_OFFSET = 0x020BFC00
-#NEW_GAME_STARTING_SECTOR_INDEX_OFFSET = 0x020BFC08
-#NEW_GAME_STARTING_ROOM_INDEX_OFFSET = 0x020BFC0C
+NEW_GAME_STARTING_AREA_INDEX_OFFSET = 0x020B3E48
+NEW_GAME_STARTING_SECTOR_INDEX_OFFSET = 0x020B3E50
+NEW_GAME_STARTING_ROOM_INDEX_OFFSET = 0x020B3E54
 
 FAKE_TRANSITION_ROOMS = [0x020DC754] # This room is marked as a transition room, but it's not actually.
 

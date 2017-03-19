@@ -272,6 +272,10 @@ class Game
     game_name = patch_name[0,3]
     return unless GAME == game_name.downcase
     
+    if REGION != :usa
+      patch_name = "#{REGION.to_s}_#{patch_name}"
+    end
+    
     patch_file = "asm/#{patch_name}.asm"
     if !File.file?(patch_file)
       raise "Could not find patch file: #{patch_file}"
