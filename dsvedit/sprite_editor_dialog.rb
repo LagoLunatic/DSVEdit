@@ -23,6 +23,7 @@ class SpriteEditor < Qt::Dialog
   slots "toggle_animation_paused()"
   slots "advance_frame()"
   slots "reload_sprite()"
+  slots "export_sprite()"
   slots "open_skeleton_editor()"
   slots "click_gfx_scene(int, int, const Qt::MouseButton&)"
   slots "drag_gfx_scene(int, int, const Qt::MouseButton&)"
@@ -177,6 +178,7 @@ class SpriteEditor < Qt::Dialog
     connect(@ui.part_vertical_flip, SIGNAL("stateChanged(int)"), self, SLOT("toggle_part_flips(int)"))
     connect(@ui.toggle_paused_button, SIGNAL("clicked()"), self, SLOT("toggle_animation_paused()"))
     connect(@ui.reload_button, SIGNAL("clicked()"), self, SLOT("reload_sprite()"))
+    connect(@ui.export_button, SIGNAL("clicked()"), self, SLOT("export_sprite()"))
     connect(@ui.view_skeleton_button, SIGNAL("clicked()"), self, SLOT("open_skeleton_editor()"))
     connect(@ui.buttonBox, SIGNAL("clicked(QAbstractButton*)"), self, SLOT("button_box_clicked(QAbstractButton*)"))
     
@@ -320,6 +322,9 @@ class SpriteEditor < Qt::Dialog
   end
   
   def load_blank_sprite
+    @sprite_info = nil
+    @sprite = nil
+    
     @ui.view_skeleton_button.enabled = false
     @ui.sprite_file_name.text = ""
     @ui.gfx_pointer.text = ""
@@ -703,6 +708,31 @@ class SpriteEditor < Qt::Dialog
     @sprite_info = SpriteInfo.new(gfx_file_pointers, palette_pointer, @sprite_info.palette_offset, sprite_pointer, @sprite_info.skeleton_file, @fs)
     
     load_sprite()
+  end
+  
+  def export_sprite
+    return if @sprite.nil?
+    
+    if @sprite.sprite_file
+      sprite_name = @sprite.sprite_file[:name]
+    else
+      sprite_name = "%08X" % @sprite.sprite_pointer
+    end
+    
+    output_folder = "./gfx/exported_sprites/#{sprite_name}"
+    FileUtils.mkdir_p(output_folder)
+    
+    chunky_frames, _ = @renderer.render_sprite(@sprite_info, override_part_palette_index: @override_part_palette_index, one_dimensional_mode: @one_dimensional_render_mode)
+    chunky_frames.each_with_index do |chunky_frame, i|
+      type_name = ""
+      filename = "#{output_folder}/frame_#{i}.png"
+      chunky_frame.save(filename, :fast_rgba)
+    end
+    
+    Qt::MessageBox.warning(self,
+      "Exported sprite frames",
+      "All frames of this sprite have been exported to the folder #{output_folder}"
+    )
   end
   
   def click_gfx_scene(mouse_x, mouse_y, button)

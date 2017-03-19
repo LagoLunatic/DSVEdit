@@ -154,6 +154,19 @@
           </widget>
          </item>
          <item>
+          <widget class="QPushButton" name="export_button">
+           <property name="maximumSize">
+            <size>
+             <width>60</width>
+             <height>16777215</height>
+            </size>
+           </property>
+           <property name="text">
+            <string>Export</string>
+           </property>
+          </widget>
+         </item>
+         <item>
           <widget class="QPushButton" name="view_skeleton_button">
            <property name="enabled">
             <bool>false</bool>
