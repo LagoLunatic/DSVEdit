@@ -4,7 +4,9 @@ Bytes 5-8: Enemy running AI.
 Bytes 9-10: Item 1
 Bytes 11-12: Item 2
 Byte 13: ???
-Byte 14: ???
+Byte 14: Attribute points given when killed.
+  Each Master Ring you have equipped doubles this number.
+  Albus starts with two Master Rings equipped, so he always receives 4 times this number.
 Bytes 15-16: Max HP
 Bytes 17-18: EXP
 Byte 19: ???

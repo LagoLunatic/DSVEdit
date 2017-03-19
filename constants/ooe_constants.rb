@@ -281,7 +281,7 @@ ENEMY_DNA_FORMAT = [
   [2, "Item 1"],
   [2, "Item 2"],
   [1, "Unknown 1"],
-  [1, "Unknown 2"],
+  [1, "AP"],
   [2, "HP"],
   [2, "EXP"],
   [2, "Unknown 3"],
