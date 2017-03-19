@@ -86,8 +86,12 @@ class SpriteInfo
               sprite_files_to_load << file
             elsif file[:file_path] =~ /\/jnt\/.+\.jnt/
               skeleton_files_to_load << file
+            elsif file[:file_path] =~ /\/sm\/.+\.nsbmd/
+              # 3D model
+            elsif file[:file_path] =~ /\/sm\/.+\.nsbtx/
+              # 3D texture
             else
-              puts file
+              puts "Unknown type of file to load: #{file.inspect}"
             end
           end
         elsif file_data_type == 3

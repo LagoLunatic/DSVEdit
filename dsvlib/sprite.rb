@@ -14,7 +14,9 @@ class Sprite
               :number_of_frames,
               :number_of_animations,
               :parts,
+              :parts_by_offset,
               :hitboxes,
+              :hitboxes_by_offset,
               :frames,
               :frame_delays,
               :animations
@@ -359,15 +361,15 @@ end
 class Frame
   attr_reader :unknown,
               :number_of_hitboxes,
-              :number_of_parts,
               :first_hitbox_offset,
-              :first_part_offset,
               :part_indexes,
               :part_offsets,
               :parts,
               :hitbox_indexes,
               :hitbox_offsets,
               :hitboxes
+  attr_accessor :number_of_parts,
+                :first_part_offset
   
   def initialize(frame_data)
     @unknown, @number_of_hitboxes, @number_of_parts, @first_hitbox_offset, @first_part_offset = frame_data.unpack("vCCVV")

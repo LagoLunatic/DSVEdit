@@ -7,6 +7,7 @@ class SpriteEditor < Qt::Dialog
   attr_reader :game, :fs
   
   slots "frame_changed(int)"
+  slots "frame_data_changed()"
   slots "animation_frame_changed(int)"
   slots "toggle_hitbox(int)"
   slots "gfx_page_changed(int)"
@@ -167,6 +168,8 @@ class SpriteEditor < Qt::Dialog
     connect(@ui.skill_list, SIGNAL("currentRowChanged(int)"), self, SLOT("skill_changed(int)"))
     connect(@ui.other_sprites_list, SIGNAL("currentRowChanged(int)"), self, SLOT("other_sprite_changed(int)"))
     connect(@ui.frame_index, SIGNAL("activated(int)"), self, SLOT("frame_changed(int)"))
+    connect(@ui.frame_first_part, SIGNAL("editingFinished()"), self, SLOT("frame_data_changed()"))
+    connect(@ui.frame_number_of_parts, SIGNAL("editingFinished()"), self, SLOT("frame_data_changed()"))
     connect(@ui.seek_slider, SIGNAL("sliderMoved(int)"), self, SLOT("animation_frame_changed(int)"))
     connect(@ui.show_hitbox, SIGNAL("stateChanged(int)"), self, SLOT("toggle_hitbox(int)"))
     connect(@ui.gfx_page_index, SIGNAL("activated(int)"), self, SLOT("gfx_page_changed(int)"))
@@ -749,6 +752,31 @@ class SpriteEditor < Qt::Dialog
       "Exported sprite frames",
       "All frames of this sprite have been exported to the folder #{output_folder}"
     )
+  end
+  
+  def frame_data_changed
+    frame = @sprite.frames[@current_frame_index]
+    return if frame.nil?
+    
+    first_part_index = @ui.frame_first_part.text.to_i(16)
+    number_of_parts = @ui.frame_number_of_parts.text.to_i(16)
+    first_part_index = [first_part_index, 0].max
+    first_part_index = [first_part_index, @sprite.parts.length-1].min
+    number_of_parts = [number_of_parts, 0].max
+    number_of_parts = [number_of_parts, @sprite.parts.length-first_part_index].min
+    
+    first_part = @sprite.parts[first_part_index]
+    part_offset = @sprite.parts_by_offset.key(first_part)
+    if part_offset
+      frame.first_part_offset = part_offset
+      frame.number_of_parts = number_of_parts
+      frame.initialize_parts(@sprite.parts, @sprite.parts_by_offset)
+    end
+    
+    @ui.frame_first_part.text = "%02X" % frame.part_indexes.first
+    @ui.frame_number_of_parts.text = "%02X" % frame.number_of_parts
+    
+    frame_changed(@current_frame_index)
   end
   
   def click_gfx_scene(mouse_x, mouse_y, button)
