@@ -28,7 +28,7 @@ class SpriteEditor < Qt::Dialog
   slots "click_gfx_scene(int, int, const Qt::MouseButton&)"
   slots "drag_gfx_scene(int, int, const Qt::MouseButton&)"
   slots "stop_dragging_gfx_scene(int, int, const Qt::MouseButton&)"
-  slots "toggle_part_flips(int)"
+  slots "toggle_part_flips(bool)"
   slots "button_box_clicked(QAbstractButton*)"
   
   def initialize(main_window, game, renderer)
@@ -174,13 +174,15 @@ class SpriteEditor < Qt::Dialog
     connect(@ui.part_index, SIGNAL("activated(int)"), self, SLOT("part_changed(int)"))
     connect(@ui.animation_index, SIGNAL("activated(int)"), self, SLOT("animation_changed(int)"))
     connect(@ui.frame_delay, SIGNAL("editingFinished()"), self, SLOT("frame_delay_changed()"))
-    connect(@ui.part_horizontal_flip, SIGNAL("stateChanged(int)"), self, SLOT("toggle_part_flips(int)"))
-    connect(@ui.part_vertical_flip, SIGNAL("stateChanged(int)"), self, SLOT("toggle_part_flips(int)"))
+    connect(@ui.part_horizontal_flip, SIGNAL("clicked(bool)"), self, SLOT("toggle_part_flips(bool)"))
+    connect(@ui.part_vertical_flip, SIGNAL("clicked(bool)"), self, SLOT("toggle_part_flips(bool)"))
     connect(@ui.toggle_paused_button, SIGNAL("clicked()"), self, SLOT("toggle_animation_paused()"))
     connect(@ui.reload_button, SIGNAL("clicked()"), self, SLOT("reload_sprite()"))
     connect(@ui.export_button, SIGNAL("clicked()"), self, SLOT("export_sprite()"))
     connect(@ui.view_skeleton_button, SIGNAL("clicked()"), self, SLOT("open_skeleton_editor()"))
     connect(@ui.buttonBox, SIGNAL("clicked(QAbstractButton*)"), self, SLOT("button_box_clicked(QAbstractButton*)"))
+    
+    load_blank_sprite()
     
     self.show()
   end
@@ -332,14 +334,21 @@ class SpriteEditor < Qt::Dialog
     @ui.gfx_page_index.clear()
     @ui.palette_pointer.text = ""
     @ui.palette_index.clear()
-    @ui.part_index.clear()
     @ui.frame_first_part.text = ""
     @ui.frame_number_of_parts.text = ""
+    @ui.frame_first_part.enabled = false
+    @ui.frame_number_of_parts.enabled = false
+    @ui.part_index.clear()
+    @ui.part_horizontal_flip.checked = false
+    @ui.part_horizontal_flip.enabled = false
+    @ui.part_vertical_flip.checked = false
+    @ui.part_vertical_flip.enabled = false
     @ui.gfx_file_name.text = ""
     @ui.show_hitbox.enabled = false
     @ui.seek_slider.enabled = false
     @ui.toggle_paused_button.enabled = false
     @ui.frame_delay.text = ""
+    @ui.frame_delay.enabled = false
     
     @rendered_gfx_pages_by_palette = {}
     @gfx_page_pixmap_items_by_palette = {}
@@ -352,6 +361,13 @@ class SpriteEditor < Qt::Dialog
   end
   
   def load_sprite
+    @ui.frame_first_part.enabled = true
+    @ui.frame_number_of_parts.enabled = true
+    @ui.part_horizontal_flip.enabled = true
+    @ui.part_vertical_flip.enabled = true
+    @ui.show_hitbox.enabled = true
+    @ui.frame_delay.enabled = true
+    
     begin
       @sprite = @sprite_info.sprite
       
