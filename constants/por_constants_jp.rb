@@ -63,28 +63,28 @@ ENEMY_DNA_RAM_START_OFFSET = 0x020B27AC
 
 REUSED_ENEMY_INFO[0x46] = {init_code: 0x0228C510, palette_offset: 3} # red axe armor -> axe armor
 REUSED_ENEMY_INFO[0x4E] = {init_code: 0x022CD89C} # flame demon
-#REUSED_ENEMY_INFO[0x58] = {init_code: 0x022744DC, gfx_sheet_ptr_index: 1, palette_list_ptr_index: 1} # buster armor -> crossbow armor
-#REUSED_ENEMY_INFO[0x5C] = {init_code: 0x022D7918, palette_list_ptr_index: 1}
-#REUSED_ENEMY_INFO[0x5E] = {init_code: 0x02259EE4} # tanjelly -> slime
-#REUSED_ENEMY_INFO[0x63] = {init_code: 0x022630F8} # vice beetle -> spittle bone
-#REUSED_ENEMY_INFO[0x72] = {init_code: 0x022D7900, gfx_sheet_ptr_index: 1, palette_list_ptr_index: 1, sprite_ptr_index: 1} # poison worm -> sand worm
+REUSED_ENEMY_INFO[0x58] = {init_code: 0x0226CEF4, gfx_sheet_ptr_index: 1, palette_list_ptr_index: 1} # buster armor -> crossbow armor
+REUSED_ENEMY_INFO[0x5C] = {init_code: 0x022CD020, palette_list_ptr_index: 1} # gorgon -> catoplepas
+REUSED_ENEMY_INFO[0x5E] = {init_code: 0x02254F40} # tanjelly -> slime
+REUSED_ENEMY_INFO[0x63] = {init_code: 0x0225AB74} # vice beetle -> spittle bone
+REUSED_ENEMY_INFO[0x72] = {init_code: 0x022CE4B4, gfx_sheet_ptr_index: 1, palette_list_ptr_index: 1, sprite_ptr_index: 1} # poison worm -> sand worm
 REUSED_ENEMY_INFO[0x79] = {init_code: 0x0228C510, gfx_sheet_ptr_index: 1, palette_list_ptr_index: 1, sprite_ptr_index: 1} # double axe armor -> axe armor
-#REUSED_ENEMY_INFO[0x7A] = {init_code: 0x022D7930, gfx_sheet_ptr_index: 1, palette_list_ptr_index: 1, sprite_ptr_index: 1} # demon
-#REUSED_ENEMY_INFO[0x98] = {init_code: 0x0221E954} # whip's memory. for some reason his pointers are off in some random place not near his init code.
+REUSED_ENEMY_INFO[0x7A] = {init_code: 0x022CD89C, gfx_sheet_ptr_index: 1, palette_list_ptr_index: 1, sprite_ptr_index: 1} # demon
+REUSED_ENEMY_INFO[0x98] = {init_code: 0x0221807C} # whip's memory. for some reason his pointers are off in some random place not near his init code.
 RICHTERS_LIST_OF_GFX_POINTERS = 0x02217DD8
 
 ENEMY_FILES_TO_LOAD_LIST = 0x020C210C
 
 SPECIAL_OBJECT_CREATE_CODE_LIST = 0x02217288
 SPECIAL_OBJECT_UPDATE_CODE_LIST = 0x02217598
-#REUSED_SPECIAL_OBJECT_INFO[0x00] = {init_code: 0x020F4B6C}
-#REUSED_SPECIAL_OBJECT_INFO[0x01] = {init_code: 0x020F4B6C}
-#REUSED_SPECIAL_OBJECT_INFO[0x1A] = {init_code: 0x020F4E84} # portrait
-#REUSED_SPECIAL_OBJECT_INFO[0x22] = {sprite: 0x022B36E8, gfx_wrapper: 0x020BFF24, palette: 0x022B7660}
-#REUSED_SPECIAL_OBJECT_INFO[0x76] = {init_code: 0x020F4E90} # portrait
-#REUSED_SPECIAL_OBJECT_INFO[0x82] = {sprite: 0x022B36E8, gfx_wrapper: 0x020BFF24, palette: 0x022B7660}
-#REUSED_SPECIAL_OBJECT_INFO[0x86] = {init_code: 0x020F4E84} # portrait
-#REUSED_SPECIAL_OBJECT_INFO[0x87] = {init_code: 0x020F4E90} # portrait
+REUSED_SPECIAL_OBJECT_INFO[0x00] = {init_code: 0x020E93A4}
+REUSED_SPECIAL_OBJECT_INFO[0x01] = {init_code: 0x020E93A4}
+REUSED_SPECIAL_OBJECT_INFO[0x1A] = {init_code: 0x020E969C} # portrait
+REUSED_SPECIAL_OBJECT_INFO[0x22] = {sprite: 0x022A9B64, gfx_wrapper: 0x020B4170, palette: 0x022AA460}
+REUSED_SPECIAL_OBJECT_INFO[0x76] = {init_code: 0x020E96A8} # portrait
+REUSED_SPECIAL_OBJECT_INFO[0x82] = {sprite: 0x022A9B64, gfx_wrapper: 0x020B4170, palette: 0x022AA460}
+REUSED_SPECIAL_OBJECT_INFO[0x86] = {init_code: 0x020E969C} # portrait
+REUSED_SPECIAL_OBJECT_INFO[0x87] = {init_code: 0x020E96A8} # portrait
 REUSED_SPECIAL_OBJECT_INFO[0xB6] = {init_code: 0x02215378}
 REUSED_SPECIAL_OBJECT_INFO[0xB7] = {init_code: 0x02215388}
 REUSED_SPECIAL_OBJECT_INFO[0xB8] = {init_code: 0x02215398}
@@ -150,8 +150,8 @@ OTHER_SPRITES = [
   {pointer: 0x022D1584, desc: "Co-op mode end menu", overlay: 25},
   {pointer: 0x02033AE8, desc: "Equip menu", one_dimensional_mode: true},
   
-#  {pointer: 0x022D7CBC, desc: "Brauner inside mirror portrait", overlay: 55},
-#  {pointer: 0x022D7C98, desc: "Brauner curse beast", overlay: 55},
+  {pointer: 0x022D045C, desc: "Brauner inside mirror portrait", overlay: 55},
+  {pointer: 0x022D0438, desc: "Brauner curse beast", overlay: 55},
 ]
 
 TEXT_LIST_START_OFFSET = 0x02215410
@@ -174,7 +174,7 @@ STRING_DATABASE_START_OFFSET = 0x02219040
 STRING_DATABASE_ORIGINAL_END_OFFSET = 0x02224786 # ?? doesn't seem to work
 STRING_DATABASE_ALLOWABLE_END_OFFSET = STRING_DATABASE_ORIGINAL_END_OFFSET
 
-## Note: the below are not actually where the original game stores the indexes. All three of those are at 02051F88 (since all three are the same: 00). The three addresses below are free space reused for the purpose of allowing the three values to be different.
+# Note: the below are not actually where the original game stores the indexes. All three of those are at 02051F88 (since all three are the same: 00). The three addresses below are free space reused for the purpose of allowing the three values to be different.
 NEW_GAME_STARTING_AREA_INDEX_OFFSET = 0x020B3E48
 NEW_GAME_STARTING_SECTOR_INDEX_OFFSET = 0x020B3E50
 NEW_GAME_STARTING_ROOM_INDEX_OFFSET = 0x020B3E54
