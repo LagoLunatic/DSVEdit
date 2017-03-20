@@ -110,7 +110,7 @@ class Text
     
     high_byte = ((index / 0xBC) + 0x81) << 8
     low_byte = (index % 0xBC) + 0x40
-    if low_byte >= 0x7D
+    if low_byte >= 0x7F
       low_byte += 1
     end
     halfword = high_byte | low_byte
@@ -279,7 +279,7 @@ class Text
       when 0x01
         "{NEXTACTION}"
       when 0x03
-        "{CHOICE}" % data
+        "{CHOICE}"
       else
         "{COMMAND2 #{data_format_string}}" % data
       end
@@ -361,6 +361,10 @@ class Text
   end
   
   def encode_char_jp(input_char)
+    if input_char == "\n"
+      return [0xF006].pack("v")
+    end
+    
     shift_jis = input_char.encode("SHIFT_JIS").ord
     index = reverse_font_character_mapping_jp(shift_jis)
     return [index].pack("v")
@@ -395,7 +399,7 @@ class Text
     when "NEXTACTION"
       [0xF002, 0x0001].pack("vv")
     when "CHOICE"
-      [0xF002, 0x0003].pack("CC")
+      [0xF002, 0x0003].pack("vv")
     when "COMMAND2"
       halfword = data.to_i(16)
       [0xF002, halfword].pack("vv")
