@@ -111,6 +111,8 @@ class Game
       
       entity_type_docs
     end
+  rescue Errno::ENOENT => e
+    ""
   end
   
   def enemy_docs
@@ -126,6 +128,8 @@ class Game
       
       enemy_docs
     end
+  rescue Errno::ENOENT => e
+    ""
   end
   
   def special_object_docs
@@ -141,6 +145,8 @@ class Game
       
       special_object_docs
     end
+  rescue Errno::ENOENT => e
+    ""
   end
   
   def enemy_format_doc
@@ -149,6 +155,8 @@ class Game
       
       file_contents
     end
+  rescue Errno::ENOENT => e
+    ""
   end
   
   def item_format_docs
@@ -164,6 +172,18 @@ class Game
       
       item_format_docs
     end
+  rescue Errno::ENOENT => e
+    ""
+  end
+  
+  def player_format_doc
+    @player_format_docs ||= begin
+      file_contents = File.read("./docs/formats/#{GAME} Player Format.txt")
+      
+      file_contents
+    end
+  rescue Errno::ENOENT => e
+    ""
   end
   
   def items

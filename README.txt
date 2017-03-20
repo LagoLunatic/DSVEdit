@@ -13,6 +13,7 @@ Report issues here: https://github.com/LagoLunatic/DSVEdit/issues
 * Editing GFX and palettes
 * Editing sprites (enemies, objects, weapons, etc)
 * Editing area maps
+* Editing player characters
 * Editing text
 * Editing which songs play in which areas
 * Editing random chest item pools
