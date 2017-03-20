@@ -556,6 +556,7 @@ REUSED_SPECIAL_OBJECT_INFO = {
 }
 BEST_SPRITE_FRAME_FOR_SPECIAL_OBJECT = {
   0x01 => 0x153,
+  0x07 => 0x04,
   0x16 => 0x05,
   0x17 => 0x05,
   0x1D =>   -1,
