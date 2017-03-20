@@ -43,7 +43,7 @@ class TextDatabase
       next_string_ram_pointer = STRING_DATABASE_START_OFFSET
       should_write_to_end_of_file = false
       text_list_for_overlay.each do |text|
-        if next_string_ram_pointer + text.encoded_string.length + header_footer_length > STRING_DATABASE_ALLOWABLE_END_OFFSET
+        if next_string_ram_pointer + text.encoded_string.length + header_footer_length >= STRING_DATABASE_ALLOWABLE_END_OFFSET
           # Writing strings past this point would result in something being overwritten, so raise an error.
           
           raise StringDatabaseTooLargeError.new

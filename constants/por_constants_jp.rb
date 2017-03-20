@@ -171,7 +171,7 @@ TEXT_REGIONS = {
   "Debug" => (0x738..0x738)
 }
 STRING_DATABASE_START_OFFSET = 0x02219040
-STRING_DATABASE_ORIGINAL_END_OFFSET = 0x02224786 # ?? doesn't seem to work
+STRING_DATABASE_ORIGINAL_END_OFFSET = 0x02225A4B # for overlay 2. overlay 1 ends at 02224785
 STRING_DATABASE_ALLOWABLE_END_OFFSET = STRING_DATABASE_ORIGINAL_END_OFFSET
 
 # Note: the below are not actually where the original game stores the indexes. All three of those are at 02051F88 (since all three are the same: 00). The three addresses below are free space reused for the purpose of allowing the three values to be different.
