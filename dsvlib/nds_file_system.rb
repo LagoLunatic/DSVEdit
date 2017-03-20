@@ -232,7 +232,7 @@ class NDSFileSystem
   def commit_file_changes(base_directory = @filesystem_directory)
     print "Committing changes to filesystem... "
     
-    @uncommitted_files.each do |file_path|
+    @uncommitted_files.uniq.each do |file_path|
       file_data = get_file_data_from_opened_files_cache(file_path)
       full_path = File.join(base_directory, file_path)
       
