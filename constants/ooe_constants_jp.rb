@@ -43,6 +43,70 @@ MAP_SECRET_DOOR_LIST_START_OFFSET = 0x020D8F24
 
 AREA_MUSIC_LIST_START_OFFSET = 0x020D75D8
 SECTOR_MUSIC_LIST_START_OFFSET = 0x020D7554
+SONG_INDEX_TO_TEXT_INDEX = [
+  "Silence",
+  0x602,
+  0x603,
+  0x604,
+  0x605,
+  0x606,
+  0x607,
+  0x608,
+  0x609,
+  0x60A,
+  0x60B,
+  0x60C,
+  0x60D,
+  "Ambience",
+  0x60E,
+  0x60F,
+  0x610,
+  0x611,
+  0x612,
+  0x613,
+  0x614,
+  0x615,
+  0x616,
+  0x617,
+  0x618,
+  0x619,
+  0x61A,
+  0x61B,
+  0x61C,
+  0x61D,
+  0x61E,
+  0x61F,
+  0x620,
+  0x621,
+  0x622,
+  0x623,
+  0x624,
+  0x625,
+  0x626,
+  0x627,
+  0x628,
+  0x629,
+  0x62A,
+  0x62B,
+  0x62C,
+  0x62D,
+  0x62E,
+  0x62F,
+  0x630,
+  0x631,
+  "Suspicions",
+  "Welcome to Legend (Alt?)",
+  "Bloody Tears",
+  0x632,
+  0x633,
+  0x634,
+  0x635,
+  0x636,
+  0x637,
+  0x638,
+  0x639,
+  0x63A,
+]
 
 LIST_OF_FILE_RAM_LOCATIONS_START_OFFSET = 0x020DA694
 LIST_OF_FILE_RAM_LOCATIONS_END_OFFSET = 0x020EE3B3
@@ -127,6 +191,29 @@ OTHER_SPRITES = [
 ]
 
 TEXT_LIST_START_OFFSET = 0x021FDDA0
+TEXT_RANGE = (0..0x781)
+TEXT_REGIONS = {
+  "Character Names" => (0..0x15),
+  "Item Names" => (0x16..0x177),
+  "Item Descriptions" => (0x178..0x2D9),
+  "Enemy Names" => (0x2DA..0x352),
+  "Enemy Descriptions" => (0x353..0x3CB),
+  "Music Names (Unused)" => (0x3CC..0x3E8),
+  "Misc" => (0x3E9..0x424),
+  "Menus" => (0x425..0x67C),
+  "Events" => (0x67D..0x781)
+}
+TEXT_REGIONS_OVERLAYS = {
+  "Character Names" => 0,
+  "Item Names" => 0,
+  "Item Descriptions" => 0,
+  "Enemy Names" => 0,
+  "Enemy Descriptions" => 0,
+  "Music Names (Unused)" => 0,
+  "Misc" => 0,
+  "Menus" => 0,
+  "Events" => 0
+}
 STRING_DATABASE_START_OFFSET = 0x021DCEA0
 STRING_DATABASE_ORIGINAL_END_OFFSET = 0x021FDD88
 STRING_DATABASE_ALLOWABLE_END_OFFSET = STRING_DATABASE_ORIGINAL_END_OFFSET
