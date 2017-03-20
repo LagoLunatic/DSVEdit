@@ -465,13 +465,17 @@ class DSVEdit < Qt::MainWindow
       x *= SCREEN_WIDTH_IN_PIXELS
       y *= SCREEN_HEIGHT_IN_PIXELS
       
-      door_item = DoorItem.new(door, x, y)
+      door_item = DoorItem.new(door, x, y, self)
       door_item.setParentItem(@doors_view_item)
     end
     
-    @room_graphics_scene.setSceneRect(@room_graphics_scene.itemsBoundingRect)
+    update_room_bounding_rect()
     
     update_visible_view_items()
+  end
+  
+  def update_room_bounding_rect
+    @room_graphics_scene.setSceneRect(@room_graphics_scene.itemsBoundingRect)
   end
   
   def load_room_collision_tileset
@@ -520,13 +524,14 @@ class DSVEdit < Qt::MainWindow
         chunky_image = @renderer.render_icon_by_global_id(item_global_id)
         
         if chunky_image.nil?
-          graphics_item = EntityRectItem.new(entity)
+          graphics_item = EntityRectItem.new(entity, self)
           graphics_item.setParentItem(@entities_view_item)
           return
         end
         
-        graphics_item = EntityChunkyItem.new(chunky_image, entity)
-        graphics_item.setPos(entity.x_pos-8, entity.y_pos-16)
+        graphics_item = EntityChunkyItem.new(chunky_image, entity, self)
+        graphics_item.setOffset(-8, -16)
+        graphics_item.setPos(entity.x_pos, entity.y_pos)
         graphics_item.setParentItem(@entities_view_item)
       else
         item_type = entity.subtype
@@ -534,13 +539,14 @@ class DSVEdit < Qt::MainWindow
         chunky_image = @renderer.render_icon_by_item_type(item_type-2, item_id)
         
         if chunky_image.nil?
-          graphics_item = EntityRectItem.new(entity)
+          graphics_item = EntityRectItem.new(entity, self)
           graphics_item.setParentItem(@entities_view_item)
           return
         end
         
-        graphics_item = EntityChunkyItem.new(chunky_image, entity)
-        graphics_item.setPos(entity.x_pos-8, entity.y_pos-16)
+        graphics_item = EntityChunkyItem.new(chunky_image, entity, self)
+        graphics_item.setOffset(-8, -16)
+        graphics_item.setPos(entity.x_pos, entity.y_pos)
         graphics_item.setParentItem(@entities_view_item)
       end
     elsif entity.is_heart? || entity.is_hidden_heart?
@@ -568,13 +574,14 @@ class DSVEdit < Qt::MainWindow
       end
       
       if chunky_image.nil?
-        graphics_item = EntityRectItem.new(entity)
+        graphics_item = EntityRectItem.new(entity, self)
         graphics_item.setParentItem(@entities_view_item)
         return
       end
       
-      graphics_item = EntityChunkyItem.new(chunky_image, entity)
-      graphics_item.setPos(entity.x_pos-8, entity.y_pos-16)
+      graphics_item = EntityChunkyItem.new(chunky_image, entity, self)
+      graphics_item.setOffset(-8, -16)
+      graphics_item.setPos(entity.x_pos, entity.y_pos)
       graphics_item.setParentItem(@entities_view_item)
     elsif (entity.is_glyph? || entity.is_hidden_glyph?) && entity.var_b > 0
       glyph_id = entity.var_b - 1
@@ -585,27 +592,28 @@ class DSVEdit < Qt::MainWindow
       end
       
       if chunky_image.nil?
-        graphics_item = EntityRectItem.new(entity)
+        graphics_item = EntityRectItem.new(entity, self)
         graphics_item.setParentItem(@entities_view_item)
         return
       end
       
-      graphics_item = EntityChunkyItem.new(chunky_image, entity)
-      graphics_item.setPos(entity.x_pos-16, entity.y_pos-16)
+      graphics_item = EntityChunkyItem.new(chunky_image, entity, self)
+      graphics_item.setOffset(-16, -16)
+      graphics_item.setPos(entity.x_pos, entity.y_pos)
       graphics_item.setParentItem(@entities_view_item)
     else
-      graphics_item = EntityRectItem.new(entity)
+      graphics_item = EntityRectItem.new(entity, self)
       graphics_item.setParentItem(@entities_view_item)
     end
   rescue StandardError => e
-    graphics_item = EntityRectItem.new(entity)
+    graphics_item = EntityRectItem.new(entity, self)
     graphics_item.setParentItem(@entities_view_item)
   end
   
   def add_sprite_item_for_entity(entity, sprite_info, frame_to_render)
     if frame_to_render == -1
       # Don't show this entity's sprite in the editor.
-      graphics_item = EntityRectItem.new(entity)
+      graphics_item = EntityRectItem.new(entity, self)
       graphics_item.setParentItem(@entities_view_item)
       return
     end
@@ -615,9 +623,10 @@ class DSVEdit < Qt::MainWindow
     sprite_filename = @renderer.ensure_sprite_exists("cache/#{GAME}/sprites/", sprite_info, frame_to_render)
     chunky_frame = ChunkyPNG::Image.from_file(sprite_filename)
     
-    graphics_item = EntityChunkyItem.new(chunky_frame, entity)
+    graphics_item = EntityChunkyItem.new(chunky_frame, entity, self)
     
-    graphics_item.setPos(entity.x_pos+sprite_info.sprite.min_x, entity.y_pos+sprite_info.sprite.min_y)
+    graphics_item.setOffset(sprite_info.sprite.min_x, sprite_info.sprite.min_y)
+    graphics_item.setPos(entity.x_pos, entity.y_pos)
     graphics_item.setParentItem(@entities_view_item)
   end
   
@@ -979,11 +988,44 @@ class DoorItem < Qt::GraphicsRectItem
   
   attr_reader :door
   
-  def initialize(door, x, y)
-    super(x, y, 16*16, 12*16)
+  def initialize(door, x, y, main_window)
+    super(0, 0, 16*16, 12*16)
+    setPos(x, y)
+    
+    @main_window = main_window
+    @door = door
     
     self.setBrush(BRUSH)
-    @door = door
+    
+    #setFlag(Qt::GraphicsItem::ItemIsMovable)
+    #setFlag(Qt::GraphicsItem::ItemSendsGeometryChanges)
+  end
+  
+  def itemChange(change, value)
+    if change == ItemPositionChange && scene()
+      new_pos = value.toPointF()
+      x = (new_pos.x / SCREEN_WIDTH_IN_PIXELS).round
+      y = (new_pos.y / SCREEN_HEIGHT_IN_PIXELS).round
+      x = [x, 0x7F].min
+      x = [x, -1].max
+      y = [y, 0x7F].min
+      y = [y, -1].max
+      new_pos.setX(x*SCREEN_WIDTH_IN_PIXELS)
+      new_pos.setY(y*SCREEN_HEIGHT_IN_PIXELS)
+      
+      @door.x_pos = x
+      @door.y_pos = y
+      @door.write_to_rom()
+      
+      return super(change, Qt::Variant.new(new_pos))
+    end
+    
+    return super(change, value)
+  end
+
+  def mouseReleaseEvent(event)
+    @main_window.update_room_bounding_rect()
+    super(event)
   end
 end
 
@@ -1029,10 +1071,42 @@ end
 class EntityChunkyItem < GraphicsChunkyItem
   attr_reader :entity
   
-  def initialize(chunky_image, entity)
+  def initialize(chunky_image, entity, main_window)
     super(chunky_image)
     
+    @main_window = main_window
     @entity = entity
+    
+    #setFlag(Qt::GraphicsItem::ItemIsMovable)
+    #setFlag(Qt::GraphicsItem::ItemSendsGeometryChanges)
+  end
+  
+  def itemChange(change, value)
+    if change == ItemPositionChange && scene()
+      new_pos = value.toPointF()
+      x = new_pos.x
+      y = new_pos.y
+      
+      if $qApp.keyboardModifiers & Qt::ControlModifier == 0
+        x = (x / 16).round * 16
+        y = (y / 16).round * 16
+        new_pos.setX(x)
+        new_pos.setY(y)
+      end
+      
+      @entity.x_pos = x
+      @entity.y_pos = y
+      @entity.write_to_rom()
+      
+      return super(change, Qt::Variant.new(new_pos))
+    end
+    
+    return super(change, value)
+  end
+
+  def mouseReleaseEvent(event)
+    @main_window.update_room_bounding_rect()
+    super(event)
   end
 end
 
@@ -1045,8 +1119,14 @@ class EntityRectItem < Qt::GraphicsRectItem
   
   attr_reader :entity
   
-  def initialize(entity)
-    super(entity.x_pos-8, entity.y_pos-8, 16, 16)
+  def initialize(entity, main_window)
+    super(-8, -8, 16, 16)
+    setPos(entity.x_pos, entity.y_pos)
+    
+    @main_window = main_window
+    
+    #setFlag(Qt::GraphicsItem::ItemIsMovable)
+    #setFlag(Qt::GraphicsItem::ItemSendsGeometryChanges)
     
     case entity.type
     when 0
@@ -1061,5 +1141,33 @@ class EntityRectItem < Qt::GraphicsRectItem
       self.setBrush(OTHER_BRUSH)
     end
     @entity = entity
+  end
+  
+  def itemChange(change, value)
+    if change == ItemPositionChange && scene()
+      new_pos = value.toPointF()
+      x = new_pos.x
+      y = new_pos.y
+      
+      if $qApp.keyboardModifiers & Qt::ControlModifier == 0
+        x = (x / 16).round * 16
+        y = (y / 16).round * 16
+        new_pos.setX(x)
+        new_pos.setY(y)
+      end
+      
+      @entity.x_pos = x
+      @entity.y_pos = y
+      @entity.write_to_rom()
+      
+      return super(change, Qt::Variant.new(new_pos))
+    end
+    
+    return super(change, value)
+  end
+
+  def mouseReleaseEvent(event)
+    @main_window.update_room_bounding_rect()
+    super(event)
   end
 end
