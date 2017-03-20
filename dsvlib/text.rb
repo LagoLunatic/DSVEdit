@@ -142,8 +142,7 @@ class Text
         if REGION == :jp
           encode_char_jp(str)
         else
-          byte = str.unpack("C").first
-          encode_char_usa(byte)
+          encode_char_usa(str)
         end
       end
     end.join
@@ -192,9 +191,9 @@ class Text
         when 0x5F
           "・"
         when 0xAF
-          "'"
+          "’"
         when 0xB1
-          '"'
+          '”'
         #when 0x60..0xBF
         #  "¡¢£¨©®°±´¸¿ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖ×ØÙÚÛÜÝßàáâãäåæçèéêëìíîïðñòóôõö÷øùúûüýŒœ"[byte-0x60]
         else
@@ -300,7 +299,14 @@ class Text
     end
   end
   
-  def encode_char_usa(byte)
+  def encode_char_usa(str)
+    if str == '’'
+      return [0xAF].pack("C")
+    elsif str == '”'
+      return [0xB1].pack("C")
+    end
+    
+    byte = str.unpack("C").first
     char = case byte
     when 0x20..0x7A # Ascii text
       [byte - 0x20].pack("C")
@@ -340,7 +346,7 @@ class Text
       [0xE2, byte].pack("CC")
     when "ENDCHOICE"
       byte = data.to_i(16)
-      [0xE1, byte].pack("CC")
+      [0xE1, byte].pack("Cn")
     when "TEXTCOLOR"
       color_name = data
       byte = TEXT_COLOR_NAMES.key(color_name)
