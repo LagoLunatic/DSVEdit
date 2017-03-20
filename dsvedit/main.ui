@@ -194,8 +194,8 @@
     <addaction name="actionText_Editor"/>
     <addaction name="actionSprite_Editor"/>
     <addaction name="actionGFX_Editor"/>
-    <addaction name="actionMusic_Editor"/>
     <addaction name="actionPlayer_Editor"/>
+    <addaction name="actionMusic_Editor"/>
     <addaction name="actionItem_Pool_Editor"/>
     <addaction name="actionTileset_Editor"/>
     <addaction name="actionEntity_Search"/>
