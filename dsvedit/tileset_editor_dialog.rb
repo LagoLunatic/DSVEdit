@@ -20,8 +20,6 @@ class TilesetEditorDialog < Qt::Dialog
     
     @fs = fs
     @renderer = renderer
-    @room = room
-    @layer = @room.layers.first
     
     @tileset_graphics_scene = ClickableGraphicsScene.new
     @ui.tileset_graphics_view.setScene(@tileset_graphics_scene)
@@ -41,9 +39,13 @@ class TilesetEditorDialog < Qt::Dialog
     @ui.selected_tile_graphics_view.setScene(@selected_tile_graphics_scene)
     @selected_tile_graphics_scene.setBackgroundBrush(BACKGROUND_BRUSH)
     
-    @ui.tileset_pointer.text = "%08X" % @layer.ram_pointer_to_tileset_for_layer
-    @ui.gfx_list_pointer.text = "%08X" % @room.gfx_list_pointer
-    @ui.palette_list_pointer.text = "%08X" % @room.palette_offset
+    @room = room
+    layer = room.layers.first
+    if layer
+      @ui.tileset_pointer.text = "%08X" % layer.ram_pointer_to_tileset_for_layer
+    end
+    @ui.gfx_list_pointer.text = "%08X" % room.gfx_list_pointer
+    @ui.palette_list_pointer.text = "%08X" % room.palette_offset
     load_tileset()
     
     connect(@ui.gfx_page_index, SIGNAL("activated(int)"), self, SLOT("gfx_page_changed(int)"))
@@ -280,8 +282,11 @@ class TilesetEditorDialog < Qt::Dialog
     @tileset.write_to_rom()
     
     # Clear the tileset cache so the changes show up in the editor.
-    tileset_filename = "cache/#{GAME}/rooms/#{@room.area_name}/Tilesets/#{@layer.tileset_filename}.png"
-    FileUtils.rm(tileset_filename)
+    tileset_filename = "tileset_%08X_%08X_%08X" % [@tileset_pointer, @palette_list_pointer || 0, @gfx_list_pointer]
+    tileset_path = "cache/#{GAME}/rooms/#{@room.area_name}/Tilesets/#{tileset_filename}.png"
+    if File.file?(tileset_path)
+      FileUtils.rm(tileset_path)
+    end
   end
   
   def button_box_clicked(button)

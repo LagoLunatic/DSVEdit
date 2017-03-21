@@ -137,12 +137,7 @@ class Layer
   end
   
   def tileset_filename
-    if room.gfx_pages
-      tileset_gfx_file_ids = room.gfx_pages.map{|gfx| gfx.file[:id]}.join(",")
-    else
-      tileset_gfx_file_ids = "none"
-    end
-    "tileset_%08X_%08X_%s" % [ram_pointer_to_tileset_for_layer, room.palette_offset || 0, tileset_gfx_file_ids]
+    "tileset_%08X_%08X_%08X" % [ram_pointer_to_tileset_for_layer, room.palette_offset || 0, @room.gfx_list_pointer]
   end
 end
 
