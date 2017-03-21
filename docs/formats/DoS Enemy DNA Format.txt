@@ -19,6 +19,7 @@ Byte 21: Chance to drop its soul.
   Yes, luck has almost no effect on soul drop chances.
   The Soul Eater Ring basically doubles the drop chance, the formula is:
     (this_number*2 + 0.125) / (512 - luck/8)
+  On hard mode, luck has 4x the effect on soul/item chances.
 Byte 22: Attack stat.
 Byte 23: Defense stat.
   Doubles as magical defense.
@@ -32,6 +33,13 @@ Byte 24: Chance to drop an item.
   So luck has more effect on item drops than soul drops, but the effect is still very small.
   The Rare Ring doubles the drop chance, the formula is:
     (this_number*3*2) / (1024 - luck)
+  Once it's been decided that you're going to get an item drop, it then decides whether you'll get Item1 or Item2.
+  If the enemy has only an Item1, Item1 will drop.
+  If the enemy has an Item2, the chance of the drop being the rarer Item2 is:
+    256 / (1024 - luck)
+  The Rare Ring also doubles that chance.
+  If that Item2 chance fails, Item1 will drop. Or nothing will drop if the enemy has no Item1.
+  On hard mode, luck has 4x the effect on soul/item chances.
 Bytes 25-26: ???
 Byte 27: ID of soul this enemy drops (see soul ID list). FF means no soul.
 Byte 28: This is the number of points/slots this enemy's soul costs to place in enemy set mode.
