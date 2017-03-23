@@ -14,6 +14,28 @@
 .org 0x02212E94 ; Line in the whip code that would normally call 021D5210 to break the blocks.
   b @CheckDestroyBaloreBlocks ; Instead jump to our own code to check if the player has Balore's soul.
 
+; There's a bug where weapons with small hitboxes won't break all the blocks they touch.
+.org 0x02212E34
+  add r3, r3, 8h ; Add 8 pixels to the hitbox height so it will be rounded up to the nearest 16px instead of down.
+
+; There's a bug where the whip code only checks the weapon's first hitbox, even though some weapons have two hitboxes at once.
+; To do this we need a new variable, r6, to keep track of whether we're on the first hitbox or the second one.
+; We also need to preserve the pointer to the weapon entity (argument r0 passed to this function).
+; So change all the push/pop statements for this function to include r0 and r6 (instead of just r4,r5,r14).
+.org 0x02212DB4
+  push r0,r4-r6,r14
+.org 0x02212DCC
+  popne r0,r4-r6,r14
+.org 0x02212DE8
+  popeq r0,r4-r6,r14
+.org 0x02212E04
+  popeq r0,r4-r6,r14
+; Then we can check the second hitbox.
+.org 0x02212E98 ; At the end of the function, after checking the first hitbox.
+  b @CheckSecondHitbox ; Instead of returning, we jump to our own code.
+  nop
+  nop
+
 .close
 
 .open "ftc/arm9.bin", 02000000h
@@ -37,5 +59,16 @@
   bl 021D5210h ; Call function to destroy blocks.
   b 02212E98h ; Return
   .pool
+
+@CheckSecondHitbox:
+  cmp r6, 1h
+  addeq r13,r13,1Ch ; If r6 is 1, we already checked both hitboxes, so return.
+  popeq r0,r4-r6,r14
+  bxeq r14
+  mov r6, 1h ; Set r6 to 1 to indicate that we already checked both hitboxes.
+  ldr r0, [r13,1Ch] ; We extract the pointer to the weapon entity from the stack (argument r0 to the whip function).
+  bl 02012DB0h ; Get the weapon's hitbox pointer.
+  add r0, r0, 0Ah ; Add 0x0A to get the second hitbox pointer.
+  b 02212DF8h ; Jump back to inside the whip function so it checks the second hitbox.
 
 .close
