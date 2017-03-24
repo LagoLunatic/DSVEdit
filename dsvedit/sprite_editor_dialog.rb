@@ -170,7 +170,7 @@ class SpriteEditor < Qt::Dialog
     connect(@ui.frame_index, SIGNAL("activated(int)"), self, SLOT("frame_changed(int)"))
     connect(@ui.frame_first_part, SIGNAL("editingFinished()"), self, SLOT("frame_data_changed()"))
     connect(@ui.frame_number_of_parts, SIGNAL("editingFinished()"), self, SLOT("frame_data_changed()"))
-    connect(@ui.seek_slider, SIGNAL("sliderMoved(int)"), self, SLOT("animation_frame_changed(int)"))
+    connect(@ui.seek_slider, SIGNAL("valueChanged(int)"), self, SLOT("animation_frame_changed(int)"))
     connect(@ui.show_hitbox, SIGNAL("stateChanged(int)"), self, SLOT("toggle_hitbox(int)"))
     connect(@ui.gfx_page_index, SIGNAL("activated(int)"), self, SLOT("gfx_page_changed(int)"))
     connect(@ui.palette_index, SIGNAL("activated(int)"), self, SLOT("palette_changed(int)"))
@@ -636,6 +636,8 @@ class SpriteEditor < Qt::Dialog
   end
   
   def animation_frame_changed(i)
+    return if i == @current_animation_frame_index && @ui.seek_slider.value == @current_animation_frame_index
+    
     @current_animation_frame_index = i
     frame_delay = @current_animation.frame_delays[@current_animation_frame_index]
     frame_changed(frame_delay.frame_index)

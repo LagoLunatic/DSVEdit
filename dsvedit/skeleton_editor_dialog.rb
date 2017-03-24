@@ -45,7 +45,7 @@ class SkeletonEditorDialog < Qt::Dialog
     connect(@ui.show_hitboxes, SIGNAL("stateChanged(int)"), self, SLOT("toggle_show_hitboxes(int)"))
     connect(@ui.show_points, SIGNAL("stateChanged(int)"), self, SLOT("toggle_show_points(int)"))
     connect(@ui.animation_index, SIGNAL("activated(int)"), self, SLOT("animation_changed(int)"))
-    connect(@ui.seek_slider, SIGNAL("sliderMoved(int)"), self, SLOT("animation_keyframe_changed_no_tween(int)"))
+    connect(@ui.seek_slider, SIGNAL("valueChanged(int)"), self, SLOT("animation_keyframe_changed_no_tween(int)"))
     connect(@ui.toggle_paused_button, SIGNAL("clicked()"), self, SLOT("toggle_animation_paused()"))
     connect(@ui.buttonBox, SIGNAL("clicked(QAbstractButton*)"), self, SLOT("button_box_clicked(QAbstractButton*)"))
     
@@ -228,6 +228,8 @@ class SkeletonEditorDialog < Qt::Dialog
   end
   
   def animation_keyframe_changed_no_tween(i)
+    return if i == @current_animation_keyframe_index && @ui.seek_slider.value == @current_animation_keyframe_index
+    
     @current_animation_keyframe_index = i
     @current_animation_tweenframe_index = 0
     @current_keyframe = @current_animation.keyframes[@current_animation_keyframe_index]
