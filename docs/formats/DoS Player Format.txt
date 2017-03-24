@@ -3,13 +3,14 @@ Player format:
   00,4: GFX list pointer.
   04,4: Sprite pointer.
   08,4: Palette list pointer.
-  0C,4: 
-  10,4: 
+  0C,4: Pointer to list of which sprite animation to use for what state.
+  10,4: Pointer to gfx filename (e.g. "f_soma").
   14,4: Walking speed.
   18,4: First jump force.
   1C,4: Bitfield of what actions the player can do.
     Bit 1: Can slide.
     Bit 2: Can attack with weapons.
+    Bit 4: Can sit in chairs.
     Bit 6: Can jumpkick.
     Bit 7: Can up+L superjump (Hippogryph).
   20,4: 
@@ -17,16 +18,18 @@ Player format:
   26,2: 
   28,4: Backdash force.
   2C,4: 
-  30,4: 
-  34,4: 
-  38,4: 
+  30,4: Number of trails. Maximum is 14.
+  34,4: Initial RGBA color of trails.
+    Each color ranges from 00 to 1F.
+  38,4: Ending RGBA color of trails.
   3C,4: 
-  40,2: 
+  40,2: Sprite y offset in pixels.
   42,2: 
-  44,2: 
-  46,2: 
-  48,4: 
-  4C,4: 
+  44,4: Scale multiplier for the player's trail.
+    00001000 means 1x.
+  48,4: Scale multiplier for the player.
+    Only does anything if the below value is nonzero.
+  4C,4: Whether to enable scaling the player sprite.
   50,2: 
   52,2: 
-  54,4: 
+  54,4: File index of sprite file.

@@ -21,6 +21,7 @@ Player format:
     Bit 22: Can hold up to do a pose.
   28,4: Bitfield of ?
     Bit 1: Player's sprite is horizontally flipped.
+    Bit 2: Can smash head into ceiling if you hit it with enough force. (Normally with a superjump.)
   2C,4: Backdash force.
   30,4: Backdash friction.
   34,2: Number of frames for a backdash to last.
@@ -34,8 +35,10 @@ Player format:
   40,2: 
   42,2:
   44,2: 
+  46,
   48,
-  4C,4:
-  50,2:
-  52,2: 
+  4C,4: Pointer to list of hitbox pointers.
+  50,2: Height in pixels?
+  52,2: maybe face frame? seems unused in ooe
   54,
+  58,
