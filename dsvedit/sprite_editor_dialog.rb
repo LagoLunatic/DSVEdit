@@ -773,7 +773,12 @@ class SpriteEditor < Qt::Dialog
       frame.initialize_parts(@sprite.parts, @sprite.parts_by_offset)
     end
     
-    @ui.frame_first_part.text = "%02X" % frame.part_indexes.first
+    if frame.part_indexes.first
+      @ui.frame_first_part.text = "%02X" % frame.part_indexes.first
+      part_changed(frame.part_indexes.first)
+    else
+      @ui.frame_first_part.text = ""
+    end
     @ui.frame_number_of_parts.text = "%02X" % frame.number_of_parts
     
     frame_changed(@current_frame_index)
