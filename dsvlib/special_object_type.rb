@@ -1,10 +1,9 @@
 
 class SpecialObjectType
   attr_reader :special_object_id,
-              :ram_pointer,
-              :fs,
-              :create_code_pointer,
-              :update_code_pointer
+              :fs
+  attr_accessor :create_code_pointer,
+                :update_code_pointer
   
   def initialize(special_object_id, fs)
     @special_object_id = special_object_id
@@ -27,6 +26,7 @@ class SpecialObjectType
   end
   
   def write_to_rom
-    raise NotImplementedError.new
+    fs.write(SPECIAL_OBJECT_CREATE_CODE_LIST + special_object_id*4, [@create_code_pointer].pack("V"))
+    fs.write(SPECIAL_OBJECT_UPDATE_CODE_LIST + special_object_id*4, [@update_code_pointer].pack("V"))
   end
 end

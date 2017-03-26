@@ -198,6 +198,7 @@
     <addaction name="actionMusic_Editor"/>
     <addaction name="actionItem_Pool_Editor"/>
     <addaction name="actionTileset_Editor"/>
+    <addaction name="actionSpecial_Object_Editor"/>
     <addaction name="actionEntity_Search"/>
     <addaction name="actionSettings"/>
    </widget>
@@ -451,6 +452,11 @@
   <action name="actionEdit_Entities">
    <property name="text">
     <string>Edit Entities</string>
+   </property>
+  </action>
+  <action name="actionSpecial_Object_Editor">
+   <property name="text">
+    <string>Special Object Editor</string>
    </property>
   </action>
  </widget>
