@@ -22,8 +22,13 @@ Player format:
   28,4: Bitfield of ?
     Bit 1: Player's sprite is horizontally flipped.
     Bit 2: Can smash head into ceiling if you hit it with enough force. (Normally with a superjump.)
-    Bit 3: does something weird to switching chars. when you load a save for the first time, and switch to charlotte, the game will switch to jonathan and charlotte's voice will say "Jonathan!" as if you were charlotte, even though you weren't.
+    Bit 3: Is currently the partner character.
+      This shouldn't be set manually in the player editor. The game sets this automatically when you change characters. It affects the voice played when changing characters, and whether taking damages hurts your HP or your MP. Setting this bit won't make the AI take control of the character.
     Bit 4: Can do combo tech (including Critical Art).
+    Bit 5: Is female.
+      For Zacchino and Astarte's attacks.
+    Bit 6: Unknown, used only for Charlotte.
+    Bit 7: Unknown, used for everyone except Stella and Loretta.
   2C,4: Backdash force.
   30,4: Backdash friction.
   34,2: Number of frames for a backdash to last.
@@ -32,6 +37,7 @@ Player format:
     Bit 18: Take half damage and reflect projectiles.
       All damage will be exactly halved. There's no minimum of 1 damage here, so 1 damage gets halved to 0.
       Most projectiles will be destroyed on contact with you, dealing no damage. Projectiles that can't be destroyed will simply pass through you. However, Dracula's projectiles will still do damage to you.
+      This bit is set when using Stonewall or Maria's turtle (Gnebu).
     Bit 19: If this bit is off, the player can't be hit at all. Can still hit enemies.
   3C,4: Pointer to ?
   40,2: Sprite y offset in pixels.

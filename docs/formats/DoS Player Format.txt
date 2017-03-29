@@ -17,11 +17,11 @@ Player format:
   24,2: Number of frames for a backdash to last.
   26,2: 
   28,4: Backdash force.
-  2C,4: 
+  2C,4: Backdash friction.
   30,4: Number of trails. Maximum is 14.
-  34,4: Initial RGBA color of trails.
+  34,4: Initial ABGR color of trails.
     Each color ranges from 00 to 1F.
-  38,4: Ending RGBA color of trails.
+  38,4: Ending ABGR color of trails.
   3C,4: 
   40,2: Sprite y offset in pixels.
   42,2: 

@@ -79,6 +79,7 @@ Glyph union format:
   Bytes 13-16: Bitfield for what elemental damage types this glyph does.
     If it does either Strike or Slash damage, it will use the player's strength for damage calculation.
     If it does neither Strike nor Slash then it uses the player's intelligence.
+    Bit 28: Set for Dominus only. Doesn't seem to affect anything?
   Bytes 17-20: Bitfield of player state booleans that must be false in order to use this glyph. Checks bitfield 021098F0 (the player's current state booleans). 0 means it can be used in any state.
   Bytes 21-22: Icon.
     Normal icons go up to 004F. Higher than that and the glyph will be invisible or have bugged graphics.

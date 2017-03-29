@@ -22,6 +22,9 @@ Player format:
   28,4: Bitfield of ?
     Bit 1: Player's sprite is horizontally flipped.
     Bit 2: Can smash head into ceiling if you hit it with enough force. (Normally with a superjump.)
+    Bit 5: Is female.
+    Bit 6: Unknown, used only for Shanoa.
+    Bit 7: Unknown, used for Shanoa and Arma Chiroptera.
   2C,4: Backdash force.
   30,4: Backdash friction.
   34,2: Number of frames for a backdash to last.

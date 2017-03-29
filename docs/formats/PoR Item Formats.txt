@@ -158,9 +158,12 @@ Skill format:
   Bytes 11-12: Damage multiplier.
   Bytes 13-16: Bitfield for what elemental damage types this skill does.
     Bits 1-11: Regular elemental types.
+    Bit 18: Reflects projectiles.
     Bit 27: Is magical.
       If either this bit, or any of the bits for fire/ice/lightning/dark/holy are set, enemies will use their magic defense to defend against this skill, instead of their physical defense.
       You don't need to set this manually. The game automatically sets this bit for spells. But you can manually set this for subweapons, and enemies will use their magic defense instead of their physical defense against that subweapon.
+    Bit 28: Cures vampirism.
+      This only works if bit 27 is also set, so set both of these bits if you want to make a subweapon cure vampirism.
   Bytes 17-20: Bitfield of player state booleans that must be false in order to use this skill. Checks bitfield 020FCB80/020FCCB0 (the player's current state booleans, first is for player 1, second is for player 2). 0 means it can be used in any state.
   Bytes 21-22:
     For Dual Crushes: Voice file 1 ID.

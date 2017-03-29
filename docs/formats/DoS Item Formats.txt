@@ -135,6 +135,8 @@ Soul format:
   Bytes 13-14: Damage multiplier.
   Bytes 15-16: 
   Bytes 17-20: Bitfield for what elemental damage types this soul does.
+    Bits 1-11: Regular elemental types.
+    Bit 16: Unknown, only set for Black Panther.
   Bytes 21-24: Bitfield of player state booleans that must be false in order to use this glyph. Checks bitfield 020CAA00 (the player's current state booleans). 0 means it can be used in any state.
   Bytes 25-26: Varies depending on the code being run.
     For 0220900C: 0 for straight punch animation, 1 for uppercut animation.
