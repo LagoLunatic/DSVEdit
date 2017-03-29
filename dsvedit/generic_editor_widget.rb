@@ -6,6 +6,7 @@ class GenericEditorWidget < Qt::Widget
   
   slots "item_changed(int)"
   slots "open_icon_chooser()"
+  slots "open_color_chooser()"
   
   def initialize(fs, item_type, format_doc)
     super()
@@ -44,6 +45,10 @@ class GenericEditorWidget < Qt::Widget
       if attribute_name == "Icon"
         field = Qt::PushButton.new(self)
         connect(field, SIGNAL("clicked()"), self, SLOT("open_icon_chooser()"))
+      elsif attribute_name =~ /color/
+        field = Qt::PushButton.new(self)
+        field.objectName = attribute_name
+        connect(field, SIGNAL("clicked()"), self, SLOT("open_color_chooser()"))
       else
         field = Qt::LineEdit.new(self)
       end
@@ -153,5 +158,31 @@ class GenericEditorWidget < Qt::Widget
       mode = :item
     end
     @icon_chooser_dialog = IconChooserDialog.new(self, fs, mode, icon_data)
+  end
+  
+  def open_color_chooser
+    attribute_name = sender.objectName
+    color_value = @attribute_text_fields[attribute_name].text.to_i(16)
+    
+    a = ((color_value & 0xFF000000) >> 24) / 31.0 * 255
+    b = ((color_value & 0x00FF0000) >> 16) / 31.0 * 255
+    g = ((color_value & 0x0000FF00) >>  8) / 31.0 * 255
+    r = ((color_value & 0x000000FF) >>  0) / 31.0 * 255
+    
+    initial_color = Qt::Color.new(r, g, b, a)
+    color = Qt::ColorDialog.getColor(initial_color, self, "Select color", Qt::ColorDialog::ShowAlphaChannel)
+    
+    if !color.isValid
+      # User clicked cancel.
+      return
+    end
+    
+    color_value = 0
+    color_value |= (color.alpha / 255.0 * 31).round << 24
+    color_value |= (color.blue  / 255.0 * 31).round << 16
+    color_value |= (color.green / 255.0 * 31).round << 8
+    color_value |= (color.red   / 255.0 * 31).round << 0
+    
+    @attribute_text_fields[attribute_name].text = "%08X" % color_value
   end
 end
