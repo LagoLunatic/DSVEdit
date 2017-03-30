@@ -98,6 +98,19 @@ class Game
     end
   end
   
+  def players
+    @players ||= begin
+      players = []
+      
+      (0..PLAYER_COUNT-1).each do |index|
+        player = Player.new(index, fs)
+        players << player
+      end
+      
+      players
+    end
+  end
+  
   def entity_type_docs
     @entity_type_docs ||= begin
       file_contents = File.read("./docs/lists/#{GAME} Entity Types.txt")

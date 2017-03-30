@@ -23,6 +23,7 @@ require_relative 'dsvlib/weapon_gfx'
 require_relative 'dsvlib/skill_gfx'
 require_relative 'dsvlib/item_pool'
 require_relative 'dsvlib/gfx_wrapper'
+require_relative 'dsvlib/player'
 
 require_relative 'dsvlib/renderer'
 require_relative 'dsvlib/tmx_interface'
