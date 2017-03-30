@@ -6,9 +6,7 @@ class Area
               :fs,
               :game,
               :area_ram_pointer,
-              :sectors,
-              :map,
-              :abyss_map
+              :sectors
 
   def initialize(area_index, game)
     @area_index = area_index
