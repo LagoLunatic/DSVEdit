@@ -255,6 +255,9 @@ class DSVEdit < Qt::MainWindow
     initialize_dropdowns()
     
     @settings[:last_used_folder] = game.folder
+    
+    folder_name = File.basename(game.folder)
+    self.setWindowTitle("DSVania Editor #{DSVEDIT_VERSION} - #{folder_name}")
   rescue Game::InvalidFileError, NDSFileSystem::InvalidFileError
     Qt::MessageBox.warning(self, "Invalid file", "Selected ROM file is not a DSVania or is not a supported region.")
   end
@@ -275,6 +278,9 @@ class DSVEdit < Qt::MainWindow
     initialize_dropdowns()
     
     @settings[:last_used_folder] = folder_path
+    
+    folder_name = File.basename(game.folder)
+    self.setWindowTitle("DSVania Editor #{DSVEDIT_VERSION} - #{folder_name}")
   rescue Game::InvalidFileError, NDSFileSystem::InvalidFileError
     Qt::MessageBox.warning(self, "Invalid file", "Selected folder is not a DSVania.")
   end
