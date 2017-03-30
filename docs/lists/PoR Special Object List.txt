@@ -54,6 +54,7 @@ Special objects:
   Var A is the y pos it returns to after falling (should be the same as the entity's y pos).
   Var B is the y pos it falls down to.
 21 Having this entity in the room causes the laser lamps and buttons that activate them (from Sandy Grave) to appear in the room. This entity can sometimes cause crashes.
+  Requires sector overlay 92.
 22 Boss door.
   Var A is is how the door acts:
     00 Door outside the boss room that opens when you touch it.
@@ -80,12 +81,13 @@ Special objects:
 23 Pulsating background effect. Used inside of the worm stomachs.
 24 Makes various food particles fly when the player lands on certain platforms. It's hardcoded to activate only when the player lands on tile 9E. In the appropriate tileset (City of Haze) this is an invisible tile that acts as a platform you can jump through. In order to make the platform visible, place visible platform tiles on a separate, non-collision layer.
 25 Cash register from City of Haze that gives you different pastries depending on how much money you drop into it.
+  Requires sector overlay 93.
 26 Pushable cart.
   Var A: Affects which miscellaneous flag to set after pushing this cart out of the way.
     0 - Misc flag 5.
     1 - Misc flag 7.
     2+ - Doesn't set a flag, cart will always move back to its original position when you re-enter the room.
-27 Dark Academy background and rain overlay and sound effects.
+27 Dark Academy background and rain and sound effects.
   Var A: Affects what sound effects the rain plays.
 28 Train you need to slow down to a stop.
   Requires sector overlay 104.
@@ -154,8 +156,11 @@ Special objects:
     02 Two gaps, one on each side.
     03 One large gap that takes up half the ring.
     04+ No gaps.
-  Var B: Unknown. Always a multiple of 0x1000.
-3E Platform that flips if you stand on it too long. Var A is the graphic style of the platform.
+  Var B: Starting rotation. 4000 is equivalent to 90 degrees.
+3E Platform that flips if you stand on it too long.
+  Var A is the graphic style of the platform:
+    00 Composed of multiple logs.
+    01 One long wooden plank.
 3F Platform that floats up and down.
 40 Large pushable switch.
 41 Wall of fire and button to the left that lowers it.
@@ -286,7 +291,7 @@ Special objects:
 7E Small waterfall.
   Requires sector overlay 86.
   Var A: 0 for the top of the waterfall. 1 for the long midsection of the waterfall.
-7F the meat you hit for that one quest?
+7F The meat in City of Haze you have to hit for the "Supersonic Punch" quest.
   Requires sector overlay 93.
 80 Transition room hider for Dracula's Castle (connects Great Stairway to other Great Stairway sector).
 81 Barrier blocking the way to the Throne Room.
