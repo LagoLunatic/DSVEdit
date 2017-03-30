@@ -55,6 +55,7 @@ class NDSFileSystem
     files_without_dirs.sort_by{|id, file| id}.each do |id, file|
       file_data = get_file_data_from_opened_files_cache(file[:file_path])
       new_file_size = file_data.length
+      file[:size] = new_file_size
       
       offset = file[:id]*8
       old_start_offset, old_end_offset = @rom[@file_allocation_table_offset+offset, 8].unpack("VV")
@@ -88,6 +89,10 @@ class NDSFileSystem
       offset = file[:id]*8
       new_rom[@file_allocation_table_offset+offset, 8] = [new_start_offset, new_end_offset].pack("VV")
       max_written_address = new_end_offset if new_end_offset > max_written_address
+      
+      if file[:overlay_id]
+        write_by_file("/ftc/arm9_overlay_table.bin", file[:overlay_id]*32 + 8, [file[:size]].pack("V"))
+      end
       
       files_written += 1
       if block_given?
