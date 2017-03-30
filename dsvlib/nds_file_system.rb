@@ -100,6 +100,10 @@ class NDSFileSystem
       end
     end
     
+    # Update used ROM size in the header.
+    @total_used_rom_size = max_written_address
+    write_by_file("/ftc/ndsheader.bin", 0x80, [@total_used_rom_size].pack("V"))
+    
     # Update arm9, header, and tables
     [
       "arm9.bin",
@@ -379,6 +383,8 @@ private
     
     @banner_start_offset = header[0x68,4].unpack("V").first
     @banner_end_offset = @banner_start_offset + 0x840 # ??
+    
+    @total_used_rom_size = header[0x80,4].unpack("V").first
     
     @files = {}
     @overlays = []
