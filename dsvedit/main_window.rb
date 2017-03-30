@@ -375,8 +375,6 @@ class DSVEdit < Qt::MainWindow
     @room = room
     @ui.room.setCurrentIndex(@room_index)
     
-    update_room_position_indicator()
-    
     load_room()
   end
   
@@ -478,6 +476,8 @@ class DSVEdit < Qt::MainWindow
     update_room_bounding_rect()
     
     update_visible_view_items()
+    
+    update_room_position_indicator()
   end
   
   def update_room_bounding_rect
