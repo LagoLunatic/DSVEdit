@@ -26,8 +26,10 @@ class TMXInterface
       
       layer_list_entry_ram_pointer = tmx_layer.attr("name").match(/^layer (\h+)$/)[1].to_i(16)
       possible_layers = room.layers.select{|layer| layer.layer_list_entry_ram_pointer == layer_list_entry_ram_pointer}
-      if possible_layers.length != 1
-        raise "%08X could be too many possible layers (or not enough)" % layer_list_entry_ram_pointer
+      if possible_layers.length == 0
+        raise ImportError.new("Could not find layer: %08X" % layer_list_entry_ram_pointer)
+      elsif possible_layers.length > 1
+        raise ImportError.new("%08X could be too many possible layers" % layer_list_entry_ram_pointer)
       end
       game_layer = possible_layers.first
       game_layer.width  = props["layer_width"]
