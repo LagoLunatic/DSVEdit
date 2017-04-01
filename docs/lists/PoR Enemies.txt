@@ -14,6 +14,11 @@ Enemies:
 07 Slinger
 08 Mini Devil
 09 Mud Man
+  Spawner.
+  Var A: Maximum number of Mud Men this spawner can have in the room at once.
+    If 0, it's not a spawner, instead it's just a single Mud Man.
+  Var B: Maximum horizontal distance in pixels away from the spawner the Mud Men can spawn.
+    If 0, it will use the default value of 0x80.
 0A Merman
 0B Une
 0C Skull Archer
@@ -60,6 +65,10 @@ Enemies:
     2 On left wall.
     3 On right wall.
 24 Mummy
+  Spawner.
+  Var A: Maximum number of Mummies this spawner can have in the room at once.
+    If 0 or 1, it's not a spawner, instead it's just a single Mummy.
+  Var B: Maximum horizontal distance in pixels away from the spawner the Mummies can spawn.
 25 Dragon Zombie
   Requires enemy overlay 68.
 26 Killer Clown

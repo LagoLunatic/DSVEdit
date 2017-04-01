@@ -203,7 +203,7 @@ ENEMY_DNA_FORMAT = [
   [4, "Running AI"],
   [2, "Item 1"],
   [2, "Item 2"],
-  [1, "Unknown 1"],
+  [1, "Petrified Palette"],
   [1, "SP"],
   [2, "HP"],
   [2, "EXP"],
@@ -461,6 +461,7 @@ OVERLAY_FILE_FOR_SPECIAL_OBJECT = {
   0x84 => 99,
   0x8B => 102,
   0x8E => 98,
+  0x8F => 89,
   0x94 => 109,
 }
 REUSED_SPECIAL_OBJECT_INFO = {
@@ -469,6 +470,7 @@ REUSED_SPECIAL_OBJECT_INFO = {
   0x02 => {init_code:         -1},
   0x03 => {init_code:         -1},
   0x06 => {init_code:         -1},
+  0x16 => {init_code:         -1},
   0x1A => {init_code: 0x020F4E84}, # portrait
   0x1B => {init_code:         -1},
   0x22 => {sprite: 0x022B36E8, gfx_wrapper: 0x020BFF24, palette: 0x022B7660},
@@ -1037,9 +1039,9 @@ PLAYER_LIST_FORMAT = [
   [2, "Unknown 19"],
   [4, "Unknown 20"],
   [4, "Hitbox pointer"],
-  [2, "Unknown 22"],
+  [2, "Height"],
   [2, "Face icon frame"],
-  [4, "Unknown 23"],
+  [4, "Swing anims ptr"],
 ]
 PLAYER_BITFIELD_ATTRIBUTES = {
   "Actions" => [

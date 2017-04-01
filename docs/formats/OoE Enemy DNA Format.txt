@@ -3,14 +3,25 @@ Bytes 1-4: Enemy init code.
 Bytes 5-8: Enemy running AI.
 Bytes 9-10: Item 1
 Bytes 11-12: Item 2
-Byte 13: ???
+Byte 13: Palette offset to use when this enemy is petrified.
 Byte 14: Attribute points given when killed.
   Each Master Ring you have equipped doubles this number.
   Albus starts with two Master Rings equipped, so he always receives 4 times this number.
 Bytes 15-16: Max HP
 Bytes 17-18: EXP
-Byte 19: ???
-Byte 20: ???
+Byte 19: Blood color.
+  This is the palette offset for the blood to use in the common sprite. Offset 0 uses palette 2, etc.
+  0 Dark Red
+  1 Bright red
+  2 Orange
+  3 Green
+  4 Blue
+  5 Purple
+  6 Brown
+  7 Grey
+  8 Black
+  Etc.
+Byte 20: ??? Unused?
 Bytes 21-22: Glyph
 Byte 23: Chance to drop glyph
 Byte 24: Attack.

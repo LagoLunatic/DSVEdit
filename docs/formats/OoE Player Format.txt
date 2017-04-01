@@ -37,11 +37,17 @@ Player format:
   3C,4: 
   40,2: 
   42,2:
-  44,2: 
+  44,2: Something related to the palette of the white outline around Shanoa that fades in/out when absorbing glyphs.
   46,
   48,
   4C,4: Pointer to list of hitbox pointers.
-  50,2: Height in pixels?
-  52,2: maybe face frame? seems unused in ooe
-  54,
-  58,
+  50,2: Height in pixels.
+    This is negative because it's the offset off the floor the player extends.
+    This if for collision checking with tiles, not enemies.
+  52,2: Which player face icon to use. This is a frame index in the common sprite.
+    This seems unused in OoE, and is just leftover from PoR.
+  54,4: Pointer to list of swing animations for Y-button glyphs.
+    This points to a list of pointers, one for each swing animation type (specified in the item data for the glyph).
+    Located at those pointers are a list of which animation to use in the player's sprite file depending on the state.
+      In order: Attacking standing, attacking crouched, attacking in air, finish attacking standing, finish attacking crouched.
+  58,4: Pointer to list of swing animations for X-button glyphs. Works the same as above.

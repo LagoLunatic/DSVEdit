@@ -300,8 +300,9 @@ Special objects:
 83 Button and wall it lowers from Great Stairway.
 84 Many crows in a tree that disperse when you get near.
   Requires sector overlay 99.
-85 used in tower of death, motorcycle room and stella fight room
-  Var A: 1 or 0
+85 Sewers in the background gushing water.
+  Var A: 0 for the ones in the motorcyle room. 1 for the ones in Stella's boss room.
+    This affects their position and z-index.
 86 Portrait to Dracula's Castle or Nest of Evil.
   Note that it can still bring you to any area you set, but it will only display the right visuals for the above areas.
   Var A: Area index of the destination room.
@@ -329,6 +330,7 @@ Special objects:
 8E Legion's horizontal boss door and walls that trap you.
   Requires sector overlay 98.
 8F in the sister's boss room
+  Requires sector overlay 89.
 90 Transition room hider for Nation of Fools.
 91 Transition room hider for Nation of Fools and Burnt Paradise.
 92 Transition room hider for Nation of Fools and Burnt Paradise.

@@ -24,14 +24,17 @@ Arm glyph format:
     Bit 7: If on, sprite part palette indexes will be used as palette indexes, unlike many weapons, where it's used as an indicator that the part should be partially transparent.
   Bytes 25-26: Varies by code pointer.
     For melee weapons: Animation Shanoa plays when swinging this weapon.
+      This is an index in the player's swing animations list (either the Y or X button list).
       3 Overhead swing.
     For shields: ?
   Byte 27: IFrames. An enemy hit by this glyph will be invulnerable to glyphs on the arm you used for this number of frames.
   Byte 28: Delay in frames before you're allowed to use this glyph again after you use it once.
-  Byte 29: Swing sound.
-  Byte 30: 
-  Byte 31: 
-  Byte 32: 
+  Byte 29-32: Swing sound?
+    bits 0x00000FFF
+    bits 0x0F000000
+      if greater than 2:
+      if equal to 2:
+    bit  0x40000000: if set, no swing sound
 
 Back glyph format:
   28 bytes long.
@@ -73,7 +76,10 @@ Glyph union format:
   Bytes 3-4: Damage multiplier.
   Bytes 5-8: Pointer to code run when using the glyph.
   Byte 9: Sprite.
-  Byte 10: 
+  Byte 10:
+    Bit 1: ?
+    Bit 2: If set, the player doesn't play a swinging animation when using this glyph.
+    Bits 3-8: Unused.
   Byte 11: Maximum number of this projectile you can have in the room at once.
   Byte 12: Mana cost of using this glyph.
   Bytes 13-16: Bitfield for what elemental damage types this glyph does.
@@ -85,8 +91,11 @@ Glyph union format:
     Normal icons go up to 004F. Higher than that and the glyph will be invisible or have bugged graphics.
     But if you increase this value to 3CD0 or higher, the glyph won't appear it all, it won't even be invisible.
   Bytes 23-24: Bitfield
-  Byte 25: affects Shanoa's swinging animation?
-  Bytes 26-28: ?
+    Bit 1: ?
+  Bytes 25-26: Animation Shanoa plays when using this Union.
+    This is an index in the player's swing animations list (the Y button list).
+  Byte 27: ?
+  Byte 28: ?
 
 Relic format:
   12 bytes long.

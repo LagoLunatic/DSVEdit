@@ -142,7 +142,7 @@ ENEMY_DNA_FORMAT = [
   [4, "Running AI"],
   [2, "Item 1"],
   [2, "Item 2"],
-  [1, "Unknown 1"],
+  [1, "Petrified Palette"],
   [1, "Unknown 2"],
   [2, "HP"],
   [2, "MP"],

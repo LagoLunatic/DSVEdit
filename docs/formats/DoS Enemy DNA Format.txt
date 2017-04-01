@@ -3,7 +3,7 @@ Bytes 1-4: Pointer to enemy initialization code.
 Bytes 5-8: Pointer to enemy running AI code.
 Bytes 9-10: The Item1 this enemy drops. 00 means no item, so the actual item list is offset by 1 (potion is 01 instead of 00).
 Byte 11-12: The Item2 this enemy drops. See above.
-Byte 13: Unknown. Usually 00, but not always.
+Byte 13: Palette offset to use when this enemy is petrified.
 Byte 14: Unknown. Ranges from 1 (for Zombie) to 99 decimal (for Dracula). As you scroll down the list of enemies this value only gets bigger or stays the same, never smaller.
 Bytes 15-16: Max HP.
 Bytes 17-18: Max MP.
