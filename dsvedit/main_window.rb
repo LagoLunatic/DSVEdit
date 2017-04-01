@@ -1014,8 +1014,8 @@ class DoorItem < Qt::GraphicsRectItem
     
     self.setBrush(BRUSH)
     
-    #setFlag(Qt::GraphicsItem::ItemIsMovable)
-    #setFlag(Qt::GraphicsItem::ItemSendsGeometryChanges)
+    setFlag(Qt::GraphicsItem::ItemIsMovable)
+    setFlag(Qt::GraphicsItem::ItemSendsGeometryChanges)
   end
   
   def itemChange(change, value)
@@ -1094,8 +1094,8 @@ class EntityChunkyItem < GraphicsChunkyItem
     @main_window = main_window
     @entity = entity
     
-    #setFlag(Qt::GraphicsItem::ItemIsMovable)
-    #setFlag(Qt::GraphicsItem::ItemSendsGeometryChanges)
+    setFlag(Qt::GraphicsItem::ItemIsMovable)
+    setFlag(Qt::GraphicsItem::ItemSendsGeometryChanges)
   end
   
   def itemChange(change, value)
@@ -1142,8 +1142,8 @@ class EntityRectItem < Qt::GraphicsRectItem
     
     @main_window = main_window
     
-    #setFlag(Qt::GraphicsItem::ItemIsMovable)
-    #setFlag(Qt::GraphicsItem::ItemSendsGeometryChanges)
+    setFlag(Qt::GraphicsItem::ItemIsMovable)
+    setFlag(Qt::GraphicsItem::ItemSendsGeometryChanges)
     
     case entity.type
     when 0
