@@ -191,6 +191,32 @@
           <widget class="QComboBox" name="animation_index"/>
          </item>
          <item>
+          <widget class="QPushButton" name="animation_add">
+           <property name="maximumSize">
+            <size>
+             <width>22</width>
+             <height>22</height>
+            </size>
+           </property>
+           <property name="text">
+            <string>+</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="animation_remove">
+           <property name="maximumSize">
+            <size>
+             <width>22</width>
+             <height>22</height>
+            </size>
+           </property>
+           <property name="text">
+            <string>-</string>
+           </property>
+          </widget>
+         </item>
+         <item>
           <widget class="QLabel" name="label_14">
            <property name="text">
             <string>Frame delay</string>
@@ -264,9 +290,6 @@
              </property>
             </widget>
            </item>
-           <item row="0" column="1">
-            <widget class="QComboBox" name="frame_index"/>
-           </item>
            <item row="1" column="0">
             <widget class="QLabel" name="label_5">
              <property name="text">
@@ -301,6 +324,39 @@
            <item row="3" column="1">
             <widget class="QLineEdit" name="frame_number_of_parts"/>
            </item>
+           <item row="0" column="1">
+            <layout class="QHBoxLayout" name="horizontalLayout_11">
+             <item>
+              <widget class="QComboBox" name="frame_index"/>
+             </item>
+             <item>
+              <widget class="QPushButton" name="frame_add">
+               <property name="maximumSize">
+                <size>
+                 <width>22</width>
+                 <height>22</height>
+                </size>
+               </property>
+               <property name="text">
+                <string>+</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QPushButton" name="frame_remove">
+               <property name="maximumSize">
+                <size>
+                 <width>22</width>
+                 <height>22</height>
+                </size>
+               </property>
+               <property name="text">
+                <string>-</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
+           </item>
           </layout>
          </item>
          <item>
@@ -314,9 +370,6 @@
               <string>Part</string>
              </property>
             </widget>
-           </item>
-           <item row="0" column="1">
-            <widget class="QComboBox" name="part_index"/>
            </item>
            <item row="1" column="0">
             <widget class="QLabel" name="label_15">
@@ -345,6 +398,39 @@
               <string/>
              </property>
             </widget>
+           </item>
+           <item row="0" column="1">
+            <layout class="QHBoxLayout" name="horizontalLayout_12">
+             <item>
+              <widget class="QComboBox" name="part_index"/>
+             </item>
+             <item>
+              <widget class="QPushButton" name="part_add">
+               <property name="maximumSize">
+                <size>
+                 <width>22</width>
+                 <height>22</height>
+                </size>
+               </property>
+               <property name="text">
+                <string>+</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QPushButton" name="part_remove">
+               <property name="maximumSize">
+                <size>
+                 <width>22</width>
+                 <height>22</height>
+                </size>
+               </property>
+               <property name="text">
+                <string>-</string>
+               </property>
+              </widget>
+             </item>
+            </layout>
            </item>
           </layout>
          </item>

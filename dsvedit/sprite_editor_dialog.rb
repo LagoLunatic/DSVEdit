@@ -30,6 +30,12 @@ class SpriteEditor < Qt::Dialog
   slots "drag_gfx_scene(int, int, const Qt::MouseButton&)"
   slots "stop_dragging_gfx_scene(int, int, const Qt::MouseButton&)"
   slots "toggle_part_flips(bool)"
+  slots "add_animation()"
+  slots "remove_animation()"
+  slots "add_frame()"
+  slots "remove_frame()"
+  slots "add_part()"
+  slots "remove_part()"
   slots "button_box_clicked(QAbstractButton*)"
   
   def initialize(main_window, game, renderer)
@@ -183,6 +189,12 @@ class SpriteEditor < Qt::Dialog
     connect(@ui.reload_button, SIGNAL("clicked()"), self, SLOT("reload_sprite()"))
     connect(@ui.export_button, SIGNAL("clicked()"), self, SLOT("export_sprite()"))
     connect(@ui.view_skeleton_button, SIGNAL("clicked()"), self, SLOT("open_skeleton_editor()"))
+    connect(@ui.animation_add, SIGNAL("clicked()"), self, SLOT("add_animation()"))
+    connect(@ui.animation_remove, SIGNAL("clicked()"), self, SLOT("remove_animation()"))
+    connect(@ui.frame_add, SIGNAL("clicked()"), self, SLOT("add_frame()"))
+    connect(@ui.frame_remove, SIGNAL("clicked()"), self, SLOT("remove_frame()"))
+    connect(@ui.part_add, SIGNAL("clicked()"), self, SLOT("add_part()"))
+    connect(@ui.part_remove, SIGNAL("clicked()"), self, SLOT("remove_part()"))
     connect(@ui.buttonBox, SIGNAL("clicked(QAbstractButton*)"), self, SLOT("button_box_clicked(QAbstractButton*)"))
     
     load_blank_sprite()
@@ -352,6 +364,12 @@ class SpriteEditor < Qt::Dialog
     @ui.toggle_paused_button.enabled = false
     @ui.frame_delay.text = ""
     @ui.frame_delay.enabled = false
+    @ui.animation_add.enabled = false
+    @ui.animation_remove.enabled = false
+    @ui.frame_add.enabled = false
+    @ui.frame_remove.enabled = false
+    @ui.part_add.enabled = false
+    @ui.part_remove.enabled = false
     
     @rendered_gfx_pages_by_palette = {}
     @gfx_page_pixmap_items_by_palette = {}
@@ -370,6 +388,12 @@ class SpriteEditor < Qt::Dialog
     @ui.part_vertical_flip.enabled = true
     @ui.show_hitbox.enabled = true
     @ui.frame_delay.enabled = true
+    @ui.animation_add.enabled = true
+    @ui.animation_remove.enabled = true
+    @ui.frame_add.enabled = true
+    @ui.frame_remove.enabled = true
+    @ui.part_add.enabled = true
+    @ui.part_remove.enabled = true
     
     begin
       @sprite = @sprite_info.sprite
@@ -498,7 +522,8 @@ class SpriteEditor < Qt::Dialog
       @frame_graphics_scene.removeItem(item)
     end
     
-    if i == nil
+    if i == nil || @sprite.frames[i] == nil
+      @current_frame_index = nil
       @ui.frame_index.setCurrentIndex(-1)
       @ui.frame_first_part.text = ""
       @ui.frame_number_of_parts.text = ""
@@ -509,7 +534,7 @@ class SpriteEditor < Qt::Dialog
       part = @sprite.parts[part_index]
       
       part_pixmap = @part_pixmaps_for_frame_view[part_index]
-      @frame_graphics_scene.addItem(part_pixmap)
+      @frame_graphics_scene.addItem(part_pixmap) if part_pixmap
     end
     
     @ui.frame_index.setCurrentIndex(i)
@@ -518,11 +543,11 @@ class SpriteEditor < Qt::Dialog
     
     if frame.part_indexes.first
       @ui.frame_first_part.text = "%02X" % frame.part_indexes.first
-      unless do_not_change_current_part
-        part_changed(frame.part_indexes.first)
-      end
     else
       @ui.frame_first_part.text = ""
+    end
+    unless do_not_change_current_part
+      part_changed(frame.part_indexes.first)
     end
     @ui.frame_number_of_parts.text = "%02X" % frame.part_indexes.length
     
@@ -556,6 +581,7 @@ class SpriteEditor < Qt::Dialog
     
     @ui.gfx_page_index.setCurrentIndex(gfx_page_index)
     
+    return if @current_part_index.nil?
     part = @sprite.parts[@current_part_index]
     if part.gfx_page_index == @gfx_page_index
       @selection_rectangle = Qt::GraphicsRectItem.new
@@ -576,19 +602,26 @@ class SpriteEditor < Qt::Dialog
     load_gfx_pages(palette_index)
     gfx_page_changed(old_gfx_page_index)
     
+    @ui.palette_index.setCurrentIndex(palette_index)
+    
+    return if @current_part_index.nil?
     part = @sprite.parts[@current_part_index]
     if part && part.palette_index != @palette_index && !force
       part.palette_index = @palette_index
       reload_current_part()
     end
-    
-    @ui.palette_index.setCurrentIndex(palette_index)
   end
   
   def part_changed(i)
     @current_part_index = i
     @part_graphics_scene.items.each do |item|
       @part_graphics_scene.removeItem(item)
+    end
+    
+    if i == nil || @sprite.parts[i] == nil
+      @current_part_index = nil
+      @ui.part_index.setCurrentIndex(-1)
+      return
     end
     
     @part_graphics_scene.addItem(@part_pixmaps_for_part_view[i])
@@ -610,11 +643,18 @@ class SpriteEditor < Qt::Dialog
   def animation_changed(i)
     @animation_timer.stop()
     @current_animation_index = i
-    @ui.animation_index.setCurrentIndex(i)
     @ui.seek_slider.value = 0
     @current_animation_frame_index = 0
     
-    @current_animation = @sprite.animations[i]
+    if i == nil || @sprite.animations[i] == nil
+      @current_animation_index = nil
+      @current_animation = nil
+      @ui.animation_index.setCurrentIndex(-1)
+    else
+      @ui.animation_index.setCurrentIndex(i)
+      @current_animation = @sprite.animations[i]
+    end
+    
     if @current_animation.nil?
       @ui.seek_slider.enabled = false
       @ui.toggle_paused_button.enabled = false
@@ -624,19 +664,23 @@ class SpriteEditor < Qt::Dialog
     
     @ui.seek_slider.enabled = true
     @ui.seek_slider.minimum = 0
-    @ui.seek_slider.maximum = @current_animation.frame_delays.length-1
+    if @current_animation.number_of_frames > 0
+      @ui.seek_slider.maximum = @current_animation.frame_delays.length-1
+    else
+      @ui.seek_slider.maximum = 0
+    end
     @ui.toggle_paused_button.enabled = true
     
     if @current_animation.number_of_frames > 0
-      animation_frame_changed(0)
+      animation_frame_changed(0, force=true)
       start_animation()
     else
       frame_changed(nil) # Blank out the frame display
     end
   end
   
-  def animation_frame_changed(i)
-    return if i == @current_animation_frame_index && @ui.seek_slider.value == @current_animation_frame_index
+  def animation_frame_changed(i, force=false)
+    return if i == @current_animation_frame_index && @ui.seek_slider.value == @current_animation_frame_index && !force
     
     @current_animation_frame_index = i
     frame_delay = @current_animation.frame_delays[@current_animation_frame_index]
@@ -756,6 +800,103 @@ class SpriteEditor < Qt::Dialog
     )
   end
   
+  def add_animation
+    new_index = @sprite.animations.length
+    animation = Animation.new("\0"*8)
+    animation.initialize_frame_delays(@sprite.frame_delays, @sprite.frame_delays_by_offset)
+    @sprite.animations << animation
+    
+    @ui.animation_index.addItem("%02X" % new_index)
+    animation_changed(new_index)
+  end
+  
+  def remove_animation
+    return if @current_animation_index.nil?
+    
+    @sprite.animations.delete_at(@current_animation_index)
+    
+    @ui.animation_index.removeItem(@sprite.animations.length)
+    if @sprite.animations.length == 0
+      animation_changed(nil)
+    else
+      new_index = [@current_animation_index, @sprite.animations.length-1].min
+      animation_changed(new_index)
+    end
+  end
+  
+  def add_frame
+    new_index = @sprite.frames.length
+    frame = Frame.new("\0"*12)
+    frame.initialize_parts(@sprite.parts, @sprite.parts_by_offset)
+    frame.initialize_hitboxes_from_sprite_file([])
+    @sprite.frames << frame
+    
+    @ui.frame_index.addItem("%02X" % new_index)
+    frame_changed(new_index)
+  end
+  
+  def remove_frame
+    return if @current_frame_index.nil?
+    
+    @sprite.frames.delete_at(@current_frame_index)
+    
+    @ui.frame_index.removeItem(@sprite.frames.length)
+    if @sprite.frames.length == 0
+      frame_changed(nil)
+    else
+      new_index = [@current_frame_index, @sprite.frames.length-1].min
+      frame_changed(new_index)
+    end
+  end
+  
+  def add_part
+    new_index = @sprite.parts.length
+    part = Part.new("\0"*16)
+    @sprite.parts << part
+    next_part_offset = @sprite.parts_by_offset.keys.max + 16
+    @sprite.parts_by_offset[next_part_offset] = part
+    @part_pixmaps_for_part_view << PartItem.new(self, part, new_index, nil)
+    @part_pixmaps_for_frame_view << PartItem.new(self, part, new_index, nil)
+    
+    @ui.part_index.addItem("%02X" % new_index)
+    part_changed(new_index)
+  end
+  
+  def remove_part
+    return if @current_part_index.nil?
+    
+    part = @sprite.parts[@current_part_index]
+    @sprite.parts.delete_at(@current_part_index)
+    part_offset = @sprite.parts_by_offset.key(part)
+    @sprite.parts_by_offset[part_offset] = nil
+    @part_pixmaps_for_part_view.delete_at(@current_part_index)
+    @part_pixmaps_for_frame_view.delete_at(@current_part_index)
+    
+    @ui.part_index.removeItem(@sprite.parts.length)
+    if @sprite.parts.length == 0
+      frame_changed(@current_frame_index)
+    else
+      new_index = [@current_part_index, @sprite.parts.length-1].min
+      frame_changed(@current_frame_index)
+      part_changed(new_index)
+    end
+  end
+  
+  def add_keyframe(new_index)
+    return if @current_animation.nil?
+    
+    frame_delay = FrameDelay.new("\0"*8)
+    @sprite.frame_delays << frame_delay
+    next_frame_delay_offset = @sprite.frame_delays_by_offset.keys.max + 8
+    @sprite.frame_delays_by_offset[next_frame_delay_offset] = frame_delay
+    
+    @current_animation.number_of_frames += 1
+    @current_animation.initialize_frame_delays(@sprite.frame_delays, @sprite.frame_delays_by_offset)
+    
+    animation_changed(@current_animation_index)
+    animation_frame_changed(new_index)
+  end
+  
   def frame_data_changed
     frame = @sprite.frames[@current_frame_index]
     return if frame.nil?
@@ -766,6 +907,12 @@ class SpriteEditor < Qt::Dialog
     first_part_index = [first_part_index, @sprite.parts.length-1].min
     number_of_parts = [number_of_parts, 0].max
     number_of_parts = [number_of_parts, @sprite.parts.length-first_part_index].min
+    
+    if number_of_parts == 0 && !@ui.frame_first_part.text.strip.empty?
+      # The user tried to set the first part to something before increasing number of parts above 0.
+      # Just automatically increase number of parts for convenience.
+      number_of_parts = 1
+    end
     
     first_part = @sprite.parts[first_part_index]
     part_offset = @sprite.parts_by_offset.key(first_part)
@@ -834,6 +981,8 @@ class SpriteEditor < Qt::Dialog
   end
   
   def update_current_part
+    return if @current_part_index.nil?
+    
     x = @selection_rectangle.rect.x
     y = @selection_rectangle.rect.y
     w = @selection_rectangle.rect.width
@@ -865,6 +1014,8 @@ class SpriteEditor < Qt::Dialog
   end
   
   def reload_current_part
+    return if @current_part_index.nil?
+    
     part = @sprite.parts[@current_part_index]
     ensure_gfx_pages_for_palette_exist(@palette_index)
     chunky_gfx_page = @rendered_gfx_pages_by_palette[@palette_index][@gfx_page_index]

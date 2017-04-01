@@ -227,8 +227,8 @@ class SkeletonEditorDialog < Qt::Dialog
     @animation_timer.start(millisecond_delay)
   end
   
-  def animation_keyframe_changed_no_tween(i)
-    return if i == @current_animation_keyframe_index && @ui.seek_slider.value == @current_animation_keyframe_index
+  def animation_keyframe_changed_no_tween(i, force=false)
+    return if i == @current_animation_keyframe_index && @ui.seek_slider.value == @current_animation_keyframe_index && !force
     
     @current_animation_keyframe_index = i
     @current_animation_tweenframe_index = 0

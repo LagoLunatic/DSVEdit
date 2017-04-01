@@ -19,6 +19,7 @@ class Sprite
               :hitboxes_by_offset,
               :frames,
               :frame_delays,
+              :frame_delays_by_offset,
               :animations
   
   def initialize(sprite_pointer, fs)
@@ -423,16 +424,16 @@ class FrameDelay
 end
 
 class Animation
-  attr_reader :number_of_frames,
-              :first_frame_delay_offset,
+  attr_reader :first_frame_delay_offset,
               :frame_delay_indexes,
               :frame_delays
+  attr_accessor :number_of_frames
               
   def initialize(animation_data)
     @number_of_frames, @first_frame_delay_offset = animation_data.unpack("VV")
   end
   
-  def initialize_frame_delays(all_frame_delays, all_frame_delays_by_offset)#(frame_list_offset, all_frame_delay_indexes)
+  def initialize_frame_delays(all_frame_delays, all_frame_delays_by_offset)
     @frame_delay_offsets = (@first_frame_delay_offset..@first_frame_delay_offset+@number_of_frames*0x08-1).step(0x08).to_a
     @frame_delays = @frame_delay_offsets.map{|offset| all_frame_delays_by_offset[offset]}
     @frame_delay_indexes = @frame_delays.map{|frame_delay| all_frame_delays.index(frame_delay)}
