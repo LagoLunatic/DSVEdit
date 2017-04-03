@@ -1188,3 +1188,32 @@ class EntityRectItem < Qt::GraphicsRectItem
     super(event)
   end
 end
+
+class MiddleClickDragGraphicsView < Qt::GraphicsView
+  def mousePressEvent(event)
+    if event.button == Qt::MiddleButton
+      new_event = Qt::MouseEvent.new(event.type, event.pos, Qt::LeftButton, Qt::LeftButton, event.modifiers)
+      super(new_event)
+    else
+      super(event)
+    end
+  end
+  
+  def mouseMoveEvent(event)
+    if event.button == Qt::MiddleButton
+      new_event = Qt::MouseEvent.new(event.type, event.pos, Qt::LeftButton, Qt::LeftButton, event.modifiers)
+      super(new_event)
+    else
+      super(event)
+    end
+  end
+  
+  def mouseReleaseEvent(event)
+    if event.button == Qt::MiddleButton
+      new_event = Qt::MouseEvent.new(event.type, event.pos, Qt::LeftButton, Qt::LeftButton, event.modifiers)
+      super(new_event)
+    else
+      super(event)
+    end
+  end
+end

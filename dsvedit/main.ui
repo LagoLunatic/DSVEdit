@@ -158,7 +158,7 @@
        </property>
        <layout class="QVBoxLayout" name="verticalLayout_2">
         <item>
-         <widget class="QGraphicsView" name="room_graphics_view"/>
+         <widget class="MiddleClickDragGraphicsView" name="room_graphics_view"/>
         </item>
        </layout>
       </widget>
@@ -460,6 +460,13 @@
    </property>
   </action>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>MiddleClickDragGraphicsView</class>
+   <extends>QGraphicsView</extends>
+   <header>middleclickdraggraphicsview.h</header>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections>
   <connection>
