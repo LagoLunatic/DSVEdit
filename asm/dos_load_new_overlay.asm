@@ -4,11 +4,11 @@
 
 .open "ftc/arm9.bin", 02000000h
 
-; Changes to game initialization code to load a new overlay (41) in addition to the ones in the original game.
+; Changes the game initialization code to load a new overlay (41) in addition to the ones in the original game.
 
 ; First we make a little bit of space to put our new code. To do this we optimize the amount of space used by the code that loads the static overlays (0, 1, 2, 3, 4, 5).
 .org 0x02008578
-  mov r0, 0h ; These lines in the original were like ldr r0, =0h. This meant a constant pool was necessary (from 020085C0-020085D7). By using mov instead of ldr no constant pool is neccessary and we can use that area for our own code.
+  mov r0, 0h ; These lines in the original were like ldr r0, =0h. This meant a constant pool was necessary (from 020085C0-020085D7). By using mov instead of ldr no constant pool is necessary and we can use that area for our own code.
   bl 02008690h
   mov r0, 2h
   bl 02008690h

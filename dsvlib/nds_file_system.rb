@@ -316,12 +316,15 @@ class NDSFileSystem
   end
   
   def add_new_overlay_file
-    overlay_id = @overlays.length
-    ram_pointer = 0x02328F00 + 0x100
-    file_size = 0x2000 + 4
+    overlay_id = NEW_OVERLAY_ID
+    if @overlays[overlay_id]
+      raise "Already added a new overlay, overlay9_#{overlay_id}. DSVEdit can currently only add one new overlay. Use the existing one."
+    end
+    ram_pointer = NEW_OVERLAY_FREE_SPACE_START
+    file_size = 4
     bss_size = 0
-    static_initializer_start = 0#ram_pointer + file_size - 4
-    static_initializer_end = 0#ram_pointer + file_size
+    static_initializer_start = 0 # todo?
+    static_initializer_end = 0 # todo?
     file_id = @files.keys.select{|key| key < 0xF000}.max + 1
     
     file_name = "overlay9_#{overlay_id}"
@@ -331,9 +334,10 @@ class NDSFileSystem
     rom_start_offset = 0
     rom_end_offset = 0
     
-    new_file = {:name => file_name, :type => :file, :id => file_id, :overlay_id => overlay_id, :ram_start_offset => ram_pointer, :size => file_size, :start_offset => rom_start_offset, :end_offset => rom_end_offset}
+    new_file = {:name => file_name, :type => :file, :id => file_id, :overlay_id => overlay_id, :ram_start_offset => ram_pointer, :size => file_size, :start_offset => rom_start_offset, :end_offset => rom_end_offset, :file_path => file_path}
     @overlays << new_file
     @files[file_id] = new_file
+    @files_by_path[new_file[:file_path]] = new_file
     
     path = File.join(@filesystem_directory, file_path)
     @opened_files_cache[file_path] = "\0"*file_size
