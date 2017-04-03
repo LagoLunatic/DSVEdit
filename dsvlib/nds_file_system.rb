@@ -108,6 +108,9 @@ class NDSFileSystem
     # Update used ROM size in the header.
     @total_used_rom_size = max_written_address
     write_by_file("/ftc/ndsheader.bin", 0x80, [@total_used_rom_size].pack("V"))
+    header_data_to_crc = read_by_file("/ftc/ndsheader.bin", 0, 0x15E)
+    header_checksum = CRC16.calc(header_data_to_crc, 0xFFFF)
+    write_by_file("/ftc/ndsheader.bin", 0x15E, [header_checksum].pack("v"))
     
     # Update arm9, header, and tables
     [

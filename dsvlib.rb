@@ -1,4 +1,5 @@
 
+require_relative 'dsvlib/crc16'
 require_relative 'dsvlib/nds_file_system'
 require_relative 'dsvlib/bitfield'
 
