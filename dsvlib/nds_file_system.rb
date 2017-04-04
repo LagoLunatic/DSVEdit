@@ -217,7 +217,7 @@ class NDSFileSystem
     write_by_file(file_path, offset_in_file, new_data)
   end
   
-  def write_by_file(file_path, offset_in_file, new_data)
+  def write_by_file(file_path, offset_in_file, new_data, freeing_space: false)
     file = files_by_path[file_path]
     if offset_in_file + new_data.length > file[:size]
       raise OffsetPastEndOfFileError.new("Offset %08X is past end of file #{file_path} (%08X bytes long)" % [offset_in_file, file[:size]])
@@ -227,6 +227,7 @@ class NDSFileSystem
     file_data[offset_in_file, new_data.length] = new_data
     @opened_files_cache[file_path] = file_data
     @uncommitted_files << file_path
+    remove_free_space(file_path, offset_in_file, new_data.length) unless freeing_space
   end
   
   def overwrite_file(file_path, new_data)
@@ -263,6 +264,8 @@ class NDSFileSystem
     
     @uncommitted_files = []
     
+    write_free_space_to_text_file(base_directory)
+    
     puts "Done."
   end
   
@@ -270,9 +273,176 @@ class NDSFileSystem
     !@uncommitted_files.empty?
   end
   
+  def read_free_space_from_text_file
+    @free_spaces = []
+    
+    if @filesystem_directory.nil?
+      return
+    end
+    
+    freespace_file = File.join(@filesystem_directory, "_dsvedit_freespace.txt")
+    if !File.file?(freespace_file)
+      return
+    end
+    
+    file_contents = File.read(freespace_file)
+    free_space_strs = file_contents.scan(/^(\h+) (\h+) (\s+)$/)
+    free_space_strs.each do |offset, length, path|
+      offset = offset.to_i(16)
+      length = length.to_i(16)
+      @free_spaces << {path: path, offset: offset, length: length}
+    end
+    
+    merge_overlapping_free_spaces()
+  end
+  
+  def write_free_space_to_text_file(base_directory=@filesystem_directory)
+    if base_directory.nil?
+      return
+    end
+    
+    output_string = ""
+    output_string << "This file lists regions that were once used, but DSVEdit freed up when relocating the data to a different location.\n"
+    output_string << "DSVEdit reads from this file to know what regions it can reuse later.\n"
+    output_string << "Don't modify this file manually unless you know what you're doing.\n\n"
+    @free_spaces.each do |free_space|
+      offset = free_space[:offset]
+      length = free_space[:length]
+      path = free_space[:path]
+      output_string << "%08X %08X %s\n" % [offset, length, path]
+    end
+    
+    freespace_file = File.join(base_directory, "_dsvedit_freespace.txt")
+    File.open(freespace_file, "w") do |f|
+      f.write(output_string)
+    end
+  end
+  
+  def free_unused_space(ram_address, length)
+    path, offset = convert_ram_address_to_path_and_offset(ram_address)
+    @free_spaces << {path: path, offset: offset, length: length}
+    write_by_file(path, offset, "\0"*length, freeing_space: true)
+    merge_overlapping_free_spaces()
+  end
+  
+  def remove_free_space(file_path, offset_in_file, length)
+    #puts "REMOVE: #{offset_in_file} #{length}"
+    new_free_spaces = [] # In case a free space is only partly delete, we might need to split it into smaller free spaces.
+    #p @free_spaces
+    @free_spaces.delete_if do |free_space|
+      next unless free_space[:path] == file_path
+      
+      free_space_range = (free_space[:offset]...free_space[:offset]+free_space[:length])
+      remove_range = (offset_in_file...offset_in_file+length)
+      next if free_space_range.max < remove_range.begin || remove_range.max < free_space_range.begin
+      
+      if free_space_range.begin != remove_range.begin
+        range_before = (free_space_range.begin...remove_range.begin)
+        offset = range_before.begin
+        length = range_before.end - offset
+        new_free_spaces << {path: file_path, offset: offset, length: length}
+      end
+      if remove_range.max != free_space_range.max
+        range_after = (remove_range.end...free_space_range.end)
+        offset = range_after.begin
+        length = range_after.end - offset
+        new_free_spaces << {path: file_path, offset: offset, length: length}
+      end
+      
+      true
+    end
+    
+    @free_spaces += new_free_spaces
+    #p @free_spaces
+  end
+  
+  def merge_overlapping_free_spaces
+    #puts "MERGE"
+    #p @free_spaces
+    merged_free_spaces = []
+    
+    free_space_groups = @free_spaces.group_by{|free_space| free_space[:path]}
+    free_space_groups.each do |path, free_space_group|
+      merged_free_space_group = []
+      
+      free_space_group.sort_by{|free_space| free_space[:offset]}.each do |free_space|
+        if merged_free_space_group.empty?
+          merged_free_space_group << free_space
+          next
+        end
+        
+        prev_free_space = merged_free_space_group.last
+        prev_range = (prev_free_space[:offset]..prev_free_space[:offset]+prev_free_space[:length])
+        curr_range = (free_space[:offset]..free_space[:offset]+free_space[:length])
+        if curr_range.include?(prev_range.begin) || prev_range.include?(curr_range.begin)
+          new_offset = [curr_range.begin, prev_range.begin].min
+          new_length = [curr_range.end, prev_range.end].max - new_offset
+          new_free_space = {path: path, offset: new_offset, length: new_length}
+          merged_free_space_group[-1] = new_free_space
+        else
+          merged_free_space_group << free_space
+          next
+        end
+      end
+      
+      merged_free_spaces += merged_free_space_group
+    end
+    
+    @free_spaces = merged_free_spaces
+    #p @free_spaces
+  end
+  
+  def get_free_space(length_needed, overlay_id = nil)
+    free_spaces_sorted = @free_spaces.sort_by{|free_space| free_space[:length]}
+    
+    files_to_check = []
+    
+    if overlay_id
+      files_to_check << File.join("/ftc", "overlay9_#{overlay_id}")
+    end
+    files_to_check << File.join("/ftc", "arm9.bin")
+    
+    files_to_check.each do |file_path|
+      file = files_by_path[file_path]
+      
+      free_space = free_spaces_sorted.find do |free_space|
+        free_space[:length] >= length_needed && free_space[:path] == file_path
+      end
+      
+      # TODO: detect if there's a free space at the end of the overlay, but it's too small. we can just expand the overlay by the diff instead of fully.
+      
+      if free_space
+        puts "Found free space at %08X (%08X in %s)" % [file[:ram_start_offset] + free_space[:offset], free_space[:offset], file[:file_path]]
+        return file[:ram_start_offset] + free_space[:offset]
+      end
+    end
+    
+    if overlay_id
+      overlay_path = File.join("/ftc", "overlay9_#{overlay_id}")
+      overlay = files_by_path[overlay_path]
+      return expand_file_and_get_end(overlay, length_needed)
+    else
+      raise "can't find"
+    end
+  end
+  
   def expand_file_and_get_end_of_file_ram_address(ram_address, length_to_expand_by)
     file_path, offset_in_file = convert_ram_address_to_path_and_offset(ram_address)
     file = @currently_loaded_files.values.find{|file| file[:file_path] == file_path}
+    
+    return expand_file_and_get_end(file, length_to_expand_by)
+  end
+  
+  def expand_file_and_get_end(file, length_to_expand_by)
+    old_size = file[:size]
+    
+    expand_file(file, length_to_expand_by)
+    
+    return file[:ram_start_offset] + old_size
+  end
+  
+  def expand_file(file, length_to_expand_by)
+    file_path = file[:file_path]
     
     if file[:overlay_id] && ROOM_OVERLAYS.include?(file[:overlay_id]) && file[:size] + length_to_expand_by > MAX_ALLOWABLE_ROOM_OVERLAY_SIZE
       raise FileExpandError.new("Failed to expand room overlay #{file[:overlay_id]} to #{file[:size] + length_to_expand_by} bytes because that is larger than the maximum size a room overlay can be in this game (#{MAX_ALLOWABLE_ROOM_OVERLAY_SIZE} bytes).")
@@ -291,28 +461,7 @@ class NDSFileSystem
     end
     
     # Expand the actual file data string, and fill it with 0 bytes.
-    write_by_file(file_path, old_size, "\0"*length_to_expand_by)
-    
-    return file[:ram_start_offset] + old_size
-  end
-  
-  def expand_file(file, length_to_expand_by)
-    file_path = file[:file_path]
-    
-    if file_path == "/ftc/arm9.bin"
-      raise FileExpandError.new("Cannot expand arm9.")
-    end
-    
-    old_size = file[:size]
-    file[:size] += length_to_expand_by
-    
-    if file[:overlay_id]
-      # Update length of changed overlay
-      write_by_file("/ftc/arm9_overlay_table.bin", file[:overlay_id]*32 + 8, [file[:size]].pack("V"))
-    end
-    
-    # Expand the actual file data string, and fill it with 0 bytes.
-    write_by_file(file_path, old_size, "\0"*length_to_expand_by)
+    write_by_file(file_path, old_size, "\0"*length_to_expand_by, freeing_space: true)
   end
   
   def add_new_overlay_file
@@ -371,6 +520,8 @@ class NDSFileSystem
     files.select{|id, file| file[:type] == :file}
   end
   
+  def inspect; to_s; end
+  
 private
   
   def read_from_rom(read_header_and_tables_from_hard_drive = false)
@@ -421,6 +572,8 @@ private
     CONSTANT_OVERLAYS.each do |overlay_index|
       load_overlay(overlay_index)
     end
+    
+    read_free_space_from_text_file()
   end
   
   def extract_to_hard_drive
@@ -440,6 +593,9 @@ private
         f.write(file_data)
       end
     end
+    
+    freespace_file = File.join(@filesystem_directory, "_dsvedit_freespace.txt")
+    FileUtils.rm(freespace_file)
     
     puts "Done."
   end
