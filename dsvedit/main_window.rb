@@ -953,9 +953,12 @@ class DSVEdit < Qt::MainWindow
     @write_to_rom_thread = Thread.new do
       game.fs.write_to_rom(output_rom_path) do |files_written|
         next unless files_written % 100 == 0 # Only update the UI every 100 files because updating too often is slow.
+        break if @progress_dialog.nil?
         
         Qt.execute_in_main_thread do
-          @progress_dialog.setValue(files_written) unless @progress_dialog.wasCanceled
+          if @progress_dialog && !@progress_dialog.wasCanceled
+            @progress_dialog.setValue(files_written) unless @progress_dialog.wasCanceled
+          end
         end
       end
       
