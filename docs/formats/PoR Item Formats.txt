@@ -89,9 +89,13 @@ Weapon format:
   Byte 18: Luck stat (signed).
   Byte 19: ?
   Byte 20: ?
-  Bytes 21-22: Bitfield for the elemental damage types this weapon deals.
-  Bytes 23-24: Bitfield.
-    Least significant bit first.
+  Bytes 21-24: Bitfield for the elemental damage types this weapon deals.
+    Bits 1-11: Regular elemental types.
+    Bit 27: Is magical.
+      If either this bit, or any of the bits for fire/ice/lightning/dark/holy are set, enemies will use their magic defense to defend against this weapon, instead of their physical defense.
+    Bit 28: Cures vampirism and kills red skeletons/axe armors.
+      This only cures the sisters if the magical bit is also set.
+      Cures Vincent and kills red skeletons/axe armors whether the magical bit is set or not.
     Bit 16: Unknown, set for all fist weapons (except the default fists you get when nothing is equipped).
     Bit 20: Can kill Red Skeletons/Axe Armors.
   Byte 25: Sprite to use for the weapon when you swing it. Doesn't just effect visuals, also hitboxes.
@@ -149,9 +153,11 @@ Skill format:
     1 - Dual Crush.
     3 - Relic.
   Byte 7:
-    Bit 1: Affects damage calculation somehow?
+    Bit 1: Something with dual crushes?
     Bit 2:
-    Bit 3: Is a chargeable spell.
+    Bit 3: Is a spell.
+      This will make it equippable by Charlotte instead of Jonathan.
+    Bit 4: If set, neither Jonathan nor Charlotte can equip this skill.
     Bits 5-8: Unused?
   Byte 8: 
   Bytes 9-10: Mana cost.
@@ -162,8 +168,9 @@ Skill format:
     Bit 27: Is magical.
       If either this bit, or any of the bits for fire/ice/lightning/dark/holy are set, enemies will use their magic defense to defend against this skill, instead of their physical defense.
       You don't need to set this manually. The game automatically sets this bit for spells. But you can manually set this for subweapons, and enemies will use their magic defense instead of their physical defense against that subweapon.
-    Bit 28: Cures vampirism.
-      This only works if bit 27 is also set, so set both of these bits if you want to make a subweapon cure vampirism.
+    Bit 28: Cures vampirism and kills red skeletons/axe armors.
+      This only cures the sisters if the magical bit is also set.
+      Cures Vincent and kills red skeletons/axe armors whether the magical bit is set or not.
   Bytes 17-20: Bitfield of player state booleans that must be false in order to use this skill. Checks bitfield 020FCB80/020FCCB0 (the player's current state booleans, first is for player 1, second is for player 2). 0 means it can be used in any state.
   Bytes 21-22:
     For Dual Crushes: Voice file 1 ID.

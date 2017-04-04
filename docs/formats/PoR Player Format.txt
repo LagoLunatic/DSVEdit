@@ -26,7 +26,8 @@ Player format:
       This shouldn't be set manually in the player editor. The game sets this automatically when you change characters. It affects the voice played when changing characters, and whether taking damages hurts your HP or your MP. Setting this bit won't make the AI take control of the character.
     Bit 4: Can do combo tech (including Critical Art).
     Bit 5: Is female.
-      For Zacchino and Astarte's attacks.
+      Affects Zacchino and Astarte's attacks.
+      Also reduces the speed this player pushes blocks at.
     Bit 6: Unknown, used only for Charlotte.
     Bit 7: Unknown, used for everyone except Stella and Loretta.
   2C,4: Backdash force.

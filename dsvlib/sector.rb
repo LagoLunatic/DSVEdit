@@ -23,8 +23,11 @@ class Sector
     @rooms ||= read_rooms_from_rom()
   end
   
+  def overlay_id
+    AREA_INDEX_TO_OVERLAY_INDEX[area.area_index][sector_index]
+  end
+  
   def load_necessary_overlay
-    overlay_id = AREA_INDEX_TO_OVERLAY_INDEX[area.area_index][sector_index]
     fs.load_overlay(overlay_id)
   end
   

@@ -797,7 +797,7 @@ SKILL_FORMAT = [
   [4, "Code"],
   [1, "Sprite"],
   [1, "Type"],
-  [1, "Unknown 1"],
+  [1, "??? bitfield", :bitfield],
   [1, "Unknown 2"],
   [2, "Mana cost"],
   [2, "DMG multiplier"],
@@ -928,7 +928,7 @@ ITEM_BITFIELD_ATTRIBUTES = {
     "Effect 25",
     "Effect 26",
     "Magical",
-    "Cures vampirism",
+    "Cures vampirism & kills undead",
     "Effect 29",
     "Effect 30",
     "Effect 31",
@@ -995,7 +995,17 @@ ITEM_BITFIELD_ATTRIBUTES = {
     "Unused 6",
     "Unused 7",
     "Unused 8",
-  ]
+  ],
+  "??? bitfield" => [
+    "Unknown 1",
+    "Unknown 2",
+    "Is spell",
+    "Unknown 4",
+    "Unknown 5",
+    "Unknown 6",
+    "Unknown 7",
+    "Unknown 8",
+  ],
 }
 
 ITEM_POOLS_LIST_POINTER = nil

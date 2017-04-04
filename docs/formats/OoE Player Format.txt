@@ -23,6 +23,7 @@ Player format:
     Bit 1: Player's sprite is horizontally flipped.
     Bit 2: Can smash head into ceiling if you hit it with enough force. (Normally with a superjump.)
     Bit 5: Is female.
+      Has no known effect in this game.
     Bit 6: Unknown, used only for Shanoa.
     Bit 7: Unknown, used for Shanoa and Arma Chiroptera.
   2C,4: Backdash force.
