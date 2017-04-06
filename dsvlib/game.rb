@@ -347,11 +347,7 @@ class Game
         f.read()
       end
       
-      if file_data.size > file[:size]
-        fs.expand_file_and_get_end_of_file_ram_address(file[:ram_start_offset], file_data.size-file[:size])
-      end
-      
-      fs.write_by_file(file[:file_path], 0, file_data)
+      fs.overwrite_file(file[:file_path], file_data)
     end
   ensure
     if File.exist?(File.join("asm", "ftc"))

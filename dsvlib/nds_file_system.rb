@@ -228,12 +228,6 @@ class NDSFileSystem
     remove_free_space(file_path, offset_in_file, new_data.length) unless freeing_space
   end
   
-  def update_header_checksum
-    header_data_to_crc = read_by_file("/ftc/ndsheader.bin", 0, 0x15E)
-    header_checksum = CRC16.calc(header_data_to_crc, 0xFFFF)
-    write_by_file("/ftc/ndsheader.bin", 0x15E, [header_checksum].pack("v"))
-  end
-  
   def overwrite_file(file_path, new_data)
     file = files_by_path[file_path]
     @opened_files_cache[file_path] = new_data
@@ -340,13 +334,13 @@ class NDSFileSystem
       remove_range = (offset_in_file...offset_in_file+length)
       next if free_space_range.max < remove_range.begin || remove_range.max < free_space_range.begin
       
-      if free_space_range.begin != remove_range.begin
+      if remove_range.begin > free_space_range.begin
         range_before = (free_space_range.begin...remove_range.begin)
         offset = range_before.begin
         length = range_before.end - offset
         new_free_spaces << {path: file_path, offset: offset, length: length}
       end
-      if remove_range.max != free_space_range.max
+      if remove_range.max < free_space_range.max
         range_after = (remove_range.end...free_space_range.end)
         offset = range_after.begin
         length = range_after.end - offset
@@ -520,6 +514,12 @@ class NDSFileSystem
     write_by_file("/ftc/ndsheader.bin", 0x54, [arm9_overlay_table_size].pack("V"))
     
     update_header_checksum()
+  end
+  
+  def update_header_checksum
+    header_data_to_crc = read_by_file("/ftc/ndsheader.bin", 0, 0x15E)
+    header_checksum = CRC16.calc(header_data_to_crc, 0xFFFF)
+    write_by_file("/ftc/ndsheader.bin", 0x15E, [header_checksum].pack("v"))
   end
   
   def files_without_dirs
