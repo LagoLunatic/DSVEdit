@@ -6,6 +6,8 @@
 
 .org 0x0203E514
   push r1, r14
+  mov r0, 4h
+  bl 0203BE9Ch
   mov r0, 0h ; Save file 0.
   bl 02010BC4h ; Load a save file.
   ldr r1, =020F6DF7h
