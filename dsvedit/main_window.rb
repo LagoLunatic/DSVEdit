@@ -1037,6 +1037,8 @@ class DoorItem < Qt::GraphicsRectItem
     
     setFlag(Qt::GraphicsItem::ItemIsMovable)
     setFlag(Qt::GraphicsItem::ItemSendsGeometryChanges)
+    
+    setCursor(Qt::Cursor.new(Qt::SizeAllCursor))
   end
   
   def itemChange(change, value)
@@ -1117,6 +1119,8 @@ class EntityChunkyItem < GraphicsChunkyItem
     
     setFlag(Qt::GraphicsItem::ItemIsMovable)
     setFlag(Qt::GraphicsItem::ItemSendsGeometryChanges)
+    
+    setCursor(Qt::Cursor.new(Qt::SizeAllCursor))
   end
   
   def itemChange(change, value)
@@ -1165,6 +1169,8 @@ class EntityRectItem < Qt::GraphicsRectItem
     
     setFlag(Qt::GraphicsItem::ItemIsMovable)
     setFlag(Qt::GraphicsItem::ItemSendsGeometryChanges)
+    
+    setCursor(Qt::Cursor.new(Qt::SizeAllCursor))
     
     case entity.type
     when 0
