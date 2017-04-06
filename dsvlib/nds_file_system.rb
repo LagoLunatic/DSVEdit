@@ -595,7 +595,9 @@ private
     end
     
     freespace_file = File.join(@filesystem_directory, "_dsvedit_freespace.txt")
-    FileUtils.rm(freespace_file)
+    if File.file?(freespace_file)
+      FileUtils.rm(freespace_file)
+    end
     
     puts "Done."
   end
