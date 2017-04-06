@@ -528,8 +528,15 @@ class NDSFileSystem
   
   def initialize_copy(orig)
     super
-    @opened_files_cache = {}
+    
     @uncommitted_files = @uncommitted_files.dup
+    
+    orig_opened_files_cache = @opened_files_cache
+    @opened_files_cache = {}
+    @uncommitted_files.each do |path|
+      @opened_files_cache[path] = orig_opened_files_cache[path].dup
+    end
+    
     @files = {}
     orig.files.each do |id, file|
       @files[id] = file.dup
