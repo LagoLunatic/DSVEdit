@@ -942,10 +942,16 @@ class DSVEdit < Qt::MainWindow
   def write_to_rom(launch_emulator = false)
     return if @progress_dialog
     
+    # These two lines are for the room test.
+    # We preserve a reference to the game's current test room fs, then revert the game's fs to the normal one.
+    # This lets us build a rom for the test room while ensuring the game doesn't get stuck with the test room fs if the build fails/is canceled.
+    fs = game.fs
+    game.end_test_room()
+    
     @progress_dialog = Qt::ProgressDialog.new
     @progress_dialog.windowTitle = "Building"
     @progress_dialog.labelText = "Writing files to ROM"
-    @progress_dialog.maximum = game.fs.files_without_dirs.length
+    @progress_dialog.maximum = fs.files_without_dirs.length
     @progress_dialog.windowModality = Qt::ApplicationModal
     @progress_dialog.windowFlags = Qt::CustomizeWindowHint | Qt::WindowTitleHint
     @progress_dialog.setFixedSize(@progress_dialog.size);
@@ -955,7 +961,7 @@ class DSVEdit < Qt::MainWindow
     output_rom_path = File.join(game.folder, "built_rom_#{GAME}.nds")
     
     @write_to_rom_thread = Thread.new do
-      game.fs.write_to_rom(output_rom_path) do |files_written|
+      fs.write_to_rom(output_rom_path) do |files_written|
         next unless files_written % 100 == 0 # Only update the UI every 100 files because updating too often is slow.
         break if @progress_dialog.nil?
         
@@ -967,7 +973,7 @@ class DSVEdit < Qt::MainWindow
       end
       
       Qt.execute_in_main_thread do
-        @progress_dialog.setValue(game.fs.files_without_dirs.length) unless @progress_dialog.wasCanceled
+        @progress_dialog.setValue(fs.files_without_dirs.length) unless @progress_dialog.wasCanceled
         @progress_dialog = nil
         
         if launch_emulator
@@ -998,7 +1004,7 @@ class DSVEdit < Qt::MainWindow
   def build_and_test
     save_file_index = 0
     scene_pos = @ui.room_graphics_view.mapToScene(@ui.room_graphics_view.mapFromGlobal(Qt::Cursor.pos))
-    game.test_room(save_file_index, @area_index, @sector_index, @room_index, scene_pos.x, scene_pos.y)
+    game.start_test_room(save_file_index, @area_index, @sector_index, @room_index, scene_pos.x, scene_pos.y)
     
     write_to_rom(launch_emulator = true)
   end

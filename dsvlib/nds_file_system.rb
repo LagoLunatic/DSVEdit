@@ -526,6 +526,20 @@ class NDSFileSystem
     files.select{|id, file| file[:type] == :file}
   end
   
+  def initialize_copy(orig)
+    super
+    @opened_files_cache = {}
+    @uncommitted_files = @uncommitted_files.dup
+    @files = {}
+    orig.files.each do |id, file|
+      @files[id] = file.dup
+    end
+    @extra_files = @extra_files.map do |file|
+      file.dup
+    end
+    generate_file_paths()
+  end
+  
   def inspect; to_s; end
   
 private

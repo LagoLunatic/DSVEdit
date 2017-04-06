@@ -365,7 +365,11 @@ class Game
     fs.write(NEW_GAME_STARTING_ROOM_INDEX_OFFSET, [room_index].pack("C"))
   end
   
-  def test_room(save_file_index, area_index, sector_index, room_index, x_pos, y_pos)
+  def start_test_room(save_file_index, area_index, sector_index, room_index, x_pos, y_pos)
+    @orig_fs = @fs
+    
+    @fs = @fs.dup
+    
     patch_name = "#{GAME}_room_test"
     if REGION != :usa
       patch_name = "#{REGION.to_s}_#{patch_name}"
@@ -380,6 +384,14 @@ class Game
     fs.write(TEST_ROOM_ROOM_INDEX_LOCATION     , [room_index].pack("C"))
     fs.write(TEST_ROOM_X_POS_LOCATION          , [x_pos * 0x1000].pack("V"))
     fs.write(TEST_ROOM_Y_POS_LOCATION          , [y_pos * 0x1000].pack("V"))
+  end
+  
+  def end_test_room
+    if @orig_fs.nil?
+      return
+    end
+    @fs = @orig_fs
+    @orig_fs = nil
   end
   
   def fix_unnamed_skills
