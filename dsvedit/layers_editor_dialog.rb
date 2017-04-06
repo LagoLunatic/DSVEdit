@@ -49,13 +49,8 @@ class LayersEditorDialog < Qt::Dialog
     @room.sector.load_necessary_overlay()
     @renderer.ensure_tilesets_exist("cache/#{GAME}/rooms/", @room)
     tileset_filename = "cache/#{GAME}/rooms/#{@room.area_name}/Tilesets/#{layer.tileset_filename}.png"
-    tileset = Qt::Pixmap.new(tileset_filename)
-    layer_item = Qt::GraphicsRectItem.new
-    layer_item.setZValue(-layer.z_index)
-    layer_item.setOpacity(layer.opacity/31.0)
+    layer_item = LayerItem.new(layer, tileset_filename)
     layer_item.setParentItem(@layers_view_item)
-    
-    parent.load_layer(layer, tileset, layer_item)
   end
   
   def save_layer

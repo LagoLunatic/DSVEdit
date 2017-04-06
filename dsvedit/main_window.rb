@@ -2,6 +2,7 @@
 require_relative 'clickable_graphics_scene'
 require_relative 'room_view'
 require_relative 'custom_graphics_items'
+require_relative 'layer_item'
 
 require_relative 'enemy_editor_dialog'
 require_relative 'text_editor_dialog'
@@ -456,13 +457,8 @@ class DSVEdit < Qt::MainWindow
     @renderer.ensure_tilesets_exist("cache/#{GAME}/rooms/", @room)
     @room.layers.each do |layer|
       tileset_filename = "cache/#{GAME}/rooms/#{@room.area_name}/Tilesets/#{layer.tileset_filename}.png"
-      tileset = Qt::Pixmap.new(tileset_filename)
-      layer_item = Qt::GraphicsRectItem.new
-      layer_item.setZValue(-layer.z_index)
-      layer_item.setOpacity(layer.opacity/31.0)
+      layer_item = LayerItem.new(layer, tileset_filename)
       layer_item.setParentItem(@layers_view_item)
-      
-      load_layer(layer, tileset, layer_item)
     end
     
     load_room_collision_tileset()
@@ -504,9 +500,9 @@ class DSVEdit < Qt::MainWindow
     if @room.layers.length > 0
       @renderer.ensure_tilesets_exist("cache/#{GAME}/rooms/", @room, collision=true)
       tileset_filename = "cache/#{GAME}/rooms/#{@room.area_name}/Tilesets/#{@room.layers.first.tileset_filename}_collision.png"
-      tileset = Qt::Pixmap.new(tileset_filename)
       layer = @room.layers.first
-      load_layer(layer, tileset, @collision_view_item)
+      layer_item = LayerItem.new(layer, tileset_filename)
+      layer_item.setParentItem(@collision_view_item)
     end
   rescue StandardError => e
     Qt::MessageBox.warning(self,
@@ -648,40 +644,6 @@ class DSVEdit < Qt::MainWindow
     graphics_item.setOffset(sprite_info.sprite.min_x, sprite_info.sprite.min_y)
     graphics_item.setPos(entity.x_pos, entity.y_pos)
     graphics_item.setParentItem(@entities_view_item)
-  end
-  
-  def load_layer(layer, tileset, layer_graphics_item)
-    layer.tiles.each_with_index do |tile, index_on_level|
-      next if tile.index_on_tileset == 0
-      
-      x_on_tileset = tile.index_on_tileset % 16
-      y_on_tileset = tile.index_on_tileset / 16
-      x_on_level = index_on_level % (layer.width*16)
-      y_on_level = index_on_level / (layer.width*16)
-      
-      if (0..tileset.width-1).include?(x_on_tileset*16) && (0..tileset.height-1).include?(y_on_tileset*16)
-        tile_gfx = tileset.copy(x_on_tileset*16, y_on_tileset*16, 16, 16)
-      else
-        # Coordinates are outside the bounds of the tileset, put a red tile there instead.
-        tile_gfx = Qt::Pixmap.new(16, 16)
-        tile_gfx.fill(Qt::Color.new(Qt::red))
-      end
-      
-      tile_item = Qt::GraphicsPixmapItem.new(tile_gfx)
-      tile_item.setPos(x_on_level*16, y_on_level*16)
-      if tile.horizontal_flip && tile.vertical_flip
-        tile_item.setTransform(Qt::Transform::fromScale(-1, -1))
-        tile_item.x += 16
-        tile_item.y += 16
-      elsif tile.horizontal_flip
-        tile_item.setTransform(Qt::Transform::fromScale(-1, 1))
-        tile_item.x += 16
-      elsif tile.vertical_flip
-        tile_item.setTransform(Qt::Transform::fromScale(1, -1))
-        tile_item.y += 16
-      end
-      tile_item.setParentItem(layer_graphics_item)
-    end
   end
   
   def edit_layers
