@@ -39,15 +39,6 @@ class TilesetEditorDialog < Qt::Dialog
     @ui.selected_tile_graphics_view.setScene(@selected_tile_graphics_scene)
     @selected_tile_graphics_scene.setBackgroundBrush(BACKGROUND_BRUSH)
     
-    @room = room
-    layer = room.layers.first
-    if layer
-      @ui.tileset_pointer.text = "%08X" % layer.ram_pointer_to_tileset_for_layer
-    end
-    @ui.gfx_list_pointer.text = "%08X" % room.gfx_list_pointer
-    @ui.palette_list_pointer.text = "%08X" % room.palette_offset
-    load_tileset()
-    
     connect(@ui.gfx_page_index, SIGNAL("activated(int)"), self, SLOT("gfx_page_changed(int)"))
     connect(@ui.palette_index, SIGNAL("activated(int)"), self, SLOT("palette_changed(int)"))
     connect(@ui.horizontal_flip, SIGNAL("stateChanged(int)"), self, SLOT("toggle_flips(int)"))
@@ -57,6 +48,21 @@ class TilesetEditorDialog < Qt::Dialog
     connect(@ui.buttonBox, SIGNAL("clicked(QAbstractButton*)"), self, SLOT("button_box_clicked(QAbstractButton*)"))
     
     self.show()
+    
+    @room = room
+    
+    if room.palette_pages.empty?
+      Qt::MessageBox.warning(self, "No palette", "The current room has no palette pages.")
+      return
+    end
+    
+    layer = room.layers.first
+    if layer
+      @ui.tileset_pointer.text = "%08X" % layer.ram_pointer_to_tileset_for_layer
+    end
+    @ui.gfx_list_pointer.text = "%08X" % room.gfx_list_pointer
+    @ui.palette_list_pointer.text = "%08X" % room.palette_offset
+    load_tileset()
   end
   
   def load_tileset

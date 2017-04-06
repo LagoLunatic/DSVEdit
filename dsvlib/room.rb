@@ -98,7 +98,7 @@ class Room
   rescue NDSFileSystem::ConversionError => e
     # When palette_wrapper_ram_pointer is like this (e.g. 0x02195984), it just points to 00s instead of actual data.
     # What this means is that the room doesn't load a palette. Instead it just keeps whatever palette the previous room had loaded.
-    @palette_pages = [nil]
+    @palette_pages = []
   end
   
   def read_entity_list_from_rom(entity_list_ram_pointer)
