@@ -11,6 +11,9 @@
   mov r2, r5, lsl 5h ; Multiply luck by 0x20.
 .org 0x021C3A68
   mov r7, r2 ; Put it in r7.
+.org 0x021C3A6C
+  movne r7, r7, lsl 2h ; Multiply by 4 if in hard mode. This is the same as the original code, just done in a way that won't break when luck is over 255.
+  nop
 .org 0x021C3A78
   mov r0, 8000h ; Always use 0x8000 as the max random number to generate, instead of basing it off the player's luck. This makes the calculation simpler.
 .org 0x021C3A9C
