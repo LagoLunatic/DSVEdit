@@ -95,22 +95,17 @@ class NDSFileSystem
       new_rom[@file_allocation_table_offset+offset, 8] = [new_start_offset, new_end_offset].pack("VV")
       max_written_address = new_end_offset if new_end_offset > max_written_address
       
-      if file[:overlay_id]
-        write_by_file("/ftc/arm9_overlay_table.bin", file[:overlay_id]*32 + 8, [file[:size]].pack("V"))
-      end
-      
       files_written += 1
       if block_given?
         yield(files_written)
       end
     end
     
-    # Update used ROM size in the header.
-    @total_used_rom_size = max_written_address
-    write_by_file("/ftc/ndsheader.bin", 0x80, [@total_used_rom_size].pack("V"))
-    header_data_to_crc = read_by_file("/ftc/ndsheader.bin", 0, 0x15E)
-    header_checksum = CRC16.calc(header_data_to_crc, 0xFFFF)
-    write_by_file("/ftc/ndsheader.bin", 0x15E, [header_checksum].pack("v"))
+    if @total_used_rom_size != max_written_address
+      # Update used ROM size in the header.
+      @total_used_rom_size = max_written_address
+      write_by_file("/ftc/ndsheader.bin", 0x80, [@total_used_rom_size].pack("V"))
+    end
     
     # Update arm9, header, and tables
     [
@@ -227,7 +222,15 @@ class NDSFileSystem
     file_data[offset_in_file, new_data.length] = new_data
     @opened_files_cache[file_path] = file_data
     @uncommitted_files << file_path
+    
     remove_free_space(file_path, offset_in_file, new_data.length) unless freeing_space
+    update_header_checksum() if file_path == "/ftc/ndsheader.bin"
+  end
+  
+  def update_header_checksum
+    header_data_to_crc = read_by_file("/ftc/ndsheader.bin", 0, 0x15E)
+    header_checksum = CRC16.calc(header_data_to_crc, 0xFFFF)
+    write_by_file("/ftc/ndsheader.bin", 0x15E, [header_checksum].pack("v"))
   end
   
   def overwrite_file(file_path, new_data)
