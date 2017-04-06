@@ -105,6 +105,8 @@ class NDSFileSystem
       # Update used ROM size in the header.
       @total_used_rom_size = max_written_address
       write_by_file("/ftc/ndsheader.bin", 0x80, [@total_used_rom_size].pack("V"))
+      
+      update_header_checksum()
     end
     
     # Update arm9, header, and tables
@@ -224,7 +226,6 @@ class NDSFileSystem
     @uncommitted_files << file_path
     
     remove_free_space(file_path, offset_in_file, new_data.length) unless freeing_space
-    update_header_checksum() if file_path == "/ftc/ndsheader.bin"
   end
   
   def update_header_checksum
@@ -517,6 +518,8 @@ class NDSFileSystem
     write_by_file("/ftc/ndsheader.bin", 0x4C, [file_allocation_table_size].pack("V"))
     arm9_overlay_table_size = files_by_path["/ftc/arm9_overlay_table.bin"][:size]
     write_by_file("/ftc/ndsheader.bin", 0x54, [arm9_overlay_table_size].pack("V"))
+    
+    update_header_checksum()
   end
   
   def files_without_dirs
