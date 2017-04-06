@@ -208,6 +208,7 @@
     </property>
     <addaction name="actionBuild"/>
     <addaction name="actionBuild_and_Run"/>
+    <addaction name="actionBuild_and_Test"/>
    </widget>
    <widget class="QMenu" name="menuView">
     <property name="title">
@@ -457,6 +458,14 @@
   <action name="actionSpecial_Object_Editor">
    <property name="text">
     <string>Special Object Editor</string>
+   </property>
+  </action>
+  <action name="actionBuild_and_Test">
+   <property name="text">
+    <string>Build and Test</string>
+   </property>
+   <property name="shortcut">
+    <string>F7</string>
    </property>
   </action>
  </widget>

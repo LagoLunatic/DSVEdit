@@ -45,6 +45,7 @@ class DSVEdit < Qt::MainWindow
   slots "open_settings()"
   slots "write_to_rom()"
   slots "build_and_run()"
+  slots "build_and_test()"
   slots "open_about()"
   
   slots "cancel_write_to_rom_thread()"
@@ -107,6 +108,7 @@ class DSVEdit < Qt::MainWindow
     connect(@ui.actionSettings, SIGNAL("activated()"), self, SLOT("open_settings()"))
     connect(@ui.actionBuild, SIGNAL("activated()"), self, SLOT("write_to_rom()"))
     connect(@ui.actionBuild_and_Run, SIGNAL("activated()"), self, SLOT("build_and_run()"))
+    connect(@ui.actionBuild_and_Test, SIGNAL("activated()"), self, SLOT("build_and_test()"))
     connect(@ui.actionAbout, SIGNAL("activated()"), self, SLOT("open_about()"))
     
     connect(@ui.area, SIGNAL("activated(int)"), self, SLOT("area_index_changed(int)"))
@@ -162,6 +164,7 @@ class DSVEdit < Qt::MainWindow
     @ui.actionEntity_Search.setEnabled(false);
     @ui.actionBuild.setEnabled(false);
     @ui.actionBuild_and_Run.setEnabled(false);
+    @ui.actionBuild_and_Test.setEnabled(false);
   end
   
   def enable_menu_actions
@@ -187,6 +190,7 @@ class DSVEdit < Qt::MainWindow
     @ui.actionEntity_Search.setEnabled(true);
     @ui.actionBuild.setEnabled(true);
     @ui.actionBuild_and_Run.setEnabled(true);
+    @ui.actionBuild_and_Test.setEnabled(true);
   end
   
   def close_open_dialogs
@@ -988,6 +992,14 @@ class DSVEdit < Qt::MainWindow
   end
   
   def build_and_run
+    write_to_rom(launch_emulator = true)
+  end
+  
+  def build_and_test
+    save_file_index = 0
+    scene_pos = @ui.room_graphics_view.mapToScene(@ui.room_graphics_view.mapFromGlobal(Qt::Cursor.pos))
+    game.test_room(save_file_index, @area_index, @sector_index, @room_index, scene_pos.x, scene_pos.y)
+    
     write_to_rom(launch_emulator = true)
   end
   
