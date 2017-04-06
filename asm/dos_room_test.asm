@@ -11,6 +11,8 @@
   ldr r1, =020F6DF7h
   mov r0, 0h
   strb r0, [r1] ; unknown value we have to set for it to load. TODO: look into this
+  ldr r1, =020F7256h ; Game mode.
+  strb r0, [r1] ; Must set to 0 in case it's 3 in the save file.
   ldr r1, =020F7008h
   mov r0, 07h
   strb r0, [r1] ; Sector index, 020F7008
