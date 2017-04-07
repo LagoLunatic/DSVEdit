@@ -800,7 +800,20 @@ class SpriteEditor < Qt::Dialog
     )
   end
   
+  def check_sprite_hardcoded
+    if @sprite.sprite_file.nil?
+      Qt::MessageBox.warning(self,
+        "Sprite has no file",
+        "This sprite is hardcoded and has no standalone sprite file.\nCannot add or remove animations/frames/parts."
+      )
+      return true
+    end
+    return false
+  end
+  
   def add_animation
+    return if check_sprite_hardcoded()
+    
     new_index = @sprite.animations.length
     animation = Animation.new("\0"*8)
     animation.initialize_frame_delays(@sprite.frame_delays, @sprite.frame_delays_by_offset)
@@ -811,6 +824,8 @@ class SpriteEditor < Qt::Dialog
   end
   
   def remove_animation
+    return if check_sprite_hardcoded()
+    
     return if @current_animation_index.nil?
     
     @sprite.animations.delete_at(@current_animation_index)
@@ -825,6 +840,8 @@ class SpriteEditor < Qt::Dialog
   end
   
   def add_frame
+    return if check_sprite_hardcoded()
+    
     new_index = @sprite.frames.length
     frame = Frame.new("\0"*12)
     frame.initialize_parts(@sprite.parts, @sprite.parts_by_offset)
@@ -836,6 +853,8 @@ class SpriteEditor < Qt::Dialog
   end
   
   def remove_frame
+    return if check_sprite_hardcoded()
+    
     return if @current_frame_index.nil?
     
     @sprite.frames.delete_at(@current_frame_index)
@@ -850,6 +869,8 @@ class SpriteEditor < Qt::Dialog
   end
   
   def add_part
+    return if check_sprite_hardcoded()
+    
     new_index = @sprite.parts.length
     part = Part.new("\0"*16)
     @sprite.parts << part
@@ -863,6 +884,8 @@ class SpriteEditor < Qt::Dialog
   end
   
   def remove_part
+    return if check_sprite_hardcoded()
+    
     return if @current_part_index.nil?
     
     part = @sprite.parts[@current_part_index]
@@ -883,6 +906,8 @@ class SpriteEditor < Qt::Dialog
   end
   
   def add_keyframe(new_index)
+    return if check_sprite_hardcoded()
+    
     return if @current_animation.nil?
     
     frame_delay = FrameDelay.new("\0"*8)
