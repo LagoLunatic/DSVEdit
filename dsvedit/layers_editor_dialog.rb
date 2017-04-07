@@ -40,6 +40,16 @@ class LayersEditorDialog < Qt::Dialog
     
     @ui.width.text = "%02X" % layer.width
     @ui.height.text = "%02X" % layer.height
+    @ui.z_index.text = "%02X" % layer.z_index
+    @ui.opacity.value = layer.opacity
+    @ui.tileset.text = "%08X" % layer.tileset_pointer
+    @ui.collision_tileset.text = "%08X" % layer.collision_tileset_pointer
+    
+    @ui.main_gfx_page_index.clear()
+    @room.gfx_pages.each_with_index do |gfx_page, index|
+      @ui.main_gfx_page_index.addItem("%02X (%d colors)" % [index, gfx_page.colors_per_palette])
+    end
+    @ui.main_gfx_page_index.setCurrentIndex(layer.main_gfx_page_index)
     
     @layer_graphics_scene.clear()
     @layer_graphics_scene = Qt::GraphicsScene.new
@@ -55,8 +65,15 @@ class LayersEditorDialog < Qt::Dialog
   
   def save_layer
     layer = @room.layers[@ui.layer_index.currentIndex]
+    
     layer.width = @ui.width.text.to_i(16)
     layer.height = @ui.height.text.to_i(16)
+    layer.z_index = @ui.z_index.text.to_i(16)
+    layer.opacity = @ui.opacity.value
+    layer.tileset_pointer = @ui.tileset.text.to_i(16)
+    layer.collision_tileset_pointer = @ui.collision_tileset.text.to_i(16)
+    layer.main_gfx_page_index = @ui.main_gfx_page_index.currentIndex
+    
     layer.write_to_rom()
     
     @game.fix_map_sector_and_room_indexes(@room.area_index, @room.sector_index)

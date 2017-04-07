@@ -58,7 +58,7 @@ class TilesetEditorDialog < Qt::Dialog
     
     layer = room.layers.first
     if layer
-      @ui.tileset_pointer.text = "%08X" % layer.ram_pointer_to_tileset_for_layer
+      @ui.tileset_pointer.text = "%08X" % layer.tileset_pointer
     end
     @ui.gfx_list_pointer.text = "%08X" % room.gfx_list_pointer
     @ui.palette_list_pointer.text = "%08X" % room.palette_offset

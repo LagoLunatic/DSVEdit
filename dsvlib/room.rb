@@ -261,14 +261,14 @@ class Room
     if main_layer
       new_layer.width = main_layer.width
       new_layer.height = main_layer.height
-      new_layer.ram_pointer_to_tileset_for_layer = main_layer.ram_pointer_to_tileset_for_layer
-      new_layer.collision_tileset_ram_pointer = main_layer.collision_tileset_ram_pointer
+      new_layer.tileset_pointer = main_layer.tileset_pointer
+      new_layer.collision_tileset_pointer = main_layer.collision_tileset_pointer
     else
       # Room that has no layers.
       new_layer.width = 1
       new_layer.height = 1
-      new_layer.ram_pointer_to_tileset_for_layer = 0
-      new_layer.collision_tileset_ram_pointer = 0
+      new_layer.tileset_pointer = 0
+      new_layer.collision_tileset_pointer = 0
     end
     new_layer.layer_tiledata_ram_start_offset = overlay_ram_start # Just a dummy pointer. Layer#write_to_rom will expand the file and set this to a new pointer.
     new_layer.tiles = []

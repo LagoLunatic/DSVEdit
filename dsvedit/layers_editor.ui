@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>640</width>
-    <height>480</height>
+    <width>1020</width>
+    <height>720</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -49,6 +49,63 @@
      <item row="3" column="1">
       <widget class="QLineEdit" name="height"/>
      </item>
+     <item row="4" column="0">
+      <widget class="QLabel" name="label_4">
+       <property name="text">
+        <string>Z-Index</string>
+       </property>
+      </widget>
+     </item>
+     <item row="5" column="0">
+      <widget class="QLabel" name="label_5">
+       <property name="text">
+        <string>Opacity</string>
+       </property>
+      </widget>
+     </item>
+     <item row="5" column="1">
+      <widget class="QSlider" name="opacity">
+       <property name="maximum">
+        <number>31</number>
+       </property>
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+      </widget>
+     </item>
+     <item row="4" column="1">
+      <widget class="QLineEdit" name="z_index"/>
+     </item>
+     <item row="6" column="0">
+      <widget class="QLabel" name="label_6">
+       <property name="text">
+        <string>Main GFX Page</string>
+       </property>
+      </widget>
+     </item>
+     <item row="6" column="1">
+      <widget class="QComboBox" name="main_gfx_page_index"/>
+     </item>
+     <item row="7" column="0">
+      <widget class="QLabel" name="label_7">
+       <property name="text">
+        <string>Tileset</string>
+       </property>
+      </widget>
+     </item>
+     <item row="8" column="0">
+      <widget class="QLabel" name="label_8">
+       <property name="text">
+        <string>Collision Tileset</string>
+       </property>
+      </widget>
+     </item>
+     <item row="7" column="1">
+      <widget class="QLineEdit" name="tileset"/>
+     </item>
+     <item row="8" column="1">
+      <widget class="QLineEdit" name="collision_tileset"/>
+     </item>
     </layout>
    </item>
    <item>
@@ -67,8 +124,8 @@
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>616</width>
-        <height>325</height>
+        <width>996</width>
+        <height>420</height>
        </rect>
       </property>
       <layout class="QVBoxLayout" name="verticalLayout_2">

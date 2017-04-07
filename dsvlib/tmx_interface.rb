@@ -34,8 +34,8 @@ class TMXInterface
       game_layer = possible_layers.first
       game_layer.width  = props["layer_width"]
       game_layer.height = props["layer_height"]
-      game_layer.ram_pointer_to_tileset_for_layer = props["tileset"]
-      game_layer.collision_tileset_ram_pointer = props["collision_tileset"]
+      game_layer.tileset_pointer = props["tileset"]
+      game_layer.collision_tileset_pointer = props["collision_tileset"]
       game_layer.z_index = props["z_index"]
       game_layer.scroll_mode = props["scroll_mode"]
       game_layer.opacity = ((tmx_layer.attr("opacity")||1.0).to_f*31).to_i
@@ -135,8 +135,8 @@ class TMXInterface
               xml.property(:name => "colors_per_palette",  :value => "%02X" % layer.colors_per_palette)
               xml.property(:name => "main_gfx_page_index", :value => "%02X" % layer.main_gfx_page_index)
               xml.property(:name => "scroll_mode",         :value => "%02X" % layer.scroll_mode)
-              xml.property(:name => "tileset",             :value => "%08X" % layer.ram_pointer_to_tileset_for_layer)
-              xml.property(:name => "collision_tileset",   :value => "%08X" % layer.collision_tileset_ram_pointer)
+              xml.property(:name => "tileset",             :value => "%08X" % layer.tileset_pointer)
+              xml.property(:name => "collision_tileset",   :value => "%08X" % layer.collision_tileset_pointer)
             }
             
             xml.data(to_tmx_level_data(layer.tiles, layer.width, get_block_offset_for_tileset(layer.tileset_filename, all_tilesets_for_room)), :encoding => "csv")

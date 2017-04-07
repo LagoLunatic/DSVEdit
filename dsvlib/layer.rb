@@ -14,8 +14,8 @@ class Layer
                 :main_gfx_page_index,
                 :width,
                 :height,
-                :ram_pointer_to_tileset_for_layer,
-                :collision_tileset_ram_pointer,
+                :tileset_pointer,
+                :collision_tileset_pointer,
                 :layer_tiledata_ram_start_offset,
                 :tiles
   
@@ -39,8 +39,8 @@ class Layer
   
   def read_from_layer_metadata
     @width, @height, _,
-      @ram_pointer_to_tileset_for_layer,
-      @collision_tileset_ram_pointer,
+      @tileset_pointer,
+      @collision_tileset_pointer,
       @layer_tiledata_ram_start_offset = fs.read(layer_metadata_ram_pointer,16).unpack("CCvVVV")
     
     if width > 15 || height > 15
@@ -117,7 +117,7 @@ class Layer
     end
     
     fs.write(layer_metadata_ram_pointer, [width, height].pack("CC"))
-    fs.write(layer_metadata_ram_pointer+4, [ram_pointer_to_tileset_for_layer, collision_tileset_ram_pointer].pack("VV"))
+    fs.write(layer_metadata_ram_pointer+4, [tileset_pointer, collision_tileset_pointer].pack("VV"))
     fs.write(layer_list_entry_ram_pointer, [z_index, scroll_mode, opacity].pack("CCC"))
     fs.write(layer_list_entry_ram_pointer+6, [height*0xC0].pack("v")) if GAME == "dos"
     fs.write(layer_list_entry_ram_pointer+8, [main_gfx_page_index].pack("C"))
@@ -137,7 +137,7 @@ class Layer
   end
   
   def tileset_filename
-    "tileset_%08X_%08X_%08X" % [ram_pointer_to_tileset_for_layer, room.palette_offset || 0, @room.gfx_list_pointer]
+    "tileset_%08X_%08X_%08X" % [tileset_pointer, room.palette_offset || 0, @room.gfx_list_pointer]
   end
 end
 

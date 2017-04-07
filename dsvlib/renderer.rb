@@ -68,9 +68,9 @@ class Renderer
     fs.load_overlay(AREA_INDEX_TO_OVERLAY_INDEX[room.area_index][room.sector_index])
     if collision
       tileset_filename = "#{folder}/#{room.area_name}/Tilesets/#{layer.tileset_filename}_collision.png"
-      tileset = render_collision_tileset(layer.collision_tileset_ram_pointer, tileset_filename)
+      tileset = render_collision_tileset(layer.collision_tileset_pointer, tileset_filename)
     else
-      tileset = get_tileset(layer.ram_pointer_to_tileset_for_layer, room.palette_offset, room.gfx_pages, layer.colors_per_palette, layer.collision_tileset_ram_pointer, tileset_filename)
+      tileset = get_tileset(layer.tileset_pointer, room.palette_offset, room.gfx_pages, layer.colors_per_palette, layer.collision_tileset_pointer, tileset_filename)
     end
     
     layer.tiles.each_with_index do |tile, index_on_level|
@@ -107,14 +107,14 @@ class Renderer
     room.layers.each do |layer|
       tileset_filename = "#{folder}/#{room.area_name}/Tilesets/#{layer.tileset_filename}.png"
       if !File.exist?(tileset_filename)
-        render_tileset(layer.ram_pointer_to_tileset_for_layer, room.palette_offset, room.gfx_pages, layer.colors_per_palette, layer.collision_tileset_ram_pointer, tileset_filename)
+        render_tileset(layer.tileset_pointer, room.palette_offset, room.gfx_pages, layer.colors_per_palette, layer.collision_tileset_pointer, tileset_filename)
       end
       
       if collision
         collision_tileset_filename = "#{folder}/#{room.area_name}/Tilesets/#{layer.tileset_filename}_collision.png"
         
         if !File.exist?(collision_tileset_filename)
-          render_collision_tileset(layer.collision_tileset_ram_pointer, collision_tileset_filename)
+          render_collision_tileset(layer.collision_tileset_pointer, collision_tileset_filename)
         end
       end
     end
