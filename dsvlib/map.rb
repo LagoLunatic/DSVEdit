@@ -355,15 +355,17 @@ class DoSMapTile
     @left_door      =  tile_line_data & 0b0011       == 2
     @left_wall      =  tile_line_data & 0b0011       == 3
 
-    @is_save        =  tile_metadata & 0b10000000_00000000 > 0
-    @is_warp        =  tile_metadata & 0b01000000_00000000 > 0
-    @sector_index   = (tile_metadata & 0b00000011_11000000) >> 6
-    @room_index     =  tile_metadata & 0b00000000_00111111
+    @is_blank       = tile_metadata == 0xFFFF
+    
+    unless is_blank
+      @is_save        =  tile_metadata & 0b10000000_00000000 > 0
+      @is_warp        =  tile_metadata & 0b01000000_00000000 > 0
+      @sector_index   = (tile_metadata & 0b00000011_11000000) >> 6
+      @room_index     =  tile_metadata & 0b00000000_00111111
+    end
     
     @y_pos          = @tile_index / map_width
     @x_pos          = @tile_index % map_width
-    
-    @is_blank       = tile_metadata == 0xFFFF
   end
   
   def to_data

@@ -179,8 +179,7 @@ class MapEditorDialog < Qt::Dialog
   def change_map_tile(old_tile)
     index = @map.tiles.index(old_tile)
     new_tile = @selected_map_tile.dup
-    new_tile.sector_index = old_tile.sector_index
-    new_tile.room_index = old_tile.room_index
+    new_tile.sector_index, new_tile.room_index = @area.get_sector_and_room_indexes_from_map_x_y(old_tile.x_pos, old_tile.y_pos)
     new_tile.y_pos = old_tile.y_pos
     new_tile.x_pos = old_tile.x_pos
     @map.tiles[index] = new_tile
@@ -190,6 +189,10 @@ class MapEditorDialog < Qt::Dialog
     if GAME == "dos"
       index = @map.tiles.index(old_tile)
       new_tile = @available_tiles[0].dup
+      new_tile.sector_index = nil
+      new_tile.room_index = nil
+      new_tile.y_pos = old_tile.y_pos
+      new_tile.x_pos = old_tile.x_pos
       new_tile.is_blank = true
       @map.tiles[index] = new_tile
     else

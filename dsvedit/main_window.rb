@@ -706,6 +706,8 @@ class DSVEdit < Qt::MainWindow
     end
     
     @tiled.read(tmx_path, @room)
+    game.fix_map_sector_and_room_indexes(@area_index, @sector_index)
+    
     load_room()
   rescue NDSFileSystem::FileExpandError => e
     @room.read_from_rom() # Reload room to get rid of the failed changes.

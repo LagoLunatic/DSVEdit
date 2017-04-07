@@ -59,6 +59,8 @@ class LayersEditorDialog < Qt::Dialog
     layer.height = @ui.height.text.to_i(16)
     layer.write_to_rom()
     
+    @game.fix_map_sector_and_room_indexes(@room.area_index, @room.sector_index)
+    
     layer_changed(@ui.layer_index.currentIndex)
   rescue NDSFileSystem::FileExpandError => e
     @room.layers[@ui.layer_index.currentIndex].read_from_rom() # Reload layer
