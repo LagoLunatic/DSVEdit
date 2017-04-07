@@ -17,6 +17,11 @@ end.to_h
 
 CONSTANT_OVERLAYS = CONSTANT_OVERLAYS.map{|overlay| overlay-1}
 
+ROOM_OVERLAYS = (ROOM_OVERLAYS.begin-1..ROOM_OVERLAYS.end-1)
+
+AREAS_OVERLAY = AREAS_OVERLAY-1
+MAPS_OVERLAY = MAPS_OVERLAY-1
+
 # Overlays 23 to 37 are used for enemies.
 OVERLAY_FILE_FOR_ENEMY_AI = OVERLAY_FILE_FOR_ENEMY_AI.map do |enemy_id, overlay|
   if overlay.is_a?(Array)

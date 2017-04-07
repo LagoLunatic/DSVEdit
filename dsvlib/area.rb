@@ -16,6 +16,8 @@ class Area
   end
   
   def read_from_rom
+    fs.load_overlay(AREAS_OVERLAY) if AREAS_OVERLAY
+    
     @area_ram_pointer = fs.read(AREA_LIST_RAM_START_OFFSET + area_index*4,4).unpack("V*").first
     
     @sectors = []
