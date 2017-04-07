@@ -9,6 +9,9 @@
 .org 0x022132F8 ; BUG: some items aren't equipped. top screen is black
   ;b 0x02213EC8
   push r1, r14
+  mov r0, 1h
+  ldr r1, =021007D5h
+  strb r0, [r1] ; Set this to 1 (loading a save) so equipment stays equipped.
   ; Load the save file.
   mov r0, 0h ; Save file 0.
   ldr r1, =02100144h
