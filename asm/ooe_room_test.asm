@@ -17,6 +17,11 @@
   ldr r1, =02100144h
   bl 0202C610h
   ;bl 020AD160h
+  ldr r1, =0210078Dh
+  ldrb r0, [r1]
+  mov r1, 10h
+  mov r2, 1h
+  bl 020657F8h
   ; Set the game state to 08 (ingame).
   mov r0, 8h
   mov r1, 10h
