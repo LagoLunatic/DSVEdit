@@ -40,10 +40,12 @@
   @InWygol:
     cmp r0, 5h
     moveq r0, 8h ; If the save file had the normal map, set it to Wygol map.
+    streqb r0, [r1] ; Store it back to 0210078D in case the player spawns in a warp room.
     b @AfterWygol
   @NotInWygol:
     cmp r0, 8h
     moveq r0, 5h ; If the save file had the Wygol map, set it to the normal map.
+    streqb r0, [r1] ; Store it back to 0210078D in case the player spawns in a warp room.
   @AfterWygol:
   mov r1, 10h
   mov r2, 1h
