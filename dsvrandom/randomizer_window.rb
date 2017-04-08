@@ -38,6 +38,7 @@ class RandomizerWindow < Qt::Dialog
     connect(@ui.remove_events, SIGNAL("stateChanged(int)"), self, SLOT("update_settings()"))
     connect(@ui.fix_first_ability_soul, SIGNAL("stateChanged(int)"), self, SLOT("update_settings()"))
     connect(@ui.skip_magic_seals, SIGNAL("stateChanged(int)"), self, SLOT("update_settings()"))
+    connect(@ui.no_touch_screen, SIGNAL("stateChanged(int)"), self, SLOT("update_settings()"))
     connect(@ui.open_world_map, SIGNAL("stateChanged(int)"), self, SLOT("update_settings()"))
     
     connect(@ui.randomize_button, SIGNAL("clicked()"), self, SLOT("randomize()"))
@@ -116,6 +117,7 @@ class RandomizerWindow < Qt::Dialog
     @settings[:remove_events] = @ui.remove_events.checked
     @settings[:fix_first_ability_soul] = @ui.fix_first_ability_soul.checked
     @settings[:skip_magic_seals] = @ui.skip_magic_seals.checked
+    @settings[:no_touch_screen] = @ui.no_touch_screen.checked
     @settings[:open_world_map] = @ui.open_world_map.checked
   end
   
@@ -154,12 +156,14 @@ class RandomizerWindow < Qt::Dialog
       game.apply_armips_patch("dos_fix_first_ability_soul")
     end
     
-    if @ui.fix_first_ability_soul.checked()
+    if @ui.skip_magic_seals.checked()
       game.apply_armips_patch("dos_skip_boss_door_seals")
       game.apply_armips_patch("dos_skip_drawing_seals")
     end
     
-    if @ui.skip_name_signing.checked()
+    if @ui.no_touch_screen.checked()
+      game.apply_armips_patch("dos_skip_drawing_seals")
+      game.apply_armips_patch("dos_melee_balore_blocks")
       game.apply_armips_patch("dos_skip_name_signing")
     end
     
