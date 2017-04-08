@@ -62,7 +62,7 @@ class EntityRectItem < Qt::GraphicsRectItem
   attr_reader :entity
   
   def initialize(entity, main_window)
-    super(-8, -8, 16, 16)
+    super(-8, -8, 16-1, 16-1)
     setPos(entity.x_pos, entity.y_pos)
     
     @main_window = main_window
@@ -122,7 +122,7 @@ class DoorItem < Qt::GraphicsRectItem
   attr_reader :door
   
   def initialize(door, x, y, main_window)
-    super(0, 0, 16*16, 12*16)
+    super(0, 0, 16*16-1, 12*16-1)
     setPos(x, y)
     
     @main_window = main_window
