@@ -30,7 +30,7 @@ class EntityLayerItem < Qt::GraphicsRectItem
     elsif entity.is_special_object?
       special_object_id = entity.subtype
       sprite_info = SpecialObjectType.new(special_object_id, @fs).extract_gfx_and_palette_and_sprite_from_create_code
-      add_sprite_item_for_entity(entity, sprite_info, BEST_SPRITE_FRAME_FOR_SPECIAL_OBJECT[special_object_id])
+      add_sprite_item_for_entity(entity, sprite_info, BEST_SPRITE_FRAME_FOR_SPECIAL_OBJECT[special_object_id], BEST_SPRITE_OFFSET_FOR_SPECIAL_OBJECT[special_object_id])
     elsif entity.is_candle?
       sprite_info = SpriteInfo.extract_gfx_and_palette_and_sprite_from_create_code(OTHER_SPRITES[0][:pointer], @fs, OTHER_SPRITES[0][:overlay], OTHER_SPRITES[0])
       add_sprite_item_for_entity(entity, sprite_info, 0xDB)
@@ -129,7 +129,7 @@ class EntityLayerItem < Qt::GraphicsRectItem
     graphics_item.setParentItem(self)
   end
   
-  def add_sprite_item_for_entity(entity, sprite_info, frame_to_render)
+  def add_sprite_item_for_entity(entity, sprite_info, frame_to_render, sprite_offset = nil)
     if frame_to_render == -1
       # Don't show this entity's sprite in the editor.
       graphics_item = EntityRectItem.new(entity, @main_window)
@@ -144,7 +144,13 @@ class EntityLayerItem < Qt::GraphicsRectItem
     
     graphics_item = EntityChunkyItem.new(chunky_frame, entity, @main_window)
     
-    graphics_item.setOffset(sprite_info.sprite.min_x, sprite_info.sprite.min_y)
+    offset_x = sprite_info.sprite.min_x
+    offset_y = sprite_info.sprite.min_y
+    if sprite_offset
+      offset_x += sprite_offset[:x] || 0
+      offset_y += sprite_offset[:y] || 0
+    end
+    graphics_item.setOffset(offset_x, offset_y)
     graphics_item.setPos(entity.x_pos, entity.y_pos)
     graphics_item.setParentItem(self)
   end

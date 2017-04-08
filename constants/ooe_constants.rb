@@ -583,6 +583,12 @@ BEST_SPRITE_FRAME_FOR_SPECIAL_OBJECT = {
   0x66 =>   -1,
   0x87 =>   -1,
 }
+BEST_SPRITE_OFFSET_FOR_SPECIAL_OBJECT = {
+  0x2E => {x: 8},
+  0x4B => {x: 8},
+  0x4D => {x: 8},
+  0x4E => {x: 8, y: -32},
+}
 SPECIAL_OBJECT_FILES_TO_LOAD_LIST = 0x020F343C
 
 WEAPON_GFX_LIST_START = nil
