@@ -924,6 +924,8 @@ class Randomizer
         "??? bitfield",
         "Damage types",
       ].each do |bitfield_attr_name|
+        next if player[bitfield_attr_name].nil?
+        
         player[bitfield_attr_name].names.each_with_index do |bit_name, i|
           next if bit_name == "Horizontal flip"
           
@@ -965,7 +967,9 @@ class Randomizer
     players.each do |player|
       player["Actions"][1] = true # Can use weapons
       player["Actions"][16] = false # No gravity
-      player["Damage types"][18] = true # Can be hit
+      if player["Damage types"]
+        player["Damage types"][18] = true # Can be hit
+      end
       
       player.write_to_rom()
     end
