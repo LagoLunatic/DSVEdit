@@ -233,6 +233,10 @@ class NDSFileSystem
     @opened_files_cache[file_path] = new_data
     file[:size] = new_data.size
     @uncommitted_files << file_path
+    
+    if file[:overlay_id]
+      update_overlay_length(file)
+    end
   end
   
   def find_file_by_ram_start_offset(ram_start_offset)
@@ -453,13 +457,18 @@ class NDSFileSystem
     old_size = file[:size]
     file[:size] += length_to_expand_by
     
+    @uncommitted_files << file_path
+    
     if file[:overlay_id]
-      # Update length of changed overlay
-      write_by_file("/ftc/arm9_overlay_table.bin", file[:overlay_id]*32 + 8, [file[:size]].pack("V"))
+      update_overlay_length(file)
     end
     
     # Expand the actual file data string, and fill it with 0 bytes.
     write_by_file(file_path, old_size, "\0"*length_to_expand_by, freeing_space: true)
+  end
+  
+  def update_overlay_length(file)
+    write_by_file("/ftc/arm9_overlay_table.bin", file[:overlay_id]*32 + 8, [file[:size]].pack("V"))
   end
   
   def add_new_overlay_file
