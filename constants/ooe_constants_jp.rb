@@ -193,6 +193,10 @@ OTHER_SPRITES = [
   {desc: "Breakable walls 6", sprite: 0x021DC95C, gfx_files: [0x020BA358], palette: 0x020D1444},
   {desc: "Breakable walls 7", sprite: 0x021DC958, gfx_files: [0x020BA364], palette: 0x020D14C8},
   {desc: "Breakable walls 8", sprite: 0x021DC954, gfx_files: [0x020BA370], palette: 0x020D158C},
+  
+  {pointer: 0x022196D0, desc: "Title screen 1", overlay: 20-1},
+  {pointer: 0x022196E8, desc: "Title screen 2", overlay: 20-1},
+  {pointer: 0x02219700, desc: "Title screen 3", overlay: 20-1},
 ]
 
 TEXT_LIST_START_OFFSET = 0x021FDDA0
