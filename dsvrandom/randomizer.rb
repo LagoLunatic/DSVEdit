@@ -228,11 +228,14 @@ class Randomizer
       old_boss = game.enemy_dnas[old_boss_id]
       
       # Make the new boss have the stats of the old boss so it fits in at this point in the game.
-      queued_dna_changes[new_boss_id]["HP"]      = old_boss["HP"]
-      queued_dna_changes[new_boss_id]["MP"]      = old_boss["MP"]
-      queued_dna_changes[new_boss_id]["EXP"]     = old_boss["EXP"]
-      queued_dna_changes[new_boss_id]["Attack"]  = old_boss["Attack"]
-      queued_dna_changes[new_boss_id]["Defense"] = old_boss["Defense"]
+      queued_dna_changes[new_boss_id]["HP"]               = old_boss["HP"]
+      queued_dna_changes[new_boss_id]["MP"]               = old_boss["MP"]
+      queued_dna_changes[new_boss_id]["SP"]               = old_boss["SP"]
+      queued_dna_changes[new_boss_id]["EXP"]              = old_boss["EXP"]
+      queued_dna_changes[new_boss_id]["Attack"]           = old_boss["Attack"]
+      queued_dna_changes[new_boss_id]["Defense"]          = old_boss["Defense"]
+      queued_dna_changes[new_boss_id]["Physical Defense"] = old_boss["Physical Defense"]
+      queued_dna_changes[new_boss_id]["Magical Defense"]  = old_boss["Magical Defense"]
     end
     
     @boss_entities.each do |boss_entity|
