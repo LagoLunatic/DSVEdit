@@ -33,6 +33,7 @@ class RandomizerWindow < Qt::Dialog
     connect(@ui.randomize_room_connections, SIGNAL("stateChanged(int)"), self, SLOT("update_settings()"))
     connect(@ui.randomize_starting_room, SIGNAL("stateChanged(int)"), self, SLOT("update_settings()"))
     connect(@ui.randomize_enemy_ai, SIGNAL("stateChanged(int)"), self, SLOT("update_settings()"))
+    connect(@ui.randomize_players, SIGNAL("stateChanged(int)"), self, SLOT("update_settings()"))
     
     connect(@ui.remove_events, SIGNAL("stateChanged(int)"), self, SLOT("update_settings()"))
     connect(@ui.fix_first_ability_soul, SIGNAL("stateChanged(int)"), self, SLOT("update_settings()"))
@@ -69,6 +70,7 @@ class RandomizerWindow < Qt::Dialog
     @ui.randomize_room_connections.setChecked(@settings[:randomize_room_connections]) unless @settings[:randomize_room_connections].nil?
     @ui.randomize_starting_room.setChecked(@settings[:randomize_starting_room]) unless @settings[:randomize_starting_room].nil?
     @ui.randomize_enemy_ai.setChecked(@settings[:randomize_enemy_ai]) unless @settings[:randomize_enemy_ai].nil?
+    @ui.randomize_players.setChecked(@settings[:randomize_players]) unless @settings[:randomize_players].nil?
     
     @ui.remove_events.setChecked(@settings[:remove_events]) unless @settings[:remove_events].nil?
     @ui.fix_first_ability_soul.setChecked(@settings[:fix_first_ability_soul]) unless @settings[:fix_first_ability_soul].nil?
@@ -109,6 +111,7 @@ class RandomizerWindow < Qt::Dialog
     @settings[:randomize_room_connections] = @ui.randomize_room_connections.checked
     @settings[:randomize_starting_room] = @ui.randomize_starting_room.checked
     @settings[:randomize_enemy_ai] = @ui.randomize_enemy_ai.checked
+    @settings[:randomize_players] = @ui.randomize_players.checked
     
     @settings[:remove_events] = @ui.remove_events.checked
     @settings[:fix_first_ability_soul] = @ui.fix_first_ability_soul.checked
@@ -142,6 +145,7 @@ class RandomizerWindow < Qt::Dialog
       :randomize_room_connections => @ui.randomize_room_connections.checked(),
       :randomize_starting_room => @ui.randomize_starting_room.checked(),
       :randomize_enemy_ai => @ui.randomize_enemy_ai.checked(),
+      :randomize_players => @ui.randomize_players.checked(),
       :remove_events => @ui.remove_events.checked()
     )
     randomizer.randomize()

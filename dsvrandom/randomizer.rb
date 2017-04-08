@@ -88,6 +88,10 @@ class Randomizer
     if options[:randomize_enemy_ai]
       randomize_enemy_ai()
     end
+    
+    if options[:randomize_players]
+      randomize_players()
+    end
   end
   
   def randomize_entity(entity)
@@ -898,6 +902,69 @@ class Randomizer
       
       this_dna["Running AI"] = available_enemies_with_same_overlay.sample(random: rng)["Running AI"]
       this_dna.write_to_rom()
+    end
+  end
+  
+  def randomize_players
+    players = game.players
+    
+    players.each do |player|
+      player["Walking speed"]     =  rng.rand(0x1400..0x3000)
+      player["Jump force"]        = -rng.rand(0x5A00..0x6000)
+      player["Double jump force"] = -rng.rand(0x4A00..0x6000)
+      player["Slide force"]       =  rng.rand(0x1800..0x5000)
+      player["Backdash force"]    = -rng.rand(0x1000..0x5000)
+      player["Backdash duration"] =  rng.rand(20..60)
+      
+      [
+        "Actions",
+        "??? bitfield",
+        "Damage types",
+      ].each do |bitfield_attr_name|
+        player[bitfield_attr_name].names.each_with_index do |bit_name, i|
+          next if bit_name == "Horizontal flip"
+          
+          player[bitfield_attr_name][i] = [true, false].sample(random: rng)
+        end
+      end
+    end
+    
+    # Shuffle some player attributes such as graphics
+    remaining_players = players.dup
+    players.each do |player|
+      next unless remaining_players.include?(player) # Already randomized this player
+      
+      remaining_players.delete(player)
+      
+      break if remaining_players.empty?
+      
+      other_player = remaining_players.sample(random: rng)
+      remaining_players.delete(other_player)
+      
+      [
+        "GFX list pointer",
+        "Sprite pointer",
+        "Palette pointer",
+        "State anims ptr",
+        "GFX file index",
+        "Sprite file index",
+        "Sprite Y offset",
+        "Hitbox pointer",
+        "Face icon frame",
+      ].each do |attr_name|
+        player[attr_name], other_player[attr_name] = other_player[attr_name], player[attr_name]
+      end
+      
+      # Horizontal flip bit
+      player["??? bitfield"][0], other_player["??? bitfield"][0] = other_player["??? bitfield"][0], player["??? bitfield"][0]
+    end
+    
+    players.each do |player|
+      player["Actions"][1] = true # Can use weapons
+      player["Actions"][16] = false # No gravity
+      player["Damage types"][18] = true # Can be hit
+      
+      player.write_to_rom()
     end
   end
 end
