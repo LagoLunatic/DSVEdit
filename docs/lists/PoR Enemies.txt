@@ -6,6 +6,13 @@ Enemies:
       Var A is the maximum number of zombies that this spawner can have in the room at once.
       The spawner spawns one zombie every 0x40 frames.
 01 Bat
+  If var A is 0, it's a single bat.
+    Var B:
+      0 Appears at the closest ceiling above where you place it.
+      1 Appears exactly where you place it.
+  If var A is greater than 0, it's a bat spawner.
+    Var A: Delay in frames between spawning each bat.
+    Var B: Usually 0. If greater than 0, ???. Somehow affects spawn rate.
 02 Skeleton
 03 Axe Armor
 04 Death Mask
@@ -22,6 +29,9 @@ Enemies:
 0A Merman
 0B Une
 0C Skull Archer
+  Var A: Speed for his arrow to fly at in pixels per frame.
+    If 0, will use the default value of 4 instead.
+    If greater than 8, will use 6.
 0D Ukoback
 0E Forneus
 0F Peeping Eye
@@ -53,6 +63,7 @@ Enemies:
 1D Armor Knight
 1E Ectoplasm
 1F Bone Pillar
+  Var A: Number of them stacked on top of each other.
 20 Fleaman
 21 Great Armor
   Requires enemy overlay 44.
@@ -214,7 +225,7 @@ Enemies:
     0 Purple and white.
     1 Blue and green.
     2 Red.
-    10 ??
+    3+ Picks one of the above palettes at random.
 74 Demon Head
 75 Lesser Demon
 76 Ghoul King

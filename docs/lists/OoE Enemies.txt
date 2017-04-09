@@ -4,6 +4,8 @@ Enemies:
   Spawner.
   Var A: Maximum number of Zombies this spawner can have in the room at once.
   Var B: Maximum horizontal distance in pixels away from the spawner the Zombies can spawn.
+  If var B is 0, it uses the default values of var A being 4 and var B being 0x80.
+  If var A is 0, it's not a spawner, instead it's just a single Zombie.
 02 Skeleton
   Var A: If bit 0x1 is set this Skeleton can jump back away from the player.
 03 Ghost
@@ -21,9 +23,16 @@ Enemies:
     1 Always walks on the ground, even in water.
 0B Necromancer
 0C Bone Archer
+  Var A: Speed for his arrow to fly at in pixels per frame.
+    If 0, will use the default value of 4 instead.
+    If greater than 8, will use 8.
 0D Spear Guard
 0E Invisible Man
 0F Gelso
+  Spawner.
+  Var A: Maximum number of Gelso this spawner can have in the room at once.
+  Var B: Delay in frames between spawning each Gelso.
+  If var A is 0, it's not a spawner, instead it's just a single Gelso.
 10 Needles
 11 Demon
 12 Fishhead
@@ -111,6 +120,8 @@ Enemies:
   Spawner.
   Var A: Maximum number of Ghouls this spawner can have in the room at once.
   Var B: Maximum horizontal distance in pixels away from the spawner the Ghouls can spawn.
+  If var B is 0, it uses the default values of var A being 4 and var B being 0x80.
+  If var A is 0, it's not a spawner, instead it's just a single Ghoul.
 49 Peeping Eye
 4A Gargoyle
   Var A:

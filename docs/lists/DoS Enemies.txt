@@ -11,7 +11,9 @@ Enemies:
 05 Peeping Eye
 06 Axe Armor
 07 Skull Archer
-  Var A: Affects the movement speed of the arrows it shoots.
+  Var A: Speed for his arrow to fly at in pixels per frame.
+    If 0, will use the default value of 2 instead.
+    If greater than 8, will use 6.
 08 Warg
 09 Spin Devil
 0A Armor Knight
@@ -46,6 +48,11 @@ Enemies:
 1C Yeti
 1D Tombstone
 1E Ghost Dancer
+  Var A: Which palette to use.
+    0 Light blue.
+    1 Blue and pink.
+    2 Green and blue.
+    3+ Buggy palettes.
 1F Flying Humanoid
 20 Mini Devil
 21 Quetzalcoatl
@@ -77,6 +84,7 @@ Enemies:
 32 Needles
 33 Hell Boar
 34 Bone Pillar
+  Var A: Number of them stacked on top of each other.
 35 White Dragon
 36 Wakwak Tree
 37 Imp
@@ -90,6 +98,7 @@ Enemies:
 3D Heart Eater
 3E Merman
 3F Fish Head
+  Var A: Number of them stacked on top of each other.
 40 Medusa Head
   Spawner.
   Var A: Maximum number of Medusa Heads this spawner can have in the room at once.
@@ -141,10 +150,14 @@ Enemies:
 60 Stolas
   Var A:
     Low byte: First enemy ID this Stolas can summon.
-    High byte: Chance of first enemy being summoned.
+    High byte: Chance out of 0x100 for the first enemy to be summoned.
   Var B:
     Low byte: Second enemy ID this Stolas can summon.
-    High byte: Chance of second enemy being summoned.
+    High byte: Chance out of 0x100 for the second enemy to be summoned.
+  The second chance is only checked if the first chance fails.
+  If both chances fail he will do a normal attack instead.
+  If either chance is guaranteed he will never do a normal attack, and just summon nonstop instead. If both chances are 0 he will never summon and instead just do normal attacks.
+  If both var A and var B are 0000, it will use the default values of var A = 202F and var B = 8024. (1/8 chance to spawn Devil, 1/2 chance to spawn Valkyrie.)
 61 Final Guard
   Requires enemy overlay 24.
 62 Malacoda
@@ -153,43 +166,68 @@ Enemies:
   Requires enemy overlay 28.
 65 Flying Armor
   Requires enemy overlay 30.
+  Var A & B are 1 for normal, 0 for boss rush.
 66 Balore
   Requires enemy overlay 23.
+  Var A:
+    0 Boss rush Balore.
+    1 Normal Balore.
+    2 Cutscene where Balore lasers a bunch of ice blocks from off screen.
 67 Malphas
   Requires enemy overlay 29.
-  Var B: 0 for normal Malphas fight. 1 for a version of Malphas that doesn't require a magic seal on death and doesn't set the flag meaning Malphas is dead.
+  Var B:
+    0 Normal Malphas fight.
+    1 An unused version of Malphas that doesn't require a magic seal on death and doesn't set his boss death flag when he dies.
 68 Dmitrii
   Requires enemy overlay 40.
-  Var A: 1 for normal Dmitrii fight, this seems to crash the game when he dies if the events are in his room. 0 for boss rush Dmitrii.
+  Var A:
+    0 Boss rush Dmitrii.
+    1 Normal Dmitrii.
 69 Dario
   Requires enemy overlay 25.
-  Var B: 0 for normal Dario fight. 1 for Dario in the throne room with Aguni.
+  Var B:
+    0 Normal Dario fight.
+    1 Dario in the throne room with Aguni.
 6A Puppet Master
   Requires enemy overlay 25.
-  Var A: 1 for normal Puppet Master fight, cuts off the left edge of the room. 0 for boss rush Puppet Master fight, doesn't cut off the left edge of the room.
+  Var A:
+    0 Boss rush Puppet Master.
+    1 Normal Puppet Master. Hides the left edge of the room.
 6B Rahab
   Requires enemy overlay 26.
 6C Gergoth
   Requires enemy overlay 36.
   Var A: 1 and Gergoth will fall down the tower after when his health gets low, 0 and he'll never fall (for boss rush).
-  Var B: 0
 6D Zephyr
   Requires enemy overlay 33.
+  Var A:
+    0 Boss rush Zephyr.
+    1 Normal Zephyr.
 6E Bat Company
   Requires enemy overlay 37.
+  Var A:
+    0 Boss rush Bat Company.
+    1 Normal Bat Company.
 6F Paranoia
   Requires enemy overlay 35.
-  Var A: 2 for normal paranoia fight, 1 for mini paranoia fight, 0 for boss rush paranoia fight.
-  Var B: 0
+  Var A:
+    0 Boss rush Paranoia.
+    1 Mini-Paranoia.
+    2 Normal Paranoia.
 70 Aguni
 71 Death
   Requires enemy overlay 34.
   Both var A and var B are 1 for normal death fight, 0 for boss rush.
 72 Abaddon
   Requires enemy overlay 39.
+  Var A:
+    0 Boss rush Abaddon.
+    1 Normal Abaddon.
 73 Menace
   Requires enemy overlay 38.
+  Var A & B are 1.
   For the first phase, Menace locks the camera to the bottom edge of the room, one screen away from the left edge of the room. However, Menace himself appears where you set his x/y positions.
-  For the second phase, Menace needs a very large room to fit in and move around.
+  For the second phase, Menace needs a very large room to fit in and move around correctly.
 74 Soma
+  Var A: 1
 75 Dracula
