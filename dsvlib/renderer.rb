@@ -764,7 +764,7 @@ class Renderer
     return output_path
   end
   
-  def render_sprite(sprite_info, frame_to_render: nil, render_hitboxes: false, override_part_palette_index: nil, one_dimensional_mode: false)
+  def render_sprite(sprite_info, frame_to_render: :all, render_hitboxes: false, override_part_palette_index: nil, one_dimensional_mode: false)
     gfx_file_pointers = sprite_info.gfx_file_pointers
     palette_pointer = sprite_info.palette_pointer
     palette_offset = sprite_info.palette_offset
@@ -793,14 +793,16 @@ class Renderer
     
     rendered_parts = {}
     
-    if frame_to_render
+    if frame_to_render == :all
+      frames = sprite.frames
+    elsif frame_to_render
       frame = sprite.frames[frame_to_render]
       if frame.nil?
         raise "Invalid frame to render: #{frame_to_render}"
       end
       frames = [frame]
     else
-      frames = sprite.frames
+      frames = []
     end
     
     parts_and_hitboxes = (sprite.parts + sprite.hitboxes)

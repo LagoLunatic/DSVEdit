@@ -399,7 +399,7 @@ class SpriteEditor < Qt::Dialog
       @sprite = @sprite_info.sprite
       
       @chunky_frames, @min_x, @min_y, rendered_parts, @gfx_pages_with_blanks, @palettes, @full_width, @full_height = 
-        @renderer.render_sprite(@sprite_info, frame_to_render: 0, override_part_palette_index: @override_part_palette_index, one_dimensional_mode: @one_dimensional_render_mode)
+        @renderer.render_sprite(@sprite_info, frame_to_render: nil, override_part_palette_index: @override_part_palette_index, one_dimensional_mode: @one_dimensional_render_mode)
     rescue StandardError => e
       Qt::MessageBox.warning(self,
         "Sprite rendering failed",
