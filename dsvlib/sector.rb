@@ -52,6 +52,8 @@ private
     
     rooms = []
     room_pointers.each_with_index do |room_pointer, room_index|
+      break if room_pointer < 0x0850EF9C && SYSTEM == :gba # TODO: less hacky way to do this
+      
       room = Room.new(self, room_pointer, area.area_index, sector_index, room_index, game)
       rooms << room
     end

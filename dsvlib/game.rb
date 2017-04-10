@@ -3,7 +3,12 @@ class Game
   class InvalidFileError < StandardError ; end
   class RoomFindError < StandardError ; end
   
-  attr_reader :areas, :fs, :folder, :text_database, :rooms_by_metadata_pointer
+  attr_reader :areas,
+              :fs,
+              :folder,
+              :rom_path,
+              :text_database,
+              :rooms_by_metadata_pointer
   
   def initialize_from_folder(input_folder_path)
     header_path = File.join(input_folder_path, "ftc", "ndsheader.bin")
@@ -28,8 +33,15 @@ class Game
     
     verify_game_and_load_constants(input_rom_path)
     
-    if extract_to_hard_drive
+    if SYSTEM == :gba
+      @folder = nil
+      @rom_path = input_rom_path
+      
+      @fs = GBADummyFilesystem.new(input_rom_path)
+    elsif extract_to_hard_drive
       @folder = File.dirname(input_rom_path)
+      @rom_path = nil
+      
       rom_name = File.basename(input_rom_path, ".*")
       @folder = File.join(folder, "Extracted files #{rom_name}")
       
@@ -37,6 +49,7 @@ class Game
       fs.open_and_extract_rom(input_rom_path, folder)
     else
       @folder = nil
+      @rom_path = nil
       
       @fs = NDSFileSystem.new
       fs.open_rom(input_rom_path)
@@ -430,22 +443,36 @@ private
     
     case title
     when "CASTLEVANIA1ACVE"
+      suppress_warnings { load './constants/nds_constants.rb' }
       suppress_warnings { load './constants/dos_constants.rb' }
     when "CASTLEVANIA2ACBE"
+      suppress_warnings { load './constants/nds_constants.rb' }
       suppress_warnings { load './constants/por_constants.rb' }
     when "CASTLEVANIA3YR9E"
+      suppress_warnings { load './constants/nds_constants.rb' }
       suppress_warnings { load './constants/ooe_constants.rb' }
     when "CASTLEVANIA1ACVJ"
+      suppress_warnings { load './constants/nds_constants.rb' }
       suppress_warnings { load './constants/dos_constants.rb' }
       suppress_warnings { load './constants/dos_constants_jp.rb' }
     when "CASTLEVANIA2ACBJ"
+      suppress_warnings { load './constants/nds_constants.rb' }
       suppress_warnings { load './constants/por_constants.rb' }
       suppress_warnings { load './constants/por_constants_jp.rb' }
     when "CASTLEVANIA3YR9J"
+      suppress_warnings { load './constants/nds_constants.rb' }
       suppress_warnings { load './constants/ooe_constants.rb' }
       suppress_warnings { load './constants/ooe_constants_jp.rb' }
     else
-      raise InvalidFileError.new("Specified game is not a DSVania or is not a supported region.")
+      title_gba = File.read(header_path, 0xB0)[0xA0,0x10]
+      
+      case title_gba
+      when "CASTLEVANIA2A2CE"
+        suppress_warnings { load './constants/gba_constants.rb' }
+        suppress_warnings { load './constants/aos_constants.rb' }
+      else
+        raise InvalidFileError.new("Specified game is not a DSVania or is not a supported region.")
+      end
     end
   end
   

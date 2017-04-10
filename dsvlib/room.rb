@@ -9,6 +9,7 @@ class Room
               :number_of_doors,
               :layer_list_ram_pointer,
               :gfx_list_pointer,
+              :palette_wrapper_pointer,
               :entity_list_ram_pointer,
               :door_list_ram_pointer,
               :gfx_pages,
@@ -39,15 +40,15 @@ class Room
     room_metadata = fs.read(room_metadata_ram_pointer, 32).unpack("V*")
     @layer_list_ram_pointer = room_metadata[2]
     @gfx_list_pointer = room_metadata[3]
-    palette_wrapper_ram_pointer = room_metadata[4]
+    @palette_wrapper_pointer = room_metadata[4]
     @entity_list_ram_pointer = room_metadata[5]
     @door_list_ram_pointer = room_metadata[6]
     last_4_bytes = room_metadata[7]
     
     read_last_4_bytes_from_rom(last_4_bytes)
-    read_layer_list_from_rom(layer_list_ram_pointer) rescue NDSFileSystem::ConversionError
+    read_layer_list_from_rom(layer_list_ram_pointer)
     read_graphic_tilesets_from_rom(gfx_list_pointer)
-    read_palette_pages_from_rom(palette_wrapper_ram_pointer)
+    read_palette_pages_from_rom(@palette_wrapper_pointer)
     read_entity_list_from_rom(entity_list_ram_pointer)
     read_door_list_from_rom(door_list_ram_pointer)
   end
@@ -56,15 +57,29 @@ class Room
     @layers = []
     i = 0
     while true
-      is_a_pointer_check = fs.read(layer_list_ram_pointer + i*16 + 15).unpack("C*").first
-      break if i == 4 # Maximum of 4 layers per room.
-      if is_a_pointer_check != 0x02
-        break
+      if SYSTEM == :nds
+        break if i == 4 # Maximum of 4 layers per room.
+        
+        is_a_pointer_check = fs.read(layer_list_ram_pointer + i*16 + 15).unpack("C*").first
+        if is_a_pointer_check != 0x02
+          break
+        end
+        
+        layer = Layer.new(self, layer_list_ram_pointer + i*16, fs)
+        layer.read_from_rom()
+        @layers << layer
+      else
+        break if i == 3 # Maximum of 3 layers per room.
+        
+        layer_data = fs.read(layer_list_ram_pointer + i*12).unpack("VVV")
+        if layer_data.all?{|x| x == 0}
+          break
+        end
+        
+        layer = Layer.new(self, layer_list_ram_pointer + i*12, fs)
+        layer.read_from_rom()
+        @layers << layer
       end
-      
-      layer = Layer.new(self, layer_list_ram_pointer + i*16, fs)
-      layer.read_from_rom()
-      @layers << layer
       
       i += 1
     end
@@ -82,21 +97,11 @@ class Room
     @gfx_pages = []
   end
   
-  def read_palette_pages_from_rom(palette_wrapper_ram_pointer)
+  def read_palette_pages_from_rom(palette_wrapper_pointer)
     i = 0
-    @palette_pages = []
-    while true
-      palette_ram_pointer = fs.read(palette_wrapper_ram_pointer + i*8,4).unpack("V*").first
-      unknown_data = fs.read(palette_wrapper_ram_pointer + i*8 + 4,4).unpack("V*").first # TODO
-      
-      break if palette_ram_pointer == 0
-      
-      @palette_pages << palette_ram_pointer
-      
-      i += 1
-    end
+    @palette_pages = PaletteWrapper.from_palette_wrapper_pointer(palette_wrapper_pointer, fs)
   rescue NDSFileSystem::ConversionError => e
-    # When palette_wrapper_ram_pointer is like this (e.g. 0x02195984), it just points to 00s instead of actual data.
+    # When palette_wrapper_pointer is like this (e.g. 0x02195984), it just points to 00s instead of actual data.
     # What this means is that the room doesn't load a palette. Instead it just keeps whatever palette the previous room had loaded.
     @palette_pages = []
   end
@@ -134,7 +139,7 @@ class Room
   end
   
   def read_last_4_bytes_from_rom(last_4_bytes)
-    if GAME == "dos"
+    if GAME == "dos" || GAME == "aos"
       @number_of_doors    = (last_4_bytes & 0b00000000_00000000_11111111_11111111)
       @room_xpos_on_map   = (last_4_bytes & 0b00000000_00111111_00000000_00000000) >> 16
       @room_ypos_on_map   = (last_4_bytes & 0b00011111_10000000_00000000_00000000) >> 23
@@ -147,7 +152,7 @@ class Room
     end
   end
   
-  def palette_offset
+  def palette_page
     palette_pages[palette_page_index]
   end
   

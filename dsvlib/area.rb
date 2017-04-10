@@ -25,6 +25,7 @@ class Area
     while true
       sector_ram_pointer = fs.read(area_ram_pointer + sector_index*4, 4).unpack("V*").first
       break if sector_ram_pointer == 0
+      break if sector_ram_pointer > 0x09000000 # TODO: less hacky way to check this
       
       sector = Sector.new(self, sector_index, sector_ram_pointer, game)
       @sectors << sector

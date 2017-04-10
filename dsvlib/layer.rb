@@ -1,8 +1,6 @@
 class Layer
   class LayerReadError < StandardError ; end
   
-  SIZE_OF_A_SCREEN_IN_BYTES = 2*16*12
-  
   attr_reader :room,
               :fs
               
@@ -24,7 +22,7 @@ class Layer
     @layer_list_entry_ram_pointer = layer_list_entry_ram_pointer
     @fs = fs
   end
-  
+    
   def read_from_rom
     read_from_layer_list_entry()
     read_from_layer_metadata()
@@ -32,16 +30,26 @@ class Layer
   end
   
   def read_from_layer_list_entry
-    @z_index, @scroll_mode, @opacity, _, _, 
-      @main_gfx_page_index, _, _, _,
-      @layer_metadata_ram_pointer = fs.read(layer_list_entry_ram_pointer, 16).unpack("CCCCVCCCCV")
+    if SYSTEM == :nds
+      @z_index, @scroll_mode, @opacity, _, _, 
+        @main_gfx_page_index, _, _, _,
+        @layer_metadata_ram_pointer = fs.read(layer_list_entry_ram_pointer, 16).unpack("CCCCVCCCCV")
+    else
+      @z_index, @scroll_mode, @opacity, _, 
+        @main_gfx_page_index, _, _, _,
+        @layer_metadata_ram_pointer = fs.read(layer_list_entry_ram_pointer, 12).unpack("CCCCCCCCV")
+    end
   end
   
   def read_from_layer_metadata
+    if layer_metadata_ram_pointer == 0
+      return # TODO
+    end
+    
     @width, @height, _,
       @tileset_pointer,
       @collision_tileset_pointer,
-      @layer_tiledata_ram_start_offset = fs.read(layer_metadata_ram_pointer,16).unpack("CCvVVV")
+      @layer_tiledata_ram_start_offset = fs.read(layer_metadata_ram_pointer, 16).unpack("CCvVVV")
     
     if width > 15 || height > 15
       raise LayerReadError.new("Invalid layer size: #{width}x#{height}")
@@ -49,9 +57,13 @@ class Layer
   end
   
   def read_from_layer_tiledata
+    if layer_tiledata_ram_start_offset.nil?
+      return # TODO
+    end
+    
     tile_data_string = fs.read(layer_tiledata_ram_start_offset, SIZE_OF_A_SCREEN_IN_BYTES*width*height)
     @tiles = tile_data_string.unpack("v*").map do |tile_data|
-      Tile.new.from_game_data(tile_data)
+      tile_class.new.from_game_data(tile_data)
     end
   end
   
@@ -96,7 +108,7 @@ class Layer
         # Pad the layer with empty blocks vertically if layer's height was increased.
         new_row = []
         width_in_blocks.times do
-          new_row << Tile.new.from_game_data(0)
+          new_row << tile_class.new.from_game_data(0)
         end
         tile_rows << new_row
       end
@@ -107,7 +119,7 @@ class Layer
         
         (width_in_blocks - row.length).times do
           # Pad the layer with empty blocks horizontally if layer's width was increased.
-          row << Tile.new.from_game_data(0)
+          row << tile_class.new.from_game_data(0)
         end
         
         row
@@ -126,6 +138,14 @@ class Layer
     fs.write(layer_tiledata_ram_start_offset, tile_data)
   end
   
+  def tile_class
+    if SYSTEM == :nds
+      Tile
+    else
+      GBATile
+    end
+  end
+  
   def colors_per_palette
     main_gfx_page = room.gfx_pages[main_gfx_page_index]
     
@@ -137,7 +157,7 @@ class Layer
   end
   
   def tileset_filename
-    "tileset_%08X_%08X_%08X" % [tileset_pointer, room.palette_offset || 0, @room.gfx_list_pointer]
+    "tileset_%08X_%08X_%08X" % [tileset_pointer, room.palette_wrapper_pointer || 0, @room.gfx_list_pointer]
   end
 end
 
@@ -149,6 +169,29 @@ class Tile
   def from_game_data(tile_data)
     @index_on_tileset = (tile_data & 0b0011111111111111)
     @horizontal_flip  = (tile_data & 0b0100000000000000) != 0
+    @vertical_flip    = (tile_data & 0b1000000000000000) != 0
+    
+    return self
+  end
+  
+  def to_tile_data
+    tile_data = index_on_tileset
+    tile_data |= 0b0100000000000000 if horizontal_flip
+    tile_data |= 0b1000000000000000 if vertical_flip
+    tile_data
+  end
+end
+
+class GBATile
+  attr_accessor :index_on_tileset,
+                :horizontal_flip,
+                :vertical_flip,
+                :unknown
+  
+  def from_game_data(tile_data)
+    @index_on_tileset = (tile_data & 0b0000000011111111)
+    @unknown          = (tile_data & 0b0011111100000000)
+    @horizontal_flip  = (tile_data & 0b0100000000000000) == 0
     @vertical_flip    = (tile_data & 0b1000000000000000) != 0
     
     return self

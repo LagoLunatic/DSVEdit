@@ -5,6 +5,8 @@ class EntityLayerItem < Qt::GraphicsRectItem
   def initialize(entities, main_window, fs, renderer)
     super()
     
+    return if SYSTEM == :gba
+    
     @main_window = main_window
     @fs = fs
     @renderer = renderer

@@ -4,7 +4,8 @@ class GfxWrapper
               :fs,
               :file,
               :unknown_1,
-              :unknown_2
+              :unknown_2,
+              :gfx_data_pointer
   attr_accessor :render_mode,
                 :canvas_width
               
@@ -12,8 +13,20 @@ class GfxWrapper
     @gfx_pointer = gfx_pointer
     @fs = fs
     
-    @file = fs.find_file_by_ram_start_offset(gfx_pointer)
-    @unknown_1, @render_mode, @canvas_width, @unknown_2 = fs.read(gfx_pointer, 4).unpack("C*")
+    if SYSTEM == :nds
+      @file = fs.find_file_by_ram_start_offset(gfx_pointer)
+      @unknown_1, @render_mode, @canvas_width, @unknown_2 = fs.read(gfx_pointer, 4).unpack("C*")
+    else
+      @unknown_1, @unknown_2, @unknown_3, @unknown_4, @gfx_data_pointer = fs.read(gfx_pointer, 8).unpack("CCCCV")
+    end
+  end
+  
+  def gfx_data
+    if SYSTEM == :nds
+      fs.read_by_file(file[:file_path], 0, 0x2000*render_mode, allow_reading_into_next_file_in_ram: true)
+    else
+      @gfx_data ||= fs.decompress(gfx_data_pointer)
+    end
   end
   
   def write_to_rom
@@ -22,6 +35,10 @@ class GfxWrapper
   end
   
   def colors_per_palette
+    if SYSTEM == :gba
+      return 16 # TODO
+    end
+    
     case render_mode
     when 1
       16

@@ -1,9 +1,5 @@
 
 class Tileset
-  TILESET_WIDTH_IN_BLOCKS = 16
-  TILESET_HEIGHT_IN_BLOCKS = 64
-  LENGTH_OF_TILESET_IN_BLOCKS = TILESET_WIDTH_IN_BLOCKS*TILESET_HEIGHT_IN_BLOCKS - 1 # -1 because the first tile in a tileset is always blank.
-  
   attr_reader :tileset_ram_pointer,
               :tiles,
               :fs
@@ -12,35 +8,57 @@ class Tileset
     @tileset_ram_pointer = tileset_ram_pointer
     @fs = fs
     
-    read_from_rom()
-  end
-  
-  def read_from_rom
-    @tiles = []
-    @tiles << tile_class.new(0) # First entry on every tileset is always blank.
-    
-    (0..LENGTH_OF_TILESET_IN_BLOCKS-1).each do |i|
-      begin
-        tile_data = fs.read(tileset_ram_pointer + i*4, 4).unpack("V").first
-      rescue NDSFileSystem::ConversionError
-        # We read past the end of the overlay. This is okay as it just means the rest of the tileset would be empty anyway.
-        break
-      end
-      
-      @tiles << tile_class.new(tile_data)
+    if SYSTEM == :gba
+      read_from_rom_gba()
+    else
+      read_from_rom_nds()
     end
   end
   
-  def write_to_rom
-    @tiles[1..-1].each_with_index do |tile, i|
-      pointer = tileset_ram_pointer + i*4
-      tile_data = tile.to_data
-      fs.write(pointer, tile_data)
+  def read_from_rom_nds
+    @tiles = []
+    @tiles << tile_class.new(0) # First entry on every tileset is always blank.
+    
+    tileset_data = fs.read(tileset_ram_pointer, 4*LENGTH_OF_TILESET_IN_BLOCKS, allow_length_to_exceed_end_of_file: true)
+    
+    offset = 0
+    while true
+      tile_data = tileset_data[offset, 4].unpack("V").first
+      
+      @tiles << tile_class.new(tile_data)
+      
+      offset += 4
+      if offset >= tileset_data.length
+        break
+      end
+    end
+  end
+  
+  def read_from_rom_gba
+    @tiles = []
+    @tiles << tile_class.new("\0\0") # First entry on every tileset is always blank.
+    
+    tileset_data = fs.decompress(tileset_ram_pointer)
+    
+    offset = 0
+    while true
+      tile_data = tileset_data[offset, 32]
+      
+      @tiles << tile_class.new(tile_data)
+      
+      offset += 32
+      if offset >= tileset_data.length
+        break
+      end
     end
   end
   
   def tile_class
-    TilesetTile
+    if SYSTEM == :gba
+      GBATilesetTile
+    else
+      TilesetTile
+    end
   end
 end
 
@@ -80,6 +98,37 @@ class TilesetTile
   def is_blank
     # This indicates the tile is completely blank, no graphics or collision.
     index_on_tile_page == 0 && tile_page == 0
+  end
+end
+
+class GBATilesetTile
+  attr_reader :minitiles
+              
+  def initialize(tile_data)
+    @minitiles = []
+    tile_data.unpack("v*").each do |minitile_data|
+      @minitiles << MiniTile.new(minitile_data)
+    end
+  end
+  
+  def is_blank
+    false # TODO
+  end
+end
+
+class MiniTile
+  attr_reader :index_on_tile_page,
+              :tile_page,
+              :horizontal_flip,
+              :vertical_flip,
+              :palette
+              
+  def initialize(minitile_data)
+    @index_on_tile_page = (minitile_data & 0b00000000_11111111)
+    @tile_page          = (minitile_data & 0b00000011_00000000) >> 8
+    @horizontal_flip    = (minitile_data & 0b00000100_00000000) == 0
+    @vertical_flip      = (minitile_data & 0b00001000_00000000) > 0
+    @palette            = (minitile_data & 0b11110000_00000000) >> 12
   end
 end
 

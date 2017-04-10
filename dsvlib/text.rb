@@ -18,11 +18,21 @@ class Text
   end
   
   def read_from_rom
-    if REGION == :jp
+    if SYSTEM == :gba
+      read_from_rom_gba()
+    elsif REGION == :jp
       read_from_rom_jp()
     else
       read_from_rom_usa()
     end
+  end
+  
+  def read_from_rom_gba
+    @text_ram_pointer = TEXT_LIST_START_OFFSET + 4*text_id
+    @string_ram_pointer = fs.read(@text_ram_pointer, 4).unpack("V").first
+    @encoded_string = fs.read_until_end_marker(string_ram_pointer+2, [0x0A]) # Skip the first 2 bytes which are always 01 00.
+    
+    @decoded_string = @encoded_string
   end
   
   def read_from_rom_usa

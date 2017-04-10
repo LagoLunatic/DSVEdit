@@ -61,7 +61,7 @@ class TilesetEditorDialog < Qt::Dialog
       @ui.tileset_pointer.text = "%08X" % layer.tileset_pointer
     end
     @ui.gfx_list_pointer.text = "%08X" % room.gfx_list_pointer
-    @ui.palette_list_pointer.text = "%08X" % room.palette_offset
+    @ui.palette_list_pointer.text = "%08X" % room.palette_pages.first.palette_list_pointer # TODO: USE RIGHT ONE
     load_tileset()
   end
   

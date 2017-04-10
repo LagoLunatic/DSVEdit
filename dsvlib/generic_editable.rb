@@ -68,7 +68,7 @@ class GenericEditable
       @description = Text.new(TEXT_REGIONS["Enemy Descriptions"].begin + index, fs).decoded_string
     when :skill
       case GAME
-      when "dos"
+      when "dos", "aos"
         @name = Text.new(TEXT_REGIONS["Soul Names"].begin + index, fs).decoded_string
         @description = Text.new(TEXT_REGIONS["Soul Descriptions"].begin + index, fs).decoded_string
       when "por"

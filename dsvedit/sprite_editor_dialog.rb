@@ -487,7 +487,7 @@ class SpriteEditor < Qt::Dialog
       else
         canvas_width = gfx.canvas_width
         if @one_dimensional_render_mode
-          chunky_image = @renderer.render_gfx_1_dimensional_mode(gfx.file, @palettes[palette_index])
+          chunky_image = @renderer.render_gfx_1_dimensional_mode(gfx, @palettes[palette_index])
         else
           chunky_image = @renderer.render_gfx(gfx.file, @palettes[palette_index], 0, 0, canvas_width*8, canvas_width*8, canvas_width=canvas_width*8)
         end

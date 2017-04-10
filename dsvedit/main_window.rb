@@ -144,6 +144,8 @@ class DSVEdit < Qt::MainWindow
     
     if @settings[:last_used_folder] && File.directory?(@settings[:last_used_folder])
       open_folder(@settings[:last_used_folder])
+    elsif @settings[:last_used_rom] && File.file?(@settings[:last_used_rom])
+      extract_rom(@settings[:last_used_rom])
     end
   end
   
@@ -231,7 +233,7 @@ class DSVEdit < Qt::MainWindow
     if game && game.folder
       default_dir = File.dirname(game.folder)
     end
-    rom_path = Qt::FileDialog.getOpenFileName(self, "Select ROM", default_dir, "NDS ROM Files (*.nds)")
+    rom_path = Qt::FileDialog.getOpenFileName(self, "Select ROM", default_dir, "NDS and GBA ROM Files (*.nds *.gba)")
     return if rom_path.nil?
     folder = File.dirname(rom_path)
     extract_rom(rom_path)
@@ -264,10 +266,19 @@ class DSVEdit < Qt::MainWindow
     
     initialize_dropdowns()
     
-    @settings[:last_used_folder] = game.folder
-    
-    folder_name = File.basename(game.folder)
-    self.setWindowTitle("DSVania Editor #{DSVEDIT_VERSION} - #{folder_name}")
+    if SYSTEM == :nds
+      @settings[:last_used_folder] = game.folder
+      @settings[:last_used_rom] = nil
+      
+      folder_name = File.basename(game.folder)
+      self.setWindowTitle("DSVania Editor #{DSVEDIT_VERSION} - #{folder_name}")
+    else
+      @settings[:last_used_rom] = game.rom_path
+      @settings[:last_used_folder] = nil
+      
+      rom_name = File.basename(game.rom_path)
+      self.setWindowTitle("DSVania Editor #{DSVEDIT_VERSION} - #{rom_name}")
+    end
   rescue Game::InvalidFileError, NDSFileSystem::InvalidFileError
     Qt::MessageBox.warning(self, "Invalid file", "Selected ROM file is not a DSVania or is not a supported region.")
   end
@@ -340,12 +351,15 @@ class DSVEdit < Qt::MainWindow
     @ui.sector.clear()
     AREA_INDEX_TO_OVERLAY_INDEX[@area_index].keys.each do |sector_index|
       overlay_id = AREA_INDEX_TO_OVERLAY_INDEX[@area_index][sector_index]
-      if SECTOR_INDEX_TO_SECTOR_NAME[@area_index]
-        sector_name = SECTOR_INDEX_TO_SECTOR_NAME[@area_index][sector_index]
-        @ui.sector.addItem("%02X %s (Overlay %d)" % [sector_index, sector_name, overlay_id])
-      else
-        @ui.sector.addItem("%02X (Overlay %d)" % [sector_index, overlay_id])
+      sector_name = SECTOR_INDEX_TO_SECTOR_NAME[@area_index][sector_index]
+      sector_text = "%02X" % sector_index
+      if sector_name
+        sector_text << " #{sector_name}"
       end
+      if overlay_id
+        sector_text << " #{overlay_id}"
+      end
+      @ui.sector.addItem(sector_text)
     end
     
     load_map()
@@ -395,6 +409,8 @@ class DSVEdit < Qt::MainWindow
   end
   
   def update_room_position_indicator
+    return if SYSTEM == :gba
+    
     @position_indicator.setPos(@room.room_xpos_on_map*4 + 2.25, @room.room_ypos_on_map*4 + 2.25)
     if @room.layers.length > 0
       @position_indicator.setRect(-2, -2, 4*@room.main_layer_width, 4*@room.main_layer_height)
@@ -457,6 +473,8 @@ class DSVEdit < Qt::MainWindow
     @room.sector.load_necessary_overlay()
     @renderer.ensure_tilesets_exist("cache/#{GAME}/rooms/", @room)
     @room.layers.each do |layer|
+      next if layer.layer_metadata_ram_pointer == 0 # TODO
+      
       tileset_filename = "cache/#{GAME}/rooms/#{@room.area_name}/Tilesets/#{layer.tileset_filename}.png"
       layer_item = LayerItem.new(layer, tileset_filename)
       layer_item.setParentItem(@layers_view_item)
@@ -494,6 +512,9 @@ class DSVEdit < Qt::MainWindow
   
   def load_room_collision_tileset
     @collision_view_item = Qt::GraphicsRectItem.new
+    
+    return if SYSTEM == :gba
+    
     @room_graphics_scene.addItem(@collision_view_item)
     if @room.layers.length > 0
       @renderer.ensure_tilesets_exist("cache/#{GAME}/rooms/", @room, collision=true)
@@ -560,6 +581,8 @@ class DSVEdit < Qt::MainWindow
   end
   
   def load_map()
+    return if SYSTEM == :gba
+    
     @map_graphics_scene.clear()
     
     @map = game.get_map(@area_index, @sector_index)
