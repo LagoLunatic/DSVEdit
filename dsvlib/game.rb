@@ -227,7 +227,8 @@ class Game
   end
   
   def get_map(area_index, sector_index)
-    if GAME == "dos"
+    case GAME
+    when "dos", "aos"
       DoSMap.new(area_index, sector_index, fs)
     else
       Map.new(area_index, sector_index, fs)
@@ -247,7 +248,7 @@ class Game
   def get_transition_rooms
     transition_rooms = []
     
-    if GAME == "dos"
+    if GAME == "dos" # TODO AoS
       transition_room_pointers = fs.read_until_end_marker(TRANSITION_ROOM_LIST_POINTER, [0, 0, 0, 0]).unpack("V*")
       
       transition_rooms = transition_room_pointers.map do |pointer|

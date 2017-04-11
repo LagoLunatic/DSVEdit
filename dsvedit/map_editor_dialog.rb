@@ -41,7 +41,8 @@ class MapEditorDialog < Qt::Dialog
     load_map()
     
     @available_tiles = []
-    if GAME == "dos"
+    case GAME
+    when "dos", "aos"
       (0..0xF).each do |line_type|
         tile = DoSMapTile.new(0, line_type, line_type, 16)
         @available_tiles << tile
@@ -73,7 +74,8 @@ class MapEditorDialog < Qt::Dialog
     connect(@ui.is_entrance, SIGNAL("stateChanged(int)"), self, SLOT("reload_available_tiles(int)"))
     connect(@ui.is_blank, SIGNAL("stateChanged(int)"), self, SLOT("reload_available_tiles(int)"))
     
-    if GAME == "dos"
+    case GAME
+    when "dos", "aos"
       @ui.is_secret.disabled = true
       @ui.is_transition.disabled = true
       @ui.is_entrance.disabled = true
@@ -186,7 +188,8 @@ class MapEditorDialog < Qt::Dialog
   end
   
   def delete_map_tile(old_tile)
-    if GAME == "dos"
+    case GAME
+    when "dos", "aos"
       index = @map.tiles.index(old_tile)
       new_tile = @available_tiles[0].dup
       new_tile.sector_index = nil

@@ -37,15 +37,22 @@ class Room
   end
   
   def read_from_rom
-    room_metadata = fs.read(room_metadata_ram_pointer, 32).unpack("V*")
+    if SYSTEM == :nds
+      room_metadata = fs.read(room_metadata_ram_pointer, 32).unpack("V*")
+      extra_data = room_metadata[7]
+      read_extra_data_from_rom(extra_data)
+    else
+      room_metadata = fs.read(room_metadata_ram_pointer, 36).unpack("V*")
+      extra_data = room_metadata[7]
+      extra_data_2 = room_metadata[8]
+      read_extra_data_from_rom(extra_data, extra_data_2)
+    end
     @layer_list_ram_pointer = room_metadata[2]
     @gfx_list_pointer = room_metadata[3]
     @palette_wrapper_pointer = room_metadata[4]
     @entity_list_ram_pointer = room_metadata[5]
     @door_list_ram_pointer = room_metadata[6]
-    last_4_bytes = room_metadata[7]
     
-    read_last_4_bytes_from_rom(last_4_bytes)
     read_layer_list_from_rom(layer_list_ram_pointer)
     read_graphic_tilesets_from_rom(gfx_list_pointer)
     read_palette_pages_from_rom(@palette_wrapper_pointer)
@@ -78,14 +85,16 @@ class Room
         
         layer = Layer.new(self, layer_list_ram_pointer + i*12, fs)
         layer.read_from_rom()
-        @layers << layer
+        if layer.layer_metadata_ram_pointer != 0 # TODO
+          @layers << layer
+        end
       end
       
       i += 1
     end
 
-    if @layers.length == 0
-      raise RoomReadError.new("Couldn't find any layers")
+    if @layers.length == 0 # TODO
+      #raise RoomReadError.new("Couldn't find any layers")
     end
   end
   
@@ -138,17 +147,22 @@ class Room
     @original_number_of_doors = 0
   end
   
-  def read_last_4_bytes_from_rom(last_4_bytes)
-    if GAME == "dos" || GAME == "aos"
-      @number_of_doors    = (last_4_bytes & 0b00000000_00000000_11111111_11111111)
-      @room_xpos_on_map   = (last_4_bytes & 0b00000000_00111111_00000000_00000000) >> 16
-      @room_ypos_on_map   = (last_4_bytes & 0b00011111_10000000_00000000_00000000) >> 23
-      @palette_page_index = 0 # always 0 in dos, and so not stored in these 4 bytes
+  def read_extra_data_from_rom(extra_data, extra_data_2)
+    if GAME == "dos"
+      @number_of_doors    = (extra_data & 0b00000000_00000000_11111111_11111111)
+      @room_xpos_on_map   = (extra_data & 0b00000000_00111111_00000000_00000000) >> 16
+      @room_ypos_on_map   = (extra_data & 0b00011111_10000000_00000000_00000000) >> 23
+      @palette_page_index = 0 # Always 0 in DoS, and so not stored in this data
+    elsif GAME == "aos"
+      @number_of_doors    = (extra_data   & 0b00000000_00000000_11111111_11111111)
+      @room_xpos_on_map   = (extra_data_2 & 0b00000000_00111111_00000000_00000000) >> 16
+      @room_ypos_on_map   = (extra_data_2 & 0b00011111_10000000_00000000_00000000) >> 23
+      @palette_page_index = 0 # Always 0 in AoS
     else
-      @number_of_doors    = (last_4_bytes & 0b00000000_00000000_00000000_01111111)
-      @room_xpos_on_map   = (last_4_bytes & 0b00000000_00000000_00111111_10000000) >> 7
-      @room_ypos_on_map   = (last_4_bytes & 0b00000000_00011111_11000000_00000000) >> 14
-      @palette_page_index = (last_4_bytes & 0b00001111_10000000_00000000_00000000) >> 23
+      @number_of_doors    = (extra_data & 0b00000000_00000000_00000000_01111111)
+      @room_xpos_on_map   = (extra_data & 0b00000000_00000000_00111111_10000000) >> 7
+      @room_ypos_on_map   = (extra_data & 0b00000000_00011111_11000000_00000000) >> 14
+      @palette_page_index = (extra_data & 0b00001111_10000000_00000000_00000000) >> 23
     end
   end
   
@@ -217,22 +231,29 @@ class Room
     end
     
     @number_of_doors = doors.length
-    write_last_4_bytes_to_rom()
+    write_extra_data_to_rom()
   end
   
-  def write_last_4_bytes_to_rom
-    last_4_bytes = 0
+  def write_extra_data_to_rom
+    extra_data = 0
     if GAME == "dos"
-      last_4_bytes |= (@number_of_doors         ) & 0b00000000_00000000_11111111_11111111
-      last_4_bytes |= (@room_xpos_on_map   << 16) & 0b00000000_00111111_00000000_00000000
-      last_4_bytes |= (@room_ypos_on_map   << 23) & 0b00011111_10000000_00000000_00000000
+      extra_data |= (@number_of_doors         ) & 0b00000000_00000000_11111111_11111111
+      extra_data |= (@room_xpos_on_map   << 16) & 0b00000000_00111111_00000000_00000000
+      extra_data |= (@room_ypos_on_map   << 23) & 0b00011111_10000000_00000000_00000000
+    elsif GAME == "aos"
+      extra_data_2 = 0
+      extra_data   |= (@number_of_doors         ) & 0b00000000_00000000_11111111_11111111
+      extra_data_2 |= (@room_xpos_on_map   << 16) & 0b00000000_00111111_00000000_00000000
+      extra_data_2 |= (@room_ypos_on_map   << 23) & 0b00011111_10000000_00000000_00000000
+      
+      fs.write(room_metadata_ram_pointer+8*4, [extra_data_2].pack("V"))
     else
-      last_4_bytes |= (@number_of_doors         ) & 0b00000000_00000000_00000000_01111111
-      last_4_bytes |= (@room_xpos_on_map   <<  7) & 0b00000000_00000000_00111111_10000000
-      last_4_bytes |= (@room_ypos_on_map   << 14) & 0b00000000_00011111_11000000_00000000
-      last_4_bytes |= (@palette_page_index << 23) & 0b00001111_10000000_00000000_00000000
+      extra_data |= (@number_of_doors         ) & 0b00000000_00000000_00000000_01111111
+      extra_data |= (@room_xpos_on_map   <<  7) & 0b00000000_00000000_00111111_10000000
+      extra_data |= (@room_ypos_on_map   << 14) & 0b00000000_00011111_11000000_00000000
+      extra_data |= (@palette_page_index << 23) & 0b00001111_10000000_00000000_00000000
     end
-    fs.write(room_metadata_ram_pointer+7*4, [last_4_bytes].pack("V"))
+    fs.write(room_metadata_ram_pointer+7*4, [extra_data].pack("V"))
   end
   
   def add_new_layer

@@ -15,7 +15,7 @@ class TMXInterface
     validate_properties(room_props, "Room", %w(map_x map_y))
     room.room_xpos_on_map = room_props["map_x"]
     room.room_ypos_on_map = room_props["map_y"]
-    room.write_last_4_bytes_to_rom()
+    room.write_extra_data_to_rom()
     
     all_tilesets_for_room = room.layers.map{|layer| layer.tileset_filename}.uniq
     

@@ -132,6 +132,7 @@ class Layer
     fs.write(layer_metadata_ram_pointer+4, [tileset_pointer, collision_tileset_pointer].pack("VV"))
     fs.write(layer_list_entry_ram_pointer, [z_index, scroll_mode, opacity].pack("CCC"))
     fs.write(layer_list_entry_ram_pointer+6, [height*0xC0].pack("v")) if GAME == "dos"
+    fs.write(layer_list_entry_ram_pointer+6, [height*0x100].pack("v")) if GAME == "aos" # TODO CHECK
     fs.write(layer_list_entry_ram_pointer+8, [main_gfx_page_index].pack("C"))
     fs.write(layer_list_entry_ram_pointer+12, [layer_metadata_ram_pointer].pack("V"))
     tile_data = tiles.map(&:to_tile_data).pack("v*")
