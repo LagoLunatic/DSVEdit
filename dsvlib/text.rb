@@ -139,14 +139,20 @@ class Text
   def encode_string(string)
     string.force_encoding("UTF-8")
     
-    encoded_string = string.scan(/(?<!\\){(?:(?!}).|\\})+(?<!\\)}|\\{|\\}|./m).map do |str|
+    encoded_string = string.scan(/(?<!\\){(?:(?!}).|\\})+(?<!\\)}|\\{|\\}|\\n|./m).map do |str|
       if str.length > 1
-        str =~ /{([A-Z0-9]+)(?: (?:0x)?([^}]+))?}/
+        if str == "\\n"
+          command = str
+        else
+          str =~ /{([A-Z0-9]+)(?: (?:0x)?([^}]+))?}/
+          command = $1
+          data = $2
+        end
         
         if REGION == :jp
-          encode_command_jp($1, $2)
+          encode_command_jp(command, data)
         else
-          encode_command_usa($1, $2)
+          encode_command_usa(command, data)
         end
       else
         if REGION == :jp
@@ -165,6 +171,8 @@ class Text
     previous_byte = nil
     multipart = false
     skip_next = false
+    curr_is_command = nil
+    prev_was_command = nil
     i = 0
     decoded_string = string.each_char.map do |char|
       byte = char.unpack("C").first
@@ -172,6 +180,8 @@ class Text
       char = if skip_next
         ""
       elsif multipart
+        curr_is_command = true
+        
         multipart = false
         command_number = previous_byte - 0xE0
         if command_number == 1 # ENDCHOICE
@@ -182,6 +192,8 @@ class Text
           decode_multipart_command(command_number, byte, data_format_string)
         end
       elsif byte >= 0xE0
+        curr_is_command = true
+        
         command_number = byte - 0xE0
         command = decode_command(command_number, data_format_string)
         if command == :multipart
@@ -191,6 +203,8 @@ class Text
           command
         end
       else
+        curr_is_command = false
+        
         case byte
         when 0x00..0x5E # Ascii text
           char = [byte + 0x20].pack("C")
@@ -211,7 +225,13 @@ class Text
         end
       end
       
+      if curr_is_command != prev_was_command && !prev_was_command.nil? && previous_byte != 0xE6 && byte != 0xE6
+        # Add a newline between a block of commands and some text for readability.
+        char = "\n#{char}"
+      end
+      
       previous_byte = byte
+      prev_was_command = curr_is_command
       
       i += 1
       
@@ -225,14 +245,20 @@ class Text
     data_format_string = "0x%04X"
     previous_halfword = nil
     multipart = false
+    curr_is_command = nil
+    prev_was_command = nil
     decoded_string = string.unpack("v*").map do |char|
       halfword = char
       
       char = if multipart
+        curr_is_command = true
+        
         multipart = false
         command_number = previous_halfword & 0x00FF
         decode_multipart_command(command_number, halfword, data_format_string)
       elsif halfword & 0xFF00 == 0xF000
+        curr_is_command = true
+        
         command_number = halfword & 0x00FF
         command = decode_command(command_number, data_format_string)
         if command == :multipart
@@ -242,13 +268,22 @@ class Text
           command
         end
       elsif halfword >= 0x8140
+        curr_is_command = true
+        
         shift_jis = font_character_mapping_jp(halfword)
         shift_jis.chr(Encoding::SHIFT_JIS).encode("UTF-8")
       else
+        prev_was_command = false
         "{RAW #{data_format_string}}" % halfword
       end
       
+      if curr_is_command != prev_was_command && !prev_was_command.nil? && previous_halfword != 0xF006 && halfword != 0xF006
+        # Add a newline between a block of commands and some text for readability.
+        char = "\n#{char}"
+      end
+      
       previous_halfword = halfword
+      prev_was_command = curr_is_command
       
       char
     end.join
@@ -267,7 +302,7 @@ class Text
     when 0x05
       "{WAITINPUT}"
     when 0x06
-      "\n"
+      "\\n\n"
     when 0x09
       "{SAMECHAR}"
     when 0x0B..0x14
@@ -321,7 +356,8 @@ class Text
     when 0x20..0x7A # Ascii text
       [byte - 0x20].pack("C")
     when 0x0A # Newline
-      [0xE6].pack("C")
+      # Ignore
+      ""
     end
     
     char
@@ -365,6 +401,8 @@ class Text
       else
         [0xE8, data.to_i(16)].pack("CC")
       end
+    when "\\n"
+      [0xE6].pack("C")
     else
       raise TextEncodeError.new("Failed to encode command: #{command} #{data}")
     end
@@ -372,7 +410,7 @@ class Text
   
   def encode_char_jp(input_char)
     if input_char == "\n"
-      return [0xF006].pack("v")
+      return "" # Ignore newlines
     end
     
     shift_jis = input_char.encode("SHIFT_JIS").ord
@@ -424,6 +462,8 @@ class Text
       else
         [0xF008, data.to_i(16)].pack("vv")
       end
+    when "\\n"
+      [0xF006].pack("v")
     else
       raise TextEncodeError.new("Failed to encode command: #{command} #{data}")
     end
