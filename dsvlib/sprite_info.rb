@@ -59,6 +59,10 @@ class SpriteInfo
     if init_code_pointer == -1
       raise CreateCodeReadError.new("This entity has no sprite.")
     end
+    if init_code_pointer & 0b1 != 0
+      # Get rid of lowest bit for GBA games.
+      init_code_pointer ^= 1
+    end
     
     gfx_files_to_load = []
     sprite_files_to_load = []
@@ -135,7 +139,7 @@ class SpriteInfo
     data = fs.read(init_code_pointer, 4*1000, allow_length_to_exceed_end_of_file: true)
     
     data.unpack("V*").each_with_index do |word, i|
-      if (0x02000000..0x02FFFFFF).include?(word)
+      if fs.is_pointer?(word)#(0x02000000..0x02FFFFFF).include?(word)
         possible_gfx_pointers << word
         possible_palette_pointers << word
         possible_sprite_pointers << word
@@ -149,26 +153,7 @@ class SpriteInfo
     end
     
     valid_gfx_pointers = possible_gfx_pointers.select do |pointer|
-      header_vals = fs.read(pointer, 4).unpack("C*") rescue next
-      data = fs.read(pointer+4, 4).unpack("V").first
-      if data >= 0x02000000 && data < 0x03000000
-        # There's a chance this might just be something that looks like a pointer (like palette data), so check to make sure it really is one.
-        possible_gfx_page_pointer = fs.read(data, 4).unpack("V").first rescue next
-        if possible_gfx_page_pointer >= 0x02000000 && possible_gfx_page_pointer < 0x03000000
-          # List of GFX pages
-          header_vals.all?{|val| val < 0x50} && (1..2).include?(header_vals[1])
-        else
-          false
-        end
-      elsif data == 0x10
-        # Just one GFX page, not a list
-        header_vals[0] == 0 && (1..2).include?(header_vals[1]) && header_vals[2] == 0x10 && header_vals[3] == 0
-      elsif data == 0x20
-        # Canvas width is doubled.
-        header_vals[0] == 0 && (1..2).include?(header_vals[1]) && header_vals[2] == 0x20 && header_vals[3] == 0
-      else
-        false
-      end
+      check_if_valid_gfx_pointer(pointer, fs)
     end
     possible_palette_pointers -= valid_gfx_pointers
     
@@ -195,8 +180,7 @@ class SpriteInfo
     end
     
     valid_palette_pointers = possible_palette_pointers.select do |pointer|
-      header_vals = fs.read(pointer, 4).unpack("C*") rescue next
-      header_vals[0] == 0 && header_vals[1] == 01 && header_vals[2] > 0 && header_vals [3] == 0
+      check_if_valid_palette_pointer(pointer, fs)
     end
     
     if valid_palette_pointers.empty?
@@ -211,22 +195,8 @@ class SpriteInfo
     
     
     if sprite_files_to_load.empty? && sprite_file_pointer.nil?
-      all_sprite_pointers = fs.files.select do |id, file|
-        file[:type] == :file && file[:file_path] =~ /^\/so\/p_/
-      end.map do |id, file|
-        file[:ram_start_offset]
-      end
       valid_sprite_pointers = possible_sprite_pointers.select do |pointer|
-        if all_sprite_pointers.include?(pointer)
-          true
-        else
-          # Check if any of the overlay files containing sprite data include this pointer.
-          OVERLAY_FILES_WITH_SPRITE_DATA.any? do |overlay_id|
-            overlay = fs.overlays[overlay_id]
-            range = (overlay[:ram_start_offset]..overlay[:ram_start_offset]+overlay[:size]-1)
-            range.include?(pointer)
-          end
-        end
+        check_if_valid_sprite_pointer(pointer, fs)
       end
       if valid_sprite_pointers.empty?
         raise CreateCodeReadError.new("Failed to find any valid sprite pointers.")
@@ -258,20 +228,93 @@ class SpriteInfo
       end
     end
     
+    puts "%08X" % gfx_file_pointers.first
+    puts gfx_file_pointers.size
     return SpriteInfo.new(gfx_file_pointers, palette_pointer, palette_offset, sprite_file_pointer, skeleton_file, fs)
   end
   
   def self.unpack_gfx_pointer_list(gfx_wrapper, fs)
-    data = fs.read(gfx_wrapper+4, 4).unpack("V").first
-    if data >= 0x02000000 && data < 0x03000000
-      _, _, number_of_gfx_pages, _ = fs.read(gfx_wrapper, 4).unpack("C*")
-      pointer_to_list_of_gfx_file_pointers = data
+    if SYSTEM == :nds
+      data = fs.read(gfx_wrapper+4, 4).unpack("V").first
+      if fs.is_pointer?(data)#data >= 0x02000000 && data < 0x03000000
+        _, _, number_of_gfx_pages, _ = fs.read(gfx_wrapper, 4).unpack("C*")
+        pointer_to_list_of_gfx_file_pointers = data
+        
+        gfx_file_pointers = fs.read(pointer_to_list_of_gfx_file_pointers, 4*number_of_gfx_pages).unpack("V*")
+      else
+        gfx_file_pointers = [gfx_wrapper]
+      end
       
-      gfx_file_pointers = fs.read(pointer_to_list_of_gfx_file_pointers, 4*number_of_gfx_pages).unpack("V*")
+      return gfx_file_pointers
     else
-      gfx_file_pointers = [gfx_wrapper]
+      return [gfx_wrapper]
     end
-    
-    return gfx_file_pointers
+  end
+  
+  def self.check_if_valid_gfx_pointer(pointer, fs)
+    if SYSTEM == :nds
+      header_vals = fs.read(pointer, 4).unpack("C*") rescue return
+      data = fs.read(pointer+4, 4).unpack("V").first
+      if fs.is_pointer?(data)#data >= 0x02000000 && data < 0x03000000
+        # There's a chance this might just be something that looks like a pointer (like palette data), so check to make sure it really is one.
+        possible_gfx_page_pointer = fs.read(data, 4).unpack("V").first rescue return
+        if fs.is_pointer?(possible_gfx_page_pointer)#possible_gfx_page_pointer >= 0x02000000 && possible_gfx_page_pointer < 0x03000000
+          # List of GFX pages
+          header_vals.all?{|val| val < 0x50} && (1..2).include?(header_vals[1])
+        else
+          false
+        end
+      elsif data == 0x10
+        # Just one GFX page, not a list
+        header_vals[0] == 0 && (1..2).include?(header_vals[1]) && header_vals[2] == 0x10 && header_vals[3] == 0
+      elsif data == 0x20
+        # Canvas width is doubled.
+        header_vals[0] == 0 && (1..2).include?(header_vals[1]) && header_vals[2] == 0x20 && header_vals[3] == 0
+      else
+        false
+      end
+    else
+      header_vals = fs.read(pointer, 4).unpack("C*") rescue return
+      data = fs.read(pointer+4, 4).unpack("V").first
+      if fs.is_pointer?(data)
+        # One GFX page
+        header_vals[0] == 1 && header_vals[1] == 4 && header_vals[2] == 0x10 && header_vals[3] <= 0x10
+      else
+        false
+      end
+    end
+  end
+  
+  def self.check_if_valid_palette_pointer(pointer, fs)
+    if SYSTEM == :nds
+      header_vals = fs.read(pointer, 4).unpack("C*") rescue return
+      header_vals[0] == 0 && header_vals[1] == 1 && header_vals[2] > 0 && header_vals [3] == 0
+    else
+      header_vals = fs.read(pointer, 4).unpack("C*") rescue return
+      header_vals[0] == 0 && header_vals[1] == 4 && header_vals[2] > 0 && header_vals [3] == 0
+    end
+  end
+  
+  def self.check_if_valid_sprite_pointer(pointer, fs)
+    if SYSTEM == :nds
+      if fs.all_sprite_pointers.include?(pointer)
+        true
+      else
+        # Check if any of the overlay files containing sprite data include this pointer.
+        OVERLAY_FILES_WITH_SPRITE_DATA.any? do |overlay_id|
+          overlay = fs.overlays[overlay_id]
+          range = (overlay[:ram_start_offset]..overlay[:ram_start_offset]+overlay[:size]-1)
+          range.include?(pointer)
+        end
+      end
+    else
+      num_frames, num_anims, frames_ptr, anims_ptr = fs.read(pointer, 12).unpack("vvVV") rescue return
+      return false if !fs.is_pointer?(frames_ptr)
+      return false if num_frames == 0
+      return false if num_anims > 0 && anims_ptr == 0
+      return false if num_frames >= 0x100 # TODO
+      return false if num_anims >= 0x100 # TODO
+      return true
+    end
   end
 end

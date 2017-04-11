@@ -18,6 +18,8 @@ class GfxWrapper
       @unknown_1, @render_mode, @canvas_width, @unknown_2 = fs.read(gfx_pointer, 4).unpack("C*")
     else
       @unknown_1, @unknown_2, @unknown_3, @unknown_4, @gfx_data_pointer = fs.read(gfx_pointer, 8).unpack("CCCCV")
+      @render_mode = 1
+      @canvas_width = 0x10
     end
   end
   

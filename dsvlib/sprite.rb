@@ -90,7 +90,7 @@ class Sprite
     unless animation_list_offset == 0
       (animation_list_offset..file_footer_offset-1).step(8) do |offset|
         animation_data = fs.read_by_file(sprite_file[:file_path], offset, 8)
-        animation = Animation.new(animation_data)
+        animation = Animation.new(animation_data, offset)
         animation.initialize_frame_delays(frame_delays, @frame_delays_by_offset)
         @animations << animation
       end
@@ -103,21 +103,21 @@ class Sprite
     @frames = []
     offset = frame_list_offset
     number_of_frames.times do
-      frame_data = fs.read(offset, 12)
+      frame_data = fs.read(offset, Frame.data_size)
       frame = Frame.new(frame_data)
       @frames << frame
       
-      offset += 12
+      offset += Frame.data_size
     end
     
     @parts_by_offset = {}
     frames.each do |frame|
       offset = frame.first_part_offset
       frame.number_of_parts.times do
-        part_data = fs.read(offset, 16)
+        part_data = fs.read(offset, Part.data_size)
         @parts_by_offset[offset] ||= Part.new(part_data)
         
-        offset += 16
+        offset += Part.data_size
       end
     end
     @parts = @parts_by_offset.sort_by{|offset, part| offset}.map{|offset, part| part}
@@ -126,10 +126,10 @@ class Sprite
     frames.each do |frame|
       offset = frame.first_hitbox_offset
       frame.number_of_hitboxes.times do
-        hitbox_data = fs.read(offset, 8)
+        hitbox_data = fs.read(offset, Hitbox.data_size)
         @hitboxes_by_offset[offset] ||= Hitbox.new(hitbox_data)
         
-        offset += 8
+        offset += Hitbox.data_size
       end
     end
     @hitboxes = @hitboxes_by_offset.sort_by{|offset, hitbox| offset}.map{|offset, hitbox| hitbox}
@@ -143,18 +143,27 @@ class Sprite
     @frame_delays_by_offset = {}
     @frame_delays = []
     if animation_list_offset && animation_list_offset != 0
-      (animation_list_offset..animation_list_offset+number_of_animations*8-1).step(8) do |offset|
-        animation_data = fs.read(offset, 8)
-        @animations << Animation.new(animation_data)
+      offset = animation_list_offset
+      number_of_animations.times do
+        animation_data = fs.read(offset, Animation.data_size)
+        animation = Animation.new(animation_data, offset)
+        @animations << animation
+        
+        offset += Animation.data_size
+        
+        if SYSTEM == :gba
+          # On GBA the frame delays come right after the animation itself, rather than being pointed to separately.
+          offset += FrameDelay.data_size*animation.number_of_frames
+        end
       end
       
       animations.each do |animation|
         offset = animation.first_frame_delay_offset
         animation.number_of_frames.times do
-          frame_delay_data = fs.read(offset, 8)
+          frame_delay_data = fs.read(offset, FrameDelay.data_size)
           @frame_delays_by_offset[offset] ||= FrameDelay.new(frame_delay_data)
           
-          offset += 8
+          offset += FrameDelay.data_size
         end
       end
     end
@@ -314,14 +323,28 @@ class Part
                 :unused
   
   def initialize(part_data)
-    @x_pos, @y_pos,
-      @gfx_x_offset, @gfx_y_offset,
-      @width, @height,
-      @gfx_page_index, flip_bits,
-      @palette_index, @unused = part_data.unpack("s<s<vvvvCCCC")
-    
-    @vertical_flip   = (flip_bits & 0b00000001) > 0
-    @horizontal_flip = (flip_bits & 0b00000010) > 0
+    if SYSTEM == :nds
+      @x_pos, @y_pos,
+        @gfx_x_offset, @gfx_y_offset,
+        @width, @height,
+        @gfx_page_index, flip_bits,
+        @palette_index, @unused = part_data.unpack("s<s<vvvvCCCC")
+      
+      @vertical_flip   = (flip_bits & 0b00000001) > 0
+      @horizontal_flip = (flip_bits & 0b00000010) > 0
+    else
+      @x_pos, @y_pos,
+        @unknown, @gfx_x_offset, @gfx_y_offset,
+        @width, @height,
+        @unknown_1, @unknown_2,
+        flip_bits, @unused = part_data.unpack("ccvCCCCCCCC")
+      
+      @gfx_page_index = 0
+      @palette_index = 0
+      
+      @vertical_flip   = (flip_bits & 0b00000001) > 0
+      @horizontal_flip = (flip_bits & 0b00000010) > 0
+    end
   end
   
   def to_data
@@ -342,6 +365,14 @@ class Part
       @unused
     ].pack("s<s<vvvvCCCC")
   end
+  
+  def self.data_size
+    if SYSTEM == :nds
+      16
+    else
+      12
+    end
+  end
 end
 
 class Hitbox
@@ -351,11 +382,23 @@ class Hitbox
               :height
   
   def initialize(hitbox_data)
-    @x_pos, @y_pos, @width, @height = hitbox_data.unpack("s<s<vv")
+    if SYSTEM == :nds
+      @x_pos, @y_pos, @width, @height = hitbox_data.unpack("s<s<vv")
+    else
+      @x_pos, @y_pos, @width, @height = hitbox_data.unpack("ccCC")
+    end
   end
   
   def to_data
     [@x_pos, @y_pos, @width, @height].pack("s<s<vv")
+  end
+  
+  def self.data_size
+    if SYSTEM == :nds
+      8
+    else
+      4
+    end
   end
 end
 
@@ -373,11 +416,15 @@ class Frame
                 :first_part_offset
   
   def initialize(frame_data)
-    @unknown, @number_of_hitboxes, @number_of_parts, @first_hitbox_offset, @first_part_offset = frame_data.unpack("vCCVV")
+    if SYSTEM == :nds
+      @unknown, @number_of_hitboxes, @number_of_parts, @first_hitbox_offset, @first_part_offset = frame_data.unpack("vCCVV")
+    else
+      @unknown, @number_of_hitboxes, @number_of_parts, @unknown_2, @first_hitbox_offset, @first_part_offset = frame_data.unpack("VCCvVV")
+    end
   end
   
   def initialize_parts(all_sprite_parts, all_sprite_parts_by_offset)
-    @part_offsets = (@first_part_offset..@first_part_offset+@number_of_parts*0x10-1).step(0x10).to_a
+    @part_offsets = (@first_part_offset..@first_part_offset+@number_of_parts*Part.data_size-1).step(Part.data_size).to_a
     @parts = @part_offsets.map{|offset| all_sprite_parts_by_offset[offset]}
     @part_indexes = @parts.map{|part| all_sprite_parts.index(part)}
   end
@@ -407,6 +454,14 @@ class Frame
       @first_part_offset
     ].pack("vCCVV")
   end
+  
+  def self.data_size
+    if SYSTEM == :nds
+      12
+    else
+      16
+    end
+  end
 end
 
 class FrameDelay
@@ -415,11 +470,23 @@ class FrameDelay
                 :unknown
               
   def initialize(frame_delay_data)
-    @frame_index, @delay, @unknown = frame_delay_data.unpack("vvV")
+    if SYSTEM == :nds
+      @frame_index, @delay, @unknown = frame_delay_data.unpack("vvV")
+    else
+      @frame_index, @delay, @unknown = frame_delay_data.unpack("CCv")
+    end
   end
   
   def to_data
     [@frame_index, @delay, @unknown].pack("vvV")
+  end
+  
+  def self.data_size
+    if SYSTEM == :nds
+      8
+    else
+      4
+    end
   end
 end
 
@@ -429,17 +496,30 @@ class Animation
               :frame_delays
   attr_accessor :number_of_frames
               
-  def initialize(animation_data)
-    @number_of_frames, @first_frame_delay_offset = animation_data.unpack("VV")
+  def initialize(animation_data, offset)
+    if SYSTEM == :nds
+      @number_of_frames, @first_frame_delay_offset = animation_data.unpack("VV")
+    else
+      @number_of_frames, @unknown_1, @unknown_2 = animation_data.unpack("CCv")
+      @first_frame_delay_offset = offset + 4
+    end
   end
   
   def initialize_frame_delays(all_frame_delays, all_frame_delays_by_offset)
-    @frame_delay_offsets = (@first_frame_delay_offset..@first_frame_delay_offset+@number_of_frames*0x08-1).step(0x08).to_a
+    @frame_delay_offsets = (@first_frame_delay_offset..@first_frame_delay_offset+@number_of_frames*FrameDelay.data_size-1).step(FrameDelay.data_size).to_a
     @frame_delays = @frame_delay_offsets.map{|offset| all_frame_delays_by_offset[offset]}
     @frame_delay_indexes = @frame_delays.map{|frame_delay| all_frame_delays.index(frame_delay)}
   end
   
   def to_data
     [@number_of_frames, @first_frame_delay_offset].pack("VV")
+  end
+  
+  def self.data_size
+    if SYSTEM == :nds
+      8
+    else
+      4
+    end
   end
 end

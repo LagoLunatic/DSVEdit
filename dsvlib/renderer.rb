@@ -394,7 +394,20 @@ class Renderer
       palette = generate_palettes(nil, 16).first
     end
     
-    (0..255).each do |minitile_index|
+    if palette.length == 16
+      pixels_per_byte = 2
+    elsif palette.length == 256
+      pixels_per_byte = 1
+      raise "256-color palette in 1-dimensional mode"
+    else
+      raise "Unknown palette length: #{palette.length}"
+    end
+    
+    bytes_per_block = 8*8 / pixels_per_byte
+    
+    num_minitiles = gfx_page.gfx_data.length / bytes_per_block
+    
+    (0..num_minitiles-1).each do |minitile_index|
       rendered_minitile = render_1_dimensional_minitile(gfx_page, palette, minitile_index)
       
       minitile_x = (minitile_index % 16) * 8
@@ -865,6 +878,10 @@ class Renderer
     palette_offset = sprite_info.palette_offset
     sprite = sprite_info.sprite
     
+    if SYSTEM == :gba
+      one_dimensional_mode = true
+    end
+    
     gfx_with_blanks = []
     gfx_file_pointers.each do |gfx_file_pointer|
       gfx = GfxWrapper.new(gfx_file_pointer, fs)
@@ -917,7 +934,6 @@ class Renderer
         rendered_gfx_files_by_palette[part.palette_index+palette_offset][part.gfx_page_index] ||= render_gfx(nil, nil, 0, 0, first_canvas_width*8, first_canvas_width*8, canvas_width=first_canvas_width*8)
       else
         gfx_page = gfx_with_blanks[part.gfx_page_index]
-        gfx_file = gfx_page.file
         canvas_width = gfx_page.canvas_width
         if override_part_palette_index
           # For weapons (which always use the first palette) and skeletally animated enemies (which have their palette specified in the skeleton file).
@@ -929,6 +945,7 @@ class Renderer
         if one_dimensional_mode
           rendered_gfx_files_by_palette[part.palette_index+palette_offset][part.gfx_page_index] ||= render_gfx_1_dimensional_mode(gfx_page, palette || dummy_palette)
         else
+          gfx_file = gfx_page.file
           rendered_gfx_files_by_palette[part.palette_index+palette_offset][part.gfx_page_index] ||= render_gfx(gfx_file, palette || dummy_palette, 0, 0, canvas_width*8, canvas_width*8, canvas_width=canvas_width*8)
         end
       end

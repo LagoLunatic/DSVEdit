@@ -73,6 +73,46 @@ class SpriteEditor < Qt::Dialog
     @animation_timer.setSingleShot(true)
     connect(@animation_timer, SIGNAL("timeout()"), self, SLOT("advance_frame()"))
     
+    set_animation_paused(true)
+    
+    connect(@ui.tabWidget, SIGNAL("currentChanged(int)"), self, SLOT("tab_changed(int)"))
+    connect(@ui.enemy_list, SIGNAL("currentRowChanged(int)"), self, SLOT("enemy_changed(int)"))
+    connect(@ui.special_object_list, SIGNAL("currentRowChanged(int)"), self, SLOT("special_object_changed(int)"))
+    connect(@ui.weapon_list, SIGNAL("currentRowChanged(int)"), self, SLOT("weapon_changed(int)"))
+    connect(@ui.skill_list, SIGNAL("currentRowChanged(int)"), self, SLOT("skill_changed(int)"))
+    connect(@ui.other_sprites_list, SIGNAL("currentRowChanged(int)"), self, SLOT("other_sprite_changed(int)"))
+    connect(@ui.frame_index, SIGNAL("activated(int)"), self, SLOT("frame_changed(int)"))
+    connect(@ui.frame_first_part, SIGNAL("editingFinished()"), self, SLOT("frame_data_changed()"))
+    connect(@ui.frame_number_of_parts, SIGNAL("editingFinished()"), self, SLOT("frame_data_changed()"))
+    connect(@ui.seek_slider, SIGNAL("valueChanged(int)"), self, SLOT("animation_frame_changed(int)"))
+    connect(@ui.show_hitbox, SIGNAL("stateChanged(int)"), self, SLOT("toggle_hitbox(int)"))
+    connect(@ui.gfx_page_index, SIGNAL("activated(int)"), self, SLOT("gfx_page_changed(int)"))
+    connect(@ui.palette_index, SIGNAL("activated(int)"), self, SLOT("palette_changed(int)"))
+    connect(@ui.part_index, SIGNAL("activated(int)"), self, SLOT("part_changed(int)"))
+    connect(@ui.animation_index, SIGNAL("activated(int)"), self, SLOT("animation_changed(int)"))
+    connect(@ui.frame_delay, SIGNAL("editingFinished()"), self, SLOT("frame_delay_changed()"))
+    connect(@ui.part_horizontal_flip, SIGNAL("clicked(bool)"), self, SLOT("toggle_part_flips(bool)"))
+    connect(@ui.part_vertical_flip, SIGNAL("clicked(bool)"), self, SLOT("toggle_part_flips(bool)"))
+    connect(@ui.toggle_paused_button, SIGNAL("clicked()"), self, SLOT("toggle_animation_paused()"))
+    connect(@ui.reload_button, SIGNAL("clicked()"), self, SLOT("reload_sprite()"))
+    connect(@ui.export_button, SIGNAL("clicked()"), self, SLOT("export_sprite()"))
+    connect(@ui.view_skeleton_button, SIGNAL("clicked()"), self, SLOT("open_skeleton_editor()"))
+    connect(@ui.animation_add, SIGNAL("clicked()"), self, SLOT("add_animation()"))
+    connect(@ui.animation_remove, SIGNAL("clicked()"), self, SLOT("remove_animation()"))
+    connect(@ui.frame_add, SIGNAL("clicked()"), self, SLOT("add_frame()"))
+    connect(@ui.frame_remove, SIGNAL("clicked()"), self, SLOT("remove_frame()"))
+    connect(@ui.part_add, SIGNAL("clicked()"), self, SLOT("add_part()"))
+    connect(@ui.part_remove, SIGNAL("clicked()"), self, SLOT("remove_part()"))
+    connect(@ui.buttonBox, SIGNAL("clicked(QAbstractButton*)"), self, SLOT("button_box_clicked(QAbstractButton*)"))
+    
+    initialize_sprite_lists()
+    
+    load_blank_sprite()
+    
+    self.show()
+  end
+  
+  def initialize_sprite_lists
     @enemies = []
     ENEMY_IDS.each do |enemy_id|
       enemy = EnemyDNA.new(enemy_id, fs)
@@ -92,6 +132,10 @@ class SpriteEditor < Qt::Dialog
         object_name << "..."
       end
       @ui.special_object_list.addItem("%02X %s" % [special_object_id, object_name])
+    end
+    
+    if SYSTEM == :gba
+      return # TODO
     end
     
     weapon_items = []
@@ -164,42 +208,6 @@ class SpriteEditor < Qt::Dialog
     OTHER_SPRITES.each_with_index do |other_sprite, id|
       @ui.other_sprites_list.addItem("%02X %s" % [id, other_sprite[:desc]])
     end
-    
-    set_animation_paused(true)
-    
-    connect(@ui.tabWidget, SIGNAL("currentChanged(int)"), self, SLOT("tab_changed(int)"))
-    connect(@ui.enemy_list, SIGNAL("currentRowChanged(int)"), self, SLOT("enemy_changed(int)"))
-    connect(@ui.special_object_list, SIGNAL("currentRowChanged(int)"), self, SLOT("special_object_changed(int)"))
-    connect(@ui.weapon_list, SIGNAL("currentRowChanged(int)"), self, SLOT("weapon_changed(int)"))
-    connect(@ui.skill_list, SIGNAL("currentRowChanged(int)"), self, SLOT("skill_changed(int)"))
-    connect(@ui.other_sprites_list, SIGNAL("currentRowChanged(int)"), self, SLOT("other_sprite_changed(int)"))
-    connect(@ui.frame_index, SIGNAL("activated(int)"), self, SLOT("frame_changed(int)"))
-    connect(@ui.frame_first_part, SIGNAL("editingFinished()"), self, SLOT("frame_data_changed()"))
-    connect(@ui.frame_number_of_parts, SIGNAL("editingFinished()"), self, SLOT("frame_data_changed()"))
-    connect(@ui.seek_slider, SIGNAL("valueChanged(int)"), self, SLOT("animation_frame_changed(int)"))
-    connect(@ui.show_hitbox, SIGNAL("stateChanged(int)"), self, SLOT("toggle_hitbox(int)"))
-    connect(@ui.gfx_page_index, SIGNAL("activated(int)"), self, SLOT("gfx_page_changed(int)"))
-    connect(@ui.palette_index, SIGNAL("activated(int)"), self, SLOT("palette_changed(int)"))
-    connect(@ui.part_index, SIGNAL("activated(int)"), self, SLOT("part_changed(int)"))
-    connect(@ui.animation_index, SIGNAL("activated(int)"), self, SLOT("animation_changed(int)"))
-    connect(@ui.frame_delay, SIGNAL("editingFinished()"), self, SLOT("frame_delay_changed()"))
-    connect(@ui.part_horizontal_flip, SIGNAL("clicked(bool)"), self, SLOT("toggle_part_flips(bool)"))
-    connect(@ui.part_vertical_flip, SIGNAL("clicked(bool)"), self, SLOT("toggle_part_flips(bool)"))
-    connect(@ui.toggle_paused_button, SIGNAL("clicked()"), self, SLOT("toggle_animation_paused()"))
-    connect(@ui.reload_button, SIGNAL("clicked()"), self, SLOT("reload_sprite()"))
-    connect(@ui.export_button, SIGNAL("clicked()"), self, SLOT("export_sprite()"))
-    connect(@ui.view_skeleton_button, SIGNAL("clicked()"), self, SLOT("open_skeleton_editor()"))
-    connect(@ui.animation_add, SIGNAL("clicked()"), self, SLOT("add_animation()"))
-    connect(@ui.animation_remove, SIGNAL("clicked()"), self, SLOT("remove_animation()"))
-    connect(@ui.frame_add, SIGNAL("clicked()"), self, SLOT("add_frame()"))
-    connect(@ui.frame_remove, SIGNAL("clicked()"), self, SLOT("remove_frame()"))
-    connect(@ui.part_add, SIGNAL("clicked()"), self, SLOT("add_part()"))
-    connect(@ui.part_remove, SIGNAL("clicked()"), self, SLOT("remove_part()"))
-    connect(@ui.buttonBox, SIGNAL("clicked(QAbstractButton*)"), self, SLOT("button_box_clicked(QAbstractButton*)"))
-    
-    load_blank_sprite()
-    
-    self.show()
   end
   
   def tab_changed(tab_id)
@@ -486,7 +494,7 @@ class SpriteEditor < Qt::Dialog
         nil
       else
         canvas_width = gfx.canvas_width
-        if @one_dimensional_render_mode
+        if @one_dimensional_render_mode || SYSTEM == :gba
           chunky_image = @renderer.render_gfx_1_dimensional_mode(gfx, @palettes[palette_index])
         else
           chunky_image = @renderer.render_gfx(gfx.file, @palettes[palette_index], 0, 0, canvas_width*8, canvas_width*8, canvas_width=canvas_width*8)
@@ -576,7 +584,12 @@ class SpriteEditor < Qt::Dialog
       @ui.gfx_file_name.text = "Invalid (gfx page index #{gfx_page_index})"
     else
       @gfx_file_graphics_scene.addItem(gfx_page_pixmap_item)
-      @ui.gfx_file_name.text = @gfx_pages_with_blanks[gfx_page_index].file[:file_path]
+      gfx_file = @gfx_pages_with_blanks[gfx_page_index].file
+      if gfx_file
+        @ui.gfx_file_name.text = gfx_file[:file_path]
+      else
+        @ui.gfx_file_name.text = ""
+      end
     end
     
     @ui.gfx_page_index.setCurrentIndex(gfx_page_index)

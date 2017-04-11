@@ -249,6 +249,10 @@ class NDSFileSystem
     end
   end
   
+  def is_pointer?(value)
+    value >= 0x02000000 && value < 0x03000000
+  end
+  
   def commit_file_changes(base_directory = @filesystem_directory)
     print "Committing changes to filesystem... "
     
@@ -531,6 +535,14 @@ class NDSFileSystem
     write_by_file("/ftc/ndsheader.bin", 0x15E, [header_checksum].pack("v"))
   end
   
+  def all_sprite_pointers
+    @all_sprite_pointers ||= files.select do |id, file|
+      file[:type] == :file && file[:file_path] =~ /^\/so\/p_/
+    end.map do |id, file|
+      file[:ram_start_offset]
+    end
+  end
+    
   def files_without_dirs
     files.select{|id, file| file[:type] == :file}
   end

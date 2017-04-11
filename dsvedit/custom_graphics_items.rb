@@ -122,7 +122,7 @@ class DoorItem < Qt::GraphicsRectItem
   attr_reader :door
   
   def initialize(door, x, y, main_window)
-    super(0, 0, 16*16-1, 12*16-1)
+    super(0, 0, SCREEN_WIDTH_IN_PIXELS, SCREEN_HEIGHT_IN_PIXELS)
     setPos(x, y)
     
     @main_window = main_window
