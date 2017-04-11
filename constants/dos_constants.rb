@@ -212,7 +212,6 @@ ENEMY_DNA_BITFIELD_ATTRIBUTES = {
     "Resistance 14",
     "Backstab",
     "Resistance 16",
-    "Resistance 16",
     "Resistance 17",
     "Resistance 18",
     "Resistance 19",
@@ -422,6 +421,7 @@ BEST_SPRITE_FRAME_FOR_SPECIAL_OBJECT = {
 }
 BEST_SPRITE_OFFSET_FOR_SPECIAL_OBJECT = {
   0x00 => {x: 8, y: 8},
+  0x17 => {x: 8, y: 8},
   0x1D => {x: 8},
   0x25 => {x: 8},
   0x2A => {x: 8},

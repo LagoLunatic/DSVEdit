@@ -32,7 +32,7 @@ Each part is 16 bytes long.
   Bytes 7-8: y pos in pixels for where in the gfx file to look for this part.
   Bytes 9-10: Width of this part in pixels.
   Bytes 11-12: Height of this part in pixels.
-  Byte 13: Enemy gfx page index to use.
+  Byte 13: GFX page index to use.
   Byte 14: Flip bits.
     Least significant bit first.
     Bit 1: Vertical flip
