@@ -97,15 +97,15 @@ class TMXInterface
   
   def create(filename, room)
     all_tilesets_for_room = room.layers.map{|layer| layer.tileset_filename}.uniq
-    room_width_in_blocks = room.max_layer_width * 16
-    room_height_in_blocks = room.max_layer_height * 12
+    room_width_in_blocks = room.max_layer_width * SCREEN_WIDTH_IN_TILES
+    room_height_in_blocks = room.max_layer_height * SCREEN_HEIGHT_IN_TILES
     
     builder = Nokogiri::XML::Builder.new do |xml|
       xml.map(:version => "1.0", 
               :orientation => "orthogonal", 
               :renderorder => "right-down", 
               :width => room_width_in_blocks, :height => room_height_in_blocks, 
-              :tilewidth => 16, :tileheight => 16, 
+              :tilewidth => TILE_WIDTH, :tileheight => TILE_HEIGHT, 
               :nextobjectid => 1) {
         xml.properties {
           xml.property(:name => "map_x", :value => "%02X" % room.room_xpos_on_map)
@@ -115,17 +115,17 @@ class TMXInterface
         all_tilesets_for_room.each do |tileset|
           xml.tileset(:firstgid => get_block_offset_for_tileset(tileset, all_tilesets_for_room),
                       :name => tileset,
-                      :tilewidth => 16, :tileheight => 16) {
+                      :tilewidth => TILE_WIDTH, :tileheight => TILE_HEIGHT) {
             xml.image(:source => "./Tilesets/#{tileset}",
-                      :width => 256,
-                      :height => 1024)
+                      :width => TILESET_WIDTH_IN_TILES*TILE_WIDTH,
+                      :height => TILESET_HEIGHT_IN_TILES*TILE_HEIGHT)
           }
         end
         
         room.z_ordered_layers.each do |layer|
           layer_name = "layer %08X" % layer.layer_list_entry_ram_pointer
           xml.layer(:name => layer_name,
-                    :width => layer.width*16, :height => layer.height*12,
+                    :width => layer.width*SCREEN_WIDTH_IN_TILES, :height => layer.height*SCREEN_HEIGHT_IN_TILES,
                     :opacity => layer.opacity/31.0) {
             
             xml.properties {
@@ -156,8 +156,8 @@ class TMXInterface
             xml.object(:id => i+1,
                        :x => x,
                        :y => y,
-                       :width => 16*16,
-                       :height => 16*12) {
+                       :width => SCREEN_WIDTH_IN_PIXELS,
+                       :height => SCREEN_HEIGHT_IN_PIXELS) {
               
               xml.properties {
                 xml.property(:name => "door_ram_pointer", :value => "%08X" % door.door_ram_pointer)
