@@ -126,7 +126,7 @@ class MiniTile
   def initialize(minitile_data)
     @index_on_tile_page = (minitile_data & 0b00000000_11111111)
     @tile_page          = (minitile_data & 0b00000011_00000000) >> 8
-    @horizontal_flip    = (minitile_data & 0b00000100_00000000) == 0
+    @horizontal_flip    = (minitile_data & 0b00000100_00000000) > 0
     @vertical_flip      = (minitile_data & 0b00001000_00000000) > 0
     @palette            = (minitile_data & 0b11110000_00000000) >> 12
   end

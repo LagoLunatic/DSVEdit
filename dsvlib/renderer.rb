@@ -208,7 +208,7 @@ class Renderer
       end
       
       rendered_tile = ChunkyPNG::Image.new(32, 32)
-      minitile_x = 3
+      minitile_x = 0
       minitile_y = 0
       tile.minitiles.each do |minitile|
         x_on_gfx_page = minitile.index_on_tile_page % 16
@@ -230,9 +230,9 @@ class Renderer
           rendered_minitile.flip!
         end
         rendered_tile.compose!(rendered_minitile, minitile_x*8, minitile_y*8)
-        minitile_x -= 1
-        if minitile_x < 0
-          minitile_x = 3
+        minitile_x += 1
+        if minitile_x > 3
+          minitile_x = 0
           minitile_y += 1
         end
       end
