@@ -128,8 +128,8 @@ TEXT_LIST_START_OFFSET = 0x08506B38
 TEXT_RANGE = (0..0xB4E)
 TEXT_REGIONS = {
   "Character Names" => (0..0xA),
-  #"Item Names" => (0xC..0xD9),
-  #"Item Descriptions" => (0xDA..0x1A7),
+  "Item Names" => (0x5B..0xE2),
+  "Item Descriptions" => (0x15C..0x1E3),
   "Enemy Names" => (0x25D..0x2CD),
   "Enemy Descriptions" => (0x2CE..0x293),
   "Soul Names" => (0xE3..0x15B),
@@ -184,6 +184,48 @@ SPECIAL_OBJECT_UPDATE_CODE_LIST = 0x084F0ED8
 
 PICKUP_SUBTYPES_FOR_ITEMS = (0x02..0x04) # TODO
 PICKUP_SUBTYPES_FOR_SKILLS = (0x05..0xFF) # TODO
+
+WEAPON_FORMAT = [
+  # length: 28
+  [2, "Item ID"],
+  [1, "Icon"],
+  [1, "Icon Palette"],
+  [4, "Price"],
+  [1, "Attack Type"],
+  [1, "Unknown 4"],
+  [1, "Attack"],
+  [1, "Defense"],
+  [1, "Constitution"],
+  [1, "Intelligence"],
+  [1, "Mind"],
+  [1, "Luck"],
+  [2, "Effects", :bitfield],
+  [1, "Sprite"],
+  [1, "???"],
+  [1, "Unknown 10"],
+  [1, "Palette"],
+  [1, "? anim??"],
+  [1, "Unknown 12"],
+  [4, "Unknown 13"],
+]
+ARMOR_FORMAT = [
+  # length: 20
+  [2, "Item ID"],
+  [1, "Icon"],
+  [1, "Icon Palette"],
+  [4, "Price"],
+  [1, "Type"],
+  [1, "Unknown 4"],
+  [1, "Attack"],
+  [1, "Defense"],
+  [1, "Constitution"],
+  [1, "Intelligence"],
+  [1, "Mind"],
+  [1, "Luck"],
+  [2, "Resistances", :bitfield],
+  [1, "Unknown 8"],
+  [1, "Unknown 9"],
+]
 SOUL_FORMAT = [
   # length: 16
   [4, "Code"],
@@ -197,6 +239,18 @@ SOUL_FORMAT = [
 ]
 ITEM_TYPES = [
   {
+    name: "Weapons",
+    list_pointer: 0x08505D3C,
+    count: 0x3C,
+    format: WEAPON_FORMAT # length 28
+  },
+  {
+    name: "Armor",
+    list_pointer: 0x085063B0,
+    count: 0x2D,
+    format: ARMOR_FORMAT # length 20
+  },
+  {
     name: "Souls",
     list_pointer: 0x080E15A8,
     count: 0x37,
@@ -206,6 +260,24 @@ ITEM_TYPES = [
 ]
 ITEM_BITFIELD_ATTRIBUTES = {
   "Effects" => [
+    "Slash",
+    "Flame",
+    "Water",
+    "Thunder",
+    "Dark",
+    "Holy",
+    "Poison",
+    "Curse",
+    "Stone",
+    "Unknown 10",
+    "Unknown 11",
+    "Unknown 12",
+    "Unknown 13",
+    "Unknown 14",
+    "Unknown 15",
+    "Unknown 16",
+  ],
+  "Resistances" => [
     "Slash",
     "Flame",
     "Water",
