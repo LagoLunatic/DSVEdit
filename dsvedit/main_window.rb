@@ -232,6 +232,8 @@ class DSVEdit < Qt::MainWindow
   def extract_rom_dialog
     if game && game.folder
       default_dir = File.dirname(game.folder)
+    elsif game && game.rom_path
+      default_dir = File.dirname(game.rom_path)
     end
     rom_path = Qt::FileDialog.getOpenFileName(self, "Select ROM", default_dir, "NDS and GBA ROM Files (*.nds *.gba)")
     return if rom_path.nil?
@@ -242,6 +244,8 @@ class DSVEdit < Qt::MainWindow
   def open_folder_dialog
     if game && game.folder
       default_dir = File.dirname(game.folder)
+    elsif game && game.rom_path
+      default_dir = File.dirname(game.rom_path)
     end
     folder = Qt::FileDialog.getExistingDirectory(self, "Open folder", default_dir)
     return if folder.nil?

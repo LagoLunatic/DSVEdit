@@ -96,6 +96,9 @@ class Room
     if @layers.length == 0 # TODO
       #raise RoomReadError.new("Couldn't find any layers")
     end
+  rescue NDSFileSystem::ConversionError => e
+    # When layer_list_ram_pointer points to something outside the overlay, that means the room has no layers.
+    @layers = []
   end
   
   def read_graphic_tilesets_from_rom(gfx_list_pointer)

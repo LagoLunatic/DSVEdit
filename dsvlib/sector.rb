@@ -40,6 +40,7 @@ private
       room_metadata_ram_pointer = fs.read(sector_ram_pointer + room_index*4, 4).unpack("V*").first
       
       break if room_metadata_ram_pointer == 0
+      break if room_metadata_ram_pointer < 0x0850EF9C && SYSTEM == :gba # TODO: less hacky way to do this
       
       room_pointers << room_metadata_ram_pointer
       
@@ -52,8 +53,6 @@ private
     
     rooms = []
     room_pointers.each_with_index do |room_pointer, room_index|
-      break if room_pointer < 0x0850EF9C && SYSTEM == :gba # TODO: less hacky way to do this
-      
       room = Room.new(self, room_pointer, area.area_index, sector_index, room_index, game)
       rooms << room
     end

@@ -264,18 +264,20 @@ class DoSMap < Map
       end
     end
     
-    @secret_doors = []
-    i = 0
-    while true
-      x_pos, y_pos = fs.read(secret_door_list_pointer + i*2, 2).unpack("C*")
-      
-      if x_pos == 0xFF && y_pos == 0xFF
-        break
+    if @secret_door_list_pointer
+      @secret_doors = []
+      i = 0
+      while true
+        x_pos, y_pos = fs.read(secret_door_list_pointer + i*2, 2).unpack("C*")
+        
+        if x_pos == 0xFF && y_pos == 0xFF
+          break
+        end
+        
+        @secret_doors << DoSSecretDoor.new(x_pos, y_pos)
+        
+        i += 1
       end
-      
-      @secret_doors << DoSSecretDoor.new(x_pos, y_pos)
-      
-      i += 1
     end
   end
   

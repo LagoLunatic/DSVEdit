@@ -1,5 +1,7 @@
 
 class GBADecompress
+  class DecompressionError < StandardError ; end
+  
   def initialize(file, offset)
     @file = file
     @file.seek(offset)
@@ -14,7 +16,7 @@ class GBADecompress
     uncompressed_size = (header & 0xFFFFFF00) >> 8
     
     if compression_type != 0x10
-      raise "Not LZ77 compressed: %1X" % compression_type
+      raise DecompressionError.new("Not LZ77 compressed: %1X" % compression_type)
     end
     
     while true
