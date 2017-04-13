@@ -213,7 +213,7 @@ class DoSMap < Map
     @sector_index = sector_index
     @fs = fs
     
-    if [10, 11].include?(sector_index)
+    if GAME == "dos" && [10, 11].include?(sector_index)
       @is_abyss = true
     else
       @is_abyss = false
