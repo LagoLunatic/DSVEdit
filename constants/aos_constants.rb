@@ -182,9 +182,27 @@ SPECIAL_OBJECT_IDS = (0..0x75)
 SPECIAL_OBJECT_CREATE_CODE_LIST = 0x084F0DF8
 SPECIAL_OBJECT_UPDATE_CODE_LIST = 0x084F0ED8
 
+ITEM_LOCAL_ID_RANGES = {
+  0x02 => (0x00..0x1F), # consumable
+  0x03 => (0x00..0x3B), # weapon
+  0x04 => (0x00..0x2C), # armor
+}
+ITEM_GLOBAL_ID_RANGE = (1..0x87)
+SOUL_GLOBAL_ID_RANGE = (0..0x36)
+
 PICKUP_SUBTYPES_FOR_ITEMS = (0x02..0x04) # TODO
 PICKUP_SUBTYPES_FOR_SKILLS = (0x05..0xFF) # TODO
 
+CONSUMABLE_FORMAT = [
+  # length: 16
+  [2, "Item ID"],
+  [2, "Icon"],
+  [4, "Price"],
+  [1, "Type"],
+  [1, "Unknown 1"],
+  [2, "Var A"],
+  [4, "Unused"],
+]
 WEAPON_FORMAT = [
   # length: 28
   [2, "Item ID"],
@@ -238,6 +256,12 @@ SOUL_FORMAT = [
   [2, "Unknown 6"],
 ]
 ITEM_TYPES = [
+  {
+    name: "Consumables",
+    list_pointer: 0x08505B3C,
+    count: 0x20,
+    format: CONSUMABLE_FORMAT # length 16
+  },
   {
     name: "Weapons",
     list_pointer: 0x08505D3C,
