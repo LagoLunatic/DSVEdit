@@ -112,6 +112,10 @@ class Room
   def read_palette_pages_from_rom(palette_wrapper_pointer)
     i = 0
     @palette_pages = PaletteWrapper.from_palette_wrapper_pointer(palette_wrapper_pointer, fs)
+    
+    if SYSTEM == :nds
+      @palette_pages = @palette_pages[palette_page_index..palette_page_index]
+    end
   rescue NDSFileSystem::ConversionError => e
     # When palette_wrapper_pointer is like this (e.g. 0x02195984), it just points to 00s instead of actual data.
     # What this means is that the room doesn't load a palette. Instead it just keeps whatever palette the previous room had loaded.
@@ -167,10 +171,6 @@ class Room
       @room_ypos_on_map   = (extra_data & 0b00000000_00011111_11000000_00000000) >> 14
       @palette_page_index = (extra_data & 0b00001111_10000000_00000000_00000000) >> 23
     end
-  end
-  
-  def palette_page
-    palette_pages[palette_page_index]
   end
   
   def write_to_rom
