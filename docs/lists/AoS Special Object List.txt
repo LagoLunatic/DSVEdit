@@ -1,0 +1,34 @@
+00 Wooden door.
+01 Pushable crates.
+02 Boss door.
+04 Boss door (forces player to enter room).
+  This boss door can be placed away from the edge of the screen and the player will automatically walk past it when entering the room.
+05 Arena door.
+06 Darkness door.
+07 Applies a visual effect to the room.
+  Includes things like the Chaotic Realm's greyscale effect, bats in the background, etc. TODO
+08 Breakable wall.
+0D Bell.
+  Rings when you land on top of it.
+0E Candle
+0F Candle
+15 Moon portal to/from Chaotic Realm.
+16 Portal to Chaos.
+17 Elevator.
+19 Skull that moves around in a rectangular path.
+1C Save point.
+1F Warp point.
+20 Event?
+21 Falling spike trap from Arena.
+22 D-pad puzzle from Arena.
+26 Damaging hand/foot of Arena background statue.
+29 Vertically moving platform.
+2A Horizontally moving platform.
+32 Crumbling platform.
+33 Waterfall splashes?
+35 Metal gate/button.
+  Var A:
+    0 Button.
+    1 Metal gate.
+37 Demon head gate.
+  Must face away from it for its mouth to open.
