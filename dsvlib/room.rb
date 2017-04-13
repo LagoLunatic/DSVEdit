@@ -154,7 +154,7 @@ class Room
     @original_number_of_doors = 0
   end
   
-  def read_extra_data_from_rom(extra_data, extra_data_2)
+  def read_extra_data_from_rom(extra_data, extra_data_2=nil)
     if GAME == "dos"
       @number_of_doors    = (extra_data & 0b00000000_00000000_11111111_11111111)
       @room_xpos_on_map   = (extra_data & 0b00000000_00111111_00000000_00000000) >> 16
@@ -162,8 +162,8 @@ class Room
       @palette_page_index = 0 # Always 0 in DoS, and so not stored in this data
     elsif GAME == "aos"
       @number_of_doors    = (extra_data   & 0b00000000_00000000_11111111_11111111)
-      @room_xpos_on_map   = (extra_data_2 & 0b00000000_00111111_00000000_00000000) >> 16
-      @room_ypos_on_map   = (extra_data_2 & 0b00011111_10000000_00000000_00000000) >> 23
+      @room_xpos_on_map   = (extra_data_2 & 0b00000000_01111111_00000000_00000000) >> 16
+      @room_ypos_on_map   = (extra_data_2 & 0b00111111_10000000_00000000_00000000) >> 23
       @palette_page_index = 0 # Always 0 in AoS
     else
       @number_of_doors    = (extra_data & 0b00000000_00000000_00000000_01111111)
