@@ -30,7 +30,7 @@ class IconChooserDialog < Qt::Dialog
     connect(@ui.buttonBox, SIGNAL("clicked(QAbstractButton*)"), self, SLOT("button_pressed(QAbstractButton*)"))
     
     if mode == :item
-      initial_icon_index, initial_palette_index = EXTRACT_ICON_INDEX_AND_PALETTE_INDEX.call(icon_data)
+      initial_icon_index, initial_palette_index = GenericEditable.extract_icon_index_and_palette_index(icon_data)
       @ui.palette_index.setEnabled(true)
     else
       initial_icon_index = icon_data
@@ -157,7 +157,7 @@ class IconChooserDialog < Qt::Dialog
     palette_index = @ui.palette_index.currentIndex
     
     if @mode == :item
-      new_icon_data = PACK_ICON_INDEX_AND_PALETTE_INDEX.call(icon_index, palette_index)
+      new_icon_data = GenericEditable.pack_icon_index_and_palette_index(icon_index, palette_index)
     else
       new_icon_data = icon_index
     end

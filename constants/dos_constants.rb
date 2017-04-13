@@ -578,16 +578,6 @@ TRANSITION_ROOM_LIST_POINTER = 0x0208AD8C
 FAKE_TRANSITION_ROOMS = []
 
 ITEM_ICONS_PALETTE_POINTER = 0x022C4684
-EXTRACT_ICON_INDEX_AND_PALETTE_INDEX = Proc.new do |icon_data|
-  icon_index    = (icon_data & 0b00000000_11111111)
-  palette_index = (icon_data & 0b11111111_00000000) >> 8
-  [icon_index, palette_index]
-end
-PACK_ICON_INDEX_AND_PALETTE_INDEX = Proc.new do |icon_index, palette_index|
-  icon_data  = icon_index
-  icon_data |= palette_index << 8
-  icon_data
-end
 
 CONSUMABLE_FORMAT = [
   # length: 16

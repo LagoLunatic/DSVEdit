@@ -1003,7 +1003,7 @@ class Renderer
     item = GenericEditable.new(item_index, item_type, fs)
     
     if mode == :item
-      icon_index, palette_index = EXTRACT_ICON_INDEX_AND_PALETTE_INDEX.call(item["Icon"])
+      icon_index, palette_index = GenericEditable.extract_icon_index_and_palette_index(item["Icon"])
     else
       icon_index = item["Icon"]
       if item_type_index == 0
@@ -1025,7 +1025,7 @@ class Renderer
         pointer = base_pointer+item_index*format_length
         item = GenericEditable.new(item_index, item_type, fs)
         if item["Item ID"] == global_id
-          icon_index, palette_index = EXTRACT_ICON_INDEX_AND_PALETTE_INDEX.call(item["Icon"])
+          icon_index, palette_index = GenericEditable.extract_icon_index_and_palette_index(item["Icon"])
           return render_icon(icon_index, palette_index, mode=:item)
         end
       end
@@ -1044,18 +1044,21 @@ class Renderer
     
     gfx_page_index = icon_index / icons_per_page
     
+    # TODO AoS
     filename = mode == :item ? "item" : "rune"
     gfx_files = fs.files.values.select do |file|
       file[:file_path] =~ /\/sc\/f_#{filename}\d+\.dat/
     end
+    gfx_file = gfx_files[gfx_page_index]
     
     palette_pointer = mode == :item ? ITEM_ICONS_PALETTE_POINTER : GLYPH_ICONS_PALETTE_POINTER
     palettes = generate_palettes(palette_pointer, 16)
     
     if mode == :item
-      gfx_page_image = render_gfx_1_dimensional_mode(gfx_files[gfx_page_index], palettes[palette_index])
+      gfx_page = GfxWrapper.new(gfx_file[:ram_start_offset], fs)
+      gfx_page_image = render_gfx_1_dimensional_mode(gfx_page, palettes[palette_index])
     else
-      gfx_page_image = render_gfx_page(gfx_files[gfx_page_index], palettes[palette_index])
+      gfx_page_image = render_gfx_page(gfx_file, palettes[palette_index])
     end
     
     x_pos = ((icon_index % icons_per_page) % icons_per_row) * icon_width

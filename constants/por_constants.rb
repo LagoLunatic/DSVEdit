@@ -735,16 +735,6 @@ TRANSITION_ROOM_LIST_POINTER = nil
 FAKE_TRANSITION_ROOMS = [0x020E7F18] # This room is marked as a transition room, but it's not actually.
 
 ITEM_ICONS_PALETTE_POINTER = 0x022C2B14
-EXTRACT_ICON_INDEX_AND_PALETTE_INDEX = Proc.new do |icon_data|
-  icon_index    = (icon_data & 0b00000111_11111111)
-  palette_index = (icon_data & 0b11111000_00000000) >> 11
-  [icon_index, palette_index]
-end
-PACK_ICON_INDEX_AND_PALETTE_INDEX = Proc.new do |icon_index, palette_index|
-  icon_data  = icon_index
-  icon_data |= palette_index << 11
-  icon_data
-end
 
 CONSUMABLE_FORMAT = [
   # length: 12

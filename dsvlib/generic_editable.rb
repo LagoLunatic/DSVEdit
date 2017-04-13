@@ -118,6 +118,32 @@ class GenericEditable
     data_format.inject(0){|sum, attr| sum += attr[0]}
   end
   
+  def self.extract_icon_index_and_palette_index(icon_data)
+    case GAME
+    when "dos", "aos"
+      icon_index    = (icon_data & 0b00000000_11111111)
+      palette_index = (icon_data & 0b11111111_00000000) >> 8
+      [icon_index, palette_index]
+    else
+      icon_index    = (icon_data & 0b00000111_11111111)
+      palette_index = (icon_data & 0b11111000_00000000) >> 11
+      [icon_index, palette_index]
+    end
+  end
+  
+  def self.pack_icon_index_and_palette_index(icon_index, palette_index)
+    case GAME
+    when "dos", "aos"
+      icon_data  = icon_index
+      icon_data |= palette_index << 8
+      icon_data
+    else
+      icon_data  = icon_index
+      icon_data |= palette_index << 11
+      icon_data
+    end
+  end
+  
 private
   
   def attribute_format_string
