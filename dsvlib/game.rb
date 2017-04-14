@@ -6,21 +6,27 @@ class Game
   attr_reader :areas,
               :fs,
               :folder,
-              :rom_path,
               :text_database,
               :rooms_by_metadata_pointer
   
   def initialize_from_folder(input_folder_path)
     header_path = File.join(input_folder_path, "ftc", "ndsheader.bin")
-    unless File.file?(header_path)
+    gba_rom_path = File.join(input_folder_path, "rom.gba")
+    if File.file?(header_path)
+      verify_game_and_load_constants(header_path)
+    elsif File.file?(gba_rom_path)
+      verify_game_and_load_constants(gba_rom_path)
+    else
       raise InvalidFileError.new("Header file not present.")
     end
     
-    verify_game_and_load_constants(header_path)
-    
     @folder = input_folder_path
     
-    @fs = NDSFileSystem.new
+    if SYSTEM == :nds
+      @fs = NDSFileSystem.new
+    else
+      @fs = GBADummyFilesystem.new
+    end
     fs.open_directory(input_folder_path)
     
     read_from_rom()
@@ -33,23 +39,20 @@ class Game
     
     verify_game_and_load_constants(input_rom_path)
     
-    if SYSTEM == :gba
-      @folder = nil
-      @rom_path = input_rom_path
-      
-      @fs = GBADummyFilesystem.new(input_rom_path)
-    elsif extract_to_hard_drive
+    if extract_to_hard_drive
       @folder = File.dirname(input_rom_path)
-      @rom_path = nil
       
       rom_name = File.basename(input_rom_path, ".*")
       @folder = File.join(folder, "Extracted files #{rom_name}")
       
-      @fs = NDSFileSystem.new
+      if SYSTEM == :nds
+        @fs = NDSFileSystem.new
+      else
+        @fs = GBADummyFilesystem.new
+      end
       fs.open_and_extract_rom(input_rom_path, folder)
     else
       @folder = nil
-      @rom_path = nil
       
       @fs = NDSFileSystem.new
       fs.open_rom(input_rom_path)

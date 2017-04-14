@@ -4,8 +4,30 @@ class GBADummyFilesystem
   
   attr_reader :rom
   
-  def initialize(rom_path)
-    @rom = File.open(rom_path, "rb"){|f| f.read}
+  def open_directory(filesystem_directory)
+    @filesystem_directory = filesystem_directory
+    input_rom_path = "#{@filesystem_directory}/rom.gba"
+    @rom = File.open(input_rom_path, "rb") {|file| file.read}
+  end
+  
+  def open_and_extract_rom(input_rom_path, filesystem_directory)
+    @filesystem_directory = filesystem_directory
+    @rom = File.open(input_rom_path, "rb") {|file| file.read}
+    extract_to_hard_drive()
+  end
+  
+  def extract_to_hard_drive
+    output_path = File.join(@filesystem_directory, "rom.gba")
+    output_dir = File.dirname(output_path)
+    FileUtils.mkdir_p(output_dir)
+    File.open(output_path, "wb") do |f|
+      f.write(@rom)
+    end
+    
+    freespace_file = File.join(@filesystem_directory, "_dsvedit_freespace.txt")
+    if File.file?(freespace_file)
+      FileUtils.rm(freespace_file)
+    end
   end
   
   def convert_address(address)

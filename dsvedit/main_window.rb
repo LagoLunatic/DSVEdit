@@ -144,8 +144,6 @@ class DSVEdit < Qt::MainWindow
     
     if @settings[:last_used_folder] && File.directory?(@settings[:last_used_folder])
       open_folder(@settings[:last_used_folder])
-    elsif @settings[:last_used_rom] && File.file?(@settings[:last_used_rom])
-      extract_rom(@settings[:last_used_rom])
     end
   end
   
@@ -232,8 +230,6 @@ class DSVEdit < Qt::MainWindow
   def extract_rom_dialog
     if game && game.folder
       default_dir = File.dirname(game.folder)
-    elsif game && game.rom_path
-      default_dir = File.dirname(game.rom_path)
     end
     rom_path = Qt::FileDialog.getOpenFileName(self, "Select ROM", default_dir, "NDS and GBA ROM Files (*.nds *.gba)")
     return if rom_path.nil?
@@ -244,8 +240,6 @@ class DSVEdit < Qt::MainWindow
   def open_folder_dialog
     if game && game.folder
       default_dir = File.dirname(game.folder)
-    elsif game && game.rom_path
-      default_dir = File.dirname(game.rom_path)
     end
     folder = Qt::FileDialog.getExistingDirectory(self, "Open folder", default_dir)
     return if folder.nil?
@@ -270,19 +264,10 @@ class DSVEdit < Qt::MainWindow
     
     initialize_dropdowns()
     
-    if SYSTEM == :nds
-      @settings[:last_used_folder] = game.folder
-      @settings[:last_used_rom] = nil
-      
-      folder_name = File.basename(game.folder)
-      self.setWindowTitle("DSVania Editor #{DSVEDIT_VERSION} - #{folder_name}")
-    else
-      @settings[:last_used_rom] = game.rom_path
-      @settings[:last_used_folder] = nil
-      
-      rom_name = File.basename(game.rom_path)
-      self.setWindowTitle("DSVania Editor #{DSVEDIT_VERSION} - #{rom_name}")
-    end
+    @settings[:last_used_folder] = game.folder
+    
+    folder_name = File.basename(game.folder)
+    self.setWindowTitle("DSVania Editor #{DSVEDIT_VERSION} - #{folder_name}")
   rescue Game::InvalidFileError, NDSFileSystem::InvalidFileError
     Qt::MessageBox.warning(self, "Invalid file", "Selected ROM file is not a DSVania or is not a supported region.")
   end
