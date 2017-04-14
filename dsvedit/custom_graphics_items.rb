@@ -62,7 +62,7 @@ class EntityRectItem < Qt::GraphicsRectItem
   attr_reader :entity
   
   def initialize(entity, main_window)
-    super(-8, -8, 16-1, 16-1)
+    super(-8, -8, 16, 16)
     setPos(entity.x_pos, entity.y_pos)
     
     @main_window = main_window
