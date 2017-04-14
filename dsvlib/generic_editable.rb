@@ -99,6 +99,9 @@ class GenericEditable
       @name = Text.new(TEXT_REGIONS["Item Names"].begin + self["Item ID"], fs).decoded_string
       @description = Text.new(TEXT_REGIONS["Item Descriptions"].begin + self["Item ID"], fs).decoded_string
     end
+    
+    @name = @name.strip.gsub("\\n", "")
+    @description = @description.strip.gsub("\\n", "")
   end
   
   def write_to_rom

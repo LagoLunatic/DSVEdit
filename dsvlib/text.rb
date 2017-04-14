@@ -18,50 +18,29 @@ class Text
   end
   
   def read_from_rom
-    if SYSTEM == :gba
-      read_from_rom_gba()
-    elsif REGION == :jp
-      read_from_rom_jp()
-    else
-      read_from_rom_usa()
-    end
-  end
-  
-  def read_from_rom_gba
-    @text_ram_pointer = TEXT_LIST_START_OFFSET + 4*text_id
-    @string_ram_pointer = fs.read(@text_ram_pointer, 4).unpack("V").first
-    @encoded_string = fs.read_until_end_marker(string_ram_pointer+2, [0x0A]) # Skip the first 2 bytes which are always 01 00.
-    
-    @decoded_string = @encoded_string
-  end
-  
-  def read_from_rom_usa
     if overlay_id
       fs.load_overlay(overlay_id)
     end
     
     @text_ram_pointer = TEXT_LIST_START_OFFSET + 4*text_id
     @string_ram_pointer = fs.read(@text_ram_pointer, 4).unpack("V").first
-    @encoded_string = fs.read_until_end_marker(string_ram_pointer+2, [0xEA]) # Skip the first 2 bytes which are always 01 00.
+    
+    if SYSTEM == :gba
+      @encoded_string = fs.read_until_end_marker(string_ram_pointer+2, [0x0A]) # Skip the first 2 bytes which are always 01 00.
+    elsif REGION == :jp
+      @encoded_string = fs.read_until_end_marker(string_ram_pointer+2, [0x0A, 0xF0]) # Skip the first 2 bytes which are always 00 00.
+    else
+      @encoded_string = fs.read_until_end_marker(string_ram_pointer+2, [0xEA]) # Skip the first 2 bytes which are always 01 00.
+    end
     
     @decoded_string = decode_string(@encoded_string)
   end
   
-  def read_from_rom_jp
-    if overlay_id
-      fs.load_overlay(overlay_id)
-    end
-    
-    @text_ram_pointer = TEXT_LIST_START_OFFSET + 4*text_id
-    @string_ram_pointer = fs.read(@text_ram_pointer, 4).unpack("V").first
-    @encoded_string = fs.read_until_end_marker(string_ram_pointer+2, [0x0A, 0xF0]) # Skip the first 2 bytes which are always 00 00.
-    
-    @decoded_string = decode_string_jp(@encoded_string)
-  end
-  
   def write_to_rom
     fs.write(text_ram_pointer, [string_ram_pointer].pack("V"))
-    if REGION == :jp
+    if SYSTEM == :gba
+      data = [1].pack("v") + encoded_string + [0x0A].pack("C")
+    elsif REGION == :jp
       data = [0].pack("v") + encoded_string + [0x0A, 0xF0].pack("CC")
     else
       data = [1].pack("v") + encoded_string + [0xEA].pack("C")
@@ -70,8 +49,10 @@ class Text
   end
   
   def overlay_id
-    region_name = TEXT_REGIONS.find{|name, range| range.include?(text_id)}[0]
-    TEXT_REGIONS_OVERLAYS[region_name]
+    if SYSTEM == :nds
+      region_name = TEXT_REGIONS.find{|name, range| range.include?(text_id)}[0]
+      TEXT_REGIONS_OVERLAYS[region_name]
+    end
   end
   
   def decoded_string=(new_str)
@@ -129,7 +110,9 @@ class Text
   end
   
   def decode_string(string)
-    if REGION == :jp
+    if SYSTEM == :gba
+      decode_string_gba(string)
+    elsif REGION == :jp
       decode_string_jp(string)
     else
       decode_string_usa(string)
@@ -149,13 +132,17 @@ class Text
           data = $2
         end
         
-        if REGION == :jp
+        if SYSTEM == :gba
+          raise TextEncodeError.new("AoS text encoding TODO")
+        elsif REGION == :jp
           encode_command_jp(command, data)
         else
           encode_command_usa(command, data)
         end
       else
-        if REGION == :jp
+        if SYSTEM == :gba
+          raise TextEncodeError.new("AoS text encoding TODO")
+        elsif REGION == :jp
           encode_char_jp(str)
         else
           encode_char_usa(str)
@@ -284,6 +271,67 @@ class Text
       
       previous_halfword = halfword
       prev_was_command = curr_is_command
+      
+      char
+    end.join
+    
+    return decoded_string
+  end
+  
+  def decode_string_gba(string)
+    data_format_string = "0x%02X"
+    previous_byte = nil
+    multipart = false
+    skip_next = false
+    curr_is_command = nil
+    prev_was_command = nil
+    i = 0
+    decoded_string = string.each_char.map do |char|
+      byte = char.unpack("C").first
+      
+      char = if byte < 0x20
+        curr_is_command = true
+        
+        command_number = byte
+        command = decode_command(command_number, data_format_string)
+        if command == :multipart
+          multipart = true
+          ""
+        else
+          command
+        end
+      else
+        curr_is_command = false
+        
+        case byte
+        when 0x20..0x7E # Ascii text
+          char = [byte].pack("C")
+          if char == "{" || char == "}"
+            char = "\\" + char
+          end
+          char
+        #when 0x5F
+        #  "・"
+        #when 0xAF
+        #  "’"
+        #when 0xB1
+        #  '”'
+        #when 0x60..0xBF
+        #  "¡¢£¨©®°±´¸¿ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖ×ØÙÚÛÜÝßàáâãäåæçèéêëìíîïðñòóôõö÷øùúûüýŒœ"[byte-0x60]
+        else
+          "{RAW #{data_format_string}}" % byte
+        end
+      end
+      
+      if curr_is_command != prev_was_command && !prev_was_command.nil? && previous_byte != 0x06 && byte != 0x06
+        # Add a newline between a block of commands and some text for readability.
+        char = "\n#{char}"
+      end
+      
+      previous_byte = byte
+      prev_was_command = curr_is_command
+      
+      i += 1
       
       char
     end.join
