@@ -82,10 +82,10 @@ class EntityEditorDialog < Qt::Dialog
         elsif subtype == 1
           subtype_name = "Money"
         elsif PICKUP_SUBTYPES_FOR_ITEMS.include?(subtype)
-          if GAME == "dos" || GAME == "por"
-            subtype_name = ITEM_TYPES[subtype-2][:name]
-          else
+          if GAME == "ooe"
             subtype_name = "Item"
+          else
+            subtype_name = ITEM_TYPES[subtype-2][:name]
           end
         elsif PICKUP_SUBTYPES_FOR_SKILLS.include?(subtype)
           subtype_name = "Skill"

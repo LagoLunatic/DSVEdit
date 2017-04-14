@@ -39,6 +39,8 @@ class ItemEditor < Qt::Dialog
         "Soul format"
       when "Souls (extra data)"
         "Extra soul data format"
+      else
+        ""
       end
       doc = main_window.game.item_format_docs[doc_name]
       

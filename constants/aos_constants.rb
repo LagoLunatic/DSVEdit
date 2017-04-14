@@ -51,9 +51,8 @@ ENTITY_TYPE_DESCRIPTIONS = {
   2 => "Special object",
   3 => "Candle",
   4 => "Pickup",
-  5 => "???",
-  6 => "Entity hider",
-  7 => "Font loader",
+  5 => "Hard mode pickup",
+  6 => "All-souls-found pickup",
 }
 
 ENEMY_IDS = (0x00..0x70)
@@ -360,6 +359,8 @@ BEST_SPRITE_FRAME_FOR_ENEMY = {
   0x00 => 0x03,
   0x01 => 0x06,
   0x06 => 0x11,
+  0x07 => 0x08,
+  0x0E => 0x07,
 }
 
 OVERLAY_FILE_FOR_SPECIAL_OBJECT = {}

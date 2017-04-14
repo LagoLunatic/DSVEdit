@@ -24,9 +24,9 @@ Entity types:
   03 Item: weapon.
     Var A: Flag for having picked up this item.
     Var B: The local ID of the weapon.
-  04 Item: body armor.
+  04 Item: body armor/accessory.
     Var A: Flag for having picked up this item.
-    Var B: The local ID of the body armor.
+    Var B: The local ID of the body armor/accessory.
   05+ Free soul.
     Var A: No effect.
     Var B: The global ID of the soul.

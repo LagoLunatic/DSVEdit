@@ -1,0 +1,47 @@
+Entity types:
+
+00 Nothing.
+
+01 Enemy.
+  Subtype determines which enemy. It's equal to ID of enemy in the bestiary, except starting at 0 instead of at 1.
+
+02 Special object.
+  Subtype determines which object. See special object list for details on each object.
+
+03 Generic candle.
+  Unaffected by subtype.
+
+04 Pickup. Subtype:
+  00 Nothing?
+  01 Money.
+    Var A: Flag for having picked up this money.
+    Var B: The amount of money. From 0 to 6: $1 $10 $50 $100 $500 $1000 $2000.
+  02 Item: consumable.
+    Var A: Flag for having picked up this item.
+    Var B: The local ID of the consumable.
+  03 Item: weapon.
+    Var A: Flag for having picked up this item.
+    Var B: The local ID of the weapon.
+  04 Item: body armor/accessory.
+    Var A: Flag for having picked up this item.
+    Var B: The local ID of the body armor/accessory.
+  05 Red soul candle.
+    Var A: Flag for having picked up this item.
+    Var B: The local ID of the soul + 1.
+  06 Blue soul candle.
+    Var A: Flag for having picked up this item.
+    Var B: The local ID of the soul + 1.
+  07 Yellow soul candle.
+    Var A: Flag for having picked up this item.
+    Var B: The local ID of the soul + 1.
+  08 Ability soul candle.
+    Var A: Flag for having picked up this item.
+    Var B: The local ID of the soul + 1.
+
+05 Hard mode pickup.
+  Appears only on normal mode.
+  Subtype/Var A/Var B work the same as normal pickups.
+
+06 All-souls-found pickup.
+  Appears only once you have all souls.
+  Subtype/Var A/Var B work the same as normal pickups.
