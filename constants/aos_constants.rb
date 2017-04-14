@@ -353,6 +353,36 @@ ITEM_BITFIELD_ATTRIBUTES = {
 OVERLAY_FILE_FOR_ENEMY_AI = {}
 REUSED_ENEMY_INFO = {
   0x07 => {init_code: 0x08070AC4}, # killer fish
+  0x0B => {init_code: 0x08077C40}, # white dragon
+  0x0F => {init_code: 0x08075660, palette_offset: 1}, # siren -> harpy
+  0x11 => {init_code: 0x08093178}, # durga -> curly
+  0x13 => {init_code: 0x0807E2CC}, # giant ghost
+  0x15 => {init_code: 0x080B0AD4}, # minotaur
+  0x17 => {init_code: 0x0807A970}, # arachne
+  0x1C => {init_code: 0x08089A50, palette_offset: 1}, # catoblepas
+  0x22 => {init_code: 0x08081128, palette_offset: 2, gfx_sheet_ptr_index: 1}, # wooden golem
+  0x2B => {palette_offset: 1}, # curly
+  0x2D => {palette_offset: 1}, # red crow -> blue crow
+  0x2E => {init_code: 0x080BBFF0}, # cockatrice
+  0x30 => {init_code: 0x08091430, palette_offset: 2}, # devil
+  0x35 => {init_code: 0x08081128, gfx_sheet_ptr_index: 1}, # golem
+  0x3E => {init_code: 0x080AD7F0}, # giant worm
+  0x43 => {init_code: 0x08087D24}, # triton
+  0x49 => {init_code: 0x080B7E80}, # cagnazzo TODO sprite file
+  0x4A => {palette_offset: 1}, # ripper
+  0x4B => {init_code: 0x0807968C}, # werejaguar
+  0x50 => {init_code: 0x08081128, palette_offset: 3}, # flesh golem TODO
+  0x54 => {init_code: 0x0807968C, palette_offset: 1}, # weretiger
+  0x58 => {init_code: 0x080B0AD4, palette_offset: 1}, # red minotaur
+  0x5D => {init_code: 0x080A1BEC}, # gladiator
+  0x60 => {init_code: 0x08099430}, # mimic
+  0x61 => {init_code: 0x0809C4E4}, # stolas
+  0x62 => {init_code: 0x0806E714, palette_offset: 1}, # erinys -> valkyrie
+  0x63 => {init_code: 0x080B7E80, palette_offset: 1}, # lubicant TODO sprite file
+  0x64 => {init_code: 0x080BBFF0, palette_offset: 1}, # basilisk
+  0x65 => {init_code: 0x08081128, palette_offset: 1, gfx_sheet_ptr_index: 1}, # iron golem
+  0x66 => {init_code: 0x08091430, palette_offset: 1}, # demon lord
+  0x68 => {init_code: 0x08091430, palette_offset: 3}, # flame demon
 }
 ENEMY_FILES_TO_LOAD_LIST = nil
 BEST_SPRITE_FRAME_FOR_ENEMY = {
@@ -361,12 +391,27 @@ BEST_SPRITE_FRAME_FOR_ENEMY = {
   0x06 => 0x11,
   0x07 => 0x08,
   0x0E => 0x07,
+  0x17 => 0x1D,
+  0x22 => 0x01,
+  0x30 => 0x05,
+  0x3D => 0x08,
+  0x50 => 0x10,
+  0x51 => 0x09,
+  0x65 => 0x02,
+  0x66 => 0x08,
+  0x68 => 0x05,
 }
 
 OVERLAY_FILE_FOR_SPECIAL_OBJECT = {}
-REUSED_SPECIAL_OBJECT_INFO = {}
+REUSED_SPECIAL_OBJECT_INFO = {
+  0x00 => {init_code: 0x0804D8F0}, # wooden door
+  0x01 => {init_code: 0x08033254}, # pushable crate TODO: sprite file can't be found, gfx and palette are fine
+}
 SPECIAL_OBJECT_FILES_TO_LOAD_LIST = nil
-BEST_SPRITE_FRAME_FOR_SPECIAL_OBJECT = {}
+BEST_SPRITE_FRAME_FOR_SPECIAL_OBJECT = {
+  0x00 => 0x01,
+  0x26 => 0x02,
+}
 BEST_SPRITE_OFFSET_FOR_SPECIAL_OBJECT = {}
 
 OTHER_SPRITES = []

@@ -64,10 +64,9 @@ class SpriteInfo
     if init_code_pointer == -1
       raise CreateCodeReadError.new("This entity has no sprite.")
     end
-    if init_code_pointer & 0b1 != 0
-      # Get rid of lowest bit for GBA games.
-      init_code_pointer ^= 1
-    end
+    
+    # Clear lowest two bits of init code pointer so it's aligned to 4 bytes.
+    init_code_pointer = init_code_pointer & 0xFFFFFFFC
     
     gfx_files_to_load = []
     sprite_files_to_load = []
@@ -144,7 +143,7 @@ class SpriteInfo
     data = fs.read(init_code_pointer, 4*1000, allow_length_to_exceed_end_of_file: true)
     
     data.unpack("V*").each_with_index do |word, i|
-      if fs.is_pointer?(word)#(0x02000000..0x02FFFFFF).include?(word)
+      if fs.is_pointer?(word)
         possible_gfx_pointers << word
         possible_palette_pointers << word
         possible_sprite_pointers << word
