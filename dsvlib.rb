@@ -32,8 +32,6 @@ require_relative 'dsvlib/player'
 require_relative 'dsvlib/renderer'
 require_relative 'dsvlib/tmx_interface'
 
-require_relative 'constants/shared_constants'
-
 if defined?(Ocra)
   orig_verbosity = $VERBOSE
   $VERBOSE = nil
