@@ -132,6 +132,10 @@ class NDSFileSystem
     puts "Done"
   end
   
+  def rom_file_extension
+    "nds"
+  end
+  
   def all_files
     @files.values + @extra_files
   end

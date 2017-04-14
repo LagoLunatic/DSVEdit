@@ -30,6 +30,20 @@ class GBADummyFilesystem
     end
   end
   
+  def write_to_rom(output_rom_path)
+    print "Writing files to #{output_rom_path}... "
+    
+    File.open(output_rom_path, "wb") do |f|
+      f.write(@rom)
+    end
+    yield 2
+    puts "Done"
+  end
+  
+  def rom_file_extension
+    "gba"
+  end
+  
   def convert_address(address)
     if !is_pointer?(address)
       raise ReadError.new("Invalid address: %08X" % address)
@@ -60,6 +74,11 @@ class GBADummyFilesystem
   
   def load_overlay(overlay_id)
     # Do nothing.
+  end
+  
+  def files_without_dirs
+    # This is for the progress dialog when writing to the rom. Give it a dummy max value of 1.
+    ["rom.gba"]
   end
   
   def read_until_end_marker(address, end_markers)

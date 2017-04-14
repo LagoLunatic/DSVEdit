@@ -802,7 +802,7 @@ class DSVEdit < Qt::MainWindow
     connect(@progress_dialog, SIGNAL("canceled()"), self, SLOT("cancel_write_to_rom_thread()"))
     @progress_dialog.show
     
-    output_rom_path = File.join(game.folder, "built_rom_#{GAME}.nds")
+    output_rom_path = File.join(game.folder, "built_rom_#{GAME}.#{fs.rom_file_extension}")
     
     @write_to_rom_thread = Thread.new do
       fs.write_to_rom(output_rom_path) do |files_written|
@@ -817,16 +817,23 @@ class DSVEdit < Qt::MainWindow
       end
       
       Qt.execute_in_main_thread do
-        @progress_dialog.setValue(fs.files_without_dirs.length) unless @progress_dialog.wasCanceled
+        @progress_dialog.setValue(@progress_dialog.maximum) unless @progress_dialog.wasCanceled
+        @progress_dialog.close()
         @progress_dialog = nil
         
         if launch_emulator
-          if @settings[:emulator_path].nil? || @settings[:emulator_path].empty?
+          if SYSTEM == :nds
+            emulator_path = @settings[:emulator_path]
+          else
+            emulator_path = @settings[:gba_emulator_path]
+          end
+          
+          if emulator_path.nil? || emulator_path.empty?
             Qt::MessageBox.warning(self, "Failed to run emulator", "You must specify the emulator path.")
-          elsif !File.file?(@settings[:emulator_path])
+          elsif !File.file?(emulator_path)
             Qt::MessageBox.warning(self, "Failed to run emulator", "Emulator path is invalid.")
           else
-            system("start \"#{@settings[:emulator_path]}\" \"#{output_rom_path}\"")
+            system("start \"#{emulator_path}\" \"#{output_rom_path}\"")
           end
         else
           #Qt::MessageBox.information(self, "Done", "All files written to rom.")
