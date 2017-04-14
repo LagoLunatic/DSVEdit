@@ -244,7 +244,7 @@ ARMOR_FORMAT = [
   [1, "Unknown 8"],
   [1, "Unknown 9"],
 ]
-SOUL_FORMAT = [
+RED_SOUL_FORMAT = [
   # length: 16
   [4, "Code"],
   [2, "Unknown 1"],
@@ -254,6 +254,22 @@ SOUL_FORMAT = [
   [2, "Unknown 4"],
   [2, "Effects", :bitfield],
   [2, "Unknown 6"],
+]
+BLUE_SOUL_FORMAT = [
+  # length: 12
+  [4, "Code"],
+  [2, "Unknown 1"],
+  [2, "Unknown 2"],
+  [2, "Unknown 3"],
+  [2, "Unknown 4"],
+]
+YELLOW_SOUL_FORMAT = [
+  # length: 12
+  [4, "Code"],
+  [2, "Unknown 1"],
+  [2, "Unknown 2"],
+  [2, "Unknown 3"],
+  [2, "Unknown 4"],
 ]
 ITEM_TYPES = [
   {
@@ -275,11 +291,25 @@ ITEM_TYPES = [
     format: ARMOR_FORMAT # length 20
   },
   {
-    name: "Souls",
+    name: "Red Souls",
     list_pointer: 0x080E15A8,
     count: 0x37,
     kind: :skill,
-    format: SOUL_FORMAT # length: 16
+    format: RED_SOUL_FORMAT # length: 16
+  },
+  {
+    name: "Blue Souls",
+    list_pointer: 0x080E1938,
+    count: 0x19,
+    kind: :skill,
+    format: BLUE_SOUL_FORMAT # length: 12
+  },
+  {
+    name: "Yellow Souls",
+    list_pointer: 0x080E1B14,
+    count: 0x23,
+    kind: :skill,
+    format: YELLOW_SOUL_FORMAT # length: 12
   },
 ]
 ITEM_BITFIELD_ATTRIBUTES = {
@@ -337,6 +367,9 @@ BEST_SPRITE_FRAME_FOR_SPECIAL_OBJECT = {}
 BEST_SPRITE_OFFSET_FOR_SPECIAL_OBJECT = {}
 
 OTHER_SPRITES = []
+
+WEAPON_GFX_LIST_START = 0x084F10C0
+WEAPON_SPRITES_LIST_START = 0x084F117C
 
 MAP_TILE_METADATA_LIST_START_OFFSET = nil
 MAP_TILE_METADATA_START_OFFSET = 0x08116650

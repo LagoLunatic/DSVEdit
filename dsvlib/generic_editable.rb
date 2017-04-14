@@ -21,6 +21,7 @@ class GenericEditable
     @ram_pointer = item_type[:list_pointer] + index*format_length
     @data_format = item_type[:format]
     @kind = item_type[:kind]
+    @item_type_name = item_type[:name]
     
     @bitfield_docs = case @kind
     when :enemy
@@ -68,9 +69,22 @@ class GenericEditable
       @description = Text.new(TEXT_REGIONS["Enemy Descriptions"].begin + index, fs).decoded_string
     when :skill
       case GAME
-      when "dos", "aos"
+      when "dos"
         @name = Text.new(TEXT_REGIONS["Soul Names"].begin + index, fs).decoded_string
         @description = Text.new(TEXT_REGIONS["Soul Descriptions"].begin + index, fs).decoded_string
+      when "aos"
+        case @item_type_name
+        when "Red Souls"
+          offset = 0
+        when "Blue Souls"
+          offset = ITEM_TYPES[3][:count]
+        when "Yellow Souls"
+          offset = ITEM_TYPES[3][:count] + ITEM_TYPES[4][:count]
+        when "Ability Souls"
+          offset = ITEM_TYPES[3][:count] + ITEM_TYPES[4][:count] + ITEM_TYPES[5][:count]
+        end
+        @name = Text.new(TEXT_REGIONS["Soul Names"].begin + offset + index, fs).decoded_string
+        @description = Text.new(TEXT_REGIONS["Soul Descriptions"].begin + offset + index, fs).decoded_string
       when "por"
         @name = Text.new(TEXT_REGIONS["Skill Names"].begin + index, fs).decoded_string
         @description = Text.new(TEXT_REGIONS["Skill Descriptions"].begin + index, fs).decoded_string
