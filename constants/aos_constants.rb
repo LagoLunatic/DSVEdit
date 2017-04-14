@@ -353,6 +353,7 @@ ITEM_BITFIELD_ATTRIBUTES = {
 OVERLAY_FILE_FOR_ENEMY_AI = {}
 REUSED_ENEMY_INFO = {
   0x07 => {init_code: 0x08070AC4}, # killer fish
+  0x08 => {init_code: 0x081193DC}, # bone pillar
   0x0B => {init_code: 0x08077C40}, # white dragon
   0x0F => {init_code: 0x08075660, palette_offset: 1}, # siren -> harpy
   0x11 => {init_code: 0x08093178}, # durga -> curly
@@ -360,29 +361,40 @@ REUSED_ENEMY_INFO = {
   0x15 => {init_code: 0x080B0AD4}, # minotaur
   0x17 => {init_code: 0x0807A970}, # arachne
   0x1C => {init_code: 0x08089A50, palette_offset: 1}, # catoblepas
+  0x21 => {init_code: 0x08098E00}, # creaking skull
   0x22 => {init_code: 0x08081128, palette_offset: 2, gfx_sheet_ptr_index: 1}, # wooden golem
+  0x25 => {palette_offset: 1}, # lilith -> succubus
   0x2B => {palette_offset: 1}, # curly
   0x2D => {palette_offset: 1}, # red crow -> blue crow
   0x2E => {init_code: 0x080BBFF0}, # cockatrice
   0x30 => {init_code: 0x08091430, palette_offset: 2}, # devil
   0x35 => {init_code: 0x08081128, gfx_sheet_ptr_index: 1}, # golem
+  0x36 => {init_code: 0x0807406C}, # manticore
+  0x37 => {init_code: 0x080864A0, palette_offset: 1}, # gremlin => gargoyle
+  0x3C => {init_code: 0x0808E024}, # great armor
   0x3E => {init_code: 0x080AD7F0}, # giant worm
+  0x41 => {init_code: 0x081193EC}, # fish head
   0x43 => {init_code: 0x08087D24}, # triton
-  0x49 => {init_code: 0x080B7E80}, # cagnazzo TODO sprite file
+  0x47 => {init_code: 0x080AD7F0, palette_offset: 1}, # poison worm
+  0x48 => {init_code: 0x08091430}, # arc demon
+  0x49 => {init_code: 0x080B7E80, sprite: 0x0824A334}, # cagnazzo
   0x4A => {palette_offset: 1}, # ripper
   0x4B => {init_code: 0x0807968C}, # werejaguar
   0x50 => {init_code: 0x08081128, palette_offset: 3}, # flesh golem TODO
   0x54 => {init_code: 0x0807968C, palette_offset: 1}, # weretiger
   0x58 => {init_code: 0x080B0AD4, palette_offset: 1}, # red minotaur
+  0x5C => {init_code: 0x08098E00, palette_offset: 1}, # giant skeleton
   0x5D => {init_code: 0x080A1BEC}, # gladiator
   0x60 => {init_code: 0x08099430}, # mimic
   0x61 => {init_code: 0x0809C4E4}, # stolas
   0x62 => {init_code: 0x0806E714, palette_offset: 1}, # erinys -> valkyrie
-  0x63 => {init_code: 0x080B7E80, palette_offset: 1}, # lubicant TODO sprite file
+  0x63 => {init_code: 0x080B7E80, palette_offset: 1, sprite: 0x0824A334}, # lubicant
   0x64 => {init_code: 0x080BBFF0, palette_offset: 1}, # basilisk
   0x65 => {init_code: 0x08081128, palette_offset: 1, gfx_sheet_ptr_index: 1}, # iron golem
   0x66 => {init_code: 0x08091430, palette_offset: 1}, # demon lord
+  0x67 => {init_code: 0x0808E024, palette_offset: 1}, # final guard
   0x68 => {init_code: 0x08091430, palette_offset: 3}, # flame demon
+  0x69 => {init_code: 0x0808E024, palette_offset: 2}, # shadow knight
 }
 ENEMY_FILES_TO_LOAD_LIST = nil
 BEST_SPRITE_FRAME_FOR_ENEMY = {
@@ -392,29 +404,44 @@ BEST_SPRITE_FRAME_FOR_ENEMY = {
   0x07 => 0x08,
   0x0E => 0x07,
   0x17 => 0x1D,
+  0x21 => 0x16,
   0x22 => 0x01,
   0x30 => 0x05,
+  0x36 => 0x03,
+  0x3C => 0x0E,
   0x3D => 0x08,
+  0x3E => 0x07,
+  0x48 => 0x07,
+  0x4D => 0x0A,
   0x50 => 0x10,
   0x51 => 0x09,
+  0x60 => 0x0D,
   0x65 => 0x02,
   0x66 => 0x08,
+  0x67 => 0x11,
   0x68 => 0x05,
+  0x69 => 0x12,
 }
 
 OVERLAY_FILE_FOR_SPECIAL_OBJECT = {}
 REUSED_SPECIAL_OBJECT_INFO = {
   0x00 => {init_code: 0x0804D8F0}, # wooden door
   0x01 => {init_code: 0x08033254}, # pushable crate TODO: sprite file can't be found, gfx and palette are fine
+  0x0E => {desc: "Common", sprite: 0x0820ED60, gfx_wrapper: 0x081C15F4, palette: 0x082099FC, palette_offset: 3, unwrapped_gfx: true}, # TODO this is actually a candle not in the common sprite
+  0x0F => {desc: "Common", sprite: 0x0820ED60, gfx_wrapper: 0x081C15F4, palette: 0x082099FC, palette_offset: 3, unwrapped_gfx: true},
 }
 SPECIAL_OBJECT_FILES_TO_LOAD_LIST = nil
 BEST_SPRITE_FRAME_FOR_SPECIAL_OBJECT = {
   0x00 => 0x01,
+  0x0E => 0x1E,
+  0x0F => 0x1E,
   0x26 => 0x02,
 }
 BEST_SPRITE_OFFSET_FOR_SPECIAL_OBJECT = {}
 
-OTHER_SPRITES = []
+OTHER_SPRITES = [
+  {desc: "Common", sprite: 0x0820ED60, gfx_wrapper: 0x081C15F4, palette: 0x082099FC, palette_offset: 3, unwrapped_gfx: true},
+]
 
 WEAPON_GFX_LIST_START = 0x084F10C0
 WEAPON_SPRITES_LIST_START = 0x084F117C

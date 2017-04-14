@@ -53,12 +53,13 @@ class SpriteInfo
     gfx_file_pointers      = reused_info[:gfx_files] || nil
     gfx_wrapper            = reused_info[:gfx_wrapper] || nil
     palette_pointer        = reused_info[:palette] || nil
+    unwrapped_gfx          = reused_info[:unwrapped_gfx] || false
     
     if sprite_file_pointer && gfx_file_pointers && palette_pointer
-      return SpriteInfo.new(gfx_file_pointers, palette_pointer, palette_offset, sprite_file_pointer, nil, fs)
+      return SpriteInfo.new(gfx_file_pointers, palette_pointer, palette_offset, sprite_file_pointer, nil, fs, unwrapped_gfx: unwrapped_gfx)
     elsif sprite_file_pointer && gfx_wrapper && palette_pointer
       gfx_file_pointers = unpack_gfx_pointer_list(gfx_wrapper, fs)
-      return SpriteInfo.new(gfx_file_pointers, palette_pointer, palette_offset, sprite_file_pointer, nil, fs)
+      return SpriteInfo.new(gfx_file_pointers, palette_pointer, palette_offset, sprite_file_pointer, nil, fs, unwrapped_gfx: unwrapped_gfx)
     end
     
     if init_code_pointer == -1
@@ -128,7 +129,7 @@ class SpriteInfo
         gfx_file_pointers = gfx_files_to_load.map{|gfx| gfx.file[:ram_start_offset]}
         sprite_file_pointer = sprite_files_to_load.first[:ram_start_offset]
         
-        return SpriteInfo.new(gfx_file_pointers, palette_pointer_to_load, palette_offset, sprite_file_pointer, skeleton_files_to_load.first, fs)
+        return SpriteInfo.new(gfx_file_pointers, palette_pointer_to_load, palette_offset, sprite_file_pointer, skeleton_files_to_load.first, fs, unwrapped_gfx: unwrapped_gfx)
       end
     end
     
@@ -232,9 +233,7 @@ class SpriteInfo
       end
     end
     
-    puts "%08X" % gfx_file_pointers.first
-    puts gfx_file_pointers.size
-    return SpriteInfo.new(gfx_file_pointers, palette_pointer, palette_offset, sprite_file_pointer, skeleton_file, fs)
+    return SpriteInfo.new(gfx_file_pointers, palette_pointer, palette_offset, sprite_file_pointer, skeleton_file, fs, unwrapped_gfx: unwrapped_gfx)
   end
   
   def self.unpack_gfx_pointer_list(gfx_wrapper, fs)
