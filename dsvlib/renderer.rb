@@ -199,7 +199,8 @@ class Renderer
     palettes = []
     palette_pages.each do |palette_page|
       pals_for_page = generate_palettes(palette_page.palette_list_pointer, colors_per_palette)
-      palettes += pals_for_page[palette_page.palette_index, palette_page.num_palettes]
+      
+      palettes[palette_page.palette_load_offset, palette_page.num_palettes] = pals_for_page[palette_page.palette_index, palette_page.num_palettes]
     end
 
     tileset.tiles.each_with_index do |tile, index_on_tileset|

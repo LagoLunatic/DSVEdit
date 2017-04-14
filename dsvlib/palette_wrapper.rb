@@ -5,14 +5,14 @@ class PaletteWrapper
               :fs,
               :palette_index,
               :num_palettes,
-              :unknown_1,
+              :palette_load_offset,
               :unknown_2
               
   def initialize(palette_wrapper_pointer, fs)
     @palette_wrapper_pointer = palette_wrapper_pointer
     @fs = fs
     
-    @palette_list_pointer, @unknown_1, @palette_index, @num_palettes, @unknown_2 = fs.read(palette_wrapper_pointer, 8).unpack("VCCCC")
+    @palette_list_pointer, @palette_load_offset, @palette_index, @num_palettes, @unknown_2 = fs.read(palette_wrapper_pointer, 8).unpack("VCCCC")
   end
   
   def self.from_palette_wrapper_pointer(palette_wrapper_list_pointer, fs)
