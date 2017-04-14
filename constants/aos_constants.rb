@@ -183,7 +183,7 @@ SPECIAL_OBJECT_UPDATE_CODE_LIST = 0x084F0ED8
 
 ITEM_LOCAL_ID_RANGES = {
   0x02 => (0x00..0x1F), # consumable
-  0x03 => (0x00..0x3B), # weapon
+  0x03 => (0x00..0x3A), # weapon
   0x04 => (0x00..0x2C), # armor
 }
 ITEM_GLOBAL_ID_RANGE = (1..0x87)
@@ -191,6 +191,8 @@ SOUL_GLOBAL_ID_RANGE = (0..0x36)
 
 PICKUP_SUBTYPES_FOR_ITEMS = (0x02..0x04) # TODO
 PICKUP_SUBTYPES_FOR_SKILLS = (0x05..0xFF) # TODO
+
+ITEM_ICONS_PALETTE_POINTER = 0x082099FC
 
 CONSUMABLE_FORMAT = [
   # length: 16
@@ -280,7 +282,7 @@ ITEM_TYPES = [
   {
     name: "Weapons",
     list_pointer: 0x08505D3C,
-    count: 0x3C,
+    count: 0x3B,
     format: WEAPON_FORMAT # length 28
   },
   {
@@ -442,6 +444,8 @@ BEST_SPRITE_OFFSET_FOR_SPECIAL_OBJECT = {}
 OTHER_SPRITES = [
   {desc: "Common", sprite: 0x0820ED60, gfx_wrapper: 0x081C15F4, palette: 0x082099FC, palette_offset: 3, unwrapped_gfx: true},
 ]
+
+CANDLE_FRAME_IN_COMMON_SPRITE = 0x1E
 
 WEAPON_GFX_LIST_START = 0x084F10C0
 WEAPON_SPRITES_LIST_START = 0x084F117C

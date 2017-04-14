@@ -45,9 +45,7 @@ class IconChooserDialog < Qt::Dialog
     @icons_per_page = 128*128 / @icon_width / @icon_width
     
     filename = mode == :item ? "item" : "rune"
-    @gfx_files = @fs.files.values.select do |file|
-      file[:file_path] =~ /\/sc\/f_#{filename}\d+\.dat/
-    end
+    @gfx_pages = @renderer.icon_gfx_pages(mode)
     @palette_pointer = mode == :item ? ITEM_ICONS_PALETTE_POINTER : GLYPH_ICONS_PALETTE_POINTER
     
     @palettes = @renderer.generate_palettes(@palette_pointer, 16)
@@ -55,7 +53,7 @@ class IconChooserDialog < Qt::Dialog
     @gfx_page_pixmaps_by_palette = {}
     
     @ui.gfx_page_index.clear()
-    @gfx_files.each_with_index do |gfx_page, i|
+    @gfx_pages.each_with_index do |gfx_page, i|
       @ui.gfx_page_index.addItem(i.to_s)
     end
     @ui.gfx_page_index.setCurrentIndex(0)
@@ -69,7 +67,7 @@ class IconChooserDialog < Qt::Dialog
     palette_changed(initial_palette_index, force=true)
     
     @ui.icon_index.clear()
-    number_of_icons = @gfx_files.length*@icons_per_page
+    number_of_icons = @gfx_pages.length*@icons_per_page
     (0..number_of_icons-1).each do |i|
       @ui.icon_index.addItem("%02X" % i)
     end
@@ -79,15 +77,14 @@ class IconChooserDialog < Qt::Dialog
   end
   
   def load_gfx_pages(palette_index)
-    @gfx_page_pixmaps_by_palette[palette_index] ||= @gfx_files.map do |gfx_page|
+    @gfx_page_pixmaps_by_palette[palette_index] ||= @gfx_pages.map do |gfx_page|
       if gfx_page.nil?
         nil
       else
-        gfx_file = gfx_page
         if @mode == :item
-          chunky_image = @renderer.render_gfx_1_dimensional_mode(gfx_file, @palettes[palette_index])
+          chunky_image = @renderer.render_gfx_1_dimensional_mode(gfx_page, @palettes[palette_index])
         else
-          chunky_image = @renderer.render_gfx_page(gfx_file, @palettes[palette_index])
+          chunky_image = @renderer.render_gfx_page(gfx_page.file, @palettes[palette_index])
         end
         
         pixmap = Qt::Pixmap.new
@@ -109,7 +106,12 @@ class IconChooserDialog < Qt::Dialog
       @ui.gfx_file_name.text = "Invalid"
     else
       @gfx_file_graphics_scene.addItem(pixmap)
-      @ui.gfx_file_name.text = @gfx_files[i][:file_path]
+      gfx_page = @gfx_pages[i]
+      if SYSTEM == :nds
+        @ui.gfx_file_name.text = gfx_page.file[:file_path]
+      else
+        @ui.gfx_file_name.text = "%08X" % gfx_page.gfx_pointer
+      end
     end
     
     @ui.gfx_page_index.setCurrentIndex(i)

@@ -182,10 +182,6 @@ class SpriteEditor < Qt::Dialog
       @ui.weapon_list.addItem("%02X %s" % [weapon_gfx_index, weapon_name])
     end
     
-    if SYSTEM == :gba
-      return # TODO
-    end
-    
     @skills = []
     (0..max_skill_gfx_index).each do |skill_gfx_index|
       skill = SkillGfx.new(skill_gfx_index, fs)
@@ -332,8 +328,9 @@ class SpriteEditor < Qt::Dialog
   end
   
   def other_sprite_changed(id)
+    other_sprite = OTHER_SPRITES[id]
     begin
-      @sprite_info = SpriteInfo.extract_gfx_and_palette_and_sprite_from_create_code(OTHER_SPRITES[id][:pointer], @fs, OTHER_SPRITES[id][:overlay], OTHER_SPRITES[id])
+      @sprite_info = SpriteInfo.extract_gfx_and_palette_and_sprite_from_create_code(other_sprite[:pointer], @fs, other_sprite[:overlay], other_sprite)
     rescue StandardError => e
       Qt::MessageBox.warning(self,
         "Sprite extraction failed",
@@ -343,7 +340,7 @@ class SpriteEditor < Qt::Dialog
     end
     
     @override_part_palette_index = nil
-    @one_dimensional_render_mode = OTHER_SPRITES[id][:one_dimensional_mode]
+    @one_dimensional_render_mode = other_sprite[:one_dimensional_mode]
     load_sprite()
     
     @ui.other_sprites_list.setCurrentRow(id)
@@ -790,7 +787,15 @@ class SpriteEditor < Qt::Dialog
     palette_pointer = @ui.palette_pointer.text.to_i(16)
     sprite_pointer = @ui.sprite_file_name.text.to_i(16)
     
-    @sprite_info = SpriteInfo.new(gfx_file_pointers, palette_pointer, @sprite_info.palette_offset, sprite_pointer, @sprite_info.skeleton_file, @fs)
+    begin
+      @sprite_info = SpriteInfo.new(gfx_file_pointers, palette_pointer, @sprite_info.palette_offset, sprite_pointer, @sprite_info.skeleton_file, @fs)
+    rescue StandardError => e
+      Qt::MessageBox.warning(self,
+        "Sprite extraction failed",
+        "Failed to extract sprite info.\n#{e.message}\n\n#{e.backtrace.join("\n")}"
+      )
+      return
+    end
     
     load_sprite()
   end

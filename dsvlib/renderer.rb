@@ -1043,21 +1043,16 @@ class Renderer
     
     gfx_page_index = icon_index / icons_per_page
     
-    # TODO AoS
-    filename = mode == :item ? "item" : "rune"
-    gfx_files = fs.files.values.select do |file|
-      file[:file_path] =~ /\/sc\/f_#{filename}\d+\.dat/
-    end
-    gfx_file = gfx_files[gfx_page_index]
-    
     palette_pointer = mode == :item ? ITEM_ICONS_PALETTE_POINTER : GLYPH_ICONS_PALETTE_POINTER
     palettes = generate_palettes(palette_pointer, 16)
+    palette = palettes[palette_index]
+    
+    gfx_page = icon_gfx_pages(mode)[gfx_page_index]
     
     if mode == :item
-      gfx_page = GfxWrapper.new(gfx_file[:ram_start_offset], fs)
-      gfx_page_image = render_gfx_1_dimensional_mode(gfx_page, palettes[palette_index])
+      gfx_page_image = render_gfx_1_dimensional_mode(gfx_page, palette)
     else
-      gfx_page_image = render_gfx_page(gfx_file, palettes[palette_index])
+      gfx_page_image = render_gfx_page(gfx_page.file, palette)
     end
     
     x_pos = ((icon_index % icons_per_page) % icons_per_row) * icon_width
@@ -1065,6 +1060,29 @@ class Renderer
     item_image = gfx_page_image.crop(x_pos, y_pos, icon_width, icon_height)
     
     return item_image
+  end
+  
+  def icon_gfx_pages(mode)
+    gfx_pages = []
+    
+    if SYSTEM == :nds
+      filename = mode == :item ? "item" : "rune"
+      gfx_files = fs.files.values.select do |file|
+        file[:file_path] =~ /\/sc\/f_#{filename}\d+\.dat/
+      end
+      
+      gfx_files.each do |gfx_file|
+        gfx_page = GfxWrapper.new(gfx_file[:ram_start_offset], fs)
+        gfx_pages << gfx_page
+      end
+    else
+      [0x081C5E00, 0x081C7E04, 0x081C9E08].each do |gfx_pointer|
+        gfx_page = GfxWrapper.new(gfx_pointer, fs, unwrapped: true)
+        gfx_pages << gfx_page
+      end
+    end
+    
+    gfx_pages
   end
   
   def inspect; to_s; end

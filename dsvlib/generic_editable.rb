@@ -137,10 +137,14 @@ class GenericEditable
   
   def self.extract_icon_index_and_palette_index(icon_data)
     case GAME
-    when "dos", "aos"
+    when "dos"
       icon_index    = (icon_data & 0b00000000_11111111)
       palette_index = (icon_data & 0b11111111_00000000) >> 8
       [icon_index, palette_index]
+    when "aos"
+      icon_index    = (icon_data & 0b00000000_11111111)
+      palette_index = (icon_data & 0b11111111_00000000) >> 8
+      [icon_index-1, 2] # TODO figure out palette index
     else
       icon_index    = (icon_data & 0b00000111_11111111)
       palette_index = (icon_data & 0b11111000_00000000) >> 11
@@ -150,8 +154,13 @@ class GenericEditable
   
   def self.pack_icon_index_and_palette_index(icon_index, palette_index)
     case GAME
-    when "dos", "aos"
+    when "dos"
       icon_data  = icon_index
+      icon_data |= palette_index << 8
+      icon_data
+    when "aos"
+      palette_index = 6
+      icon_data  = icon_index + 1
       icon_data |= palette_index << 8
       icon_data
     else

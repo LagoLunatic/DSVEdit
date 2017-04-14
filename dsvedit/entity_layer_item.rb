@@ -33,7 +33,7 @@ class EntityLayerItem < Qt::GraphicsRectItem
       add_sprite_item_for_entity(entity, sprite_info, BEST_SPRITE_FRAME_FOR_SPECIAL_OBJECT[special_object_id], BEST_SPRITE_OFFSET_FOR_SPECIAL_OBJECT[special_object_id])
     elsif entity.is_candle?
       sprite_info = SpriteInfo.extract_gfx_and_palette_and_sprite_from_create_code(OTHER_SPRITES[0][:pointer], @fs, OTHER_SPRITES[0][:overlay], OTHER_SPRITES[0])
-      add_sprite_item_for_entity(entity, sprite_info, 0xDB)
+      add_sprite_item_for_entity(entity, sprite_info, CANDLE_FRAME_IN_COMMON_SPRITE)
     elsif entity.is_magic_seal?
       sprite_info = SpriteInfo.extract_gfx_and_palette_and_sprite_from_create_code(OTHER_SPRITES[0][:pointer], @fs, OTHER_SPRITES[0][:overlay], OTHER_SPRITES[0])
       add_sprite_item_for_entity(entity, sprite_info, 0xCE)
