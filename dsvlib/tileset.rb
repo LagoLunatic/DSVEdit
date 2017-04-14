@@ -133,6 +133,10 @@ class MiniTile
 end
 
 class CollisionTileset < Tileset
+  def read_from_rom_gba
+    @tiles = [] # TODO
+  end
+  
   def tile_class
     CollisionTile
   end

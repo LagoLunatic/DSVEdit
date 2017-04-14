@@ -788,7 +788,6 @@ class SpriteEditor < Qt::Dialog
   def reload_sprite
     gfx_file_pointers = @ui.gfx_pointer.text.split(/,\s*/).map{|ptr| ptr.to_i(16)}
     palette_pointer = @ui.palette_pointer.text.to_i(16)
-    sprite_file = @fs.files_by_path[@ui.sprite_file_name.text]
     sprite_pointer = @ui.sprite_file_name.text.to_i(16)
     
     @sprite_info = SpriteInfo.new(gfx_file_pointers, palette_pointer, @sprite_info.palette_offset, sprite_pointer, @sprite_info.skeleton_file, @fs)

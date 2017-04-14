@@ -26,8 +26,6 @@ class GfxWrapper
         @unknown_1, @unknown_2, @unknown_3, @unknown_4, @gfx_data_pointer = fs.read(gfx_pointer, 8).unpack("CCCCV")
         @render_mode = 1
         @canvas_width = 0x10
-        #@gfx_data_pointer = 0x081AA53C
-        #@unknown_2 = 0
       end
     end
   end
@@ -36,7 +34,11 @@ class GfxWrapper
     if SYSTEM == :nds
       fs.read_by_file(file[:file_path], 0, 0x2000*render_mode, allow_reading_into_next_file_in_ram: true)
     else
-      @gfx_data ||= fs.decompress(gfx_data_pointer)
+      @gfx_data ||= if @unknown_2 == 4
+        fs.decompress(gfx_data_pointer)
+      else
+        fs.read(gfx_data_pointer+4, 0x2000)
+      end
     end
   end
   
