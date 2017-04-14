@@ -437,7 +437,7 @@ class Frame
   end
   
   def initialize_hitboxes_from_pointer(all_sprite_hitboxes, all_sprite_hitboxes_by_offset)
-    @hitbox_offsets = (@first_hitbox_offset..@first_hitbox_offset+@number_of_hitboxes*0x08-1).step(0x08).to_a
+    @hitbox_offsets = (@first_hitbox_offset..@first_hitbox_offset+@number_of_hitboxes*Hitbox.data_size-1).step(Hitbox.data_size).to_a
     @hitboxes = @hitbox_offsets.map{|offset| all_sprite_hitboxes_by_offset[offset]}
     if @hitboxes.include?(nil)
       raise "Couldn't find hitboxes"
