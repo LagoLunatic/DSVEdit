@@ -6,7 +6,7 @@ class GBADummyFilesystem
   
   def open_directory(filesystem_directory)
     @filesystem_directory = filesystem_directory
-    input_rom_path = "#{@filesystem_directory}/rom.gba"
+    input_rom_path = File.join(@filesystem_directory, "rom.gba")
     @rom = File.open(input_rom_path, "rb") {|file| file.read}
   end
   
@@ -45,6 +45,10 @@ class GBADummyFilesystem
   def write(address, new_data)
     offset = convert_address(address)
     rom[offset, new_data.length] = new_data
+    
+    @has_uncommitted_changes = true
+    
+    #remove_free_space(file_path, offset_in_file, new_data.length)
   end
   
   def decompress(address)
@@ -65,8 +69,25 @@ class GBADummyFilesystem
     return substring[0,end_index]
   end
   
-  def has_uncommitted_files?
-    false # TODO
+  def commit_changes(base_directory = @filesystem_directory)
+    print "Committing changes to filesystem... "
+    
+    full_path = File.join(base_directory, "rom.gba")
+    full_dir = File.dirname(full_path)
+    FileUtils.mkdir_p(full_dir)
+    File.open(full_path, "wb") do |f|
+      f.write(@rom)
+    end
+    
+    @has_uncommitted_changes = false
+    
+    #write_free_space_to_text_file(base_directory)
+    
+    puts "Done."
+  end
+  
+  def has_uncommitted_changes?
+    @has_uncommitted_changes
   end
   
   def find_file_by_ram_start_offset(ram_start_offset)

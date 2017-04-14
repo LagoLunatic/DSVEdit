@@ -753,11 +753,11 @@ class DSVEdit < Qt::MainWindow
   end
   
   def save_files
-    game.fs.commit_file_changes()
+    game.fs.commit_changes()
   end
   
   def confirm_discard_changes
-    if game && game.fs.has_uncommitted_files?
+    if game && game.fs.has_uncommitted_changes?
       response = Qt::MessageBox.question(self, "Save changes", "There are files with unsaved changes. Save them now?",
         Qt::MessageBox::Cancel | Qt::MessageBox::No | Qt::MessageBox::Yes, Qt::MessageBox::Cancel)
       if response == Qt::MessageBox::Cancel

@@ -253,7 +253,7 @@ class NDSFileSystem
     value >= 0x02000000 && value < 0x03000000
   end
   
-  def commit_file_changes(base_directory = @filesystem_directory)
+  def commit_changes(base_directory = @filesystem_directory)
     print "Committing changes to filesystem... "
     
     @uncommitted_files.uniq.each do |file_path|
@@ -275,7 +275,7 @@ class NDSFileSystem
     puts "Done."
   end
   
-  def has_uncommitted_files?
+  def has_uncommitted_changes?
     !@uncommitted_files.empty?
   end
   
