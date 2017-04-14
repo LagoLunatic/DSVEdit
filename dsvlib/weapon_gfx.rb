@@ -15,9 +15,11 @@ class WeaponGfx
   
   def read_from_rom
     if GAME == "ooe"
-      gfx_file_index, sprite_file_index, gfx_pointer, unknown, @palette_pointer = fs.read(WEAPON_GFX_LIST_START + weapon_gfx_index*16, 16).unpack("vvVVV")
-      @gfx_file_pointer = fs.files_by_index[gfx_file_index][:ram_start_offset]
-      @sprite_file_pointer = fs.files_by_index[sprite_file_index][:ram_start_offset]
+      raise "No weapons in OoE"
+    elsif GAME == "aos"
+      @gfx_file_pointer = fs.read(WEAPON_GFX_LIST_START + weapon_gfx_index*4, 4).unpack("V").first
+      @sprite_file_pointer = fs.read(WEAPON_SPRITES_LIST_START + weapon_gfx_index*4, 4).unpack("V").first
+      @palette_pointer = WEAPON_PALETTE_LIST
     else
       @gfx_file_pointer, @sprite_file_pointer, @palette_pointer = fs.read(WEAPON_GFX_LIST_START + weapon_gfx_index*12, 12).unpack("VVV")
     end

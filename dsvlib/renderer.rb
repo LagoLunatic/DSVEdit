@@ -874,7 +874,7 @@ class Renderer
   end
   
   def render_sprite(sprite_info, frame_to_render: :all, render_hitboxes: false, override_part_palette_index: nil, one_dimensional_mode: false)
-    gfx_file_pointers = sprite_info.gfx_file_pointers
+    gfx_pages = sprite_info.gfx_pages
     palette_pointer = sprite_info.palette_pointer
     palette_offset = sprite_info.palette_offset
     sprite = sprite_info.sprite
@@ -884,9 +884,7 @@ class Renderer
     end
     
     gfx_with_blanks = []
-    gfx_file_pointers.each do |gfx_file_pointer|
-      gfx = GfxWrapper.new(gfx_file_pointer, fs)
-      
+    gfx_pages.each do |gfx|
       gfx_with_blanks << gfx
       blanks_needed = (gfx.canvas_width/0x10 - 1) * 3
       gfx_with_blanks += [nil]*blanks_needed

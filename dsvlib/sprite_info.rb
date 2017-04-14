@@ -7,9 +7,10 @@ class SpriteInfo
               :sprite_file_pointer,
               :skeleton_file,
               :sprite_file,
-              :sprite
+              :sprite,
+              :gfx_pages
   
-  def initialize(gfx_file_pointers, palette_pointer, palette_offset, sprite_file_pointer, skeleton_file, fs)
+  def initialize(gfx_file_pointers, palette_pointer, palette_offset, sprite_file_pointer, skeleton_file, fs, unwrapped_gfx: false)
     @gfx_file_pointers = gfx_file_pointers
     @palette_pointer = palette_pointer
     @palette_offset = palette_offset
@@ -17,6 +18,10 @@ class SpriteInfo
     @skeleton_file = skeleton_file
     @sprite_file = fs.find_file_by_ram_start_offset(sprite_file_pointer)
     @sprite = Sprite.new(sprite_file_pointer, fs)
+    
+    @gfx_pages = @gfx_file_pointers.map do |gfx_pointer|
+      GfxWrapper.new(gfx_pointer, fs, unwrapped: unwrapped_gfx)
+    end
   end
   
   def self.extract_gfx_and_palette_and_sprite_from_create_code(create_code_pointer, fs, overlay_to_load, reused_info, ptr_to_ptr_to_files_to_load=nil)

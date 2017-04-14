@@ -9,7 +9,7 @@ class GfxWrapper
   attr_accessor :render_mode,
                 :canvas_width
               
-  def initialize(gfx_pointer, fs)
+  def initialize(gfx_pointer, fs, unwrapped: false)
     @gfx_pointer = gfx_pointer
     @fs = fs
     
@@ -17,9 +17,18 @@ class GfxWrapper
       @file = fs.find_file_by_ram_start_offset(gfx_pointer)
       @unknown_1, @render_mode, @canvas_width, @unknown_2 = fs.read(gfx_pointer, 4).unpack("C*")
     else
-      @unknown_1, @unknown_2, @unknown_3, @unknown_4, @gfx_data_pointer = fs.read(gfx_pointer, 8).unpack("CCCCV")
-      @render_mode = 1
-      @canvas_width = 0x10
+      if unwrapped
+        @gfx_data_pointer = gfx_pointer
+        @unknown_2 = 0
+        @render_mode = 1
+        @canvas_width = 0x10
+      else
+        @unknown_1, @unknown_2, @unknown_3, @unknown_4, @gfx_data_pointer = fs.read(gfx_pointer, 8).unpack("CCCCV")
+        @render_mode = 1
+        @canvas_width = 0x10
+        #@gfx_data_pointer = 0x081AA53C
+        #@unknown_2 = 0
+      end
     end
   end
   

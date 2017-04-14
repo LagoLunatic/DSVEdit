@@ -134,10 +134,6 @@ class SpriteEditor < Qt::Dialog
       @ui.special_object_list.addItem("%02X %s" % [special_object_id, object_name])
     end
     
-    if SYSTEM == :gba
-      return # TODO
-    end
-    
     weapon_items = []
     skill_items = []
     max_weapon_gfx_index = 0
@@ -184,6 +180,10 @@ class SpriteEditor < Qt::Dialog
         weapon_name = "Unused"
       end
       @ui.weapon_list.addItem("%02X %s" % [weapon_gfx_index, weapon_name])
+    end
+    
+    if SYSTEM == :gba
+      return # TODO
     end
     
     @skills = []
@@ -285,8 +285,11 @@ class SpriteEditor < Qt::Dialog
       palette_offset = 0
       sprite_pointer = weapon.sprite_file_pointer
       skeleton_file = nil
+      if SYSTEM == :gba
+        unwrapped_gfx = true
+      end
       
-      @sprite_info = SpriteInfo.new(gfx_file_pointers, palette_pointer, palette_offset, sprite_pointer, skeleton_file, @fs)
+      @sprite_info = SpriteInfo.new(gfx_file_pointers, palette_pointer, palette_offset, sprite_pointer, skeleton_file, @fs, unwrapped_gfx: unwrapped_gfx)
     rescue StandardError => e
       Qt::MessageBox.warning(self,
         "Weapon sprite extraction failed",
@@ -407,7 +410,12 @@ class SpriteEditor < Qt::Dialog
       @sprite = @sprite_info.sprite
       
       @chunky_frames, @min_x, @min_y, rendered_parts, @gfx_pages_with_blanks, @palettes, @full_width, @full_height = 
-        @renderer.render_sprite(@sprite_info, frame_to_render: nil, override_part_palette_index: @override_part_palette_index, one_dimensional_mode: @one_dimensional_render_mode)
+        @renderer.render_sprite(
+          @sprite_info,
+          frame_to_render: nil,
+          override_part_palette_index: @override_part_palette_index,
+          one_dimensional_mode: @one_dimensional_render_mode,
+        )
     rescue StandardError => e
       Qt::MessageBox.warning(self,
         "Sprite rendering failed",
