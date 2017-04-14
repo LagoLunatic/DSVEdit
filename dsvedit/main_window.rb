@@ -833,7 +833,7 @@ class DSVEdit < Qt::MainWindow
           elsif !File.file?(emulator_path)
             Qt::MessageBox.warning(self, "Failed to run emulator", "Emulator path is invalid.")
           else
-            system("start \"#{emulator_path}\" \"#{output_rom_path}\"")
+            system("start \"\" \"#{emulator_path}\" \"#{output_rom_path}\"")
           end
         else
           #Qt::MessageBox.information(self, "Done", "All files written to rom.")
