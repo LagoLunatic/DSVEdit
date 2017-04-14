@@ -9,9 +9,10 @@ class Sector
               :room_pointers,
               :rooms
 
-  def initialize(area, sector_index, sector_ram_pointer, game)
+  def initialize(area, sector_index, sector_ram_pointer, game, next_sector_pointer: nil)
     @area = area
     @sector_ram_pointer = sector_ram_pointer
+    @next_sector_pointer = next_sector_pointer
     @sector_index = sector_index
     @fs = game.fs
     @game = game
@@ -37,6 +38,8 @@ private
     @room_pointers = []
     room_index = 0
     while true
+      break if sector_ram_pointer + room_index*4 == @next_sector_pointer
+      
       room_metadata_ram_pointer = fs.read(sector_ram_pointer + room_index*4, 4).unpack("V*").first
       
       break if room_metadata_ram_pointer == 0

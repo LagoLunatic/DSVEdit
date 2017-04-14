@@ -27,7 +27,12 @@ class Area
       break if sector_ram_pointer == 0
       break if !fs.is_pointer?(sector_ram_pointer)
       
-      sector = Sector.new(self, sector_index, sector_ram_pointer, game)
+      next_sector_ram_pointer = fs.read(area_ram_pointer + (sector_index+1)*4, 4).unpack("V*").first
+      if !fs.is_pointer?(next_sector_ram_pointer)
+        next_sector_ram_pointer = nil
+      end
+      
+      sector = Sector.new(self, sector_index, sector_ram_pointer, game, next_sector_pointer: next_sector_ram_pointer)
       @sectors << sector
       
       sector_index += 1
