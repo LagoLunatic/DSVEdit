@@ -814,7 +814,7 @@ SKILL_EXTRA_DATA_FORMAT = [
   # length: 6
   [2, "Max at once/Spell charge"],
   [2, "SP to Master"],
-  [2, "Unknown 1"],
+  [2, "Price (1000G)"],
 ]
 ITEM_TYPES = [
   {

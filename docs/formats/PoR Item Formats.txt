@@ -185,4 +185,6 @@ Extra skill data format:
     Bits 5-16: (For subweapons) Additional max you get when you've mastered this subweapon.
     Bits 5-16: (For spells) Number of frames this spell takes to charge up.
   Bytes 3-4: Number of SP points this subweapon takes to master.
-  Bytes 5-6: ??
+  Bytes 5-6: Price of this skill.
+    This is in increments of decimal 1000 gold.
+    For example if you want the price of this skill to be decimal 200,000, set to this to 0xC8 (decimal 200).
