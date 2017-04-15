@@ -12,6 +12,11 @@
   Rings when you land on top of it.
 0E Candle
 0F Candle
+14 Boat.
+  Var A:
+    0 Boats spawn from the background that are affected by physics in the water.
+    1 Single boat can be pushed on the ground.
+    2 Single boat that moves back and forth regularly.
 15 Moon portal to/from Chaotic Realm.
 16 Portal to Chaos.
 17 Elevator.

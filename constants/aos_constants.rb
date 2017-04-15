@@ -429,8 +429,14 @@ OVERLAY_FILE_FOR_SPECIAL_OBJECT = {}
 REUSED_SPECIAL_OBJECT_INFO = {
   0x00 => {init_code: 0x0804D8F0}, # wooden door
   0x01 => {init_code: 0x08033254}, # pushable crate TODO: sprite file can't be found, gfx and palette are fine
+  0x07 => {init_code:         -1},
+  0x08 => {init_code: 0x08526004},
+  0x09 => {init_code: 0x08526004},
+  0x0C => {init_code:         -1},
   0x0E => {desc: "Common", sprite: 0x0820ED60, gfx_wrapper: 0x081C15F4, palette: 0x082099FC, palette_offset: 3, unwrapped_gfx: true}, # TODO this is actually a candle not in the common sprite
   0x0F => {desc: "Common", sprite: 0x0820ED60, gfx_wrapper: 0x081C15F4, palette: 0x082099FC, palette_offset: 3, unwrapped_gfx: true},
+  0x20 => {init_code:         -1},
+  0x29 => {init_code: 0x080573B0},
 }
 SPECIAL_OBJECT_FILES_TO_LOAD_LIST = nil
 BEST_SPRITE_FRAME_FOR_SPECIAL_OBJECT = {
@@ -443,9 +449,36 @@ BEST_SPRITE_OFFSET_FOR_SPECIAL_OBJECT = {}
 
 OTHER_SPRITES = [
   {desc: "Common", sprite: 0x0820ED60, gfx_wrapper: 0x081C15F4, palette: 0x082099FC, palette_offset: 3, unwrapped_gfx: true},
+  
+  {desc: "Breakable walls 1", pointer: 0x08526004},
+  {desc: "Breakable walls 2", pointer: 0x08526010},
+  {desc: "Breakable walls 3", pointer: 0x0852601C},
+  {desc: "Breakable walls 4", pointer: 0x08526028},
+  {desc: "Breakable walls 5", pointer: 0x08526034},
+  {desc: "Breakable walls 6", pointer: 0x08526040},
+  {desc: "Breakable walls 7", pointer: 0x0852604C},
+  {desc: "Breakable walls 8", pointer: 0x08526058},
+  
+  {desc: "Destructibles 1", pointer: 0x08526214},
+  {desc: "Destructibles 2", pointer: 0x08526220},
+  {desc: "Destructibles 3", pointer: 0x0852622C},
+  {desc: "Destructibles 4", pointer: 0x08526238},
+  {desc: "Destructibles 5", pointer: 0x08526244},
+  {desc: "Destructibles 6", pointer: 0x08526250},
+  {desc: "Destructibles 7", pointer: 0x0852625C},
+  {desc: "Destructibles 8", pointer: 0x08526268},
+  {desc: "Destructibles 9", pointer: 0x08526274},
+  {desc: "Destructibles 10", pointer: 0x08526280},
+  {desc: "Destructibles 11", pointer: 0x0852628C},
+  {desc: "Destructibles 12", pointer: 0x08526298},
+  {desc: "Destructibles 13", pointer: 0x085262A4},
+  {desc: "Destructibles 14", pointer: 0x085262B0},
 ]
 
 CANDLE_FRAME_IN_COMMON_SPRITE = 0x1E
+MONEY_FRAME_IN_COMMON_SPRITE = 0x21
+CANDLE_SPRITE = OTHER_SPRITES[0].merge(palette_offset: 3)
+MONEY_SPRITE = OTHER_SPRITES[0].merge(palette_offset: 2)
 
 WEAPON_GFX_LIST_START = 0x084F10C0
 WEAPON_SPRITES_LIST_START = 0x084F117C

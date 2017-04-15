@@ -32,7 +32,7 @@ class EntityLayerItem < Qt::GraphicsRectItem
       sprite_info = SpecialObjectType.new(special_object_id, @fs).extract_gfx_and_palette_and_sprite_from_create_code
       add_sprite_item_for_entity(entity, sprite_info, BEST_SPRITE_FRAME_FOR_SPECIAL_OBJECT[special_object_id], BEST_SPRITE_OFFSET_FOR_SPECIAL_OBJECT[special_object_id])
     elsif entity.is_candle?
-      sprite_info = SpriteInfo.extract_gfx_and_palette_and_sprite_from_create_code(OTHER_SPRITES[0][:pointer], @fs, OTHER_SPRITES[0][:overlay], OTHER_SPRITES[0])
+      sprite_info = SpriteInfo.extract_gfx_and_palette_and_sprite_from_create_code(CANDLE_SPRITE[:pointer], @fs, CANDLE_SPRITE[:overlay], CANDLE_SPRITE)
       add_sprite_item_for_entity(entity, sprite_info, CANDLE_FRAME_IN_COMMON_SPRITE)
     elsif entity.is_magic_seal?
       sprite_info = SpriteInfo.extract_gfx_and_palette_and_sprite_from_create_code(OTHER_SPRITES[0][:pointer], @fs, OTHER_SPRITES[0][:overlay], OTHER_SPRITES[0])
@@ -78,8 +78,8 @@ class EntityLayerItem < Qt::GraphicsRectItem
       sprite_info = SpriteInfo.extract_gfx_and_palette_and_sprite_from_create_code(OTHER_SPRITES[0][:pointer], @fs, OTHER_SPRITES[0][:overlay], OTHER_SPRITES[0])
       add_sprite_item_for_entity(entity, sprite_info, frame_id)
     elsif entity.is_money_bag? || entity.is_hidden_money_bag?
-      sprite_info = SpriteInfo.extract_gfx_and_palette_and_sprite_from_create_code(OTHER_SPRITES[0][:pointer], @fs, OTHER_SPRITES[0][:overlay], OTHER_SPRITES[0])
-      add_sprite_item_for_entity(entity, sprite_info, 0xEF)
+      sprite_info = SpriteInfo.extract_gfx_and_palette_and_sprite_from_create_code(MONEY_SPRITE[:pointer], @fs, MONEY_SPRITE[:overlay], MONEY_SPRITE)
+      add_sprite_item_for_entity(entity, sprite_info, MONEY_FRAME_IN_COMMON_SPRITE)
     elsif (entity.is_skill? || entity.is_hidden_skill?) && GAME == "por"
       case entity.var_b
       when 0x00..0x26
@@ -125,6 +125,12 @@ class EntityLayerItem < Qt::GraphicsRectItem
       graphics_item.setParentItem(self)
     end
   rescue StandardError => e
+    unless e.message =~ /has no sprite/
+      Qt::MessageBox.warning(@main_window,
+        "Sprite error",
+        "#{e.message}\n\n#{e.backtrace.join("\n")}"
+      )
+    end
     graphics_item = EntityRectItem.new(entity, @main_window)
     graphics_item.setParentItem(self)
   end

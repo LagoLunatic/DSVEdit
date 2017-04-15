@@ -1,0 +1,4 @@
+06 Peeping Eye
+  Var A:
+    0 Normal.
+    1 In the background, cannot be hit the player or be hit.
