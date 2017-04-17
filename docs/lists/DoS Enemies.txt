@@ -150,10 +150,10 @@ Enemies:
 60 Stolas
   Var A:
     Low byte: First enemy ID this Stolas can summon.
-    High byte: Chance out of 0x100 for the first enemy to be summoned.
+    High byte: Chance out of 0xFF for the first enemy to be summoned.
   Var B:
     Low byte: Second enemy ID this Stolas can summon.
-    High byte: Chance out of 0x100 for the second enemy to be summoned.
+    High byte: Chance out of 0xFF for the second enemy to be summoned.
   The second chance is only checked if the first chance fails.
   If both chances fail he will do a normal attack instead.
   If either chance is guaranteed he will never do a normal attack, and just summon nonstop instead. If both chances are 0 he will never summon and instead just do normal attacks.

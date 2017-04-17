@@ -2,12 +2,13 @@ Special objects:
 00 Rectangle of blocks breakable by the Balore soul.
   Var A: Number of blocks wide.
   Var B: Number of blocks tall.
-01 Destructible such as a candle. Var A controls the type:
-  00 The glowing lamp vessel containing a soul (with var B controlling which soul is in it).
-  01-0F Just normal candles, each with a different graphic.
-  10 Chest containing money.
-  11-17 More candle graphics, including statues and grandfather clocks.
-  18-FF Buggy candles, that have mismatched graphics, sfx, and contents, or they just don't show up at all.
+01 Destructible.
+  Var A:
+    00 The glowing lamp vessel containing a soul (var B is the index of the soul in it).
+    01-0F Just normal candles, each with a different graphic.
+    10 Chest containing money.
+    11-17 More candle graphics, including statues and grandfather clocks.
+    18-FF Buggy candles, that have mismatched graphics, sfx, and contents, or they just don't show up at all.
 02 Water level.
   Var B: The event flag for the water being lowered. Set to the same as the lever's Var B.
 03 Waterfall that pushes the player downwards when they jump up into it.
@@ -61,13 +62,15 @@ Special objects:
   For pickups, entity byte 8 affects how it appears in the mirror world. 0 means it appears only in the real world, 1 means it appears only in the mirror world.
 0C The control room for the sliding puzzle in the Demon Guest House.
 0D Part of the big sliding puzzle in the demon guest house.
-  This object acts as the walls (and number) for a room. The visuals for the walls (and number) are fixed on screen and scroll with the screen. But the physical walls are locked to the top screen. Var a controls which number room it is.
-  00: Probably the empty room with no number.
-  01-0F: 1-15.
-  10: Just a horizontal wall visual in the exact center of the screen, no collision.
-  11: Same as 10, but vertical instead of horizontal.
-  12: The 3 "out arrows" in the puzzle room that show you where you can go.
-  13+: The 1 "in arrow".
+  This object acts as the walls (and number) for a room.
+  The visuals for the walls (and number) are fixed on screen and scroll with the screen. But the physical walls are locked to the top screen.
+  Var A: Which number room it is:
+    00: The empty room with no number.
+    01-0F: Numbers 1-15.
+    10: Just a horizontal wall visual in the exact center of the screen, no collision.
+    11: Same as 10, but vertical instead of horizontal.
+    12: The 3 "out arrows" in the puzzle room that show you where you can go.
+    13+: The 1 "in arrow".
 0E Snow effect.
 0F Car with snow on it.
 10 Platform moving up and down.
@@ -151,7 +154,7 @@ Special objects:
   Var A is is how the door acts:
     00 Door outside the boss room that you need a magic seal to open.
     01 Door inside the boss room that opens when the boss is killed.
-    02 used for gergoth?
+    02 Used in Gergoth's tower? TODO
     03 Door inside the boss room that doesn't open when the boss is killed (e.g. the right door in mini Paranoia's room).
   Var B is the boss this door is for:
     00 N/A (Never permanently disappears)
@@ -182,8 +185,10 @@ Special objects:
   Var B: The event flag for the water being lowered. Set to the same as the lever's Var B.
 2B The destroyable floor in the Lost Village underneath the statues.
   Var A:
-    0 for the floor and the animated water on the statue.
-    1 for the ceiling with explosives strapped to it and the button that blows it up. (The button automatically positions itself to the upper left screen, and the explosive ceiling visually positions itself there too, but the collision on the ceiling will be wherever you set the X and Y to.)
+    0 The floor and the animated water on the statue.
+    1 The ceiling with explosives strapped to it and the button that blows it up.
+      The button automatically positions itself to the upper left screen.
+      The explosive ceiling visually positions itself to the upper left screen too, but the collision on the ceiling will be wherever you set its X and Y to.
   Var B: The event flag for the floor being destroyed.
 2C Chandelier.
   Var A is the color of the chandelier:
@@ -197,21 +202,24 @@ Special objects:
   Cannot be placed normally, the game will crash. Must be spawned by Puppet Master.
 2F Applies a visual effect to a layer.
   Var A: The layer to apply the effect to.
-  Var B: Which effect to use.
+  Var B: Which effect to use. TODO
 30 Save room.
-  Not just the save point like in PoR and OoE, this is the whole room's graphics, and locks itself to the upper left screen. You can't collide with its tiles though, so you must still place collision tiles for this room.
+  Not just the save point like in PoR and OoE, this is the whole room's graphics, and locks itself to the upper left screen.
+  You can't collide with its tiles though, so you still have to place collision tiles for this room.
   Var A: The direction of the save room:
     0 has a door on the left.
     1 has a door on the right.
 31 Warp room, works just like save room.
 32 Room that transports you to the abyss.
-33 The 3D background model for either the Lost Village or the Pinnacle (the model is chosen automatically depending on what sector the room is in).
+33 The 3D background model for either the Lost Village or the Pinnacle.
+  The model is chosen automatically depending on what sector you're in.
   Var A: Which camera angle to view the model from. 0 to 4.
 34 The 3D background in Condemned Tower.
 35 The 3D background in Mine of Judgement.
 36 Cycles through palettes? Used in rooms that have tiles with changing colors.
   Var A: ???
   Var B: ???
+  TODO
 37 The ceiling hatch and button to open it from Demon Guest House.
   Var A: 0 for the button and the hatch and the bottom of the room. 1 for the hatch at the top of the room.
 38 Fades the music out to nothing. The music comes back when you leave the room.
@@ -221,13 +229,18 @@ Special objects:
 3B The darkness barrier in the Condemned Tower that you can't get past until late in the game.
 3C Yoko follower and event actor.
   Follows you around if you've triggered the event for Yoko to follow you, but only in rooms that this special object is placed in.
-3D The castle in the background in the epilogue. Also permanently changes the top screen to the symbol you see during cutscenes.
-3E The bouncing ball in the puzzle with touch screen blocks. It just explodes instantly if it's not inside touch screen blocks.
+3D The castle in the background in the epilogue.
+  Also permanently changes the top screen to the symbol you see during cutscenes.
+3E The bouncing ball in the puzzle with touch screen blocks.
+  It just explodes instantly if it's not inside touch screen blocks.
 3F Strongman puzzle you have to hit with a hammer.
-40 Unused. Yellow square TODO. Changes into what looks like tiles depending on var a. Inner square rotates depending on var b,
+40 Unused. Yellow square TODO.
+  Var A: Certain values change it into what looks like tiles.
+  Var B: Rotates the inner square.
 41 Starts boss rush, puts a timer on screen and restarts the current music track.
 42 The item you get as a reward at the end of boss rush.
-43 The destroyable wall in the room with the waterfall. Automatically positions itself.
+43 The destroyable wall in the room with the waterfall.
+  Automatically positions itself.
 44 A destroyable wall (for hiding secret rooms).
   Var A:
     0 for the ceiling in Demon Guest House.
