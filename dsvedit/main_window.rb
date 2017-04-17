@@ -612,11 +612,15 @@ class DSVEdit < Qt::MainWindow
   end
   
   def open_gfx_editor
+    return unless validate_nds()
+    
     return if @gfx_editor && @gfx_editor.visible?
     @gfx_editor = GfxEditorDialog.new(self, game.fs, @renderer)
   end
   
   def open_music_editor
+    return unless validate_nds()
+    
     return if @music_editor && @music_editor.visible?
     @music_editor = MusicEditor.new(self, game)
   end
@@ -626,11 +630,13 @@ class DSVEdit < Qt::MainWindow
     if GAME == "ooe"
       @item_pool_editor = ItemPoolEditor.new(self, game)
     else
-      Qt::MessageBox.warning(self, "Can't edit item pools", "DoS and PoR have no random chest item pools to edit.")
+      Qt::MessageBox.warning(self, "Can't edit item pools", "Only OoE has random chest item pools.")
     end
   end
   
   def open_tileset_editor
+    return unless validate_nds()
+    
     return if @tileset_editor && @tileset_editor.visible?
     @tileset_editor = TilesetEditorDialog.new(self, game.fs, @renderer, @room)
   end
@@ -646,6 +652,8 @@ class DSVEdit < Qt::MainWindow
   end
   
   def open_player_editor
+    return unless validate_nds()
+    
     return if @player_editor_dialog && @player_editor_dialog.visible?
     @player_editor_dialog = PlayerEditor.new(self, game.fs)
   end
@@ -653,6 +661,14 @@ class DSVEdit < Qt::MainWindow
   def open_special_object_editor
     return if @special_object_editor_dialog && @special_object_editor_dialog.visible?
     @special_object_editor_dialog = SpecialObjectEditor.new(self, game)
+  end
+  
+  def validate_nds
+    if SYSTEM == :gba
+      Qt::MessageBox.warning(self, "AoS not supported", "This tool doesn't support AoS yet.")
+      return false
+    end
+    return true
   end
   
   def add_new_overlay
