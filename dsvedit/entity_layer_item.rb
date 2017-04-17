@@ -45,33 +45,22 @@ class EntityLayerItem < Qt::GraphicsRectItem
       if GAME == "ooe"
         item_global_id = entity.var_b - 1
         chunky_image = @renderer.render_icon_by_global_id(item_global_id)
-        
-        if chunky_image.nil?
-          graphics_item = EntityRectItem.new(entity, @main_window)
-          graphics_item.setParentItem(self)
-          return
-        end
-        
-        graphics_item = EntityChunkyItem.new(chunky_image, entity, @main_window)
-        graphics_item.setOffset(-8, -16)
-        graphics_item.setPos(entity.x_pos, entity.y_pos)
-        graphics_item.setParentItem(self)
       else
         item_type = entity.subtype
         item_id = entity.var_b
         chunky_image = @renderer.render_icon_by_item_type(item_type-2, item_id)
-        
-        if chunky_image.nil?
-          graphics_item = EntityRectItem.new(entity, @main_window)
-          graphics_item.setParentItem(self)
-          return
-        end
-        
-        graphics_item = EntityChunkyItem.new(chunky_image, entity, @main_window)
-        graphics_item.setOffset(-8, -16)
-        graphics_item.setPos(entity.x_pos, entity.y_pos)
-        graphics_item.setParentItem(self)
       end
+      
+      if chunky_image.nil?
+        graphics_item = EntityRectItem.new(entity, @main_window)
+        graphics_item.setParentItem(self)
+        return
+      end
+      
+      graphics_item = EntityChunkyItem.new(chunky_image, entity, @main_window)
+      graphics_item.setOffset(-8, -16)
+      graphics_item.setPos(entity.x_pos, entity.y_pos)
+      graphics_item.setParentItem(self)
     elsif entity.is_heart? || entity.is_hidden_heart?
       case GAME
       when "dos"
@@ -129,12 +118,12 @@ class EntityLayerItem < Qt::GraphicsRectItem
       graphics_item.setParentItem(self)
     end
   rescue StandardError => e
-    unless e.message =~ /has no sprite/
-      Qt::MessageBox.warning(@main_window,
-        "Sprite error",
-        "#{e.message}\n\n#{e.backtrace.join("\n")}"
-      )
-    end
+    #unless e.message =~ /has no sprite/
+    #  Qt::MessageBox.warning(@main_window,
+    #    "Sprite error",
+    #    "#{e.message}\n\n#{e.backtrace.join("\n")}"
+    #  )
+    #end
     graphics_item = EntityRectItem.new(entity, @main_window)
     graphics_item.setParentItem(self)
   end

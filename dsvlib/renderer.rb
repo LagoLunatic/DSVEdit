@@ -994,6 +994,18 @@ class Renderer
     return part_gfx
   end
   
+  def nil_image_if_invisible(image)
+    invisible = image.palette.all? do |color|
+      ChunkyPNG::Color.fully_transparent?(color)
+    end
+    
+    if invisible
+      nil
+    else
+      image
+    end
+  end
+  
   def render_icon_by_item_type(item_type_index, item_index, mode=:item)
     item_type = ITEM_TYPES[item_type_index]
     format = item_type[:format]
@@ -1033,8 +1045,6 @@ class Renderer
   end
   
   def render_icon(icon_index, palette_index, mode=:item)
-    return nil if icon_index == 0
-    
     icon_width = mode == :item ? 16 : 32
     icon_height = icon_width
     icons_per_row = 128 / icon_width
@@ -1059,6 +1069,8 @@ class Renderer
     y_pos = ((icon_index % icons_per_page) / icons_per_column) * icon_height
     item_image = gfx_page_image.crop(x_pos, y_pos, icon_width, icon_height)
     
+    item_image = nil_image_if_invisible(item_image)
+    
     return item_image
   end
   
@@ -1076,7 +1088,7 @@ class Renderer
         gfx_pages << gfx_page
       end
     else
-      [0x081C5E00, 0x081C7E04, 0x081C9E08].each do |gfx_pointer|
+      ITEM_ICONS_GFX_POINTERS.each do |gfx_pointer|
         gfx_page = GfxWrapper.new(gfx_pointer, fs, unwrapped: true)
         gfx_pages << gfx_page
       end
