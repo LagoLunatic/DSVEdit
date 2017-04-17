@@ -1,0 +1,488 @@
+
+=== 02000000 - 020F61BF: Most of ARM9
+
+020CA5DC - List of code pointers for each game state (020F6284).
+
+020CD88C - List of enemy files to load.
+020E19DC - List of special object files to load.
+
+020DF2A4 - List of BGM indexes by area. (These are indexes in list 020E0204.)
+020DF2B4 - List of BGM indexes by sector in dracula's castle. (These are indexes in list 020E0204.)
+020E0204 - List of songs available for use as BGM.
+022E187C - List of songs->text indexes for sound test mode.
+
+020DF36C-020DF3A3 - List of areas. Each entry is a pointer to a list of sectors for the area somewhere in 020E3A34-020E3B13.
+
+020DF3E4 - List of pointers to map metadata for each area.
+020DF420 - List of pointers to map line data for each area.
+020BF914 - List of map lengths (number of map tiles each area map has). Halfwords.
+
+020DFD40 - List of quests. Entry length 16.
+  0,2 Global ID of the item to give as a reward. Skills start at 150.
+  4,2 Affects conditions to complete the quest somehow?
+020DFCA0 - List of pointers to functions that check quest completion conditions. For example, checking certain flags. Use the quest index as the index in this list.
+
+020E1CEC - Leg armor.
+020E1FA4 - Head armor.
+020E2334 - Accessories.
+020E2724 - Consumables.
+020E2BA4 - Body armor.
+020E3114 - Weapons.
+
+020E3A34-020E3B13 - Lists of sectors. Each entry is a pointer to a list of rooms for the sector.
+
+020E3CFC - Skills.
+020E3B14 - List of extra data for each skill. Only for subweapons and spells.
+
+020F49E8 - List of breakable walls for each area.
+  0,2: Sprite frame index to use.
+  2,2: Flag for this breakable wall being destroyed. FFFF means it won't stay destroyed.
+  4,2: Used for something, but doesn't seem to affect anything?
+  6,2: Unused.
+
+=== 020F61BF: End of most of ARM9.
+
+020F61D0 - Number times the player has soft reset the game with select+start+L+R.
+
+020F6284 - Game state.
+  This is used as the index in list 020CA5D0.
+  00 Loading a save
+  01 Loading a save
+  02 Ingame
+  03 
+  04 
+  05 Title
+  06 Game over
+  07 Pause screen
+  08 Shop menu
+  09 Quest menu
+  0A Intro movie
+  0B Intro logos
+  0C Credits (bad end)
+  0D Data loading failed
+  0E Save failed
+  0F 
+  10 
+  11 Wireless connection error
+  12 Game start menu
+  13 Boss rush mode menu
+  14 Shop mode menu
+  15 Co-op mode menu
+  16 Options menu (for editing name, etc)
+  18 Booting up (both for the first time, and after soft resetting)
+  19 Scrolling prologue text
+  1A Sound test
+  1B Ranking
+020F6285 & 020F6286 - Game substates.
+020F628C - 0 when the game is running, 1 when it's paused. Not just the pause screen, any time the actual game logic is paused.
+  However, if you pause, visit the map screen, then back out, the game will be paused yet this value will be 0.
+
+=== 020FC500 - 0211173F: Entities currently loaded into memory. Each is 0x160 bytes long. They range from 0-F4.
+
+020FCA80 - Start of player 1's entity memory.
+020FCAB0 - Player 1's x pos.
+020FCAB4 - Player 1's y pos.
+020FCABC - Player 1's x velocity.
+020FCAC0 - Player 1's y velocity.
+020FCB50 - Player 1's bitfield of state booleans.
+  0x00000001 - Moving.
+  0x00000002 - Moving forward
+  0x00000004 - Facing left.
+  0x00000008 - Crouching.
+  0x00000010 - In air.
+  0x00000020 - Double jumping.
+  0x00000040 - Dying.
+  0x00000080 - Bouncing after a jumpkick.
+  0x00000100 - There's a ceiling right above the player's head (when jumping up or crouching in a small space).
+  0x00000200 - Standing on jump-through platform.
+  0x00000400 - There's a ceiling right above the player's head (when crouching in a small space).
+  0x00000800 - Taking damage in the air.
+  0x00001000 - There's a ceiling right above the player's head (when standing normally).
+  0x00002000 - Jumpkicking or using subweapon.
+  0x00004000 - Swinging melee weapon.
+  0x00008000 - Using a combo tech (including critical art).
+  0x00010000 - Using subweapon.
+  0x00020000 - 
+  0x00040000 - 
+  0x00080000 - Backdashing.
+  0x00100000 - Sliding.
+  0x00200000 - Jumpkicking.
+  0x00400000 - Taking damage.
+  0x00800000 - 
+  0x01000000 - 
+  0x02000000 - 
+  0x04000000 - Pushing.
+  0x08000000 - 
+  0x10000000 - Set for one frame when you start sliding or swing a weapon.
+  0x20000000 - Jumping off partner's shoulders.
+  0x40000000 - 
+  0x80000000 - 
+020FCB68 - Normally 0, set to 1 during cinquedia and axe supers.
+  But unlike a similar variable in DoS, this doesn't prevent you from going in a door. Doesn't seem to do anything at all.
+020FCB80 - Another bitfield of player 1 state booleans.
+  This has the exact same value as 020FCB50but is updated one frame later.
+  TODO: What is this duplicate field for?
+020FCB8E - Number of jumps player 1 has left to make.
+020FCB90 - Number of frames player 1 has left to jump.
+  This is for the mercy jump period when you walk off a ledge. When you're standing on the floor this is 4. It decreases by 1 every frame when you walk off an edge. If you jump it's instantly set to 0 instead. When it's 0 you can't jump.
+  This is the cause of the partner double jump glitch, as this variable is only properly set for the character you're currently in control of, not your partner.
+020FC498 - Whether the player is in control or not.
+  0 - The player can control the character normally.
+  1 - Control is taken away, used for events and wooden doors and such.
+020FCB64 - Bitfield of ?. Copied from player data at offset 28.
+020FCB74 - Pointer to list of which animations are for which state. Copied from the player data at offset 0C.
+020FCB88 - Player 1's bitfield of actions they can do. Copied from the player data at offset 24.
+
+020FCBE0 - Start of player 2's entity memory.
+020FCBFC - Number of frames Charlotte has been charging a spell.
+  Continues increasing even when fully charged.
+  This value doesn't seem to actually affect anything.
+020FCC10 - Player 2's x pos.
+020FCC14 - Player 2's y pos.
+020FCC1C - Player 2's x velocity.
+020FCC20 - Player 2's y velocity.
+020FCCB0 - Bitfield of player 2 state booleans.
+020FCCCA - Number of frames left before the current spell is charged. (Halfword.)
+  If Sorceress Crest is equipped, this value decreases by 2 each frame.
+020FCCEE - Number of jumps player 2 has left to make.
+020FCCF0 - Number of frames you have left to jump. (Halfword.)
+020FCCF2 - Number of frames the current spell takes to charge up total.
+  This is set when you start charging a spell, not when you equip a spell.
+
+=== 0211173F: End of entities currently loaded into memory.
+
+0211174C - Bitfield. Seems to be similar to 020F6DFC from DoS.
+  0x00000001 - Disables pausing and switching to or calling your partner.
+  0x00000002 - Set during boss fights. Disables suspending and keeps boss doors shut.
+  0x00000080 - Set during events?
+  0x00040000 - Set during events and in Wind and Vincent's rooms?
+  0x00100000 - Set when going through a door.
+  0x01000000 - Set for a frame when entering the sisters' room.
+  0x08000000 - Set when not in game, such as on the title screen.
+  0x40000000 - Set when you haven't saved the game once yet. Disables suspending.
+  0x80000000 - Set during events?
+
+02111768 - Pointer to the current room's metadata.
+0211176C - Pointer to the current room's metadata. This is updated one frame before 02111768.
+02111770 - Pointer to the door the player most recently walked through.
+02111785 - Current area index?
+
+02111790 - Which type of door the player is currently walking through.
+  0 - Not walking through a door right now.
+  1 - Left door.
+  2 - Up door.
+  3 - Right door.
+  4 - Down door.
+
+02111794 - Explored map tiles.
+  Each tile takes up 2 bits.
+  The first bit is set if it's revealed by a map item but not explored.
+  Both bits are set if it's explored.
+
+021119AA - Area index to save to the save file.
+021119AB - Sector index to save to the save file.
+021119AC - Room index to save to the save file.
+021119BC - X pos to save to the save file.
+021119C0 - Y pos to save to the save file.
+
+021119D0 - Bitfield of which map items you've bought.
+
+021119FC,02111A08,02111F90 - Screen scrolling X pos.
+02111A00,02111A0C,02111F94 - Screen scrolling Y pos.
+
+021119DC - Boss death flags.
+  0x02000000 is doppelganger, resets when you leave the nest of evil.
+
+02111A5C - Bitfield of used byte 5s in the current room?
+
+02111A6C - Currently owned skills.
+
+02111BA0 - Miscellaneous flags.
+  0x1 - Drawbridge is partially down.
+  0x2 - Drawbridge is fully down.
+  TODO
+  Includes what breakable walls have been destroyed.
+02111BB0 - Event flags.
+
+02111BF8 - Currently owned items.
+
+02111CB8 - List of ? for each skill. Each entry is a halfword.
+  Bits 1-13: Current SP the player has for this subweapon.
+  Bit 14: 
+  Bit 15: 
+  Bit 16: Whether this subweapon is mastered or not.
+
+02111D76 - List of number of times you've killed each enemy. Halfwords.
+
+02111EAC-02111ED0 - List of quest statuses. Each quest is 1 byte.
+  Each bit:
+  01 - Quest seen.
+  02 - Quest taken.
+  04 - Met requirements to complete quest.
+  08 - Completed quest (cashed in reward).
+
+02111F51 - Current game mode.
+  0 - Jonathan/Charlotte mode.
+  1 - Richter/Maria mode.
+  2 - Sisters mode.
+  3 - Old Axe Armor mode.
+02111F52 - Current game mode?
+  0 - Jonathan/Charlotte mode.
+  1 - Sisters mode.
+  2 - Richter/Maria mode.
+  3 - Old Axe Armor mode.
+02111F53 - Which player character player 1 is.
+  0 - Jonathan.
+  1 - Charlotte.
+  2 - Stella.
+  3 - Loretta.
+  4 - Richter.
+  5 - Maria.
+  6 - Old Axe Armor.
+02111F54 - Which player character player 2 is.
+02111F55 - Difficulty.
+  0 - Normal mode
+  1 - Hard mode.
+02111F56 - Which player character you're controlling.
+02111F57 - Which player number you're controlling.
+  0 - Player 1.
+  1 - Player 2.
+02111F5B - Max level.
+02111F98 - Pointer to controlled character's entity.
+02111F9C - Pointer to partner character's entity.
+
+02111FC0 - Player 1's current stats. Halfwords.
+  02111FC0 - ATK
+  02111FC2 - DEF
+  02111FC4 - STR
+  02111FC6 - CON
+  02111FC8 - INT
+  02111FCA - MND
+  02111FCC - LCK
+  02111FCE - ???
+  02111FD0 - Bitfield of resistances.
+  02111FD2 - ???
+02111FD4 - Player 1's current stats, with bonus stats added.
+02111FE8 - Player 1's bonus stats.
+02112010 - Player 2's current stats.
+02112024 - Player 2's current stats, with bonus stats added.
+02112038 - Player 2's bonus stats.
+
+021120E2 - 01 if you're controlling player 1, 00 if player 2.
+
+02112104 - Current spell charge progress. Halfword. 0x1000 means 100% charged.
+02112106 - Current spell double charge progress. Halfword. 0x1000 means 100% charged.
+
+02112109 - 00 if you're controlling player 1, 01 if player 2.
+
+02112168 - Current level.
+0211216C - Current HP.
+0211216E - Max HP.
+02112170 - Current MP.
+02112172 - Max MP.
+
+0211217C - Player 1's currently equipped weapon.
+0211217E - Player 1's currently equipped subweapon.
+02112180 - Player 1's currently equipped body armor.
+02112182 - Player 1's currently equipped head armor.
+02112184 - Player 1's currently equipped leg armor.
+02112186 - Player 1's currently equipped accessory 1.
+02112188 - Player 1's currently equipped accessory 2.
+All of the player's current equips are duplicated three times. Only the first seems to matter.
+TODO: What are the other 2 for? It's not for the "recent" tab.
+
+021121C4 - Current gold.
+
+021121E8 - Player 2's currently equipped weapon.
+021121EA - Player 2's currently equipped spell.
+021121EC - Player 2's currently equipped body armor.
+021121EE - Player 2's currently equipped head armor.
+021121F0 - Player 2's currently equipped leg armor.
+021121F2 - Player 2's currently equipped accessory 1.
+021121F4 - Player 2's currently equipped accessory 2.
+
+021121C0 - Total experience.
+021121C4 - Experience to next level.
+
+021121C8-021121C9 - Bitfield of status effects on player 1.
+  0x1 - Poison
+  0x2 - Curse
+  0x4 - Petrify
+021121CA-021121CB - Frames left until poison expires.
+  It takes 0x708 - CON*8 total frames for it to expire.
+021121CC-021121CD - Frames left until curse expires.
+  It takes 0x708 - MND*8 total frames for it to expire.
+021121CE-021121CF - Number of button presses left until you break free of petrify.
+  It takes 0x2D total button presses to break free.
+
+021122C8-021122CB - Override walking speed of the player characters.
+  If this is 0, player characters use their own unique walking speed.
+  Otherwise, this is a speed value that overrides the player's walking speed.
+  Speed Up uses this to set the player's speed. Half charge sets this to 0x3000, full charge sets it to 0x4000.
+
+021122CC-0211230B - List of the last 32 states of player input.
+  Each is a halfword; a bitfield of which buttons were pressed.
+  This is used by the code that checks if you're pressing a certain button combo.
+
+0211ABE0 - Start of list of globally loaded palettes.
+
+02112458-02112617 - Data for the current room's 4 layers. Each is 0x70 bytes long.
+  00,4: Pointer to the layer's metadata.
+  0C,4: Affects screen's y position.
+
+0213291C - List of hitboxes. Each entry is 0x14 bytes long, containing two hitboxes 0xA bytes long each.
+  The index in this list for a particular entity is at offset+0xA7 in the entity memory.
+
+0213D65C,0213DCF8,0213DD04 - Currently playing song.
+
+0221D7A0 - List of enemies that need a certain enemy overlay and which overlay they need.
+  Each entry is 8 bytes long.
+  0,4: Enemy ID.
+  4,4: Overlay ID.
+
+0221D908 - List of special object create code pointers.
+0221DC18 - List of special object update code pointers.
+
+0221E05C-0221E06B - List of button combos.
+  Each entry is just a pointer. They point to:
+0221E00C-0221E02B - These are lists of ? for each button combo.
+  Bytes 1-2: ?
+  Bytes 3-4: ?
+  Bytes 5-8: Pointer to list of buttons that need to be pressed to trigger this combo:
+0221E004-? - These are lists of buttons for each button combo.
+  Simply a list of buttons that must be pressed in what order. Each button is 2 bytes long.
+  For example, 0010 0000 0010 means you must press forward, then nothing, then forward.
+  The list ends when you see FFFF.
+
+0221E09C - Something related to cutin portraits for Jonathan and Charlotte?
+  /sc/f_fjona00.dat uses palette 022C5B10
+
+0221E244 - List of which combo moves are for each player.
+  This is pointed to by the player data.
+  Each slot for a combo move is 1 byte long, each player has 4 slots. The byte is the index of the combo move in list 0221F070. 0 means no combo move.
+  Slot 1: Up left down right Y
+  Slot 2: Right down left right Y
+  Slot 3: Right down left up right Y
+  Slot 4:
+0221F070 - List of criticals and combo moves. Each entry is 8 bytes long.
+  Bytes 1-4: Pointer to code for this move.
+  Byte 5: Mana cost.
+  Byte 6: If 0, you must be on the ground to do this combo move. Otherwise you can be in the air.
+
+0221E7F4 - List of player data for each character.
+
+0221E468 - List of which sprite animations are for which player states for each player character (state anims).
+  The pointer at offset C in player data points to the appropiate entry in this list.
+  Specific pointers for each player:
+    0221E468: Loretta
+    0221E4B0: Richter
+    0221E4F8: Maria
+    0221E540: Old Axe Armor
+    0221E588: Jonathan
+    0221E5D0: Charlotte
+    0221E618: Stella
+  Each entry is 0x48 bytes long.
+  Format:
+    Each state takes up 1 byte, with that byte being the sprite animation index for that state. The states are in this order:
+    00 Idle
+    01 Holding up
+    02 Backdashing
+    03 Starting to walk
+    04 Turning around
+    05 Walking
+    06 Stopping
+    07 
+    08 
+    09 Crouching
+    0A Standing up
+    0B Jumping straight up
+    0C Jumping diagonally
+    0D Double jumping
+    0E 
+    0F 
+    10 
+    11 Falling
+    12 
+    13 Landing
+    14 Hard landing
+    15 Landing from a diagonal jump kick
+    16 Pushing
+    17 Using skill
+    18 
+    19 
+    1A 
+    1B 
+    1C 
+    1D Using dual crush
+    1E 
+    1F 
+    20 
+    21 
+    22 
+    23 
+    24 
+    25 
+    26 
+    27 
+    28 
+    29 
+    2A 
+    2B 
+    2C 
+    2D 
+    2E 
+    2F 
+    30 Sliding on flat ground
+    31 Sliding on slope
+    32 
+    33 Jumpkicking straight down
+    34 Jumpkicking diagonally down
+    35 Taking damage while standing/walking
+    36 Taking damage while backdashing
+    37 Taking damage while crouching
+    38 Taking damage in air from the front
+    39 Taking damage in air from behind
+    3A Petrified
+    3B Petrified (trying to break free)
+    3C 
+    3D 
+    3E 
+    3F 
+    40 ?? attacking on ground
+    41 
+    42 
+    43 
+    44 
+    45 
+    46 
+    47 
+
+0221E660 - List of some entity index ranges that different types of entities can occupy.
+  04-04 Player 1.
+  07-07 ?
+  08-11 Skills.
+  1C-1F Weapons.
+  20-24 ?
+  05-05 Player 2.
+  07-07 ?
+  12-1B ?
+  25-28 ?
+  29-2D ?
+
+0221ED18 - List of skill gfx.
+0221F110 - List of weapon gfx. Same format as DoS.
+
+022B1294 - The color multipliers for Wight. Tints it blue.
+
+022B7E44-022C7B1B - palette data.
+
+022C5860 - This one 256 color palette is used for all portraits.
+
+023BD0D0-023DFFFF - Free space.
+
+=== 023E0000 - 023F7CBF: Some of /dwc/utility.bin (for wifi)
+=== 02900000 - 02900650: Some of ARM9
+=== 02A00000 - 02A063FF: Some of ARM9
+
+/sc/f_item00-05.dat - Item icons. GFX mode is 1-dimensional.
+Subweapons/dual crushes/spells/relics use icons 40-43.
