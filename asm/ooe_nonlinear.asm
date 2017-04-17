@@ -52,6 +52,44 @@
 
 .close
 
+
+; Set the var B of certain events to 0.
+; Var B for events is the prerequisite event flag you need before this event will appear.
+; Setting it to 0 allows these events to appear even if you don't have the prerequisite flag.
+.open "ftc/overlay9_51", 022C1FE0h
+.org 0x022CF55C+8 ; Event 69
+  .halfword 0
+.close
+.open "ftc/overlay9_53", 022C1FE0h
+.org 0x022CD85C+8 ; Event 6B
+  .halfword 0
+.close
+.open "ftc/overlay9_64", 022C1FE0h
+.org 0x022CDAB0+8 ; Event 6C
+  .halfword 0
+.close
+.open "ftc/overlay9_59", 022C1FE0h
+.org 0x022D3564+8 ; Event 6F
+  .halfword 0
+.close
+.open "ftc/overlay9_62", 022C1FE0h
+.org 0x022C5FC8+8 ; Event 71
+  .halfword 0
+.close
+.open "ftc/overlay9_60", 022C1FE0h
+.org 0x022D2DC4+8 ; Event 74
+  .halfword 0
+.close
+.open "ftc/overlay9_67", 022C1FE0h
+.org 0x022C994C+8 ; Event 7E
+  .halfword 0
+.close
+.open "ftc/overlay9_75", 022C1FE0h
+.org 0x022CEDB8+8 ; Event 85
+  .halfword 0
+.close
+
+
 .open "ftc/overlay9_19", 021FFFC0h
 
 ; Fixes a bug where beating Lighthouse without ever visiting Kalidus Channel and then trying to enter Kalidus Channel would crash the game.
