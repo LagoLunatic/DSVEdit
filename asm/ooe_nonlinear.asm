@@ -57,35 +57,35 @@
 ; Var B for events is the prerequisite event flag you need before this event will appear.
 ; Setting it to 0 allows these events to appear even if you don't have the prerequisite flag.
 .open "ftc/overlay9_51", 022C1FE0h
-.org 0x022CF55C+8 ; Event 69
+.org 0x022CF55C+0Ah ; Event 69
   .halfword 0
 .close
 .open "ftc/overlay9_53", 022C1FE0h
-.org 0x022CD85C+8 ; Event 6B
+.org 0x022CD85C+0Ah ; Event 6B
   .halfword 0
 .close
 .open "ftc/overlay9_64", 022C1FE0h
-.org 0x022CDAB0+8 ; Event 6C
+.org 0x022CDAB0+0Ah ; Event 6C
   .halfword 0
 .close
 .open "ftc/overlay9_59", 022C1FE0h
-.org 0x022D3564+8 ; Event 6F
+.org 0x022D3564+0Ah ; Event 6F
   .halfword 0
 .close
 .open "ftc/overlay9_62", 022C1FE0h
-.org 0x022C5FC8+8 ; Event 71
+.org 0x022C5FC8+0Ah ; Event 71
   .halfword 0
 .close
 .open "ftc/overlay9_60", 022C1FE0h
-.org 0x022D2DC4+8 ; Event 74
+.org 0x022D2DC4+0Ah ; Event 74
   .halfword 0
 .close
 .open "ftc/overlay9_67", 022C1FE0h
-.org 0x022C994C+8 ; Event 7E
+.org 0x022C994C+0Ah ; Event 7E
   .halfword 0
 .close
 .open "ftc/overlay9_75", 022C1FE0h
-.org 0x022CEDB8+8 ; Event 85
+.org 0x022CEDB8+0Ah ; Event 85
   .halfword 0
 .close
 
