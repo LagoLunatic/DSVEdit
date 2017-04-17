@@ -473,7 +473,7 @@ class DSVEdit < Qt::MainWindow
     
     load_room_collision_tileset()
     
-    @entities_view_item = EntityLayerItem.new(@room.entities, self, game.fs, @renderer)
+    @entities_view_item = EntityLayerItem.new(@room.entities, self, game, @renderer)
     @room_graphics_scene.addItem(@entities_view_item)
     
     @doors_view_item = Qt::GraphicsRectItem.new

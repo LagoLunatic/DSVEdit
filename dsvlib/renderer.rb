@@ -1006,42 +1006,10 @@ class Renderer
     end
   end
   
-  def render_icon_by_item_type(item_type_index, item_index, mode=:item)
-    item_type = ITEM_TYPES[item_type_index]
-    format = item_type[:format]
-    format_length = format.inject(0){|sum, attr| sum += attr[0]}
-    pointer = item_type[:list_pointer] + item_index*format_length
-    item = GenericEditable.new(item_index, item_type, fs)
-    
-    if mode == :item
-      icon_index, palette_index = GenericEditable.extract_icon_index_and_palette_index(item["Icon"])
-    else
-      icon_index = item["Icon"]
-      if item_type_index == 0
-        palette_index = 2
-      else
-        palette_index = 1
-      end
-    end
+  def render_icon_by_item(item, mode=:item)
+    icon_index, palette_index = GenericEditable.extract_icon_index_and_palette_index(item["Icon"])
     
     render_icon(icon_index, palette_index, mode)
-  end
-  
-  def render_icon_by_global_id(global_id)
-    ITEM_TYPES.each do |item_type|
-      format = item_type[:format]
-      format_length = format.inject(0){|sum, attr| sum += attr[0]}
-      base_pointer = item_type[:list_pointer]
-      item_type[:count].times do |item_index|
-        pointer = base_pointer+item_index*format_length
-        item = GenericEditable.new(item_index, item_type, fs)
-        if item["Item ID"] == global_id
-          icon_index, palette_index = GenericEditable.extract_icon_index_and_palette_index(item["Icon"])
-          return render_icon(icon_index, palette_index, mode=:item)
-        end
-      end
-    end
-    raise "Could not find item with global ID: %04X" % global_id
   end
   
   def render_icon(icon_index, palette_index, mode=:item)

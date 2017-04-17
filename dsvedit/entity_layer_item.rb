@@ -2,11 +2,12 @@
 class EntityLayerItem < Qt::GraphicsRectItem
   attr_reader :entities
   
-  def initialize(entities, main_window, fs, renderer)
+  def initialize(entities, main_window, game, renderer)
     super()
     
     @main_window = main_window
-    @fs = fs
+    @game = game
+    @fs = game.fs
     @renderer = renderer
     
     entities.each do |entity|
@@ -27,28 +28,32 @@ class EntityLayerItem < Qt::GraphicsRectItem
       soul_candle_sprite = OTHER_SPRITES[0].merge(palette_offset: 4)
       sprite_info = SpriteInfo.extract_gfx_and_palette_and_sprite_from_create_code(soul_candle_sprite[:pointer], @fs, soul_candle_sprite[:overlay], soul_candle_sprite)
       add_sprite_item_for_entity(entity, sprite_info, 0x6B)
-    elsif GAME == "ooe" && entity.is_special_object? && entity.subtype == 0x02 && entity.var_a == 0 # glyph statue
+    elsif entity.is_glyph_statue?
       pointer = OTHER_SPRITES.find{|spr| spr[:desc] == "Glyph statue"}[:pointer]
       sprite_info = SpriteInfo.extract_gfx_and_palette_and_sprite_from_create_code(pointer, @fs, nil, {})
       add_sprite_item_for_entity(entity, sprite_info, 0)
     elsif entity.is_special_object?
       special_object_id = entity.subtype
       sprite_info = SpecialObjectType.new(special_object_id, @fs).extract_gfx_and_palette_and_sprite_from_create_code
-      add_sprite_item_for_entity(entity, sprite_info, BEST_SPRITE_FRAME_FOR_SPECIAL_OBJECT[special_object_id], BEST_SPRITE_OFFSET_FOR_SPECIAL_OBJECT[special_object_id])
+      add_sprite_item_for_entity(entity, sprite_info,
+        BEST_SPRITE_FRAME_FOR_SPECIAL_OBJECT[special_object_id],
+        sprite_offset: BEST_SPRITE_OFFSET_FOR_SPECIAL_OBJECT[special_object_id])
     elsif entity.is_candle?
       sprite_info = SpriteInfo.extract_gfx_and_palette_and_sprite_from_create_code(CANDLE_SPRITE[:pointer], @fs, CANDLE_SPRITE[:overlay], CANDLE_SPRITE)
       add_sprite_item_for_entity(entity, sprite_info, CANDLE_FRAME_IN_COMMON_SPRITE)
     elsif entity.is_magic_seal?
       sprite_info = SpriteInfo.extract_gfx_and_palette_and_sprite_from_create_code(OTHER_SPRITES[0][:pointer], @fs, OTHER_SPRITES[0][:overlay], OTHER_SPRITES[0])
       add_sprite_item_for_entity(entity, sprite_info, 0xCE)
-    elsif entity.is_item? || entity.is_hidden_item?
+    elsif entity.is_item?
       if GAME == "ooe"
         item_global_id = entity.var_b - 1
-        chunky_image = @renderer.render_icon_by_global_id(item_global_id)
+        item = @game.items[item_global_id]
+        chunky_image = @renderer.render_icon_by_item(item)
       else
         item_type = entity.subtype
         item_id = entity.var_b
-        chunky_image = @renderer.render_icon_by_item_type(item_type-2, item_id)
+        item = @game.get_item_by_type_and_index(item_type, item_id)
+        chunky_image = @renderer.render_icon_by_item(item)
       end
       
       if chunky_image.nil?
@@ -61,7 +66,7 @@ class EntityLayerItem < Qt::GraphicsRectItem
       graphics_item.setOffset(-8, -16)
       graphics_item.setPos(entity.x_pos, entity.y_pos)
       graphics_item.setParentItem(self)
-    elsif entity.is_heart? || entity.is_hidden_heart?
+    elsif entity.is_heart?
       case GAME
       when "dos"
         frame_id = 0xDA
@@ -70,10 +75,10 @@ class EntityLayerItem < Qt::GraphicsRectItem
       end
       sprite_info = SpriteInfo.extract_gfx_and_palette_and_sprite_from_create_code(OTHER_SPRITES[0][:pointer], @fs, OTHER_SPRITES[0][:overlay], OTHER_SPRITES[0])
       add_sprite_item_for_entity(entity, sprite_info, frame_id)
-    elsif entity.is_money_bag? || entity.is_hidden_money_bag?
+    elsif entity.is_money_bag?
       sprite_info = SpriteInfo.extract_gfx_and_palette_and_sprite_from_create_code(MONEY_SPRITE[:pointer], @fs, MONEY_SPRITE[:overlay], MONEY_SPRITE)
       add_sprite_item_for_entity(entity, sprite_info, MONEY_FRAME_IN_COMMON_SPRITE)
-    elsif (entity.is_skill? || entity.is_hidden_skill?) && GAME == "por"
+    elsif entity.is_skill? && GAME == "por"
       case entity.var_b
       when 0x00..0x26
         chunky_image = @renderer.render_icon(64 + 0, 0)
@@ -95,13 +100,17 @@ class EntityLayerItem < Qt::GraphicsRectItem
       graphics_item.setOffset(-8, -16)
       graphics_item.setPos(entity.x_pos, entity.y_pos)
       graphics_item.setParentItem(self)
-    elsif (entity.is_glyph? || entity.is_hidden_glyph?) && entity.var_b > 0
+    elsif entity.is_glyph? && entity.var_b > 0
       glyph_id = entity.var_b - 1
+      item = @game.items[glyph_id]
+      
+      icon_index = item["Icon"]
       if glyph_id <= 0x36
-        chunky_image = @renderer.render_icon_by_item_type(0, glyph_id, mode=:glyph)
+        palette_index = 2
       else
-        chunky_image = @renderer.render_icon_by_item_type(1, glyph_id-0x37, mode=:glyph)
+        palette_index = 1
       end
+      chunky_image = @renderer.render_icon(icon_index, palette_index, mode=:glyph)
       
       if chunky_image.nil?
         graphics_item = EntityRectItem.new(entity, @main_window)
@@ -128,7 +137,7 @@ class EntityLayerItem < Qt::GraphicsRectItem
     graphics_item.setParentItem(self)
   end
   
-  def add_sprite_item_for_entity(entity, sprite_info, frame_to_render, sprite_offset = nil)
+  def add_sprite_item_for_entity(entity, sprite_info, frame_to_render, sprite_offset: nil)
     if frame_to_render == -1
       # Don't show this entity's sprite in the editor.
       graphics_item = EntityRectItem.new(entity, @main_window)

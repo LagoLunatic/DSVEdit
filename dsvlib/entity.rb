@@ -59,8 +59,12 @@ class Entity
     type == 0x03
   end
   
-  def is_pickup?
+  def is_normal_pickup?
     type == 0x04
+  end
+  
+  def is_pickup?
+    is_normal_pickup? || is_hidden_pickup?
   end
   
   def is_heart?
@@ -91,31 +95,15 @@ class Entity
     GAME == "ooe" && is_pickup? && (2..4).include?(subtype)
   end
   
+  def is_glyph_statue?
+    GAME == "ooe" && is_special_object? && subtype == 0x02 && var_a == 0
+  end
+  
+  def is_item_chest?
+    GAME == "ooe" && is_special_object? && (0x16..0x17).include?(subtype)
+  end
+  
   def is_hidden_pickup?
     type == 0x07 && (GAME == "por" || GAME == "ooe")
-  end
-  
-  def is_hidden_heart?
-    is_hidden_pickup? && subtype == 0x00
-  end
-  
-  def is_hidden_money_bag?
-    is_hidden_pickup? && subtype == 0x01
-  end
-  
-  def is_hidden_item?
-    if GAME == "ooe"
-      is_hidden_pickup? && subtype == 0xFF
-    else
-      is_hidden_pickup? && ITEM_LOCAL_ID_RANGES.keys.include?(subtype)
-    end
-  end
-  
-  def is_hidden_skill?
-    is_hidden_pickup? && PICKUP_SUBTYPES_FOR_SKILLS.include?(subtype)
-  end
-  
-  def is_hidden_glyph?
-    GAME == "ooe" && is_hidden_pickup? && (2..4).include?(subtype)
   end
 end

@@ -229,6 +229,22 @@ class Game
     end
   end
   
+  def get_item_by_type_and_index(item_type_index, item_index)
+    if !PICKUP_SUBTYPES_FOR_ITEMS.include?(item_type_index) && !PICKUP_SUBTYPES_FOR_SKILLS.include?(item_type_index)
+      raise "Bad item type: %02X" % item_type_index
+    end
+    
+    item_type_index -= 2
+    
+    global_index = 0
+    (0..item_type_index-1).each do |earlier_item_type|
+      global_index += ITEM_TYPES[earlier_item_type][:count]
+    end
+    global_index += item_index
+    
+    return items[global_index]
+  end
+  
   def get_map(area_index, sector_index)
     case GAME
     when "dos", "aos"
