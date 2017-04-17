@@ -199,6 +199,7 @@
     <addaction name="actionItem_Pool_Editor"/>
     <addaction name="actionTileset_Editor"/>
     <addaction name="actionSpecial_Object_Editor"/>
+    <addaction name="actionAdd_Overlay"/>
     <addaction name="actionEntity_Search"/>
     <addaction name="actionSettings"/>
    </widget>
@@ -466,6 +467,11 @@
    </property>
    <property name="shortcut">
     <string>F7</string>
+   </property>
+  </action>
+  <action name="actionAdd_Overlay">
+   <property name="text">
+    <string>Add Overlay</string>
    </property>
   </action>
  </widget>

@@ -408,6 +408,11 @@ class Game
     fs.write(NEW_GAME_STARTING_ROOM_INDEX_OFFSET, [room_index].pack("C"))
   end
   
+  def add_new_overlay
+    fs.add_new_overlay_file()
+    apply_armips_patch("#{GAME}_load_new_overlay")
+  end
+  
   def start_test_room(save_file_index, area_index, sector_index, room_index, x_pos, y_pos)
     @orig_fs = @fs
     

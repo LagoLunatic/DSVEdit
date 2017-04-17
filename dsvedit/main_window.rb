@@ -48,6 +48,7 @@ class DSVEdit < Qt::MainWindow
   slots "open_map_editor()"
   slots "open_player_editor()"
   slots "open_special_object_editor()"
+  slots "add_new_overlay()"
   slots "open_settings()"
   slots "write_to_rom()"
   slots "build_and_run()"
@@ -110,6 +111,7 @@ class DSVEdit < Qt::MainWindow
     connect(@ui.actionMap_Editor, SIGNAL("activated()"), self, SLOT("open_map_editor()"))
     connect(@ui.actionPlayer_Editor, SIGNAL("activated()"), self, SLOT("open_player_editor()"))
     connect(@ui.actionSpecial_Object_Editor, SIGNAL("activated()"), self, SLOT("open_special_object_editor()"))
+    connect(@ui.actionAdd_Overlay, SIGNAL("activated()"), self, SLOT("add_new_overlay()"))
     connect(@ui.actionEntity_Search, SIGNAL("activated()"), self, SLOT("open_entity_search()"))
     connect(@ui.actionSettings, SIGNAL("activated()"), self, SLOT("open_settings()"))
     connect(@ui.actionBuild, SIGNAL("activated()"), self, SLOT("write_to_rom()"))
@@ -167,6 +169,7 @@ class DSVEdit < Qt::MainWindow
     @ui.actionMap_Editor.setEnabled(false);
     @ui.actionPlayer_Editor.setEnabled(false);
     @ui.actionSpecial_Object_Editor.setEnabled(false);
+    @ui.actionAdd_Overlay.setEnabled(false);
     @ui.actionEntity_Search.setEnabled(false);
     @ui.actionBuild.setEnabled(false);
     @ui.actionBuild_and_Run.setEnabled(false);
@@ -193,6 +196,7 @@ class DSVEdit < Qt::MainWindow
     @ui.actionMap_Editor.setEnabled(true);
     @ui.actionPlayer_Editor.setEnabled(true);
     @ui.actionSpecial_Object_Editor.setEnabled(true);
+    @ui.actionAdd_Overlay.setEnabled(true);
     @ui.actionEntity_Search.setEnabled(true);
     @ui.actionBuild.setEnabled(true);
     @ui.actionBuild_and_Run.setEnabled(true);
@@ -649,6 +653,32 @@ class DSVEdit < Qt::MainWindow
   def open_special_object_editor
     return if @special_object_editor_dialog && @special_object_editor_dialog.visible?
     @special_object_editor_dialog = SpecialObjectEditor.new(self, game)
+  end
+  
+  def add_new_overlay
+    if game.fs.overlays[NEW_OVERLAY_ID]
+      msg = "You have already added an overlay to this project.\n"
+      msg << "DSVEdit only supports adding one new overlay to each project.\n\n"
+      msg << "The new overlay is /ftc/overlay9_#{NEW_OVERLAY_ID}, it's loaded at %08X in RAM, and its maximum size is %08X bytes." % [NEW_OVERLAY_FREE_SPACE_START, NEW_OVERLAY_FREE_SPACE_SIZE]
+      Qt::MessageBox.warning(self, "Can't add more overlays", msg)
+      return
+    end
+    
+    msg = "This option will add a new empty (free space) overlay file to the game. You can put whatever code or data you want in this file.\n"
+    msg << "DSVEdit will also modify the game's code so that this new overlay gets loaded into the game's RAM.\n\n"
+    msg << "Are you sure you want to add a new overlay?"
+    response = Qt::MessageBox.question(self, "Add new overlay", msg, Qt::MessageBox::No | Qt::MessageBox::Yes, Qt::MessageBox::No)
+    
+    if response == Qt::MessageBox::No
+      return
+    end
+    
+    game.add_new_overlay()
+    
+    msg = "Successfully added new overlay /ftc/overlay9_#{NEW_OVERLAY_ID}.\n\n"
+    msg << "This overlay will be loaded at %08X in RAM. The maximum size you can make this overlay is %08X bytes.\n\n" % [NEW_OVERLAY_FREE_SPACE_START, NEW_OVERLAY_FREE_SPACE_SIZE]
+    msg << "If you are going to manually modify this file in a hex editor, only do so while DSVEdit is closed. DSVEdit may not notice files changed while it's open."
+    Qt::MessageBox.warning(self, "Added new overlay #{NEW_OVERLAY_ID}", msg)
   end
   
   def open_entity_editor(entity = nil)

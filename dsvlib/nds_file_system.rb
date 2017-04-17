@@ -520,6 +520,8 @@ class NDSFileSystem
     @uncommitted_files << "/ftc/fat.bin"
     
     write_new_table_sizes_to_header()
+    
+    load_overlay(NEW_OVERLAY_ID)
   end
   
   def write_new_table_sizes_to_header
@@ -624,6 +626,7 @@ private
     CONSTANT_OVERLAYS.each do |overlay_index|
       load_overlay(overlay_index)
     end
+    load_overlay(NEW_OVERLAY_ID) if overlays[NEW_OVERLAY_ID]
     
     read_free_space_from_text_file()
   end
