@@ -32,6 +32,17 @@ class EntityLayerItem < Qt::GraphicsRectItem
       pointer = OTHER_SPRITES.find{|spr| spr[:desc] == "Glyph statue"}[:pointer]
       sprite_info = SpriteInfo.extract_gfx_and_palette_and_sprite_from_create_code(pointer, @fs, nil, {})
       add_sprite_item_for_entity(entity, sprite_info, 0)
+    elsif entity.is_item_chest?
+      item_global_id = entity.var_a - 1
+      item = @game.items[item_global_id]
+      item_icon_chunky_image = @renderer.render_icon_by_item(item)
+      
+      special_object_id = entity.subtype
+      sprite_info = SpecialObjectType.new(special_object_id, @fs).extract_gfx_and_palette_and_sprite_from_create_code
+      add_sprite_item_for_entity(entity, sprite_info,
+        BEST_SPRITE_FRAME_FOR_SPECIAL_OBJECT[special_object_id],
+        sprite_offset: BEST_SPRITE_OFFSET_FOR_SPECIAL_OBJECT[special_object_id],
+        item_icon_image: item_icon_chunky_image)
     elsif entity.is_special_object?
       special_object_id = entity.subtype
       sprite_info = SpecialObjectType.new(special_object_id, @fs).extract_gfx_and_palette_and_sprite_from_create_code
@@ -137,7 +148,7 @@ class EntityLayerItem < Qt::GraphicsRectItem
     graphics_item.setParentItem(self)
   end
   
-  def add_sprite_item_for_entity(entity, sprite_info, frame_to_render, sprite_offset: nil)
+  def add_sprite_item_for_entity(entity, sprite_info, frame_to_render, sprite_offset: nil, item_icon_image: nil)
     if frame_to_render == -1
       # Don't show this entity's sprite in the editor.
       graphics_item = EntityRectItem.new(entity, @main_window)
@@ -149,6 +160,10 @@ class EntityLayerItem < Qt::GraphicsRectItem
     
     sprite_filename = @renderer.ensure_sprite_exists("cache/#{GAME}/sprites/", sprite_info, frame_to_render)
     chunky_frame = ChunkyPNG::Image.from_file(sprite_filename)
+    
+    if item_icon_image
+      chunky_frame.compose!(item_icon_image, 6, 0)
+    end
     
     graphics_item = EntityChunkyItem.new(chunky_frame, entity, @main_window)
     
