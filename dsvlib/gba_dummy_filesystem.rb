@@ -65,6 +65,10 @@ class GBADummyFilesystem
     #remove_free_space(file_path, offset_in_file, new_data.length)
   end
   
+  def overwrite_rom(new_data)
+    @rom = new_data
+  end
+  
   def decompress(address)
     io = StringIO.new(@rom)
     offset = convert_address(address)

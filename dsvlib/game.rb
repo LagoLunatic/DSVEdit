@@ -342,16 +342,25 @@ class Game
     end
     
     # Temporarily copy code files to asm directory so armips can be run without permanently modifying the files.
-    fs.all_files.each do |file|
-      next unless (file[:overlay_id] || file[:name] == "arm9.bin")
-      
-      file_data = fs.read_by_file(file[:file_path], 0, file[:size])
-      
-      output_path = File.join("asm", file[:file_path])
+    if SYSTEM == :nds
+      fs.all_files.each do |file|
+        next unless (file[:overlay_id] || file[:name] == "arm9.bin")
+        
+        file_data = fs.read_by_file(file[:file_path], 0, file[:size])
+        
+        output_path = File.join("asm", file[:file_path])
+        output_dir = File.dirname(output_path)
+        FileUtils.mkdir_p(output_dir)
+        File.open(output_path, "wb") do |f|
+          f.write(file_data)
+        end
+      end
+    else
+      output_path = File.join("asm", "ftc", "rom.gba")
       output_dir = File.dirname(output_path)
       FileUtils.mkdir_p(output_dir)
       File.open(output_path, "wb") do |f|
-        f.write(file_data)
+        f.write(fs.rom)
       end
     end
     
@@ -364,17 +373,24 @@ class Game
     end
     
     # Now reload the file contents from the temporary directory, and then delete the directory.
-    fs.all_files.each do |file|
-      next unless (file[:overlay_id] || file[:name] == "arm9.bin")
-      
-      input_path = File.join("asm", file[:file_path])
-      input_dir = File.dirname(input_path)
-      FileUtils.mkdir_p(input_dir)
+    if SYSTEM == :nds
+      fs.all_files.each do |file|
+        next unless (file[:overlay_id] || file[:name] == "arm9.bin")
+        
+        input_path = File.join("asm", file[:file_path])
+        file_data = File.open(input_path, "rb") do |f|
+          f.read()
+        end
+        
+        fs.overwrite_file(file[:file_path], file_data)
+      end
+    else
+      input_path = File.join("asm", "ftc", "rom.gba")
       file_data = File.open(input_path, "rb") do |f|
         f.read()
       end
       
-      fs.overwrite_file(file[:file_path], file_data)
+      fs.overwrite_rom(file_data)
     end
   ensure
     if File.exist?(File.join("asm", "ftc"))
