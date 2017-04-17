@@ -136,7 +136,7 @@ class Renderer
     end
     
     tileset = Tileset.new(tileset_offset, fs)
-    rendered_tileset = ChunkyPNG::Image.new(Tileset::TILESET_WIDTH_IN_TILES*16, Tileset::TILESET_HEIGHT_IN_TILES*16, ChunkyPNG::Color::TRANSPARENT)
+    rendered_tileset = ChunkyPNG::Image.new(TILESET_WIDTH_IN_TILES*16, TILESET_HEIGHT_IN_TILES*16, ChunkyPNG::Color::TRANSPARENT)
     palette_list = generate_palettes(palette_pages.first.palette_list_pointer, 16) # TODO: USE CORRECT PALETTE PAGE
     if gfx_pages.any?{|gfx| gfx.colors_per_palette == 256}
       palette_list_256 = generate_palettes(palette_pages.first.palette_list_pointer, 256)
@@ -643,7 +643,7 @@ class Renderer
     end
     
     collision_tileset = CollisionTileset.new(collision_tileset_offset, fs)
-    rendered_tileset = ChunkyPNG::Image.new(Tileset::TILESET_WIDTH_IN_TILES*16, Tileset::TILESET_HEIGHT_IN_TILES*16, ChunkyPNG::Color::TRANSPARENT)
+    rendered_tileset = ChunkyPNG::Image.new(TILESET_WIDTH_IN_TILES*16, TILESET_HEIGHT_IN_TILES*16, ChunkyPNG::Color::TRANSPARENT)
     
     collision_tileset.tiles.each_with_index do |tile, index_on_tileset|
       graphic_tile = render_collision_tile(tile)
