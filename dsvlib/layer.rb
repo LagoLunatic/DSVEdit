@@ -10,6 +10,7 @@ class Layer
                 :scroll_mode,
                 :opacity,
                 :main_gfx_page_index,
+                :bg_control,
                 :width,
                 :height,
                 :tileset_pointer,
@@ -35,9 +36,10 @@ class Layer
         @main_gfx_page_index, _, _, _,
         @layer_metadata_ram_pointer = fs.read(layer_list_entry_ram_pointer, 16).unpack("CCCCVCCCCV")
     else
-      @z_index, @scroll_mode, @opacity, _, 
+      @z_index, @scroll_mode, @bg_control, 
         @main_gfx_page_index, _, _, _,
-        @layer_metadata_ram_pointer = fs.read(layer_list_entry_ram_pointer, 12).unpack("CCCCCCCCV")
+        @layer_metadata_ram_pointer = fs.read(layer_list_entry_ram_pointer, 12).unpack("CCvCCCCV")
+      @opacity = 0x1F
     end
   end
   
@@ -63,7 +65,7 @@ class Layer
     
     tile_data_string = fs.read(layer_tiledata_ram_start_offset, SIZE_OF_A_SCREEN_IN_BYTES*width*height)
     @tiles = tile_data_string.unpack("v*").map do |tile_data|
-      tile_class.new.from_game_data(tile_data)
+      Layer.tile_class.new.from_game_data(tile_data)
     end
   end
   
@@ -108,7 +110,7 @@ class Layer
         # Pad the layer with empty blocks vertically if layer's height was increased.
         new_row = []
         width_in_blocks.times do
-          new_row << tile_class.new.from_game_data(0)
+          new_row << Layer.tile_class.new.from_game_data(0)
         end
         tile_rows << new_row
       end
@@ -119,7 +121,7 @@ class Layer
         
         (width_in_blocks - row.length).times do
           # Pad the layer with empty blocks horizontally if layer's width was increased.
-          row << tile_class.new.from_game_data(0)
+          row << Layer.tile_class.new.from_game_data(0)
         end
         
         row
@@ -130,16 +132,23 @@ class Layer
     
     fs.write(layer_metadata_ram_pointer, [width, height].pack("CC"))
     fs.write(layer_metadata_ram_pointer+4, [tileset_pointer, collision_tileset_pointer].pack("VV"))
-    fs.write(layer_list_entry_ram_pointer, [z_index, scroll_mode, opacity].pack("CCC"))
-    fs.write(layer_list_entry_ram_pointer+6, [height*0xC0].pack("v")) if GAME == "dos"
-    fs.write(layer_list_entry_ram_pointer+6, [height*0x100].pack("v")) if GAME == "aos" # TODO CHECK
-    fs.write(layer_list_entry_ram_pointer+8, [main_gfx_page_index].pack("C"))
-    fs.write(layer_list_entry_ram_pointer+12, [layer_metadata_ram_pointer].pack("V"))
+    fs.write(layer_list_entry_ram_pointer, [z_index, scroll_mode].pack("CC"))
+    if SYSTEM == :nds
+      fs.write(layer_list_entry_ram_pointer+2, [opacity].pack("C"))
+      fs.write(layer_list_entry_ram_pointer+6, [height*0xC0].pack("v")) if GAME == "dos"
+      fs.write(layer_list_entry_ram_pointer+8, [main_gfx_page_index].pack("C"))
+      fs.write(layer_list_entry_ram_pointer+12, [layer_metadata_ram_pointer].pack("V"))
+    else
+      fs.write(layer_list_entry_ram_pointer+2, [bg_control].pack("v"))
+      #fs.write(layer_list_entry_ram_pointer+6, [height*0x100].pack("v")) if GAME == "aos" # TODO CHECK
+      fs.write(layer_list_entry_ram_pointer+4, [main_gfx_page_index].pack("C"))
+      fs.write(layer_list_entry_ram_pointer+8, [layer_metadata_ram_pointer].pack("V"))
+    end
     tile_data = tiles.map(&:to_tile_data).pack("v*")
     fs.write(layer_tiledata_ram_start_offset, tile_data)
   end
   
-  def tile_class
+  def self.tile_class
     if SYSTEM == :nds
       Tile
     else

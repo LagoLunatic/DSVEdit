@@ -232,7 +232,7 @@ class TMXInterface
       index_on_tileset -= 1 # TMX indexes start at 1 instead of 0.
       index_on_tileset = index_on_tileset % 1024 # Account for the block offset for different tilesets. 1024 blocks in each tileset.
       
-      tile = Tile.new
+      tile = Layer.tile_class.new
       tile.index_on_tileset = index_on_tileset
       tile.horizontal_flip = horizontal_flip
       tile.vertical_flip = vertical_flip
