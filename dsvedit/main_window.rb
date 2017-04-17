@@ -656,6 +656,12 @@ class DSVEdit < Qt::MainWindow
   end
   
   def add_new_overlay
+    if SYSTEM == :gba
+      msg = "Can't add an overlay to a GBA game."
+      Qt::MessageBox.warning(self, "Can't add overlay", msg)
+      return
+    end
+    
     if game.fs.overlays[NEW_OVERLAY_ID]
       msg = "You have already added an overlay to this project.\n"
       msg << "DSVEdit only supports adding one new overlay to each project.\n\n"
