@@ -64,6 +64,7 @@ Weapon format:
     Bit 2: Weapon doesn't follow Soma, it floats in the air where Soma started swinging it.
     Bit 3: 
     Bit 4: Soma doesn't play a swinging animation. This normally means the weapon stops swinging immediately, but combine this with bit 10 and you can swing the weapon and walk around at the same time, like with the Valmanway.
+    Bit 5: No trailing slash effect on the weapon.
     Bit 7: Makes weapon transparent.
     Bit 8: Gives weapon a shaky echo effect and moves it up above Soma higher than it should be.
     Bit 9: Weapon doesn't stop swinging when Soma's swinging animation ends. Only seems to do anything if combined with bit 5.

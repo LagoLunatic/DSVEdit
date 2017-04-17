@@ -137,7 +137,7 @@ Weapon format:
     Bit 9: If combined with bit 4, the weapon stops swinging immediately. Basically this is the inverse of how it worked in DoS.
     Bit 10:
     Bit 11:
-    Bit 12: Weapon persists even when the player's swing animation end.
+    Bit 12: Weapon persists even when the player's swing animation ends.
     Bit 13: Whip cannot be dangled.
     Bit 14: Can whip diagonally downward (if you have Whip Skill 2 relic).
     Bit 15:

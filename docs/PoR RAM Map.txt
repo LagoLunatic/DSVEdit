@@ -77,6 +77,16 @@
 020F628C - 0 when the game is running, 1 when it's paused. Not just the pause screen, any time the actual game logic is paused.
   However, if you pause, visit the map screen, then back out, the game will be paused yet this value will be 0.
 
+020FA200 - List of sprite info for currently loaded entities.
+  The halfword at +6C in an entity's memory is the index in this list.
+  Each entry is 0x10 bytes long.
+  08,4: Affects GFX. Index in list 020FB208.
+  0C,4: Pointer to something affecting sprite?
+020FB208 - List of ?.
+  Each entry is 0x14 bytes long.
+  00,2: 
+  04,1:
+
 === 020FC500 - 0211173F: Entities currently loaded into memory. Each is 0x160 bytes long. They range from 0-F4.
 
 020FCA80 - Start of player 1's entity memory.

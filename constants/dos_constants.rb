@@ -347,6 +347,7 @@ REUSED_SPECIAL_OBJECT_INFO = {
   0x06 => {sprite: 0x0229A9FC, gfx_files: [0x022CA4B8, 0x022CA4C4, 0x022CA4D0, 0x022CA4DC, 0x022CA4E8, 0x022CA4F4], palette: 0x022C141C}, # area titles
   0x09 => {init_code: 0x0222BD04}, # chair
   0x0B => {init_code:         -1},
+  0x0E => {init_code:         -1},
   0x11 => {init_code:         -1},
   0x1D => {sprite: 0x0229EAD8, gfx_wrapper: 0x02079EAC, palette: 0x022B9B04}, # wooden door
   0x22 => {init_code:         -1},
