@@ -39,7 +39,7 @@ Entity types:
     Var B: The local ID of the soul + 1.
 
 05 Hard mode pickup.
-  Appears only on normal mode.
+  Appears only on hard mode.
   Subtype/Var A/Var B work the same as normal pickups.
 
 06 All-souls-found pickup.

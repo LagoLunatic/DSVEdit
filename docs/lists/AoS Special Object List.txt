@@ -10,8 +10,15 @@
 08 Breakable wall.
 0D Bell.
   Rings when you land on top of it.
-0E Candle
-0F Candle
+0E Destructible.
+  Var A: Which destructible. 0-D.
+0F Flame.
+12 Various background visuals.
+  Var A:
+    0 Body-length window that gets blown open.
+    1 Water rushing out of a grate.
+    2 Moon.
+    3 Moon. Positioned lower than 2.
 14 Boat.
   Var A:
     0 Boats spawn from the background that are affected by physics in the water.
@@ -22,6 +29,7 @@
 17 Elevator.
 19 Skull that moves around in a rectangular path.
 1C Save point.
+1D Walls of save room/warp room.
 1F Warp point.
 20 Event.
   Var A: Which event.
@@ -45,6 +53,7 @@
     1E Soma floating in white space after defeating Chaos.
 21 Falling spike trap from Arena.
 22 D-pad puzzle from Arena.
+25 Legion members emerging from the background.
 26 Damaging hand/foot of Arena background statue.
 29 Vertically moving platform.
 2A Horizontally moving platform.
@@ -54,5 +63,6 @@
   Var A:
     0 Button.
     1 Metal gate.
+36 Cog.
 37 Demon head gate.
   Must face away from it for its mouth to open.

@@ -1,0 +1,34 @@
+
+Red soul format:
+  00,4: Code pointer.
+  04,2: Animation for Soma to play when using this soul.
+    00 Normal soul use animation.
+    01 Uppercut.
+    02 Straight punch.
+    03 Powerful punch.
+    This is an index in list 080E1918. Each entry in that list is composed of two separate bytes: the first is the animation for Soma to use when on the ground, the second is the one to use when in the air.
+  06,2: Mana cost.
+  08,1:
+  09,1:
+  0A,2: Damage multiplier.
+  0C,2: Bitfield of damage types this soul does.
+  0E,2: Varies by code pointer.
+    08025785/08028EC1: Which projectile to throw.
+      0 Rock Armor
+      1 Waiter Skeleton
+      2 Bomber Armor
+      3 Skeleton
+      4 Giant Skeleton
+      5 Zombie Soldier
+      6 Arachne
+      7 Mudman
+    Axe Armor (08024275):
+      Affects graphics? Index in list 082306A0, entry length 0x10.
+    08023A71: Type of knife to throw.
+      0 Evil Butcher
+      1 Ripper
+    Harpy (0802CC85): No effect?
+    08027609: Which type of punch to throw.
+      0 Uppercut (Weretiger)
+      1 Straight punch (Werejaguar)
+    Chronomage (080E1658): Duration of timestop in frames.

@@ -207,8 +207,7 @@ CONSUMABLE_FORMAT = [
 WEAPON_FORMAT = [
   # length: 28
   [2, "Item ID"],
-  [1, "Icon"],
-  [1, "Icon Palette"],
+  [2, "Icon"],
   [4, "Price"],
   [1, "Attack Type"],
   [1, "Unknown 4"],
@@ -230,8 +229,7 @@ WEAPON_FORMAT = [
 ARMOR_FORMAT = [
   # length: 20
   [2, "Item ID"],
-  [1, "Icon"],
-  [1, "Icon Palette"],
+  [2, "Icon"],
   [4, "Price"],
   [1, "Type"],
   [1, "Unknown 4"],
@@ -248,13 +246,13 @@ ARMOR_FORMAT = [
 RED_SOUL_FORMAT = [
   # length: 16
   [4, "Code"],
-  [2, "Unknown 1"],
+  [2, "Use anim"],
   [2, "Mana"],
   [1, "Unknown 2"],
   [1, "Unknown 3"],
-  [2, "Unknown 4"],
+  [2, "DMG multiplier"],
   [2, "Effects", :bitfield],
-  [2, "Unknown 6"],
+  [2, "Var A"],
 ]
 BLUE_SOUL_FORMAT = [
   # length: 12
@@ -377,6 +375,7 @@ REUSED_ENEMY_INFO = {
   0x3E => {init_code: 0x080AD7F0}, # giant worm
   0x41 => {init_code: 0x081193EC}, # fish head
   0x43 => {init_code: 0x08087D24}, # triton
+  0x45 => {init_code: 0x080AD1D0}, # big golem
   0x47 => {init_code: 0x080AD7F0, palette_offset: 1}, # poison worm
   0x48 => {init_code: 0x08091430}, # arc demon
   0x49 => {init_code: 0x080B7E80, sprite: 0x0824A334}, # cagnazzo
@@ -429,20 +428,24 @@ OVERLAY_FILE_FOR_SPECIAL_OBJECT = {}
 REUSED_SPECIAL_OBJECT_INFO = {
   0x00 => {init_code: 0x0804D8F0}, # wooden door
   0x01 => {init_code: 0x08033254}, # pushable crate TODO: sprite file can't be found, gfx and palette are fine
+  0x02 => {sprite: 0x0820ED60, gfx_wrapper: 0x081C15F4, palette: 0x082099FC, palette_offset: 2, unwrapped_gfx: true},
   0x07 => {init_code:         -1},
   0x08 => {init_code: 0x08526004},
   0x09 => {init_code: 0x08526004},
   0x0C => {init_code:         -1},
-  0x0E => {desc: "Common", sprite: 0x0820ED60, gfx_wrapper: 0x081C15F4, palette: 0x082099FC, palette_offset: 3, unwrapped_gfx: true}, # TODO this is actually a candle not in the common sprite
-  0x0F => {desc: "Common", sprite: 0x0820ED60, gfx_wrapper: 0x081C15F4, palette: 0x082099FC, palette_offset: 3, unwrapped_gfx: true},
+  0x0E => {init_code: 0x08526214}, # destructible
+  0x0F => {sprite: 0x0820ED60, gfx_wrapper: 0x081C15F4, palette: 0x082099FC, palette_offset: 3, unwrapped_gfx: true},
+  0x1F => {init_code: 0x08055BE0, palette_offset: 2},
   0x20 => {init_code:         -1},
-  0x29 => {init_code: 0x080573B0},
+  0x29 => {init_code: 0x085264D0, palette_offset: 6},
+  0x2A => {init_code: 0x085264D0, palette_offset: 6},
 }
 SPECIAL_OBJECT_FILES_TO_LOAD_LIST = nil
 BEST_SPRITE_FRAME_FOR_SPECIAL_OBJECT = {
   0x00 => 0x01,
-  0x0E => 0x1E,
-  0x0F => 0x1E,
+  0x02 => 0x3F,
+  0x0F => 0x4A,
+  0x1F => 0x0A,
   0x26 => 0x02,
 }
 BEST_SPRITE_OFFSET_FOR_SPECIAL_OBJECT = {}
@@ -459,20 +462,34 @@ OTHER_SPRITES = [
   {desc: "Breakable walls 7", pointer: 0x0852604C},
   {desc: "Breakable walls 8", pointer: 0x08526058},
   
-  {desc: "Destructibles 1", pointer: 0x08526214},
-  {desc: "Destructibles 2", pointer: 0x08526220},
-  {desc: "Destructibles 3", pointer: 0x0852622C},
-  {desc: "Destructibles 4", pointer: 0x08526238},
-  {desc: "Destructibles 5", pointer: 0x08526244},
-  {desc: "Destructibles 6", pointer: 0x08526250},
-  {desc: "Destructibles 7", pointer: 0x0852625C},
-  {desc: "Destructibles 8", pointer: 0x08526268},
-  {desc: "Destructibles 9", pointer: 0x08526274},
-  {desc: "Destructibles 10", pointer: 0x08526280},
-  {desc: "Destructibles 11", pointer: 0x0852628C},
-  {desc: "Destructibles 12", pointer: 0x08526298},
-  {desc: "Destructibles 13", pointer: 0x085262A4},
-  {desc: "Destructibles 14", pointer: 0x085262B0},
+  {desc: "Destructible 0", pointer: 0x08526214},
+  {desc: "Destructible 1", pointer: 0x08526220},
+  {desc: "Destructible 2", pointer: 0x0852622C},
+  {desc: "Destructible 3", pointer: 0x08526238},
+  {desc: "Destructible 4", pointer: 0x08526244},
+  {desc: "Destructible 5", pointer: 0x08526250},
+  {desc: "Destructible 6", pointer: 0x0852625C},
+  {desc: "Destructible 7", pointer: 0x08526268},
+  {desc: "Destructible 8", pointer: 0x08526274},
+  {desc: "Destructible 9", pointer: 0x08526280},
+  {desc: "Destructible A", pointer: 0x0852628C},
+  {desc: "Destructible B", pointer: 0x08526298},
+  {desc: "Destructible C", pointer: 0x085262A4},
+  {desc: "Destructible D", pointer: 0x085262B0},
+  
+  {desc: "Background window", pointer: 0x085263A8},
+  {desc: "Background rushing water", pointer: 0x085263C0},
+  {desc: "Background moon", pointer: 0x085263D8},
+  
+  {desc: "unknown", pointer: 0x085264D0},
+  {desc: "unknown", pointer: 0x085264E0},
+  {desc: "unknown", pointer: 0x085264F0},
+  {desc: "unknown", pointer: 0x08526500},
+  {desc: "unknown", pointer: 0x08526510},
+  {desc: "unknown", pointer: 0x08526520},
+  {desc: "unknown", pointer: 0x08526530},
+  {desc: "unknown", pointer: 0x08526540},
+  {desc: "unknown", pointer: 0x08526550},
 ]
 
 CANDLE_FRAME_IN_COMMON_SPRITE = 0x1E
@@ -506,3 +523,15 @@ MAP_LINE_COLOR = [248, 248, 248, 255]
 MAP_DOOR_COLOR = [0, 200, 200, 255]
 MAP_DOOR_CENTER_PIXEL_COLOR = MAP_DOOR_COLOR
 MAP_SECRET_DOOR_COLOR = [248, 248, 0, 255]
+
+NEW_OVERLAY_ID = nil
+NEW_OVERLAY_FREE_SPACE_START = nil
+NEW_OVERLAY_FREE_SPACE_END = nil
+
+TEST_ROOM_SAVE_FILE_INDEX_LOCATION = 0x087FFFF0 # TODO
+TEST_ROOM_AREA_INDEX_LOCATION      = nil
+TEST_ROOM_SECTOR_INDEX_LOCATION    = 0x087FFFF0
+TEST_ROOM_ROOM_INDEX_LOCATION      = 0x087FFFF0
+TEST_ROOM_X_POS_LOCATION           = 0x087FFFF0
+TEST_ROOM_Y_POS_LOCATION           = 0x087FFFF0
+TEST_ROOM_OVERLAY = nil

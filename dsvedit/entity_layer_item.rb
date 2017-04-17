@@ -23,6 +23,10 @@ class EntityLayerItem < Qt::GraphicsRectItem
       pointer = OTHER_SPRITES.find{|spr| spr[:desc] == "Destructibles 0"}[:pointer]
       sprite_info = SpriteInfo.extract_gfx_and_palette_and_sprite_from_create_code(pointer, @fs, nil, {})
       add_sprite_item_for_entity(entity, sprite_info, 0)
+    elsif GAME == "aos" && entity.is_pickup? && (5..8).include?(entity.subtype) # soul candle
+      soul_candle_sprite = OTHER_SPRITES[0].merge(palette_offset: 4)
+      sprite_info = SpriteInfo.extract_gfx_and_palette_and_sprite_from_create_code(soul_candle_sprite[:pointer], @fs, soul_candle_sprite[:overlay], soul_candle_sprite)
+      add_sprite_item_for_entity(entity, sprite_info, 0x6B)
     elsif GAME == "ooe" && entity.is_special_object? && entity.subtype == 0x02 && entity.var_a == 0 # glyph statue
       pointer = OTHER_SPRITES.find{|spr| spr[:desc] == "Glyph statue"}[:pointer]
       sprite_info = SpriteInfo.extract_gfx_and_palette_and_sprite_from_create_code(pointer, @fs, nil, {})

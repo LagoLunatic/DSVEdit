@@ -251,6 +251,7 @@ Special objects:
 66 The 3D background in Dark Academy.
   Requires sector overlay 112.
 67 The 3D background model of the clock tower, used in the stairway leading up to the throne.
+  Requires sector overlay 87.
 68 Statue/cross.
   Var A: 0 for the statue of Mary from Nation of Fools. 1 for the cross from 13th Street.
 69 Transition room hider for Master's Keep.

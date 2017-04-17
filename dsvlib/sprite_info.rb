@@ -317,6 +317,8 @@ class SpriteInfo
       return false if num_anims > 0 && anims_ptr == 0
       return false if num_frames >= 0x100 # TODO
       return false if num_anims >= 0x100 # TODO
+      return false if frames_ptr % 4 != 0
+      return false if anims_ptr % 4 != 0
       return true
     end
   end
