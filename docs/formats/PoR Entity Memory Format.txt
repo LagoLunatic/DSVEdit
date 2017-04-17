@@ -1,0 +1,31 @@
+
+Memory used for entities in PoR is 020FC500 - 0211173F. Each entity is 0x160 bytes long. They range from 0-F4.
+
+000,4: Pointer to create code.
+004,4: Pointer to draw code.
+00D,1: State of the entity. Each entity's update code handles this differently.
+014,2: Frame counter 1.
+016,2: Frame counter 1.
+024,4: X pos on the screen.
+028,4: X pos on the screen.
+030,4: X pos.
+034,4: Y pos.
+03C,4: X velocity.
+040,4: Y velocity.
+048,4: X acceleration.
+04C,4: Y acceleration (gravity).
+0A4,1: Controls the iframes this entity should give.
+  This is an index in list 020BE4C8 - a list of different iframes values. Each entry is 1 byte long.
+  This value is only read when the entity is initialized, changing it after the entity already exists has no effect.
+0A6,1: Hitbox bitfield.
+  Bits:
+  0x1: Whether this entity's hitboxes are active or not.
+0A7,1: Index of this entity's hitbox in the global hitbox list (0213291C).
+0A8,2: Damage.
+0AC,4: Bitfield of damage types.
+0B8,2: Number of iframes this entity gives.
+11A,1: For skills, this is the ID of the skill.
+11E,1: For skills, this is the skill multiplier. (1 or 2.)
+  For spells it varies depending on if it's half charged or fully charged.
+  For subweapons it varies depending on whether it's mastered or not.
+138,2: For enemies, this is the attack value from the enemy DNA.
