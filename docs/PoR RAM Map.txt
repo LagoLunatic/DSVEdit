@@ -391,7 +391,7 @@ TODO: What are the other 2 for? It's not for the "recent" tab.
     0221E588: Jonathan
     0221E5D0: Charlotte
     0221E618: Stella
-  Each entry is 0x48 bytes long.
+  Each entry is 0x48 bytes long. 0x48 states in total.
   Format:
     Each state takes up 1 byte, with that byte being the sprite animation index for that state. The states are in this order:
     00 Idle
@@ -414,10 +414,10 @@ TODO: What are the other 2 for? It's not for the "recent" tab.
     11 Falling
     12 
     13 Landing
-    14 Hard landing
-    15 Landing from a diagonal jump kick
+    14 Hard landing straight down
+    15 Hard landing diagonally
     16 Pushing
-    17 Using skill
+    17 Using skill on ground
     18 
     19 
     1A 

@@ -27,9 +27,10 @@ Player format:
   42,2: 
   44,4: Scale multiplier for the player's trail.
     00001000 means 1x.
-  48,4: Scale multiplier for the player.
-    Only does anything if the below value is nonzero.
-  4C,4: Whether to enable scaling the player sprite.
+    Also scales the player's height, but only if "Enable player scale" is nonzero.
+  48,4: Height scale multiplier for the player.
+    Only does anything if "Enable player scale" is nonzero.
+  4C,4: Enable player scale.
   50,2: 
   52,2: 
   54,4: File index of sprite file.
