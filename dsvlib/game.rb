@@ -245,6 +245,22 @@ class Game
     return items[global_index]
   end
   
+  def get_item_type_and_index_by_global_id(item_global_id)
+    this_item_type_first_global_id = 0
+    ITEM_TYPES.each_with_index do |item_type, i|
+      this_item_type_global_id_range = (this_item_type_first_global_id..this_item_type_first_global_id+item_type[:count]-1)
+      if this_item_type_global_id_range.include?(item_global_id)
+        item_type_index = i + 2
+        item_index = item_global_id - this_item_type_first_global_id
+        return [item_type_index, item_index]
+      end
+      
+      this_item_type_first_global_id += item_type[:count]
+    end
+    
+    raise "Could not find item by global ID: %04X" % item_global_id
+  end
+  
   def get_map(area_index, sector_index)
     case GAME
     when "dos", "aos"

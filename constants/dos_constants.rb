@@ -358,6 +358,7 @@ REUSED_SPECIAL_OBJECT_INFO = {
   0x2A => {init_code: 0x021A7B44}, # flood gate
   0x2E => {init_code: 0x02304B98}, # iron maiden
   0x2F => {init_code:         -1},
+  0x33 => {init_code:         -1},
   0x36 => {init_code:         -1},
   0x38 => {init_code:         -1},
   0x41 => {init_code:         -1},
@@ -574,6 +575,7 @@ ITEM_LOCAL_ID_RANGES = {
 }
 ITEM_GLOBAL_ID_RANGE = (1..0xCE)
 SOUL_GLOBAL_ID_RANGE = (0..0x7A)
+PICKUP_GLOBAL_ID_RANGE = (0..0x148)
 
 PICKUP_SUBTYPES_FOR_ITEMS = (0x02..0x04)
 PICKUP_SUBTYPES_FOR_SKILLS = (0x05..0xFF)
