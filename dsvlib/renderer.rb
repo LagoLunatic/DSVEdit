@@ -483,8 +483,8 @@ class Renderer
     end
     
     colors = []
-    (0..image.width-1).step(16) do |x|
-      (0..image.height-1).step(16) do |y|
+    (0..image.height-1).step(16) do |y|
+      (0..image.width-1).step(16) do |x|
         colors << image[x,y]
       end
     end
