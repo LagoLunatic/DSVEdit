@@ -729,8 +729,9 @@ ITEM_LOCAL_ID_RANGES = {
   0x06 => (0x01..0x1C), # feet
   0x07 => (0x01..0x29), # misc
 }
-ITEM_GLOBAL_ID_RANGE = (0x01..0x1BB) # regular items end at 150. skills end at 1AB. 1BB is including relics.
-SKILL_GLOBAL_ID_RANGE = (0x01..0x6B)
+ITEM_GLOBAL_ID_RANGE = (0..0x14F)
+SKILL_GLOBAL_ID_RANGE = (0..0x1BB)
+SKILL_LOCAL_ID_RANGE = (0..0x6B)
 PICKUP_GLOBAL_ID_RANGE = (0..0x1BB)
 
 PICKUP_SUBTYPES_FOR_ITEMS = (0x02..0x07)

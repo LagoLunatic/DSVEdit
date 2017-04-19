@@ -74,6 +74,7 @@ Special objects:
     0B Medusa
     0D Stella
     0E Stella & Loretta
+    0F Brauner
     10 Death
     11 Dracula
     14 ??? Used in Gergoth's room in Boss Rush Course 1.
@@ -296,7 +297,7 @@ Special objects:
   Requires sector overlay 93.
 80 Transition room hider for Dracula's Castle (connects Great Stairway to other Great Stairway sector).
 81 Barrier blocking the way to the Throne Room.
-  The blocking effect extends all the way down the left edge of the screen, but the visuals only appear on the top-left screen.
+  The blocking effect extends all the way down the left edge of the room, but the visuals only appear on the top-left screen.
 82 Wooden door separating areas.
 83 Button and wall it lowers from Great Stairway.
 84 Many crows in a tree that disperse when you get near.

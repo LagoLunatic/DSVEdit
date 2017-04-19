@@ -486,7 +486,7 @@ TODO: What are the other 2 for? It's not for the "recent" tab.
 
 022B7E44-022C7B1B - palette data.
 
-022C5860 - This one 256 color palette is used for all portraits.
+022C5860 - This one 256 color palette is used for all face portraits.
 
 023BD0D0-023DFFFF - Free space.
 

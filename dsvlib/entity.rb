@@ -63,6 +63,10 @@ class Entity
     type == 0x04
   end
   
+  def is_hidden_pickup?
+    type == 0x07 && (GAME == "por" || GAME == "ooe")
+  end
+  
   def is_pickup?
     is_normal_pickup? || is_hidden_pickup?
   end
@@ -103,7 +107,14 @@ class Entity
     GAME == "ooe" && is_special_object? && (0x16..0x17).include?(subtype)
   end
   
-  def is_hidden_pickup?
-    type == 0x07 && (GAME == "por" || GAME == "ooe")
+  def is_money_chest?
+    case GAME
+    when "dos"
+      is_special_object? && subtype == 1 && var_a == 0x10
+    when "por"
+      is_special_object? && subtype == 1 && (0xE..0xF).include?(var_a)
+    else
+      false
+    end
   end
 end

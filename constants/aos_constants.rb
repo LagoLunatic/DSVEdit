@@ -186,8 +186,10 @@ ITEM_LOCAL_ID_RANGES = {
   0x03 => (0x00..0x3A), # weapon
   0x04 => (0x00..0x2C), # armor
 }
-ITEM_GLOBAL_ID_RANGE = (1..0x87)
-SOUL_GLOBAL_ID_RANGE = (0..0x36)
+ITEM_GLOBAL_ID_RANGE = (0..0x87)
+SKILL_GLOBAL_ID_RANGE = (0..0xFA)
+SKILL_LOCAL_ID_RANGE = nil # souls in AoS are split into multiple different types.
+PICKUP_GLOBAL_ID_RANGE = (0..0xFA)
 
 PICKUP_SUBTYPES_FOR_ITEMS = (0x02..0x04) # TODO
 PICKUP_SUBTYPES_FOR_SKILLS = (0x05..0xFF) # TODO
