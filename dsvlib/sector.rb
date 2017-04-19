@@ -5,6 +5,7 @@ class Sector
               :game,
               :area,
               :sector_ram_pointer,
+              :area_index,
               :sector_index,
               :room_pointers,
               :rooms
@@ -13,6 +14,7 @@ class Sector
     @area = area
     @sector_ram_pointer = sector_ram_pointer
     @next_sector_pointer = next_sector_pointer
+    @area_index = area.area_index
     @sector_index = sector_index
     @fs = game.fs
     @game = game
@@ -31,6 +33,16 @@ class Sector
   def load_necessary_overlay
     fs.load_overlay(overlay_id)
   end
+  
+  def name
+    if SECTOR_INDEX_TO_SECTOR_NAME[area_index]
+      SECTOR_INDEX_TO_SECTOR_NAME[area_index][sector_index]
+    else
+      ""
+    end
+  end
+  
+  def inspect; to_s; end
   
 private
   

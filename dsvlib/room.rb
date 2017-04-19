@@ -4,6 +4,7 @@ class Room
   class WriteError < StandardError ; end
   
   attr_reader :room_metadata_ram_pointer,
+              :area,
               :sector,
               :layers,
               :number_of_doors,
@@ -28,6 +29,7 @@ class Room
 
   def initialize(sector, room_metadata_ram_pointer, area_index, sector_index, room_index, game)
     @room_metadata_ram_pointer = room_metadata_ram_pointer
+    @area = sector.area
     @sector = sector
     @area_index = area_index
     @sector_index = sector_index
@@ -357,4 +359,6 @@ class Room
   def connected_rooms
     doors.map{|door| door.destination_door.room}.uniq
   end
+  
+  def inspect; to_s; end
 end

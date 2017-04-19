@@ -52,4 +52,8 @@ class Area
     
     return [0, 0]
   end
+  
+  def name
+    AREA_INDEX_TO_AREA_NAME[area_index]
+  end
 end

@@ -297,7 +297,7 @@ Special objects:
 60 Event - Yoko talks about magic seals by the door to Flying Armor's room.
 61 Event - Talking with Yoko after killing Flying Armor.
 62 Event - Soma meeting Dario and Dmitrii in Wizardry Lab.
-63 Event - Dmitrii in the Demon Guest House.
+63 Event - Dmitrii in the Dark Chapel.
 64 Event - Dario in the Garden of Madness.
 65 Event - Arikado gives Mina's Talisman to Soma.
 66 Event - Talk with Julius about the Mine of Judgement seal.

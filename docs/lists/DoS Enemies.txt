@@ -1,8 +1,9 @@
 Enemies:
 00 Zombie
-  Var A:
-    When 0, it's a single Zombie.
-    When greater than 0 it's a spawner that infinitely creates Zombie. Var A is the maximum number of zombies this spawner can have in the room at once. It will spawn a Zombie once every 0x40 frames up to the max.
+  Spawner.
+  Spawns a Zombie once every 0x40 frames up to the max.
+  Var A: Maximum number of Zombies this spawner can have in the room at once.
+  If var A is 0, it's not a spawner, instead it's just a single Zombie.
 01 Bat
   Var A: When 0, it's a single bat that hangs on the ceiling. When greater than 0, it's a spawner for bats that flying from the sides of the screen. Var a controls the delay in frames between each bat spawning, so lower values cause bats to spawn more quickly.
 02 Ghost
@@ -41,9 +42,10 @@ Enemies:
 19 Catoblepas
   Requires enemy overlay 32.
 1A Ghoul
-  Var A:
-    When 0, it's a single Ghoul.
-    When greater than 0 it's a spawner that infinitely creates Ghoul. Var A is the maximum number of zombies this spawner can have in the room at once. It will spawn a Ghoul once every 0x40 frames up to the max.
+  Spawner.
+  Spawns a Ghoul once every 0x40 frames up to the max.
+  Var A: Maximum number of Ghouls this spawner can have in the room at once.
+  If var A is 0, it's not a spawner, instead it's just a single Ghoul.
 1B Corpseweed
 1C Yeti
 1D Tombstone
@@ -72,13 +74,13 @@ Enemies:
 2A Buer
 2B Lilith
 2C Killer Clown
-  Var B: 0 or 1
+  Var B: 0 or 1, but seems unused?
 2D Skelerang
 2E Fleaman
   Var A: Number of fleamen to spawn. (They only spawn once when you enter the room, not infinitely.) If this is 0, then 1 fleaman spawns instead.
 2F Devil
   Requires enemy overlay 31.
-  Var B: 0 or 1
+  Var B: 0 or 1, but seems unused?
 30 Guillotiner
 31 Draghignazzo
 32 Needles
@@ -91,8 +93,10 @@ Enemies:
 38 Harpy
 39 Barbariccia
 3A Malachi
-  For a normal Malachi, set var A to 0 and var B to 1.
-  For the Malachi that just stands still for Dmitrii's event set var A to 1 and var B to 0.
+  Var A:
+    0 Normal Malachi.
+    1 The Malachi that just stands still for Dmitrii's event, and disappears once that event flag is set.
+  Var B: 0 or 1, but seems unused?
 3B Cave Troll
 3C Larva
 3D Heart Eater
@@ -132,7 +136,8 @@ Enemies:
 56 Ripper
 57 Black Panther
 58 Mud Demon
-  Var B: ?
+  Var A: If not 0, then ???
+  Var B: Maximum horizontal distance in pixels this Mud Demon can randomly spawn away from where you place it.
 59 Giant Slug
 5A Werewolf
 5B Flame Demon
