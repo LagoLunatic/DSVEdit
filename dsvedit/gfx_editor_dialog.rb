@@ -126,9 +126,10 @@ class GfxEditorDialog < Qt::Dialog
       chunky_image = @renderer.render_gfx_page(@gfx.file, @palettes[@palette_index], @gfx.canvas_width)
     end
     file_basename = File.basename(@gfx.file[:name], ".*")
-    gfx_file_path = "#{@output_folder}/#{file_basename}.png"
+    palette_name = "palette_%08X-%02X" % [@palette_pointer, @palette_index]
+    gfx_file_path = "#{@output_folder}/#{file_basename}_#{palette_name}.png"
     chunky_image.save(gfx_file_path)
-    palette_file_path = "#{@output_folder}/palette_%08X-%02X.png" % [@palette_pointer, @palette_index]
+    palette_file_path = "#{@output_folder}/#{palette_name}.png"
     @renderer.export_palette_to_palette_swatches_file(@palettes[@palette_index], palette_file_path)
     
     @ui.info_label.text = "Exported gfx and palette to folder ./#{@output_folder}"
@@ -138,17 +139,18 @@ class GfxEditorDialog < Qt::Dialog
     return if @gfx.nil? || @palettes.nil? || @palette_index.nil?
     
     file_basename = File.basename(@gfx.file[:name], ".*")
-    file_path = "#{@output_folder}/#{file_basename}.png"
-    unless File.file?(file_path)
-      Qt::MessageBox.warning(self, "No file", "Could not find file #{file_path} to import.")
+    palette_name = "palette_%08X-%02X" % [@palette_pointer, @palette_index]
+    gfx_file_path = "#{@output_folder}/#{file_basename}_#{palette_name}.png"
+    unless File.file?(gfx_file_path)
+      Qt::MessageBox.warning(self, "No file", "Could not find file #{gfx_file_path} to import.")
       return
     end
     
     begin
       if @ui.one_dimensional_mode.checked
-        @renderer.import_gfx_page_1_dimensional_mode(file_path, @gfx.file, @palette_pointer, @gfx.colors_per_palette, @palette_index)
+        @renderer.import_gfx_page_1_dimensional_mode(gfx_file_path, @gfx.file, @palette_pointer, @gfx.colors_per_palette, @palette_index)
       else
-        @renderer.import_gfx_page(file_path, @gfx, @palette_pointer, @gfx.colors_per_palette, @palette_index)
+        @renderer.import_gfx_page(gfx_file_path, @gfx, @palette_pointer, @gfx.colors_per_palette, @palette_index)
       end
     rescue Renderer::GFXImportError => e
       Qt::MessageBox.warning(self,
