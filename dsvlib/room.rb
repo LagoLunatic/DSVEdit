@@ -317,12 +317,11 @@ class Room
     end
     
     overlay = fs.overlays[overlay_id]
-    overlay_ram_start = overlay[:ram_start_offset]
     overlay_ram_end = overlay[:ram_start_offset]+overlay[:size]
     
     if layers.length == 0 && layer_list_ram_pointer >= overlay_ram_end
-      # Invalid room where layer list pointer points outside the overlay file. So we expand the file and create a blank layer list.
-      @layer_list_ram_pointer = fs.expand_file_and_get_end_of_file_ram_address(overlay_ram_start, 16*4)
+      # Invalid room where layer list pointer points outside the overlay file. So we create a blank layer list in free space first.
+      @layer_list_ram_pointer = fs.get_free_space(16*4, overlay_id)
       fs.write(room_metadata_ram_pointer+2*4, [@layer_list_ram_pointer].pack("V"))
     end
     
@@ -349,7 +348,7 @@ class Room
       new_layer.tileset_pointer = 0
       new_layer.collision_tileset_pointer = 0
     end
-    new_layer.layer_tiledata_ram_start_offset = overlay_ram_start # Just a dummy pointer. Layer#write_to_rom will expand the file and set this to a new pointer.
+    new_layer.layer_tiledata_ram_start_offset = nil # Layer#write_to_rom will get free space and put this there.
     new_layer.tiles = []
     
     new_layer.write_to_rom()

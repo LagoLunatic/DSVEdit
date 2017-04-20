@@ -286,6 +286,8 @@ class NDSFileSystem
   def read_free_space_from_text_file
     @free_spaces = []
     
+    # TODO: count expandable overlay ends as free space
+    
     if @filesystem_directory.nil?
       return
     end

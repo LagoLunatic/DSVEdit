@@ -80,8 +80,16 @@ class Layer
     
     old_width, old_height = fs.read(layer_metadata_ram_pointer, 2).unpack("C*")
     
-    if (width*height) > (old_width*old_height)
-      # Size of layer was increased. Repoint to end of file so nothing is overwritten.
+    if layer_tiledata_ram_start_offset.nil?
+      # This is a newly added layer.
+      new_tiledata_length = width * height * SIZE_OF_A_SCREEN_IN_BYTES
+      
+      new_tiledata_ram_pointer = fs.get_free_space(new_tiledata_length, room.overlay_id)
+      
+      fs.write(layer_metadata_ram_pointer+12, [new_tiledata_ram_pointer].pack("V"))
+      @layer_tiledata_ram_start_offset = new_tiledata_ram_pointer
+    elsif (width*height) > (old_width*old_height)
+      # Size of layer was increased. Repoint to free space so nothing is overwritten.
       
       old_tiledata_length = old_width * old_height * SIZE_OF_A_SCREEN_IN_BYTES
       new_tiledata_length = width * height * SIZE_OF_A_SCREEN_IN_BYTES
