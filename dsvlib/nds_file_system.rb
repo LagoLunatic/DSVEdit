@@ -296,7 +296,7 @@ class NDSFileSystem
     end
     
     file_contents = File.read(freespace_file)
-    free_space_strs = file_contents.scan(/^(\h+) (\h+) (\s+)$/)
+    free_space_strs = file_contents.scan(/^(\h+) (\h+) (\S+)$/)
     free_space_strs.each do |offset, length, path|
       offset = offset.to_i(16)
       length = length.to_i(16)
