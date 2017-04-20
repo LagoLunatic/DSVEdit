@@ -1,7 +1,7 @@
 OoE Enemy DNA (36 bytes long):
 Bytes 1-4: Enemy init code.
 Bytes 5-8: Enemy running AI.
-Bytes 9-10: Item 1
+Bytes 9-10: Item 1. Global ID of the item + 1.
 Bytes 11-12: Item 2
 Byte 13: Palette offset to use when this enemy is petrified.
 Byte 14: Attribute points given when killed.
@@ -23,6 +23,7 @@ Byte 19: Blood color.
   Etc.
 Byte 20: ??? Unused?
 Bytes 21-22: Glyph
+  The enemy can only drop a glyph on death if its AI is coded to drop a glyph.
 Byte 23: Chance to drop glyph
 Byte 24: Attack.
 Byte 25: Defense.

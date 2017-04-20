@@ -88,6 +88,9 @@ Enemies:
 34 Bone Pillar
   Var A: Number of them stacked on top of each other.
 35 White Dragon
+  Var A:
+    0 Attached to left wall.
+    1 Attached to right wall.
 36 Wakwak Tree
 37 Imp
 38 Harpy

@@ -5,6 +5,7 @@ class GenericEditable
               :index,
               :bitfield_docs,
               :kind,
+              :item_type_name,
               :fs,
               :name,
               :description,

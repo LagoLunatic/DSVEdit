@@ -1,7 +1,7 @@
 PoR Enemy DNA (32 bytes long):
 Bytes 1-4: Enemy init code.
 Bytes 5-8: Enemy running AI.
-Bytes 9-10: Item 1
+Bytes 9-10: Item 1. Global ID of the item + 1. Can be a skill.
 Bytes 11-12: Item 2
 Byte 13: Palette offset to use when this enemy is petrified.
 Byte 14: SP.
