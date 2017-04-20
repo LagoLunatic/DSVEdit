@@ -4,11 +4,13 @@ class Map
               :map_tile_line_data_ram_pointer,
               :number_of_tiles,
               :secret_door_list_pointer,
+              :row_widths_list_pointer,
               :fs,
               :area_index,
               :sector_index,
               :tiles,
-              :secret_doors
+              :secret_doors,
+              :row_widths
   
   def initialize(area_index, sector_index, fs)
     @area_index = area_index
@@ -25,6 +27,7 @@ class Map
     @map_tile_line_data_ram_pointer = fs.read(MAP_TILE_LINE_DATA_LIST_START_OFFSET + area_index*4, 4).unpack("V*").first
     @number_of_tiles = fs.read(MAP_LENGTH_DATA_START_OFFSET + area_index*2, 2).unpack("v*").first
     @secret_door_list_pointer = fs.read(MAP_SECRET_DOOR_LIST_START_OFFSET + area_index*4, 4).unpack("V*").first
+    @row_widths_list_pointer = fs.read(MAP_ROW_WIDTHS_LIST_START_OFFSET + area_index*4, 4).unpack("V*").first
     
     @tiles = []
     (0..number_of_tiles-1).each do |i|
@@ -52,6 +55,26 @@ class Map
         end
       end
     end
+    
+    @row_widths = []
+    row = 0
+    total_tiles_found = 0
+    while true
+      row_width = fs.read(@row_widths_list_pointer + row, 1).unpack("C").first
+      break if total_tiles_found == number_of_tiles
+      
+      if total_tiles_found > number_of_tiles
+        raise "Error reading map row widths: Too many tiles"
+      end
+      if row > 0xFF
+        raise "Error reading map row widths: Read too many rows"
+      end
+      
+      @row_widths << row_width
+      total_tiles_found += row_width
+      
+      row += 1
+    end
   end
   
   def write_to_rom
@@ -62,6 +85,25 @@ class Map
       
       fs.write(map_tile_line_data_ram_pointer + i, [tile_line_data].pack("C"))
       fs.write(map_tile_metadata_ram_pointer + i*4, tile_metadata.pack("vCC"))
+    end
+    
+    tiles_by_row = @tiles.group_by{|tile| tile.y_pos}
+    max_y_pos = tiles_by_row.keys.max
+    if max_y_pos < @row_widths.size - 1
+      raise "Cannot decrease height of map in PoR/OoE."
+    end
+    (0..max_y_pos).each do |row|
+      if @row_widths[row].nil?
+        raise "Cannot increase height of map in PoR/OoE."
+      end
+      
+      if tiles_by_row[row]
+        @row_widths[row] = tiles_by_row[row].length
+      else
+        @row_widths[row] = 0
+      end
+      
+      fs.write(@row_widths_list_pointer + row, [@row_widths[row]].pack("C"))
     end
   end
 end

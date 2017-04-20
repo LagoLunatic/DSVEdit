@@ -168,13 +168,22 @@ class MapEditorDialog < Qt::Dialog
   def add_map_tile(x, y)
     # In PoR/OoE, add a tile where there wasn't one before.
     if @map.tiles.length < @map.number_of_tiles
+      tiles_by_row = @map.tiles.group_by{|tile| tile.y_pos}
+      max_y_pos = tiles_by_row.keys.max
+      if y > max_y_pos
+        # Don't allow adding tiles below the original maximum Y pos.
+        msg = "Can't increase map height in PoR or OoE."
+        Qt::MessageBox.warning(self, "Can't increase height", msg)
+        return
+      end
+      
       new_tile = @selected_map_tile.dup
       new_tile.sector_index, new_tile.room_index = @area.get_sector_and_room_indexes_from_map_x_y(x, y)
       new_tile.y_pos = y
       new_tile.x_pos = x
       @map.tiles << new_tile
     else
-      Qt::MessageBox.warning(self, "Can't add more tiles", "Can't add any more tiles to maps in PoR or OoE. Please delete some tiles with right click so you can add more.")
+      Qt::MessageBox.warning(self, "Can't add more tiles", "Can't add any more tiles to maps in PoR or OoE.\nPlease delete some tiles with right click so you can add more.")
     end
   end
   
@@ -199,6 +208,16 @@ class MapEditorDialog < Qt::Dialog
       new_tile.is_blank = true
       @map.tiles[index] = new_tile
     else
+      tiles_by_row = @map.tiles.group_by{|tile| tile.y_pos}
+      max_y_pos = tiles_by_row.keys.max
+      if old_tile.y_pos == max_y_pos && tiles_by_row[max_y_pos].length == 1
+        # This tile is the only one left in the bottom row.
+        # Don't allow removing it because decreasing the map height in PoR/OoE would cause problems.
+        msg = "Can't decrease map height in PoR or OoE."
+        Qt::MessageBox.warning(self, "Can't decrease height", msg)
+        return
+      end
+      
       index = @map.tiles.index(old_tile)
       @map.tiles.delete_at(index)
     end
