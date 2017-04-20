@@ -329,10 +329,15 @@ class NDSFileSystem
   end
   
   def free_unused_space(ram_address, length)
+    return if length <= 0
+    
+    p @free_spaces
     path, offset = convert_ram_address_to_path_and_offset(ram_address)
     @free_spaces << {path: path, offset: offset, length: length}
     write_by_file(path, offset, "\0"*length, freeing_space: true)
+    p @free_spaces
     merge_overlapping_free_spaces()
+    p @free_spaces
   end
   
   def remove_free_space(file_path, offset_in_file, length)
@@ -420,6 +425,7 @@ class NDSFileSystem
       end
       
       # TODO: detect if there's a free space at the end of the overlay, but it's too small. we can just expand the overlay by the diff instead of fully.
+      # Maybe to do this we should have everything past the end of an overlay be considered one big free space from the start.
       
       if free_space
         puts "Found free space at %08X (%08X in %s)" % [file[:ram_start_offset] + free_space[:offset], free_space[:offset], file[:file_path]]
