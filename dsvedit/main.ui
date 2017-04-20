@@ -199,6 +199,7 @@
     <addaction name="actionItem_Pool_Editor"/>
     <addaction name="actionTileset_Editor"/>
     <addaction name="actionSpecial_Object_Editor"/>
+    <addaction name="actionWeapon_Synth_Editor"/>
     <addaction name="actionAdd_Overlay"/>
     <addaction name="actionEntity_Search"/>
     <addaction name="actionSettings"/>
@@ -472,6 +473,11 @@
   <action name="actionAdd_Overlay">
    <property name="text">
     <string>Add Overlay</string>
+   </property>
+  </action>
+  <action name="actionWeapon_Synth_Editor">
+   <property name="text">
+    <string>Weapon Synth Editor</string>
    </property>
   </action>
  </widget>

@@ -949,3 +949,15 @@ TEST_ROOM_ROOM_INDEX_LOCATION      = 0x0203E548
 TEST_ROOM_X_POS_LOCATION           = 0x0203E574
 TEST_ROOM_Y_POS_LOCATION           = 0x0203E578
 TEST_ROOM_OVERLAY = nil
+
+WEAPON_SYNTH_CHAIN_LIST_START = 0x0209CCBC
+WEAPON_SYNTH_CHAIN_NAMES = [
+  "Swords",
+  "Great Swords",
+  "Rapiers",
+  "Polearms",
+  "Axes",
+  "Hammers",
+  "Katanas",
+  "Punchs",
+]

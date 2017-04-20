@@ -28,6 +28,7 @@ require_relative 'dsvlib/item_pool'
 require_relative 'dsvlib/gfx_wrapper'
 require_relative 'dsvlib/palette_wrapper'
 require_relative 'dsvlib/player'
+require_relative 'dsvlib/weapon_synth'
 
 require_relative 'dsvlib/renderer'
 require_relative 'dsvlib/tmx_interface'

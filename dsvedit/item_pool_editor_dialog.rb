@@ -101,13 +101,11 @@ class ItemPoolEditor < Qt::Dialog
   def button_box_clicked(button)
     if @ui.buttonBox.standardButton(button) == Qt::DialogButtonBox::Ok
       save_changes()
-      parent.load_room()
       self.close()
     elsif @ui.buttonBox.standardButton(button) == Qt::DialogButtonBox::Cancel
       self.close()
     elsif @ui.buttonBox.standardButton(button) == Qt::DialogButtonBox::Apply
       save_changes()
-      parent.load_room()
     end
   end
 end
