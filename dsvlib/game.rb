@@ -451,9 +451,6 @@ class Game
     @fs = @fs.dup
     
     patch_name = "#{GAME}_room_test"
-    if REGION != :usa
-      patch_name = "#{REGION.to_s}_#{patch_name}"
-    end
     apply_armips_patch(patch_name)
     
     fs.load_overlay(TEST_ROOM_OVERLAY) if TEST_ROOM_OVERLAY
@@ -464,6 +461,10 @@ class Game
     fs.write(TEST_ROOM_ROOM_INDEX_LOCATION     , [room_index].pack("C"))
     fs.write(TEST_ROOM_X_POS_LOCATION          , [x_pos * 0x1000].pack("V"))
     fs.write(TEST_ROOM_Y_POS_LOCATION          , [y_pos * 0x1000].pack("V"))
+    
+    # In OoE the test room overlay and area overlay are loaded at the same spot.
+    # So after we're done with the test room overlay we need to load the area overlay back.
+    fs.load_overlay(AREAS_OVERLAY) if AREAS_OVERLAY
   end
   
   def end_test_room
