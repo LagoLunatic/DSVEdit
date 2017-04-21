@@ -496,7 +496,7 @@ class Animation
               :frame_delays
   attr_accessor :number_of_frames
               
-  def initialize(animation_data, offset)
+  def initialize(animation_data, offset=nil)
     if SYSTEM == :nds
       @number_of_frames, @first_frame_delay_offset = animation_data.unpack("VV")
     else
