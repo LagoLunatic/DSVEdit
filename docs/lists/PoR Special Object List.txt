@@ -327,7 +327,8 @@ Special objects:
 8A Studio portrait (burned).
 8B The 3D sphinx in the background in the Forgotten City.
   Requires sector overlay 102.
-8C Switch next to elevator from Tower of Death you have to hit to activate it.
+8C ??? from room with mechanical elevator in Tower of Death. TODO
+  Requires sector overlay 85.
 8D Cycles through palettes for conveyor belt tiles to make gears look like they're turning.
 8E Legion's horizontal boss door and walls that trap you.
   Requires sector overlay 98.

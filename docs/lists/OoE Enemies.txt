@@ -1,5 +1,12 @@
 Enemies:
 00 Bat
+  If var A is 0, it's a single bat.
+    Var B:
+      0 Appears at the closest ceiling above where you place it.
+      1 Appears exactly where you place it.
+  If var A is greater than 0, it's a bat spawner.
+    Var A: Delay in frames between spawning each bat.
+    Var B: Usually 0. If greater than 0, ???. Somehow affects spawn rate.
 01 Zombie
   Spawner.
   Var A: Maximum number of Zombies this spawner can have in the room at once.
@@ -14,6 +21,7 @@ Enemies:
 04 Banshee
 05 Bone Scimitar
 06 Sea Stinger
+  Var A: TODO
 07 Nominon
 08 Axe Knight
 09 Une
@@ -34,6 +42,7 @@ Enemies:
   Var B: Delay in frames between spawning each Gelso.
   If var A is 0, it's not a spawner, instead it's just a single Gelso.
 10 Needles
+  Var A: TODO
 11 Demon
 12 Fishhead
   Var A: Number of them stacked on top of each other.
@@ -69,6 +78,9 @@ Enemies:
 28 Dullahan
 29 Skeleton Rex
 2A White Dragon
+  Var A:
+    0 Attached to left wall.
+    1 Attached to right wall.
 2B Saint Elmo
   Spawner.
   Var A: Maximum number of Saint Elmos this spawner can have in the room at once.

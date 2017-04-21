@@ -92,6 +92,9 @@ Enemies:
 2A Sand Worm
   Requires enemy overlay 69.
 2B White Dragon
+  Var A:
+    0 Attached to left wall.
+    1 Attached to right wall.
 2C Amphisbaena
   Requires enemy overlay 62.
 2D Elgiza
