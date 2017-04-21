@@ -30,11 +30,8 @@
   popeq r0,r4-r6,r14
 .org 0x02212E04
   popeq r0,r4-r6,r14
-; Then we can check the second hitbox.
-.org 0x02212E98 ; At the end of the function, after checking the first hitbox.
-  b @CheckSecondHitbox ; Instead of returning, we jump to our own code.
-  nop
-  nop
+.org 0x02212E9C
+  pop r0,r4-r6,r14
 
 .close
 
@@ -42,9 +39,10 @@
 
 .org 0x020C0290 ; Free space
 @CheckDestroyBaloreBlocks:
-  mov r5, r14
+  push r14 ; Preserve r14 because it has an argument we'll need to call the function to break the blocks later.
   mov r0, 0h
   bl 0220F81Ch
+  pop r14
   cmp r0, 1h ; Check if Balore soul is active.
   beq @DestroyBaloreBlocks ; Destroy blocks if it is.
   ldr r0,=020F740Eh
@@ -53,14 +51,12 @@
   bge @DestroyBaloreBlocks ; Destroy blocks if it's Julius/Alucard.
   b 02212E98h ; Didn't meet either condition, so return without destroying them.
 @DestroyBaloreBlocks:
-  mov r0, r5
+  mov r0, r14
   mov r1, r12
   mov r2, r4
   bl 021D5210h ; Call function to destroy blocks.
-  b 02212E98h ; Return
-  .pool
-
-@CheckSecondHitbox:
+  
+; Now we need to check the second hitbox.
   cmp r6, 1h
   addeq r13,r13,1Ch ; If r6 is 1, we already checked both hitboxes, so return.
   popeq r0,r4-r6,r14
@@ -70,5 +66,6 @@
   bl 02012DB0h ; Get the weapon's hitbox pointer.
   add r0, r0, 0Ah ; Add 0x0A to get the second hitbox pointer.
   b 02212DF8h ; Jump back to inside the whip function so it checks the second hitbox.
+  .pool
 
 .close
