@@ -24,8 +24,8 @@ Special Objects:
   Var A:
     0 - Points left.
     1 - Points right.
-08 Activates practice mode with "3 2 1 Start!"
-09 Ends practice mode?
+08 Starts practice mode with "3 2 1 Start!"
+09 Ends practice mode.
 0A Powerup in practice mode. Will only appear if in practice mode, as triggered by object 08.
   Var A is which powerup:
     00 Invincibility.
@@ -114,12 +114,13 @@ Special Objects:
   Requires sector overlay 53.
   Also spawns the platforms and ceilings Brachyura destroys.
 29 Moving platform.
-  Byte 5: Which waypoints are for this platform? (See below.) This should match all of the waypoints byte 5s.
+  Moves by seeking out its waypoints (object 2A).
+  It moves to each waypoint in the order they were placed in the room, then goes back to its starting position and repeats the process.
+  Byte 5: Must match the byte 5 of this platform's waypoints.
   Var A: Sprite animation to use.
   Var B: Speed to move.
 2A Moving platform waypoint.
-  Object 29 will seek out its waypoints and move to them one at a time (in the order the waypoints were placed in the room), and then go back to its starting position and repeat the process.
-  Byte 5: Which platform is this waypoint for? This should match the platform's byte 5.
+  Byte 5: Must match the byte 5 of the platform this waypoint is for.
 2B Area exit.
   Touching it puts you back on the world map. Extends infinitely vertically. Also draws the arrow pointing out.
   Var A: The area index of the area to unlock when exiting via this exit.
@@ -167,8 +168,12 @@ Special Objects:
 38 Waves in the background of Kalidus Channel.
   Requires sector overlay 46.
 39 Water level.
-  Var A: Vertical distance in pixels for the waves to move the water level up or down. For example, a value of 0x20 means at its highest point the water level will be 2 blocks above the position you placed it at, and at its lowest point the water level will be 2 blocks below the position you placed it at. 0 means the water level does not move up or down.
-  Var B: If Var A is 0, this is the z-index for the water level to be drawn on.
+  Var A:
+    Vertical distance in pixels for the waves to move the water level up or down.
+    For example, a value of 0x20 means at its highest point the water level will be 2 blocks above the position you placed it at, and at its lowest point the water level will be 2 blocks below the position you placed it at.
+    0 means the water level does not move up or down.
+  Var B:
+    If Var A is 0, this is the z-index for the water level to be drawn on.
     Otherwise, it's the speed for the water level to move up and down at. This is relative to the total distance the water level needs to travel, so for larger values of Var A the water level will move faster even if Var B is the same.
 3A 3D boat in the background of Kalidus channel.
   Requires sector overlay 46.
