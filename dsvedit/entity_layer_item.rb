@@ -140,12 +140,14 @@ class EntityLayerItem < Qt::GraphicsRectItem
       graphics_item.setParentItem(self)
     end
   rescue StandardError => e
-    #unless e.message =~ /has no sprite/
-    #  Qt::MessageBox.warning(@main_window,
-    #    "Sprite error",
-    #    "#{e.message}\n\n#{e.backtrace.join("\n")}"
-    #  )
-    #end
+    if DEBUG
+      unless e.message =~ /has no sprite/
+        Qt::MessageBox.warning(@main_window,
+          "Sprite error",
+          "#{e.message}\n\n#{e.backtrace.join("\n")}"
+        )
+      end
+    end
     graphics_item = EntityRectItem.new(entity, @main_window)
     graphics_item.setParentItem(self)
   end

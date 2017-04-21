@@ -1,3 +1,6 @@
+
+DEBUG = true
+
 begin
   require 'Qt'
   require 'fileutils'
@@ -38,5 +41,5 @@ begin
 rescue ScriptError, StandardError => e
   puts "Error: #{e.class.name}: #{e.message}"
   puts e.backtrace
-  gets
+  gets unless DEBUG
 end
