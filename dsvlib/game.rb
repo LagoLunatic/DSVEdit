@@ -1,4 +1,6 @@
 
+require 'open3'
+
 class Game
   class InvalidFileError < StandardError ; end
   class RoomFindError < StandardError ; end
@@ -396,11 +398,11 @@ class Game
       end
     end
     
-    success = system("./armips/armips.exe \"#{patch_file}\"")
-    unless success
-      success = system("./armips/armips64.exe \"#{patch_file}\"")
-      unless success
-        raise "Armips call failed (try installing the Visual C++ Redistributable for Visual Studio 2015)"
+    stdout, stderr, status = Open3.capture3("./armips/armips.exe \"#{patch_file}\"")
+    unless status.success?
+      stdout64, stderr64, status64 = Open3.capture3("./armips/armips64.exe \"#{patch_file}\"")
+      unless status64.success?
+        raise "Armips call failed (try installing the Visual C++ Redistributable for Visual Studio 2015).\nError message from armips was:\n#{stdout}#{stdout64}"
       end
     end
     
