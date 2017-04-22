@@ -90,6 +90,9 @@ class Room
         layer.read_from_rom()
         if layer.layer_metadata_ram_pointer != 0 # TODO
           @layers << layer
+          if color_effects & 0xC0 == 0x40 && color_effects & 1<<(i+1) > 0
+            layer.opacity = 0x0F # HACK
+          end
         end
       end
       
