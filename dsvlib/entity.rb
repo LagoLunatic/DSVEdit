@@ -67,8 +67,16 @@ class Entity
     type == 0x07 && (GAME == "por" || GAME == "ooe")
   end
   
+  def is_all_quests_complete_pickup?
+    type == 0x06 && GAME == "por"
+  end
+  
+  def is_hard_mode_pickup?
+    type == 0x05 && GAME == "aos"
+  end
+  
   def is_pickup?
-    is_normal_pickup? || is_hidden_pickup?
+    is_normal_pickup? || is_hidden_pickup? || is_all_quests_complete_pickup? || is_hard_mode_pickup?
   end
   
   def is_heart?
