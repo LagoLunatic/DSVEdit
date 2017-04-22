@@ -177,7 +177,7 @@ TEXT_COLOR_NAMES = {
   0x0F => "BLACK2",
 }
 
-SPECIAL_OBJECT_IDS = (0..0x75)
+SPECIAL_OBJECT_IDS = (0..0x37)
 SPECIAL_OBJECT_CREATE_CODE_LIST = 0x084F0DF8
 SPECIAL_OBJECT_UPDATE_CODE_LIST = 0x084F0ED8
 
@@ -420,6 +420,7 @@ BEST_SPRITE_FRAME_FOR_ENEMY = {
   0x4D => 0x0A,
   0x50 => 0x10,
   0x51 => 0x09,
+  0x5C => 0x16,
   0x60 => 0x0D,
   0x65 => 0x02,
   0x66 => 0x08,
@@ -434,12 +435,14 @@ REUSED_SPECIAL_OBJECT_INFO = {
   0x00 => {init_code: 0x0804D8F0}, # wooden door
   0x01 => {init_code: 0x08033254}, # pushable crate TODO: sprite file can't be found, gfx and palette are fine
   0x02 => {sprite: 0x0820ED60, gfx_wrapper: 0x081C15F4, palette: 0x082099FC, palette_offset: 2, unwrapped_gfx: true},
+  0x05 => {sprite: 0x0820ED60, gfx_wrapper: 0x081C15F4, palette: 0x082099FC, palette_offset: 3, unwrapped_gfx: true},
   0x07 => {init_code:         -1},
   0x08 => {init_code: 0x08526004},
   0x09 => {init_code: 0x08526004},
   0x0C => {init_code:         -1},
   0x0E => {init_code: 0x08526214}, # destructible
   0x0F => {sprite: 0x0820ED60, gfx_wrapper: 0x081C15F4, palette: 0x082099FC, palette_offset: 3, unwrapped_gfx: true},
+  0x12 => {init_code:         -1}, # multiple different background visuals
   0x1F => {init_code: 0x08055BE0, palette_offset: 2},
   0x20 => {init_code:         -1},
   0x29 => {init_code: 0x085264D0, palette_offset: 6},
@@ -449,7 +452,9 @@ SPECIAL_OBJECT_FILES_TO_LOAD_LIST = nil
 BEST_SPRITE_FRAME_FOR_SPECIAL_OBJECT = {
   0x00 => 0x01,
   0x02 => 0x3F,
+  0x05 => 0x7D,
   0x0F => 0x4A,
+  0x1B => 0x02,
   0x1F => 0x0A,
   0x26 => 0x02,
 }
