@@ -4,6 +4,10 @@ Memory used for entities in PoR is 020FC500 - 0211173F. Each entity is 0x160 byt
 000,4: Pointer to create code.
 004,4: Pointer to draw code.
 00D,1: State of the entity. Each entity's update code handles this differently.
+010,2: Somehow affects the projectiles/subentities spawned by this entity.
+  0B is used for players.
+  Any values besides 0B and the skill/weapon will damage the player, not enemies.
+012,2: 
 014,2: Frame counter 1.
 016,2: Frame counter 2.
 024,4: X pos on the screen.
@@ -18,6 +22,16 @@ Memory used for entities in PoR is 020FC500 - 0211173F. Each entity is 0x160 byt
 04C,4: Y acceleration (gravity).
 06C,2: Affects the entity's graphics.
   This is an index in list 020FA200.
+078,4: Pointer to sprite animation list.
+08C,2: Affects how this entity is rendered.
+  0 - Normal.
+  1 - Transparency is rendered as white.
+  2 - Sprite is rendered as black, transparency is normal.
+  3 - Sprite and transparency are transparent.
+090,4: Color tint 1?
+094,4: Color tint 2?
+098,4: Color tint 3?
+09C,4: Color tint 4?
 0A4,1: Controls the iframes this entity should give.
   This is an index in list 020BE4C8 - a list of different iframes values. Each entry is 1 byte long.
   This value is only read when the entity is initialized, changing it after the entity already exists has no effect.
@@ -28,8 +42,21 @@ Memory used for entities in PoR is 020FC500 - 0211173F. Each entity is 0x160 byt
 0A8,2: Damage.
 0AC,4: Bitfield of damage types.
 0B8,2: Number of iframes this entity gives.
+0D0,4: For players, this is a bitfield of their current state booleans.
+0E8,2: For players, ???.
+  This is 1 when the player is doing a critical art/combo tech.
+  This is 4 when the player is not present (neither player-controlled nor AI-controlled).
+  Otherwise, this counts down every frame until it reaches 0.
+0EC,1: For players, 0 for player 1, 1 for player 2.
+0F4,4: For players, this is a pointer to their state->anims mapping.
+0FC,2: 
+100,4: For players, this is a bitfield of their current state booleans. Seems very similar to 0D0, but not exactly the same.
 11A,1: For skills, this is the ID of the skill.
 11E,1: For skills, this is the skill multiplier. (1 or 2.)
   For spells it varies depending on if it's half charged or fully charged.
   For subweapons it varies depending on whether it's mastered or not.
+120,4: Bitfield of ???.
+124,4: For players, duplicate of x pos?
+128,4: For players, duplicate of y pos?
 138,2: For enemies, this is the attack value from the enemy DNA.
+149,1: 
