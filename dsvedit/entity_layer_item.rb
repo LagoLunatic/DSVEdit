@@ -22,6 +22,12 @@ class EntityLayerItem < Qt::GraphicsRectItem
       add_sprite_item_for_entity(entity, sprite_info,
         BEST_SPRITE_FRAME_FOR_ENEMY[enemy_id],
         sprite_offset: BEST_SPRITE_OFFSET_FOR_ENEMY[enemy_id])
+    elsif GAME == "aos" && entity.is_special_object? && entity.subtype == 0x0A # Conditional enemy
+      enemy_id = entity.var_a
+      sprite_info = EnemyDNA.new(enemy_id, @fs).extract_gfx_and_palette_and_sprite_from_init_ai
+      add_sprite_item_for_entity(entity, sprite_info,
+        BEST_SPRITE_FRAME_FOR_ENEMY[enemy_id],
+        sprite_offset: BEST_SPRITE_OFFSET_FOR_ENEMY[enemy_id])
     elsif GAME == "dos" && entity.is_special_object? && entity.subtype == 0x01 && entity.var_a == 0 # soul candle
       pointer = OTHER_SPRITES.find{|spr| spr[:desc] == "Destructibles 0"}[:pointer]
       sprite_info = SpriteInfo.extract_gfx_and_palette_and_sprite_from_create_code(pointer, @fs, nil, {})
