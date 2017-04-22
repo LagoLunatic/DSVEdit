@@ -336,10 +336,9 @@ class Part
       @x_pos, @y_pos,
         @unknown, @gfx_x_offset, @gfx_y_offset,
         @width, @height,
-        @unknown_1, @unknown_2,
+        @unknown_1, @gfx_page_index,
         flip_bits, @unused = part_data.unpack("ccvCCCCCCCC")
       
-      @gfx_page_index = 0
       @palette_index = 0
       
       @vertical_flip   = (flip_bits & 0b00000001) > 0
