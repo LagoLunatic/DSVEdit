@@ -8,6 +8,10 @@
 07 Applies a visual effect to the room.
   Includes things like the Chaotic Realm's greyscale effect, bats in the background, etc. TODO
 08 Breakable wall.
+0A Conditional enemy.
+  Once a certain flag has been set this will spawn an enemy.
+  Var A: Enemy ID to spawn.
+  Var B: The index of the flag to check in bitfield 0200037E.
 0D Bell.
   Rings when you land on top of it.
 0E Destructible.
@@ -27,7 +31,12 @@
 15 Moon portal to/from Chaotic Realm.
 16 Portal to Chaos.
 17 Elevator.
+18 Chest.
+  Var A:
+    0 Full of money.
+    1 Full of Rippers.
 19 Skull that moves around in a rectangular path.
+1B Button that reverses conveyor belts.
 1C Save point.
 1D Walls of save room/warp room.
 1F Warp point.
@@ -57,8 +66,14 @@
 26 Damaging hand/foot of Arena background statue.
 29 Vertically moving platform.
 2A Horizontally moving platform.
+2D Statue before the stairway to the throne room.
+2E Three flames in the eyes of a background skull.
+  Light up when you get near it.
 32 Crumbling platform.
 33 Waterfall splashes?
+34 Swinging pendulum.
+  Var A: ???
+  Var B: ???
 35 Metal gate/button.
   Var A:
     0 Button.

@@ -447,6 +447,9 @@ REUSED_SPECIAL_OBJECT_INFO = {
   0x20 => {init_code:         -1},
   0x29 => {init_code: 0x085264D0, palette_offset: 6},
   0x2A => {init_code: 0x085264D0, palette_offset: 6},
+  0x2D => {palette_offset: 2},
+  0x2E => {palette_offset: 5},
+  0x34 => {palette_offset: 2},
 }
 SPECIAL_OBJECT_FILES_TO_LOAD_LIST = nil
 BEST_SPRITE_FRAME_FOR_SPECIAL_OBJECT = {
@@ -457,6 +460,7 @@ BEST_SPRITE_FRAME_FOR_SPECIAL_OBJECT = {
   0x1B => 0x02,
   0x1F => 0x0A,
   0x26 => 0x02,
+  0x34 => 0x03,
 }
 BEST_SPRITE_OFFSET_FOR_SPECIAL_OBJECT = {}
 

@@ -22,6 +22,10 @@
   4,2 Affects conditions to complete the quest somehow?
 020DFCA0 - List of pointers to functions that check quest completion conditions. For example, checking certain flags. Use the quest index as the index in this list.
 
+020E0028-020E003B - List of pointers to lists of items in the shop.
+  Each item in a sublist is 2 bytes long, and is the global ID+1 of the item.
+  Each sublist is terminated by FFFF.
+
 020E1CEC - Leg armor.
 020E1FA4 - Head armor.
 020E2334 - Accessories.
@@ -218,7 +222,7 @@
 
 02111CB8 - List of ? for each skill. Each entry is a halfword.
   Bits 1-13: Current SP the player has for this subweapon.
-  Bit 14: 
+  Bit 14: Skill is available in the shop.
   Bit 15: 
   Bit 16: Whether this subweapon is mastered or not.
 
@@ -467,17 +471,26 @@ TODO: What are the other 2 for? It's not for the "recent" tab.
     46 
     47 
 
-0221E660 - List of some entity index ranges that different types of entities can occupy.
+0221E660 - List of entity index ranges for player 1 and player 1's weapons/skills.
   04-04 Player 1.
-  07-07 ?
-  08-11 Skills.
+  07-07 Dual crushes.
+    Enemies don't seem to take damage from entities in this range?
+  08-11 Subweapons.
   1C-1F Weapons.
   20-24 ?
+0221E688 - List of entity index ranges for player 2 and player 2's weapons/skills.
   05-05 Player 2.
-  07-07 ?
-  12-1B ?
-  25-28 ?
+  07-07 Dual crushes.
+  12-1B Spells.
+  25-28 Weapons.
   29-2D ?
+
+0221ED04 - List of ? for each type of skill.
+  Each entry is 0xA bytes long.
+  The index in this list is the "type" of the skill from the item data (0 or 1).
+  04,2: Which entity range to use. Index in list 0221E660.
+  For subweapons/spells: 0004 0018 0002 0011 0004
+  For dual crushes:      0006 0020 0001 0007 0009
 
 0221ED18 - List of skill gfx.
 0221F110 - List of weapon gfx. Same format as DoS.
