@@ -39,6 +39,12 @@ class ItemEditor < Qt::Dialog
         "Soul format"
       when "Souls (extra data)"
         "Extra soul data format"
+      when "Red Souls"
+        "Red soul format"
+      when "Blue Souls"
+        "Blue soul format"
+      when "Yellow Souls"
+        "Yellow soul format"
       else
         ""
       end

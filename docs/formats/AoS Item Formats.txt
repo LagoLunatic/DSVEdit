@@ -1,5 +1,14 @@
+Consumable format:
+  0x10 bytes long.
+
+Weapon format:
+  0x1C bytes long.
+
+Body armor and Accessory format:
+  0x14 bytes long.
 
 Red soul format:
+  0x10 bytes long.
   00,4: Code pointer.
   04,2: Animation for Soma to play when using this soul.
     00 Normal soul use animation.
@@ -32,3 +41,9 @@ Red soul format:
       0 Uppercut (Weretiger)
       1 Straight punch (Werejaguar)
     Chronomage (080E1658): Duration of timestop in frames.
+
+Blue soul format:
+  0xC bytes long.
+
+Yellow soul format:
+  0xC bytes long.

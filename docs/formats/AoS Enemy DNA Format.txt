@@ -1,0 +1,2 @@
+AoS Enemy DNA format:
+0x24 bytes long.
