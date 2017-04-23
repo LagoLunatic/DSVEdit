@@ -400,6 +400,7 @@ REUSED_ENEMY_INFO = {
   0x67 => {init_code: 0x0808E024, palette_offset: 1}, # final guard
   0x68 => {init_code: 0x08091430, palette_offset: 3}, # flame demon
   0x69 => {init_code: 0x0808E024, palette_offset: 2}, # shadow knight
+  0x6A => {gfx_wrapper: 0x08118F00, sprite: 0x0821C190, palette: 0x0820A780}, # headhunter
 }
 ENEMY_FILES_TO_LOAD_LIST = nil
 BEST_SPRITE_FRAME_FOR_ENEMY = {
@@ -411,6 +412,7 @@ BEST_SPRITE_FRAME_FOR_ENEMY = {
   0x17 => 0x1D,
   0x21 => 0x16,
   0x22 => 0x01,
+  0x2A => 0x07,
   0x30 => 0x05,
   0x36 => 0x03,
   0x3C => 0x0E,
@@ -434,14 +436,15 @@ OVERLAY_FILE_FOR_SPECIAL_OBJECT = {}
 REUSED_SPECIAL_OBJECT_INFO = {
   0x00 => {init_code: 0x0804D8F0}, # wooden door
   0x01 => {init_code: 0x08033254}, # pushable crate TODO: sprite file can't be found, gfx and palette are fine
-  0x02 => {sprite: 0x0820ED60, gfx_wrapper: 0x081C15F4, palette: 0x082099FC, palette_offset: 2, unwrapped_gfx: true},
-  0x05 => {sprite: 0x0820ED60, gfx_wrapper: 0x081C15F4, palette: 0x082099FC, palette_offset: 3, unwrapped_gfx: true},
+  0x02 => {sprite: 0x0820ED60, gfx_files: [0x081C15F4], palette: 0x082099FC, palette_offset: 2, unwrapped_gfx: true},
+  0x04 => {sprite: 0x0820ED60, gfx_files: [0x081C15F4], palette: 0x082099FC, palette_offset: 2, unwrapped_gfx: true},
+  0x05 => {sprite: 0x0820ED60, gfx_files: [0x081C15F4], palette: 0x082099FC, palette_offset: 3, unwrapped_gfx: true},
   0x07 => {init_code:         -1},
   0x08 => {init_code: 0x08526004},
   0x09 => {init_code: 0x08526004},
   0x0C => {init_code:         -1},
   0x0E => {init_code: 0x08526214}, # destructible
-  0x0F => {sprite: 0x0820ED60, gfx_wrapper: 0x081C15F4, palette: 0x082099FC, palette_offset: 3, unwrapped_gfx: true},
+  0x0F => {sprite: 0x0820ED60, gfx_files: [0x081C15F4], palette: 0x082099FC, palette_offset: 3, unwrapped_gfx: true},
   0x12 => {init_code:         -1}, # multiple different background visuals
   0x1F => {init_code: 0x08055BE0, palette_offset: 2},
   0x20 => {init_code:         -1},
@@ -455,6 +458,7 @@ SPECIAL_OBJECT_FILES_TO_LOAD_LIST = nil
 BEST_SPRITE_FRAME_FOR_SPECIAL_OBJECT = {
   0x00 => 0x01,
   0x02 => 0x3F,
+  0x04 => 0x3F,
   0x05 => 0x7D,
   0x0F => 0x4A,
   0x1B => 0x02,
@@ -465,7 +469,7 @@ BEST_SPRITE_FRAME_FOR_SPECIAL_OBJECT = {
 BEST_SPRITE_OFFSET_FOR_SPECIAL_OBJECT = {}
 
 OTHER_SPRITES = [
-  {desc: "Common", sprite: 0x0820ED60, gfx_wrapper: 0x081C15F4, palette: 0x082099FC, palette_offset: 3, unwrapped_gfx: true},
+  {desc: "Common", sprite: 0x0820ED60, gfx_files: [0x081C15F4], palette: 0x082099FC, palette_offset: 3, unwrapped_gfx: true},
   
   {desc: "Breakable walls 1", pointer: 0x08526004},
   {desc: "Breakable walls 2", pointer: 0x08526010},

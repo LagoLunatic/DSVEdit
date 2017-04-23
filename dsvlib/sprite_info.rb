@@ -239,13 +239,25 @@ class SpriteInfo
   def self.unpack_gfx_pointer_list(gfx_wrapper, fs)
     if SYSTEM == :nds
       data = fs.read(gfx_wrapper+4, 4).unpack("V").first
-      if fs.is_pointer?(data)#data >= 0x02000000 && data < 0x03000000
+      if fs.is_pointer?(data)
         _, _, number_of_gfx_pages, _ = fs.read(gfx_wrapper, 4).unpack("C*")
         pointer_to_list_of_gfx_file_pointers = data
         
         gfx_file_pointers = fs.read(pointer_to_list_of_gfx_file_pointers, 4*number_of_gfx_pages).unpack("V*")
       else
         gfx_file_pointers = [gfx_wrapper]
+      end
+      
+      return gfx_file_pointers
+    elsif SYSTEM == :gba
+      header_vals = fs.read(gfx_wrapper, 4).unpack("C*")
+      is_single_gfx_page = header_vals[0] == 1 && header_vals[1] == 4 && header_vals[2] == 0x10 && header_vals[3] <= 0x10
+      
+      if is_single_gfx_page
+        gfx_file_pointers = [gfx_wrapper]
+      else
+        number_of_gfx_pages = header_vals[2]
+        gfx_file_pointers = fs.read(gfx_wrapper+4, 4*number_of_gfx_pages).unpack("V*")
       end
       
       return gfx_file_pointers
@@ -280,8 +292,11 @@ class SpriteInfo
       header_vals = fs.read(pointer, 4).unpack("C*") rescue return
       data = fs.read(pointer+4, 4).unpack("V").first
       if fs.is_pointer?(data)
-        # One GFX page
-        header_vals[0] == 1 && header_vals[1] == 4 && header_vals[2] == 0x10 && header_vals[3] <= 0x10
+        is_single_gfx_page = header_vals[0] == 1 && header_vals[1] == 4 && header_vals[2] == 0x10 && header_vals[3] <= 0x10
+        return true if is_single_gfx_page
+        
+        is_gfx_list = header_vals[0] == 3 && header_vals[1] == 4 && header_vals[2] == 4 && header_vals[3] == 2
+        return is_gfx_list
       else
         false
       end
@@ -319,6 +334,7 @@ class SpriteInfo
       return false if num_anims >= 0x100 # TODO
       return false if frames_ptr % 4 != 0
       return false if anims_ptr % 4 != 0
+      return false if pointer < 0x08200000 # HACK TODO
       return true
     end
   end
