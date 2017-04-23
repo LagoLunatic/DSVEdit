@@ -270,7 +270,7 @@ class Sprite
     offset = @frame_list_offset
     @frames.each do |frame|
       fs.write(offset, frame.to_data)
-      offset += 12
+      offset += Frame.data_size
     end
     
     @frame_delays_by_offset.each do |offset, frame_delay|
@@ -280,7 +280,12 @@ class Sprite
     offset = @animation_list_offset
     @animations.each do |animation|
       fs.write(offset, animation.to_data)
-      offset += 8
+      offset += Animation.data_size
+      
+      if SYSTEM == :gba
+        # On GBA the frame delays come right after the animation itself, rather than being pointed to separately.
+        offset += FrameDelay.data_size*animation.number_of_frames
+      end
     end
   end
   
@@ -351,18 +356,34 @@ class Part
     flip_bits |= 0b00000001 if @vertical_flip
     flip_bits |= 0b00000010 if @horizontal_flip
     
-    [
-      @x_pos,
-      @y_pos,
-      @gfx_x_offset,
-      @gfx_y_offset,
-      @width,
-      @height,
-      @gfx_page_index,
-      flip_bits,
-      @palette_index,
-      @unused
-    ].pack("s<s<vvvvCCCC")
+    if SYSTEM == :nds
+      [
+        @x_pos,
+        @y_pos,
+        @gfx_x_offset,
+        @gfx_y_offset,
+        @width,
+        @height,
+        @gfx_page_index,
+        flip_bits,
+        @palette_index,
+        @unused
+      ].pack("s<s<vvvvCCCC")
+    else
+      [
+        @x_pos,
+        @y_pos,
+        @unknown,
+        @gfx_x_offset,
+        @gfx_y_offset,
+        @width,
+        @height,
+        @unknown_1,
+        @gfx_page_index,
+        flip_bits,
+        @unused
+      ].pack("ccvCCCCCCCC")
+    end
   end
   
   def self.data_size
@@ -389,7 +410,11 @@ class Hitbox
   end
   
   def to_data
-    [@x_pos, @y_pos, @width, @height].pack("s<s<vv")
+    if SYSTEM == :nds
+      [@x_pos, @y_pos, @width, @height].pack("s<s<vv")
+    else
+      [@x_pos, @y_pos, @width, @height].pack("ccCC")
+    end
   end
   
   def self.data_size
@@ -445,13 +470,24 @@ class Frame
   end
   
   def to_data
-    [
-      @unknown,
-      @number_of_hitboxes,
-      @number_of_parts,
-      @first_hitbox_offset,
-      @first_part_offset
-    ].pack("vCCVV")
+    if SYSTEM == :nds
+      [
+        @unknown,
+        @number_of_hitboxes,
+        @number_of_parts,
+        @first_hitbox_offset,
+        @first_part_offset
+      ].pack("vCCVV")
+    else
+      [
+        @unknown,
+        @number_of_hitboxes,
+        @number_of_parts,
+        @unknown_2,
+        @first_hitbox_offset,
+        @first_part_offset
+      ].pack("VCCvVV")
+    end
   end
   
   def self.data_size
@@ -477,7 +513,11 @@ class FrameDelay
   end
   
   def to_data
-    [@frame_index, @delay, @unknown].pack("vvV")
+    if SYSTEM == :nds
+      [@frame_index, @delay, @unknown].pack("vvV")
+    else
+      [@frame_index, @delay, @unknown].pack("CCv")
+    end
   end
   
   def self.data_size
@@ -511,7 +551,11 @@ class Animation
   end
   
   def to_data
-    [@number_of_frames, @first_frame_delay_offset].pack("VV")
+    if SYSTEM == :nds
+      [@number_of_frames, @first_frame_delay_offset].pack("VV")
+    else
+      [@number_of_frames, @unknown_1, @unknown_2].pack("CCv")
+    end
   end
   
   def self.data_size
