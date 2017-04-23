@@ -7,7 +7,14 @@ Consumable format:
     Bits 12-13: Icon palette.
     Bits 14-16: Unused?
   Bytes 5-8: Store price of the item.
-  Byte 9: Type of the item. 0 restores HP, 1 restores MP, 2 is special, 3 subtracts HP, 4 cannot be used.
+  Byte 9: Type of the item.
+    00 Restores HP.
+    01 Restores MP
+    02 Special.
+    03 Subtracts HP
+    04 Cannot be used.
+    05 Cannot be used. This type is used for records, but their effect is hardcoded.
+    06 Cannot be used. This type is used for magical tickets, but their effect is hardcoded.
   Byte 10: Always 00, no effect.
   Bytes 11-12: Varies by the item type.
     For type 0: Amount of HP to restore.
@@ -17,7 +24,7 @@ Consumable format:
       01: Cures poison.
       02: Nullifies curse.
     For type 3: Amount of HP to subtract.
-    For type 4: No effect.
+    For types 4-6: No effect.
 
 Armor format:
   24 bytes long.

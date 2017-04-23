@@ -22,9 +22,21 @@
   4,2 Affects conditions to complete the quest somehow?
 020DFCA0 - List of pointers to functions that check quest completion conditions. For example, checking certain flags. Use the quest index as the index in this list.
 
-020E0028-020E003B - List of pointers to lists of items in the shop.
-  Each item in a sublist is 2 bytes long, and is the global ID+1 of the item.
-  Each sublist is terminated by FFFF.
+020E0028-020E003B - List of pointers that each point to a list of items that get unlocked in the shop by certain boss deaths.
+  The first halfword of each list is the boss death flag to check.
+  Then are the items to unlock. Each is a halfword, the global ID+1 of the item.
+  Each list is terminated by FFFF.
+  Specific lists:
+    020E0074-020E009B Flag 00 (already unlocked by default)
+    020E003C-020E0057 Flag 01 (Dullahan)
+    020E00C4-020E00F3 Flag 0D (Stella)
+    020E0058-020E0073 Flag 10 (Death)
+    020E0018-020E0025 Flag 0E (Stella & Loretta)
+020E009C-020E00C3 - List of items in the shop unlocked by gaining shop points.
+  Each entry is 4 bytes long.
+  00,2: You need 1000x this number to unlock the item.
+  02,2: The global ID+1 of the item to unlock.
+  FFFFFFFF terminates the list.
 
 020E1CEC - Leg armor.
 020E1FA4 - Head armor.
@@ -262,20 +274,20 @@
   0 - Player 1.
   1 - Player 2.
 02111F5B - Max level.
+02111F60 - Current number of shop points you have.
 02111F98 - Pointer to controlled character's entity.
 02111F9C - Pointer to partner character's entity.
 
 02111FC0 - Player 1's current stats. Halfwords.
-  02111FC0 - ATK
-  02111FC2 - DEF
-  02111FC4 - STR
-  02111FC6 - CON
-  02111FC8 - INT
-  02111FCA - MND
-  02111FCC - LCK
-  02111FCE - ???
-  02111FD0 - Bitfield of resistances.
-  02111FD2 - ???
+  02111FC0,2 - ATK
+  02111FC2,2 - DEF
+  02111FC4,2 - STR
+  02111FC6,2 - CON
+  02111FC8,2 - INT
+  02111FCA,2 - MND
+  02111FCC,2 - LCK
+  02111FCE,2 - Unused?
+  02111FD0,4 - Bitfield of resistances.
 02111FD4 - Player 1's current stats, with bonus stats added.
 02111FE8 - Player 1's bonus stats.
 02112010 - Player 2's current stats.
