@@ -31,5 +31,3 @@
   .pool
 
 .close
-
-; TODO: although this loads you into the room fine, there are several bugs, like room entities being gone and menu graphics being messed up

@@ -61,7 +61,7 @@ class TilesetEditorDialog < Qt::Dialog
       @ui.tileset_pointer.text = "%08X" % layer.tileset_pointer
     end
     @ui.gfx_list_pointer.text = "%08X" % room.gfx_list_pointer
-    @ui.palette_list_pointer.text = "%08X" % room.palette_pages.first.palette_list_pointer # TODO: USE RIGHT ONE
+    @ui.palette_list_pointer.text = "%08X" % room.palette_pages.first.palette_list_pointer
     load_tileset()
   end
   
@@ -288,11 +288,7 @@ class TilesetEditorDialog < Qt::Dialog
     @tileset.write_to_rom()
     
     # Clear the tileset cache so the changes show up in the editor.
-    tileset_filename = "tileset_%08X_%08X_%08X" % [@tileset_pointer, @palette_list_pointer || 0, @gfx_list_pointer]
-    tileset_path = "cache/#{GAME}/rooms/#{@room.area_name}/Tilesets/#{tileset_filename}.png"
-    if File.file?(tileset_path)
-      FileUtils.rm(tileset_path)
-    end
+    parent.clear_cache()
   end
   
   def button_box_clicked(button)
