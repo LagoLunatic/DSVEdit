@@ -763,6 +763,8 @@ class SpriteEditor < Qt::Dialog
   end
   
   def save_sprite
+    return if @sprite.nil?
+    
     @sprite.write_to_rom()
   rescue Sprite::SaveError => e
     Qt::MessageBox.warning(self,
