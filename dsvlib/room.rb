@@ -226,10 +226,28 @@ class Room
       @original_number_of_entities = entities.length
     end
     
+    if SYSTEM == :gba
+      # AoS only loads entities when you get close to them in the room.
+      # It checks this by looking at the x or y pos of the entity.
+      # However, it assumes that all entities in the room are ordered by the x or y pos.
+      # So we need to reorder them for the entities to load correctly.
+      
+      # Room is considered vertical if height is greater than width, otherwise horizontal.
+      if main_layer_width < main_layer_height
+        entities.sort_by! do |entity|
+          entity.y_pos
+        end
+      else
+        entities.sort_by! do |entity|
+          entity.x_pos
+        end
+      end
+    end
+    
     new_entity_pointer = entity_list_ram_pointer
     entities.each do |entity|
       entity.entity_ram_pointer = new_entity_pointer
-      entity.write_to_rom()
+      fs.write(entity.entity_ram_pointer, entity.to_data)
       
       new_entity_pointer += 12
     end
