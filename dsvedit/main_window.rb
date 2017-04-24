@@ -221,6 +221,7 @@ class DSVEdit < Qt::MainWindow
     @map_editor_dialog.close() if @map_editor_dialog
     @player_editor_dialog.close() if @player_editor_dialog
     @special_object_editor_dialog.close() if @special_object_editor_dialog
+    @weapon_synth_editor_dialog.close() if @weapon_synth_editor_dialog
     @entity_search_dialog.close() if @entity_search_dialog
     @entity_editor.close() if @entity_editor
     @settings_dialog.close() if @settings_dialog
