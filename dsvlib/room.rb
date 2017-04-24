@@ -105,6 +105,8 @@ class Room
   rescue NDSFileSystem::ConversionError => e
     # When layer_list_ram_pointer points to something outside the overlay, that means the room has no layers.
     @layers = []
+  rescue Layer::LayerReadError => e
+    # TODO. for now we just ignore the bad layer
   end
   
   def read_graphic_tilesets_from_rom(gfx_list_pointer)

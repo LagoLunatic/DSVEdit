@@ -48,10 +48,14 @@ class Layer
       return # TODO
     end
     
-    @width, @height, _,
+    @width, @height, tileset_compression_type,
       @tileset_pointer,
       @collision_tileset_pointer,
       @layer_tiledata_ram_start_offset = fs.read(layer_metadata_ram_pointer, 16).unpack("CCvVVV")
+    
+    if SYSTEM == :gba && tileset_compression_type != 2
+      raise LayerReadError.new("Unknown tileset compression type: #{tileset_compression_type}")
+    end
     
     if width > 15 || height > 15
       raise LayerReadError.new("Invalid layer size: #{width}x#{height}")
