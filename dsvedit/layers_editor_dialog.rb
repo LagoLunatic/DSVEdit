@@ -66,6 +66,8 @@ class LayersEditorDialog < Qt::Dialog
   def save_layer
     layer = @room.layers[@ui.layer_index.currentIndex]
     
+    return if layer.nil?
+    
     layer.width = @ui.width.text.to_i(16)
     layer.height = @ui.height.text.to_i(16)
     layer.z_index = @ui.z_index.text.to_i(16)
