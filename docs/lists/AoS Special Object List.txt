@@ -8,10 +8,14 @@
 07 Applies a visual effect to the room.
   Includes things like the Chaotic Realm's greyscale effect, bats in the background, etc. TODO
 08 Breakable wall.
-0A Conditional enemy.
-  Once a certain flag has been set this will spawn an enemy.
+0A Boss-death-conditional enemy.
+  Once a certain boss death flag has been set this will spawn an enemy.
   Var A: Enemy ID to spawn.
-  Var B: The index of the flag to check in bitfield 0200037E.
+  Var B: The index of the boss death flag to check (in bitfield 0200037E).
+0B Event-conditional enemy.
+  Once a certain event flag has been set this will spawn an enemy.
+  Var A: Enemy ID to spawn.
+  Var B: The index of the event flag to check (in bitfield 0200033C).
 0D Bell.
   Rings when you land on top of it.
 0E Destructible.
