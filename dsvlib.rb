@@ -1,5 +1,6 @@
 
 require_relative 'dsvlib/crc16'
+require_relative 'dsvlib/free_space_manager'
 require_relative 'dsvlib/nds_file_system'
 require_relative 'dsvlib/gba_dummy_filesystem'
 require_relative 'dsvlib/gba_decompress'
