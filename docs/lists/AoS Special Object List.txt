@@ -1,6 +1,7 @@
 00 Wooden door.
 01 Pushable crates.
 02 Boss door.
+03 
 04 Boss door (forces player to enter room).
   This boss door can be placed away from the edge of the screen and the player will automatically walk past it when entering the room.
 05 Arena door.
@@ -8,6 +9,7 @@
 07 Applies a visual effect to the room.
   Includes things like the Chaotic Realm's greyscale effect, bats in the background, etc. TODO
 08 Breakable wall.
+09 
 0A Boss-death-conditional enemy.
   Once a certain boss death flag has been set this will spawn an enemy.
   Var A: Enemy ID to spawn.
@@ -16,17 +18,21 @@
   Once a certain event flag has been set this will spawn an enemy.
   Var A: Enemy ID to spawn.
   Var B: The index of the event flag to check (in bitfield 0200033C).
+0C 
 0D Bell.
   Rings when you land on top of it.
 0E Destructible.
   Var A: Which destructible. 0-D.
 0F Flame.
+10 
+11 
 12 Various background visuals.
   Var A:
     0 Body-length window that gets blown open.
     1 Water rushing out of a grate.
     2 Moon.
     3 Moon. Positioned lower than 2.
+13 Ball on a chain you can swing by attacking.
 14 Boat.
   Var A:
     0 Boats spawn from the background that are affected by physics in the water.
@@ -40,9 +46,12 @@
     0 Full of money.
     1 Full of Rippers.
 19 Skull that moves around in a rectangular path.
+1A 
 1B Button that reverses conveyor belts.
 1C Save point.
+  Object 1D must also be in the room for the save point to work?
 1D Walls of save room/warp room.
+1E 
 1F Warp point.
 20 Event.
   Var A: Which event.
@@ -66,13 +75,22 @@
     1E Soma floating in white space after defeating Chaos.
 21 Falling spike trap from Arena.
 22 D-pad puzzle from Arena.
+23 
+24 
 25 Legion members emerging from the background.
 26 Damaging hand/foot of Arena background statue.
+27 
+28 
 29 Vertically moving platform.
 2A Horizontally moving platform.
+2B 
+2C 
 2D Statue before the stairway to the throne room.
 2E Three flames in the eyes of a background skull.
   Light up when you get near it.
+2F 
+30 
+31 
 32 Crumbling platform.
 33 Waterfall splashes?
 34 Swinging pendulum.
