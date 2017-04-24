@@ -3,47 +3,43 @@ Map tile metadata (DoS):
 Each map tile is 2 bytes long. Unlike PoR and OoE, every map tile, even completely blank ones, have an entry here.
 When these 2 bytes are equal to FFFF the tile has no fill color, only its lines (if any) are drawn.
 Bytes 1-2:
-Most significant bit first.
-  Bit 1: is a save room (red) (takes precedence over blue)
-  Bit 2: is a warp room (blue)
-  Bits 3-6: unused
+  Bits 1-6: Room index of the room located here. Unlike PoR and OoE, warp rooms don't seem to use this to decide what room to place the player in. Used by the suspend function to remember what sector you suspended in.
   Bits 7-10: Sector index of the room located here. This also affects the music, as music is tied to the sector. Also seems to affect where doors will lead you? Also used by the suspend function to remember what room you suspended in.
-  Bits 11-16: Room index of the room located here. Unlike PoR and OoE, warp rooms don't seem to use this to decide what room to place the player in. Used by the suspend function to remember what sector you suspended in.
+  Bits 11-14: Unused.
+  Bit 15: Warp room (blue).
+  Bit 16: Save room (red) (takes precedence over warp room).
 
 Map tile line data (DoS):
 Each map tile takes up only half a byte.
-Most significant bit first.
-  Bit 1: has top door
-  Bit 2: has top ceiling
-  Bit 3: has left door
-  Bit 4: has left wall
+  Bit 1: has left wall
+  Bit 2: has left door
+  Bit 3: has top ceiling
+  Bit 4: has top door
 Note that normally for a wall both the door bit and the wall bit will be set. But for destroyable walls, only the wall bit will be set.
 
 Map tile metadata (PoR and OoE):
 Bytes 1-2: control type of room.
-Most significant bit first.
-  Bit 1: is a save room (red).
-  Bit 2: is a warp room (blue).
-  Bit 3: is a secret room
-  Bit 4: is transition room (no special color, but loads necessary tile data for rooms around it automatically).
-  Bit 5: is an area entrance (yellow).
-  Bit 6: unused
+  Bits 1-6: Room index of the room located here. Used by warp room and area entrance to decide where to place the player.
   Bits 7-10: Sector index of the room located here. This also affects the music, as music is tied to the area/sector.
-  Bits 11-16: Room index of the room located here. Used by warp room and area entrance to decide where to place the player.
-Byte 3: y pos on map.
-Byte 4: x pos on map.
+  Bit 11: Unused.
+  Bit 12: Area entrance (yellow).
+  Bit 13: Transition room (no special color, but loads necessary tile data for rooms around it automatically).
+  Bit 14: Secret room
+  Bit 15: Warp room (blue).
+  Bit 16: Save room (red).
+Byte 3: Y pos on map.
+Byte 4: X pos on map.
 
 Map tile line data (PoR and OoE):
 Each tile on the map takes up 1 byte.
-Most significant bit first.
-  Bit 1: has bottom door
-  Bit 2: has bottom floor
-  Bit 3: has right door
-  Bit 4: has right wall
-  Bit 5: has top door
-  Bit 6: has top ceiling
-  Bit 7: has left door
-  Bit 8: has left wall
+  Bit 1: has left wall
+  Bit 2: has left door
+  Bit 3: has top ceiling
+  Bit 4: has top door
+  Bit 5: has right wall
+  Bit 6: has right door
+  Bit 7: has bottom floor
+  Bit 8: has bottom door
 Note that normally only the door bit or the wall bit will be set. But for destroyable walls, both of them will be set. This will be drawn as a wall before the wall has been destroyed, and as a door afterwards.
 
 Map length in tiles (PoR and OoE):

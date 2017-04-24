@@ -23,6 +23,7 @@ Memory used for entities in PoR is 020FC500 - 0211173F. Each entity is 0x160 byt
 06C,2: Affects the entity's graphics.
   This is an index in list 020FA200.
 078,4: Pointer to sprite animation list.
+07C,2: Current animation index.
 08C,2: Affects how this entity is rendered.
   0 - Normal.
   1 - Transparency is rendered as white.
