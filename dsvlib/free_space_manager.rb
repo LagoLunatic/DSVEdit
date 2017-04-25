@@ -1,9 +1,11 @@
 
 module FreeSpaceManager
+  class FreeSpaceFindError < StandardError ; end
+  
   def read_free_space_from_text_file
     @free_spaces = []
     
-    # TODO: count expandable overlay ends as free space
+    initialize_sector_overlay_free_spaces()
     
     if @filesystem_directory.nil?
       return
@@ -25,13 +27,28 @@ module FreeSpaceManager
     merge_overlapping_free_spaces()
   end
   
+  def initialize_sector_overlay_free_spaces
+    ROOM_OVERLAYS.each do |overlay_id|
+      overlay = overlays[overlay_id]
+      length = MAX_ALLOWABLE_ROOM_OVERLAY_SIZE - overlay[:size]
+      next if length == 0
+      
+      offset = overlay[:size]
+      path = overlay[:file_path]
+      
+      @free_spaces << {path: path, offset: offset, length: length}
+    end
+  end
+  
   def write_free_space_to_text_file(base_directory=@filesystem_directory)
     if base_directory.nil?
       return
     end
     
     output_string = ""
-    output_string << "This file lists regions that were once used, but DSVEdit freed up when relocating the data to a different location.\n"
+    output_string << "This file lists regions of currently unused space in this project.\n"
+    output_string << "Some of these are from expanding overlay files.\n"
+    output_string << "Others were once used, but DSVEdit freed them up when relocating the data to a different location.\n"
     output_string << "DSVEdit reads from this file to know what regions it can reuse later.\n"
     output_string << "Don't modify this file manually unless you know what you're doing.\n\n"
     @free_spaces.each do |free_space|
@@ -134,21 +151,18 @@ module FreeSpaceManager
         free_space[:length] >= length_needed && free_space[:path] == file_path
       end
       
-      # TODO: detect if there's a free space at the end of the overlay, but it's too small. we can just expand the overlay by the diff instead of fully.
-      # Maybe to do this we should have everything past the end of an overlay be considered one big free space from the start.
-      
       if free_space
         puts "Found free space at %08X (%08X in %s)" % [file[:ram_start_offset] + free_space[:offset], free_space[:offset], file[:file_path]]
+        
+        expand_length_needed = free_space[:offset] + free_space[:length] - file[:size]
+        if expand_length_needed > 0
+          expand_file(file, length_needed)
+        end
+        
         return file[:ram_start_offset] + free_space[:offset]
       end
     end
     
-    if overlay_id
-      overlay_path = File.join("/ftc", "overlay9_#{overlay_id}")
-      overlay = files_by_path[overlay_path]
-      return expand_file_and_get_end(overlay, length_needed)
-    else
-      raise "can't find"
-    end
+    raise FreeSpaceFindError.new("Failed to find any free space!")
   end
 end
