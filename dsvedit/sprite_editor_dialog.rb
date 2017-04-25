@@ -491,6 +491,12 @@ class SpriteEditor < Qt::Dialog
       @ui.animation_index.addItem("%02X" % i)
     end
     animation_changed(0)
+  rescue StandardError => e
+    Qt::MessageBox.warning(self,
+      "Failed to load sprite",
+      "Failed to load sprite.\n#{e.message}\n\n#{e.backtrace.join("\n")}"
+    )
+    load_blank_sprite()
   end
   
   def ensure_gfx_pages_for_palette_exist(palette_index)

@@ -897,7 +897,7 @@ class Renderer
       palettes = generate_palettes(palette_pointer, 256)
       dummy_palette = generate_palettes(nil, 256).first
     else
-      raise NotImplementedError.new("Unknown render mode.")
+      raise "Unknown render mode."
     end
     
     rendered_gfx_files_by_palette = Hash.new{|h, k| h[k] = {}}
