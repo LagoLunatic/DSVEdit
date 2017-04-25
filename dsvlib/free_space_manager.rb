@@ -51,7 +51,9 @@ module FreeSpaceManager
     output_string << "Others were once used, but DSVEdit freed them up when relocating the data to a different location.\n"
     output_string << "DSVEdit reads from this file to know what regions it can reuse later.\n"
     output_string << "Don't modify this file manually unless you know what you're doing.\n\n"
-    @free_spaces.each do |free_space|
+    
+    free_spaces_sorted_by_path = @free_spaces.sort_by{|free_space| [free_space[:path], free_space[:offset]]}
+    free_spaces_sorted_by_path.each do |free_space|
       offset = free_space[:offset]
       length = free_space[:length]
       path = free_space[:path]
@@ -139,6 +141,7 @@ module FreeSpaceManager
     
     files_to_check = []
     
+    # Check the specific overlay first, then arm9 if there's no free space in the overlay.
     if overlay_id
       files_to_check << File.join("/ftc", "overlay9_#{overlay_id}")
     end
