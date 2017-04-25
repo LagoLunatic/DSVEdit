@@ -27,6 +27,7 @@ class NDSFileSystem
       file[:end_offset] = file[:start_offset] + file[:size]
     end
     get_file_ram_start_offsets_and_file_data_types()
+    read_free_space_from_text_file()
   end
   
   def open_and_extract_rom(input_rom_path, filesystem_directory)
@@ -35,6 +36,7 @@ class NDSFileSystem
     read_from_rom()
     extract_to_hard_drive()
     get_file_ram_start_offsets_and_file_data_types()
+    read_free_space_from_text_file()
   end
   
   def open_rom(input_rom_path)
@@ -476,8 +478,6 @@ private
       load_overlay(overlay_index)
     end
     load_overlay(NEW_OVERLAY_ID) if overlays[NEW_OVERLAY_ID]
-    
-    read_free_space_from_text_file()
   end
   
   def extract_to_hard_drive
