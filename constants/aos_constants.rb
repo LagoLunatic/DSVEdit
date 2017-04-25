@@ -65,8 +65,8 @@ ENEMY_DNA_FORMAT = [
   # length: 36
   [4, "Init AI"],
   [4, "Running AI"],
-  [2, "Unknown 1"],
-  [2, "Unknown 2"],
+  [2, "Item 1"],
+  [2, "Item 2"],
   [2, "HP"],
   [2, "MP"],
   [2, "EXP"],
@@ -368,6 +368,7 @@ REUSED_ENEMY_INFO = {
   0x13 => {init_code: 0x0807E2CC}, # giant ghost
   0x15 => {init_code: 0x080B0AD4}, # minotaur
   0x17 => {init_code: 0x0807A970}, # arachne
+  0x19 => {palette_offset: 1}, # evil butcher
   0x1C => {init_code: 0x08089A50, palette_offset: 1}, # catoblepas
   0x21 => {init_code: 0x08098E00}, # creaking skull
   0x22 => {init_code: 0x08081128, palette_offset: 2, gfx_sheet_ptr_index: 1}, # wooden golem
@@ -392,6 +393,7 @@ REUSED_ENEMY_INFO = {
   0x50 => {init_code: 0x08081128, palette_offset: 3}, # flesh golem TODO
   0x54 => {init_code: 0x0807968C, palette_offset: 1}, # weretiger
   0x58 => {init_code: 0x080B0AD4, palette_offset: 1}, # red minotaur
+  0x5B => {init_code: 0x080B7E80, palette_offset: 2, sprite: 0x0824A8E0}, # skull millione
   0x5C => {init_code: 0x08098E00, palette_offset: 1}, # giant skeleton
   0x5D => {init_code: 0x080A1BEC}, # gladiator
   0x60 => {init_code: 0x08099430}, # mimic
@@ -457,7 +459,9 @@ REUSED_SPECIAL_OBJECT_INFO = {
   0x2A => {init_code: 0x085264D0, palette_offset: 6},
   0x2D => {palette_offset: 2},
   0x2E => {palette_offset: 5},
+  0x32 => {palette_offset: 1},
   0x34 => {palette_offset: 2},
+  0x36 => {init_code:         -1},
 }
 SPECIAL_OBJECT_FILES_TO_LOAD_LIST = nil
 BEST_SPRITE_FRAME_FOR_SPECIAL_OBJECT = {
