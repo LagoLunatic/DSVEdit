@@ -480,7 +480,12 @@ class SpriteEditor < Qt::Dialog
       @part_pixmaps_for_part_view << PartItem.new(self, part, part_index, pixmap)
       @part_pixmaps_for_frame_view << PartItem.new(self, part, part_index, pixmap)
       
-      @ui.part_index.addItem("%02X" % part_index)
+      part_text = "%02X" % part_index
+      if !@sprite.sprite_file
+        offset = @sprite.parts_by_offset.key(part)
+        part_text << " (%08X)" % offset
+      end
+      @ui.part_index.addItem(part_text)
     end
     part_changed(0)
     
