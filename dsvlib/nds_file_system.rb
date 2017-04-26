@@ -337,8 +337,8 @@ class NDSFileSystem
     ram_pointer = NEW_OVERLAY_FREE_SPACE_START
     file_size = 4
     bss_size = 0
-    static_initializer_start = ram_pointer
-    static_initializer_end = ram_pointer + 4
+    static_initializer_start = 0 # No static initializer
+    static_initializer_end = 0
     file_id = @files.keys.select{|key| key < 0xF000}.max + 1
     
     file_name = "overlay9_#{overlay_id}"
