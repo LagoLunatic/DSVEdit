@@ -16,11 +16,13 @@
   ldr r1, =020003CCh
   str r0, [r1] ; Store it as the current room at 020003CC.
   
-  ;ldr r1, =02000524h
-  ;ldr r0, =80001h
-  ;str r0, [r1]
-  ;ldr r0, =60001h
-  ;str r0, [r1, 4h]
+  ; Overrides the X/Y pos loaded from the save file.
+  ; Unlike the DSVanias these are halfwords.
+  ldr r1, =02000338h
+  ldr r0, =80h
+  strh r0, [r1]
+  ldr r0, =60h
+  strh r0, [r1,2h]
   
   ; Return 4 so the state manager changes the state to ingame.
   mov r0, 4h

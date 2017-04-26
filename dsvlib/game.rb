@@ -457,12 +457,17 @@ class Game
     
     fs.load_overlay(TEST_ROOM_OVERLAY) if TEST_ROOM_OVERLAY
     
+    if SYSTEM == :nds
+      x_pos *= 0x1000
+      y_pos *= 0x1000
+    end
+    
     fs.write(TEST_ROOM_SAVE_FILE_INDEX_LOCATION, [save_file_index].pack("C"))
     fs.write(TEST_ROOM_AREA_INDEX_LOCATION     , [area_index].pack("C")) if TEST_ROOM_AREA_INDEX_LOCATION
     fs.write(TEST_ROOM_SECTOR_INDEX_LOCATION   , [sector_index].pack("C"))
     fs.write(TEST_ROOM_ROOM_INDEX_LOCATION     , [room_index].pack("C"))
-    fs.write(TEST_ROOM_X_POS_LOCATION          , [x_pos * 0x1000].pack("V"))
-    fs.write(TEST_ROOM_Y_POS_LOCATION          , [y_pos * 0x1000].pack("V"))
+    fs.write(TEST_ROOM_X_POS_LOCATION          , [x_pos].pack("V"))
+    fs.write(TEST_ROOM_Y_POS_LOCATION          , [y_pos].pack("V"))
     
     # In OoE the test room overlay and area overlay are loaded at the same spot.
     # So after we're done with the test room overlay we need to load the area overlay back.
