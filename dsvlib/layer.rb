@@ -98,8 +98,7 @@ class Layer
       old_tiledata_length = old_width * old_height * SIZE_OF_A_SCREEN_IN_BYTES
       new_tiledata_length = width * height * SIZE_OF_A_SCREEN_IN_BYTES
       
-      fs.free_unused_space(layer_tiledata_ram_start_offset, old_tiledata_length)
-      new_tiledata_ram_pointer = fs.get_free_space(new_tiledata_length, room.overlay_id)
+      new_tiledata_ram_pointer = fs.free_old_space_and_find_new_free_space(layer_tiledata_ram_start_offset, old_tiledata_length, new_tiledata_length, room.overlay_id)
       
       puts "TILEDATA MORE"
       puts "ORIG TILEDATA LIST: %08X" % layer_tiledata_ram_start_offset

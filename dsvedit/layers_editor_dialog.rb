@@ -81,7 +81,7 @@ class LayersEditorDialog < Qt::Dialog
     @game.fix_map_sector_and_room_indexes(@room.area_index, @room.sector_index)
     
     layer_changed(@ui.layer_index.currentIndex)
-  rescue NDSFileSystem::FileExpandError => e
+  rescue FreeSpaceManager::FreeSpaceFindError => e
     @room.layers[@ui.layer_index.currentIndex].read_from_rom() # Reload layer
     Qt::MessageBox.warning(self, "Cannot expand layer", e.message)
   end

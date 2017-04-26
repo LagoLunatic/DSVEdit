@@ -201,10 +201,10 @@ class Room
       end
       
       original_length = (@original_number_of_entities+1)*12
-      fs.free_unused_space(entity_list_ram_pointer, original_length)
-      
       length_needed = (entities.length+1)*12
-      new_entity_list_pointer = fs.get_free_space(length_needed, overlay_id)
+      
+      new_entity_list_pointer = fs.free_old_space_and_find_new_free_space(entity_list_ram_pointer, original_length, length_needed, overlay_id)
+      
       @original_number_of_entities = entities.length
       
       puts "ENTS MORE"
@@ -277,8 +277,8 @@ class Room
       old_length = @original_number_of_doors*16
       new_length = doors.length*16
       
-      fs.free_unused_space(door_list_ram_pointer, old_length)
-      new_door_list_pointer = fs.get_free_space(new_length, overlay_id)
+      new_door_list_pointer = fs.free_old_space_and_find_new_free_space(door_list_ram_pointer, old_length, new_length, overlay_id)
+      
       @original_number_of_doors = doors.length
       
       puts "DOORS MORE"

@@ -547,7 +547,7 @@ class DSVEdit < Qt::MainWindow
     load_room()
     
     Qt::MessageBox.warning(self, "Layer added", "Successfully added a new layer to room %08X." % @room.room_metadata_ram_pointer)
-  rescue NDSFileSystem::FileExpandError => e
+  rescue FreeSpaceManager::FreeSpaceFindError => e
     Qt::MessageBox.warning(self, "Cannot add layer", e.message)
   end
   
@@ -565,11 +565,7 @@ class DSVEdit < Qt::MainWindow
     load_room()
     
     open_entity_editor(entity)
-  rescue NDSFileSystem::FileExpandError => e
-    @room.read_from_rom() # Reload room to get rid of the failed changes.
-    load_room()
-    Qt::MessageBox.warning(self, "Cannot add entity", e.message)
-  rescue Room::WriteError => e
+  rescue FreeSpaceManager::FreeSpaceFindError, Room::WriteError => e
     @room.read_from_rom() # Reload room to get rid of the failed changes.
     load_room()
     Qt::MessageBox.warning(self, "Cannot add entity", e.message)
@@ -789,11 +785,7 @@ class DSVEdit < Qt::MainWindow
     game.fix_map_sector_and_room_indexes(@area_index, @sector_index)
     
     load_room()
-  rescue NDSFileSystem::FileExpandError => e
-    @room.read_from_rom() # Reload room to get rid of the failed changes.
-    load_room()
-    Qt::MessageBox.warning(self, "Cannot add layer", e.message)
-  rescue TMXInterface::ImportError => e
+  rescue TMXInterface::ImportError, FreeSpaceManager::FreeSpaceFindError => e
     @room.read_from_rom() # Reload room to get rid of the failed changes.
     load_room()
     Qt::MessageBox.warning(self, "Error importing from Tiled", e.message)
