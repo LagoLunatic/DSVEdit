@@ -157,6 +157,7 @@ class DSVEdit < Qt::MainWindow
     @ui.actionEdit_Layers.setEnabled(false);
     @ui.actionEdit_Entities.setEnabled(false);
     @ui.actionAdd_New_Layer.setEnabled(false);
+    @ui.actionAdd_Entity.setEnabled(false);
     @ui.actionEntities.setEnabled(false);
     @ui.actionDoors.setEnabled(false);
     @ui.actionCollision.setEnabled(false);
@@ -185,6 +186,7 @@ class DSVEdit < Qt::MainWindow
     @ui.actionEdit_Layers.setEnabled(true);
     @ui.actionEdit_Entities.setEnabled(true);
     @ui.actionAdd_New_Layer.setEnabled(true);
+    @ui.actionAdd_Entity.setEnabled(true);
     @ui.actionEntities.setEnabled(true);
     @ui.actionDoors.setEnabled(true);
     @ui.actionCollision.setEnabled(true);
