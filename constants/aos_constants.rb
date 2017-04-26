@@ -127,18 +127,21 @@ TEXT_LIST_START_OFFSET = 0x08506B38
 TEXT_RANGE = (0..0xB4E)
 TEXT_REGIONS = {
   "Character Names" => (0..0xA),
+  "Events" => (0xB..0x5A),
   "Item Names" => (0x5B..0xE2),
+  "Red Soul Names" => (0xE3..0x119),
+  "Unused Blue Soul name" => (0x11A..0x11A),
+  "Blue Soul Names" => (0x11B..0x132),
+  "Yellow Soul Names" => (0x133..0x155),
+  "Ability Soul Names" => (0x156..0x15B),
   "Item Descriptions" => (0x15C..0x1E3),
+  "Red Soul Descriptions" => (0x1E4..0x21A),
+  "Unused Blue Soul Description" => (0x21B..0x21B),
+  "Blue Soul Descriptions" => (0x21C..0x233),
+  "Yellow Soul Descriptions" => (0x234..0x256),
+  "Ability Soul Descriptions" => (0x257..0x25C),
   "Enemy Names" => (0x25D..0x2CD),
-  "Enemy Descriptions" => (0x2CE..0x293),
-  "Soul Names" => (0xE3..0x15B),
-  "Soul Descriptions" => (0x1E4..0x25C),
-  #"Area Names" => (0x38A..0x395),
-  #"Music Names" => (0x396..0x3B2),
-  #"Misc" => (0x3B3..0x3D8),
-  #"Menus" => (0x3D9..0x477),
-  #"Library" => (0x478..0x4A5),
-  #"Events" => (0x4A6..0xB4E)
+  "Enemy Descriptions" => (0x2CE..0x33E),
 }
 TEXT_REGIONS_OVERLAYS = {
   "Character Names" => 0,
@@ -307,7 +310,7 @@ ITEM_TYPES = [
   {
     name: "Blue Souls",
     list_pointer: 0x080E1938,
-    count: 0x19,
+    count: 0x18,
     kind: :skill,
     format: BLUE_SOUL_FORMAT # length: 12
   },

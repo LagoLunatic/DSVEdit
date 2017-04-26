@@ -76,16 +76,18 @@ class GenericEditable
       when "aos"
         case @item_type_name
         when "Red Souls"
-          offset = 0
+          @name = Text.new(TEXT_REGIONS["Red Soul Names"].begin + index, fs).decoded_string
+          @description = Text.new(TEXT_REGIONS["Red Soul Descriptions"].begin + index, fs).decoded_string
         when "Blue Souls"
-          offset = ITEM_TYPES[3][:count]
+          @name = Text.new(TEXT_REGIONS["Blue Soul Names"].begin + index, fs).decoded_string
+          @description = Text.new(TEXT_REGIONS["Blue Soul Descriptions"].begin + index, fs).decoded_string
         when "Yellow Souls"
-          offset = ITEM_TYPES[3][:count] + ITEM_TYPES[4][:count]
+          @name = Text.new(TEXT_REGIONS["Yellow Soul Names"].begin + index, fs).decoded_string
+          @description = Text.new(TEXT_REGIONS["Yellow Soul Descriptions"].begin + index, fs).decoded_string
         when "Ability Souls"
-          offset = ITEM_TYPES[3][:count] + ITEM_TYPES[4][:count] + ITEM_TYPES[5][:count]
+          @name = Text.new(TEXT_REGIONS["Ability Soul Names"].begin + index, fs).decoded_string
+          @description = Text.new(TEXT_REGIONS["Ability Soul Descriptions"].begin + index, fs).decoded_string
         end
-        @name = Text.new(TEXT_REGIONS["Soul Names"].begin + offset + index, fs).decoded_string
-        @description = Text.new(TEXT_REGIONS["Soul Descriptions"].begin + offset + index, fs).decoded_string
       when "por"
         @name = Text.new(TEXT_REGIONS["Skill Names"].begin + index, fs).decoded_string
         @description = Text.new(TEXT_REGIONS["Skill Descriptions"].begin + index, fs).decoded_string
