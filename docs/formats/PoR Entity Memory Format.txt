@@ -22,8 +22,11 @@ Memory used for entities in PoR is 020FC500 - 0211173F. Each entity is 0x160 byt
 04C,4: Y acceleration (gravity).
 06C,2: Affects the entity's graphics.
   This is an index in list 020FA200.
+074,4: Bitfield related to sprite drawing.
+  80 Horizontal flip.
 078,4: Pointer to sprite animation list.
 07C,2: Current animation index.
+080,2: Bitfield?
 08C,2: Affects how this entity is rendered.
   0 - Normal.
   1 - Transparency is rendered as white.
@@ -42,8 +45,11 @@ Memory used for entities in PoR is 020FC500 - 0211173F. Each entity is 0x160 byt
 0A7,1: Index of this entity's hitbox in the global hitbox list (0213291C).
 0A8,2: Damage.
 0AC,4: Bitfield of damage types.
+0B0,4: Bitfield of resistances.
 0B8,2: Number of iframes this entity gives.
 0D0,4: For players, this is a bitfield of their current state booleans.
+0DC,2: Counter?
+0DE,2: Counter?
 0E8,2: For players, ???.
   This is 1 when the player is doing a critical art/combo tech.
   This is 4 when the player is not present (neither player-controlled nor AI-controlled).

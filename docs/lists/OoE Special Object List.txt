@@ -130,6 +130,7 @@ Special Objects:
     1 Also unlocks the lower right entrance to Kalidus Channel. This should only be done after the player has visited at least one of the other entrances to Kalidus Channel, otherwise the game will crash when they enter Kalidus Channel.
     2 Also unlocks the Large Cavern.
 2C Wygol door that leads into a house.
+  Requires sector overlay 41.
   Var A:
     Low byte: The room index of the house to go into.
     High byte: 0 to enter the house from the left, 1 to enter from the right.
