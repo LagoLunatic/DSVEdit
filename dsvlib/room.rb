@@ -244,6 +244,12 @@ class Room
           entity.x_pos
         end
       end
+      
+      entities.each_with_index do |entity, i|
+        # Byte 5 acts as a unique ID for this entity in the room.
+        # If two entities in the same room share a byte 5, one of them won't appear.
+        entity.byte_5 = i
+      end
     end
     
     new_entity_pointer = entity_list_ram_pointer
