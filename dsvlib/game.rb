@@ -116,6 +116,19 @@ class Game
     end
   end
   
+  def special_objects
+    @special_objects ||= begin
+      special_objects = []
+      
+      SPECIAL_OBJECT_IDS.each do |obj_id|
+        obj = SpecialObjectType.new(obj_id, fs)
+        special_objects << obj
+      end
+      
+      special_objects
+    end
+  end
+  
   def players
     @players ||= begin
       players = []
