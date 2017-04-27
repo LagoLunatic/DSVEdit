@@ -234,7 +234,7 @@ WEAPON_FORMAT = [
   [1, "Unknown 10"],
   [1, "Palette"],
   [1, "? anim??"],
-  [1, "Unknown 12"],
+  [1, "IFrames"],
   [4, "Unknown 13"],
 ]
 ARMOR_FORMAT = [
@@ -268,7 +268,8 @@ RED_SOUL_FORMAT = [
 BLUE_SOUL_FORMAT = [
   # length: 12
   [4, "Code"],
-  [2, "Unknown 1"],
+  [1, "Mana"],
+  [1, "Hold/Press R"],
   [2, "Unknown 2"],
   [2, "Unknown 3"],
   [2, "Unknown 4"],
