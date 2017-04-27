@@ -1,5 +1,5 @@
 
-DSVEdit (DSVania Editor) is a work-in-progress editor for the three Castlevania games for the Nintendo DS: Dawn of Sorrow, Portrait of Ruin, and Order of Ecclesia. It's currently compatible with the North American and Japanese versions.
+DSVEdit (DSVania Editor) is a work-in-progress editor for the three Castlevania games for the Nintendo DS: Dawn of Sorrow, Portrait of Ruin, and Order of Ecclesia. It's currently compatible with the US and Japanese versions. It also has beta support for Aria of Sorrow (US version only).
 
 Source code: https://github.com/LagoLunatic/DSVEdit
 Report issues here: https://github.com/LagoLunatic/DSVEdit/issues
@@ -17,6 +17,9 @@ Report issues here: https://github.com/LagoLunatic/DSVEdit/issues
 * Editing text
 * Editing which songs play in which areas
 * Editing random chest item pools
+* Editing weapon synthesis
+* Adding a new overlay file that can be used as free space
+* Testing rooms by launching the game with you in that room
 
 ### Requirements
 
@@ -46,6 +49,9 @@ After you're finished editing the room, make sure you press Ctrl+S in Tiled to s
 After editing the game you will need to build a modified ROM in order to actually play it. Press F5 or go to Build -> Build to create a modified ROM file.
 After it's finished building the ROM will be placed in the same folder as all the game's files, and will have a name like "built_rom_dos.nds".
 
+If you press F6 instead of F5, DSVEdit will launch an emulator with the modified ROM as soon as it's done building. You can specify what emulator to use in the settings.
+If you press F7, it will launch the emulator, immediately load your first save file, and place you into the room you had open in DSVEdit. This allows you to quickly test a room.
+
 If you want the changes you made to be saved to the filesystem, don't forget to press Ctrl+S in DSVEdit too! Otherwise the changes you made will be gone the next time you open up DSVEdit.
 
 ### How to edit entities
@@ -54,6 +60,8 @@ Right click on the entity you want to edit in the room and an entity editor wind
 The bottom half of the window will display documentation on the specific entity selected (if available). This explains exactly what this entity does, and how its variables affect this.
 
 You can add a new entity to a room by putting your mouse over the place you want the entity and pressing A.
+
+You can move entities around by left clicking and dragging them.
 
 ### Editing enemies, items, text, and maps
 
@@ -81,4 +89,4 @@ Finally go through each of the GFX files one by one and click Import GFX.
 
 ### Running from source
 
-If you want to run DSVEdit from source you must have Ruby 2.0.0 or higher and Qt 4.8.6 installed.
+If you want to run DSVEdit from source you must have Ruby 2.0.0 or higher and Qt 4.8.6 exactly installed.
