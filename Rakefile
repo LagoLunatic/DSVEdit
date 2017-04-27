@@ -63,7 +63,8 @@ task :build_releases do
     
     if program_name == "DSVania Editor"
       FileUtils.mkdir "../build/#{program_name}/docs"
-      FileUtils.cp_r ["./docs/formats", "./docs/lists"], "../build/#{program_name}/docs"
+      FileUtils.cp_r ["./docs/formats", "./docs/lists", "./docs/asm"], "../build/#{program_name}/docs"
+      FileUtils.cp_r ["./docs/PoR RAM Map.txt"], "../build/#{program_name}/docs"
       
       FileUtils.rm_f ["../build/#{program_name}/dsvedit", "../build/#{program_name}/dsvedit.rb"]
       FileUtils.cp_r ["./dsvedit", "dsvedit.rb"], "../build/#{program_name}"
