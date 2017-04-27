@@ -76,6 +76,8 @@ module FreeSpaceManager
   end
   
   def remove_free_space(file_path, offset_in_file, length)
+    return if @free_spaces.nil? # Only open in memory
+    
     new_free_spaces = [] # In case a free space is only partly deleted, we might need to split it into smaller free spaces.
     @free_spaces.delete_if do |free_space|
       next unless free_space[:path] == file_path
