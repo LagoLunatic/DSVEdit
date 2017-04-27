@@ -761,7 +761,7 @@ ARM_GLYPH_FORMAT = [
   # length: 32
   [2, "Item ID"],
   [2, "DMG multiplier"],
-  [4, "Code Pointer"],
+  [4, "Code"],
   [1, "Sprite"],
   [1, "?/Swings/Union"],
   [1, "Max at once"],
@@ -779,7 +779,7 @@ BACK_GLYPH_FORMAT = [
   # length: 28
   [2, "Item ID"],
   [2, "DMG multiplier"],
-  [4, "Code Pointer"],
+  [4, "Code"],
   [1, "Sprite"],
   [1, "Unknown 2"],
   [1, "Max at once"],
@@ -794,7 +794,7 @@ GLYPH_UNION_FORMAT = [
   # length: 28
   [2, "Item ID"],
   [2, "DMG multiplier"],
-  [4, "Code Pointer"],
+  [4, "Code"],
   [1, "Sprite"],
   [1, "?/Swings"],
   [1, "Max at once"],
