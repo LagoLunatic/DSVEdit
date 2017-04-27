@@ -80,6 +80,7 @@ task :build_releases do
     end
     
     FileUtils.rm_rf "../build/#{program_name}/cache"
+    FileUtils.rm_f "../build/#{program_name}/crashlog.txt"
     
     version = program_name == "DSVania Editor" ? DSVEDIT_VERSION : DSVRANDOM_VERSION
     
