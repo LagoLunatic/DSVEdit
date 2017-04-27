@@ -90,7 +90,7 @@ class GfxEditorDialog < Qt::Dialog
   
   def load_gfx
     if @ui.one_dimensional_mode.checked
-      chunky_image = @renderer.render_gfx_1_dimensional_mode(@gfx.file, @palettes[@palette_index])
+      chunky_image = @renderer.render_gfx_1_dimensional_mode(@gfx, @palettes[@palette_index])
     else
       chunky_image = @renderer.render_gfx_page(@gfx.file, @palettes[@palette_index], @gfx.canvas_width)
     end
@@ -121,7 +121,7 @@ class GfxEditorDialog < Qt::Dialog
     return if @gfx.nil? || @palettes.nil? || @palette_index.nil?
     
     if @ui.one_dimensional_mode.checked
-      chunky_image = @renderer.render_gfx_1_dimensional_mode(@gfx.file, @palettes[@palette_index])
+      chunky_image = @renderer.render_gfx_1_dimensional_mode(@gfx, @palettes[@palette_index])
     else
       chunky_image = @renderer.render_gfx_page(@gfx.file, @palettes[@palette_index], @gfx.canvas_width)
     end
