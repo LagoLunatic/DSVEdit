@@ -183,6 +183,11 @@ class Text
         
         command_number = byte - 0xE0
         command = decode_command(command_number, data_format_string)
+        
+        if (0x0B..0x1A).include?(command_number) # BUTTON
+          curr_is_command = false
+        end
+        
         if command == :multipart
           multipart = true
           ""
@@ -248,6 +253,11 @@ class Text
         
         command_number = halfword & 0x00FF
         command = decode_command(command_number, data_format_string)
+        
+        if (0x0B..0x1A).include?(command_number) # BUTTON
+          curr_is_command = false
+        end
+        
         if command == :multipart
           multipart = true
           ""
@@ -294,6 +304,11 @@ class Text
         
         command_number = byte
         command = decode_command(command_number, data_format_string)
+        
+        if (0x0B..0x1A).include?(command_number) # BUTTON
+          curr_is_command = false
+        end
+        
         if command == :multipart
           multipart = true
           ""
