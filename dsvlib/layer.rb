@@ -100,21 +100,11 @@ class Layer
       
       new_tiledata_ram_pointer = fs.free_old_space_and_find_new_free_space(layer_tiledata_ram_start_offset, old_tiledata_length, new_tiledata_length, room.overlay_id)
       
-      puts "TILEDATA MORE"
-      puts "ORIG TILEDATA LIST: %08X" % layer_tiledata_ram_start_offset
-      puts "ORIG LENGTH: %08X" % old_tiledata_length
-      puts "NEW TILEDATA LIST: %08X" % new_tiledata_ram_pointer
-      puts "NEW LENGTH: %08X" % new_tiledata_length
-      
       fs.write(layer_metadata_ram_pointer+12, [new_tiledata_ram_pointer].pack("V"))
       @layer_tiledata_ram_start_offset = new_tiledata_ram_pointer
     elsif (width*height) < (old_width*old_height)
       old_tiledata_length = old_width * old_height * SIZE_OF_A_SCREEN_IN_BYTES
       new_tiledata_length = width * height * SIZE_OF_A_SCREEN_IN_BYTES
-      
-      puts "TILEDATA LESS"
-      puts "ORIG LENGTH: %08X" % old_tiledata_length
-      puts "NEW LENGTH: %08X" % new_tiledata_length
       
       fs.free_unused_space(layer_tiledata_ram_start_offset + new_tiledata_length, old_tiledata_length - new_tiledata_length)
     end

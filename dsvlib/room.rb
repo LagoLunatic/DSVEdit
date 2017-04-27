@@ -207,21 +207,11 @@ class Room
       
       @original_number_of_entities = entities.length
       
-      puts "ENTS MORE"
-      puts "ORIG ENT LIST: %08X" % entity_list_ram_pointer
-      puts "ORIG LENGTH: %08X" % original_length
-      puts "NEW ENT LIST: %08X" % new_entity_list_pointer
-      puts "NEW LENGTH: %08X" % length_needed
-      
       @entity_list_ram_pointer = new_entity_list_pointer
       fs.write(room_metadata_ram_pointer+5*4, [entity_list_ram_pointer].pack("V"))
     elsif entities.length < @original_number_of_entities
       original_length = (@original_number_of_entities+1)*12
       length_needed = (entities.length+1)*12
-      
-      puts "ENTS LESS"
-      puts "ORIG LENGTH: %08X" % original_length
-      puts "NEW LENGTH: %08X" % length_needed
       
       fs.free_unused_space(entity_list_ram_pointer + length_needed, original_length - length_needed)
       
@@ -281,22 +271,11 @@ class Room
       
       @original_number_of_doors = doors.length
       
-      puts "DOORS MORE"
-      puts "ORIG DOOR LIST: %08X" % door_list_ram_pointer
-      puts "ORIG LENGTH: %08X" % old_length
-      puts "NEW DOOR LIST: %08X" % new_door_list_pointer
-      puts "NEW LENGTH: %08X" % new_length
-      
       @door_list_ram_pointer = new_door_list_pointer
       fs.write(room_metadata_ram_pointer+6*4, [door_list_ram_pointer].pack("V"))
     elsif doors.length < @original_number_of_doors
       old_length = @original_number_of_doors*16
       new_length = doors.length*16
-      
-      puts "DOORS LESS"
-      puts "DOOR LIST: %08X" % door_list_ram_pointer
-      puts "ORIG LENGTH: %08X" % old_length
-      puts "NEW LENGTH: %08X" % new_length
       
       fs.free_unused_space(door_list_ram_pointer + new_length, old_length - new_length)
       
