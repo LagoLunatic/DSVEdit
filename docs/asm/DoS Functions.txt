@@ -4,6 +4,8 @@
 02008690 LoadOverlay
 02010BC4 LoadSave
 02012B10 GetEntitySlot
+  ; r0 - Minimum entity index to check
+  ; r1 - Maximum entity index to check
 
 021C3A00 EnemyCheckDrops
 0221029C GetNumOwnedSoul

@@ -3,6 +3,10 @@
 
 02007970 LoadOverlay
 
+02012D20 GetEntitySlot
+  ; r0 - Minimum entity index to check
+  ; r1 - Maximum entity index to check
+
 021FEE34 PlayerGetStateAnim
   ; r0 - Pointer to player entity
   ; r1 - State index

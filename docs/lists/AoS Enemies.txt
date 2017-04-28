@@ -1,4 +1,120 @@
+Enemies:
+00 Bat
+01 Zombie
+02 Skeleton
+03 Merman
+04 Axe Armor
+05 Skull Archer
 06 Peeping Eye
   Var A:
     0 Normal.
     1 In the background, cannot be hit the player or be hit.
+07 Killer Fish
+08 Bone Pillar
+09 Blue Crow
+0A Buer
+0B White Dragon
+0C Zombie Soldier
+0D Skeleton Knight
+0E Ghost
+0F Siren
+10 Tiny Devil
+11 Durga
+12 Rock Armor
+13 Giant Ghost
+14 Winged Skeleton
+15 Minotaur
+16 Student Witch
+17 Arachne
+18 Fleaman
+19 Evil Butcher
+1A Quezlcoatl
+1B Ectoplasm
+1C Catoblepas
+1D Ghost Dancer
+1E Waiter Skeleton
+1F Killer Doll
+20 Zombie Officer
+21 Creaking Skull
+22 Wooden Golem
+23 Tsuchinoko 
+24 Persephone
+25 Lilith
+26 Nemesis
+27 Kyoma Demon
+28 Chronomage
+29 Valkyrie
+2A Witch
+2B Curly
+2C Altair
+2D Red Crow
+2E Cockatrice
+2F Dead Warrior
+30 Devil
+31 Imp
+32 Werewolf
+33 Gorgon
+34 Disc Armor
+  Var A:
+    0
+    2
+35 Golem
+36 Manticore
+37 Gremlin
+38 Harpy
+39 Medusa Head
+3A Bomber Armor
+3B Lightning Doll
+3C Great Armor
+3D Une
+3E Giant Worm
+3F Needles
+40 Man-Eater
+41 Fish Head
+42 Nightmare
+43 Triton
+44 Slime
+45 Big Golem
+46 Dryad
+47 Poison Worm
+48 Arc Demon
+49 Cagnazzo
+4A Ripper
+4B Werejaguar
+4C Ukoback
+4D Alura Une
+4E Biphron
+4F Mandragora
+50 Flesh Golem
+51 Sky Fish
+52 Dead Crusader
+53 Kicker Skeleton
+54 Weretiger
+55 Killer Mantle
+56 Mudman
+57 Gargoyle
+58 Red Minotaur
+59 Beam Skeleton
+5A Alastor
+5B Skull Millione
+5C Giant Skeleton
+5D Gladiator
+5E Bael
+5F Succubus
+60 Mimic
+61 Stolas
+62 Erinys
+63 Lubicant
+64 Basilisk
+65 Iron Golem
+66 Demon Lord
+67 Final Guard
+68 Flame Demon
+69 Shadow Knight
+6A Headhunter
+6B Death
+6C Legion
+6D Balore
+6E Belmont
+6F Graham
+70 Chaos
