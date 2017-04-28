@@ -277,11 +277,22 @@ class Game
   end
   
   def get_map(area_index, sector_index)
-    case GAME
-    when "dos", "aos"
-      DoSMap.new(area_index, sector_index, fs)
+    if GAME == "dos" && [10, 11].include?(sector_index)
+      @abyss_map ||= DoSMap.new(area_index, sector_index, fs)
+    elsif GAME == "dos" || GAME == "aos"
+      @castle_map ||= DoSMap.new(area_index, sector_index, fs)
     else
-      Map.new(area_index, sector_index, fs)
+      @maps ||= begin
+        maps = []
+        
+        AREA_INDEX_TO_OVERLAY_INDEX.keys.each do |area_index|
+          maps << Map.new(area_index, sector_index, fs)
+        end
+        
+        maps
+      end
+      
+      @maps[area_index]
     end
   end
   
