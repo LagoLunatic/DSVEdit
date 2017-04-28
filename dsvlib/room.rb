@@ -22,7 +22,12 @@ class Room
               :room_index,
               :fs,
               :game
-  attr_accessor :room_xpos_on_map,
+  attr_accessor :layer_list_ram_pointer,
+                :gfx_list_pointer,
+                :palette_wrapper_pointer,
+                :entity_list_ram_pointer,
+                :door_list_ram_pointer,
+                :room_xpos_on_map,
                 :room_ypos_on_map,
                 :entities,
                 :doors
@@ -185,7 +190,12 @@ class Room
   def write_to_rom
     sector.load_necessary_overlay()
     
-    raise NotImplementedError
+    room_data = [layer_list_ram_pointer, gfx_list_pointer, palette_wrapper_pointer, entity_list_ram_pointer, door_list_ram_pointer].pack("V*")
+    fs.write(room_metadata_ram_pointer + 8, room_data)
+    
+    write_extra_data_to_rom()
+    
+    read_from_rom()
   end
   
   def write_entities_to_rom

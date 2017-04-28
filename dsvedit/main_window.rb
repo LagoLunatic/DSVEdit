@@ -15,6 +15,7 @@ require_relative 'icon_chooser_dialog'
 require_relative 'map_editor_dialog'
 require_relative 'entity_editor_dialog'
 require_relative 'skeleton_editor_dialog'
+require_relative 'room_editor_dialog'
 require_relative 'layers_editor_dialog'
 require_relative 'item_pool_editor_dialog'
 require_relative 'gfx_editor_dialog'
@@ -32,6 +33,7 @@ class DSVEdit < Qt::MainWindow
   slots "extract_rom_dialog()"
   slots "open_folder_dialog()"
   slots "save_files()"
+  slots "edit_room_data()"
   slots "edit_layers()"
   slots "open_entity_editor()"
   slots "add_new_layer()"
@@ -94,6 +96,7 @@ class DSVEdit < Qt::MainWindow
     connect(@ui.actionOpen_Folder, SIGNAL("activated()"), self, SLOT("open_folder_dialog()"))
     connect(@ui.actionExtract_ROM, SIGNAL("activated()"), self, SLOT("extract_rom_dialog()"))
     connect(@ui.actionSave, SIGNAL("activated()"), self, SLOT("save_files()"))
+    connect(@ui.actionEdit_Room, SIGNAL("activated()"), self, SLOT("edit_room_data()"))
     connect(@ui.actionEdit_Layers, SIGNAL("activated()"), self, SLOT("edit_layers()"))
     connect(@ui.actionEdit_Entities, SIGNAL("activated()"), self, SLOT("open_entity_editor()"))
     connect(@ui.actionAdd_New_Layer, SIGNAL("activated()"), self, SLOT("add_new_layer()"))
@@ -154,6 +157,7 @@ class DSVEdit < Qt::MainWindow
   
   def disable_menu_actions
     @ui.actionSave.setEnabled(false);
+    @ui.actionEdit_Room.setEnabled(false);
     @ui.actionEdit_Layers.setEnabled(false);
     @ui.actionEdit_Entities.setEnabled(false);
     @ui.actionAdd_New_Layer.setEnabled(false);
@@ -183,6 +187,7 @@ class DSVEdit < Qt::MainWindow
   
   def enable_menu_actions
     @ui.actionSave.setEnabled(true);
+    @ui.actionEdit_Room.setEnabled(true);
     @ui.actionEdit_Layers.setEnabled(true);
     @ui.actionEdit_Entities.setEnabled(true);
     @ui.actionAdd_New_Layer.setEnabled(true);
@@ -211,6 +216,7 @@ class DSVEdit < Qt::MainWindow
   end
   
   def close_open_dialogs
+    @edit_room_data_dialog.close() if @edit_room_data_dialog
     @edit_layers_dialog.close() if @edit_layers_dialog
     @enemy_dialog.close() if @enemy_dialog
     @text_editor.close() if @text_editor
@@ -532,6 +538,11 @@ class DSVEdit < Qt::MainWindow
       "Collision tileset loading failed",
       "Failed to load collision tileset.\n#{e.message}\n\n#{e.backtrace.join("\n")}"
     )
+  end
+  
+  def edit_room_data
+    return if @edit_room_data_dialog && @edit_room_data_dialog.visible?
+    @edit_room_data_dialog = RoomEditorDialog.new(self, @room, @renderer)
   end
   
   def edit_layers

@@ -231,6 +231,7 @@
     <property name="title">
      <string>Edit</string>
     </property>
+    <addaction name="actionEdit_Room"/>
     <addaction name="actionEdit_Layers"/>
     <addaction name="actionEdit_Entities"/>
     <addaction name="actionAdd_New_Layer"/>
@@ -478,6 +479,11 @@
   <action name="actionWeapon_Synth_Editor">
    <property name="text">
     <string>Weapon Synth Editor</string>
+   </property>
+  </action>
+  <action name="actionEdit_Room">
+   <property name="text">
+    <string>Edit Room</string>
    </property>
   </action>
  </widget>
