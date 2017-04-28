@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>640</width>
-    <height>480</height>
+    <height>640</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -70,6 +70,23 @@
       <widget class="QLineEdit" name="door_list"/>
      </item>
     </layout>
+   </item>
+   <item>
+    <widget class="QLabel" name="label">
+     <property name="text">
+      <string>Position on map:</string>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QGraphicsView" name="map_graphics_view">
+     <property name="minimumSize">
+      <size>
+       <width>520</width>
+       <height>390</height>
+      </size>
+     </property>
+    </widget>
    </item>
    <item>
     <widget class="QDialogButtonBox" name="buttonBox">
