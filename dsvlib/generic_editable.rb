@@ -87,6 +87,9 @@ class GenericEditable
         when "Ability Souls"
           @name = Text.new(TEXT_REGIONS["Ability Soul Names"].begin + index, fs).decoded_string
           @description = Text.new(TEXT_REGIONS["Ability Soul Descriptions"].begin + index, fs).decoded_string
+        when "Julius Skills"
+          @name = ["Cross", "Holy Water", "Axe", "Grand Cross"][index]
+          @description = ""
         end
       when "por"
         @name = Text.new(TEXT_REGIONS["Skill Names"].begin + index, fs).decoded_string
