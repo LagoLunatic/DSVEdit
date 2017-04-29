@@ -282,6 +282,7 @@ YELLOW_SOUL_FORMAT = [
   [2, "Unknown 3"],
   [2, "Unknown 4"],
 ]
+JULIUS_SKILL_FORMAT = RED_SOUL_FORMAT
 ITEM_TYPES = [
   {
     name: "Consumables",
@@ -321,6 +322,13 @@ ITEM_TYPES = [
     count: 0x23,
     kind: :skill,
     format: YELLOW_SOUL_FORMAT # length: 12
+  },
+  {
+    name: "Julius Skills",
+    list_pointer: 0x080E1ED8,
+    count: 0x4,
+    kind: :skill,
+    format: JULIUS_SKILL_FORMAT # length: 16
   },
 ]
 ITEM_BITFIELD_ATTRIBUTES = {
