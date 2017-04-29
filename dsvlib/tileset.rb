@@ -36,7 +36,7 @@ class Tileset
   
   def read_from_rom_gba
     @tiles = []
-    @tiles << tile_class.new("\0\0") # First entry on every tileset is always blank.
+    @tiles << tile_class.new("\0\0"*16) # First entry on every tileset is always blank.
     
     tileset_data = fs.decompress(tileset_ram_pointer)
     
@@ -117,18 +117,22 @@ class GBATilesetTile
 end
 
 class MiniTile
-  attr_reader :index_on_tile_page,
-              :tile_page,
-              :horizontal_flip,
-              :vertical_flip,
-              :palette
+  attr_accessor :index_on_tile_page,
+                :tile_page,
+                :horizontal_flip,
+                :vertical_flip,
+                :palette_index
               
   def initialize(minitile_data)
     @index_on_tile_page = (minitile_data & 0b00000000_11111111)
     @tile_page          = (minitile_data & 0b00000011_00000000) >> 8
     @horizontal_flip    = (minitile_data & 0b00000100_00000000) > 0
     @vertical_flip      = (minitile_data & 0b00001000_00000000) > 0
-    @palette            = (minitile_data & 0b11110000_00000000) >> 12
+    @palette_index      = (minitile_data & 0b11110000_00000000) >> 12
+  end
+  
+  def is_blank
+    false
   end
 end
 

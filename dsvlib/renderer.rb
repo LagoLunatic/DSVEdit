@@ -219,7 +219,7 @@ class Renderer
           rendered_minitile = ChunkyPNG::Image.new(8, 8, ChunkyPNG::Color.rgba(255, 0, 0, 255))
         else
           gfx_page = gfx_pages[minitile.tile_page]
-          palette = palettes[minitile.palette]
+          palette = palettes[minitile.palette_index]
           
           rendered_minitile = render_1_dimensional_minitile(gfx_page, palette, minitile.index_on_tile_page)
         end
