@@ -50,7 +50,7 @@ After editing the game you will need to build a modified ROM in order to actuall
 After it's finished building the ROM will be placed in the same folder as all the game's files, and will have a name like "built_rom_dos.nds".
 
 If you press F6 instead of F5, DSVEdit will launch an emulator with the modified ROM as soon as it's done building. You can specify what emulator to use in the settings.
-If you press F7, it will launch the emulator, immediately load your first save file, and place you into the room you had open in DSVEdit. This allows you to quickly test a room.
+If you hover your mouse over a certain spot and press F7, it will launch the emulator, immediately load your first save file, and place you into the room you had open in DSVEdit, at the exact location of your mouse cursor. This allows you to quickly test a room.
 
 If you want the changes you made to be saved to the filesystem, don't forget to press Ctrl+S in DSVEdit too! Otherwise the changes you made will be gone the next time you open up DSVEdit.
 
