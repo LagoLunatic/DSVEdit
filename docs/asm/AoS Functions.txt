@@ -3,6 +3,20 @@
   ; r0 - Source pointer to the LZ77-compressed data to be decompressed
   ; r1 - Destination pointer where the decompressed data should be stored
 
+08000DA0 GetEntitySlot
+  ; r0 - Minimum entity index to check
+  ; r1 - Maximum entity index to check
+  ; r2 - ? Create code pointer?
+
+08000A90 Rand
+
+0802D284 GetRedSoulPointer
+  ; r0 - Index of the red soul
+  ; If in Julius mode, will return the Julius skill of that index instead of the red soul.
+
+08022028 AddMP
+  ; r0 - MP to add
+
 08012744 LoadSave
   ; r0 - Save file to load. 0 is the first file, 2 is the second file, 4 is the third file.
 
@@ -365,6 +379,7 @@
 0802A8D4 SkillGhostUse
 08026368 SkillSirenUse
 08029FB0 SkillTinyDevilUse
+08029C68 SkillTinyDevilUpdate
 0802B808 SkillDurgaUse
 08025784 SkillRockArmorUse
 08025360 SkillStudentWitchUse
@@ -397,6 +412,7 @@
 0802B4C8 SkillGladiatorUse
 0802BF68 SkillDemonLordUse
 080293C4 SkillFlameDemonUse
+0802BD1C SkillFlameDemonUpdate
 080277B0 SkillLightningDollUse
 08024CBC SkillValkyrieUse
 08025784 SkillBomberArmorUse
