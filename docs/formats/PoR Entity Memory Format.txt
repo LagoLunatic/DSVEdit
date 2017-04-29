@@ -58,6 +58,7 @@ Memory used for entities in PoR is 020FC500 - 0211173F. Each entity is 0x160 byt
 0F4,4: For players, this is a pointer to their state->anims mapping.
 0FC,2: 
 100,4: For players, this is a bitfield of their current state booleans. Seems very similar to 0D0, but not exactly the same.
+118,2: For enemies, current HP.
 11A,1: For skills, this is the ID of the skill.
 11E,1: For skills, this is the skill multiplier. (1 or 2.)
   For spells it varies depending on if it's half charged or fully charged.

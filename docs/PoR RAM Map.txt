@@ -224,8 +224,13 @@
 02111A6C - Currently owned skills.
 
 02111BA0 - Miscellaneous flags.
-  0x1 - Drawbridge is partially down.
-  0x2 - Drawbridge is fully down.
+  Bit indexes:
+  00 - Drawbridge is partially down.
+  01 - Drawbridge is fully down.
+  02 - Train from 13th Street stopped.
+  0C - Flame wall from Tower of Death disabled.
+  1A - 13th Street area name seen.
+  3A - Breakable wall 04 from 13th Street physically destroyed.
   TODO
   Includes what breakable walls have been destroyed.
 02111BB0 - Event flags.
