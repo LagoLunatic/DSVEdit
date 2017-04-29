@@ -1,7 +1,7 @@
 
 class Bitfield
-  attr_reader :value,
-              :names
+  attr_accessor :value
+  attr_reader :names
   
   def initialize(value, names)
     @value = value
