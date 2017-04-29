@@ -304,22 +304,22 @@ ITEM_TYPES = [
   },
   {
     name: "Red Souls",
-    list_pointer: 0x080E15A8,
-    count: 0x37,
+    list_pointer: 0x080E1598,
+    count: 0x38,
     kind: :skill,
     format: RED_SOUL_FORMAT # length: 16
   },
   {
     name: "Blue Souls",
-    list_pointer: 0x080E1938,
-    count: 0x18,
+    list_pointer: 0x080E192C,
+    count: 0x19,
     kind: :skill,
     format: BLUE_SOUL_FORMAT # length: 12
   },
   {
     name: "Yellow Souls",
-    list_pointer: 0x080E1B14,
-    count: 0x23,
+    list_pointer: 0x080E1B08,
+    count: 0x24,
     kind: :skill,
     format: YELLOW_SOUL_FORMAT # length: 12
   },

@@ -74,22 +74,28 @@ class GenericEditable
         @name = Text.new(TEXT_REGIONS["Soul Names"].begin + index, fs).decoded_string
         @description = Text.new(TEXT_REGIONS["Soul Descriptions"].begin + index, fs).decoded_string
       when "aos"
-        case @item_type_name
-        when "Red Souls"
-          @name = Text.new(TEXT_REGIONS["Red Soul Names"].begin + index, fs).decoded_string
-          @description = Text.new(TEXT_REGIONS["Red Soul Descriptions"].begin + index, fs).decoded_string
-        when "Blue Souls"
-          @name = Text.new(TEXT_REGIONS["Blue Soul Names"].begin + index, fs).decoded_string
-          @description = Text.new(TEXT_REGIONS["Blue Soul Descriptions"].begin + index, fs).decoded_string
-        when "Yellow Souls"
-          @name = Text.new(TEXT_REGIONS["Yellow Soul Names"].begin + index, fs).decoded_string
-          @description = Text.new(TEXT_REGIONS["Yellow Soul Descriptions"].begin + index, fs).decoded_string
-        when "Ability Souls"
-          @name = Text.new(TEXT_REGIONS["Ability Soul Names"].begin + index, fs).decoded_string
-          @description = Text.new(TEXT_REGIONS["Ability Soul Descriptions"].begin + index, fs).decoded_string
-        when "Julius Skills"
+        if @item_type_name == "Julius Skills"
           @name = ["Cross", "Holy Water", "Axe", "Grand Cross"][index]
           @description = ""
+        elsif index == 0
+          @name = "---"
+          @description = ""
+        else
+          zero_index = index - 1
+          case @item_type_name
+          when "Red Souls"
+            @name = Text.new(TEXT_REGIONS["Red Soul Names"].begin + zero_index, fs).decoded_string
+            @description = Text.new(TEXT_REGIONS["Red Soul Descriptions"].begin + zero_index, fs).decoded_string
+          when "Blue Souls"
+            @name = Text.new(TEXT_REGIONS["Blue Soul Names"].begin + zero_index, fs).decoded_string
+            @description = Text.new(TEXT_REGIONS["Blue Soul Descriptions"].begin + zero_index, fs).decoded_string
+          when "Yellow Souls"
+            @name = Text.new(TEXT_REGIONS["Yellow Soul Names"].begin + zero_index, fs).decoded_string
+            @description = Text.new(TEXT_REGIONS["Yellow Soul Descriptions"].begin + zero_index, fs).decoded_string
+          when "Ability Souls"
+            @name = Text.new(TEXT_REGIONS["Ability Soul Names"].begin + zero_index, fs).decoded_string
+            @description = Text.new(TEXT_REGIONS["Ability Soul Descriptions"].begin + zero_index, fs).decoded_string
+          end
         end
       when "por"
         @name = Text.new(TEXT_REGIONS["Skill Names"].begin + index, fs).decoded_string
