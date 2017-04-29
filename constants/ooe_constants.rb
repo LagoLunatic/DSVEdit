@@ -257,9 +257,10 @@ PICKUP_SUBTYPES_FOR_ITEMS = (0xFF..0xFF)
 PICKUP_SUBTYPES_FOR_SKILLS = (0x02..0x04)
 
 ENEMY_IDS = (0x00..0x78)
-COMMON_ENEMY_IDS = (0x00..0x6A).to_a
-BOSS_IDS = (0x6B..0x78).to_a
-RANDOMIZABLE_BOSS_IDS = BOSS_IDS - [0x76] # remove eligor, he needs his own huge room
+COMMON_ENEMY_IDS = (0x00..0x6A)
+BOSS_IDS = (0x6B..0x78)
+FINAL_BOSS_IDS = (0x78..0x78)
+RANDOMIZABLE_BOSS_IDS = BOSS_IDS.to_a - [0x76] # remove eligor, he needs his own huge room
 
 BOSS_DOOR_SUBTYPE = 0x4B
 BOSS_ID_TO_BOSS_DOOR_VAR_B = {
