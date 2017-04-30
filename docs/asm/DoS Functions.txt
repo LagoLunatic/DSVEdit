@@ -37,6 +37,15 @@
 021D9440 ActorTurn
 021D95C0 ActorTeleport
 
+021C31E8 FacePlayer
+  ; Makes an enemy turn towards the player.
+  ; r0 - Enemy entity pointer
+
+021C4CFC CheckContactDamagePlayer
+  ; Makes an enemy damage the player if touching.
+  ; r0 - Enemy entity pointer
+  ; r1 - 1?
+
 02024D74 MapTileSetExplored
 
 ; Enemy-specific code

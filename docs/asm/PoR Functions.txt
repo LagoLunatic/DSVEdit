@@ -14,6 +14,17 @@
 
 02214330 SubweaponInitialize
 
+021FC77C PlayerFullRecover
+  ; Fully restores player HP and MP.
+
+021E3A94 UseConsumable
+  ; r0 - Index of the consumable
+  ; Calls func 021E3AA8 with r1=0 and r2=1.
+
+021E46C4 GetItemPointer
+  ; r0 - Item type (2 is consumable, etc)
+  ; r1 - Index of the item
+
 02043DF0 ShopGetItemPrice
   ; r0 - Global ID of the item (can be a skill)
   ; r1 - 

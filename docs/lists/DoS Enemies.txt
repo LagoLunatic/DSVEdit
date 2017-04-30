@@ -31,6 +31,10 @@ Enemies:
     3 On right wall.
 10 Une
 11 Skeleton Ape
+  Var A:
+    0 Faces whichever direction the player was in when first entering the room.
+    1 Always faces left.
+    2 Always faces right.
 12 Manticore
   Requires enemy overlay 27.
 13 Mollusca
