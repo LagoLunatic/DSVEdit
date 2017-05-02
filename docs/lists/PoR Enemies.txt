@@ -65,6 +65,8 @@ Enemies:
 1F Bone Pillar
   Var A: Number of them stacked on top of each other.
 20 Fleaman
+  Var A: TODO
+  Var B: TODO
 21 Great Armor
   Requires enemy overlay 44.
 22 Catoblepas
@@ -91,6 +93,9 @@ Enemies:
 29 Flying Skull
 2A Sand Worm
   Requires enemy overlay 69.
+  Var A:
+    0 Reappears even after its been killed once.
+    1 Stays dead after the first time you kill it. Uses miscellaneous flag index 21.
 2B White Dragon
   Var A:
     0 Attached to left wall.
@@ -159,6 +164,10 @@ Enemies:
 47 Maneating Plant
 48 Skeleton Blaze
 49 Razor Bat
+  Var A:
+    If 0, it's a single Razor Bat.
+    Otherwise it's a spawner.
+      Var A is the delay in frames between each Razor Bat spawning.
 4A Wyvern
 4B Malachi
 4C Spin Devil
@@ -223,6 +232,9 @@ Enemies:
 71 Ripper
 72 Poison Worm
   Requires enemy overlay 69.
+  Var A:
+    0 Reappears even after its been killed once.
+    1 Stays dead after the first time you kill it. Uses miscellaneous flag index 22.
 73 Ghost Dancer
   Var A: Which palette to use.
     0 Purple and white.

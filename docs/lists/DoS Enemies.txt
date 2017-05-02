@@ -118,6 +118,7 @@ Enemies:
     1 Spawns yellow Medusa Heads that can petrify the player.
   If var A is 0, it's not a spawner, instead it's just a single blue Medusa Head.
 41 Ukoback
+  var a/b: speed or something? TODO
 42 Killer Fish
 43 Mimic
 44 Dead Pirate

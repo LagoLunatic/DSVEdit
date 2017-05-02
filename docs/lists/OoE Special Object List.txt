@@ -200,7 +200,7 @@ Special Objects:
     00 Cat returned to its home in Wygol village.
     01 Jumping up trying to free its master.
     02 Crouched/standing, meowing. Can be picked up.
-40 The falling block puzzle from the Monastery.
+40 The falling block puzzle from the Monastery that spawns the Cubus Glyph.
   Requires sector overlay 78.
 41 Object that floats (supposed to be in the water). Var A changes what it is:
   00 Log platform
@@ -256,7 +256,7 @@ Special Objects:
     0D Death
     0E ??? TODO
     0F Dracula
-4C Electricity hazard from Minera Prison Island.
+4C Electricity hazard that spawns the Vol Fulgur glyph from Minera Prison Island.
   Requires sector overlay 52.
 4D Wooden door in Ecclesia. Unlike a regular wooden door (2E), this one will be locked at the beginning of the game.
   Requires sector overlay 42.
@@ -268,9 +268,20 @@ Special Objects:
   Requires sector overlay 76.
 51 Cerberus statue from Forsaken Cloister.
   Requires sector overlay 77.
-52 Fire hazard from Training Chamber.
-  Var A: ???
-  Var B: ???
+52 Fire hazard.
+  Var A:
+    0 Points up
+    1 Points right
+    2 Points down
+    3 Points left
+  Var B:
+    Low byte: Delay in frames between each time it erupts.
+    High byte:
+      Affects delay of the initial eruption when you first enter the room.
+      The initial delay is 0x1E + low byte - high byte.
+      If high byte is greater than or equal to low byte, the delay is just 0x1E.
+  If in Dracula's Castle and picked-up-item-flag index 24 (Vol Ignis puzzle) is set, this object will not appear.
+  If this object's X and Y are both zero, this will instead spawn the Vol Ignis glyph and give the room a red glow effect.
 53 Generator puzzle from Mechanical Tower.
   Requires sector overlay 72.
 54 Makes the room dark and spawns Vol Umbra glyph. Absorbing the glyph gets rid of the darkness. From Mystery Manor.

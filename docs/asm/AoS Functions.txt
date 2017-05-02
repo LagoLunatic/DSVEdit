@@ -13,6 +13,9 @@
 0802D284 GetRedSoulPointer
   ; r0 - Index of the red soul
   ; If in Julius mode, will return the Julius skill of that index instead of the red soul.
+0802D244 GetLastUsedRedSoulPointer
+  ; 020131BF - Index of the last used red soul
+  ; If in Julius mode, will return the Julius skill of that index instead of the red soul.
 
 08022028 AddMP
   ; r0 - MP to add

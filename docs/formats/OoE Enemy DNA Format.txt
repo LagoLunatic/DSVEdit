@@ -22,7 +22,7 @@ Byte 19: Blood color.
   8 Black
   Etc.
 Byte 20: ??? Unused?
-Bytes 21-22: Glyph
+Bytes 21-22: Glyph drop. Global ID of the glyph + 1.
   The enemy can only drop a glyph on death if its AI is coded to drop a glyph.
 Byte 23: Chance to drop glyph
 Byte 24: Attack.

@@ -230,6 +230,7 @@
   02 - Train from 13th Street stopped.
   0C - Flame wall from Tower of Death disabled.
   1A - 13th Street area name seen.
+  22 - Sand Worm killed.
   3A - Breakable wall 04 from 13th Street physically destroyed.
   TODO
   Includes what breakable walls have been destroyed.
