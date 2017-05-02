@@ -259,7 +259,7 @@ RED_SOUL_FORMAT = [
   # length: 16
   [4, "Code"],
   [2, "Use anim"],
-  [2, "Mana"],
+  [2, "Mana cost"],
   [1, "Unknown 2"],
   [1, "Unknown 3"],
   [2, "DMG multiplier"],
@@ -269,7 +269,7 @@ RED_SOUL_FORMAT = [
 BLUE_SOUL_FORMAT = [
   # length: 12
   [4, "Code"],
-  [1, "Mana"],
+  [1, "Mana cost"],
   [1, "Hold/Press R"],
   [2, "Unknown 2"],
   [2, "Unknown 3"],
