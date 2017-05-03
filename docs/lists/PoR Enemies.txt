@@ -50,6 +50,8 @@ Enemies:
     2 Vacuum, starts moving immediately.
 17 Mimic
 18 Larva
+  Var A: TODO
+  Var B: TODO
 19 Lerajie
 1A Spittle Bone
   Var A: Which wall to attach to when first initialized.

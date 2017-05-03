@@ -26,7 +26,7 @@ Enemies:
 08 Axe Knight
   Var B:
     0 Normal.
-    1 Starts out in pieces, reforms as soon as you enter the room.
+    1 Starts out in pieces, reforms when the player gets near.
     2 Red colored.
     3 Red colored, starts out in pieces.
     4+ Glitchy animations, such as throwing axe knight corpses in place of axes.

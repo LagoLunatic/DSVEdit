@@ -17,9 +17,38 @@
 0220F81C CheckAbilityEnabled
   ; r0 - Index of the ability soul to check. 0-6.
 
+020059F0 BaloreBlockCreateRect
+  ; These arguments are all in pixels, not blocks.
+  ; r0 - X pos
+  ; r1 - Y pos
+  ; r2 - Width
+  ; r3 - Height
+02005AAC BaloreBlockCreate
+  ; r0 - X pos
+  ; r1 - Y pos
+02005A68 BaloreBlockDestroy
+  ; r0 - X pos
+  ; r1 - Y pos
+
 02006FB4 GetRoomPtr
   ; r0 - Sector index
   ; r1 - Room index.
+
+021E7870 GiveItem
+  ; r0 - Item type (2 is consumables, etc)
+  ; r1 - Item index
+021E7AB4 GetItemGlobalID+1
+  ; r0 - Item type
+  ; r1 - Item index
+
+0202DE80 ShowItemName?
+  ; r0 - Item global ID+1
+  ; r1 - ?
+0202DEC8 ShowItemName2?
+  ; r0 - ?
+  ; r1 - Item global ID
+  ; r2 - ?
+  ; r3 - ?
 
 0201C1B8 LoadSprite
   ; r0 - Entity ptr
