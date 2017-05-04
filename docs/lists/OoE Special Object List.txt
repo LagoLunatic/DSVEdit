@@ -282,7 +282,7 @@ Special Objects:
       If high byte is greater than or equal to low byte, the delay is just 0x1E.
   If in Dracula's Castle and picked-up-item-flag index 24 (Vol Ignis puzzle) is set, this object will not appear.
   If this object's X and Y are both zero, this will instead spawn the Vol Ignis glyph and give the room a red glow effect.
-53 Generator puzzle from Mechanical Tower.
+53 Generator puzzle from Mechanical Tower that spawns the Morbus glyph.
   Requires sector overlay 72.
 54 Makes the room dark and spawns Vol Umbra glyph. Absorbing the glyph gets rid of the darkness. From Mystery Manor.
   Requires sector overlay 60.

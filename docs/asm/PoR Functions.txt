@@ -7,6 +7,16 @@
   ; r0 - Minimum entity index to check
   ; r1 - Maximum entity index to check
 
+021E43E4 GiveItem
+  ; r0 - Item type (2 is consumables, etc)
+  ; r1 - Item index
+021E54B4 GiveItemShowName
+  ; r0 - ?
+  ; r1 - Item type (2 is consumables, etc)
+  ; r2 - Item index
+  ; r3 - 32?
+  ; [r13,0] - ?
+
 021FEE34 PlayerGetStateAnim
   ; r0 - Pointer to player entity
   ; r1 - State index
