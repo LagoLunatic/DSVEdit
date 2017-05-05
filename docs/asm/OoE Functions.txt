@@ -35,18 +35,33 @@
   ; r0 - Global ID+1 of the item
 
 0206DDEC GlyphSpawn
-  ; r0 - x pos
-  ; r1 - y pos
-  ; r2 - z index?
+  ; r0 - x pos in subpixels
+  ; r1 - y pos in subpixels
+  ; r2 - z-index. (e.g. 5680.)
   ; r3 - Global ID+1 of the glyph
-0206DEE0 GlyphSpawn2
-  ; ???
-  ; r0 - x pos
-  ; r1 - y pos
-0206DBA4 GlyphSpawn3
-  ; ???
-  ; [r13,0] - 0 for a glyph that lasts 0x200 frames, -1 for a glyph that lasts forever.
-  ; [r13,4] - 0 to spawn glyph instantly, 1 to fail forming a glyph, 3 to succeed forming a glyph.
+  ; [r13,0] - Number of frames for the glyph to stay on screen.
+  ;   0 - Uses the default of 0x200 frames instead.
+  ;   -1 - Lasts forever.
+  ; [r13,4] - How to create the glyph.
+  ;   0 - Spawn glyph instantly.
+  ;   1 - Fail forming a glyph.
+  ;   3 - Succeed forming a glyph.
+  ; [r13,8] - ?
+0206DBA4 GlyphSpawnNoLoad
+  ; Spawns a glyph, but doesn't load the assets for the glyph's icon first.
+  ; Same arguments as GlyphSpawn
+
+0206DF34 EnemyCheckGlyphDrop
+  ; Checks if the random chance to drop a glyph is met, and spawns the glyph if it is.
+  ; r0 - x pos in subpixels
+  ; r1 - y pos in subpixels
+  ; r2 - z-index. (e.g. 5680.)
+  ; r3 - Enemy ID.
+  ; [r13,0] - ?
+0206DEE0 EnemyDropGlyph
+  ; Spawns a glyph based on the glyph ID in a given enemy's enemy DNA.
+  ; Same arguments as EnemyCheckGlyphDrop.
+
 0222FFD4 GlyphSpawn4
   ; ??? used by events where Albus gives you Dominus glyphs
   ; r0 - 
@@ -56,16 +71,39 @@
   ; r0 - Global ID+1 of the item
   ; r1 - Number of the item to give?
 
+0206A764 GetGlyphPointer
+  ; r0 - The Global ID+1 of the glyph.
+
+0206A748 GetGlyphPointerByTypeIndex
+  ; r0 - Type of glyph.
+  ;   0 - Arm glyph
+  ;   1 - Arm glyph
+  ;   2 - Back glyph
+  ;   3 - Glyph union
+  ; r1 - Index of the glyph in that type's list.
+
+0206CE4C GlyphLoadIcon
+  ; r0 - The Global ID+1 of the glyph.
+  ; Returns: 1 on success, 0 on failure?
+
+020331E4 AssetGetPointer
+  ; r0 - Asset index
+  ; Returns 020D8CEC+(r0*0x20)
+02033048 AssetLoad?
+  ; r0 - Asset index
+02033074 AssetGetFreeSlot?
+  ; r0 - Asset index
+
 0205DDB4 EntityMoveToFloor
   ; Teleports entity downwards to the nearest floor.
   ; r0 - Pointer to entity
-  ; r1 - ???
+  ; r1 - Pointer to ??. May have the size of this entity?
+  ;   For spear guard, this is 022B63E8.
+  ;   04,2: Height in pixels.
 
 0221ABD8 RandomizeWoodenChests
   ; Puts random items from a given pool into all wooden chests.
   ; r0 - Item pool index to use
-
-0206DF34 EnemyCheckGlyphDrop
 
 02031884 EntitySetIframes
   ; r0 - Pointer to the entity
