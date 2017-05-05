@@ -68,6 +68,7 @@ Enemies:
 1B Winged Guard
   Spawner.
   Var A: Maximum number of Winged Guards this spawner can have in the room at once.
+  If var A is 0, it's not a spawner, instead it's just a single Winged Guard.
 1C Nightmare
 1D Rock Knight
 1E Fire Demon
@@ -118,6 +119,7 @@ Enemies:
   Requires enemy overlay 38.
 3D Werewolf
 3E Altair
+  Spawner.
   Var A:
     0 Altairs will carry Flea Men.
     1 Altairs will have no Flea Men, and instead swoop down to attack you.

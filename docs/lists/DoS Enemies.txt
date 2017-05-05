@@ -81,7 +81,8 @@ Enemies:
   Var B: 0 or 1, but seems unused?
 2D Skelerang
 2E Fleaman
-  Var A: Number of fleamen to spawn. (They only spawn once when you enter the room, not infinitely.) If this is 0, then 1 fleaman spawns instead.
+  Var A: Number of fleamen to spawn. (They only spawn once when you enter the room, not infinitely.)
+  If var A is 0, then 1 fleaman spawns instead.
 2F Devil
   Requires enemy overlay 31.
   Var B: 0 or 1, but seems unused?

@@ -67,8 +67,8 @@ Enemies:
 1F Bone Pillar
   Var A: Number of them stacked on top of each other.
 20 Fleaman
-  Var A: TODO
-  Var B: TODO
+  Var A: Number of fleamen to spawn. (They only spawn once when you enter the room, not infinitely.)
+  If var A is 0, then 1 fleaman spawns instead.
 21 Great Armor
   Requires enemy overlay 44.
 22 Catoblepas
