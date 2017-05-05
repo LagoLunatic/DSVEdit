@@ -473,6 +473,8 @@ BEST_SPRITE_OFFSET_FOR_ENEMY = {
 
 ENEMY_FILES_TO_LOAD_LIST = 0x020F2814
 
+COMMON_SPRITE = {desc: "Common", sprite: 0x020C4E24, gfx_files: [0x020B8788, 0x020B8794, 0x020B87A0, 0x020B87AC, 0x020B87B8, 0x020B87D0, 0x020B8818, 0x020B8824], palette: 0x020C8E50}
+
 SPECIAL_OBJECT_IDS = (0..0x8C)
 SPECIAL_OBJECT_CREATE_CODE_LIST = 0x020F370C
 SPECIAL_OBJECT_UPDATE_CODE_LIST = 0x020F3940
@@ -514,7 +516,7 @@ OVERLAY_FILE_FOR_SPECIAL_OBJECT = {
 }
 REUSED_SPECIAL_OBJECT_INFO = {
   0x00 => {init_code:         -1},
-  0x01 => {sprite: 0x020C4E24, gfx_files: [0x020B8788, 0x020B8794, 0x020B87A0, 0x020B87AC, 0x020B87B8, 0x020B87D0, 0x020B8818, 0x020B8824], palette: 0x020C8E50}, # magnes point
+  0x01 => COMMON_SPRITE, # magnes point
   0x02 => {init_code: 0x022B6E98}, # destructible
   0x03 => {init_code:         -1},
   0x06 => {init_code:         -1},
@@ -531,15 +533,15 @@ REUSED_SPECIAL_OBJECT_INFO = {
   0x23 => {init_code:         -1}, # volaticus blocker
   0x24 => {init_code:         -1}, # timed boss door opener
   0x2A => {init_code:         -1}, # moving platform waypoint
-  0x2B => {sprite: 0x020C4E24, gfx_files: [0x020B8788, 0x020B8794, 0x020B87A0, 0x020B87AC, 0x020B87B8, 0x020B87D0, 0x020B8818, 0x020B8824], palette: 0x020C8E50}, # area exit
-  0x2D => {sprite: 0x020C4E24, gfx_files: [0x020B8788, 0x020B8794, 0x020B87A0, 0x020B87AC, 0x020B87B8, 0x020B87D0, 0x020B8818, 0x020B8824], palette: 0x020C8E50}, # wygol wooden door
-  0x2E => {sprite: 0x020C4E24, gfx_files: [0x020B8788, 0x020B8794, 0x020B87A0, 0x020B87AC, 0x020B87B8, 0x020B87D0, 0x020B8818, 0x020B8824], palette: 0x020C8E50}, # wooden door
+  0x2B => COMMON_SPRITE, # area exit
+  0x2D => COMMON_SPRITE, # wygol wooden door
+  0x2E => COMMON_SPRITE, # wooden door
   0x35 => {init_code:         -1},
   0x36 => {init_code:         -1}, # transition room hider TODO
   0x3A => {init_code:         -1},
   0x3E => {init_code:         -1},
-  0x4B => {sprite: 0x020C4E24, gfx_files: [0x020B8788, 0x020B8794, 0x020B87A0, 0x020B87AC, 0x020B87B8, 0x020B87D0, 0x020B8818, 0x020B8824], palette: 0x020C8E50}, # boss door
-  0x4D => {sprite: 0x020C4E24, gfx_files: [0x020B8788, 0x020B8794, 0x020B87A0, 0x020B87AC, 0x020B87B8, 0x020B87D0, 0x020B8818, 0x020B8824], palette: 0x020C8E50}, # ecclesia wooden door
+  0x4B => COMMON_SPRITE, # boss door
+  0x4D => COMMON_SPRITE, # ecclesia wooden door
   0x54 => {init_code:         -1},
   0x55 => {sprite: 0x021DCAC0, gfx_files: [0x020B838C, 0x020B8398, 0x020B83A4, 0x020B83B0, 0x020B83BC, 0x020B83C8, 0x020B83D4, 0x020B83E0, 0x020B83EC, 0x020B83F8, 0x020B8404, 0x020B8410, 0x020B841C, 0x020B8428], palette: 0x020D73D0}, # area titles
   0x5C => {sprite: 0x021DCD34, gfx_files: [0x020BA300], palette: 0x020D151C}, # breakable wall
@@ -631,7 +633,7 @@ WEAPON_PALETTE_LIST = nil
 SKILL_GFX_LIST_START = 0x020F3BC0
 
 OTHER_SPRITES = [
-  {desc: "Common", sprite: 0x020C4E24, gfx_files: [0x020B8788, 0x020B8794, 0x020B87A0, 0x020B87AC, 0x020B87B8, 0x020B87D0, 0x020B8818, 0x020B8824], palette: 0x020C8E50},
+  COMMON_SPRITE,
   {desc: "Explosion", sprite: 0x021DD02C, gfx_files: [0x020B8830], palette: 0x020C8E50},
   
   {pointer: 0x020EED5C, desc: "Shanoa player"},
@@ -689,8 +691,8 @@ OTHER_SPRITES = [
 
 CANDLE_FRAME_IN_COMMON_SPRITE = 0xDB
 MONEY_FRAME_IN_COMMON_SPRITE = 0xEF
-CANDLE_SPRITE = OTHER_SPRITES[0]
-MONEY_SPRITE = OTHER_SPRITES[0]
+CANDLE_SPRITE = COMMON_SPRITE
+MONEY_SPRITE = COMMON_SPRITE
 
 OVERLAY_FILES_WITH_SPRITE_DATA = []
 

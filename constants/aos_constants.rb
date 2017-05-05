@@ -454,19 +454,21 @@ BEST_SPRITE_FRAME_FOR_ENEMY = {
 }
 BEST_SPRITE_OFFSET_FOR_ENEMY = {}
 
+COMMON_SPRITE = {desc: "Common", sprite: 0x0820ED60, gfx_files: [0x081C15F4], palette: 0x082099FC, palette_offset: 3, unwrapped_gfx: true}
+
 OVERLAY_FILE_FOR_SPECIAL_OBJECT = {}
 REUSED_SPECIAL_OBJECT_INFO = {
   0x00 => {init_code: 0x0804D8F0}, # wooden door
   0x01 => {init_code: 0x08033254}, # pushable crate TODO: sprite file can't be found, gfx and palette are fine
-  0x02 => {sprite: 0x0820ED60, gfx_files: [0x081C15F4], palette: 0x082099FC, palette_offset: 2, unwrapped_gfx: true},
-  0x04 => {sprite: 0x0820ED60, gfx_files: [0x081C15F4], palette: 0x082099FC, palette_offset: 2, unwrapped_gfx: true},
-  0x05 => {sprite: 0x0820ED60, gfx_files: [0x081C15F4], palette: 0x082099FC, palette_offset: 3, unwrapped_gfx: true},
+  0x02 => COMMON_SPRITE.merge(palette_offset: 2),
+  0x04 => COMMON_SPRITE.merge(palette_offset: 2),
+  0x05 => COMMON_SPRITE,
   0x07 => {init_code:         -1},
   0x08 => {init_code: 0x08526004},
   0x09 => {init_code: 0x08526004},
   0x0C => {init_code:         -1},
   0x0E => {init_code: 0x08526214}, # destructible
-  0x0F => {sprite: 0x0820ED60, gfx_files: [0x081C15F4], palette: 0x082099FC, palette_offset: 3, unwrapped_gfx: true},
+  0x0F => COMMON_SPRITE,
   0x12 => {init_code:         -1}, # multiple different background visuals
   0x1C => {palette_offset: 1},
   0x1F => {init_code: 0x08055BE0, palette_offset: 2},
@@ -496,7 +498,7 @@ BEST_SPRITE_FRAME_FOR_SPECIAL_OBJECT = {
 BEST_SPRITE_OFFSET_FOR_SPECIAL_OBJECT = {}
 
 OTHER_SPRITES = [
-  {desc: "Common", sprite: 0x0820ED60, gfx_files: [0x081C15F4], palette: 0x082099FC, palette_offset: 3, unwrapped_gfx: true},
+  COMMON_SPRITE,
   
   {desc: "Breakable walls 1", pointer: 0x08526004},
   {desc: "Breakable walls 2", pointer: 0x08526010},
@@ -539,8 +541,8 @@ OTHER_SPRITES = [
 
 CANDLE_FRAME_IN_COMMON_SPRITE = 0x1E
 MONEY_FRAME_IN_COMMON_SPRITE = 0x21
-CANDLE_SPRITE = OTHER_SPRITES[0].merge(palette_offset: 3)
-MONEY_SPRITE = OTHER_SPRITES[0].merge(palette_offset: 2)
+CANDLE_SPRITE = COMMON_SPRITE.merge(palette_offset: 3)
+MONEY_SPRITE = COMMON_SPRITE.merge(palette_offset: 2)
 
 WEAPON_GFX_LIST_START = 0x084F10C0
 WEAPON_SPRITES_LIST_START = 0x084F117C

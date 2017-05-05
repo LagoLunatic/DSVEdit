@@ -429,6 +429,8 @@ BEST_SPRITE_OFFSET_FOR_ENEMY = {}
 
 ENEMY_FILES_TO_LOAD_LIST = 0x020CD88C
 
+COMMON_SPRITE = {desc: "Common", sprite: 0x022B36E8, gfx_wrapper: 0x020BFF24, palette: 0x022B7660}
+
 SPECIAL_OBJECT_IDS = (0..0xBE)
 SPECIAL_OBJECT_CREATE_CODE_LIST = 0x0221D908
 SPECIAL_OBJECT_UPDATE_CODE_LIST = 0x0221DC18
@@ -480,7 +482,7 @@ REUSED_SPECIAL_OBJECT_INFO = {
   0x16 => {init_code:         -1},
   0x1A => {init_code: 0x020F4E84}, # portrait
   0x1B => {init_code:         -1},
-  0x22 => {sprite: 0x022B36E8, gfx_wrapper: 0x020BFF24, palette: 0x022B7660},
+  0x22 => COMMON_SPRITE,
   0x23 => {init_code:         -1},
   0x24 => {init_code:         -1},
   0x42 => {init_code:         -1},
@@ -500,7 +502,7 @@ REUSED_SPECIAL_OBJECT_INFO = {
   0x66 => {init_code:         -1},
   0x67 => {init_code:         -1},
   0x76 => {init_code: 0x020F4E90}, # portrait
-  0x82 => {sprite: 0x022B36E8, gfx_wrapper: 0x020BFF24, palette: 0x022B7660},
+  0x82 => COMMON_SPRITE,
   0x86 => {init_code: 0x020F4E84}, # portrait
   0x87 => {init_code: 0x020F4E90}, # portrait
   0x8B => {init_code:         -1},
@@ -592,7 +594,7 @@ WEAPON_PALETTE_LIST = nil
 SKILL_GFX_LIST_START = 0x0221ED18
 
 OTHER_SPRITES = [
-  {desc: "Common", sprite: 0x022B36E8, gfx_wrapper: 0x020BFF24, palette: 0x022B7660},
+  COMMON_SPRITE,
   
   {pointer: 0x0221E7F4, desc: "Jonathan player"},
   {pointer: 0x0221E84C, desc: "Charlotte player"},
@@ -648,8 +650,8 @@ OTHER_SPRITES = [
 
 CANDLE_FRAME_IN_COMMON_SPRITE = 0xDB
 MONEY_FRAME_IN_COMMON_SPRITE = 0xEF
-CANDLE_SPRITE = OTHER_SPRITES[0]
-MONEY_SPRITE = OTHER_SPRITES[0]
+CANDLE_SPRITE = COMMON_SPRITE
+MONEY_SPRITE = COMMON_SPRITE
 
 OVERLAY_FILES_WITH_SPRITE_DATA = [5, 6]
 

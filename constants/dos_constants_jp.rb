@@ -20,14 +20,16 @@ REUSED_ENEMY_INFO[0x54] = {init_code: 0x0226F79C, gfx_sheet_ptr_index: 0, palett
 REUSED_ENEMY_INFO[0x5C] = {init_code: 0x02288054, gfx_sheet_ptr_index: 0, palette_offset: 0, palette_list_ptr_index: 0} # tanjelly and slime
 REUSED_ENEMY_INFO[0x5B] = {init_code: 0x022FEA30, gfx_sheet_ptr_index: 1, palette_offset: 0, palette_list_ptr_index: 1, sprite_ptr_index: 1} # flame demon and devil
 
+COMMON_SPRITE = {desc: "Common", sprite: 0x0229DB78, gfx_wrapper: 0x02079EA8, palette: 0x022B8BA4}
+
 SPECIAL_OBJECT_CREATE_CODE_LIST = 0x0222B7B4
 SPECIAL_OBJECT_UPDATE_CODE_LIST = 0x0222B990
-REUSED_SPECIAL_OBJECT_INFO[0x00] = {sprite: 0x0229DB78, gfx_wrapper: 0x02079EA8, palette: 0x022B8BA4} # ice block
+REUSED_SPECIAL_OBJECT_INFO[0x00] = COMMON_SPRITE # ice block
 REUSED_SPECIAL_OBJECT_INFO[0x01] = {init_code: 0x0222AB58, ignore_files_to_load: true} # destructible
 REUSED_SPECIAL_OBJECT_INFO[0x06] = {sprite: 0x02299A9C, gfx_files: [0x022C9534, 0x022C9540, 0x022C954C, 0x022C9558, 0x022C9564, 0x022C9570], palette: 0x022C04BC} # area titles
 REUSED_SPECIAL_OBJECT_INFO[0x09] = {init_code: 0x0222ADA4} # chair
-REUSED_SPECIAL_OBJECT_INFO[0x1D] = {sprite: 0x0229DB78, gfx_wrapper: 0x02079EA8, palette: 0x022B8BA4} # wooden door
-REUSED_SPECIAL_OBJECT_INFO[0x25] = {sprite: 0x0229DB78, gfx_wrapper: 0x02079EA8, palette: 0x022B8BA4} # boss door
+REUSED_SPECIAL_OBJECT_INFO[0x1D] = COMMON_SPRITE # wooden door
+REUSED_SPECIAL_OBJECT_INFO[0x25] = COMMON_SPRITE # boss door
 REUSED_SPECIAL_OBJECT_INFO[0x26] = {init_code: 0x021A9048} # slot machine
 REUSED_SPECIAL_OBJECT_INFO[0x27] = {init_code: 0x021A84B4} # condemned tower gate
 REUSED_SPECIAL_OBJECT_INFO[0x29] = {init_code: 0x021A8044} # dark chapel gate
@@ -49,7 +51,7 @@ WEAPON_GFX_LIST_START = 0x0222DED4
 SKILL_GFX_LIST_START = 0x0222DA84
 
 OTHER_SPRITES = [
-  {desc: "Common", sprite: 0x0229DB78, gfx_wrapper: 0x02079EA8, palette: 0x022B8BA4},
+  COMMON_SPRITE,
   
   {pointer: 0x0222D524, desc: "Soma player"},
   {pointer: 0x0222D57C, desc: "Julius player"},
@@ -86,8 +88,8 @@ OTHER_SPRITES = [
   {pointer: 0x020490C0, desc: "Wi-fi menu"},
 ]
 
-CANDLE_SPRITE = OTHER_SPRITES[0]
-MONEY_SPRITE = OTHER_SPRITES[0]
+CANDLE_SPRITE = COMMON_SPRITE
+MONEY_SPRITE = COMMON_SPRITE
 
 TEXT_LIST_START_OFFSET = 0x0222E3B0
 STRING_DATABASE_START_OFFSET = 0x0221803C

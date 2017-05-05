@@ -33,7 +33,7 @@ class EntityLayerItem < Qt::GraphicsRectItem
       sprite_info = SpriteInfo.extract_gfx_and_palette_and_sprite_from_create_code(pointer, @fs, nil, {})
       add_sprite_item_for_entity(entity, sprite_info, 0)
     elsif GAME == "aos" && entity.is_pickup? && (5..8).include?(entity.subtype) # soul candle
-      soul_candle_sprite = OTHER_SPRITES[0].merge(palette_offset: 4)
+      soul_candle_sprite = COMMON_SPRITE.merge(palette_offset: 4)
       sprite_info = SpriteInfo.extract_gfx_and_palette_and_sprite_from_create_code(soul_candle_sprite[:pointer], @fs, soul_candle_sprite[:overlay], soul_candle_sprite)
       add_sprite_item_for_entity(entity, sprite_info, 0x6B)
     elsif entity.is_glyph_statue?
@@ -61,7 +61,7 @@ class EntityLayerItem < Qt::GraphicsRectItem
       sprite_info = SpriteInfo.extract_gfx_and_palette_and_sprite_from_create_code(CANDLE_SPRITE[:pointer], @fs, CANDLE_SPRITE[:overlay], CANDLE_SPRITE)
       add_sprite_item_for_entity(entity, sprite_info, CANDLE_FRAME_IN_COMMON_SPRITE)
     elsif entity.is_magic_seal?
-      sprite_info = SpriteInfo.extract_gfx_and_palette_and_sprite_from_create_code(OTHER_SPRITES[0][:pointer], @fs, OTHER_SPRITES[0][:overlay], OTHER_SPRITES[0])
+      sprite_info = SpriteInfo.extract_gfx_and_palette_and_sprite_from_create_code(COMMON_SPRITE[:pointer], @fs, COMMON_SPRITE[:overlay], COMMON_SPRITE)
       add_sprite_item_for_entity(entity, sprite_info, 0xCE)
     elsif entity.is_item?
       if GAME == "ooe"
@@ -92,7 +92,7 @@ class EntityLayerItem < Qt::GraphicsRectItem
       when "por", "ooe"
         frame_id = 0x11D
       end
-      sprite_info = SpriteInfo.extract_gfx_and_palette_and_sprite_from_create_code(OTHER_SPRITES[0][:pointer], @fs, OTHER_SPRITES[0][:overlay], OTHER_SPRITES[0])
+      sprite_info = SpriteInfo.extract_gfx_and_palette_and_sprite_from_create_code(COMMON_SPRITE[:pointer], @fs, COMMON_SPRITE[:overlay], COMMON_SPRITE)
       add_sprite_item_for_entity(entity, sprite_info, frame_id)
     elsif entity.is_money_bag?
       sprite_info = SpriteInfo.extract_gfx_and_palette_and_sprite_from_create_code(MONEY_SPRITE[:pointer], @fs, MONEY_SPRITE[:overlay], MONEY_SPRITE)

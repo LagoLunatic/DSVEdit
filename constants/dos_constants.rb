@@ -332,6 +332,8 @@ BEST_SPRITE_OFFSET_FOR_ENEMY = {}
 
 ENEMY_FILES_TO_LOAD_LIST = 0x0208CA90
 
+COMMON_SPRITE = {desc: "Common", sprite: 0x0229EAD8, gfx_wrapper: 0x02079EAC, palette: 0x022B9B04}
+
 SPECIAL_OBJECT_IDS = (0..0x75)
 SPECIAL_OBJECT_CREATE_CODE_LIST = 0x0222C714
 SPECIAL_OBJECT_UPDATE_CODE_LIST = 0x0222C8F0
@@ -339,7 +341,7 @@ OVERLAY_FILE_FOR_SPECIAL_OBJECT = {
   0x2E => 25
 }
 REUSED_SPECIAL_OBJECT_INFO = {
-  0x00 => {sprite: 0x0229EAD8, gfx_wrapper: 0x02079EAC, palette: 0x022B9B04}, # ice block
+  0x00 => COMMON_SPRITE, # ice block
   0x01 => {init_code: 0x0222BAB8, ignore_files_to_load: true}, # destructible
   0x02 => {init_code:         -1},
   0x03 => {init_code:         -1},
@@ -350,9 +352,9 @@ REUSED_SPECIAL_OBJECT_INFO = {
   0x0B => {init_code:         -1},
   0x0E => {init_code:         -1},
   0x11 => {init_code:         -1},
-  0x1D => {sprite: 0x0229EAD8, gfx_wrapper: 0x02079EAC, palette: 0x022B9B04}, # wooden door
+  0x1D => COMMON_SPRITE, # wooden door
   0x22 => {init_code:         -1},
-  0x25 => {sprite: 0x0229EAD8, gfx_wrapper: 0x02079EAC, palette: 0x022B9B04}, # boss door
+  0x25 => COMMON_SPRITE, # boss door
   0x26 => {init_code: 0x021A8FC8}, # slot machine
   0x27 => {init_code: 0x021A8434}, # condemned tower gate
   0x29 => {init_code: 0x021A7FC4}, # dark chapel gate
@@ -437,7 +439,7 @@ WEAPON_PALETTE_LIST = nil
 SKILL_GFX_LIST_START = 0x0222E9D4
 
 OTHER_SPRITES = [
-  {desc: "Common", sprite: 0x0229EAD8, gfx_wrapper: 0x02079EAC, palette: 0x022B9B04},
+  COMMON_SPRITE,
   
   {pointer: 0x0222E474, desc: "Soma player"},
   {pointer: 0x0222E4CC, desc: "Julius player"},
@@ -476,8 +478,8 @@ OTHER_SPRITES = [
 
 CANDLE_FRAME_IN_COMMON_SPRITE = 0xDB
 MONEY_FRAME_IN_COMMON_SPRITE = 0xEF
-CANDLE_SPRITE = OTHER_SPRITES[0]
-MONEY_SPRITE = OTHER_SPRITES[0]
+CANDLE_SPRITE = COMMON_SPRITE
+MONEY_SPRITE = COMMON_SPRITE
 
 OVERLAY_FILES_WITH_SPRITE_DATA = [2]
 
