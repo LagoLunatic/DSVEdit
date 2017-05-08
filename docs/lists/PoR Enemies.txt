@@ -147,6 +147,9 @@ Enemies:
 3B Slogra
 3C Flying Armor
 3D Blue Crow
+  Var A:
+    0 Will spawn exactly where you place it.
+    1+ Will spawn on the closest floor below where you place it.
 3E Frog
 3F Killer Doll
   Var A: ? 0 or 1
@@ -221,6 +224,9 @@ Enemies:
   Requires enemy overlay 73.
 65 Lightkeeper
 66 Black Crow
+  Var A:
+    0 Will spawn exactly where you place it.
+    1+ Will spawn on the closest floor below where you place it.
 67 Mandragora
 68 Wakwak Tree
 69 Guillotiner

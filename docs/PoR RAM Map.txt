@@ -85,6 +85,7 @@
   14 Shop mode menu
   15 Co-op mode menu
   16 Options menu (for editing name, etc)
+  17 Initializing save data on first boot
   18 Booting up (both for the first time, and after soft resetting)
   19 Scrolling prologue text
   1A Sound test
@@ -102,6 +103,8 @@
   Each entry is 0x14 bytes long.
   00,2: 
   04,1:
+
+020FC48C - Bitfield of what buttons the player is pressing.
 
 === 020FC500 - 0211173F: Entities currently loaded into memory. Each is 0x160 bytes long. They range from 0-F4.
 
