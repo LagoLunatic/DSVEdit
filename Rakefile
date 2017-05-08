@@ -74,7 +74,7 @@ task :build_releases do
       FileUtils.rm_f "../build/#{program_name}/settings.yml"
     else
       FileUtils.rm_f ["../build/#{program_name}/dsvrandom", "../build/#{program_name}/dsvrandom.rb"]
-      FileUtils.cp_r ["./dsvrandom/dsvrandom.rb", "./dsvrandom/completability_checker.rb", "./dsvrandom/randomizer.rb", "./dsvrandom/randomizer_window.rb", "./dsvrandom/ui_randomizer.rb", "./dsvrandom/version.rb", "./dsvrandom/requirements", "./dsvrandom/images"], "../build/#{program_name}/dsvrandom"
+      FileUtils.cp_r ["./dsvrandom/dsvrandom.rb", "./dsvrandom/completability_checker.rb", "./dsvrandom/randomizer.rb", "./dsvrandom/randomizer_window.rb", "./dsvrandom/ui_randomizer.rb", "./dsvrandom/version.rb", "./dsvrandom/requirements", "./dsvrandom/images", "./dsvrandom/randomizers"], "../build/#{program_name}/dsvrandom"
       FileUtils.cp_r ["./dsvrandom/README.txt", "./dsvrandom/LICENSE.txt"], "../build/#{program_name}"
       FileUtils.rm_f ["../build/#{program_name}/dsvrandom/README.txt", "../build/#{program_name}/dsvrandom/LICENSE.txt"]
       FileUtils.rm_f "../build/#{program_name}/images/dsvedit_icon.ico"
