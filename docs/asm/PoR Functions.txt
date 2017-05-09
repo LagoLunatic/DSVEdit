@@ -73,6 +73,13 @@
   ; r0 - Pointer to entity
   ; r1 - Pointer to part
 
+021FE5FC SetEntityCollision
+  ; r0 - Entity pointer
+  ; r1 - Type of collision.
+  ;   0 - A jump-through platform you can slide on.
+  ;   1 - A jump-through platform you can fall through.
+  ;   3 - A completely solid block.
+
 020BD268 FloatMultiply1
   ; r0 - Integer to multiply
 020BD2B0 FloatMultiply2

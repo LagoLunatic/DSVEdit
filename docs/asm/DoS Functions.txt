@@ -10,12 +10,24 @@
 021C3A00 EnemyCheckDrops
 0221029C GetNumOwnedSoul
 02215774 MakeMagicSeal
+  ; r0 - Which magic seal.
+  ; r1 - How to complete the magic seal.
+  ;   0 - Demonstration seal.
+  ;   1 - Instant autoseal.
+  ;   2 - Manually drawn seal.
 0203BE9C SetTopScreen
 02012DB0 GetEntityHitboxPtr
-  ; r0 - Entity ptr
+  ; r0 - Entity pointer
 021D5210 DestroyIceBlocks
 0220F81C CheckAbilityEnabled
   ; r0 - Index of the ability soul to check. 0-6.
+
+021F7928 SetEntityCollision
+  ; r0 - Entity pointer
+  ; r1 - Type of collision.
+  ;   0 - A jump-through platform you can slide on.
+  ;   1 - A jump-through platform you can fall through.
+  ;   3 - A completely solid block.
 
 020059F0 BaloreBlockCreateRect
   ; These arguments are all in pixels, not blocks.

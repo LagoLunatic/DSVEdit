@@ -101,6 +101,13 @@
   ;   For spear guard, this is 022B63E8.
   ;   04,2: Height in pixels.
 
+0204D244 SetEntityCollision
+  ; r0 - Entity pointer
+  ; r1 - Type of collision.
+  ;   0 - A jump-through platform you can slide on.
+  ;   1 - A jump-through platform you can fall through.
+  ;   3 - A completely solid block.
+
 0221ABD8 RandomizeWoodenChests
   ; Puts random items from a given pool into all wooden chests.
   ; r0 - Item pool index to use

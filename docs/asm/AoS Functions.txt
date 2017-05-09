@@ -27,6 +27,12 @@
   ; r0 - Sector index
   ; r1 - Room index
 
+08021278 SetEntityCollision
+  ; r0 - Entity pointer
+  ; r1 - Whether this platform is slippery or has friction.
+  ;   0 - Player stays at the same x pos, eventually slipping off the entity.
+  ;   1 - Player's x pos is moved as this entity moves.
+
 ; Enemy-specific code
 080AD2A8 EnemyBatCreate
 080AD644 EnemyBatUpdate

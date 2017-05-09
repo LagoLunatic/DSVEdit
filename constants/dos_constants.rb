@@ -777,7 +777,7 @@ ITEM_BITFIELD_ATTRIBUTES = {
     "Transparent weapon",
     "Shaky weapon",
     "No interrupt on anim end",
-    "Modifier 10",
+    "No interrupt on ???",
     "Modifier 11",
     "Modifier 12",
     "Modifier 13",
