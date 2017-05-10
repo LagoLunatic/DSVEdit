@@ -89,6 +89,17 @@
 020BD1AC FloatMultiply3
   ; r0 - Return value from FloatMultiply2
 
+02208218 CheckPlayerPushColliding
+  ; Checks if the player is walking into a certain entity.
+  ; r0 - Entity to check if the player is pushing.
+02207D18 GetPlayerPushSpeed
+  ; It will check both players, only adding the speed of the player(s) that have the pushing state bit active (0x04000000).
+  ; For males, base speed is 0x1000.
+  ; For females, base speed is 0x800.
+  ; Strength Glove adds +0x800.
+
+02215394 CheckRelicEnabled
+  ; r0 - Index of the relic to check. 0-F.
 
 ; Enemy-specific code
 0222D5DC EnemyZombieCreate

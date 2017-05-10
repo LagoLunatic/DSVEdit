@@ -131,7 +131,7 @@
   0x00004000 - Swinging melee weapon.
   0x00008000 - Using a combo tech (including critical art).
   0x00010000 - Using subweapon.
-  0x00020000 - 
+  0x00020000 - Charging spell.
   0x00040000 - 
   0x00080000 - Backdashing.
   0x00100000 - Sliding.

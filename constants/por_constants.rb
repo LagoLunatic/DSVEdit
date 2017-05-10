@@ -713,7 +713,7 @@ ENEMY_IDS = (0x00..0x9A).to_a
 COMMON_ENEMY_IDS = (0x00..0x80).to_a
 BOSS_IDS = (0x81..0x9A).to_a
 FINAL_BOSS_IDS = (0x99..0x9A).to_a
-RANDOMIZABLE_BOSS_IDS = BOSS_IDS - FINAL_BOSS_IDS
+RANDOMIZABLE_BOSS_IDS = BOSS_IDS - FINAL_BOSS_IDS - [0x88, 0x89] # Remove Fake Grant and Sypha
 SPAWNER_ENEMY_IDS = [0x00, 0x01, 0x09, 0x24, 0x38, 0x49]
 
 BOSS_DOOR_SUBTYPE = 0x22
@@ -980,7 +980,7 @@ ITEM_BITFIELD_ATTRIBUTES = {
     "Swinging melee weapon",
     "Using combo tech",
     "Using subweapon",
-    "State 18",
+    "Charging spell",
     "State 19",
     "Backdashing",
     "Sliding",
