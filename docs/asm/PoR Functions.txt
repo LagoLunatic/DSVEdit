@@ -80,13 +80,17 @@
   ;   1 - A jump-through platform you can fall through.
   ;   3 - A completely solid block.
 
-020BD268 FloatMultiply1
-  ; r0 - Integer to multiply
-020BD2B0 FloatMultiply2
-  ; r0 - Return value from FloatMultiply1
-  ; r1 - Floating point constant to multiply by. See https://gregstoll.dyndns.org/~gregstoll/floattohex/
-020BD1AC FloatMultiply3
-  ; r0 - Return value from FloatMultiply2
+020BD268 FloatConvertFromInt
+  ; r0 - Integer
+  ; Returns r0 - The integer converted to a float
+020BD2B0 FloatMultiply
+  ; r0 - First float number to multiply
+  ; r1 - Second float number to multiply
+  ; Returns r0 - Result
+020BD1AC FloatConvertToInt
+  ; r0 - Float
+  ; Returns r0 - The float converted to an integer
+; Online tool for converting between int and float represented as hex: https://gregstoll.dyndns.org/~gregstoll/floattohex/
 
 02208218 CheckPlayerPushColliding
   ; Checks if the player is walking into a certain entity.
