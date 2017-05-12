@@ -17,6 +17,20 @@
   ; 020131BF - Index of the last used red soul
   ; If in Julius mode, will return the Julius skill of that index instead of the red soul.
 
+080C4624 DamageEnemy
+  ; r0 - Enemy entity receiving the damage
+  ; r1 - Entity doing the damage
+  ; r2 - ??? pointer
+0806B7D8 CalculateDamageToEnemy
+  ; r0 - Enemy entity receiving the damage
+  ; r1 - Entity doing the damage
+  ; r2 - ??? pointer
+  ; Returns r0 - The amount of damage to do
+08042B8C ShowDamageToEnemyNumber
+  ; r0 - Pointer to entity getting damaged
+  ; r1 - Damage done
+  ; r2 - 0 for damage, 1 for healing
+
 08022028 AddMP
   ; r0 - MP to add
 
@@ -32,6 +46,10 @@
   ; r1 - Whether this platform is slippery or has friction.
   ;   0 - Player stays at the same x pos, eventually slipping off the entity.
   ;   1 - Player's x pos is moved as this entity moves.
+
+0803F17C SpriteAnimate
+  ; Call every frame to handle the animation.
+  ; r0 - Entity pointer to animate
 
 ; Enemy-specific code
 080AD2A8 EnemyBatCreate

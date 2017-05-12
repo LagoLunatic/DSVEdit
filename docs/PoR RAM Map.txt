@@ -288,6 +288,7 @@
 02111F98 - Pointer to controlled character's entity.
 02111F9C - Pointer to partner character's entity.
 
+02111FAC - Player 2's current base stats??
 02111FC0 - Player 1's current stats. Halfwords.
   02111FC0,2 - ATK
   02111FC2,2 - DEF
@@ -300,9 +301,12 @@
   02111FD0,4 - Bitfield of resistances.
 02111FD4 - Player 1's current stats, with bonus stats added.
 02111FE8 - Player 1's bonus stats.
+  02111FF8,4 - Not bonus resistances, instead this is 0 or 1 to indicate whether any bonuses are active.
+02111FFC - Player 2's current base stats??
 02112010 - Player 2's current stats.
 02112024 - Player 2's current stats, with bonus stats added.
 02112038 - Player 2's bonus stats.
+  02112048,4 - Not bonus resistances, instead this is 0 or 1 to indicate whether any bonuses are active.
 
 021120E2 - 01 if you're controlling player 1, 00 if player 2.
 
@@ -506,6 +510,8 @@ TODO: What are the other 2 for? It's not for the "recent" tab.
   12-1B Spells.
   25-28 Weapons.
   29-2D ?
+
+0221EAF0 - List of base stats for each player? Entry length 0x18.
 
 0221ED04 - List of ? for each type of skill.
   Each entry is 0xA bytes long.

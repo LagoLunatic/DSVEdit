@@ -84,8 +84,7 @@
   ; r0 - Integer to multiply
 020BD2B0 FloatMultiply2
   ; r0 - Return value from FloatMultiply1
-  ; r1 - Amount to multiply by? Examples:
-  ; 3F400000 = 0.75, 3F800000 = 1.0, 41000000 = 8.0
+  ; r1 - Floating point constant to multiply by. See https://gregstoll.dyndns.org/~gregstoll/floattohex/
 020BD1AC FloatMultiply3
   ; r0 - Return value from FloatMultiply2
 
@@ -100,6 +99,17 @@
 
 02215394 CheckRelicEnabled
   ; r0 - Index of the relic to check. 0-F.
+
+02014FB0 SetDefenses
+  ; r0 - Entity pointer
+  ; r1 - Physical defense
+  ; r2 - Resistances
+  ; r3 - Weaknesses
+  ; Only stores these if the entity's hitbox is active (entity+A4)
+02014F9C SetMagicDefense
+  ; r0 - Entity pointer
+  ; r1 - Magical defense
+  ; Only stores these if the entity's hitbox is active (entity+A4)
 
 ; Enemy-specific code
 0222D5DC EnemyZombieCreate

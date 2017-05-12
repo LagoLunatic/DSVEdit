@@ -44,9 +44,12 @@ Memory used for entities in PoR is 020FC500 - 0211173F. Each entity is 0x160 byt
   0x1: Whether this entity's hitboxes are active or not.
 0A7,1: Index of this entity's hitbox in the global hitbox list (0213291C).
 0A8,2: Damage.
+0AA,2: Physical defense.
 0AC,4: Bitfield of damage types.
 0B0,4: Bitfield of resistances.
+0B4,4: Bitfield of weaknesses.
 0B8,2: Number of iframes this entity gives.
+0C0,2: Magical defense.
 0D0,4: For players, this is a bitfield of their current state booleans.
 0DC,2: Counter?
 0DE,2: Counter?
@@ -66,5 +69,8 @@ Memory used for entities in PoR is 020FC500 - 0211173F. Each entity is 0x160 byt
 120,4: Bitfield of ???.
 124,4: For players, duplicate of x pos?
 128,4: For players, duplicate of y pos?
+12A,2: For enemies, this is the magical defense value from the enemy DNA.
+132,1: For enemies, this is the ID of the enemy.
 138,2: For enemies, this is the attack value from the enemy DNA.
+13A,2: For enemies, this is the physical defense value from the enemy DNA.
 149,1: 

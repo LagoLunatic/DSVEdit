@@ -62,6 +62,17 @@
   ; r2 - ?
   ; r3 - ?
 
+021E7C60 SpawnSoul
+  ; r0 - x pos
+  ; r1 - y pos
+  ; r2 - ?
+  ; r3 - Soul index, or -1
+  ; [r13,0] - B?
+  ; [r13,4] - 0?
+  ; [r13,8] - 0? affects homing
+  ; [r13,C] - 1000? z-index?
+  ; [r13,10] - 0?
+
 0201C1B8 LoadSprite
   ; r0 - Entity ptr
   ; r1 - Sprite ptr
