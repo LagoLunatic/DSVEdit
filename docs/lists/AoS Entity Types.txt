@@ -27,16 +27,16 @@ Entity types:
     Var B: The local ID of the body armor/accessory.
   05 Red soul candle.
     Var A: Flag for having picked up this item.
-    Var B: The local ID of the soul + 1.
+    Var B: The local ID of the soul.
   06 Blue soul candle.
     Var A: Flag for having picked up this item.
-    Var B: The local ID of the soul + 1.
+    Var B: The local ID of the soul.
   07 Yellow soul candle.
     Var A: Flag for having picked up this item.
-    Var B: The local ID of the soul + 1.
+    Var B: The local ID of the soul.
   08 Ability soul candle.
     Var A: Flag for having picked up this item.
-    Var B: The local ID of the soul + 1.
+    Var B: The local ID of the soul.
 
 05 Hard mode pickup.
   Appears only on hard mode.

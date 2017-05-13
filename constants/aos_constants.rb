@@ -116,7 +116,7 @@ ENEMY_DNA_BITFIELD_ATTRIBUTES = {
     "Curse",
     "Stone",
     "Resistance 10",
-    "Resistance 11",
+    "Time Stop",
     "Resistance 12",
     "Resistance 13",
     "Resistance 14",
@@ -273,15 +273,14 @@ BLUE_SOUL_FORMAT = [
   [1, "Mana cost"],
   [1, "Hold/Press R"],
   [2, "Unknown 2"],
-  [2, "Unknown 3"],
-  [2, "Unknown 4"],
+  [4, "Unknown 3"],
 ]
 YELLOW_SOUL_FORMAT = [
   # length: 12
   [4, "Code"],
   [2, "Unknown 1"],
-  [2, "Unknown 2"],
-  [2, "Unknown 3"],
+  [2, "Stat to raise"],
+  [2, "Amount to raise"],
   [2, "Unknown 4"],
 ]
 JULIUS_SKILL_FORMAT = RED_SOUL_FORMAT

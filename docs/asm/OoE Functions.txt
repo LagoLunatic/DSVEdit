@@ -21,6 +21,22 @@
   ; The formula is: level*(level+1)*(level+2+level*2)
   ; r0 - Level
 
+02023794 FloatConvertFromInt
+  ; r0 - Integer
+  ; Returns r0 - The integer converted to a float
+020237DC FloatMultiply
+  ; r0 - First float number to multiply
+  ; r1 - Second float number to multiply
+  ; Returns r0 - Result
+02022CE4 FloatAdd
+  ; r0 - First float number to add
+  ; r1 - Second float number to add
+  ; Returns r0 - Result
+02023760 FloatConvertToInt
+  ; r0 - Float
+  ; Returns r0 - The float converted to an integer
+; Online tool for converting between int and float represented as hex: https://gregstoll.dyndns.org/~gregstoll/floattohex/
+
 0206238C GetOwnedItemInfo
   ; Gets owned info for a specific item from list 021003E8.
   ; r0 - Global ID+1 of the item

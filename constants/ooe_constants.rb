@@ -706,7 +706,9 @@ TEXT_REGIONS = {
   "Enemy Names" => (0x2DA..0x352),
   "Enemy Descriptions" => (0x353..0x3CB),
   "Misc" => (0x3CC..0x407),
-  "Menus" => (0x408..0x65F),
+  "Menus 1" => (0x408..0x533),
+  "Quest Names" => (0x534..0x557),
+  "Menus 2" => (0x558..0x65F),
   "Events" => (0x660..0x764)
 }
 TEXT_REGIONS_OVERLAYS = {
