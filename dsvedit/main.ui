@@ -199,6 +199,7 @@
     <addaction name="actionItem_Pool_Editor"/>
     <addaction name="actionTileset_Editor"/>
     <addaction name="actionSpecial_Object_Editor"/>
+    <addaction name="actionShop_Editor"/>
     <addaction name="actionWeapon_Synth_Editor"/>
     <addaction name="actionAdd_Overlay"/>
     <addaction name="actionEntity_Search"/>
@@ -484,6 +485,11 @@
   <action name="actionEdit_Room">
    <property name="text">
     <string>Edit Room</string>
+   </property>
+  </action>
+  <action name="actionShop_Editor">
+   <property name="text">
+    <string>Shop Editor</string>
    </property>
   </action>
  </widget>

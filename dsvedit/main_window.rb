@@ -24,6 +24,7 @@ require_relative 'tileset_editor_dialog'
 require_relative 'player_editor_dialog'
 require_relative 'special_object_editor_dialog'
 require_relative 'weapon_synth_editor_dialog'
+require_relative 'shop_editor_dialog'
 
 require_relative 'ui_main'
 
@@ -52,6 +53,7 @@ class DSVEdit < Qt::MainWindow
   slots "open_player_editor()"
   slots "open_special_object_editor()"
   slots "open_weapon_synth_editor()"
+  slots "open_shop_editor()"
   slots "add_new_overlay()"
   slots "open_settings()"
   slots "write_to_rom()"
@@ -117,6 +119,7 @@ class DSVEdit < Qt::MainWindow
     connect(@ui.actionPlayer_Editor, SIGNAL("activated()"), self, SLOT("open_player_editor()"))
     connect(@ui.actionSpecial_Object_Editor, SIGNAL("activated()"), self, SLOT("open_special_object_editor()"))
     connect(@ui.actionWeapon_Synth_Editor, SIGNAL("activated()"), self, SLOT("open_weapon_synth_editor()"))
+    connect(@ui.actionShop_Editor, SIGNAL("activated()"), self, SLOT("open_shop_editor()"))
     connect(@ui.actionAdd_Overlay, SIGNAL("activated()"), self, SLOT("add_new_overlay()"))
     connect(@ui.actionEntity_Search, SIGNAL("activated()"), self, SLOT("open_entity_search()"))
     connect(@ui.actionSettings, SIGNAL("activated()"), self, SLOT("open_settings()"))
@@ -178,6 +181,7 @@ class DSVEdit < Qt::MainWindow
     @ui.actionPlayer_Editor.setEnabled(false);
     @ui.actionSpecial_Object_Editor.setEnabled(false);
     @ui.actionWeapon_Synth_Editor.setEnabled(false);
+    @ui.actionShop_Editor.setEnabled(false);
     @ui.actionAdd_Overlay.setEnabled(false);
     @ui.actionEntity_Search.setEnabled(false);
     @ui.actionBuild.setEnabled(false);
@@ -208,6 +212,7 @@ class DSVEdit < Qt::MainWindow
     @ui.actionPlayer_Editor.setEnabled(true);
     @ui.actionSpecial_Object_Editor.setEnabled(true);
     @ui.actionWeapon_Synth_Editor.setEnabled(true);
+    @ui.actionShop_Editor.setEnabled(true);
     @ui.actionAdd_Overlay.setEnabled(true);
     @ui.actionEntity_Search.setEnabled(true);
     @ui.actionBuild.setEnabled(true);
@@ -230,6 +235,7 @@ class DSVEdit < Qt::MainWindow
     @player_editor_dialog.close() if @player_editor_dialog
     @special_object_editor_dialog.close() if @special_object_editor_dialog
     @weapon_synth_editor_dialog.close() if @weapon_synth_editor_dialog
+    @shop_editor_dialog.close() if @shop_editor_dialog
     @entity_search_dialog.close() if @entity_search_dialog
     @entity_editor.close() if @entity_editor
     @settings_dialog.close() if @settings_dialog
@@ -685,6 +691,11 @@ class DSVEdit < Qt::MainWindow
     else
       Qt::MessageBox.warning(self, "Can't edit weapon synths", "Only DoS has weapon synths.")
     end
+  end
+  
+  def open_shop_editor
+    return if @shop_editor_dialog && @shop_editor_dialog.visible?
+    @shop_editor_dialog = ShopEditor.new(self, game)
   end
   
   def validate_nds

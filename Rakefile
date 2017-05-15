@@ -34,6 +34,7 @@ task :build_ui do
   system "rbuic4 dsvedit/player_editor.ui          -o dsvedit/ui_player_editor.rb"
   system "rbuic4 dsvedit/special_object_editor.ui  -o dsvedit/ui_special_object_editor.rb"
   system "rbuic4 dsvedit/weapon_synth_editor.ui    -o dsvedit/ui_weapon_synth_editor.rb"
+  system "rbuic4 dsvedit/shop_editor.ui            -o dsvedit/ui_shop_editor.rb"
   
   system "rbuic4 dsvrandom/randomizer.ui           -o dsvrandom/ui_randomizer.rb" if defined?(DSVRANDOM_VERSION)
 end
