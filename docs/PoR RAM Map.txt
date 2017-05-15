@@ -288,7 +288,7 @@
 02111F98 - Pointer to controlled character's entity.
 02111F9C - Pointer to partner character's entity.
 
-02111FAC - Player 2's current base stats??
+02111FAC - Player 1's current base stats??
 02111FC0 - Player 1's current stats. Halfwords.
   02111FC0,2 - ATK
   02111FC2,2 - DEF
