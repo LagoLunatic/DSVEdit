@@ -656,8 +656,6 @@ class DSVEdit < Qt::MainWindow
   end
   
   def open_tileset_editor
-    return unless validate_nds()
-    
     return if @tileset_editor && @tileset_editor.visible?
     @tileset_editor = TilesetEditorDialog.new(self, game.fs, @renderer, @room)
   end

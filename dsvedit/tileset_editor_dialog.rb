@@ -56,6 +56,16 @@ class TilesetEditorDialog < Qt::Dialog
       return
     end
     
+    if SYSTEM == :nds
+      @tile_width = @tile_height = 16
+      @tiles_per_row = 16
+      @tiles_per_gfx_page_row = 8
+    else
+      @tile_width = @tile_height = 8
+      @tiles_per_row = 16*4
+      @tiles_per_gfx_page_row = 16
+    end
+    
     layer = room.layers.first
     if layer
       @ui.tileset_pointer.text = "%08X" % layer.tileset_pointer
@@ -76,11 +86,40 @@ class TilesetEditorDialog < Qt::Dialog
     
     @tileset = Tileset.new(@tileset_pointer, @fs)
     
+    if SYSTEM == :nds
+      @tiles = @tileset.tiles
+    else
+      @tiles = []
+      @tileset.tiles.each_slice(16) do |row_of_tiles|
+        row_of_tiles.each do |tile|
+          @tiles += tile.minitiles[0,4]
+        end
+        row_of_tiles.each do |tile|
+          @tiles += tile.minitiles[4,4]
+        end
+        row_of_tiles.each do |tile|
+          @tiles += tile.minitiles[8,4]
+        end
+        row_of_tiles.each do |tile|
+          @tiles += tile.minitiles[12,4]
+        end
+      end
+    end
+    
     @gfx_pages = GfxWrapper.from_gfx_list_pointer(@gfx_list_pointer, @fs)
     
-    @palettes = @renderer.generate_palettes(@palette_list_pointer, 16)
-    if @gfx_pages.any?{|gfx| gfx.colors_per_palette == 256}
-      @palettes_256 = @renderer.generate_palettes(@palette_list_pointer, 256)
+    if SYSTEM == :nds
+      @palettes = @renderer.generate_palettes(@palette_list_pointer, 16)
+      if @gfx_pages.any?{|gfx| gfx.colors_per_palette == 256}
+        @palettes_256 = @renderer.generate_palettes(@palette_list_pointer, 256)
+      end
+    else
+      @palettes = []
+      @room.palette_pages.each do |palette_page|
+        pals_for_page = @renderer.generate_palettes(palette_page.palette_list_pointer, 16)
+        
+        @palettes[palette_page.palette_load_offset, palette_page.num_palettes] = pals_for_page[palette_page.palette_index, palette_page.num_palettes]
+      end
     end
     
     @ui.gfx_page_index.clear()
@@ -109,7 +148,7 @@ class TilesetEditorDialog < Qt::Dialog
     @tileset_graphics_scene.clear()
     
     @tileset_pixmap_items = []
-    @tileset.tiles.each_with_index do |tile, index_on_tileset|
+    @tiles.each_with_index do |tile, index_on_tileset|
       if index_on_tileset == 0
         @tileset_pixmap_items << nil
         next
@@ -120,16 +159,16 @@ class TilesetEditorDialog < Qt::Dialog
       
       render_tile_on_tileset(index_on_tileset)
       
-      x_on_tileset = index_on_tileset % 16
-      y_on_tileset = index_on_tileset / 16
-      tile_pixmap_item.setPos(x_on_tileset*16 + 8, y_on_tileset*16 + 8)
+      x_on_tileset = index_on_tileset % @tiles_per_row
+      y_on_tileset = index_on_tileset / @tiles_per_row
+      tile_pixmap_item.setPos(x_on_tileset*@tile_width + @tile_width/2, y_on_tileset*@tile_height + @tile_height/2)
       
       @tileset_graphics_scene.addItem(tile_pixmap_item)
     end
   end
   
   def render_tile_on_tileset(tile_index)
-    tile = @tileset.tiles[tile_index]
+    tile = @tiles[tile_index]
     
     if tile.is_blank
       return
@@ -164,7 +203,11 @@ class TilesetEditorDialog < Qt::Dialog
       return # TODO: figure out why this sometimes happens.
     end
     
-    chunky_tile = @renderer.render_graphic_tile(gfx.file, palette, tile.index_on_tile_page)
+    if SYSTEM == :nds
+      chunky_tile = @renderer.render_graphic_tile(gfx.file, palette, tile.index_on_tile_page)
+    else
+      chunky_tile = @renderer.render_1_dimensional_minitile(gfx, palette, tile.index_on_tile_page)
+    end
     
     pixmap = Qt::Pixmap.new
     blob = chunky_tile.to_blob
@@ -193,14 +236,14 @@ class TilesetEditorDialog < Qt::Dialog
     render_tile(@selected_tile, selected_tile_pixmap_item)
     @selected_tile_graphics_scene.addItem(selected_tile_pixmap_item)
     
-    tile_x_pos_on_page = @selected_tile.index_on_tile_page % 8
-    tile_y_pos_on_page = @selected_tile.index_on_tile_page / 8
+    tile_x_pos_on_page = @selected_tile.index_on_tile_page % @tiles_per_gfx_page_row
+    tile_y_pos_on_page = @selected_tile.index_on_tile_page / @tiles_per_gfx_page_row
     
     @gfx_page_graphics_scene.removeItem(@selection_rectangle) if @selection_rectangle
     @selection_rectangle = Qt::GraphicsRectItem.new
     @selection_rectangle.setPen(RED_PEN_COLOR)
-    @selection_rectangle.setRect(0, 0, 16, 16)
-    @selection_rectangle.setPos(tile_x_pos_on_page*16, tile_y_pos_on_page*16)
+    @selection_rectangle.setRect(0, 0, @tile_width, @tile_height)
+    @selection_rectangle.setPos(tile_x_pos_on_page*@tile_width, tile_y_pos_on_page*@tile_height)
     @gfx_page_graphics_scene.addItem(@selection_rectangle)
   end
   
@@ -210,14 +253,19 @@ class TilesetEditorDialog < Qt::Dialog
     @gfx_page_graphics_scene.clear()
     
     gfx = @gfx_pages[@selected_tile.tile_page]
-    @ui.gfx_file.text = gfx.file[:file_path]
     if gfx.colors_per_palette == 16
       palette = @palettes[@selected_tile.palette_index]
     else
       palette = @palettes_256[@selected_tile.palette_index]
     end
     
-    chunky_image = @renderer.render_gfx_page(gfx.file, palette)
+    if SYSTEM == :nds
+      @ui.gfx_file.text = gfx.file[:file_path]
+      chunky_image = @renderer.render_gfx_page(gfx.file, palette)
+    else
+      @ui.gfx_file.text = ""
+      chunky_image = @renderer.render_gfx_1_dimensional_mode(gfx, palette)
+    end
     
     pixmap = Qt::Pixmap.new()
     blob = chunky_image.to_blob
@@ -227,7 +275,7 @@ class TilesetEditorDialog < Qt::Dialog
     
     @selection_rectangle = Qt::GraphicsRectItem.new
     @selection_rectangle.setPen(RED_PEN_COLOR)
-    @selection_rectangle.setRect(0, 0, 16, 16)
+    @selection_rectangle.setRect(0, 0, @tile_width, @tile_height)
     @gfx_page_graphics_scene.addItem(@selection_rectangle)
     
     load_selected_tile()
@@ -242,10 +290,10 @@ class TilesetEditorDialog < Qt::Dialog
   end
   
   def select_tile_by_x_y(x, y, button)
-    return unless (0..255).include?(x) && (0..1023).include?(y)
+    return unless (0..@tile_width*@tiles_per_row-1).include?(x) && (0..1023).include?(y)
     return unless button == Qt::LeftButton
     
-    i = x/16 + y/16*16
+    i = x/@tile_width + y/@tile_width*@tiles_per_row
     
     select_tile(i)
   end
@@ -254,7 +302,7 @@ class TilesetEditorDialog < Qt::Dialog
     old_selected_tile = @selected_tile
     
     @selected_tile_index = tile_index
-    @selected_tile = @tileset.tiles[tile_index]
+    @selected_tile = @tiles[tile_index]
     
     @ui.gfx_page_index.setCurrentIndex(@selected_tile.tile_page)
     @ui.palette_index.setCurrentIndex(@selected_tile.palette_index)
@@ -270,7 +318,7 @@ class TilesetEditorDialog < Qt::Dialog
   def select_tile_index_on_gfx_page(x, y, button)
     return unless (0..127).include?(x) && (0..127).include?(y)
     
-    i = x/16 + y/16*8
+    i = x/@tile_width + y/@tile_width*@tiles_per_gfx_page_row
     @selected_tile.index_on_tile_page = i
     
     load_selected_tile()
@@ -303,4 +351,6 @@ class TilesetEditorDialog < Qt::Dialog
       parent.load_room()
     end
   end
+  
+  def inspect; to_s; end
 end

@@ -53,6 +53,19 @@ class Tileset
     end
   end
   
+  def write_to_rom
+    tileset_data = ""
+    @tiles[1..-1].each_with_index do |tile, i|
+      tileset_data << tile.to_data
+    end
+    
+    if SYSTEM == :nds
+      fs.write(tileset_ram_pointer, tileset_data)
+    else
+      fs.compress_write(tileset_ram_pointer, tileset_data)
+    end
+  end
+  
   def tile_class
     if SYSTEM == :gba
       GBATilesetTile
@@ -111,6 +124,10 @@ class GBATilesetTile
     end
   end
   
+  def to_data
+    @minitiles.map{|mt| mt.to_data}.join
+  end
+  
   def is_blank
     false # TODO
   end
@@ -129,6 +146,16 @@ class MiniTile
     @horizontal_flip    = (minitile_data & 0b00000100_00000000) > 0
     @vertical_flip      = (minitile_data & 0b00001000_00000000) > 0
     @palette_index      = (minitile_data & 0b11110000_00000000) >> 12
+  end
+  
+  def to_data
+    minitile_data = 0
+    minitile_data |= (@index_on_tile_page      ) & 0b00000000_11111111
+    minitile_data |= (@tile_page          <<  8) & 0b00000011_00000000
+    minitile_data |=                               0b00000100_00000000 if @horizontal_flip
+    minitile_data |=                               0b00001000_00000000 if @vertical_flip
+    minitile_data |= (@palette_index      << 12) & 0b11110000_00000000
+    [minitile_data].pack("v")
   end
   
   def is_blank

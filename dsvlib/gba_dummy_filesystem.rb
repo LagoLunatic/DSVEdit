@@ -76,6 +76,10 @@ class GBADummyFilesystem
     return decompressed_data
   end
   
+  def compress_write(address, new_data)
+    raise NotImplementedError.new
+  end
+  
   def load_overlay(overlay_id)
     # Do nothing.
   end
