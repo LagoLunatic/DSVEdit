@@ -902,6 +902,9 @@ class DSVEdit < Qt::MainWindow
         @progress_dialog.close()
         @progress_dialog = nil
         
+        symbol_file_out_path = File.join(File.dirname(output_rom_path), "built_rom_#{GAME}.sym")
+        FileUtils.cp("./docs/asm/#{GAME} Functions.txt", symbol_file_out_path)
+        
         if launch_emulator
           if SYSTEM == :nds
             emulator_path = @settings[:emulator_path]
