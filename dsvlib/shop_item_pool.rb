@@ -110,6 +110,7 @@ class ShopItemPool
       data = [@requirement] + @item_ids + [0xFFFF]
       fs.write(@item_pool_pointer, data.pack("v*"))
     when "ooe"
+      return if @item_pool_pointer == 0
       data = [@item_ids.length] + @item_ids
       fs.write(@item_pool_pointer, data.pack("v*"))
     end
