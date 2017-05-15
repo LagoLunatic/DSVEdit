@@ -5,6 +5,7 @@ class ShopEditor < Qt::Dialog
   slots "pool_index_changed(int)"
   slots "item_index_changed(int)"
   slots "item_id_changed(int)"
+  slots "requirement_changed()"
   slots "button_box_clicked(QAbstractButton*)"
   
   def initialize(main_window, game)
@@ -45,6 +46,7 @@ class ShopEditor < Qt::Dialog
     connect(@ui.pool_index, SIGNAL("currentRowChanged(int)"), self, SLOT("pool_index_changed(int)"))
     connect(@ui.item_index, SIGNAL("currentRowChanged(int)"), self, SLOT("item_index_changed(int)"))
     connect(@ui.item_id, SIGNAL("currentRowChanged(int)"), self, SLOT("item_id_changed(int)"))
+    connect(@ui.requirement, SIGNAL("editingFinished()"), self, SLOT("requirement_changed()"))
     connect(@ui.buttonBox, SIGNAL("clicked(QAbstractButton*)"), self, SLOT("button_box_clicked(QAbstractButton*)"))
     
     if GAME == "por"
@@ -110,6 +112,15 @@ class ShopEditor < Qt::Dialog
     
     item = @game.items[item_id]
     @ui.item_index.currentItem.text = "%02X %s" % [item_id+1, item.name]
+  end
+  
+  def requirement_changed
+    if @pool.is_a?(ShopPointItemPool)
+      item_index = @ui.item_index.currentRow
+      @pool.required_shop_points[item_index] = @ui.requirement.text.to_i(16)
+    else
+      @pool.requirement = @ui.requirement.text.to_i(16)
+    end
   end
   
   def save_changes

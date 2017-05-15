@@ -35,7 +35,7 @@ class ShopItemPool
         @requirement = nil
       else
         constant, constant_shift = fs.read(required_flag_location, 2).unpack("CC")
-        constant_shift = constant_shift & 0xF
+        constant_shift &= 0xF
         unless constant_shift == 0
           constant_shift = (0x10 - constant_shift)*2
         end
@@ -80,9 +80,34 @@ class ShopItemPool
     case GAME
     when "aos"
     when "dos"
-      fs.write(@item_pool_pointer, data.pack("C*"))
+      fs.write(@item_pool_pointer, @item_ids.pack("C*"))
+      
+      required_flag_location = SHOP_ITEM_POOL_REQUIRED_EVENT_FLAG_HARDCODED_LOCATIONS[pool_id]
+      if !required_flag_location.nil?
+        if !(0..0x1F).include?(@requirement)
+          raise "Invalid requirement, must be between 0x00 and 0x1F."
+        end
+        
+        if @requirement.even?
+          constant = 1
+        else
+          constant = 2
+        end
+        if @requirement == 0
+          constant_shift = @requirement
+        else
+          constant_shift = (0x10 - @requirement/2)
+        end
+        
+        # The upper nibble of the constant shift byte is some other code we don't want to overwrite.
+        old_constant_shift_byte = fs.read(required_flag_location+1, 1).unpack("C").first
+        old_constant_shift_byte &= 0xF0
+        constant_shift |= old_constant_shift_byte
+        p "%02X %02X" % [constant, constant_shift]
+        fs.write(required_flag_location, [constant, constant_shift].pack("CC"))
+      end
     when "por"
-      data = [@required_event_flag] + @item_ids + [0xFFFF]
+      data = [@requirement] + @item_ids + [0xFFFF]
       fs.write(@item_pool_pointer, data.pack("v*"))
     when "ooe"
       data = [@item_ids.length] + @item_ids
