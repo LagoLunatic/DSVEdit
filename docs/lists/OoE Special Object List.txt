@@ -8,7 +8,9 @@ Special Objects:
   Var B: Distance in pixels away from its starting point it should move right/down before turning around and heading back left/up to its starting point.
 02 Destructible.
   Var A:
-    00 A statue that yields a glyph when destroyed. Var B controls what glyph it is, it's the global ID of the glyph + 1.
+    00 A statue that yields a glyph when destroyed.
+      Var B controls what glyph it is, it's the global ID of the glyph + 1.
+      Furthermore, var B + 1 (global ID + 2) will be used as the picked up flag for this glyph statue.
     01-1E A candle.
     1F+ Buggy, it looks like a glyph statue but has a messed up palette, and it may yield either a glyph or money like a candle.
 03 Nothing.

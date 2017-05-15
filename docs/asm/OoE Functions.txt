@@ -62,7 +62,7 @@
   ;   0 - Spawn glyph instantly.
   ;   1 - Fail forming a glyph.
   ;   3 - Succeed forming a glyph.
-  ; [r13,8] - ?
+  ; [r13,8] - Picked up flag to set when the player absorbs this glyph.
 0206DBA4 GlyphSpawnNoLoad
   ; Spawns a glyph, but doesn't load the assets for the glyph's icon first.
   ; Same arguments as GlyphSpawn
