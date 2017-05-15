@@ -719,7 +719,9 @@ TEXT_REGIONS_OVERLAYS = {
   "Enemy Names" => 0,
   "Enemy Descriptions" => 0,
   "Misc" => 0,
-  "Menus" => 0,
+  "Menus 1" => 0,
+  "Quest Names" => 0,
+  "Menus 2" => 0,
   "Events" => 0
 }
 STRING_DATABASE_START_OFFSET = 0x021DD280
