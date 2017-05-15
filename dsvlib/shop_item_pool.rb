@@ -103,7 +103,6 @@ class ShopItemPool
         old_constant_shift_byte = fs.read(required_flag_location+1, 1).unpack("C").first
         old_constant_shift_byte &= 0xF0
         constant_shift |= old_constant_shift_byte
-        p "%02X %02X" % [constant, constant_shift]
         fs.write(required_flag_location, [constant, constant_shift].pack("CC"))
       end
     when "por"

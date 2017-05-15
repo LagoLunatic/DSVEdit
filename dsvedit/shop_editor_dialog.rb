@@ -39,7 +39,7 @@ class ShopEditor < Qt::Dialog
       @available_shop_item_range = ITEM_GLOBAL_ID_RANGE
     end
     @game.items[@available_shop_item_range].zip(@available_shop_item_range).each do |item, item_id|
-      item_name = "%02X %s" % [item_id+1, item.name]
+      item_name = "%03X %s" % [item_id+1, item.name]
       @ui.item_id.addItem(item_name)
     end
     
@@ -85,7 +85,7 @@ class ShopEditor < Qt::Dialog
     @ui.item_index.clear()
     @pool.item_ids.each do |global_id|
       item = @game.items[global_id-1]
-      @ui.item_index.addItem("%02X %s" % [global_id, item.name])
+      @ui.item_index.addItem("%03X %s" % [global_id, item.name])
     end
   end
   
@@ -111,7 +111,7 @@ class ShopEditor < Qt::Dialog
     @pool.item_ids[item_index] = item_id+1
     
     item = @game.items[item_id]
-    @ui.item_index.currentItem.text = "%02X %s" % [item_id+1, item.name]
+    @ui.item_index.currentItem.text = "%03X %s" % [item_id+1, item.name]
   end
   
   def requirement_changed
