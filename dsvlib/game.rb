@@ -296,6 +296,10 @@ class Game
         shop_item_pools << ShopItemPool.new(i, fs)
       end
       
+      if GAME == "por"
+        shop_item_pools << ShopPointItemPool.new(fs)
+      end
+      
       shop_item_pools
     end
   end
