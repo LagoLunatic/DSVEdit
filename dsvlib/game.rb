@@ -276,6 +276,30 @@ class Game
     raise "Could not find item by global ID: %04X" % item_global_id
   end
   
+  def wooden_chest_item_pools
+    @wooden_chest_item_pools ||= begin
+      wooden_chest_item_pools = []
+      
+      (NUMBER_OF_ITEM_POOLS*2).times do |i|
+        wooden_chest_item_pools << ItemPool.new(i, fs)
+      end
+      
+      wooden_chest_item_pools
+    end
+  end
+  
+  def shop_item_pools
+    @shop_item_pools ||= begin
+      shop_item_pools = []
+      
+      SHOP_ITEM_POOL_COUNT.times do |i|
+        shop_item_pools << ShopItemPool.new(i, fs)
+      end
+      
+      shop_item_pools
+    end
+  end
+  
   def get_map(area_index, sector_index)
     if GAME == "dos" && [10, 11].include?(sector_index)
       @abyss_map ||= DoSMap.new(area_index, sector_index, fs)
