@@ -36,6 +36,8 @@ Memory used for entities in PoR is 020FC500 - 0211173F. Each entity is 0x160 byt
 094,4: Color tint 2?
 098,4: Color tint 3?
 09C,4: Color tint 4?
+0A0,2: Sprite x offset relative to the entity's position.
+0A2,2: Sprite y offset relative to the entity's position.
 0A4,1: Controls the iframes this entity should give.
   This is an index in list 020BE4C8 - a list of different iframes values. Each entry is 1 byte long.
   This value is only read when the entity is initialized, changing it after the entity already exists has no effect.

@@ -114,6 +114,9 @@
   ; r0 - Asset index
 02033074 AssetGetFreeSlot?
   ; r0 - Asset index
+02039F78 Asset???
+  ; r0 - Asset index
+  ; r1 - ???
 
 0205DDB4 EntityMoveToFloor
   ; Teleports entity downwards to the nearest floor.
