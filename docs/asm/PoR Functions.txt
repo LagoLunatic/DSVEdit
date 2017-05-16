@@ -53,6 +53,7 @@
   ; Max random number is r0-1. Min is 0.
 02013024 RandMaxRandSign
   ; Min random number is -r0. Max is r0-1.
+02013008 RandMax2?
 
 020216B0 LoadSprite
   ; r0 - Entity ptr

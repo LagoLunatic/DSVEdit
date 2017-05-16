@@ -50,8 +50,14 @@ Enemies:
     2 Vacuum, starts moving immediately.
 17 Mimic
 18 Larva
-  Var A: TODO
-  Var B: TODO
+  Spawner.
+  Var A: Sometimes set, but seems unused.
+  Var B: Bitfield of which directions the larva can move in.
+    01 - Right to left.
+    02 - Left to right.
+    04 - Top to bottom.
+    08 - Bottom to top.
+    If var B is 0, it's the same as if it's F (all directions allowed).
 19 Lerajie
 1A Spittle Bone
   Var A: Which wall to attach to when first initialized.
