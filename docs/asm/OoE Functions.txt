@@ -16,10 +16,15 @@
   ; r1 - ??? 10
   ; r2 - ??? 1
 
+02038C1C ChangeRoom
+  ; r0 - New room pointer
+
 0204FB1C CalcExpNeededForLevel
   ; Figures out the total EXP for a given level.
   ; The formula is: level*(level+1)*(level+2+level*2)
   ; r0 - Level
+
+0206B2F0 CalcAPBonusAttack
 
 02023794 FloatConvertFromInt
   ; r0 - Integer

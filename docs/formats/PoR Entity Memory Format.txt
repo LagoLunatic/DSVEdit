@@ -12,10 +12,10 @@ Memory used for entities in PoR is 020FC500 - 0211173F. Each entity is 0x160 byt
 016,2: Frame counter 2.
 024,4: X pos on the screen.
 028,4: X pos on the screen.
-02C,4: Z-index.
+02C,4: Z position.
 030,4: X pos.
 034,4: Y pos.
-038,4: Z-index.
+038,4: Z position.
 03C,4: X velocity.
 040,4: Y velocity.
 048,4: X acceleration.

@@ -1,6 +1,16 @@
 
 === 02000000 - 020F61BF: Most of ARM9
 
+020BFA74 - List of layer scroll modes.
+  Each is 0xC bytes long.
+  00,4: Horizontal scrolling multiplier (0x1000 = 1.0).
+  04,4: Vertical scrolling multiplier (0x1000 = 1.0).
+  08,4: Autoscrolling type.
+    0 - No autoscrolling.
+    1 - Autoscrolling.
+      Word 00 is the speed of horizontal scrolling.
+      Word 04 is the speed of vertical scrolling.
+
 020CA5DC - List of code pointers for each game state (020F6284).
 
 020CD88C - List of enemy files to load.
@@ -368,7 +378,23 @@ TODO: What are the other 2 for? It's not for the "recent" tab.
 
 02112458-02112617 - Data for the current room's 4 layers. Each is 0x70 bytes long.
   00,4: Pointer to the layer's metadata.
-  0C,4: Affects screen's y position.
+  08,4: x position on the screen.
+  0C,4: y position on the screen.
+  10,4: z position.
+  14,4: Scroll mode's horizontal multiplier (0x1000 = 1.0).
+  18,4: Scroll mode's vertical multiplier (0x1000 = 1.0).
+  1C,4: Scroll mode's autoscroll type.
+  34,4: RGBA color multipliers.
+  38,2: Height in pixels.
+  3A,2: Height in pixels.
+  3C,2: Texture format for how this layer should be rendered. 0-7.
+    3 - 16 colors.
+    4 - 256 colors.
+  44,4: Texture VRAM offset.
+  51,1: Scroll mode's autoscroll type.
+  58,4: Opacity.
+  60,2: Bitfield of ?.
+    0100 - Turn off and layer will be invisible?
 
 0213291C - List of hitboxes. Each entry is 0x14 bytes long, containing two hitboxes 0xA bytes long each.
   The index in this list for a particular entity is at offset+0xA7 in the entity memory.

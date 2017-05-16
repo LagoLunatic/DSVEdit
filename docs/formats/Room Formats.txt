@@ -31,12 +31,17 @@ Always 64 bytes long. Each entry takes up 16 bytes, so the maximum number of lay
 If a room has less than 4 layers, the remaining entries will simply be filled with all 00s to indicate those should be ignored.
 Whichever layer is first in the layer list will be used for collision.
 Format for each entry here:
-Byte 1: Z-Index to draw the layer at. TODO: List some examples.
-Byte 2: How the layer scrolls. TODO: Figure out how it works.
-Byte 3: Opacity of the layer. 0 is invisible, 31 (0x1F) is fully visible. In OoE 0 looks fully visible, so the lowest you can get there is 1.
+Byte 1: Z-Index to draw the layer at.
+  Lower values are closer to the screen. 00 is in front of everything.
+  The actual z-axis position is calculated as:
+  0x7000-(this_number*0x180)
+Byte 2: How the layer scrolls.
+  This is an index in the list of scroll modes, which is different between games.
+Byte 3: Opacity of the layer. 0 is invisible, 0x1F is fully visible.
+  In OoE 0 looks fully visible, so the lowest you can get there is 1.
 Byte 4: Unknown.
 Bytes 5-6: Unknown.
-Bytes 7-8: Should be equal to the layer's height in screens multipled by 0xC0.
+Bytes 7-8: Should be equal to the layer's height in pixels.
   This is used by the collision checker to tell if the player is standing on a jump-through platform.
   If you set this value too small, for example setting it to C0 in a room 2 screens tall, then the player won't be able to properly stand on jump-through platforms below that point in the level.
   Note that in PoR and OoE this value is automatically calculated every time you enter a room, so the bug described above can only happen in DoS.
