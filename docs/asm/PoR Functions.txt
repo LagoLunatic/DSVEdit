@@ -7,15 +7,47 @@
   ; r0 - Minimum entity index to check
   ; r1 - Maximum entity index to check
 
+0201BB6C AssetGetPointer
+  ; r0 - Asset index
+  ; Returns the pointer at 020CDAFC+(r0*0x20)
+0201BB58 AssetGetName
+  ; r0 - Asset index
+  ; Returns 020CDAFC+(r0*0x20)+6, where the asset's filename starts
+
+02015AFC LoadPalette
+  ; r0 - Palette list pointer
+  ; r1 - Number of palettes
+  ; r2 - ?
+
+0204D5FC PlaySfx
+  ; r0 - Sfx index
+  ; r1 - x pos
+  ; r2 - y pos
+  ; r3 - z pos
+
 021E43E4 GiveItem
   ; r0 - Item type (2 is consumables, etc)
   ; r1 - Item index
-021E54B4 GiveItemShowName
-  ; r0 - ?
+021E54B4 TakeItem
+  ; The player takes an item, deleting the entity, showing the item's name in the corner, etc.
+  ; r0 - Pointer to the item entity to delete
   ; r1 - Item type (2 is consumables, etc)
   ; r2 - Item index
-  ; r3 - 32?
+  ; r3 - Sound effect to play when picking up item
   ; [r13,0] - ?
+
+021E46C4 GetItemPointerByTypeIndex
+  ; r0 - Item type (2 is consumable, etc)
+  ; r1 - Index of the item
+021E476C GetItemIDByTypeIndex
+  ; r0 - Item type (2 is consumable, etc)
+  ; r1 - Index of the item
+  ; Returns r0 - global ID+1 of the item
+
+02043DF0 ShopGetItemPrice
+  ; r0 - Global ID of the item (can be a skill)
+  ; r1 - 
+  ; r2 - 
 
 021FEE34 PlayerGetStateAnim
   ; r0 - Pointer to player entity
@@ -31,18 +63,10 @@
   ; r0 - Index of the consumable
   ; Calls func 021E3AA8 with r1=0 and r2=1.
 
-021E46C4 GetItemPointer
-  ; r0 - Item type (2 is consumable, etc)
-  ; r1 - Index of the item
-
-02043DF0 ShopGetItemPrice
-  ; r0 - Global ID of the item (can be a skill)
-  ; r1 - 
-  ; r2 - 
-
 0205582C MapDrawBackground
 
 022028E0 PlayerUpdate
+021F6044 PartnerUpdate
 
 0220A038 DamageCalcEnemy
   ; Calculates the damage an enemy should do to the player.

@@ -109,7 +109,7 @@
 
 020331E4 AssetGetPointer
   ; r0 - Asset index
-  ; Returns 020D8CEC+(r0*0x20)
+  ; Returns the pointer at 020D8CEC+(r0*0x20)
 02033048 AssetLoad?
   ; r0 - Asset index
 02033074 AssetGetFreeSlot?
