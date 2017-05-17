@@ -418,6 +418,9 @@ class Room
     end
   end
   
+  alias width main_layer_width
+  alias height main_layer_height
+  
   def connected_rooms
     doors.map{|door| door.destination_door.room}.uniq
   end
