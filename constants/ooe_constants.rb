@@ -807,7 +807,7 @@ GLYPH_UNION_FORMAT = [
   [1, "Sprite"],
   [1, "?/Swings"],
   [1, "Max at once"],
-  [1, "Mana cost"],
+  [1, "Heart cost"],
   [4, "Effects", :bitfield],
   [4, "Unwanted States", :bitfield],
   [2, "Icon"],

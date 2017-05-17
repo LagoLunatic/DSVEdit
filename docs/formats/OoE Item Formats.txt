@@ -8,6 +8,26 @@ Arm glyph format:
     Bit 1: ?
     Bit 2: If set, the player doesn't play a swinging animation when using this glyph.
     Bits 3-8: Glyph union type. This value for both arms is used by function 0206E610 to determine what glyph union to use.
+      00 Generic punch
+      01 Generic punch
+      02 Sword
+      03 Rapier
+      04 Lance
+      05 Hammer
+      06 Bow
+      07 Axe
+      08 Sickle
+      09 Knife
+      0A Shield
+      0B Lapiste
+      0C Pneuma
+      0D Fire
+      0E Ice
+      0F Lightning
+      10 Holy
+      11 Dark
+      12 Nitesco
+      13 Dominus
   Byte 11: Maximum number of this projectile you can have in the room at once (per arm).
   Byte 12: Mana cost of using this glyph.
   Bytes 13-16: Bitfield for what elemental damage types this glyph does.

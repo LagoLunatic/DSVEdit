@@ -51,28 +51,37 @@ Memory used for entities in PoR is 020FC500 - 0211173F. Each entity is 0x160 byt
 0B0,4: Bitfield of resistances.
 0B4,4: Bitfield of weaknesses.
 0B8,2: Number of iframes this entity gives.
+0BA,2: 
+0BC,2: 
+0BE,2: 
 0C0,2: Magical defense.
-0D0,4: For players, this is a bitfield of their current state booleans.
 0DC,2: Counter?
 0DE,2: Counter?
+0FC,2: 
+120,4: Bitfield of ???.
+149,1: 
+
+For players:
+0D0,4: For players, this is a bitfield of their current state booleans.
 0E8,2: For players, ???.
   This is 1 when the player is doing a critical art/combo tech.
   This is 4 when the player is not present (neither player-controlled nor AI-controlled).
   Otherwise, this counts down every frame until it reaches 0.
 0EC,1: For players, 0 for player 1, 1 for player 2.
 0F4,4: For players, this is a pointer to their state->anims mapping.
-0FC,2: 
 100,4: For players, this is a bitfield of their current state booleans. Seems very similar to 0D0, but not exactly the same.
-118,2: For enemies, current HP.
-11A,1: For skills, this is the ID of the skill.
-11E,1: For skills, this is the skill multiplier. (1 or 2.)
-  For spells it varies depending on if it's half charged or fully charged.
-  For subweapons it varies depending on whether it's mastered or not.
-120,4: Bitfield of ???.
 124,4: For players, duplicate of x pos?
 128,4: For players, duplicate of y pos?
-12A,2: For enemies, this is the magical defense value from the enemy DNA.
-132,1: For enemies, this is the ID of the enemy.
-138,2: For enemies, this is the attack value from the enemy DNA.
-13A,2: For enemies, this is the physical defense value from the enemy DNA.
-149,1: 
+
+For enemies:
+128,2: Current HP. Originally copied from the max HP from the enemy DNA.
+12A,2: The magical defense value from the enemy DNA.
+132,1: The ID of the enemy.
+138,2: The attack value from the enemy DNA.
+13A,2: The physical defense value from the enemy DNA.
+
+For skills:
+11A,1: The ID of the skill.
+11E,1: The skill multiplier. (1 or 2.)
+  For spells it varies depending on if it's half charged or fully charged.
+  For subweapons it varies depending on whether it's mastered or not.

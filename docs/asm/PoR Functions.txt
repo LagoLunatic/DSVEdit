@@ -7,6 +7,9 @@
   ; r0 - Minimum entity index to check
   ; r1 - Maximum entity index to check
 
+02012B60 UpdateAllEntities
+02012784 ProcessInput
+
 0201BB6C AssetGetPointer
   ; r0 - Asset index
   ; Returns the pointer at 020CDAFC+(r0*0x20)
@@ -134,21 +137,44 @@
 02215394 CheckRelicEnabled
   ; r0 - Index of the relic to check. 0-F.
 
-02014FCC EntitySetDamageAndTypes
+021D9148 SetEnemyDefenses
+  ; r0 - Entity pointer
+  ; r1 - Enemy ID
+  ; Copies defense values from the enemy DNA into the entity.
+  ; This is also used for projectiles spawned by an enemy.
+021D9184 InitializeEnemyFromDNA
+  ; r0 - Entity pointer
+  ; Copies values from the enemy DNA into the entity.
+  ; It detects which enemy it is by the ID at +132 in the entity.
+
+02014FCC SetDamageAndTypes
   ; r0 - Entity pointer
   ; r1 - Damage value
   ; r2 - Damage types bitfield
   ; Stores r1 to entity+A8 and r2 to entity+AC if the entity's hitbox is active (entity+A6)
+02014F40 SetDamage
+  ; r0 - Entity pointer
+  ; r1 - Damage value
+  ; Stores r1 to entity+A8 if the entity's hitbox is active (entity+A6)
 02014FB0 SetDefenses
   ; r0 - Entity pointer
   ; r1 - Physical defense
   ; r2 - Resistances
   ; r3 - Weaknesses
-  ; Only stores these if the entity's hitbox is active (entity+A4)
+  ; Only stores these if the entity's hitbox is active (entity+A6)
 02014F9C SetMagicDefense
   ; r0 - Entity pointer
   ; r1 - Magical defense
-  ; Only stores these if the entity's hitbox is active (entity+A4)
+  ; Only stores these if the entity's hitbox is active (entity+A6)
+02014F2C SetIframes
+  ; r0 - Entity pointer
+  ; r1 - Iframes
+  ; Stores r1 to entity+B8 if the entity's hitbox is active (entity+A6)
+02014F08 SetIframesByIndex
+  ; r0 - Entity pointer
+  ; Only does anything if the entity's hitbox is active (entity+A6)
+  ; Gets the entity's iframes index from entity+A4.
+  ; Then gets the actual iframes from list 020BE4C8 and stores that to entity+B8.
 
 ; Enemy-specific code
 0222D5DC EnemyZombieCreate
