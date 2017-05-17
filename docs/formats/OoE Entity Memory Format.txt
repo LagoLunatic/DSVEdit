@@ -26,12 +26,16 @@ Memory used for entities in OoE is 021092A0 - 0211DF5F. Each entity is 0x160 byt
   Bits:
   0x1: Whether this entity's hitboxes are active or not.
 0A7,1: Index of this entity's hitbox in the global hitbox list (02128BDC).
+0A8,2: Damage.
+0AC,4: Bitfield of damage types.
 0B8,2: ? something related to glyph union?
 0D0,4: For players, this is a bitfield of their current state booleans.
   For glyphs, ?
 0D6,2: For glyphs, ?
 0D8,4: For glyphs, ?
 0DC,4: For glyphs, has the picked up flag to set.
+0E0,4: For items, has the global ID+1 of the item.
+  For money, has the type of money (0-6 for different values of money).
 124,1: 
 126,1: For enemies, has the petrified palette index from the enemy DNA.
 12C,1: For glyphs, has the type of the glyph.

@@ -9,6 +9,9 @@
   ; r2 - ? Create code pointer?
 
 08000A90 Rand
+080D812C RandClampToMax
+  ; r0 - Random number
+  ; r1 - Maximum is r1-1
 
 0802D284 GetRedSoulPointer
   ; r0 - Index of the red soul

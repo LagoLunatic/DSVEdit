@@ -3,6 +3,12 @@
 
 02032DD8 LoadOverlay
 
+02028C58 GetEntitySlot
+  ; r0 - Minimum entity index to check
+  ; r1 - Maximum entity index to check
+02028C1C DeleteEntity
+  ; r0 - Entity pointer
+
 020332E0 RandMax
   ; Max random number is r0-1. Min is 0.
 
@@ -51,6 +57,22 @@
 02063750 CheckItemAvailableInShop
   ; Checks bit 0x20 of the owned item info (see above).
   ; r0 - Global ID+1 of the item
+020636E8 SetItemEverOwned
+  ; Sets/clears bit 0x10 of the owned item info (see above).
+  ; r0 - Global ID+1 of the item
+  ; r1 - 1 to set the item as owned. 0 to set the item as never owned.
+020635A4 GiveItem
+  ; r0 - Global ID+1 of the item
+02062DE0 TakeItem
+  ; The player takes an item, deleting the entity, showing the item's name in the corner, etc.
+  ; r0 - Pointer to the item entity to delete
+  ; r1 - Pointer to the player entity
+  ; r2 - Pointer to ??? in the stack
+02062EB8 TakeMoney
+  ; The player takes the money, deleting the entity, showing the amount of money in the corner, etc.
+  ; r0 - Pointer to the money entity to delete
+  ; r1 - Pointer to the player entity
+  ; r2 - Pointer to ??? in the stack
 
 022018C4 ShopGetItemPrice
   ; r0 - Global ID+1 of the item
@@ -87,10 +109,6 @@
   ; ??? used by events where Albus gives you Dominus glyphs
   ; r0 - 
   ; r1 - Global ID+1 of the glyph
-
-020636E8 GiveItem
-  ; r0 - Global ID+1 of the item
-  ; r1 - Number of the item to give?
 
 0206A764 GetGlyphPointer
   ; r0 - The Global ID+1 of the glyph.
@@ -139,6 +157,20 @@
 02031884 EntitySetIframes
   ; r0 - Pointer to the entity
   ; r1 - Iframes for this entity to give
+
+020318B8 EntitySetDamageAndTypes
+  ; r0 - Entity pointer
+  ; r1 - Damage value
+  ; r2 - Damage types bitfield
+  ; Stores r1 to entity+A8 and r2 to entity+AC if the entity's hitbox is active (entity+A6)
+02031834 EntitySetDamage
+  ; r0 - Entity pointer
+  ; r1 - Damage value
+  ; Stores r1 to entity+A8 if the entity's hitbox is active (entity+A6)
+020318D0 EntitySetDamageTypes
+  ; r0 - Entity pointer
+  ; r1 - Damage types bitfield
+  ; Stores r1 to entity+AC if the entity's hitbox is active (entity+A6)
 
 0204E328 NewgameGiveStartingItems
 

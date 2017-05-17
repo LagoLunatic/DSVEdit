@@ -68,6 +68,11 @@
 022028E0 PlayerUpdate
 021F6044 PartnerUpdate
 
+02208C28 CalcPlayerAttack
+  ; r0 - ?
+  ; r1 - ?
+  ; Returns r0 - the new attack value
+
 0220A038 DamageCalcEnemy
   ; Calculates the damage an enemy should do to the player.
   ; r0 - Player number to damage. 0 or 1.
@@ -129,6 +134,11 @@
 02215394 CheckRelicEnabled
   ; r0 - Index of the relic to check. 0-F.
 
+02014FCC EntitySetDamageAndTypes
+  ; r0 - Entity pointer
+  ; r1 - Damage value
+  ; r2 - Damage types bitfield
+  ; Stores r1 to entity+A8 and r2 to entity+AC if the entity's hitbox is active (entity+A6)
 02014FB0 SetDefenses
   ; r0 - Entity pointer
   ; r1 - Physical defense

@@ -82,7 +82,7 @@
 020F343C - List of special object files to load.
 020F3688 - List of special object ??
 020F370C - List of special object create code pointers
-020F3940 - List of special object running code pointers.
+020F3940 - List of special object update code pointers.
 02298AD0 - List of special object ???
 02345CF8 - List of special object ???
 
@@ -139,16 +139,18 @@
 020FFCB4,2 - ?
 020FFCB9 - Current area index.
 
-020FFD5C - Player's current stats.
-  020FFD5C,2 - ATK
-  020FFD5E,2 - DEF
-  020FFD60,2 - STR
-  020FFD62,2 - CON
-  020FFD64,2 - INT
-  020FFD66,2 - MND
-  020FFD68,2 - LCK
-  020FFD6A,2 - ?
-  020FFD6C,4 - Bitfield of resistances.
+Player's current stats:
+020FFD5C,2 - ATK
+020FFD5E,2 - DEF
+020FFD60,2 - STR
+020FFD62,2 - CON
+020FFD64,2 - INT
+020FFD66,2 - MND
+020FFD68,2 - LCK
+020FFD6A,2 - ?
+020FFD6C,4 - Bitfield of resistances.
+
+020FFDDC,4 - Bitfield of damage types that most recently hit the player.
 
 Player's current bonus elemental attribute points (AP):
 020FFE04,2 - Bonus strike AP. Set to 0x1800 by Blow Ring.
@@ -170,6 +172,7 @@ Player's current bonus elemental attribute points (AP):
 02100203 - change from 55 to 5D to unlock that one tile of kalidus channel that unlocks after beating brachyura (or more specifically, leaving the lighthouse through the bottom exit).
 
 021002B0,2 - Current level
+021002B2,2 - ?
 021002B4,2 - Current HP
 021002B6,2 - Max HP
 021002B8,2 - Current MP
@@ -227,13 +230,15 @@ Player's current elemental attribute points (AP):
 02100326,2 - Holy AP
 02100328,2 - Dark AP
 The more AP you have for attributes that your current weapon has, the higher the attack multiplier you get.
-A 1% attack boost takes about 0x147 (0d327) AP.
-A 100% attack boost would take about 0x8000 (0d32768) AP.
+A 1% attack boost takes 0x147 (0d327) AP.
+A 100% attack boost (double) takes 0x8000 (0d32768) AP.
+A 200% attack boost (triple) takes 0xFFFF (0d65535) AP.
 
 02100342,1 - Current glyph sleeve (0 1 or 2 for A B or C).
 
 02100378-0210037B - miscellaneous flags.
-  0x40 - cerberus gate down.
+  Bit indexes:
+  06 - Cerberus gate down.
   includes flags for which area titles have been seen by the player (e.g. "Monastery")
 0210037C-0210037F - flags which breakable walls/secret doors have been uncovered on the map. bit 80 means the one at the bottom right of dracula's castle.
 0210037E - change to 02 and kalidus channel gets the "NEW" with the hand pointing to the bottom right.
@@ -243,7 +248,7 @@ A 100% attack boost would take about 0x8000 (0d32768) AP.
   0x200 - seen event in minera prison island where albus gives you the glyph.
 
 02100398-021003C3 - Picked up item flags.
-  Bits:
+  Bit indexes:
   21 - Lapiste puzzle
   24 - Vol Ignis puzzle
   28 - Vol Fulgur puzzle
@@ -261,7 +266,7 @@ A 100% attack boost would take about 0x8000 (0d32768) AP.
   Bit 5: Whether you've ever owned any of this item.
   Bit 6: Whether this item is available for sale in the shop.
   Bit 7: (For relics) Whether this relic is currently equipped.
-  Bit 8: ?
+  Bit 8: ? Set for all items you've owned except HP/MP/Heart Max Ups.
 
 021005F0-02100601 - Quest statuses. Each takes up half a byte, in the order of low nibble first, high nibble second. Value for each quest:
   0 - Not started.
@@ -269,14 +274,14 @@ A 100% attack boost would take about 0x8000 (0d32768) AP.
   3 - Started and accomplished, but not turned in.
   7 - Completed.
 
-021006CC - Area index to save to the save file?
-021006CD - Sector index to save to the save file?
-021006CE - Room index to save to the save file?
+021006CC - Area index to be saved to the save file.
+021006CD - Sector index to be saved to the save file.
+021006CE - Room index to be saved to the save file.
 
-021006CF-0210078C - List of player-position map reminder markers.
+021006CF-0210078C - List of player-positioned map reminder markers.
   Each marker is 2 bytes long:
     00,1: X pos
-    00,2: Y pos
+    01,1: Y pos
   Each area has 5 markers. Area 13 has no markers.
 
 0210078D - Top screen to be saved to the save file.
@@ -301,16 +306,27 @@ A 100% attack boost would take about 0x8000 (0d32768) AP.
   This list is randomized every time you enter an area.
   See 02223B08 for which items are available to be chosen in which areas.
 
-02345D74 - current area index?
-
 === 021092A0 - 0211DF5F: Entities currently loaded into memory. Each is 0x160 bytes long. They range from 0-F1.
+
+What each range of entity slots is for:
+00-03 Used when the game is booting up
+04-04 Player.
+06-06 ?
+08-10 Player skills.
+2A-2A ?
+2D-7C Room entities, including enemies and special objects.
+7D-E8 Various small thing including particles and enemy projectiles.
+EA-EB Menus.
+EC-EC Used in term list?
+EE-EE Used when loading a save
+F0-F0 ?
+
+02109820-0210997F - Player (slot 04)
 
 02109820 - Start of the player's entity memory.
 02109850 - Player's x pos.
 02109854 - Player's y pos.
-021098C0-021098C1 - x offset to draw shanoa's sprite at relative to her position.
-021098C2-021098C3 - y offset to draw shanoa's sprite at relative to her position.
-021098F0 - (shanoa+0xD0) Bitfield of player state booleans.
+021098F0 - Bitfield of player state booleans.
   0x00000001 - Moving.
   0x00000002 - Moving forward
   0x00000004 - Facing left.
@@ -358,6 +374,9 @@ A 100% attack boost would take about 0x8000 (0d32768) AP.
 02109934 - Number of frames left for mercy jump left.
   4 when on ground. 0 when you can't jump.
 
+0210D080-02113E7F - Room entities (slots 2D-7C)
+
+02113E80-0211D2FF - Particles (slots 7D-E8)
 
 === 0211DF5F: End of entities currently loaded into memory.
 
@@ -415,7 +434,6 @@ when you first enter a new area, the game determines which entrance room to put 
 02151CDC - Song currently playing in sound test?
 0215AA08 - Song currently playing. FF when no song is playing.
 0215AA10 - Music volume.
-0221A114 - list of songs to play in sound test.
 
 021DD240 - what area name is shown on the top screen on the world map (0 is dracula's castle, etc).
 
@@ -425,7 +443,7 @@ when you first enter a new area, the game determines which entrance room to put 
 
 02214F68 (in overlay 19) - the hardcoded value for the type of top screen to show on starting a new game.
 
-0221A114 - list of songs.
+0221A114 - list of songs to play in sound test.
 
 022228D4 - List of which shop item pool gets unlocked by each quest.
   If a pointer is 0, that quest doesn't unlock any items in the shop.
@@ -474,6 +492,10 @@ when you first enter a new area, the game determines which entrance room to put 
 
 022EB1A0 - First asset loaded into RAM.
 
+022FFA90 - shanoa's hitbox data
+
+02345D74 - current area index?
+
 0234C200-0237FFFF - Free space.
 
 023FFC20 - Number times the player has soft reset the game with select+start+L+R. If this is greater than 0, the game skips showing the Nintendo/Konami/Actimagine/ESRB logos as well as the intro movie on startup.
@@ -482,7 +504,5 @@ when you first enter a new area, the game determines which entrance room to put 
 === 02A00000 - 02A0726F: Some of ARM9
 
 =========
-
-022FFA90 - shanoa's hitbox data
 
 f_ascii.dat - contains letters of the alphabet and such for displaying text. 1-dimensional gfx mode.
