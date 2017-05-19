@@ -2,7 +2,8 @@
 0      021DD280-021FFD9F  Strings (English).
 1      021DD280-021FFD9F  Strings (French).
 2-18   021FFDA0-021FFFBF  Palettes?
-19-20  021FFFC0-02223C3F  
+19     021FFFC0-02223C3F  Area data, map data, shop data.
+20     021FFFC0-02223C3F  
 21-23  02223E00-022B723F  Various game code.
 24-38  022B73A0-022C1FBF  Enemy code.
 39     022B73A0-022C1FBF  Wireless mode code.

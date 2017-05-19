@@ -236,12 +236,19 @@ A 200% attack boost (triple) takes 0xFFFF (0d65535) AP.
 
 02100342,1 - Current glyph sleeve (0 1 or 2 for A B or C).
 
-02100378-0210037B - miscellaneous flags.
+02100344-02100353 - Bitfield of which enemies have been killed at least once so they show up in the bestiary.
+02100354-02100363 - Bitfield of which enemy item 1 drops have been seen so they show up in the bestiary.
+02100364-02100373 - Bitfield of which enemy item 2 drops have been seen so they show up in the bestiary.
+
+02100374,4 - Total playtime in frames.
+
+02100378-0210037F - Miscellaneous flags.
   Bit indexes:
   06 - Cerberus gate down.
   includes flags for which area titles have been seen by the player (e.g. "Monastery")
-0210037C-0210037F - flags which breakable walls/secret doors have been uncovered on the map. bit 80 means the one at the bottom right of dracula's castle.
-0210037E - change to 02 and kalidus channel gets the "NEW" with the hand pointing to the bottom right.
+  also includes flags which breakable walls/secret doors have been uncovered on the map. 27 means the one at the bottom right of dracula's castle.
+  31 - Kalidus Channel gets the "NEW" with the hand pointing to the bottom right entrance.
+  32 - Player saw the hand pointing at the bottom right entrance of Kalidus Channel and then entered Kalidus through any of its entrances (not necessarily the one that was pointed to).
 
 02100388 - event flags.
   0x100 - can trigger event in minera prison island where albus gives you the first part of dominus?
@@ -253,7 +260,13 @@ A 200% attack boost (triple) takes 0xFFFF (0d65535) AP.
   24 - Vol Ignis puzzle
   28 - Vol Fulgur puzzle
 
-021003CC-021003D0 - which areas on the world map have been unlocked. each area takes up 2 bits. the lower bit makes the area visible on the map but not selectable. the higher bit makes it both visible and accessible, overriding the lower bit. the order the areas are in is the same as their area index - so the lowest 2 bits of the first byte are dracula's castle, etc.
+021003CC-021003D3 - which areas on the world map have been unlocked. each area takes up 2 bits. the lower bit makes the area visible on the map but not selectable. the higher bit makes it both visible and accessible, overriding the lower bit. the order the areas are in is the same as their area index - so the lowest 2 bits of the first byte are dracula's castle, etc.
+
+021003D8-021003DB - Bitfield of ? flags.
+02223C00-02223C13 - List of ? indexes for each area.
+  Each entry is a byte. It's the index in bitfield 021003D8 for this area.
+  When you enter an area, that area's bit gets set in bitfield 021003D8.
+  What is this used for?
 
 021003E4-021003E7 - Boss death flags.
   0x0002 - Arthroverta.
@@ -285,6 +298,7 @@ A 200% attack boost (triple) takes 0xFFFF (0d65535) AP.
   Each area has 5 markers. Area 13 has no markers.
 
 0210078D - Top screen to be saved to the save file.
+0210078E - ID of the last enemy you attacked. For the enemy info on the top screen.
 
 02100790 - Current game mode.
   0 - Shanoa mode.
@@ -305,6 +319,13 @@ A 200% attack boost (triple) takes 0xFFFF (0d65535) AP.
   There are 0xC items in this list, each is a halfword.
   This list is randomized every time you enter an area.
   See 02223B08 for which items are available to be chosen in which areas.
+
+02101418 - glyph distortion matrixes?
+0210012C - 1 when glyph is being absorbed, 0 otherwise
+02101548 - x pos to distort towards
+0210154C - y pos to distort towards
+02100124 - x pos to distort towards
+02100128 - y pos to distort towards
 
 === 021092A0 - 0211DF5F: Entities currently loaded into memory. Each is 0x160 bytes long. They range from 0-F1.
 

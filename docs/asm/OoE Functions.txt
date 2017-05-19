@@ -22,6 +22,12 @@
   ; r1 - ??? 10
   ; r2 - ??? 1
 
+020AA508 PlaySfx
+  ; r0 - Sfx index
+  ; r1 - x pos
+  ; r2 - y pos
+  ; r3 - z pos
+
 02038C1C ChangeRoom
   ; r0 - New room pointer
 
@@ -31,6 +37,8 @@
   ; r0 - Level
 
 0206B2F0 CalcAPBonusAttack
+
+0209D1C8 ShowEnemyName??
 
 02023794 FloatConvertFromInt
   ; r0 - Integer
@@ -113,13 +121,27 @@
 0206A764 GetGlyphPointer
   ; r0 - The Global ID+1 of the glyph.
 
-0206A748 GetGlyphPointerByTypeIndex
-  ; r0 - Type of glyph.
-  ;   0 - Arm glyph
-  ;   1 - Arm glyph
+0206A748 GetGlyphPointerBySlotIndex
+  ; r0 - Slot of glyph.
+  ;   0 - Y-button arm glyph
+  ;   1 - X-button arm glyph
   ;   2 - Back glyph
   ;   3 - Glyph union
   ; r1 - Index of the glyph in that type's list.
+
+0206A6E8 GetGlyphPointerByTypeIndex
+  ; r0 - Type of glyph.
+  ;   0 - Arm glyph
+  ;   1 - Back glyph
+  ;   2 - Glyph union
+  ; r1 - Index of the glyph in that type's list.
+
+0206E610 CalcCurrentGlyphUnion
+  ; Calculates what glyph union the player should have depending on the union type of the glyphs on the player's left and right arms.
+  ; Other factors also affect it, like the union helms and Dominus Agony.
+  ; Returns r0 - Index of the glyph union
+0206E56C CalcCurrentGlyphUnionHelperFunc1
+0206E534 CalcCurrentGlyphUnionHelperFunc2
 
 0206CE4C GlyphLoadIcon
   ; r0 - The Global ID+1 of the glyph.
@@ -135,6 +157,10 @@
 02039F78 Asset???
   ; r0 - Asset index
   ; r1 - ???
+
+02049C58 PlayerUpdate
+0204E854 PlayerTakeInput
+02049CE4 PlayerUpdate2
 
 0205DDB4 EntityMoveToFloor
   ; Teleports entity downwards to the nearest floor.
@@ -172,6 +198,12 @@
   ; r1 - Damage types bitfield
   ; Stores r1 to entity+AC if the entity's hitbox is active (entity+A6)
 
+0205C464 EnemyDie?
+  ; Sets the enemy as being killed once
+  ; Gives EXP
+0205C930 EnemyDie2?
+  ; Calls EnemyDie
+
 0204E328 NewgameGiveStartingItems
 
 02046144 MapSetRoomExplored
@@ -185,6 +217,20 @@
   ; r2 - ??? 1
   ; r3 - x pos (in pixels) to set
   ; [r13,0] - y pos (in pixels) to set
+
+0206D6B0 GlyphUpdate
+0206D250 GlyphDistort
+  ; r0 - Glyph entity
+  ; r1 - X pos to distort towards
+  ; r2 - Y pos to distort towards
+0206E99C SetGlyphDistortTargetPos
+  ; r0 - X pos to distort towards
+  ; r1 - Y pos to distort towards
+  ; r2 - Whether the glyph should distort or not. 1 to distort, 0 to not.
+02048DE0 SetGlyphDistortTargetEntity
+  ; r0 - Entity to distort towards
+0206E9B4 SetGlyphShouldDistort
+  ; r0 - Whether the glyph should distort or not. 1 to distort, 0 to not.
 
 ; Enemy-specific code
 022114AC EnemyBatCreate
