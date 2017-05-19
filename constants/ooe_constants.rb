@@ -261,7 +261,7 @@ ENEMY_IDS = (0x00..0x78).to_a
 COMMON_ENEMY_IDS = (0x00..0x6A).to_a - [0x67]
 BOSS_IDS = [0x67] + (0x6B..0x78).to_a
 FINAL_BOSS_IDS = (0x78..0x78).to_a
-RANDOMIZABLE_BOSS_IDS = BOSS_IDS - FINAL_BOSS_IDS - [0x76] # remove eligor, he needs his own huge room
+RANDOMIZABLE_BOSS_IDS = BOSS_IDS - FINAL_BOSS_IDS - [0x6D, 0x76] # remove brachyura and eligor, they need their own rooms
 SPAWNER_ENEMY_IDS = [0x00, 0x01, 0x03, 0x0F, 0x1B, 0x2B, 0x3E, 0x48, 0x60, 0x61]
 
 BOSS_DOOR_SUBTYPE = 0x4B
