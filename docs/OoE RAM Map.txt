@@ -126,6 +126,26 @@
 
 020F4A56 - change from 08 to FF and "Shanoa" text appears in bottom left of screen, and dialogue in events doesn't work correctly.
 
+020F58B0-020F5AEF - List of quests.
+  Entry length 0x10.
+  00,2: Quest reward.
+    Usually the global ID+1 of the item.
+    A negative number means no reward.
+    If the reward is gold, this is the amount of gold.
+    This value is just for the freely given reward, items this quest unlocks in the shop are handled by list 022228D4.
+  04,4: Pointer to list of requirements to complete this quest (see below).
+  08,1: Bitfield.
+    01 - Reward is gold
+    02 - ?? Only used for Jacob's unused quest, "Get Business Started"
+    04 - Is a kill quest
+    08 - ?? Used for The Killing Scream (record Banshee's wail with Phonograph)
+Requirement lists for fetch quests:
+  The first halfword is the number of items in this list.
+  Then those items are each listed as global item IDs+1. Halfwords.
+Requirement lists for kill quests:
+  First halfword is the index in list 02100688, the list of enemies killed for each kill quest.
+  Second halfword is number of the enemy you need to kill.
+
 === 020F6B3F: End of most of ARM9.
 
 020FFC88 - normally 0. 12 when in paries state. 12 prevents pausing.
@@ -287,9 +307,17 @@ A 200% attack boost (triple) takes 0xFFFF (0d65535) AP.
   3 - Started and accomplished, but not turned in.
   7 - Completed.
 
-021006CC - Area index to be saved to the save file.
-021006CD - Sector index to be saved to the save file.
-021006CE - Room index to be saved to the save file.
+02100630,4 - Total gold you've spent at the shop.
+  Jacob gives you the VIP Card at 100000.
+
+02100688 - List of number of enemies you've killed for each kill quest.
+02100688,1 - Number of Black Crows (enemy 17) killed.
+02100689,1 - Number of Werewolves (enemy 3D) killed.
+0210068A,1 - Number of Jiang Shi (enemy 67) killed.
+
+021006CC,1 - Area index to be saved to the save file.
+021006CD,1 - Sector index to be saved to the save file.
+021006CE,1 - Room index to be saved to the save file.
 
 021006CF-0210078C - List of player-positioned map reminder markers.
   Each marker is 2 bytes long:
@@ -299,6 +327,7 @@ A 200% attack boost (triple) takes 0xFFFF (0d65535) AP.
 
 0210078D - Top screen to be saved to the save file.
 0210078E - ID of the last enemy you attacked. For the enemy info on the top screen.
+  79 means no enemy, just a blank info screen.
 
 02100790 - Current game mode.
   0 - Shanoa mode.

@@ -31,13 +31,15 @@
 021E43E4 GiveItem
   ; r0 - Item type (2 is consumables, etc)
   ; r1 - Item index
-021E54B4 TakeItem
+021E54B4 PickupItem
   ; The player takes an item, deleting the entity, showing the item's name in the corner, etc.
   ; r0 - Pointer to the item entity to delete
   ; r1 - Item type (2 is consumables, etc)
   ; r2 - Item index
   ; r3 - Sound effect to play when picking up item
   ; [r13,0] - ?
+021E4574 GetOwnedItemNum
+  ; r0 - Global ID+1 of the item
 
 021E46C4 GetItemPointerByTypeIndex
   ; r0 - Item type (2 is consumable, etc)
