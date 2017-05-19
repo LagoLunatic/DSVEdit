@@ -13,6 +13,8 @@ class ShopItemPool
   end
   
   def read_from_rom
+    fs.load_overlay(AREAS_OVERLAY) if AREAS_OVERLAY # In OoE this overlay also has shop data
+    
     @item_pool_pointer = fs.read(SHOP_ITEM_POOL_LIST + pool_id*4, 4).unpack("V").first
     
     @item_ids = []
