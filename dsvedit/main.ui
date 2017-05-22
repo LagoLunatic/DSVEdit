@@ -15,7 +15,7 @@
   </property>
   <property name="windowIcon">
    <iconset>
-    <normaloff>images/dsvedit_icon.ico</normaloff>images/dsvedit_icon.ico</iconset>
+    <normaloff>images/dsvedit_icon.png</normaloff>images/dsvedit_icon.png</iconset>
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QHBoxLayout" name="horizontalLayout">
