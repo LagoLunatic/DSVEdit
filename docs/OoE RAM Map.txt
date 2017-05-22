@@ -292,7 +292,7 @@ A 200% attack boost (triple) takes 0xFFFF (0d65535) AP.
   0x0002 - Arthroverta.
   0x4000 - Dracula?
 
-021003E8-0210054A - Start of list of what glyphs and items you own.
+021003E8-0210054A - Start of list of what glyphs and items you own (owned item info).
   Each item takes up 1 byte.
   The index in this list is the global ID+1 of the item, so Confodere is at 021003EA.
   The low nibble (4 bits) controls how many you have.
@@ -333,6 +333,9 @@ A 200% attack boost (triple) takes 0xFFFF (0d65535) AP.
   0 - Shanoa mode.
   1 - Albus mode.
   2 - Boss rush mode.
+  3 - ?
+  4 - Practice mode.
+02100791 - 
 02100792 - Current playable character.
   0 - Shanoa.
   1 - Arma Felix.
@@ -348,6 +351,8 @@ A 200% attack boost (triple) takes 0xFFFF (0d65535) AP.
   There are 0xC items in this list, each is a halfword.
   This list is randomized every time you enter an area.
   See 02223B08 for which items are available to be chosen in which areas.
+
+021007D5 - 0 when starting a new game, 1 when loading a save.
 
 02101418 - glyph distortion matrixes?
 0210012C - 1 when glyph is being absorbed, 0 otherwise
@@ -424,11 +429,19 @@ F0-F0 ?
 02109934 - Number of frames left for mercy jump left.
   4 when on ground. 0 when you can't jump.
 
+02109DA0-0210A9FF - Player skill entities (slots 08-10).
+
 0210D080-02113E7F - Room entities (slots 2D-7C)
 
 02113E80-0211D2FF - Particles (slots 7D-E8)
 
 === 0211DF5F: End of entities currently loaded into memory.
+
+0211E0C0 - List of sprite info for currently loaded entities.
+  The halfword at +6C in an entity's memory is the index in this list.
+  Each entry is 0x10 bytes long.
+  08,4: Affects GFX.
+  0C,4: Sprite pointer.
 
 0211FC60 - Start of list of globally loaded palettes.
 
@@ -526,7 +539,42 @@ when you first enter a new area, the game determines which entrance room to put 
   02,2: Asset index of graphic file for this breakable wall.
   04,4: Palette pointer.
 
-022B6FB4 - List of Transition room sprites & effects.
+022B6CA6 - List of destructibles.
+  Entry length 8.
+  The destructible's var A is the index in this list.
+  00,1: Destructible sprite index. This is the index in list 022B6DA0.
+  01,1: Animation/frame index.
+    Modifier bit 0001 controls whether this is an animation or frame index.
+  02,1: Destroyed frame index.
+    Used to create the flying particles after this destructible is destroyed.
+  03,1: Frame/animation index of glow visual behind this destructible.
+    FF for no glow visual.
+    Modifier bit 0100 controls whether this is a frame or animation index.
+  04,1: Palette offset.
+  05,1: What the destructible yields when destroyed.
+    0 - A single heart, or if you're at max hearts a single coin instead.
+    1 - A large number of coins.
+    2 - A glyph.
+  06,2: Bitfield of modifiers.
+    0001 - The destructible sprite is a single frame, instead of an animation.
+    0002 - Flip horizontally.
+    0004 - Has no glow.
+    0008 - When destroyed, the destructible doesn't break apart into flying particles, instead it just creates a small flame at its center.
+    0010 - Use destroy SFX 34B.
+    0020 - Use destroy SFX 349. (Overrides bit 0010.)
+    0040 - Use destroy SFX 34D. (Overrides bits 0010 and 0020.)
+    0080 - Floats in the air.
+    0100 - The glow is an animation, instead of a single frame.
+022B6DA0 - List of destructible sprites.
+  Entry length 0x14.
+  The first byte from list 022B6CA6 is the index in this list.
+  00,4: Sprite asset index.
+  04,4: GFX asset index.
+  08,4: GFX pointer.
+  0C,4: Sprite pointer.
+  10,4: Palette pointer.
+
+022B6FB4 - List of transition room sprites & effects.
   Each is 0x10 bytes long.
   00,4: Pointer to a list of asset indexes for GFX files.
   04,8: Asset index of sprite file.
