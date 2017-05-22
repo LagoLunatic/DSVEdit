@@ -65,13 +65,22 @@
 021E7C60 SpawnSoul
   ; r0 - x pos
   ; r1 - y pos
-  ; r2 - ?
+  ; r2 - z pos
   ; r3 - Soul index, or -1
-  ; [r13,0] - B?
+  ; [r13,0] - affects soul color if soul index is -1
   ; [r13,4] - 0?
   ; [r13,8] - 0? affects homing
   ; [r13,C] - 1000? z-index?
   ; [r13,10] - 0?
+021E7B68 SpawnSoulPickup
+  ; r0 - x pos
+  ; r1 - y pos
+  ; r2 - z pos
+  ; r3 - Soul index
+021E8F78 SoulUpdate
+
+021D7998 CreateRoomEntity
+  ; r0 - Pointer to the entity in the room's entity list.
 
 0201C1B8 LoadSprite
   ; r0 - Entity ptr
@@ -83,7 +92,7 @@
 
 021D9668 ActorSpawn
 021D9288 ActorSetVelocity
-021D9114 ActorCheckHPos
+021D9114 ActorCheckXPos
 021D91B8 ActorSetAnim
 021D9330 ActorSetState
 021D9440 ActorTurn

@@ -26,6 +26,7 @@ Memory used for entities in PoR is 020FC500 - 0211173F. Each entity is 0x160 byt
   80 Horizontal flip.
 078,4: Pointer to sprite animation list.
 07C,2: Current animation index.
+07E,2: Current keyframe index in this animation.
 080,2: Bitfield?
 08C,2: Affects how this entity is rendered.
   0 - Normal.

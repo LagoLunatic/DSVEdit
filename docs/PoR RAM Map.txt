@@ -29,7 +29,7 @@
 
 020DFD40 - List of quests.
   Entry length 0x10.
-  00,2 Global ID+1 of the item to give as a reward. Skills start at 150.
+  00,2 Global ID+1 of the item to give as a reward. Skills start at 151.
   04,2 Affects conditions to complete the quest somehow?
     Bit indexes:
       00-05: ???
@@ -112,7 +112,7 @@
   The halfword at +6C in an entity's memory is the index in this list.
   Each entry is 0x10 bytes long.
   08,4: Affects GFX. Index in list 020FB208.
-  0C,4: Pointer to something affecting sprite?
+  0C,4: Sprite pointer.
 020FB208 - List of ?.
   Each entry is 0x14 bytes long.
   00,2: 

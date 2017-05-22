@@ -28,7 +28,9 @@ Entity types:
     Var A: Flag for having picked up this item.
     Var B: The local ID of the body armor/accessory.
   05+ Free soul.
-    Var A: No effect.
+    Var A: Flag for having picked up this item.
+      Note that absorbing this soul won't set this flag, so you'd be able to absorb it over and over again by re-entering the room.
+      But if something else sets this flag, then this soul will no longer appear.
     Var B: The global ID of the soul.
 
 05 Nothing? Unused?

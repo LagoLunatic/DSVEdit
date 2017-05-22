@@ -22,7 +22,7 @@
   ; r1 - Number of palettes
   ; r2 - ?
 
-0204D5FC PlaySfx
+0204D5FC PlaySfxAtPos
   ; r0 - Sfx index
   ; r1 - x pos
   ; r2 - y pos
@@ -32,7 +32,7 @@
   ; r0 - Item type (2 is consumables, etc)
   ; r1 - Item index
 021E54B4 PickupItem
-  ; The player takes an item, deleting the entity, showing the item's name in the corner, etc.
+  ; The player picks up an item, deleting the entity, showing the item's name in the corner, etc.
   ; r0 - Pointer to the item entity to delete
   ; r1 - Item type (2 is consumables, etc)
   ; r2 - Item index
