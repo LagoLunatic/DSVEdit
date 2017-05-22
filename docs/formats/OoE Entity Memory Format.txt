@@ -10,11 +10,17 @@ Memory used for entities in OoE is 021092A0 - 0211DF5F. Each entity is 0x160 byt
 038,4: Z pos.
 03C,4: X velocity.
 040,4: Y velocity.
-06C,2: 
+048,4: X acceleration.
+04C,4: Y acceleration (gravity).
+06C,2: Affects the entity's graphics.
+  This is an index in list 0211E0C0.
 074,4: Bitfield.
   Bit 0x04: For skeletally animated enemies, this bit must be set or the parts won't be rotated at all.
   Bit 0x80: For Giant Skeleton, this is which direction he's facing, 0 for left, 80 for right.
 078,4: Pointer to sprite animation list.
+07C,2: Current animation index.
+07E,2: Current keyframe index in this animation.
+082,2: Delay in frames remaining before advancing to the next animation keyframe.
 084,2: Current sprite frame index.
 086,2: Palette index in the list of globally loaded palettes.
 088,2: Palette index in the list of globally loaded palettes. Unused?
@@ -22,24 +28,46 @@ Memory used for entities in OoE is 021092A0 - 0211DF5F. Each entity is 0x160 byt
 090,10: Affects color tint of this entity. 1F for everything means normal colored.
 0A0,2: Sprite x offset relative to the entity's position.
 0A2,2: Sprite y offset relative to the entity's position.
+0A4,1: Controls the iframes this entity should give.
+  This is an index in list 020B5C28 - a list of different iframes values. Each entry is 1 byte long.
+  This value is only read when the entity is initialized, changing it after the entity already exists has no effect.
 0A6,1: Hitbox bitfield.
   Bits:
   0x1: Whether this entity's hitboxes are active or not.
 0A7,1: Index of this entity's hitbox in the global hitbox list (02128BDC).
 0A8,2: Damage.
+0AA,2: Physical defense.
 0AC,4: Bitfield of damage types.
+0B0,4: Bitfield of resistances.
+0B4,4: Bitfield of weaknesses.
 0B8,2: ? something related to glyph union?
+0C0,2: Magical defense.
+0C8,4: On-hurt-player callback.
+  This function pointer is called when the entity collides with the player.
+0CC,4: On-damaged callback.
+  This function pointer is called when the entity collides with a player weapon.
 0D0,4: For players, this is a bitfield of their current state booleans.
   For glyphs, ?
+0E0,4: For items, has the global ID+1 of the item.
+  For money, has the type of money (0-6 for different values of money).
+
+For enemies:
+124,2: Bitfield of ??? for peeping eye:
+  0080 - initial
+  20C2 - hit
+  20C6 petrified
+126,1: For enemies, has the petrified palette index from the enemy DNA.
+12A,2: The magical defense value from the enemy DNA.
+132,1: Enemy ID.
+138,2: The attack value from the enemy DNA.
+13A,2: The physical defense value from the enemy DNA.
+158,4: Pointer to something for skeletal animation?
+
+For glyphs:
 0D6,2: For glyphs, ?
 0D8,4: For glyphs, ?
 0DC,4: For glyphs, has the picked up flag to set.
-0E0,4: For items, has the global ID+1 of the item.
-  For money, has the type of money (0-6 for different values of money).
-124,1: 
-126,1: For enemies, has the petrified palette index from the enemy DNA.
 12C,1: For glyphs, has the type of the glyph.
   1 - Arm glyph.
   2 - Back glyph.
 12D,1: For glyphs, has the index of the glyph in that type's list.
-132,1: Has the enemy's ID.

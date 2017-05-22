@@ -6,6 +6,7 @@
 02028C58 GetEntitySlot
   ; r0 - Minimum entity index to check
   ; r1 - Maximum entity index to check
+  ; r2 - Code pointer for the entity
 02028C1C DeleteEntity
   ; r0 - Entity pointer
 
@@ -60,6 +61,9 @@
 0206238C GetOwnedItemInfo
   ; Gets owned info for a specific item from list 021003E8.
   ; r0 - Global ID+1 of the item
+020623A4 SetOwnedItemInfo
+  ; r0 - Global ID+1 of the item
+  ; r1 - Item info to set
 020633F0 GetOwnedItemNum
   ; Returns 0x0F of the owned item info (see above).
   ; r0 - Global ID+1 of the item
@@ -74,6 +78,10 @@
   ; Sets/clears bit 0x10 of the owned item info (see above).
   ; r0 - Global ID+1 of the item
   ; r1 - 1 to set the item as owned. 0 to set the item as never owned.
+020637C8 SetRelicEquipped
+  ; Sets/clears bit 0x40 of the owned item info (see above).
+  ; r0 - Global ID+1 of the item
+  ; r1 - 1 to set the relic as equipped. 0 to set the item as unequipped.
 020635A4 GiveItem
   ; r0 - Global ID+1 of the item
 0206363C RemoveItem
@@ -108,13 +116,13 @@
   ; r1 - Bit(s) to set via OR
 020AA3F4 UpdateKillQuestCounts
   ; Called when an enemy dies.
-  ; r0 - Enemy that was just killed
+  ; r0 - Enemy entity that was just killed
   ; Increments the number of this enemy you've killed for the corresponding kill quest.
   ; What quest it updates for is hardcoded depending on the enemy ID.
 
 020881FC GiveGold
   ; r0 - Amount of gold to give
-020881B8 SetMoney
+020881B8 SetGold
   ; r0 - Amount of gold to set
   ; The amount is clamped between 0 and 9999999.
 
@@ -214,6 +222,9 @@
   ; r1 - Pointer to ??. May have the size of this entity?
   ;   For spear guard, this is 022B63E8.
   ;   04,2: Height in pixels.
+0205DEE4 EntityMoveToFloor2?
+  ; r0 - Entity
+  ; r1 - 0?
 
 0204D244 SetEntityCollision
   ; r0 - Entity pointer
@@ -225,10 +236,6 @@
 0221ABD8 RandomizeWoodenChests
   ; Puts random items from a given pool into all wooden chests.
   ; r0 - Item pool index to use
-
-02031884 EntitySetIframes
-  ; r0 - Pointer to the entity
-  ; r1 - Iframes for this entity to give
 
 020318B8 EntitySetDamageAndTypes
   ; r0 - Entity pointer
@@ -243,6 +250,41 @@
   ; r0 - Entity pointer
   ; r1 - Damage types bitfield
   ; Stores r1 to entity+AC if the entity's hitbox is active (entity+A6)
+020318D8 SetDefenses
+  ; r0 - Entity pointer
+  ; r1 - Physical defense
+  ; r2 - Resistances
+  ; r3 - Weaknesses
+  ; Only stores these if the entity's hitbox is active (entity+A6)
+02031854 SetPhysicalDefense
+  ; r0 - Entity pointer
+  ; r1 - Physical defense
+  ; Stores r1 to entity+AA if the entity's hitbox is active (entity+A6)
+02031864 SetResistances
+  ; r0 - Entity pointer
+  ; r1 - Bitfield of resistances
+  ; Stores r1 to entity+B0 if the entity's hitbox is active (entity+A6)
+02031874 SetWeaknesses
+  ; r0 - Entity pointer
+  ; r1 - Bitfield of weaknesses
+  ; Stores r1 to entity+B4 if the entity's hitbox is active (entity+A6)
+02031908 SetMagicDefense
+  ; r0 - Entity pointer
+  ; r1 - Magical defense
+  ; Stores r1 to entity+C0 if the entity's hitbox is active (entity+A6)
+02031884 SetIframes
+  ; r0 - Pointer to the entity
+  ; r1 - Iframes for this entity to give
+02031894 SetIframesByIndex
+  ; r0 - Entity pointer
+  ; Only does anything if the entity's hitbox is active (entity+A6)
+  ; Gets the entity's iframes index from entity+A4.
+  ; Then gets the actual iframes from list 020B5C28 and stores that to entity+B8.
+0203175C SetCallbacksAndIframesIndex
+  ; r0 - Entity
+  ; r1 - Iframes index to store at entity+A4
+  ; r2 - On-hurt-player callback to store at +C8
+  ; r3 - On-damaged callback to store at +CC
 
 0205C464 EnemyDie?
   ; Sets the enemy as being killed once
@@ -250,6 +292,75 @@
 0205C930 EnemyDie2?
   ; Calls EnemyDie
 
+0205CC48 EnemySetDefenses
+  ; r0 - Enemy entity
+  ; r1 - Enemy ID
+  ; Copies defense values from the enemy's DNA
+
+0205B3FC EnemyCheckStatusEffects
+  ; r0 - Enemy entity
+  ; r1 - Bitfield of ???. Maybe which status effects to check??
+  ; Returns r0 - 1 if the enemy is frozen and shouldn't move at all. 0 if the enemy can still move.
+  ; The enemy AI calls this, and if the return value isn't 0 the AI returns early.
+
+0205D0D8 CheckPlayerClose
+  ; r0 - Entity to check how close the player is to it
+  ; r1 - Minimum X pos to the left (negative)
+  ; r2 - Minimum Y pos upwards (negative)
+  ; r3 - Maximum X pos to the right (positive)
+  ; [r13,0] - Maximum Y pos downwards (positive)
+0205CE48 GetPlayerXPos
+  ; r0 - Entity calling this function?
+
+0205BF78 EnemyTakeDamage
+  ; r0 - Enemy entity
+  ; r1 - Player skill entity doing the damage
+  ; r2 - Pointer to ?? in the stack
+  ; Returns r0 - 0 if the enemy is still alive, 1 if it's dead.
+
+0205CB14 DamagePlayer
+  ; r0 - Enemy entity
+  ; r1 - Player entity
+  ; r2 - Pointer to ?? in the stack
+
+0203B5D0 LoadSpriteSingleGfx
+  ; r0 - Entity ptr
+  ; r1 - Sprite ptr
+  ; r2 - GFX asset ptr
+  ; r3 - Palette list ptr
+0203B6D0 LoadSpriteMultiGfx
+  ; r0 - Entity ptr
+  ; r1 - Sprite ptr
+  ; r2 - GFX list ptr
+  ; r3 - Palette list ptr
+
+02030684 InitializeSprite
+  ; r0 - Entity
+020306A4 ???Sprite
+  ; r0 - Entity
+
+0202BE2C EntityGetSpritePointer
+  ; r0 - Entity
+
+02065A94 LoadSkeleton
+  ; r0 - Entity
+  ; r1 - Skeleton ptr
+  ; r2 - B4?
+  ; r3 - 3C?
+
+0205B244 EnemyDraw
+02065EA0 EnemyDrawSkeleton
+  ; If the enemy has both skeletal and non-skeletal parts, this only draws the skeletal parts.
+
+02298498 DestructibleDraw
+
+02065F34 UpdateSkeleton
+  ; r0 - Entity
+
+0204E4B8 InitializeGame
+  ; Called both when loading a save and when starting a new game.
+0204E6D8 CreatePlayer
+  ; r0 - Player character index
 0204E328 NewgameGiveStartingItems
 
 02046144 MapSetRoomExplored
@@ -429,6 +540,8 @@
 02241854 EnemyPeepingEyeUpdate
 022517D0 EnemyGargoyleCreate
 02250D4C EnemyGargoyleUpdate
+02250C58 EnemyGargoylePedestalCreate
+02250BC4 EnemyGargoylePedestalUpdate
 02246824 EnemyBloodSkeletonCreate
 02246588 EnemyBloodSkeletonUpdate
 0228BF2C EnemyBlackPantherCreate
