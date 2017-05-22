@@ -237,7 +237,8 @@ WEAPON_FORMAT = [
   [1, "Palette"],
   [1, "? anim??"],
   [1, "IFrames"],
-  [4, "Unknown 13"],
+  [2, "Swing Sound"],
+  [2, "Unknown 13"],
 ]
 ARMOR_FORMAT = [
   # length: 20

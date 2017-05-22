@@ -12,6 +12,9 @@
 080D812C RandClampToMax
   ; r0 - Random number
   ; r1 - Maximum is r1-1
+080DAA00 RandClampToMax2?
+  ; r0 - Random number
+  ; r1 - Maximum is r1-1
 
 0802D284 GetRedSoulPointer
   ; r0 - Index of the red soul
@@ -40,6 +43,9 @@
 08012744 LoadSave
   ; r0 - Save file to load. 0 is the first file, 2 is the second file, 4 is the third file.
 
+080D7910 PlaySfx
+  ; r0 - Sfx index
+
 08001980 GetRoomPointer
   ; r0 - Sector index
   ; r1 - Room index
@@ -49,6 +55,15 @@
   ; r1 - Whether this platform is slippery or has friction.
   ;   0 - Player stays at the same x pos, eventually slipping off the entity.
   ;   1 - Player's x pos is moved as this entity moves.
+
+0806E0D0 LoadSprite
+  ; r0 - Entity ptr
+  ; r1 - GFX asset ptr
+  ; r2 - Palette pointer
+  ; r3 - 0? Palette offset?
+  ; [r13,0] - Sprite ptr
+
+0803B9D1 EnemyDraw
 
 0803F17C SpriteAnimate
   ; Call every frame to handle the animation.
