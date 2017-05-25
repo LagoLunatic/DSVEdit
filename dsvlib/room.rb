@@ -334,13 +334,15 @@ class Room
       raise "Can't add new layer; room already has 4 layers."
     end
     
-    overlay = fs.overlays[overlay_id]
-    overlay_ram_end = overlay[:ram_start_offset]+overlay[:size]
-    
-    if layers.length == 0 && layer_list_ram_pointer >= overlay_ram_end
-      # Invalid room where layer list pointer points outside the overlay file. So we create a blank layer list in free space first.
-      @layer_list_ram_pointer = fs.get_free_space(16*4, overlay_id)
-      fs.write(room_metadata_ram_pointer+2*4, [@layer_list_ram_pointer].pack("V"))
+    if SYSTEM == :nds
+      overlay = fs.overlays[overlay_id]
+      overlay_ram_end = overlay[:ram_start_offset]+overlay[:size]
+      
+      if layers.length == 0 && layer_list_ram_pointer >= overlay_ram_end
+        # Invalid room where layer list pointer points outside the overlay file. So we create a blank layer list in free space first.
+        @layer_list_ram_pointer = fs.get_free_space(16*4, overlay_id)
+        fs.write(room_metadata_ram_pointer+2*4, [@layer_list_ram_pointer].pack("V"))
+      end
     end
     
     new_layer_i = layers.length
@@ -348,8 +350,11 @@ class Room
     
     new_layer.z_index = 0x16
     new_layer.scroll_mode = 0x01
-    new_layer.opacity = 0x1F
     new_layer.main_gfx_page_index = 0x00
+    new_layer.opacity = 0x1F
+    if SYSTEM == :gba
+      new_layer.bg_control = 0x1D48
+    end
     
     new_layer.layer_metadata_ram_pointer = fs.get_free_space(16, overlay_id)
     
