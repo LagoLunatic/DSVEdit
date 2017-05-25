@@ -70,14 +70,34 @@ class GBADummyFilesystem
   end
   
   def decompress(address)
-    io = StringIO.new(@rom)
-    offset = convert_address(address)
-    decompressed_data = GBADecompress.new(io, offset).decompress[4..-1]
+    decompressed_data, compressed_size = decompress_and_get_compressed_size(address)
     return decompressed_data
   end
   
+  def decompress_and_get_compressed_size(address)
+    offset = convert_address(address)
+    decompressed_data, compressed_size = GBALZ77.decompress(rom[offset..-1])
+    #@original_compressed_sizes[address] = compressed_size # TODO preserve
+    return [decompressed_data[4..-1], compressed_size]
+  end
+  
   def compress_write(address, new_data)
-    raise NotImplementedError.new
+    uncomp_size = new_data.size + 4
+    if uncomp_size > 0xFFFFFF
+      raise "New data too large"
+    end
+    header = 0x10 | (uncomp_size << 8)
+    new_data = [header].pack("V") + new_data
+    
+    compr_data = GBALZ77.compress(new_data)
+    
+    # TODO: check if new compressed length is bigger than original compressed length and raise an error
+    #p [compr_data.length, @compressed_length]
+    #if compr_data.length > @compressed_length
+    #  raise "New GFX data too large"
+    #end
+    
+    write(address, compr_data)
   end
   
   def load_overlay(overlay_id)

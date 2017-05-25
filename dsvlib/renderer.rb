@@ -594,7 +594,7 @@ class Renderer
     gfx.write_to_rom()
   end
   
-  def import_gfx_page_1_dimensional_mode(input_filename, gfx_file, palette_list_pointer, colors_per_palette, palette_index)
+  def import_gfx_page_1_dimensional_mode(input_filename, gfx, palette_list_pointer, colors_per_palette, palette_index)
     input_image = ChunkyPNG::Image.from_file(input_filename)
     
     colors = generate_palettes(palette_list_pointer, colors_per_palette)[palette_index]
@@ -634,7 +634,7 @@ class Renderer
       end
     end
     
-    fs.write_by_file(gfx_file[:file_path], 0, gfx_data_bytes.pack("C*"))
+    gfx.write_gfx_data(gfx_data_bytes.pack("C*"))
   end
   
   def render_collision_tileset(collision_tileset_offset, output_filename=nil)

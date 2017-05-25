@@ -33,23 +33,39 @@ class GfxEditorDialog < Qt::Dialog
     connect(@ui.import_palette_button, SIGNAL("clicked()"), self, SLOT("import_palette()"))
     connect(@ui.generate_palette_from_files, SIGNAL("clicked()"), self, SLOT("generate_palette_from_multiple_files()"))
     
+    if SYSTEM == :gba
+      @ui.one_dimensional_mode.checked = true
+      @ui.label_2.text = "GFX pointer"
+    end
+    
     self.show()
   end
   
   def load_gfx_file_and_palette_list
-    gfx_file = @fs.files_by_path[@ui.gfx_file_name.text.strip]
-    if gfx_file.nil?
-      possible_ram_pointer = @ui.gfx_file_name.text.to_i(16)
-      if possible_ram_pointer >= 0x02000000 && possible_ram_pointer < 0x03000000
-        gfx_file = @fs.find_file_by_ram_start_offset(possible_ram_pointer)
+    if SYSTEM == :nds
+      gfx_file = @fs.files_by_path[@ui.gfx_file_name.text.strip]
+      if gfx_file.nil?
+        possible_ram_pointer = @ui.gfx_file_name.text.to_i(16)
+        if possible_ram_pointer >= 0x02000000 && possible_ram_pointer < 0x03000000
+          gfx_file = @fs.find_file_by_ram_start_offset(possible_ram_pointer)
+        end
       end
+      if gfx_file.nil?
+        Qt::MessageBox.warning(self, "Not a file", "Couldn't find file with path: #{@ui.gfx_file_name.text}")
+        return
+      end
+      
+      gfx = GfxWrapper.new(gfx_file[:ram_start_offset], @fs)
+      
+      @gfx_path = gfx.file[:file_path]
+      @gfx_name = gfx.file[:name]
+    else
+      gfx_pointer = @ui.gfx_file_name.text.to_i(16)
+      gfx = GfxWrapper.new(gfx_pointer, @fs)
+      
+      @gfx_path = "%08X" % gfx.gfx_pointer
+      @gfx_name = @gfx_path
     end
-    if gfx_file.nil?
-      Qt::MessageBox.warning(self, "Not a file", "Couldn't find file with path: #{@ui.gfx_file_name.text}")
-      return
-    end
-    
-    gfx = GfxWrapper.new(gfx_file[:ram_start_offset], @fs)
     
     success = load_palettes(gfx.colors_per_palette)
     return unless success
@@ -65,7 +81,7 @@ class GfxEditorDialog < Qt::Dialog
       @ui.palette_index.addItem("%02X" % i)
     end
     
-    @ui.gfx_file_name.text = @gfx.file[:file_path]
+    @ui.gfx_file_name.text = @gfx_path
     @ui.palette_pointer.text = "%08X" % @palette_pointer
   end
   
@@ -125,7 +141,7 @@ class GfxEditorDialog < Qt::Dialog
     else
       chunky_image = @renderer.render_gfx_page(@gfx.file, @palettes[@palette_index], @gfx.canvas_width)
     end
-    file_basename = File.basename(@gfx.file[:name], ".*")
+    file_basename = File.basename(@gfx_name, ".*")
     palette_name = "palette_%08X-%02X" % [@palette_pointer, @palette_index]
     gfx_file_path = "#{@output_folder}/#{file_basename}_#{palette_name}.png"
     chunky_image.save(gfx_file_path)
@@ -138,7 +154,7 @@ class GfxEditorDialog < Qt::Dialog
   def import_gfx
     return if @gfx.nil? || @palettes.nil? || @palette_index.nil?
     
-    file_basename = File.basename(@gfx.file[:name], ".*")
+    file_basename = File.basename(@gfx_name, ".*")
     palette_name = "palette_%08X-%02X" % [@palette_pointer, @palette_index]
     gfx_file_path = "#{@output_folder}/#{file_basename}_#{palette_name}.png"
     unless File.file?(gfx_file_path)
@@ -148,7 +164,7 @@ class GfxEditorDialog < Qt::Dialog
     
     begin
       if @ui.one_dimensional_mode.checked
-        @renderer.import_gfx_page_1_dimensional_mode(gfx_file_path, @gfx.file, @palette_pointer, @gfx.colors_per_palette, @palette_index)
+        @renderer.import_gfx_page_1_dimensional_mode(gfx_file_path, @gfx, @palette_pointer, @gfx.colors_per_palette, @palette_index)
       else
         @renderer.import_gfx_page(gfx_file_path, @gfx, @palette_pointer, @gfx.colors_per_palette, @palette_index)
       end

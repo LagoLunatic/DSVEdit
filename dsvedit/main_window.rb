@@ -633,8 +633,6 @@ class DSVEdit < Qt::MainWindow
   end
   
   def open_gfx_editor
-    return unless validate_nds()
-    
     return if @gfx_editor && @gfx_editor.visible?
     @gfx_editor = GfxEditorDialog.new(self, game.fs, @renderer)
   end

@@ -42,6 +42,23 @@ class GfxWrapper
     end
   end
   
+  def write_gfx_data(new_gfx_data)
+    if SYSTEM == :nds
+      fs.write_by_file(gfx.file[:file_path], 0, gfx_data_bytes.pack("C*"))
+    else
+      if @unknown_2 == 4
+        fs.compress_write(gfx_data_pointer, new_gfx_data)
+      else
+        if new_gfx_data.length > 0x2000
+          raise "New GFX data too large"
+        end
+        fs.write(gfx_data_pointer+4, new_gfx_data)
+      end
+      
+      @gfx_data = nil # Clear gfx data cache
+    end
+  end
+  
   def write_to_rom
     fs.write(gfx_pointer, [@unknown_1, @render_mode, @canvas_width, @unknown_2].pack("CCCC"))
     fs.write(gfx_pointer + 4, [@canvas_width].pack("V"))
