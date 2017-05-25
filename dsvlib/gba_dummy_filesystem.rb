@@ -2,18 +2,22 @@
 class GBADummyFilesystem
   class ReadError < StandardError ; end
   
+  include FreeSpaceManager
+  
   attr_reader :rom
   
   def open_directory(filesystem_directory)
     @filesystem_directory = filesystem_directory
     input_rom_path = File.join(@filesystem_directory, "rom.gba")
     @rom = File.open(input_rom_path, "rb") {|file| file.read}
+    read_free_space_from_text_file()
   end
   
   def open_and_extract_rom(input_rom_path, filesystem_directory)
     @filesystem_directory = filesystem_directory
     @rom = File.open(input_rom_path, "rb") {|file| file.read}
     extract_to_hard_drive()
+    read_free_space_from_text_file()
   end
   
   def extract_to_hard_drive
@@ -62,7 +66,23 @@ class GBADummyFilesystem
     
     @has_uncommitted_changes = true
     
-    #remove_free_space(file_path, offset_in_file, new_data.length)
+    remove_free_space("rom.gba", offset, new_data.length)
+  end
+  
+  def write_by_file(file_path, offset_in_file, new_data, freeing_space: false)
+    # Dummy function for the FSM.
+    if file_path != "rom.gba"
+      raise "Invalid file: #{file_path}"
+    end
+    
+    old_data = rom[offset_in_file, new_data.length]
+    if old_data && old_data.length == new_data.length
+      rom[offset_in_file, new_data.length] = new_data
+    else
+      raise "Invalid offset/size: %08X, length %08X" % [offset_in_file, new_data.length]
+    end
+    
+    remove_free_space(file_path, offset_in_file, new_data.length) unless freeing_space
   end
   
   def overwrite_rom(new_data)
@@ -128,7 +148,7 @@ class GBADummyFilesystem
     
     @has_uncommitted_changes = false
     
-    #write_free_space_to_text_file(base_directory)
+    write_free_space_to_text_file(base_directory)
     
     puts "Done."
   end
@@ -139,6 +159,16 @@ class GBADummyFilesystem
   
   def find_file_by_ram_start_offset(ram_start_offset)
     nil
+  end
+  
+  def convert_ram_address_to_path_and_offset(address)
+    # Dummy function for the FSM.
+    return ["rom.gba", convert_address(address)]
+  end
+  
+  def files_by_path
+    # Dummy function for the FSM.
+    {"rom.gba" => {:name => "rom.gba", :type => :file, :start_offset => 0, :end_offset => 0 + @rom.size, :ram_start_offset => 0x08000000, :size => @rom.size}}
   end
   
   def is_pointer?(value)

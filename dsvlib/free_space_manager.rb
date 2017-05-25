@@ -5,7 +5,9 @@ module FreeSpaceManager
   def read_free_space_from_text_file
     @free_spaces = []
     
-    initialize_sector_overlay_free_spaces()
+    if SYSTEM == :nds
+      initialize_sector_overlay_free_spaces()
+    end
     
     if @filesystem_directory.nil?
       return
@@ -13,6 +15,10 @@ module FreeSpaceManager
     
     freespace_file = File.join(@filesystem_directory, "_dsvedit_freespace.txt")
     if !File.file?(freespace_file)
+      if SYSTEM == :gba
+        initialize_rom_free_space()
+      end
+      
       return
     end
     
@@ -38,6 +44,10 @@ module FreeSpaceManager
       
       @free_spaces << {path: path, offset: offset, length: length}
     end
+  end
+  
+  def initialize_rom_free_space
+    @free_spaces << {path: "rom.gba", offset: ROM_FREE_SPACE_START, length: ROM_FREE_SPACE_SIZE}
   end
   
   def write_free_space_to_text_file(base_directory=@filesystem_directory)
@@ -143,11 +153,15 @@ module FreeSpaceManager
     
     files_to_check = []
     
-    # Check the specific overlay first, then arm9 if there's no free space in the overlay.
-    if overlay_id
-      files_to_check << File.join("/ftc", "overlay9_#{overlay_id}")
+    if SYSTEM == :nds
+      # Check the specific overlay first, then arm9 if there's no free space in the overlay.
+      if overlay_id
+        files_to_check << File.join("/ftc", "overlay9_#{overlay_id}")
+      end
+      files_to_check << File.join("/ftc", "arm9.bin")
+    else
+      files_to_check << "rom.gba"
     end
-    files_to_check << File.join("/ftc", "arm9.bin")
     
     files_to_check.each do |file_path|
       file = files_by_path[file_path]
