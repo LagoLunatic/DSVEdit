@@ -74,6 +74,8 @@
 
 020F61D0 - Number times the player has soft reset the game with select+start+L+R.
 
+020F6270 - Start of game object?
+
 020F6284 - Game state.
   This is used as the index in list 020CA5D0.
   00 Loading a save
@@ -217,24 +219,71 @@
   3 - Right door.
   4 - Down door.
 
-02111794 - Explored map tiles.
+02111794-0211196D Explored map tile list.
   Each tile takes up 2 bits.
   The first bit is set if it's revealed by a map item but not explored.
   Both bits are set if it's explored.
+  Each area's list starts at:
+  00 02111794
+  01 021118AC
+  02 021118D6
+  03 021118F8
+  04 02111922
+  05 02111812
+  06 02111844
+  07 0211186C
+  08 02111890
+  09 0211194E
+  0A 021119E4
+  0B 021119F2
+  0C 021119F4
+  0D 021119F6
+  The game doesn't have a list of pointers to each of these lists for each area. Instead function 02030570 is used to hardcode these pointers.
 
-021119AA - Area index to save to the save file.
-021119AB - Sector index to save to the save file.
-021119AC - Room index to save to the save file.
-021119BC - X pos to save to the save file.
-021119C0 - Y pos to save to the save file.
+0211196E-021119A9 List of player-positioned map reminder markers.
+  Each marker is 2 bytes long:
+    00,1: X pos
+    01,1: Y pos
+  Each area has 3 markers. Only areas 00-09 have markers.
 
-021119D0 - Bitfield of which map items you've bought.
+021119AA,1 - Area index to save to the save file.
+021119AB,1 - Sector index to save to the save file.
+021119AC,1 - Room index to save to the save file.
+021119BC,4 - X pos to save to the save file.
+021119C0,4 - Y pos to save to the save file.
+
+021119D0,4 - Bitfield of which map items you've bought.
+
+021119DC - Boss death flags.
+  01 Dullahan
+  02 Behemoth
+  03 
+  04 Keremet
+  05 Legion
+  06 Dagon
+  07 Astarte
+  08 Werewolf
+  09 The Creature
+  0A Mummy Man
+  0B Medusa
+  0C 
+  0D Stella
+  0E Stella & Loretta
+  0F Brauner
+  10 Death
+  11 Dracula
+  14 ??? Used in Gergoth's room in Boss Rush Course 1.
+  19 Doppelganger, resets when you leave the nest of evil.
+
+021119E4-021119F7 Explored map tile list for areas with unused maps.
+  Each area's list starts at:
+  0A 021119E4
+  0B 021119F2
+  0C 021119F4
+  0D 021119F6
 
 021119FC,02111A08,02111F90 - Screen scrolling X pos.
 02111A00,02111A0C,02111F94 - Screen scrolling Y pos.
-
-021119DC - Boss death flags.
-  0x02000000 is doppelganger, resets when you leave the nest of evil.
 
 02111A5C - Bitfield of used byte 5s in the current room?
 

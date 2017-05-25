@@ -69,6 +69,10 @@
   ; Calls func 021E3AA8 with r1=0 and r2=1.
 
 0205582C MapDrawBackground
+02030570 MapGetExploredTileListForArea
+  ; r0 - Area index
+  ; Returns r0 - Pointer to the start of this area's list of explored tiles.
+  ; These pointers are hardcoded instead of being a simple list.
 
 022028E0 PlayerUpdate
 021F6044 PartnerUpdate

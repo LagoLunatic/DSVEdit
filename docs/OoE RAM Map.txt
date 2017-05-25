@@ -548,7 +548,7 @@ when you first enter a new area, the game determines which entrance room to put 
   02,1: Destroyed frame index.
     Used to create the flying particles after this destructible is destroyed.
   03,1: Frame/animation index of glow visual behind this destructible.
-    FF for no glow visual.
+    FF to just use a generic circle as the glow visual.
     Modifier bit 0100 controls whether this is a frame or animation index.
   04,1: Palette offset.
   05,1: What the destructible yields when destroyed.
