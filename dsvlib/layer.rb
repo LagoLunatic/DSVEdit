@@ -11,6 +11,7 @@ class Layer
                 :opacity,
                 :main_gfx_page_index,
                 :bg_control,
+                :tileset_compression_type,
                 :width,
                 :height,
                 :tileset_pointer,
@@ -48,7 +49,7 @@ class Layer
       return # TODO
     end
     
-    @width, @height, tileset_compression_type,
+    @width, @height, @tileset_compression_type,
       @tileset_pointer,
       @collision_tileset_pointer,
       @layer_tiledata_ram_start_offset = fs.read(layer_metadata_ram_pointer, 16).unpack("CCvVVV")
@@ -148,7 +149,7 @@ class Layer
       @tiles = tile_rows.flatten
     end
     
-    fs.write(layer_metadata_ram_pointer, [width, height].pack("CC"))
+    fs.write(layer_metadata_ram_pointer, [width, height, tileset_compression_type].pack("CCv"))
     fs.write(layer_metadata_ram_pointer+4, [tileset_pointer, collision_tileset_pointer].pack("VV"))
     fs.write(layer_list_entry_ram_pointer, [z_index, scroll_mode].pack("CC"))
     if SYSTEM == :nds
@@ -171,6 +172,14 @@ class Layer
       Tile
     else
       GBATile
+    end
+  end
+  
+  def self.layer_list_entry_size
+    if SYSTEM == :nds
+      16
+    else
+      12
     end
   end
   

@@ -330,8 +330,8 @@ class Room
   def add_new_layer
     sector.load_necessary_overlay()
     
-    if layers.length >= 4
-      raise "Can't add new layer; room already has 4 layers."
+    if layers.length >= Room.max_number_of_layers
+      raise "Can't add new layer; room already has #{Room.max_number_of_layers} layers."
     end
     
     if SYSTEM == :nds
@@ -340,20 +340,35 @@ class Room
       
       if layers.length == 0 && layer_list_ram_pointer >= overlay_ram_end
         # Invalid room where layer list pointer points outside the overlay file. So we create a blank layer list in free space first.
-        @layer_list_ram_pointer = fs.get_free_space(16*4, overlay_id)
+        @layer_list_ram_pointer = fs.get_free_space(Layer.layer_list_entry_size*4, overlay_id)
         fs.write(room_metadata_ram_pointer+2*4, [@layer_list_ram_pointer].pack("V"))
+        self.write_to_rom()
       end
+    else
+      # On GBA the layer list doesn't just have free space for us to add layers up to 4, so we first need to move the layer list into fre space.
+      new_num_layers = layers.length + 1
+      @layer_list_ram_pointer = fs.get_free_space(Layer.layer_list_entry_size*new_num_layers)
+      fs.write(room_metadata_ram_pointer+2*4, [@layer_list_ram_pointer].pack("V"))
+      
+      layers.each_with_index do |layer, i|
+        layer.layer_list_entry_ram_pointer = layer_list_ram_pointer + i*Layer.layer_list_entry_size
+        layer.write_to_rom()
+      end
+      
+      self.write_to_rom()
     end
     
     new_layer_i = layers.length
-    new_layer = Layer.new(self, layer_list_ram_pointer + new_layer_i*16, fs)
+    new_layer = Layer.new(self, layer_list_ram_pointer + new_layer_i*Layer.layer_list_entry_size, fs)
     
     new_layer.z_index = 0x16
     new_layer.scroll_mode = 0x01
     new_layer.main_gfx_page_index = 0x00
     new_layer.opacity = 0x1F
+    new_layer.tileset_compression_type = 0
     if SYSTEM == :gba
       new_layer.bg_control = 0x1D48
+      new_layer.tileset_compression_type = 2
     end
     
     new_layer.layer_metadata_ram_pointer = fs.get_free_space(16, overlay_id)
@@ -396,6 +411,14 @@ class Room
       return SECTOR_INDEX_TO_SECTOR_NAME[area_index][sector_index]
     else
       return AREA_INDEX_TO_AREA_NAME[area_index]
+    end
+  end
+  
+  def self.max_number_of_layers
+    if SYSTEM == :nds
+      4
+    else
+      3
     end
   end
   

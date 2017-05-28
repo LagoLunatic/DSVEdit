@@ -76,11 +76,13 @@ class GBADummyFilesystem
     end
     
     old_data = rom[offset_in_file, new_data.length]
-    if old_data && old_data.length == new_data.length
-      rom[offset_in_file, new_data.length] = new_data
-    else
+    if old_data.nil? || old_data.length != new_data.length
       raise "Invalid offset/size: %08X, length %08X" % [offset_in_file, new_data.length]
     end
+    
+    rom[offset_in_file, new_data.length] = new_data
+    
+    @has_uncommitted_changes = true
     
     remove_free_space(file_path, offset_in_file, new_data.length) unless freeing_space
   end
@@ -168,7 +170,7 @@ class GBADummyFilesystem
   
   def files_by_path
     # Dummy function for the FSM.
-    {"rom.gba" => {:name => "rom.gba", :type => :file, :start_offset => 0, :end_offset => 0 + @rom.size, :ram_start_offset => 0x08000000, :size => @rom.size}}
+    {"rom.gba" => {:name => "rom.gba", :type => :file, :start_offset => 0, :end_offset => 0 + @rom.size, :ram_start_offset => 0x08000000, :size => @rom.size, :file_path => "rom.gba"}}
   end
   
   def is_pointer?(value)
