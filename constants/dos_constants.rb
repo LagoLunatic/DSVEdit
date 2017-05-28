@@ -141,8 +141,8 @@ COLOR_OFFSETS_PER_256_PALETTE_INDEX = 16
 ENEMY_DNA_RAM_START_OFFSET = 0x02078CAC
 ENEMY_DNA_FORMAT = [
   # length: 36
-  [4, "Init AI"],
-  [4, "Running AI"],
+  [4, "Create Code"],
+  [4, "Update Code"],
   [2, "Item 1"],
   [2, "Item 2"],
   [1, "Petrified Palette"],

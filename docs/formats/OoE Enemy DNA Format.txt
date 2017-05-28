@@ -1,6 +1,6 @@
 OoE Enemy DNA (36 bytes long):
-Bytes 1-4: Enemy init code.
-Bytes 5-8: Enemy running AI.
+Bytes 1-4: Enemy create code.
+Bytes 5-8: Enemy update code.
 Bytes 9-10: Item 1. Global ID of the item + 1.
 Bytes 11-12: Item 2
 Byte 13: Palette offset to use when this enemy is petrified.

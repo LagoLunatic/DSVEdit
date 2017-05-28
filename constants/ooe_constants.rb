@@ -285,8 +285,8 @@ BOSS_ID_TO_BOSS_DOOR_VAR_B = {
 ENEMY_DNA_RAM_START_OFFSET = 0x020B6364
 ENEMY_DNA_FORMAT = [
   # length: 36
-  [4, "Init AI"],
-  [4, "Running AI"],
+  [4, "Create Code"],
+  [4, "Update Code"],
   [2, "Item 1"],
   [2, "Item 2"],
   [1, "Petrified Palette"],

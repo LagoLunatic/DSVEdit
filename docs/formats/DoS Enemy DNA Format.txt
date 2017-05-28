@@ -1,6 +1,6 @@
 DoS Enemy DNA (36 bytes long):
-Bytes 1-4: Pointer to enemy initialization code.
-Bytes 5-8: Pointer to enemy running AI code.
+Bytes 1-4: Pointer to enemy create code.
+Bytes 5-8: Pointer to enemy update code.
 Bytes 9-10: Item1. Global ID+1 of the item.
 Byte 11-12: Item2.
 Byte 13: Palette offset to use when this enemy is petrified.
