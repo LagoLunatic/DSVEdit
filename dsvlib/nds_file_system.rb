@@ -24,6 +24,10 @@ class NDSFileSystem
       next unless file[:type] == :file
       
       file[:size] = File.size(File.join(@filesystem_directory, file[:file_path]))
+      
+      if file[:overlay_id]
+        update_overlay_length(file)
+      end
     end
     get_file_ram_start_offsets_and_file_data_types()
     read_free_space_from_text_file()
