@@ -1,0 +1,94 @@
+
+02000010,1 - Current game state.
+  00 - Konami logo
+  01 - Title screen
+  02 - Game start
+  04 - Ingame
+  0C - Nintendo logo
+  0D - Bootup
+
+02000014 - Bitfield of currently pressed buttons.
+  0001 - A
+  0002 - B
+  0004 - Select
+  0008 - Start
+  0010 - Right
+  0020 - Left
+  0040 - Up
+  0080 - Down
+  0100 - R
+  0200 - L
+02000016 - Bitfield of buttons pressed this frame.
+02000018 - Bitfield of buttons pressed this frame.
+
+02000060 - ?? if this is 3, you can skip events with start.
+
+02000088 - Pointer to current room metadata.
+0200008C,2:
+  Bits 1-7: Current room's X on the map.
+  Bits 8-16: Current room's Y on the map.
+
+0200009E - Sector index for save file.
+0200009F - Room index for save file.
+
+020000B4 - List of map tiles you've explored. Each takes up 1 bit.
+
+0200033C - Event flags.
+
+020003CC - Has the room pointer to load when loading a save.
+
+=== 020004E4-??: Entity memory. Each entity is 0x84 bytes long. Entities range from 00-CF (at least, maybe more).
+
+020004E4 - Players's entity memory.
+02000526,2 - Player's current x pos in pixels.
+0200052A,2 - Player's current y pos in pixels.
+0200052C - Player's current x velocity
+
+0200037E - Boss death flags.
+
+020003D4 - Bitfield of entity used byte 5s in the current room.
+  Byte 5 must be unique for all entities in the room.
+  Unlike the DSVanias, a byte 5 of 0 must also be unique, and doesn't make an entity exempt.
+
+0200A09C,0200A0B8 - screen Y?
+
+02013144 - ???
+
+020131BF - Index of the red soul you last used.
+  This is only updated when you use a red soul, not just when you equip it.
+
+020131D6,2 - Related to how much damage the player just took.
+  0 - Player didn't just take damage.
+  1 - Player just took damage.
+  2 - Player just took a lot of damage, and gets sents flying.
+
+020131EE - Player's current stats.
+  020131EE,2 - ATK
+  020131F0,2 - DEF
+  020131F2,2 - STR
+  020131F4,2 - CON
+  020131F6,2 - INT
+  020131F8,2 - LCK
+020131FC - Player's base stats?
+020133F4 - base stats?
+02013286 - ???
+020131F2
+
+02013260 - ?
+
+02013266 - Current game mode.
+  0 - Soma mode.
+  1 - Julius mode.
+02013269 - Currently equipped red soul.
+02013396 - Bitfield of currently equipped ability souls.
+
+Player's button config:
+02013398,2 - Attack
+0201339A,2 - Jump
+0201339C,2 - Backdash ("Ability" in game)
+0201339E,2 - Guardian soul
+
+0201336E - ??? could be related to which souls you own. or soul chances? or something. specifically for yellow souls. each soul takes up half a byte.
+02013380 - ??? for yellow souls. each soul takes up half a byte.
+
+02013400 - player's current resistances?

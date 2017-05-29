@@ -1,7 +1,7 @@
 
 Memory used for entities in PoR is 020FC500 - 0211173F. Each entity is 0x160 bytes long. They range from 0-F4.
 
-000,4: Pointer to create code.
+000,4: Pointer to update code.
 004,4: Pointer to draw code.
 00D,1: State of the entity. Each entity's update code handles this differently.
 010,2: Somehow affects the projectiles/subentities spawned by this entity.
