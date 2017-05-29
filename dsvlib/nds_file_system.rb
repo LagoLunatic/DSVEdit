@@ -484,10 +484,10 @@ private
     
     all_files.each do |file|
       next unless file[:type] == :file
-      #next unless (file[:overlay_id] || file[:name] == "arm9.bin" || file[:name] == "rom.nds")
       
       start_offset, end_offset, file_path = file[:start_offset], file[:end_offset], file[:file_path]
-      file_data = @rom[start_offset..end_offset-1]
+      size = end_offset - start_offset
+      file_data = @rom[start_offset,size]
       
       output_path = File.join(@filesystem_directory, file_path)
       output_dir = File.dirname(output_path)
@@ -512,7 +512,8 @@ private
       next unless file[:type] == :file
       
       start_offset, end_offset, file_path = file[:start_offset], file[:end_offset], file[:file_path]
-      file_data = @rom[start_offset..end_offset-1]
+      size = end_offset - start_offset
+      file_data = @rom[start_offset,size]
       
       @opened_files_cache[file_path] = file_data
     end
