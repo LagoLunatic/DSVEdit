@@ -82,7 +82,7 @@
   ; r1 - ?
   ; Returns r0 - the new attack value
 
-0220A038 DamageCalcEnemy
+0220A038 CalcDamageToPlayer
   ; Calculates the damage an enemy should do to the player.
   ; r0 - Player number to damage. 0 or 1.
 

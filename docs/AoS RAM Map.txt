@@ -69,7 +69,15 @@
   020131F4,2 - CON
   020131F6,2 - INT
   020131F8,2 - LCK
-020131FC - Player's base stats?
+  020131FA,2 - Bitfield of resistances.
+020131FC - Player's base stats.
+  020131FC,2 - ATK
+  020131FE,2 - DEF
+  02013200,2 - STR
+  02013202,2 - CON
+  02013204,2 - INT
+  02013206,2 - LCK
+  02013208,2 - Bitfield of resistances.
 020133F4 - base stats?
 02013286 - ???
 020131F2

@@ -27,7 +27,9 @@
   ; r0 - Enemy entity receiving the damage
   ; r1 - Entity doing the damage
   ; r2 - ??? pointer
-0806B7D8 CalculateDamageToEnemy
+08021530 GetPlayerAttack
+  ; r0 - ? 3
+0806B7D8 CalcDamageToEnemy
   ; r0 - Enemy entity receiving the damage
   ; r1 - Entity doing the damage
   ; r2 - ??? pointer
@@ -37,8 +39,15 @@
   ; r1 - Damage done
   ; r2 - 0 for damage, 1 for healing
 
+08021654 DamagePlayer
+  ; r0 - Pointer to ??? in the stack.
+
 08022028 AddMP
   ; r0 - MP to add
+
+08021FA4 CopyPlayerStats
+  ; Copies the player's STR CON INT LCK and resistances from the player's base stats list (020131FC) to the player's current stats list (020131EE).
+  ; Does not copy ATK or DEF.
 
 08012744 LoadSave
   ; r0 - Save file to load. 0 is the first file, 2 is the second file, 4 is the third file.
