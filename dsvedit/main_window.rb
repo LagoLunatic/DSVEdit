@@ -98,7 +98,7 @@ class DSVEdit < Qt::MainWindow
     connect(@ui.actionOpen_Folder, SIGNAL("activated()"), self, SLOT("open_folder_dialog()"))
     connect(@ui.actionExtract_ROM, SIGNAL("activated()"), self, SLOT("extract_rom_dialog()"))
     connect(@ui.actionSave, SIGNAL("activated()"), self, SLOT("save_files()"))
-    connect(@ui.actionEdit_Room, SIGNAL("activated()"), self, SLOT("edit_room_data()"))
+    connect(@ui.actionEdit_Room_Props, SIGNAL("activated()"), self, SLOT("edit_room_data()"))
     connect(@ui.actionEdit_Layers, SIGNAL("activated()"), self, SLOT("edit_layers()"))
     connect(@ui.actionEdit_Entities, SIGNAL("activated()"), self, SLOT("open_entity_editor()"))
     connect(@ui.actionAdd_New_Layer, SIGNAL("activated()"), self, SLOT("add_new_layer()"))
@@ -160,7 +160,7 @@ class DSVEdit < Qt::MainWindow
   
   def disable_menu_actions
     @ui.actionSave.setEnabled(false);
-    @ui.actionEdit_Room.setEnabled(false);
+    @ui.actionEdit_Room_Props.setEnabled(false);
     @ui.actionEdit_Layers.setEnabled(false);
     @ui.actionEdit_Entities.setEnabled(false);
     @ui.actionAdd_New_Layer.setEnabled(false);
@@ -191,7 +191,7 @@ class DSVEdit < Qt::MainWindow
   
   def enable_menu_actions
     @ui.actionSave.setEnabled(true);
-    @ui.actionEdit_Room.setEnabled(true);
+    @ui.actionEdit_Room_Props.setEnabled(true);
     @ui.actionEdit_Layers.setEnabled(true);
     @ui.actionEdit_Entities.setEnabled(true);
     @ui.actionAdd_New_Layer.setEnabled(true);
