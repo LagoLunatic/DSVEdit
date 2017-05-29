@@ -16,8 +16,13 @@ class MapEditorDialog < Qt::Dialog
     
     @game = game
     @renderer = renderer
-    @map = game.get_map(area_index, sector_index)
     @area = game.areas[area_index]
+    
+    if GAME == "dos" || GAME == "aos"
+      @map = DoSMap.new(area_index, sector_index, game.fs)
+    else
+      @map = Map.new(area_index, sector_index, game.fs)
+    end
     
     @map_graphics_scene = ClickableGraphicsScene.new
     @map_graphics_scene.setSceneRect(0, 0, 64*4+1, 48*4+1)
