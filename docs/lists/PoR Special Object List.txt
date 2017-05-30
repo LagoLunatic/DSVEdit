@@ -321,7 +321,11 @@ Special objects:
     Bits 1-6: Room index of destination room.
     Bits 7-10: Sector index of the destination room.
     Bits 11-16: Nothing.
-88 Breakable wall.
+88 Disappearing ceiling below pushable carts.
+  These disappear automatically once the corresponding cart has been pushed out of the way.
+  Var A: Affects which miscellaneous flag to check.
+    0 - Misc flag 5.
+    1 - Misc flag 7.
 89 Button and floor it explodes from Master's Keep.
   Var A: 0 for ceiling. 1 for button and floor.
 8A Studio portrait (burned).

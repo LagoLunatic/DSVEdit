@@ -183,7 +183,7 @@ Special objects:
   Var B: The event flag for the wall being down. Set to the same as the button's Var B.
 2A Flood gate from Lost Village.
   Var B: The event flag for the water being lowered. Set to the same as the lever's Var B.
-2B The destroyable floor in the Lost Village underneath the statues.
+2B The explodable floor in the Lost Village underneath the statues.
   Var A:
     0 The floor and the animated water on the statue.
     1 The ceiling with explosives strapped to it and the button that blows it up.
@@ -239,9 +239,9 @@ Special objects:
   Var B: Rotates the inner square.
 41 Starts boss rush, puts a timer on screen and restarts the current music track.
 42 The item you get as a reward at the end of boss rush.
-43 The destroyable wall in the room with the waterfall.
+43 The breakable wall in the room with the waterfall.
   Automatically positions itself.
-44 A destroyable wall (for hiding secret rooms).
+44 A breakable wall (for hiding secret rooms).
   Var A:
     0 for the ceiling in Demon Guest House.
     1 for the ceiling in the Pinnacle.
@@ -253,7 +253,7 @@ Special objects:
     03 - Double gate with button to the left.
     04+ - Gate only, no button.
   Var B: The event flag for the gate being opened.
-46 More destroyable walls like 44.
+46 More breakable walls like 44.
   Var A:
     0 for the left wall in the underground portion of Lost Village.
     1 for the floor in the Lost Village.
@@ -283,7 +283,7 @@ Special objects:
 54 Dario event actor.
 55 Dmitrii event actor.
 56 Force field used in the prologue.
-57 The destroyable ceiling from the long room at the end of Wizardry Lab.
+57 The breakable ceiling from the long room at the end of Wizardry Lab.
 58 Celia on a cross. Used in Menace's room. Doesn't appear until the event causes it to.
 59 Pillars of flame from the Abyss.
 5A Transition room hider.

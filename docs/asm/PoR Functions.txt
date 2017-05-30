@@ -54,6 +54,12 @@
   ; r1 - 
   ; r2 - 
 
+02207C9C CheckItemEquippedAndActive
+  ; r0 - Slot (0 for weapon, 3 for head armor, etc)
+  ; r1 - Item index
+  ; Will return true if either player 1 or player 2 have this item equipped, but only if your partner is called out. If your partner is hidden away, only the controlled character's equipment matters.
+  ; This is used for Eye for Decay.
+
 021FEE34 PlayerGetStateAnim
   ; r0 - Pointer to player entity
   ; r1 - State index

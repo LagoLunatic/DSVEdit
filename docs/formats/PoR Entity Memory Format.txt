@@ -63,16 +63,18 @@ Memory used for entities in PoR is 020FC500 - 0211173F. Each entity is 0x160 byt
 149,1: 
 
 For players:
-0D0,4: For players, this is a bitfield of their current state booleans.
-0E8,2: For players, ???.
+0D0,4: This is a bitfield of their current state booleans.
+0E0,4: Bitfield of partner states?
+  00000020 - Is called out.
+0E8,2: ???.
   This is 1 when the player is doing a critical art/combo tech.
   This is 4 when the player is not present (neither player-controlled nor AI-controlled).
   Otherwise, this counts down every frame until it reaches 0.
-0EC,1: For players, 0 for player 1, 1 for player 2.
-0F4,4: For players, this is a pointer to their state->anims mapping.
-100,4: For players, this is a bitfield of their current state booleans. Seems very similar to 0D0, but not exactly the same.
-124,4: For players, duplicate of x pos?
-128,4: For players, duplicate of y pos?
+0EC,1: 0 for player 1, 1 for player 2.
+0F4,4: Pointer to their state->anims mapping.
+100,4: Bitfield of their current state booleans. Seems very similar to 0D0, but not exactly the same.
+124,4: Duplicate of x pos?
+128,4: Duplicate of y pos?
 
 For enemies:
 128,2: Current HP. Originally copied from the max HP from the enemy DNA.
