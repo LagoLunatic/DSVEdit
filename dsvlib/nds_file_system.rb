@@ -23,9 +23,10 @@ class NDSFileSystem
     @files.each do |id, file|
       next unless file[:type] == :file
       
+      old_file_size = file[:size]
       file[:size] = File.size(File.join(@filesystem_directory, file[:file_path]))
       
-      if file[:overlay_id]
+      if file[:overlay_id] && old_file_size != file[:size]
         update_overlay_length(file)
       end
     end
