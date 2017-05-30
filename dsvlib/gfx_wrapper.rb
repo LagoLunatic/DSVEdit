@@ -14,7 +14,7 @@ class GfxWrapper
     @fs = fs
     
     if SYSTEM == :nds
-      @file = fs.find_file_by_ram_start_offset(gfx_pointer)
+      @file = fs.assets_by_pointer[gfx_pointer]
       @unknown_1, @render_mode, @canvas_width, @unknown_2 = fs.read(gfx_pointer, 4).unpack("C*")
     else
       if unwrapped

@@ -159,8 +159,8 @@ class GBADummyFilesystem
     @has_uncommitted_changes
   end
   
-  def find_file_by_ram_start_offset(ram_start_offset)
-    nil
+  def assets_by_pointer
+    {}
   end
   
   def convert_ram_address_to_path_and_offset(address)

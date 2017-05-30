@@ -33,4 +33,4 @@ Player format:
   4C,4: Enable player scale.
   50,2: 
   52,2: 
-  54,4: File index of sprite file.
+  54,4: Asset index of sprite file.

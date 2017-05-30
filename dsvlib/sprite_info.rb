@@ -16,7 +16,7 @@ class SpriteInfo
     @palette_offset = palette_offset
     @sprite_file_pointer = sprite_file_pointer
     @skeleton_file = skeleton_file
-    @sprite_file = fs.find_file_by_ram_start_offset(sprite_file_pointer)
+    @sprite_file = fs.assets_by_pointer[sprite_file_pointer]
     @sprite = Sprite.new(sprite_file_pointer, fs)
     
     @gfx_pages = @gfx_file_pointers.map do |gfx_pointer|
@@ -78,18 +78,18 @@ class SpriteInfo
       
       i = 0
       while true
-        file_index_or_palette_pointer, file_data_type = fs.read(pointer_to_start_of_file_index_list+i*8, 8).unpack("VV")
-        #puts "%08X %08X" % [file_index_or_palette_pointer, file_data_type]
-        if file_index_or_palette_pointer == 0xFFFFFFFF
+        asset_index_or_palette_pointer, file_data_type = fs.read(pointer_to_start_of_file_index_list+i*8, 8).unpack("VV")
+        
+        if asset_index_or_palette_pointer == 0xFFFFFFFF
           # End of list.
           break
         end
         if file_data_type == 1 || file_data_type == 2
-          file_index = file_index_or_palette_pointer
-          file = fs.files_by_index[file_index]
+          asset_index = asset_index_or_palette_pointer
+          file = fs.assets[asset_index]
           
           if file_data_type == 1
-            gfx_files_to_load << GfxWrapper.new(file[:ram_start_offset], fs)
+            gfx_files_to_load << GfxWrapper.new(file[:asset_pointer], fs)
           elsif file_data_type == 2
             if file[:file_path] =~ /\/so2?\/.+\.dat/
               sprite_files_to_load << file
@@ -104,7 +104,7 @@ class SpriteInfo
             end
           end
         elsif file_data_type == 3
-          palette_pointer_to_load = file_index_or_palette_pointer
+          palette_pointer_to_load = asset_index_or_palette_pointer
         else
           raise CreateCodeReadError.new("Unknown file data type: #{file_data_type}")
         end
@@ -126,8 +126,8 @@ class SpriteInfo
       #end
       
       if gfx_files_to_load.length > 0 && sprite_files_to_load.length > 0 && palette_pointer_to_load
-        gfx_file_pointers = gfx_files_to_load.map{|gfx| gfx.file[:ram_start_offset]}
-        sprite_file_pointer = sprite_files_to_load.first[:ram_start_offset]
+        gfx_file_pointers = gfx_files_to_load.map{|gfx| gfx.file[:asset_pointer]}
+        sprite_file_pointer = sprite_files_to_load.first[:asset_pointer]
         
         return SpriteInfo.new(gfx_file_pointers, palette_pointer_to_load, palette_offset, sprite_file_pointer, skeleton_files_to_load.first, fs, unwrapped_gfx: unwrapped_gfx)
       end
@@ -220,13 +220,13 @@ class SpriteInfo
     
     if ptr_to_ptr_to_files_to_load
       if gfx_files_to_load.length > 0
-        gfx_file_pointers = gfx_files_to_load.map{|gfx| gfx.file[:ram_start_offset]}
+        gfx_file_pointers = gfx_files_to_load.map{|gfx| gfx.file[:asset_pointer]}
       end
       if palette_pointer_to_load
         palette_pointer = palette_pointer_to_load
       end
       if sprite_files_to_load.length > 0
-        sprite_file_pointer = sprite_files_to_load.first[:ram_start_offset]
+        sprite_file_pointer = sprite_files_to_load.first[:asset_pointer]
       end
       if skeleton_files_to_load.length > 0
         skeleton_file = skeleton_files_to_load.first

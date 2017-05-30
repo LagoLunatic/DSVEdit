@@ -26,7 +26,7 @@ class Sprite
     @fs = fs
     
     @sprite_pointer = sprite_pointer
-    @sprite_file = fs.find_file_by_ram_start_offset(sprite_pointer)
+    @sprite_file = fs.assets_by_pointer[sprite_pointer]
     if @sprite_file
       read_from_rom_by_sprite_file(@sprite_file)
     else

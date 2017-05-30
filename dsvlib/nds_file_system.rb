@@ -11,7 +11,8 @@ class NDSFileSystem
   
   attr_reader :files,
               :files_by_path,
-              :files_by_index,
+              :assets,
+              :assets_by_pointer,
               :overlays,
               :rom
   
@@ -30,7 +31,7 @@ class NDSFileSystem
         update_overlay_length(file)
       end
     end
-    get_file_ram_start_offsets_and_file_data_types()
+    get_assets()
     read_free_space_from_text_file()
   end
   
@@ -39,7 +40,7 @@ class NDSFileSystem
     @rom = File.open(input_rom_path, "rb") {|file| file.read}
     read_from_rom()
     extract_to_hard_drive()
-    get_file_ram_start_offsets_and_file_data_types()
+    get_assets()
     read_free_space_from_text_file()
   end
   
@@ -48,7 +49,7 @@ class NDSFileSystem
     @rom = File.open(input_rom_path, "rb") {|file| file.read}
     read_from_rom()
     extract_to_memory()
-    get_file_ram_start_offsets_and_file_data_types()
+    get_assets()
   end
   
   def write_to_rom(output_rom_path)
@@ -199,8 +200,8 @@ class NDSFileSystem
       max_offset = offset_in_file + length
     end
     if max_offset > file[:size]
-      if options[:allow_reading_into_next_file_in_ram] && file[:ram_start_offset]
-        next_file_in_ram = find_file_by_ram_start_offset(file[:ram_start_offset]+0xC)
+      if options[:allow_reading_into_next_file_in_ram] && file[:asset_pointer]
+        next_file_in_ram = assets_by_pointer[file[:asset_pointer]+0xC]
         if next_file_in_ram
           return read_by_file(next_file_in_ram[:file_path], offset_in_file - file[:size], length, options=options)
         end
@@ -248,16 +249,6 @@ class NDSFileSystem
     
     if file[:overlay_id]
       update_overlay_length(file)
-    end
-  end
-  
-  def find_file_by_ram_start_offset(ram_start_offset)
-    unless ram_start_offset >= 0x02000000 && ram_start_offset < 0x03000000
-      raise "RAM start offset %08X is invalid." % ram_start_offset
-    end
-    
-    files.values.find do |file|
-      file[:type] == :file && file[:ram_start_offset] == ram_start_offset
     end
   end
   
@@ -397,10 +388,11 @@ class NDSFileSystem
   end
   
   def all_sprite_pointers
+    # TODO: instead of using the filename, use the asset type to select these
     @all_sprite_pointers ||= files.select do |id, file|
       file[:type] == :file && file[:file_path] =~ /^\/so\/p_/
     end.map do |id, file|
-      file[:ram_start_offset]
+      file[:asset_pointer]
     end
   end
     
@@ -602,36 +594,38 @@ private
     end
   end
   
-  def get_file_ram_start_offsets_and_file_data_types
-    @files_by_index = []
-    offset = LIST_OF_FILE_RAM_LOCATIONS_START_OFFSET
-    while offset < LIST_OF_FILE_RAM_LOCATIONS_END_OFFSET
-      file_data = read(offset, LIST_OF_FILE_RAM_LOCATIONS_ENTRY_LENGTH)
+  def get_assets
+    @assets = []
+    @assets_by_pointer = {}
+    offset = ASSET_LIST_START
+    while offset < ASSET_LIST_END
+      asset_entry = read(offset, ASSET_LIST_ENTRY_LENGTH)
       
-      ram_start_offset = file_data[0..3].unpack("V").first
+      asset_pointer = asset_entry[0,4].unpack("V").first
       
-      file_data_type = file_data[4..5].unpack("v").first
+      asset_type = asset_entry[4,2].unpack("v").first
       
-      file_path = file_data[6..-1]
+      file_path = asset_entry[6..-1]
       file_path = file_path.delete("\x00") # Remove null bytes padding the end of the string
       file = files_by_path[file_path]
       
-      if ram_start_offset != 0
-        file[:ram_start_offset] = ram_start_offset
+      if asset_pointer != 0
+        file[:asset_pointer] = asset_pointer
+        @assets_by_pointer[asset_pointer] = file
       end
-      file[:file_data_type] = file_data_type
+      file[:asset_type] = asset_type
       
-      @files_by_index << file
+      @assets << file
       
-      offset += LIST_OF_FILE_RAM_LOCATIONS_ENTRY_LENGTH
+      offset += ASSET_LIST_ENTRY_LENGTH
     end
     
     if GAME == "por"
       # Richter's gfx files don't have a ram offset stored in the normal place.
       i = 0
       files.values.each do |file|
-        if file[:ram_start_offset] == nil && file[:file_path] =~ /\/sc2\/s0_ri_..\.dat/
-          file[:ram_start_offset] = read(RICHTERS_LIST_OF_GFX_POINTERS + i*4, 4).unpack("V").first
+        if file[:asset_pointer] == nil && file[:file_path] =~ /\/sc2\/s0_ri_..\.dat/
+          file[:asset_pointer] = read(RICHTERS_LIST_OF_GFX_POINTERS + i*4, 4).unpack("V").first
           i += 1
         end
       end

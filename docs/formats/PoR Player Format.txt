@@ -4,8 +4,8 @@ Player format:
   04,4: Sprite pointer.
   08,4: Palette list pointer.
   0C,4: Pointer to list of which sprite animation to use for what state.
-  10,2: File index of first GFX file.
-  12,2: File index of sprite file.
+  10,2: Asset index of first GFX file.
+  12,2: Asset index of sprite file.
   14,4: Walking speed.
   18,4: First jump force.
   1C,4: Second jump force.

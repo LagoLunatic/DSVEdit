@@ -241,9 +241,9 @@ MAP_DOOR_COLOR = [216, 216, 216, 255]
 MAP_DOOR_CENTER_PIXEL_COLOR = [0, 0, 0, 0]
 MAP_SECRET_DOOR_COLOR = [248, 248, 0, 255]
 
-LIST_OF_FILE_RAM_LOCATIONS_START_OFFSET = 0x020D8CEC
-LIST_OF_FILE_RAM_LOCATIONS_END_OFFSET = 0x020ECA0B
-LIST_OF_FILE_RAM_LOCATIONS_ENTRY_LENGTH = 0x20
+ASSET_LIST_START = 0x020D8CEC
+ASSET_LIST_END = 0x020ECA0B
+ASSET_LIST_ENTRY_LENGTH = 0x20
 
 COLOR_OFFSETS_PER_256_PALETTE_INDEX = 256
 
@@ -1076,8 +1076,8 @@ PLAYER_LIST_FORMAT = [
   [4, "Sprite pointer"],
   [4, "Palette pointer"],
   [4, "State anims ptr"],
-  [2, "GFX file index"],
-  [2, "Sprite file index"],
+  [2, "GFX asset index"],
+  [2, "Sprite asset index"],
   [4, "Walking speed"],
   [4, "Jump force"],
   [4, "Double jump force"],

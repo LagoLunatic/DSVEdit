@@ -1052,7 +1052,7 @@ class Renderer
       end
       
       gfx_files.each do |gfx_file|
-        gfx_page = GfxWrapper.new(gfx_file[:ram_start_offset], fs)
+        gfx_page = GfxWrapper.new(gfx_file[:asset_pointer], fs)
         gfx_pages << gfx_page
       end
     else

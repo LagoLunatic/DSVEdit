@@ -194,9 +194,9 @@ SONG_INDEX_TO_TEXT_INDEX = [
   0x621,
 ]
 
-LIST_OF_FILE_RAM_LOCATIONS_START_OFFSET = 0x020CDAFC
-LIST_OF_FILE_RAM_LOCATIONS_END_OFFSET = 0x020DF15B
-LIST_OF_FILE_RAM_LOCATIONS_ENTRY_LENGTH = 0x20
+ASSET_LIST_START = 0x020CDAFC
+ASSET_LIST_END = 0x020DF15B
+ASSET_LIST_ENTRY_LENGTH = 0x20
 
 COLOR_OFFSETS_PER_256_PALETTE_INDEX = 256
 
@@ -1058,8 +1058,8 @@ PLAYER_LIST_FORMAT = [
   [4, "Sprite pointer"],
   [4, "Palette pointer"],
   [4, "State anims ptr"],
-  [2, "GFX file index"],
-  [2, "Sprite file index"],
+  [2, "GFX asset index"],
+  [2, "Sprite asset index"],
   [4, "Walking speed"],
   [4, "Jump force"],
   [4, "Double jump force"],

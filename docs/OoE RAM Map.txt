@@ -35,8 +35,8 @@
 020D7988-020D79D7 - List of ??? in each area (except Dracula's Castle).
 
 020D8CEC-020ECA0B - List of assets.
+  Entry length 0x20.
   Asset indexes are indexes in this list.
-  Each is 0x20 bytes long.
   00,4: Asset pointer.
   04,2: Type of asset.
     0001 - GFX.
