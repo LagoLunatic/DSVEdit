@@ -71,7 +71,7 @@ REUSED_ENEMY_INFO[0x63] = {init_code: 0x0225AB74} # vice beetle -> spittle bone
 REUSED_ENEMY_INFO[0x72] = {init_code: 0x022CE4B4, gfx_sheet_ptr_index: 1, palette_list_ptr_index: 1, sprite_ptr_index: 1} # poison worm -> sand worm
 REUSED_ENEMY_INFO[0x79] = {init_code: 0x0228C510, gfx_sheet_ptr_index: 1, palette_list_ptr_index: 1, sprite_ptr_index: 1} # double axe armor -> axe armor
 REUSED_ENEMY_INFO[0x7A] = {init_code: 0x022CD89C, gfx_sheet_ptr_index: 1, palette_list_ptr_index: 1, sprite_ptr_index: 1} # demon
-REUSED_ENEMY_INFO[0x98] = {init_code: 0x0221807C} # whip's memory. for some reason his pointers are off in some random place not near his init code.
+REUSED_ENEMY_INFO[0x98] = {gfx_wrapper: 0x02215048, sprite: 0x02132A44, palette: 0x022BA78C} # whip's memory
 RICHTERS_LIST_OF_GFX_POINTERS = 0x02217DD8
 
 ENEMY_FILES_TO_LOAD_LIST = 0x020C210C
