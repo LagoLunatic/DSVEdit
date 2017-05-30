@@ -92,6 +92,9 @@ Enemies:
   Var B: Maximum horizontal distance in pixels away from the spawner the Mummies can spawn.
 25 Dragon Zombie
   Requires enemy overlay 68.
+  Var A:
+    0 Always appears.
+    1 Disappears once you've killed it once. Sets boss death flag 03.
 26 Killer Clown
 27 Coppelia
 28 Hanged Bones

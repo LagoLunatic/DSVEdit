@@ -257,7 +257,7 @@
 021119DC - Boss death flags.
   01 Dullahan
   02 Behemoth
-  03 
+  03 Dragon Zombie in Buried Chamber
   04 Keremet
   05 Legion
   06 Dagon
@@ -266,7 +266,7 @@
   09 The Creature
   0A Mummy Man
   0B Medusa
-  0C 
+  0C Whip's Memory
   0D Stella
   0E Stella & Loretta
   0F Brauner
@@ -302,6 +302,12 @@
   TODO
   Includes what breakable walls have been destroyed.
 02111BB0 - Event flags.
+  0E - Set after defeating sisters?
+  10 - Set after defeating sisters?
+  1F - Sisters cured.
+  20 - Currently in the middle of fighting Whip's Memory.
+  21 - Already attempted to defeat Whip's Memory once and failed.
+  23 - Whip's Memory defeated.
 
 02111BF8 - Currently owned items.
 
@@ -612,7 +618,7 @@ TODO: What are the other 2 for? It's not for the "recent" tab.
 
 022C5860 - This one 256 color palette is used for all face portraits.
 
-023BD0D0-023DFFFF - Free space.
+023C0000-023DFFFF - Free space.
 
 === 023E0000 - 023F7CBF: Some of /dwc/utility.bin (for wifi)
 === 02900000 - 02900650: Some of ARM9

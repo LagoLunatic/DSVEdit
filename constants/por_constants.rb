@@ -478,6 +478,7 @@ REUSED_SPECIAL_OBJECT_INFO = {
   0x01 => {init_code: 0x020F4B6C},
   0x02 => {init_code:         -1},
   0x03 => {init_code:         -1},
+  0x04 => {init_code:         -1},
   0x06 => {init_code:         -1},
   0x16 => {init_code:         -1},
   0x1A => {init_code: 0x020F4E84}, # portrait
