@@ -625,7 +625,9 @@ private
       i = 0
       files.values.each do |file|
         if file[:asset_pointer] == nil && file[:file_path] =~ /\/sc2\/s0_ri_..\.dat/
-          file[:asset_pointer] = read(RICHTERS_LIST_OF_GFX_POINTERS + i*4, 4).unpack("V").first
+          asset_pointer = read(RICHTERS_LIST_OF_GFX_POINTERS + i*4, 4).unpack("V").first
+          file[:asset_pointer] = asset_pointer
+          @assets_by_pointer[asset_pointer] = file
           i += 1
         end
       end
