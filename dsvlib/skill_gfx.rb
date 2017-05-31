@@ -19,8 +19,8 @@ class SkillGfx
       gfx_filename_pointer, @gfx_file_pointer, @sprite_file_pointer, @palette_pointer = fs.read(SKILL_GFX_LIST_START + skill_gfx_index*16, 16).unpack("VVVV")
     when "por", "ooe"
       gfx_asset_index, sprite_asset_index, gfx_pointer, unknown, @palette_pointer = fs.read(SKILL_GFX_LIST_START + skill_gfx_index*16, 16).unpack("vvVVV")
-      @gfx_file_pointer = fs.assets[gfx_asset_index][:ram_start_offset]
-      @sprite_file_pointer = fs.assets[sprite_asset_index][:ram_start_offset]
+      @gfx_file_pointer = fs.assets[gfx_asset_index][:asset_pointer]
+      @sprite_file_pointer = fs.assets[sprite_asset_index][:asset_pointer]
     end
   end
   
