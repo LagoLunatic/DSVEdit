@@ -454,7 +454,7 @@ class SpriteEditor < Qt::Dialog
     
     @ui.gfx_page_index.clear()
     @gfx_pages_with_blanks.each_with_index do |gfx_page, i|
-      @ui.gfx_page_index.addItem(i.to_s)
+      @ui.gfx_page_index.addItem("%02X" % i)
     end
     @ui.gfx_page_index.setCurrentIndex(0)
     
@@ -597,7 +597,7 @@ class SpriteEditor < Qt::Dialog
     
     gfx_page_pixmap_item = @gfx_page_pixmap_items_by_palette[@palette_index][gfx_page_index]
     if gfx_page_pixmap_item.nil?
-      @ui.gfx_file_name.text = "Invalid (gfx page index #{gfx_page_index})"
+      @ui.gfx_file_name.text = "Invalid (gfx page index %02X)" % gfx_page_index
     else
       @gfx_file_graphics_scene.addItem(gfx_page_pixmap_item)
       gfx_file = @gfx_pages_with_blanks[gfx_page_index].file
