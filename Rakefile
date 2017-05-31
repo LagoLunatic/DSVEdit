@@ -48,22 +48,26 @@ task :build_installers do
   
   # OCRA normally places all the source files in the /src directory. In order to make it place them in the base directory open up /bin/ocra and change line 204 from SRCDIR = Pathname.new('src') to SRCDIR = Pathname.new('.').
 
-  system "ruby ocra-1.3.6/bin/ocra dsvedit.rb --output DSVEdit.exe --no-lzma --chdir-first --innosetup setup_dsvedit.iss --icon ./images/dsvedit_icon.ico"
-  system "ruby ocra-1.3.6/bin/ocra dsvrandom/dsvrandom.rb --output DSVRandom.exe --no-lzma --chdir-first --innosetup setup_dsvrandom.iss --windows --icon ./dsvrandom/images/dsvrandom_icon.ico" if defined?(DSVRANDOM_VERSION)
+  system "C:/Ruby23/bin/ruby ocra-1.3.6/bin/ocra dsvedit.rb --output DSVEdit.exe --no-lzma --chdir-first --innosetup setup_dsvedit.iss --icon ./images/dsvedit_icon.ico"
+  system "C:/Ruby23-x64/bin/ruby ocra-1.3.6/bin/ocra dsvedit.rb --output DSVEdit_x64.exe --no-lzma --chdir-first --innosetup setup_dsvedit_x64.iss --icon ./images/dsvedit_icon.ico"
+  if defined?(DSVRANDOM_VERSION)
+    system "C:/Ruby23/bin/ruby ocra-1.3.6/bin/ocra dsvrandom/dsvrandom.rb --output DSVRandom.exe --no-lzma --chdir-first --innosetup setup_dsvrandom.iss --windows --icon ./dsvrandom/images/dsvrandom_icon.ico"
+    system "C:/Ruby23-x64/bin/ruby ocra-1.3.6/bin/ocra dsvrandom/dsvrandom.rb --output DSVRandom_x64.exe --no-lzma --chdir-first --innosetup setup_dsvrandom_x64.iss --windows --icon ./dsvrandom/images/dsvrandom_icon.ico"
+  end
 end
 
 task :build_releases do
   # Updates the executable builds with any changes to the code, delete unnecessary files, and then pack everything into zip files.
   
-  ["DSVania Editor", "DSVania Randomizer"].each do |program_name|
-    next if program_name == "DSVania Randomizer" && !defined?(DSVRANDOM_VERSION)
+  ["DSVania Editor", "DSVania Randomizer", "DSVania Editor x64", "DSVania Randomizer x64"].each do |program_name|
+    next if program_name.include?("DSVania Randomizer") && !defined?(DSVRANDOM_VERSION)
     
     FileUtils.rm_f ["../build/#{program_name}/armips", "../build/#{program_name}/asm", "../build/#{program_name}/constants", "../build/#{program_name}/dsvlib", "../build/#{program_name}/images", "../build/#{program_name}/dsvlib.rb", "../build/#{program_name}/version.rb"]
     FileUtils.cp_r ["./armips", "./asm", "./constants", "./dsvlib", "dsvlib.rb"], "../build/#{program_name}"
     
     FileUtils.rm_rf "../build/#{program_name}/docs"
     
-    if program_name == "DSVania Editor"
+    if program_name.include?("DSVania Editor")
       FileUtils.mkdir "../build/#{program_name}/docs"
       FileUtils.cp_r ["./docs/formats", "./docs/lists", "./docs/asm"], "../build/#{program_name}/docs"
       FileUtils.cp_r ["./docs/PoR RAM Map.txt"], "../build/#{program_name}/docs"
@@ -85,9 +89,17 @@ task :build_releases do
     FileUtils.rm_rf "../build/#{program_name}/cache"
     FileUtils.rm_f "../build/#{program_name}/crashlog.txt"
     
-    version = program_name == "DSVania Editor" ? DSVEDIT_VERSION : DSVRANDOM_VERSION
-    
-    zip_path = "../build/#{program_name}_#{version}.zip".tr(" ", "_")
+    zip_path = "../build/"
+    if program_name.include?("DSVania Editor")
+      zip_path << "DSVania_Editor_#{DSVEDIT_VERSION}"
+    else
+      zip_path << "DSVania_Randomizer_#{DSVRANDOM_VERSION}"
+    end
+    if program_name.include?("x64")
+      zip_path << "_x64"
+    end
+    zip_path << ".zip"
+    zip_path = zip_path.tr(" ", "_")
     
     FileUtils.rm_f zip_path
     
