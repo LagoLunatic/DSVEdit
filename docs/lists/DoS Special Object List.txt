@@ -10,7 +10,7 @@ Special objects:
     11-17 More candle graphics, including statues and grandfather clocks.
     18-FF Buggy candles, that have mismatched graphics, sfx, and contents, or they just don't show up at all.
 02 Water level.
-  Var B: The event flag for the water being lowered. Set to the same as the lever's Var B.
+  Var B: The misc flag for the water being lowered. Set to the same as the lever's Var B.
 03 Waterfall that pushes the player downwards when they jump up into it.
   Var A: Width in pixels.
   Var B: Height in pixels.
@@ -127,10 +127,10 @@ Special objects:
       06 is intended for large weights.
   Var B: Initial swinging velocity. Can be negative. Positive means it starts swinging clockwise, negative means counterclockwise.
 1C Button from Cursed Clock Tower. Blows up 1E.
-  Var B: The event flag for the wall being destroyed.
+  Var B: The misc flag for the wall being destroyed.
 1D Wooden door (for area connections).
 1E Explodable wall from Cursed Clock Tower. 1C blows it up.
-  Var B: The event flag for the wall being destroyed.
+  Var B: The misc flag for the wall being destroyed.
 1F Portrait of a woman whose eyes follow you around.
 20 Blockade/wall.
   Var A: Type of wall:
@@ -143,13 +143,13 @@ Special objects:
     1 and it disappears in the mirror world.
     2 and it disappears after the player has found a warp room.
 21 Drawbridge.
-  Var B: The event flag for the drawbridge being down.
+  Var B: The misc flag for the drawbridge being down.
 22 Bubbles floating up through the water.
   Var A: Delay in between bubbles being created.
   Var B: Z-index of the bubbles.
 23 Huge bell you can walk on.
 24 The lever you pull to lower the water level in the Lost Village and the floodgate next to the lever.
-  Var B: The event flag for the water being lowered. Set to the same as the water level's Var B.
+  Var B: The misc flag for the water being lowered. Set to the same as the water level's Var B.
 25 Boss door.
   Var A is is how the door acts:
     00 Door outside the boss room that you need a magic seal to open.
@@ -175,21 +175,21 @@ Special objects:
     0F Abaddon
 26 Gold door that only opens when the last three digits of your gold match the number on the door.
   Var A: Which version of the door to use - 0 is 573, 1 is 777, 2 is 666.
-  Var B: The event flag for the door being opened.
+  Var B: The misc flag for the door being opened.
 27 Gate in Condemned Tower that only opens with the Tower Key.
 28 The button in the Dark Chapel that lowers the wall blocking the path.
-  Var B: The event flag for the wall being down. Set to the same as the wall's Var B.
+  Var B: The misc flag for the wall being down. Set to the same as the wall's Var B.
 29 The wall that blocks the path in the Dark Chapel.
-  Var B: The event flag for the wall being down. Set to the same as the button's Var B.
+  Var B: The misc flag for the wall being down. Set to the same as the button's Var B.
 2A Flood gate from Lost Village.
-  Var B: The event flag for the water being lowered. Set to the same as the lever's Var B.
+  Var B: The misc flag for the water being lowered. Set to the same as the lever's Var B.
 2B The explodable floor in the Lost Village underneath the statues.
   Var A:
     0 The floor and the animated water on the statue.
     1 The ceiling with explosives strapped to it and the button that blows it up.
       The button automatically positions itself to the upper left screen.
       The explosive ceiling visually positions itself to the upper left screen too, but the collision on the ceiling will be wherever you set its X and Y to.
-  Var B: The event flag for the floor being destroyed.
+  Var B: The misc flag for the floor being destroyed.
 2C Chandelier.
   Var A is the color of the chandelier:
     00 Blue.
@@ -252,7 +252,7 @@ Special objects:
     02 - Single gate with button to the left.
     03 - Double gate with button to the left.
     04+ - Gate only, no button.
-  Var B: The event flag for the gate being opened.
+  Var B: The misc flag for the gate being opened.
 46 More breakable walls like 44.
   Var A:
     0 for the left wall in the underground portion of Lost Village.
