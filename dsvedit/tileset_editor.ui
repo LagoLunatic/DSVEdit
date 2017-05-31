@@ -27,6 +27,23 @@
       <widget class="QLineEdit" name="tileset_pointer"/>
      </item>
      <item>
+      <widget class="QLabel" name="label_6">
+       <property name="text">
+        <string>Tileset Type</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLineEdit" name="tileset_type">
+       <property name="maximumSize">
+        <size>
+         <width>40</width>
+         <height>16777215</height>
+        </size>
+       </property>
+      </widget>
+     </item>
+     <item>
       <widget class="QLabel" name="label_9">
        <property name="text">
         <string>GFX list pointer</string>

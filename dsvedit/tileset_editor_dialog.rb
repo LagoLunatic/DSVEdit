@@ -69,6 +69,7 @@ class TilesetEditorDialog < Qt::Dialog
     layer = room.layers.first
     if layer
       @ui.tileset_pointer.text = "%08X" % layer.tileset_pointer
+      @ui.tileset_type.text = "%04X" % layer.tileset_type
     end
     @ui.gfx_list_pointer.text = "%08X" % room.gfx_list_pointer
     @ui.palette_list_pointer.text = "%08X" % room.palette_pages.first.palette_list_pointer
@@ -79,12 +80,13 @@ class TilesetEditorDialog < Qt::Dialog
     @tileset_graphics_scene.clear()
     
     @tileset_pointer = @ui.tileset_pointer.text.to_i(16)
+    @tileset_type = @ui.tileset_type.text.to_i(16)
     @gfx_list_pointer = @ui.gfx_list_pointer.text.to_i(16)
     @palette_list_pointer = @ui.palette_list_pointer.text.to_i(16)
     
     return if @tileset_pointer == 0 || @gfx_list_pointer == 0 || @palette_list_pointer == 0
     
-    @tileset = Tileset.new(@tileset_pointer, @fs)
+    @tileset = Tileset.new(@tileset_pointer, @tileset_type, @fs)
     
     if SYSTEM == :nds
       @tiles = @tileset.tiles
@@ -253,6 +255,12 @@ class TilesetEditorDialog < Qt::Dialog
     @gfx_page_graphics_scene.clear()
     
     gfx = @gfx_pages[@selected_tile.tile_page]
+    
+    if gfx.nil?
+      @ui.gfx_file.text = "Invalid (gfx page index %02X)" % gfx_page_index
+      return
+    end
+    
     if gfx.colors_per_palette == 16
       palette = @palettes[@selected_tile.palette_index]
     else
