@@ -1,12 +1,14 @@
 
 class Tileset
-  attr_reader :tileset_ram_pointer,
+  attr_reader :tileset_pointer,
+              :tileset_type,
               :tiles,
               :fs
               
-  def initialize(tileset_ram_pointer, fs)
-    @tileset_ram_pointer = tileset_ram_pointer
+  def initialize(tileset_pointer, tileset_type, fs)
+    @tileset_pointer = tileset_pointer
     @fs = fs
+    @tileset_type = tileset_type
     
     if SYSTEM == :gba
       read_from_rom_gba()
@@ -19,7 +21,7 @@ class Tileset
     @tiles = []
     @tiles << tile_class.new(0) # First entry on every tileset is always blank.
     
-    tileset_data = fs.read(tileset_ram_pointer, 4*LENGTH_OF_TILESET_IN_BLOCKS, allow_length_to_exceed_end_of_file: true)
+    tileset_data = fs.read(tileset_pointer, 4*LENGTH_OF_TILESET_IN_BLOCKS, allow_length_to_exceed_end_of_file: true)
     
     offset = 0
     while true
@@ -38,15 +40,21 @@ class Tileset
     @tiles = []
     @tiles << tile_class.new("\0\0"*16) # First entry on every tileset is always blank.
     
-    tileset_data = fs.decompress(tileset_ram_pointer)
+    if tileset_type == 2
+      tileset_data = fs.decompress(tileset_pointer)
+    elsif tileset_type == 1
+      tileset_data = fs.read(tileset_pointer, 0x1000)
+    else
+      raise "Unknown tileset type: #{tileset_type}"
+    end
     
     offset = 0
     while true
-      tile_data = tileset_data[offset, 32]
+      tile_data = tileset_data[offset, tile_class.data_size]
       
       @tiles << tile_class.new(tile_data)
       
-      offset += 32
+      offset += tile_class.data_size
       if offset >= tileset_data.length
         break
       end
@@ -60,15 +68,22 @@ class Tileset
     end
     
     if SYSTEM == :nds
-      fs.write(tileset_ram_pointer, tileset_data)
+      fs.write(tileset_pointer, tileset_data)
     else
-      fs.compress_write(tileset_ram_pointer, tileset_data)
+      fs.compress_write(tileset_pointer, tileset_data)
     end
   end
   
   def tile_class
     if SYSTEM == :gba
-      GBATilesetTile
+      case tileset_type
+      when 2
+        GBATilesetTile
+      when 1
+        GBA256TilesetTile
+      else
+        raise "Unknown tileset type: #{tileset_type}"
+      end
     else
       TilesetTile
     end
@@ -131,6 +146,10 @@ class GBATilesetTile
   def is_blank
     false # TODO
   end
+  
+  def self.data_size
+    32
+  end
 end
 
 class MiniTile
@@ -163,7 +182,56 @@ class MiniTile
   end
 end
 
+class GBA256TilesetTile
+  attr_reader :minitiles
+              
+  def initialize(tile_data)
+    @minitiles = []
+    tile_data.unpack("C*").each do |minitile_data|
+      @minitiles << MiniTile256.new(minitile_data)
+    end
+  end
+  
+  def to_data
+    @minitiles.map{|mt| mt.to_data}.join
+  end
+  
+  def is_blank
+    false # TODO
+  end
+  
+  def self.data_size
+    16
+  end
+end
+
+class MiniTile256 < MiniTile
+  def initialize(minitile_data)
+    @index_on_tile_page = minitile_data
+    @tile_page          = 0
+    @horizontal_flip    = false
+    @vertical_flip      = false
+    @palette_index      = 0
+  end
+  
+  def to_data
+    minitile_data = index_on_tile_page
+    [minitile_data].pack("C")
+  end
+end
+
 class CollisionTileset < Tileset
+  def initialize(tileset_pointer, fs)
+    @tileset_pointer = tileset_pointer
+    @fs = fs
+    
+    if SYSTEM == :gba
+      read_from_rom_gba()
+    else
+      read_from_rom_nds()
+    end
+  end
+  
   def read_from_rom_gba
     @tiles = [] # TODO
   end

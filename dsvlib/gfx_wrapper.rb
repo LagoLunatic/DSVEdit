@@ -5,6 +5,8 @@ class GfxWrapper
               :file,
               :unknown_1,
               :unknown_2,
+              :bpp,
+              :size_in_512_chunks,
               :gfx_data_pointer
   attr_accessor :render_mode,
                 :canvas_width
@@ -19,12 +21,19 @@ class GfxWrapper
     else
       if unwrapped
         @gfx_data_pointer = gfx_pointer
-        @unknown_2 = 0
         @render_mode = 1
         @canvas_width = 0x10
+        @size_in_512_chunks = 0x10
       else
-        @unknown_1, @unknown_2, @unknown_3, @unknown_4, @gfx_data_pointer = fs.read(gfx_pointer, 8).unpack("CCCCV")
-        @render_mode = 1
+        @unknown_1, @bpp, @unknown_3, @size_in_512_chunks, @gfx_data_pointer = fs.read(gfx_pointer, 8).unpack("CCCCV")
+        @render_mode = case bpp
+        when 4
+          1
+        when 8
+          2
+        else
+          raise "Unknown bpp: #{bpp}"
+        end
         @canvas_width = 0x10
       end
     end
@@ -34,10 +43,10 @@ class GfxWrapper
     if SYSTEM == :nds
       fs.read_by_file(file[:file_path], 0, 0x2000*render_mode, allow_reading_into_next_file_in_ram: true)
     else
-      @gfx_data ||= if @unknown_2 == 4
+      @gfx_data ||= if @bpp == 4 || @bpp == 8
         fs.decompress(gfx_data_pointer)
       else
-        fs.read(gfx_data_pointer+4, 0x2000)
+        fs.read(gfx_data_pointer+4, 512*size_in_512_chunks)
       end
     end
   end
@@ -46,7 +55,7 @@ class GfxWrapper
     if SYSTEM == :nds
       fs.write_by_file(gfx.file[:file_path], 0, gfx_data_bytes.pack("C*"))
     else
-      if @unknown_2 == 4
+      if @bpp == 4 || @bpp == 8
         fs.compress_write(gfx_data_pointer, new_gfx_data)
       else
         if new_gfx_data.length > 0x2000
@@ -65,10 +74,6 @@ class GfxWrapper
   end
   
   def colors_per_palette
-    if SYSTEM == :gba
-      return 16 # TODO
-    end
-    
     case render_mode
     when 1
       16

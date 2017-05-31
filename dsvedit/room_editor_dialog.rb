@@ -28,6 +28,11 @@ class RoomEditorDialog < Qt::Dialog
     
     connect(@ui.buttonBox, SIGNAL("clicked(QAbstractButton*)"), self, SLOT("button_box_clicked(QAbstractButton*)"))
     
+    if SYSTEM == :nds
+      @ui.color_effects.hide()
+      @ui.label_5.hide()
+    end
+    
     read_room()
     
     self.show()
@@ -39,6 +44,7 @@ class RoomEditorDialog < Qt::Dialog
     @ui.palette_page_list.text = "%08X" % @room.palette_wrapper_pointer
     @ui.entity_list.text = "%08X" % @room.entity_list_ram_pointer
     @ui.door_list.text = "%08X" % @room.door_list_ram_pointer
+    @ui.color_effects.text = "%04X" % @room.color_effects if SYSTEM == :gba
     
     @map_graphics_scene.clear()
     
@@ -79,6 +85,7 @@ class RoomEditorDialog < Qt::Dialog
     @room.palette_wrapper_pointer = @ui.palette_page_list.text.to_i(16)
     @room.entity_list_ram_pointer = @ui.entity_list.text.to_i(16)
     @room.door_list_ram_pointer = @ui.door_list.text.to_i(16)
+    @room.color_effects = @ui.color_effects.text.to_i(16) if SYSTEM == :gba
     
     @room.write_to_rom()
     

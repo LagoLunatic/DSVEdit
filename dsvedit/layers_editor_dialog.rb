@@ -28,6 +28,17 @@ class LayersEditorDialog < Qt::Dialog
     connect(@ui.layer_index, SIGNAL("activated(int)"), self, SLOT("layer_changed(int)"))
     connect(@ui.buttonBox, SIGNAL("clicked(QAbstractButton*)"), self, SLOT("button_box_clicked(QAbstractButton*)"))
     
+    if SYSTEM == :nds
+      @ui.bg_control.hide()
+      @ui.label_11.hide()
+    end
+    if SYSTEM == :gba
+      @ui.opacity.hide()
+      @ui.label_5.hide()
+      @ui.gridLayout.addWidget(@ui.bg_control, 2, 3)
+      @ui.gridLayout.addWidget(@ui.label_11, 2, 2)
+    end
+    
     layer_changed(0)
     
     self.show()
@@ -41,7 +52,10 @@ class LayersEditorDialog < Qt::Dialog
     @ui.width.text = "%02X" % layer.width
     @ui.height.text = "%02X" % layer.height
     @ui.z_index.text = "%02X" % layer.z_index
+    @ui.scroll_mode.text = "%02X" % layer.scroll_mode
+    @ui.bg_control.text = "%04X" % layer.bg_control if SYSTEM == :gba
     @ui.opacity.value = layer.opacity
+    @ui.tileset_type.text = "%04X" % layer.tileset_type
     @ui.tileset.text = "%08X" % layer.tileset_pointer
     @ui.collision_tileset.text = "%08X" % layer.collision_tileset_pointer
     
@@ -51,6 +65,10 @@ class LayersEditorDialog < Qt::Dialog
     end
     @ui.main_gfx_page_index.setCurrentIndex(layer.main_gfx_page_index)
     
+    display_layer(layer)
+  end
+  
+  def display_layer(layer)
     @layer_graphics_scene.clear()
     @layer_graphics_scene = Qt::GraphicsScene.new
     @ui.layer_graphics_view.setScene(@layer_graphics_scene)
@@ -61,6 +79,11 @@ class LayersEditorDialog < Qt::Dialog
     tileset_filename = "cache/#{GAME}/rooms/#{@room.area_name}/Tilesets/#{layer.tileset_filename}.png"
     layer_item = LayerItem.new(layer, tileset_filename)
     layer_item.setParentItem(@layers_view_item)
+  rescue StandardError => e
+    Qt::MessageBox.warning(self,
+      "Failed to display layer",
+      "Failed to display layer %08X.\n#{e.message}\n\n#{e.backtrace.join("\n")}" % layer.layer_list_entry_ram_pointer
+    )
   end
   
   def save_layer
@@ -71,7 +94,10 @@ class LayersEditorDialog < Qt::Dialog
     layer.width = @ui.width.text.to_i(16)
     layer.height = @ui.height.text.to_i(16)
     layer.z_index = @ui.z_index.text.to_i(16)
-    layer.opacity = @ui.opacity.value
+    layer.scroll_mode = @ui.scroll_mode.text.to_i(16)
+    layer.bg_control = @ui.bg_control.text.to_i(16) if SYSTEM == :gba
+    layer.opacity = @ui.opacity.value if SYSTEM == :nds
+    layer.tileset_type = @ui.tileset_type.text.to_i(16)
     layer.tileset_pointer = @ui.tileset.text.to_i(16)
     layer.collision_tileset_pointer = @ui.collision_tileset.text.to_i(16)
     layer.main_gfx_page_index = @ui.main_gfx_page_index.currentIndex

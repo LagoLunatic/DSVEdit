@@ -794,6 +794,11 @@ class DSVEdit < Qt::MainWindow
     @renderer.ensure_tilesets_exist(folder, @room)
     @tiled.create(tmx_path, @room)
     system("start \"#{@settings[:tiled_path]}\" \"#{tmx_path}\"")
+  rescue StandardError => e
+    Qt::MessageBox.warning(self,
+      "Failed to export to Tiled",
+      "Failed to export to Tiled:\n#{e.message}\n\n#{e.backtrace.join("\n")}"
+    )
   end
   
   def import_from_tiled

@@ -70,7 +70,7 @@ class Renderer
       tileset_filename = "#{folder}/#{room.area_name}/Tilesets/#{layer.tileset_filename}_collision.png"
       tileset = render_collision_tileset(layer.collision_tileset_pointer, tileset_filename)
     else
-      tileset = get_tileset(layer.tileset_pointer, room.palette_pages, room.graphic_tilesets_for_room, layer.colors_per_palette, layer.collision_tileset_pointer, tileset_filename)
+      tileset = get_tileset(layer.tileset_pointer, layer.tileset_type, room.palette_pages, room.graphic_tilesets_for_room, layer.colors_per_palette, layer.collision_tileset_pointer, tileset_filename)
     end
     
     layer.tiles.each_with_index do |tile, index_on_level|
@@ -95,11 +95,11 @@ class Renderer
     return rendered_layer
   end
   
-  def get_tileset(pointer_to_tileset_for_layer, palette_pages, gfx_pages, colors_per_palette, collision_tileset_offset, tileset_filename)
+  def get_tileset(pointer_to_tileset_for_layer, tileset_type, palette_pages, gfx_pages, colors_per_palette, collision_tileset_offset, tileset_filename)
     if File.exist?(tileset_filename)
       ChunkyPNG::Image.from_file(tileset_filename)
     else
-      render_tileset(pointer_to_tileset_for_layer, palette_pages, gfx_pages, colors_per_palette, collision_tileset_offset, tileset_filename)
+      render_tileset(pointer_to_tileset_for_layer, tileset_type, palette_pages, gfx_pages, colors_per_palette, collision_tileset_offset, tileset_filename)
     end
   end
   
@@ -109,7 +109,7 @@ class Renderer
       
       tileset_filename = "#{folder}/#{room.area_name}/Tilesets/#{layer.tileset_filename}.png"
       if !File.exist?(tileset_filename)
-        render_tileset(layer.tileset_pointer, room.palette_pages, room.gfx_pages, layer.colors_per_palette, layer.collision_tileset_pointer, tileset_filename)
+        render_tileset(layer.tileset_pointer, layer.tileset_type, room.palette_pages, room.gfx_pages, layer.colors_per_palette, layer.collision_tileset_pointer, tileset_filename)
       end
       
       if collision
@@ -122,20 +122,20 @@ class Renderer
     end
   end
   
-  def render_tileset(tileset_offset, palette_pages, gfx_pages, colors_per_palette, collision_tileset_offset, output_filename=nil)
+  def render_tileset(tileset_offset, tileset_type, palette_pages, gfx_pages, colors_per_palette, collision_tileset_offset, output_filename=nil)
     if SYSTEM == :nds
-      render_tileset_nds(tileset_offset, palette_pages, gfx_pages, colors_per_palette, collision_tileset_offset, output_filename)
+      render_tileset_nds(tileset_offset, tileset_type, palette_pages, gfx_pages, colors_per_palette, collision_tileset_offset, output_filename)
     else
-      render_tileset_gba(tileset_offset, palette_pages, gfx_pages, colors_per_palette, collision_tileset_offset, output_filename)
+      render_tileset_gba(tileset_offset, tileset_type, palette_pages, gfx_pages, colors_per_palette, collision_tileset_offset, output_filename)
     end
   end
   
-  def render_tileset_nds(tileset_offset, palette_pages, gfx_pages, colors_per_palette, collision_tileset_offset, output_filename=nil)
+  def render_tileset_nds(tileset_offset, tileset_type, palette_pages, gfx_pages, colors_per_palette, collision_tileset_offset, output_filename=nil)
     if gfx_pages.empty?
       return render_collision_tileset(collision_tileset_offset, output_filename)
     end
     
-    tileset = Tileset.new(tileset_offset, fs)
+    tileset = Tileset.new(tileset_offset, tileset_type, fs)
     rendered_tileset = ChunkyPNG::Image.new(TILESET_WIDTH_IN_TILES*16, TILESET_HEIGHT_IN_TILES*16, ChunkyPNG::Color::TRANSPARENT)
     palette_list = generate_palettes(palette_pages.first.palette_list_pointer, 16) # TODO: USE CORRECT PALETTE PAGE
     if gfx_pages.any?{|gfx| gfx.colors_per_palette == 256}
@@ -189,12 +189,12 @@ class Renderer
     return rendered_tileset
   end
   
-  def render_tileset_gba(tileset_offset, palette_pages, gfx_pages, colors_per_palette, collision_tileset_offset, output_filename=nil)
+  def render_tileset_gba(tileset_offset, tileset_type, palette_pages, gfx_pages, colors_per_palette, collision_tileset_offset, output_filename=nil)
     if gfx_pages.empty?
       return render_collision_tileset(collision_tileset_offset, output_filename)
     end
     
-    tileset = Tileset.new(tileset_offset, fs)
+    tileset = Tileset.new(tileset_offset, tileset_type, fs)
     rendered_tileset = ChunkyPNG::Image.new(TILESET_WIDTH_IN_TILES*TILE_WIDTH, TILESET_HEIGHT_IN_TILES*TILE_HEIGHT, ChunkyPNG::Color::TRANSPARENT)
     palettes = []
     palette_pages.each do |palette_page|
@@ -339,7 +339,6 @@ class Renderer
       pixels_per_byte = 2
     elsif palette.length == 256
       pixels_per_byte = 1
-      raise "256-color palette in 1-dimensional mode"
     else
       raise "Unknown palette length: #{palette.length}"
     end
@@ -399,7 +398,6 @@ class Renderer
       pixels_per_byte = 2
     elsif palette.length == 256
       pixels_per_byte = 1
-      raise "256-color palette in 1-dimensional mode"
     else
       raise "Unknown palette length: #{palette.length}"
     end
@@ -897,7 +895,7 @@ class Renderer
       palettes = generate_palettes(palette_pointer, 256)
       dummy_palette = generate_palettes(nil, 256).first
     else
-      raise "Unknown render mode."
+      raise "Unknown render mode: #{gfx_with_blanks.first.render_mode}"
     end
     
     rendered_gfx_files_by_palette = Hash.new{|h, k| h[k] = {}}
