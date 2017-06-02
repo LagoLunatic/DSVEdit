@@ -898,7 +898,7 @@ class DSVEdit < Qt::MainWindow
         
         Qt.execute_in_main_thread do
           if @progress_dialog && !@progress_dialog.wasCanceled
-            @progress_dialog.setValue(files_written) unless @progress_dialog.wasCanceled
+            @progress_dialog.setValue(files_written)
           end
         end
       end
