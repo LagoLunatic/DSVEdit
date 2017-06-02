@@ -13,7 +13,7 @@ Memory used for entities in OoE is 021092A0 - 0211DF5F. Each entity is 0x160 byt
 048,4: X acceleration.
 04C,4: Y acceleration (gravity).
 06C,2: Affects the entity's graphics.
-  This is an index in list 0211E0C0.
+  This is an index in the currently loaded sprite info list, 0211E0C0.
 074,4: Bitfield.
   Bit 0x04: For skeletally animated enemies, this bit must be set or the parts won't be rotated at all.
   Bit 0x80: For Giant Skeleton, this is which direction he's facing, 0 for left, 80 for right.

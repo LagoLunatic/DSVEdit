@@ -59,6 +59,10 @@
   ; r0 - Sector index
   ; r1 - Room index
 
+0804F84C GetWarpRoomPointer
+  ; r0 - Warp room index
+  ; Returns pointer to the warp point in list 08525FBC.
+
 08021278 SetEntityCollision
   ; r0 - Entity pointer
   ; r1 - Whether this platform is slippery or has friction.
@@ -77,6 +81,15 @@
 0803F17C SpriteAnimate
   ; Call every frame to handle the animation.
   ; r0 - Entity pointer to animate
+
+08001994 GetMinitileData
+  ; r0 - 
+  ; r1 - 
+  ; r2 - 
+  ; r3 - 
+
+080221CC WeaponOneHandedUse
+080224BC WeaponTwoHandedUse
 
 ; Enemy-specific code
 080AD2A8 EnemyBatCreate

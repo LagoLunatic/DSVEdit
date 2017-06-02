@@ -219,6 +219,10 @@
   0x40000000 - Set when you haven't saved the game once yet. Disables suspending.
   0x80000000 - Set during events?
 
+0211174C - Bitfield of ?.
+  Bits:
+  02 - Can't switch to or call partner.
+
 02111768 - Pointer to the current room's metadata.
 0211176C - Pointer to the current room's metadata. This is updated one frame before 02111768.
 02111770 - Pointer to the door the player most recently walked through.

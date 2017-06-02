@@ -37,20 +37,33 @@
 
 020003CC - Has the room pointer to load when loading a save.
 
-=== 020004E4-??: Entity memory. Each entity is 0x84 bytes long. Entities range from 00-CF (at least, maybe more).
-
-020004E4 - Players's entity memory.
-02000526,2 - Player's current x pos in pixels.
-0200052A,2 - Player's current y pos in pixels.
-0200052C - Player's current x velocity
-
 0200037E - Boss death flags.
 
 020003D4 - Bitfield of entity used byte 5s in the current room.
   Byte 5 must be unique for all entities in the room.
   Unlike the DSVanias, a byte 5 of 0 must also be unique, and doesn't make an entity exempt.
 
+020003F4 - Currently selected warp room on the warp select screen.
+
+=== 020004E4-??: Entity memory. Each entity is 0x84 bytes long. Entities range from 00-CF (at least, maybe more).
+
+What each range of entity slots is for:
+00-00 - Player.
+02-10 - Player weapons/red souls/blue souls/Julius skills
+11-11 - Yellow soul in Soma mode. Subweapon icon in Julius mode.
+16-19 - 
+1B-48 - Room entities, including enemies and special objects.
+49-CF - Various small thing including particles and enemy projectiles.
+
+020004E4 - Players's entity memory.
+02000526,2 - Player's current x pos in pixels.
+0200052A,2 - Player's current y pos in pixels.
+0200052C - Player's current x velocity
+
 0200A09C,0200A0B8 - screen Y?
+
+0200A100 - Decompressed tileset data.
+0200C0EC - tileset data again?
 
 02013144 - ???
 

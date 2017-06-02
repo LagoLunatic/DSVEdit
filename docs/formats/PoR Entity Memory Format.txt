@@ -11,7 +11,7 @@ Memory used for entities in PoR is 020FC500 - 0211173F. Each entity is 0x160 byt
 014,2: Frame counter 1.
 016,2: Frame counter 2.
 024,4: X pos on the screen.
-028,4: X pos on the screen.
+028,4: Y pos on the screen.
 02C,4: Z position.
 030,4: X pos.
 034,4: Y pos.
@@ -21,7 +21,7 @@ Memory used for entities in PoR is 020FC500 - 0211173F. Each entity is 0x160 byt
 048,4: X acceleration.
 04C,4: Y acceleration (gravity).
 06C,2: Affects the entity's graphics.
-  This is an index in list 020FA200.
+  This is an index in the currently loaded sprite info list, 020FA200.
 074,4: Bitfield related to sprite drawing.
   80 Horizontal flip.
 078,4: Pointer to sprite animation list.

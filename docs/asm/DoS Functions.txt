@@ -82,13 +82,38 @@
 021D7998 CreateRoomEntity
   ; r0 - Pointer to the entity in the room's entity list.
 
-0201C1B8 LoadSprite
+0201C1B8 LoadSpriteMultiGfx
   ; r0 - Entity ptr
   ; r1 - Sprite ptr
   ; r2 - GFX list ptr
   ; r3 - Palette list ptr
-0201C2B8 LoadSprite2
-0201C2D8 LoadSprite3
+0201C2B8 LoadSpriteSingleGfx
+  ; r0 - Entity ptr
+  ; r1 - Sprite ptr
+  ; r2 - GFX asset ptr
+  ; r3 - Palette list ptr
+0201C2D8 LoadSpriteSingleGfx2
+
+0200EE44 GetSpriteInfoPointer
+  ; r0 - Index in the currently loaded sprite info list, 020C6260. This is from +68 in the entity.
+  ; Returns r0 - Pointer to the entry in that list.
+
+02018780 AssetGetPointer
+  ; r0 - Asset index
+  ; Returns the pointer at 0208CC6C+(r0*0x28)
+02018750 AssetGetType
+  ; r0 - Asset index
+  ; Returns the asset type halfword at 0208CC6C+(r0*0x28)+4
+
+021D6F74 GetAssetSpace
+  ; r0 - ?
+  ; r1 - Number of bytes of space needed
+  ; r2 - ?
+  ; Returns pointer to free space
+020185E8 GetAssetSpace2
+  ; r0 - Number of bytes of space needed
+  ; r1 - ?
+  ; Returns pointer to free space
 
 021D9668 ActorSpawn
 021D9288 ActorSetVelocity

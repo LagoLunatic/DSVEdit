@@ -5,8 +5,11 @@ Memory used for entities in AoS is 020004E4 - ?. Each entity is 0x84 bytes long.
 04,4: Pointer to draw code.
 22,2: Frame counter.
 40,4: X pos.
-44,4: X pos.
+44,4: Y pos. (on screen??)
 48,4: X velocity.
 4C,4: Y velocity.
 50,4: X acceleration.
 54,4: Y acceleration (gravity).
+
+For weapons/skills:
+14,4: Pointer to the entity that used this weapon/skill (the player).
