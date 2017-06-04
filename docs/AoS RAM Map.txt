@@ -53,7 +53,7 @@ What each range of entity slots is for:
 11-11 - Yellow soul in Soma mode. Subweapon icon in Julius mode.
 16-19 - 
 1B-48 - Room entities, including enemies and special objects.
-49-CF - Various small thing including particles and enemy projectiles.
+49-CF - Various small things including particles and enemy projectiles.
 
 020004E4 - Players's entity memory.
 02000526,2 - Player's current x pos in pixels.

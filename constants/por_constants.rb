@@ -708,7 +708,13 @@ TEXT_COLOR_NAMES = {
   0x0F => "WHITE2",
 }
 
-NAMES_FOR_UNNAMED_SKILLS = {}
+NAMES_FOR_UNNAMED_SKILLS = {
+  0x02 => "Axe (Richter)",
+  0x03 => "Cross (Richter)",
+  0x04 => "Holy Water (Richter)",
+  0x05 => "Grand Cross (Richter)",
+  0x09 => "Genbu",
+}
 
 ENEMY_IDS = (0x00..0x9A).to_a
 COMMON_ENEMY_IDS = (0x00..0x80).to_a
@@ -779,7 +785,7 @@ WEAPON_FORMAT = [
   [2, "Icon"],
   [4, "Price"],
   [1, "Swing Anim"],
-  [1, "Graphical Effect"],
+  [1, "Special Effect"],
   [1, "Equippable by", :bitfield],
   [1, "Attack"],
   [1, "Defense"],

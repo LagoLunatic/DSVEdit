@@ -134,7 +134,55 @@
 
 020FC48C - Bitfield of what buttons the player is pressing.
 
+020FC4B4,1 - Whether touch screen has been touched for at least 2 frames.
+020FC4B5,1 - Whether touch screen has been touched for exactly 2 frames.
+020FC4B6,1 - Whether the location currently touched on the touch screen is the same as the location touched last frame.
+020FC4B7,1:
+  Upper nibble: Whether the location currently touched on the touch screen is different from the location touched last frame.
+  Lower nibble: Whether touch screen is currently being touched or not.
+020FC4B8,2 - X pos on the touch screen that was last touched.
+020FC4BA,2 - Y pos on the touch screen that was last touched.
+020FC4BC,2 - X pos on the touch screen that was last touched.
+020FC4BE,2 - Y pos on the touch screen that was last touched.
+020FC4C0,2 - X pos on the touch screen that was last touched and held for at least 2 frames.
+020FC4C2,2 - Y pos on the touch screen that was last touched and held for at least 2 frames.
+020FC4C4,2 - X pos on the touch screen that was last touched and held for at least 3 frames.
+020FC4C6,2 - Y pos on the touch screen that was last touched and held for at least 3 frames.
+020FC4C8,2 - X pos on the touch screen that was last touched and held for at least 4 frames.
+020FC4CA,2 - Y pos on the touch screen that was last touched and held for at least 4 frames.
+020FC4CC,2 - X pos difference on the touch screen touched compared to last frame.
+020FC4CE,2 - Y pos difference on the touch screen touched compared to last frame.
+
 === 020FC500 - 0211173F: Entities currently loaded into memory. Each is 0x160 bytes long. They range from 0-F4.
+
+What each range of entity slots is for:
+00-01 Boss rush timer?
+04-04 Player 1.
+05-05 Player 2.
+06-06 
+08-11 Player skills.
+1C-1F Player weapons.
+20-24 
+21-24 
+25-28 
+29-2D 
+2A-2D 
+2E-2E Face icons for players.
+31-80 Room entities, including enemies and special objects.
+81-EF Various small things including particles and enemy projectiles.
+F0-F0 
+F1-F1 
+F2-F2 
+F4-F4 
+F5-F5 
+
+020FCA80-020FCBDF - Player 1 (slot 04)
+020FCA80-020FCBDF - Player 2 (slot 05)
+020FD000-020FDDBF - Player skills (slots 08-11)
+020FEB80-020FF0FF - Player weapons (slots 1C-1F)
+02100440-0210059F - Face icons for players (slot 2E)
+02100860-0210765F - Room entities (slots 31-80)
+02107660-02110EFF - Particles (slots 81-EF)
 
 020FCA80 - Start of player 1's entity memory.
 020FCAB0 - Player 1's x pos.
@@ -211,6 +259,7 @@
 0211174C - Bitfield. Seems to be similar to 020F6DFC from DoS.
   0x00000001 - Disables pausing and switching to or calling your partner.
   0x00000002 - Set during boss fights. Disables suspending and keeps boss doors shut.
+  0x00000040 - ?
   0x00000080 - Set during events?
   0x00040000 - Set during events and in Wind and Vincent's rooms?
   0x00100000 - Set when going through a door.
@@ -219,9 +268,12 @@
   0x40000000 - Set when you haven't saved the game once yet. Disables suspending.
   0x80000000 - Set during events?
 
-0211174C - Bitfield of ?.
+02111750 - Bitfield of ?.
   Bits:
-  02 - Can't switch to or call partner.
+  00000001 - Partner is out.
+  00000002 - Can't switch to or call partner.
+  00000004 - Partner is out?
+  00000200 - Currently switching players.
 
 02111768 - Pointer to the current room's metadata.
 0211176C - Pointer to the current room's metadata. This is updated one frame before 02111768.
@@ -290,6 +342,8 @@
   11 Dracula
   14 ??? Used in Gergoth's room in Boss Rush Course 1.
   19 Doppelganger, resets when you leave the nest of evil.
+
+021119E0,4 - Total playtime (in frames)
 
 021119E4-021119F7 Explored map tile list for areas with unused maps.
   Each area's list starts at:
@@ -394,11 +448,16 @@
   02112048,4 - Not bonus resistances, instead this is 0 or 1 to indicate whether any bonuses are active.
 
 021120E2 - 01 if you're controlling player 1, 00 if player 2.
+021120EC - 01 if the touch screen is touched. For Stella/Loretta's touch screen attacks.
 
 02112104 - Current spell charge progress. Halfword. 0x1000 means 100% charged.
 02112106 - Current spell double charge progress. Halfword. 0x1000 means 100% charged.
 
 02112109 - 00 if you're controlling player 1, 01 if player 2.
+
+02112118 - Partner's X destination.
+0211211C - Partner's Y destination.
+0211212C - ?
 
 02112168 - Current level.
 0211216C - Current HP.
@@ -449,7 +508,7 @@ TODO: What are the other 2 for? It's not for the "recent" tab.
   Each is a halfword; a bitfield of which buttons were pressed.
   This is used by the code that checks if you're pressing a certain button combo.
 
-0211ABE0 - Start of list of globally loaded palettes.
+0211243E
 
 02112458-02112617 - Data for the current room's 4 layers. Each is 0x70 bytes long.
   00,4: Pointer to the layer's metadata.
@@ -470,6 +529,8 @@ TODO: What are the other 2 for? It's not for the "recent" tab.
   58,4: Opacity.
   60,2: Bitfield of ?.
     0100 - Turn off and layer will be invisible?
+
+0211ABE0 - Start of list of globally loaded palettes.
 
 0213291C - List of hitboxes. Each entry is 0x14 bytes long, containing two hitboxes 0xA bytes long each.
   The index in this list for a particular entity is at offset+0xA7 in the entity memory.
@@ -623,6 +684,16 @@ TODO: What are the other 2 for? It's not for the "recent" tab.
 
 0221ED18 - List of skill gfx.
 0221F110 - List of weapon gfx. Same format as DoS.
+
+0221F000-0221F01F - List of weapon special effect code pointers.
+  00 00000000 No effect.
+  01 02216708 Nebula.
+  02 02216638 Flame Whip.
+  03 02216584 Rahab's Frost.
+  04 02216568 Agni's Flame.
+  05 02216200 Heaven's Sword (throw the weapon straight in front of you, then it comes back to you).
+  06 02215EC4 Illusion Fist.
+  07 02215FD8 Tori (throw the weapon diagonally upwards, then it comes back to you).
 
 022B1294 - The color multipliers for Wight. Tints it blue.
 

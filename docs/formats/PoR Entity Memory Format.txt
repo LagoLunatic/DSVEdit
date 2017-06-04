@@ -23,11 +23,13 @@ Memory used for entities in PoR is 020FC500 - 0211173F. Each entity is 0x160 byt
 06C,2: Affects the entity's graphics.
   This is an index in the currently loaded sprite info list, 020FA200.
 074,4: Bitfield related to sprite drawing.
-  80 Horizontal flip.
+  0080 Horizontal flip.
+  8000 
 078,4: Pointer to sprite animation list.
 07C,2: Current animation index.
 07E,2: Current keyframe index in this animation.
 080,2: Bitfield?
+084,2: Current sprite frame index.
 08C,2: Affects how this entity is rendered.
   0 - Normal.
   1 - Transparency is rendered as white.
@@ -63,16 +65,22 @@ Memory used for entities in PoR is 020FC500 - 0211173F. Each entity is 0x160 byt
 149,1: 
 
 For players:
-0D0,4: This is a bitfield of their current state booleans.
+0D0,4: Bitfield of player state booleans.
+0DC,4: Bitfield of ?
 0E0,4: Bitfield of partner states?
+  00000002 - Can't move.
   00000020 - Is called out.
+  00004000 - Told to stand still with the Wait Cube.
+  00040000 - Jumping.
+0E4,4: Bitfield of ??? from player data.
 0E8,2: ???.
   This is 1 when the player is doing a critical art/combo tech.
   This is 4 when the player is not present (neither player-controlled nor AI-controlled).
   Otherwise, this counts down every frame until it reaches 0.
 0EC,1: 0 for player 1, 1 for player 2.
+0ED,1: Which player character index this player is. 2 is Stella, 3 is Loretta, etc.
 0F4,4: Pointer to their state->anims mapping.
-100,4: Bitfield of their current state booleans. Seems very similar to 0D0, but not exactly the same.
+100,4: Bitfield of player state booleans. Seems very similar to 0D0, but not exactly the same.
 124,4: Duplicate of x pos?
 128,4: Duplicate of y pos?
 

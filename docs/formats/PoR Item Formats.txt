@@ -75,7 +75,7 @@ Weapon format:
     07: Punch.
     08: Whip.
     09: Book.
-  Byte 10: Graphical effect.
+  Byte 10: Special effect.
     00: No effect.
     01: Nebula.
     02: Flame Whip.

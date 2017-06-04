@@ -31,6 +31,11 @@
 021E43E4 GiveItem
   ; r0 - Item type (2 is consumables, etc)
   ; r1 - Item index
+021E4428 SetNumOwnedItem
+  ; r0 - Item type (2 is consumables, etc)
+  ; r1 - Item index
+  ; r2 - Number to set
+  ; Doesn't add or subtract, simply overrides the number of the item you own with r2.
 021E54B4 PickupItem
   ; The player picks up an item, deleting the entity, showing the item's name in the corner, etc.
   ; r0 - Pointer to the item entity to delete
@@ -69,6 +74,8 @@
 
 021FC77C PlayerFullRecover
   ; Fully restores player HP and MP.
+02209AEC SubtractMP
+  ; r0 - MP to subtract
 
 021E3A94 UseConsumable
   ; r0 - Index of the consumable
@@ -82,6 +89,14 @@
 
 022028E0 PlayerUpdate
 021F6044 PartnerUpdate
+021FA7E8 PartnerMoveToPos
+  ; r0 - X pos (subpixels)
+  ; r1 - Y pos (subpixels)
+02202AD4 PlayerFloatingUpdate
+021F5EF4 PartnerFloatingUpdate
+
+021F5004 SwitchPlayers
+021F5AC0 CheckCanSwitchPlayers
 
 02208C28 CalcPlayerAttack
   ; r0 - ?
@@ -117,6 +132,17 @@
 0200F5B8 SpriteDrawPart
   ; r0 - Pointer to entity
   ; r1 - Pointer to part
+
+0201FECC InitializeVisibleEntity?
+
+0206DC34 BossRushTimerUpdate
+0206DC38 BossRushTimerDraw
+0201DE24 DrawTimerNumber
+  ; r0 - Entity
+  ; r1 - X pos on the screen (of the first digit)
+  ; r2 - Y pos on the screen
+  ; r3 - Number to draw
+  ; This draws just one part of the timer (minutes, or seconds, or milliseconds). In order for the three parts to be properly spaced there should be a 0x18000 difference between each of their X positions.
 
 021FE5FC SetEntityCollision
   ; r0 - Entity pointer

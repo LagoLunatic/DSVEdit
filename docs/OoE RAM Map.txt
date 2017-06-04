@@ -370,13 +370,16 @@ What each range of entity slots is for:
 08-10 Player skills.
 2A-2A ?
 2D-7C Room entities, including enemies and special objects.
-7D-E8 Various small thing including particles and enemy projectiles.
+7D-E8 Various small things including particles and enemy projectiles.
 EA-EB Menus.
 EC-EC Used in term list?
 EE-EE Used when loading a save
 F0-F0 ?
 
 02109820-0210997F - Player (slot 04)
+02109DA0-0210A9FF - Player skill entities (slots 08-10).
+0210D080-02113E7F - Room entities (slots 2D-7C)
+02113E80-0211D2FF - Particles (slots 7D-E8)
 
 02109820 - Start of the player's entity memory.
 02109850 - Player's x pos.
@@ -428,12 +431,6 @@ F0-F0 ?
 02109932 - Number of jumps player has left.
 02109934 - Number of frames left for mercy jump left.
   4 when on ground. 0 when you can't jump.
-
-02109DA0-0210A9FF - Player skill entities (slots 08-10).
-
-0210D080-02113E7F - Room entities (slots 2D-7C)
-
-02113E80-0211D2FF - Particles (slots 7D-E8)
 
 === 0211DF5F: End of entities currently loaded into memory.
 
