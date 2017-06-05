@@ -306,15 +306,15 @@ class Game
   
   def get_map(area_index, sector_index)
     if GAME == "dos" && [10, 11].include?(sector_index)
-      @abyss_map ||= DoSMap.new(area_index, sector_index, fs)
+      @abyss_map ||= DoSMap.new(area_index, sector_index, self)
     elsif GAME == "dos" || GAME == "aos"
-      @castle_map ||= DoSMap.new(area_index, sector_index, fs)
+      @castle_map ||= DoSMap.new(area_index, sector_index, self)
     else
       @maps ||= begin
         maps = []
         
         AREA_INDEX_TO_OVERLAY_INDEX.keys.each do |area_index|
-          maps << Map.new(area_index, sector_index, fs)
+          maps << Map.new(area_index, sector_index, self)
         end
         
         maps
@@ -322,6 +322,12 @@ class Game
       
       @maps[area_index]
     end
+  end
+  
+  def clear_map_cache
+    @abyss_map = nil
+    @castle_map = nil
+    @maps = nil
   end
   
   def fix_map_sector_and_room_indexes(area_index, sector_index)

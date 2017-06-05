@@ -7,6 +7,7 @@ class MapEditorDialog < Qt::Dialog
   slots "edit_map_tile(int, int, const Qt::MouseButton&)"
   slots "select_tile(int, int, const Qt::MouseButton&)"
   slots "reload_available_tiles(int)"
+  slots "toggle_edit_warps()"
   slots "button_box_clicked(QAbstractButton*)"
   
   def initialize(main_window, game, renderer, area_index, sector_index)
@@ -19,9 +20,9 @@ class MapEditorDialog < Qt::Dialog
     @area = game.areas[area_index]
     
     if GAME == "dos" || GAME == "aos"
-      @map = DoSMap.new(area_index, sector_index, game.fs)
+      @map = DoSMap.new(area_index, sector_index, game)
     else
-      @map = Map.new(area_index, sector_index, game.fs)
+      @map = Map.new(area_index, sector_index, game)
     end
     
     @map_graphics_scene = ClickableGraphicsScene.new
@@ -88,6 +89,9 @@ class MapEditorDialog < Qt::Dialog
       @ui.is_blank.disabled = true
     end
     
+    @edit_warps_mode = false
+    connect(@ui.edit_warps_button, SIGNAL("released()"), self, SLOT("toggle_edit_warps()"))
+    
     connect(@ui.buttonBox, SIGNAL("clicked(QAbstractButton*)"), self, SLOT("button_box_clicked(QAbstractButton*)"))
     
     self.show()
@@ -141,6 +145,7 @@ class MapEditorDialog < Qt::Dialog
   end
   
   def edit_map_tile(x, y, button)
+    return if @edit_warps_mode
     return unless (0..@map_graphics_scene.width-1-5).include?(x) && (0..@map_graphics_scene.height-1-5).include?(y)
     
     x = x / 4
@@ -235,11 +240,48 @@ class MapEditorDialog < Qt::Dialog
     load_selected_map_tile()
   end
   
+  def toggle_edit_warps
+    if GAME == "por" || GAME == "ooe"
+      Qt::MessageBox.warning(self, "Can't edit warps", "PoR and OoE automatically determine warp point position from the map. Warp rooms don't need to be placed manually.")
+      return
+    end
+    
+    @edit_warps_mode = !@edit_warps_mode
+    
+    if @edit_warps_mode
+      @position_indicator_timeline = Qt::TimeLine.new
+      @position_indicator_timeline.updateInterval = 1
+      @position_indicator_timeline.duration = 40.0/60.0 * 1000.0
+      @position_indicator_timeline.curveShape = Qt::TimeLine::LinearCurve
+      @position_indicator_timeline.loopCount = 0
+      @position_indicator_timeline.start
+      
+      @position_indicators = []
+      @map.warp_rooms.each do |warp_room|
+        position_indicator = WarpPositionIndicator.new(warp_room, @position_indicator_timeline)
+        @map_graphics_scene.addItem(position_indicator)
+        @position_indicators << position_indicator
+      end
+    else
+      @position_indicator_timeline.stop()
+      @position_indicator_timeline = nil
+      @position_indicators.each do |position_indicator|
+        @map_graphics_scene.removeItem(position_indicator)
+      end
+      @position_indicators = nil
+    end
+  end
+  
+  def save_changes
+    @map.write_to_rom()
+    @game.clear_map_cache()
+    parent.load_map()
+  end
+  
   def button_box_clicked(button)
     if @ui.buttonBox.standardButton(button) == Qt::DialogButtonBox::Ok
       if @map.tiles.length == @map.number_of_tiles
-        @map.write_to_rom()
-        parent.load_map()
+        save_changes()
         self.close()
       else
         Qt::MessageBox.warning(self, "Can't save", "Can't save maps in PoR or OoE unless the number of tiles is the same as the original. Please add more tiles.")
@@ -248,11 +290,56 @@ class MapEditorDialog < Qt::Dialog
       self.close()
     elsif @ui.buttonBox.standardButton(button) == Qt::DialogButtonBox::Apply
       if @map.tiles.length == @map.number_of_tiles
-        @map.write_to_rom()
-        parent.load_map()
+        save_changes()
       else
         Qt::MessageBox.warning(self, "Can't save", "Can't save maps in PoR or OoE unless the number of tiles is the same as the original. Please add more tiles.")
       end
     end
+  end
+end
+
+class WarpPositionIndicator < Qt::GraphicsEllipseItem
+  RADIUS = 6
+  
+  attr_reader :warp_room
+  
+  def initialize(warp_room, position_indicator_timeline)
+    super(-RADIUS, -RADIUS, RADIUS*2, RADIUS*2)
+    setPen(Qt::Pen.new(Qt::NoPen))
+    setBrush(Qt::Brush.new(Qt::white))
+    
+    @warp_room = warp_room
+    
+    setPos(warp_room.x_pos_in_tiles*4 + 2.25, warp_room.y_pos_in_tiles*4 + 2.25)
+    setOpacity(0.5)
+    setFlag(Qt::GraphicsItem::ItemIsMovable)
+    setFlag(Qt::GraphicsItem::ItemSendsGeometryChanges)
+    
+    @animation = Qt::GraphicsItemAnimation.new(@map_graphics_view) do |anim|
+      anim.item = self
+      anim.setTimeLine(position_indicator_timeline)
+      anim.setScaleAt(1, 0.0, 0.0)
+    end
+  end
+  
+  def itemChange(change, value)
+    if change == ItemPositionChange && scene()
+      new_pos = value.toPointF()
+      x = new_pos.x - 2.25
+      y = new_pos.y - 2.25
+      
+      x = (x / 4).round
+      y = (y / 4).round
+      new_pos.setX(x*4 + 2.25)
+      new_pos.setY(y*4 + 2.25)
+      
+      @warp_room.x_pos_in_tiles = x
+      @warp_room.y_pos_in_tiles = y
+      @warp_room.write_to_rom()
+      
+      return super(change, Qt::Variant.new(new_pos))
+    end
+    
+    return super(change, value)
   end
 end

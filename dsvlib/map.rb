@@ -5,6 +5,7 @@ class Map
               :number_of_tiles,
               :secret_door_list_pointer,
               :row_widths_list_pointer,
+              :game,
               :fs,
               :area_index,
               :sector_index,
@@ -12,10 +13,11 @@ class Map
               :secret_doors,
               :row_widths
   
-  def initialize(area_index, sector_index, fs)
+  def initialize(area_index, sector_index, game)
     @area_index = area_index
     @sector_index = sector_index
-    @fs = fs
+    @game = game
+    @fs = game.fs
     
     read_from_rom()
   end
@@ -248,12 +250,14 @@ class SecretDoor
 end
 
 class DoSMap < Map
-  attr_reader :is_abyss
+  attr_reader :is_abyss,
+              :warp_rooms
   
-  def initialize(area_index, sector_index, fs)
+  def initialize(area_index, sector_index, game)
     @area_index = area_index
     @sector_index = sector_index
-    @fs = fs
+    @game = game
+    @fs = game.fs
     
     if GAME == "dos" && [10, 11].include?(sector_index)
       @is_abyss = true
@@ -321,6 +325,18 @@ class DoSMap < Map
         i += 1
       end
     end
+    
+    if GAME == "dos"
+      @warp_rooms = []
+      WARP_ROOM_COUNT.times do |i|
+        @warp_rooms << DoSWarpRoom.new(i, fs)
+      end
+    elsif GAME == "aos"
+      @warp_rooms = []
+      WARP_ROOM_COUNT.times do |i|
+        @warp_rooms << AoSWarpRoom.new(i, fs)
+      end
+    end
   end
   
   def write_to_rom
@@ -349,6 +365,36 @@ class DoSMap < Map
         fs.write(map_tile_metadata_ram_pointer + index_for_metadata*2, [tile_metadata].pack("v"))
         
         i += 1
+      end
+    end
+    
+    if GAME == "dos"
+      warp_rooms_x_sorted = warp_rooms.sort_by{|tile| [tile.x_pos_in_tiles, tile.y_pos_in_tiles] }
+      warp_rooms_y_sorted = warp_rooms.sort_by{|tile| [tile.y_pos_in_tiles, tile.x_pos_in_tiles] }
+      warp_rooms.each do |warp_room|
+        warp_room.x_pos_in_pixels = warp_room.x_pos_in_tiles*4
+        warp_room.y_pos_in_pixels = warp_room.y_pos_in_tiles*4
+        warp_room.x_index         = warp_rooms_x_sorted.index(warp_room)
+        warp_room.y_index         = warp_rooms_y_sorted.index(warp_room)
+        
+        warp_tile = @tiles.find{|tile| tile.x_pos == warp_room.x_pos_in_tiles && tile.y_pos == warp_room.y_pos_in_tiles}
+        if warp_tile && !warp_tile.is_blank
+          warp_room.sector_index = warp_tile.sector_index
+          warp_room.room_index = warp_tile.room_index
+        else
+          warp_room.sector_index = 0
+          warp_room.room_index = 0
+        end
+        
+        warp_room.write_to_rom()
+      end
+    else
+      warp_rooms.each do |warp_room|
+        warp_tile = @tiles.find{|tile| tile.x_pos == warp_room.x_pos_in_tiles && tile.y_pos == warp_room.y_pos_in_tiles}
+        room = game.areas[0].sectors[warp_tile.sector_index].rooms[warp_tile.room_index]
+        warp_room.room_pointer = room.room_metadata_ram_pointer
+        
+        warp_room.write_to_rom()
       end
     end
   end
@@ -466,5 +512,72 @@ class DoSSecretDoor < SecretDoor
       # If y is positive the door is on the top of the tile.
       @door_side = :top
     end
+  end
+end
+
+class DoSWarpRoom
+  attr_reader :warp_room_index,
+              :fs,
+              :warp_room_data_pointer,
+              :warp_room_icon_pos_data_pointer
+  attr_accessor :sector_index,
+                :room_index,
+                :x_pos_in_pixels,
+                :y_pos_in_pixels,
+                :x_index,
+                :y_index,
+                :area_name_index,
+                :x_pos_in_tiles,
+                :y_pos_in_tiles
+  
+  def initialize(warp_room_index, fs)
+    @warp_room_index = warp_room_index
+    @fs = fs
+    
+    @warp_room_data_pointer = WARP_ROOM_LIST_START + warp_room_index*7
+    @warp_room_icon_pos_data_pointer = WARP_ROOM_ICON_POS_LIST_START + warp_room_index*2
+    
+    @sector_index, @room_index,
+      @x_pos_in_pixels, @y_pos_in_pixels,
+      @x_index, @y_index,
+      @area_name_index = fs.read(warp_room_data_pointer, 7).unpack("C*")
+    @x_pos_in_tiles, @y_pos_in_tiles = fs.read(warp_room_icon_pos_data_pointer, 2).unpack("C*")
+  end
+  
+  def write_to_rom
+    fs.write(warp_room_data_pointer, [
+      @sector_index, @room_index,
+      @x_pos_in_pixels, @y_pos_in_pixels,
+      @x_index, @y_index,
+      @area_name_index
+    ].pack("C*"))
+    fs.write(warp_room_icon_pos_data_pointer, [@x_pos_in_tiles, @y_pos_in_tiles].pack("C*"))
+  end
+end
+
+class AoSWarpRoom
+  attr_reader :warp_room_index,
+              :fs,
+              :warp_room_data_pointer
+  attr_accessor :x_pos_in_tiles,
+                :y_pos_in_tiles,
+                :room_pointer
+  
+  def initialize(warp_room_index, fs)
+    @warp_room_index = warp_room_index
+    @fs = fs
+    
+    @warp_room_data_pointer = WARP_ROOM_LIST_START + warp_room_index*8
+    
+    @x_pos_in_tiles, @y_pos_in_tiles,
+      @room_pointer = fs.read(warp_room_data_pointer, 8).unpack("vvV")
+  end
+  
+  def write_to_rom
+    fs.write(warp_room_data_pointer, [
+      @x_pos_in_tiles,
+      @y_pos_in_tiles,
+      @room_pointer
+    ].pack("vvV"))
   end
 end
