@@ -8,6 +8,7 @@ class MapEditorDialog < Qt::Dialog
   slots "select_tile(int, int, const Qt::MouseButton&)"
   slots "reload_available_tiles(int)"
   slots "toggle_edit_warps()"
+  slots "warp_name_changed(int)"
   slots "button_box_clicked(QAbstractButton*)"
   
   def initialize(main_window, game, renderer, area_index, sector_index)
@@ -90,7 +91,29 @@ class MapEditorDialog < Qt::Dialog
     end
     
     @edit_warps_mode = false
+    if GAME == "dos"
+      warp_names = [
+        "The Lost Village",
+        "Wizardry Lab",
+        "Garden of Madness",
+        "The Dark Chapel",
+        "Demon Guest House",
+        "Condemned Tower",
+        "Mine of Judgment",
+        "Cursed Clock Tower",
+        "Subterranean Hell",
+        "Silenced Ruins",
+        "The Pinnacle",
+        "The Abyss",
+      ]
+      warp_names.each do |area_name|
+        @ui.warp_name.addItem(area_name)
+      end
+    end
+    @ui.warp_name_label.hide()
+    @ui.warp_name.hide()
     connect(@ui.edit_warps_button, SIGNAL("released()"), self, SLOT("toggle_edit_warps()"))
+    connect(@ui.warp_name, SIGNAL("activated(int)"), self, SLOT("warp_name_changed(int)"))
     
     connect(@ui.buttonBox, SIGNAL("clicked(QAbstractButton*)"), self, SLOT("button_box_clicked(QAbstractButton*)"))
     
@@ -258,9 +281,18 @@ class MapEditorDialog < Qt::Dialog
       
       @position_indicators = []
       @map.warp_rooms.each do |warp_room|
-        position_indicator = WarpPositionIndicator.new(warp_room, @position_indicator_timeline)
+        position_indicator = WarpPositionIndicator.new(warp_room, @position_indicator_timeline, self)
         @map_graphics_scene.addItem(position_indicator)
         @position_indicators << position_indicator
+      end
+      
+      @selected_warp_room = @map.warp_rooms.first
+      
+      @ui.edit_warps_button.text = "Edit Map"
+      
+      if GAME == "dos"
+        @ui.warp_name_label.show()
+        @ui.warp_name.show()
       end
     else
       @position_indicator_timeline.stop()
@@ -269,6 +301,24 @@ class MapEditorDialog < Qt::Dialog
         @map_graphics_scene.removeItem(position_indicator)
       end
       @position_indicators = nil
+      
+      @ui.edit_warps_button.text = "Edit Warps"
+      
+      @ui.warp_name_label.hide()
+      @ui.warp_name.hide()
+    end
+  end
+  
+  def warp_name_changed(warp_name_index)
+    @selected_warp_room.area_name_index = warp_name_index
+  end
+  
+  def selected_warp_room_changed(warp_room)
+    @selected_warp_room = warp_room
+    
+    if GAME == "dos"
+      warp_name_index = @selected_warp_room.area_name_index
+      @ui.warp_name.setCurrentIndex(warp_name_index)
     end
   end
   
@@ -303,12 +353,13 @@ class WarpPositionIndicator < Qt::GraphicsEllipseItem
   
   attr_reader :warp_room
   
-  def initialize(warp_room, position_indicator_timeline)
+  def initialize(warp_room, position_indicator_timeline, map_editor)
     super(-RADIUS, -RADIUS, RADIUS*2, RADIUS*2)
     setPen(Qt::Pen.new(Qt::NoPen))
     setBrush(Qt::Brush.new(Qt::white))
     
     @warp_room = warp_room
+    @map_editor = map_editor
     
     setPos(warp_room.x_pos_in_tiles*4 + 2.25, warp_room.y_pos_in_tiles*4 + 2.25)
     setOpacity(0.5)
@@ -341,5 +392,10 @@ class WarpPositionIndicator < Qt::GraphicsEllipseItem
     end
     
     return super(change, value)
+  end
+  
+  def mouseReleaseEvent(event)
+    @map_editor.selected_warp_room_changed(@warp_room)
+    super(event)
   end
 end
