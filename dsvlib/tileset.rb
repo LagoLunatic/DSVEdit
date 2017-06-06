@@ -289,4 +289,20 @@ class CollisionTile
   def to_data
     raise NotImplementedError.new
   end
+  
+  def is_solid?
+    block_shape == 0 && has_top && has_sides_and_bottom
+  end
+  
+  def is_slope?
+    block_shape >= 4
+  end
+  
+  def is_damage?
+    @block_effect == :damage
+  end
+  
+  def is_conveyor?
+    @block_effect == :conveyor_belt_left || @block_effect == :conveyor_belt_right
+  end
 end
