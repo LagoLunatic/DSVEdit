@@ -163,7 +163,7 @@ Consumable format:
     2 Restores hearts.
       Var A: Number of hearts to restore.
     3 Cures a status effect.
-      Var A: 1 for poison, 2 for curse, 4 for petrify.
+      Var A: Which status effect to cure. 1 for poison, 2 for curse, 4 for petrify.
     4 HP Max Up
     5 MP Max Up
     6 HEART Max Up
