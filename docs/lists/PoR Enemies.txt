@@ -97,6 +97,7 @@ Enemies:
     1 Disappears once you've killed it once. Sets boss death flag 03.
 26 Killer Clown
 27 Coppelia
+  one var is for cannon/no cannon
 28 Hanged Bones
   Attaches itself to the closest wall it can find.
   Var A: Length of the bone it swings on.

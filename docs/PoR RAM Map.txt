@@ -177,7 +177,7 @@ F4-F4
 F5-F5 
 
 020FCA80-020FCBDF - Player 1 (slot 04)
-020FCA80-020FCBDF - Player 2 (slot 05)
+020FCBE0-020FCD3F - Player 2 (slot 05)
 020FD000-020FDDBF - Player skills (slots 08-11)
 020FEB80-020FF0FF - Player weapons (slots 1C-1F)
 02100440-0210059F - Face icons for players (slot 2E)

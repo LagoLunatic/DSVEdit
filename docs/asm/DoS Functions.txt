@@ -29,6 +29,11 @@
   ;   1 - A jump-through platform you can fall through.
   ;   3 - A completely solid block.
 
+02005C54 SetBlockCollision
+  ; r0 - X pos of the block in pixels
+  ; r1 - Y pos of the block in pixels
+  ; Used by the floors in Gergoth's tower that change depending on the state.
+
 020059F0 BaloreBlockCreateRect
   ; These arguments are all in pixels, not blocks.
   ; r0 - X pos
@@ -115,6 +120,9 @@
   ; r1 - ?
   ; Returns pointer to free space
 
+021FC590 PlayerUpdate
+021FCC9C PlayerDraw
+
 021D9668 ActorSpawn
 021D9288 ActorSetVelocity
 021D9114 ActorCheckXPos
@@ -132,7 +140,20 @@
   ; r0 - Enemy entity pointer
   ; r1 - 1?
 
+020143D4 SetDamageTypes
+  ; r0 - Entity pointer
+  ; r1 - Damage value
+  ; r2 - Damage types bitfield
+  ; Stores r1 to entity+A8 and r2 to entity+AC if the entity's hitbox is active (entity+A6)
+
 02024D74 MapTileSetExplored
+
+02024C7C GetWarpIndexFromPos
+  ; r0 - Room's x on the map
+  ; r1 - Room's y on the map
+  ; Returns the warp room's index in the warp room lists (0209A188 and 020F71A8)
+
+0203F410 GameOverScreenCreate?
 
 ; Enemy-specific code
 0223266C EnemyZombieCreate

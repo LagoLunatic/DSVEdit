@@ -1,6 +1,10 @@
 
 === 02000000 - 020F6B3F: Most of ARM9
 
+020B0854 - List of ???
+  Entry length 0x40.
+  Change 020B0856,2 to 4000 and axe armor, rapidus fio, and some other things are way larger than normal.
+
 020B5D50 - List of layer scroll modes.
   Each is 3 bytes long.
   00,1: Horizontal scrolling multiplier (8 = 1.0).
