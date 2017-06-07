@@ -18,7 +18,7 @@ Memory used for entities in PoR is 020FC500 - 0211173F. Each entity is 0x160 byt
 038,4: Z position.
 03C,4: X velocity.
 040,4: Y velocity.
-048,4: X acceleration.
+048,4: X friction.
 04C,4: Y acceleration (gravity).
 06C,2: Affects the entity's graphics.
   This is an index in the currently loaded sprite info list, 020FA200.

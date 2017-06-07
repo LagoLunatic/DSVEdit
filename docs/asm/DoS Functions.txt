@@ -122,6 +122,7 @@
 
 021FC590 PlayerUpdate
 021FCC9C PlayerDraw
+021FEE28 PlayerUpdateYAccel
 
 021D9668 ActorSpawn
 021D9288 ActorSetVelocity
@@ -145,6 +146,12 @@
   ; r1 - Damage value
   ; r2 - Damage types bitfield
   ; Stores r1 to entity+A8 and r2 to entity+AC if the entity's hitbox is active (entity+A6)
+020143B8 SetDefenses
+  ; r0 - Entity pointer
+  ; r1 - Physical defense
+  ; r2 - Resistances
+  ; r3 - Weaknesses
+  ; Only stores these if the entity's hitbox is active (entity+A6)
 
 02024D74 MapTileSetExplored
 
@@ -152,6 +159,10 @@
   ; r0 - Room's x on the map
   ; r1 - Room's y on the map
   ; Returns the warp room's index in the warp room lists (0209A188 and 020F71A8)
+
+02025484 GetSectorAssetList
+  ; r0 - Sector index
+  ; Returns a pointer to the start of the sector's asset list.
 
 0203F410 GameOverScreenCreate?
 

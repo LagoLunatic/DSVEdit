@@ -1,0 +1,709 @@
+
+=== 02000000 - 020C073F: Most of ARM9
+
+020070FC - Has pointers to 0207708C and 020788F4 (map tile metadata for castle & abyss).
+020251B8 - Has pointers to 02076AAC and 02078810 (map line data for castle & abyss).
+020250C4 - Has pointers to 02076408 and 0207880C (secret doors for castle & abyss).
+
+02076408-0207641D - List of secret door positions on the map for the castle.
+02076AAC - Map line data for the castle.
+0207708C - Map tile metadata for the castle.
+0207880C - List of secret door positions on the map for the abyss. List is empty, it ends instantly.
+02078810 - Map line data for the abyss.
+020788F4 - Map tle metadata for the abyss.
+
+02078CAC-02079D43 - Enemy DNA list.
+
+02079D7C - List of layer scroll modes.
+  Each is 0xC bytes long.
+  00,4: Horizontal scrolling multiplier (0x1000 = 1.0).
+  04,4: Vertical scrolling multiplier (0x1000 = 1.0).
+  08,4: Autoscrolling type.
+    0 - No autoscrolling.
+    1 - Autoscrolling.
+      Word 00 is the speed of horizontal scrolling.
+      Word 04 is the speed of vertical scrolling.
+
+0208ACC0 - List of update code pointers for each game state (020C07E8).
+
+0208AD8C - List of room pointers for transition rooms.
+  00000000 marks the end of the list.
+
+0208CC6C-0209A0C3 - List of assets.
+  Entry length 0x28.
+  Asset indexes are indexes in this list.
+  00,4: Asset pointer.
+  04,2: Type of asset.
+    0001 - GFX.
+    0004 - Sprite.
+    0100 - 3D model.
+    1000 - Font.
+  06,1A: Filename. The end is padded with null bytes.
+
+0209A4C4-0209A507 - List of pointers to each sector's list of assets.
+Each list of assets has this format:
+  Entry length 8.
+  00,4: Asset index of the asset.
+  04,4: 2?
+  The list is terminated by FFFFFFFF.
+
+0208CA90 - List of files to load for enemies.
+
+0209A188-0209A19F - List of the x and y positions (in map tiles) of each the icon of each warp room on the map.
+  This list is only for the position of the square icon on top of each warp room when you're using a warp point.
+  The list of warp rooms (0222C478) has the locations of the warp rooms themselves, not just the icon.
+  00,1: The warp room's x pos on the map.
+  01,1: The warp room's y pos on the map.
+  These warp rooms are in the same order as list 020F71A8 (bitfield of what warp rooms you've visited).
+
+0209A630 - List of songs that play in each sector.
+  Entry length 4.
+  the list starts 4 bytes later, the first entry is blank.
+  If the sector index is 5 (Condemned Tower & Mine of Judgement) and the room's y pos on the map (020F6E22) is greater than 0x16, then use the 0x10th entry in this list instead of the 0x5th.
+  Entries in this list that say 0 will not result in the song being changed.
+0209E928 - List of songs for sound test.
+  Entry length 8.
+  Bytes 1-4: Song number.
+  Bytes 5-8: Text index for the song name.
+
+0209A688 - List of face portrait files. Format:
+  Each is 20 bytes long.
+  Bytes 1-4: GFX pointer.
+  Bytes 5-8: Palette pointer.
+  Bytes 9-16: Gfx filename (e.g. "soma0".)
+  Bytes 17-20: Asset index of the gfx file.
+There are 41 entries in the list total.
+
+0209A7D0 - some kind of lists of multiple graphic file names? like /sc/f_f%s.dat along with domi0 domi1 domi2 and domi3 (dmitrii's gfx files)
+
+0209A9CC-0209A9E3 - List of asset pointers to the 6 common GFX files.
+
+0209B88C-0209BA67 - List of files to load for special objects.
+
+0209BA68-0209BE87 - Consumable item data.
+0209BE88-0209C34B - Armor item data.
+0209C34C-0209CBEF - Weapon item data.
+
+0209CCBC - List of pointers to weapon synthesis chains.
+  Each chain is composed of synths. Each synth is 4 bytes long:
+    00,1: Global ID+1 of the weapon required for synthesis.
+    01,1: Local ID of the soul required for synthesis.
+    02,1: Global ID+1 of the weapon to synthesize.
+    03,1: 00
+    00000000 indicates the end of this chain of weapon synths.
+
+0209D124 - List of extra soul data.
+  Entry length 2.
+  Byte 1: Maximum you can have when you have 1 of this soul.
+  Byte 2: Additional number you can have for every additional soul scaling level you get after the first.
+
+0209D190-0209DF03 - Soul data.
+
+0209DF4C-0209DF61 - List of 0x16 items for sale in the shop from the beginning.
+0209DF38-0209DF49 - List of 0x12 items for sale in the shop after getting event flag 0x40 (meeting Dario and Dmitrii in Wizardry Lab).
+0209DF14-0209DF1D - List of 0x0A items for sale in the shop after getting event flag 0x200 (Arikado giving Soma Mina's Talisman).
+  Each item is a byte. It's the global ID+1 of the item.
+  Here's where in the code the number of items in each pool and the required event flags are defined:
+  020370F4 - Hardcoded number of items in shop pool 1 (0x16).
+  0203711C - Hardcoded number of items in shop pool 2 (0x12).
+  02037144 - Hardcoded number of items in shop pool 3 (0x0A).
+  0203710C - Hardcoded required event flag for shop pool 2 (0x40).
+  02037134 - Hardcoded required event flag for shop pool 3 (0x200).
+
+0209ED10 - currently playing song?
+
+=== 020C073F: End of most of ARM9.
+
+020C07E8 - Game state.
+  This is an index in list 0208ACC0.
+  00 Loading a save
+  01 Loading a save
+  02 Ingame
+  03 
+  04 Title screen
+  09 Game start menu
+  0A Paused
+  13 Intro movie
+  14 Booting up (both for the first time, and after soft resetting)
+  15 Intro logos
+  09 02 05 loads file immediately
+020C07E9-020C07EA - Substate.
+
+020C1FF8 - Bitfield of which blocks in the room currently have Balore blocks on them.
+
+020C6260 - List of sprite info for currently loaded entities.
+  The halfword at +68 in an entity's memory is the index in this list.
+  Each entry is 0x10 bytes long.
+  08,4: Affects GFX. Index in the list of currently loaded GFX files?
+  0C,4: Sprite pointer.
+
+020C75C4 - pointer to list of gfx files for entities in this room? e.g. /sc/t_fm68_0.dat for merman
+020C75F4 - changes for each room. can be 10, 13, 14, FFFFFFFF
+020C7729
+
+020CA388,2 - Bitfield of what buttons the player is pressing.
+  0001 - A
+  0002 - B
+  0004 - Select
+  0008 - Start
+  0010 - Right
+  0020 - Left
+  0040 - Up
+  0080 - Down
+  0100 - R
+  0200 - L
+  0400 - X
+  0800 - Y
+  2000 - Debug
+  These can also be set programmatically by events or enemies to make Soma act a certain way when controls are disabled.
+020CA38C,2 - Bitfield of what buttons the player just pressed this frame.
+
+020CA398 - normally 0, if 1 then soma can't move. but the game puts it back to 0 if you try to make it 1, so you need a cheat to stop soma from moving (or vice versa).
+
+020CA39C - Bitfield of what buttons the player is pressing. Unlike 020CA388, this is sometimes 0 even when the player is pressing buttons. TODO
+
+=== 020CA3F0 - 020F6DEF: Entities currently loaded into memory. Each is 2A0 bytes long. They range from 0-10F.
+
+What each range of entity slots is for:
+002-002 Player.
+004-004 
+01C-028 Player skills.
+029-02C Player weapons.
+02D-02D 
+030-080 Room entities, including enemies and special objects.
+081-0EF Various small things including particles and enemy projectiles.
+0F2-0F2 
+10E-10E 
+10F-10F 
+
+020CA930 - Start of the player's entity memory.
+020CA95C,020CA960 - The player's x pos and y pos.
+020CA968,020CA96C - The player's current x and y velocity.
+020CA980 - Scale multiplier for the player's trail. 1000 means 1x.
+020CA984 - Scale multiplier for the player. Only does anything if 020CA984 is nonzero.
+020CA988 - Enable player scaling.
+020CA9DC - Bitfield of damage types.
+  Bit 00040000 should be on for the player to take damage.
+020CAA00 - Bitfield of player state booleans.
+  0x00000001 - Moving.
+  0x00000002 - Moving forward
+  0x00000004 - Facing left.
+  0x00000008 - In air.
+  0x00000010 - Double jumping.
+  0x00000020 - Hippogryph jumping.
+  0x00000040 - Bouncing after a jumpkick.
+  0x00000080 - Crouching.
+  0x00000100 - 
+  0x00000200 - Standing on jump-through platform.
+  0x00000400 - 
+  0x00000800 - Taking damage in the air.
+  0x00001000 - 
+  0x00002000 - Jumpkicking.
+  0x00004000 - Swinging melee weapon.
+  0x00008000 - Super attacking.
+  0x00010000 - 
+  0x00020000 - Using R-button soul.
+  0x00040000 - 
+  0x00080000 - 
+  0x00100000 - Jumpkicking.
+  0x00200000 - Taking damage.
+  0x00400000 - 
+  0x00800000 - 
+  0x01000000 - 
+  0x02000000 - 
+  0x04000000 - 
+  0x08000000 - 
+  0x10000000 - 
+  0x20000000 - 
+  0x40000000 - 
+  0x80000000 - 
+020CAA2A,1 - Numbers of jumps the player has left.
+020CAA6E - keeps track of the id of the bullet soul soma just threw. (maybe only during dmitrii fight?)
+020CAA74 - current playable character. not sure how this is different from 020F740E.
+
+020D2C7D - event counter for the event with hammer at the start of dracula's castle.
+020D2DA0 - during dmitrii fight, the red soul dmitrii currently has equipped.
+020D36A0 - flying armor state? 07 means he died. 87 is still alive.
+020D36A8 - flying armor's hp.
+020D29D0 - dmitrii's memory position. (possibly)
+  dmitrii keeps a list of the last 8 or souls that hit him. if you hit him with one of those again he won't take it again. but if you hit him with more than 8 souls he loses track of the first ones, and you can hit him with those again and he'll take it. this list starts at 020D2ABC. 020D2B00 has the integer of which soul in this list dmitrii should use, which increases whenever he gets a new soul, and resets to 0 when he loses track of the first soul. also, after the id of each soul he's keeping track of, 0 means red soul, 1 means blue soul.
+020D3E88-89 - menace's second form's bottom head hp
+020D6348-49 - menace's second form's top head hp
+
+=== 020F6DEF: End of entities currently loaded into memory.
+
+020F6DF4 - Affects the room transitions and the screen:
+  02 - Normal.
+  03 - The screen is black and soma can't be controlled (for loading screens between rooms). 
+  04 - Selecting what warp to go.
+  06 - Arriving at a warp room after warping.
+020F6DF5 - 00 or 01. Affects the above variable.
+020F6DF9 - 0 is normal, 3 is inside a mirror.
+
+020F6DFC-020F6DFF - Bitfield.
+  0x00000001 - Disables controls. Used during events.
+  0x00000002 - Set during boss fights. Disables suspending, keeps boss doors shut, and turns mirrors into boss mirrors.
+  0x00000008 - A magic seal is currently in progress (either an example automatic one or a manual one).
+  0x00000020 - ? something related to input? or magic seals?
+  0x00000040 - In player death state. The player won't actually die from this bit alone, but it does disable doors and make Yoko scream.
+  0x00000080 - Hides the HUD.
+  0x00000400 - Can't enter doors.
+  0x00100000 - Freezes Soma. He won't animate, take damage, be affected by gravity or momentum, or respond to player input. Used when loading the next room.
+  0x02000000 - if 2nd bit is set, enemies are hidden. they're still moving around, but are invisible and can't damage soma. this bit doesn't always seem to work though? it worked against zombie, but not some other enemies.
+
+020F6E09 - ??? related to events somehow??
+020F6E0B - ??? related to paranoia somehow?
+020F6E14 - this contains a ram pointer to the metadata for the room you're currently in.
+020F6E18 - also contains a pointer to the current room metadata. but when you hit a door, this pointer updates a couple frames earlier than the above pointer. after 2 frames, the value here gets copied to the above location.
+020F6E1C - pointer to the destination door you're heading to.
+020F6E20,020F6E22 - current room's x pos and y pos on map. this is used when suspending to know what room the player is in.
+020F6E25 - 0 if in dracula's castle. 1 if in abyss.
+020F6E27 - ??? if this is 1, events end instantly, setting their event flag to true
+
+=== 020F6E34 - 020F703B: First region that gets saved to the save file. 208 bytes long. Corresponds to 0000-0207 in the save file data.
+
+020F6E34-020F6FA3 - List of which Castle map tiles you have explored.
+020F6FA4-020F7006 - List of which Abyss map tiles you have explored.
+  in the abyss each row of map tiles is 16 tiles wide. therefore each row takes up 2 bytes (16 bits) in this list.
+  in other words, every screen soma zips up when corrupting memory subtracts 2 bytes from where memory is being corrupted.
+  020F6FB0 - the byte for the last room of the abyss (the teleporter room).
+
+020F7008 - Sector index to save to the save file.
+020F7009 - Room index to save to the save file.
+020F7018,4 - Player's x pos that should be stored in the save file.
+020F701C,4 - Player's y pos that should be stored in the save file.
+  These are set to the player's position when he enters a room so suspend will work.
+  When you save the game they're set to the center of the upperleftmost screen.
+020F7024 - Bitfield of destroyable walls that have been destroyed on the map.
+020F702C-020F702D - Bitfield of which map items you have. so the lowest bit makes the lost village be fully revealed with black map tiles, the second lowest bit makes demon guest house revealed with black map tiles, etc.
+020F7038-39 - Bitfield of boss death flags.
+  0x0002 Flying Armor
+  0x0004 Balore
+  0x0008 Dmitrii
+  0x0010 Malphas
+  0x0020 Dario
+  0x0040 Puppet Master
+  0x0080 Gergoth
+  0x0100 Rahab
+  0x0200 Zephyr
+  0x0400 Bat Company
+  0x0800 Aguni
+  0x1000 Paranoia
+  0x2000 Death
+  0x4000 Doppelganger (the event in the center of the castle)
+  0x8000 Abaddon
+
+=== 020F703B: End of first region that gets saved to the save file. Corresponds to 0207 in the save file data.
+
+020F703C,4 - Total play time.
+
+020F7070,4 - Screen scrolling x pos.
+020F7074,4 - Screen scrolling y pos.
+020F707C,4 - Screen scrolling x pos for entity rendering purposes.
+020F7080,4 - Screen scrolling y pos for entity rendering purposes.
+
+020F70BC - Current screen shake type.
+  00,1: ?
+  01,1: Counter for time remaining to keep shaking in frames.
+  02,1: Number of pixels to shake by horizontally.
+  03,1: Number of pixels to shake by vertically.
+
+020F70C4 - Bitfield used by spinning spikes to track which byte 5s have already been used in this room.
+
+020F70CC - Pointer to list of entities for the current room.
+
+=== 020F70D0 - 020F732B: Second region that gets saved to the save file. 25C bytes long. Corresponds to 0208-0463 in the save file data.
+
+020F70D0 - List of which souls you own and how many.
+  Each soul takes up a nibble (half a byte). So you can have up to 15 of each soul (though it only correctly displays up to 9).
+020F7110 - An unused second list of which souls you own and how many? This number gets added to the first number.
+
+020F715C - bitfield for which bosses are dead? but unlike 020F7038, changing this doesn't actually do anything like bring the boss back to life.
+  0x20 flying armor.
+
+020F7160-020F716F - Bitfield of which enemy item1s you've learned.
+020F7170-020F717F - Bitfield of which enemy item2s you've learned.
+  These bits being set stops the item from showing up as question marks in the enemy info.
+
+020F7180-020F7187 - Bitfield of miscellaneous flags.
+  includes what area titles you've seen when entering the area.
+  includes what breakable walls physically (not on the map)
+  also whether you've seen save/warp room tutorial message.
+  02 - Drained the water in the Lost Village drawbridge room.
+  03 - Drawbridge is lowered.
+  3A - Seen the save room tutorial message.
+  3B - Seen the warp room tutorial message.
+020F7188-020F718B - Bitfield of event flags seen by the player.
+  01 00000002 - Event 5D (prologue)
+  02 00000004 - Event 5E
+  03 00000008 - Event 5F
+  04 00000010 - Event 60
+  05 00000020 - Event 61
+  06 00000040 - Event 62, Soma meeting Dario and Dmitrii in Wizardry Lab.
+    This flag also controls whether Hammer's shop should have some more items in it yet or not.
+  07 00000080 - Event 63
+  08 00000100 - Event 64
+  09 00000200 - Event 65, Arikado gives Mina's Talisman to Soma.
+    This flag also controls whether Hammer's shop should have even more items in it yet or not.
+  0A 00000400 - Event 66
+  0B 00000800 - Event 67
+  0C 00001000 - Event 68 (julius in silenced ruins defeated by dario)
+  0D 00002000 - Event 69
+  0E 00004000 - 
+  0F 00008000 - 
+  10 00010000 - Event 6A bad end
+  11 00020000 - Unused? 6A bad end?
+  12 00040000 - Event 
+  13 00080000 - Event 6B
+  14 00100000 - Event 6C for entered menace fight?
+  15 00200000 - Event 6D for halfway through menace fight?
+  16 00400000 - Event 6E for killed menace?
+  17 00800000 - 
+  18 01000000 - 
+  19 02000000 - Event 6F Flag for having cleared the game at least once?
+  1A 04000000 - Event 70
+  1B 08000000 - Event 71
+  1C 10000000 - Event 72
+  1D 20000000 - Event 73? except 73 doesn't have it set
+  1E 40000000 - Event 74
+  1F 80000000 - Event 75
+020F7190-020F719F - Bitfield of flags for what items you've picked up.
+020F71A8-020F71A9 - Bitfield of flags for what warp rooms you've visited.
+  0001 - Lost Village, automatically unlocked.
+  0002 - Demon Guest House.
+  0004 - Wizardry Lab.
+  0008 - Garden of Madness
+  0010 - The Dark Chapel
+  0020 - Condemned Tower
+  0040 - Mine of Judgment
+  0080 - Subterranean Hell
+  0100 - Silenced Ruins
+  0200 - Cursed Clock Tower
+  0400 - The Pinnacle
+  0800 - The Abyss
+020F71B4-020F71B5 - Bitfield relating to the number of times you've visited Hammer's shop. TODO
+020F71B6-020F71B7 - Bitfield relating to the number of times you've visited Yoko's shop. TODO
+
+020F71BC-020F7227 - List of which items you own and how many.
+  Each item takes up a nibble (half a byte). So you can have up to 15 of each item (though it only correctly displays up to 9).
+
+020F7228-020F7233 - The player's control config settings.
+  Each setting is 2 bytes long.
+  Specific control locations:
+    020F7228,2 - Attack
+    020F722A,2 - Super Attack
+    020F722C,2 - Jump
+    020F722E,2 - Change Equipment (Doppelganger)
+    020F7230,2 - Guardian
+    020F7232,2 - Ability (backdash/superjump)
+  Each button:
+    0001 - A
+    0002 - B
+    0004 - Select
+    0008 - Start (doesn't actually work, it only opens the pause menu no matter what)
+    0100 - R
+    0200 - L
+    0400 - X
+    0800 - Y
+  If you set more than one button bit for a single control, then either of the buttons you set will trigger that control.
+
+020F7254 - Bitfield of what Magic Seals the player owns.
+020F7256 - current game mode:
+  0 - Soma mode.
+  1 - Julius mode.
+  2 - Boss rush.
+  3 - ???. No room entities get loaded in this mode.
+  This variable affects various things, like whether you can press select to switch the top screen, how boss doors act, whether killing a boss triggers a magic seal, etc.
+020F7257 - When this is 1 the Julius mode HUD is displayed on the bottom screen and pausing doesn't bring up a menu. (For Julius mode.) When higher than 1 the Julius HUD is not displayed, but pausing still doesn't bring up the menu.
+020F7259 - Difficulty.
+  0 - Normal mode.
+  1 - Hard mode
+
+=== 020F732B: End of second region that gets saved to the save file. Corresponds to 0463 in the save file data.
+
+020F7348 - Normally 0, when 1 it prevents Soma from entering doors. This is used when Soma is using the cutall/axe super so he doesn't enter the door. Events set this to 0, which is what allows the seal warp glitch to work. can also be 3 for events?
+020F7350 - Pointer to the player entity.
+020F7354 - Another pointer to the player entity?
+
+Player's stats:
+020F735C-6B - base stats?
+  020F735C,2 - ATK
+  020F735E,2 - DEF
+  020F7360,2 - STR
+  020F7362,2 - CON
+  020F7364,2 - INT
+  020F7366,2 - LCK
+  020F7368,4 - Bitfield of resistances.
+020F736C-7B - base stats + item stats
+020F737C-8B - base stats + item stats + soul stats
+
+020F73A4 - Bitfield of passive effects currently on the player.
+
+=== 020F740C - 020F746B: Third region that gets saved to the save file. 60 bytes long. Corresponds to 0464-04C3 in the save file data.
+
+020F740C - Current level.
+020F740E - Current player character.
+  0 Soma.
+  1 Julius.
+  2 Yoko.
+  3 Alucard.
+
+020F7410 - Current HP.
+020F7412 - Max HP.
+020F7414 - Current MP.
+020F7416 - Max MP.
+
+020F7418 - Red soul you currently have equipped.
+020F741A - Blue soul you currently have equipped.
+020F741C - Yellow soul you currently have equipped.
+020F741E - Bitfield of what ability souls are currently enabled/equipped. (NOT which ones you currently own.)
+
+020F7420 and 020F7436 - The weapon ID of the weapon you currently have equipped. The first address affects what weapon soma actually swings and the stats you get. The second address affects what the weapon name appears as in the equip menu.
+020F742C - when you get an ability soul to gives you other bugged ability souls like doppelganger, this byte holds only the extra bugged souls you get (the one you're supposed to be getting isn't included here).
+
+020F744C - Current gold.
+
+020F7469 - Current subweapon (for Julius mode).
+
+=== 020F746B: End of third region that gets saved to the save file. Corresponds to 04C3 in the save file data.
+
+020F746C - List of collidable entities.
+  Each entry is 8 bytes long.
+  00,4: Type of collision.
+    0 - A jump-through platform you can slide on.
+    1 - A jump-through platform you can fall through.
+    2 - A completely solid block.
+  04,4: Pointer to the entity.
+
+020F7596 - The maximum address that can be corrupted by the broken map code by getting out of bounds (aka memory corruption).
+  Also remember bits can only be set on by memory corruption, never off.
+
+020F75A8 - Has a pointer to the first (collision) layer for the current room.
+
+020F8018 - Current area name shown on the top screen (in warp rooms).
+
+020F82B0-020F82B2 - Current top screen. What do each of the bytes do?
+  Different top screen values for 020F82B1:
+    0 - Map.
+    1 - Info and stats.
+    2 - Area name for a warp room.
+    3 - Castle and moon used on the title screen.
+    4 - Cross with inverted bat wings.
+    5 - Enemy set mode map.
+    8 - Enemy set mode map.
+    9 - White (for intro logos).
+    A - Black (for intro logos).
+
+020F8340 - start of list of all globally loaded palettes
+020FC340 - copy of above...?
+
+02100358 - ???
+  50,2 in player data is an index in this list. entry len 2.
+
+0210AF18 - Start of list of hitboxes. Each entry 0x14 bytes long. The index in this list is located at offset +0xA7 within the entity's memory.
+  the first 0xA bytes are the first hitbox, the second 0xA bytes are the second hitbox.
+0210B24C - has stuff related to weapon hitboxes.
+  0210B24E,0210B250 - left x pos, top y pos
+  0210B252,0210B254 - right x pos, bottom y pos
+  if a weapon has more than 1 hitbox, then the other ones will be listed right after this.
+
+0210ECE0 - list of pointers to dynamic files loaded into ram?
+
+Stuff related to currently loaded tilesets:
+02115064,4 - Which tile GFX asset index to load next.
+02115068,4 - 
+0211506C,4 - 
+02115070,4 - 
+02115074,4 - 
+02115078-02115137 - List of tile GFX asset indexes currently loaded.
+  Each is a word.
+  FFFFFFFF indicates an unused slot.
+
+02115384,0211538C - currently playing song.
+
+0222B8E0 - list of sprite pointers for area titles. the first one is shows the upper half of the gfx page. the second one shows the bottom half of the gfx page.
+0222B8E8 - list of gfx files for area titles. each area in the list is 8 bytes long. the first number is a gfx page pointer, the second is either 0 or 1. the 0 or 1 is for which sprite pointer to use. 0 means the top half, 1 means the bottom half.
+
+0222BAB8 - ??? list of pointers
+0222BF74 - list of ??? pointers
+
+0222C714 - List of pointers to special object create codes.
+0222C8F0 - List of pointers to special object update codes.
+
+0222E9B0 - List of soul ID offsets for each color of soul. Entry length 4.
+  00 - Offset 00
+  01 - Offset 35
+  02 - Offset 59
+  03 - Offset 74
+
+0222BCEC - List of chairs.
+  Entry length 3.
+  Var A of the chair is the index in this list.
+  00,1: Chair's sprite index. This is the index in list 0222BD04.
+  01,1: Frame index.
+  02,1: Destroyed frame index.
+    Used to create the flying particles after this chair is destroyed.
+
+0222BD04-0222BD33 - List of chair sprite info.
+  Entry length 0xC.
+  00,4: GFX asset pointer.
+  04,4: Sprite pointer.
+  08,4: Palette pointer.
+
+0222C478-0222C4CB - List of warp rooms.
+  Entry length 7.
+  00,1: Sector index of the warp room.
+  01,1: Room index of the warp room.
+  02,1: X pos of the warp room on the map in pixels.
+  03,1: Y pos of the warp room on the map in pixels.
+  04,1: X index of this warp room compared to other warp rooms.
+    Used for deciding what warp room to select when pressing left/right on the dpad. Left selects the warp room with 1 less X index, right selects the warp room with 1 more X index.
+  05,1: Y index of this warp room compared to other warp rooms.
+    Used for deciding what warp room to select when pressing up/down on the dpad. Up selects the warp room with 1 less Y index, down selects the warp room with 1 more Y index.
+  06,1: Area name index to show on the top screen.
+  See also list 0209A188, which has the list of x/y positions for the square icons on each warp room.
+
+0222C644 - List of enemies that need a certain enemy overlay and which overlay they need.
+  00,4: Enemy ID.
+  04,4: Overlay ID.
+
+0222CBE0 - List of event actors. Each is 16 bytes long.
+  00,4: Sprite file pointer.
+  04,4: GFX pointer.
+  08,4: Palette pointer.
+  0C,4: ID of the special object corresponding to this event actor.
+Here's what each actor is (index, special object id, description):
+  00 4F Mina
+  01 51 Arikado
+  02 3C Yoko (missing many gfx pages)
+  03 50 Hammer
+  04 52 Julius NPC
+  05 53 Celia
+  06 54 Dario
+  07 55 Dmitrii
+  08 5B Alucard (missing gfx pages)
+  09 52 Julius NPC (missing gfx page)
+
+0222DFEC - List of which sprite animations are for which player states for each player character (state anims).
+  The pointer at offset C in player data points to the appropiate entry in this list.
+  Specific pointers for each player:
+    0222DFEC: Soma
+    0222E070: Alucard
+    0222E0F4: Julius
+    0222E178: Yoko
+  Each entry is 0x84 bytes long. 0x42 states in total.
+  Format:
+    Each state takes up 2 bytes. This is the sprite animation index for that state. The states are in this order:
+    00 Idle
+    01 Holding up
+    02 Starting to walk
+    03 Turning around
+    04 Walking
+    05 Stopping
+    06 Landing while walking
+    07 Starting to crouch
+    08 Crouching
+    09 Standing up
+    0A Jumping straight up
+    0B Jumping diagonally
+    0C Double jumping
+    0D Superjumping
+    0E Smashing head
+    0F Falling
+    10 
+    11 Landing
+    12 Hard landing straight down
+    13 Hard landing diagonally
+    14 Swimming?
+    15 ? swimming?
+    16 Sitting
+    17 Using skill on ground
+    18 Using skill in air
+    19 Starting to use transformation skill
+    1A Using transformation skill
+    1B Using armor knight
+    1C Using malacoda
+    1D Using succubus
+    1E Using ghost
+    1F Using alura une
+    20 Using slaughterer
+    21 Using hell boar
+    22 
+    23 
+    24 
+    25 
+    26 Starting to use gergoth
+    27 Using gergoth
+    28 Stop using gergoth
+    29 Bat mode
+    2A Flying up in bat mode
+    2B Transforming into bat mode
+    2C Untransforming from bat mode
+    2D Using black panther
+    2E Using werewolf
+    2F Backdashing
+    30 Sliding on flat ground
+    31 Sliding on slope
+    32 Jumpkicking straight down
+    33 Jumpkicking diagonally down
+    34 Taking damage while standing/walking
+    35 Taking damage while backdashing
+    36 Taking damage while crouching
+    37 Taking damage in air from the front
+    38 Taking damage in air from behind
+    39 Petrified 1
+    3A Petrified 2
+    3B Dying?
+    3C Attacking with ?
+    3D Attacking with ? while crouching
+    3E Attacking with ? in air
+    3F ? standing
+    40 ? crouching
+    41 
+
+0222E9D4 - List of skill gfx.
+  Entry length 0x10.
+  00,4: Pointer to GFX filename string
+  04,4: GFX pointer
+  08,4: Sprite pointer
+  0C,4: Palette pointer
+
+0222ED5C - List of something weapon swing anims. TODO
+  Entry length 6.
+  01,1:
+  02,2: 
+  04,2:
+  0201439C - func that gets called with this data in it.
+    r0 - ?
+    r1 - 02,2
+    r2 - 04,2
+    r3 - 01,1
+0222DFA8 - List of which player sprite animation corresponds to a type of weapon swing animation.
+  Entry length 5.
+  00,1: Swing anim while standing.
+  01,1: Swing anim while crouching.
+  02,1: Swing anim while in air.
+  03,1: ?
+  04,1: ?
+
+0222EE24 - List of weapon gfx.
+  Entry length 0xC.
+  00,4: GFX pointer
+  04,4: Sprite pointer
+  08,4: Palette pointer
+
+0222F290 - List of ???. Related to events somehow?? Entry length 4.
+
+02298D9C
+
+022B9F48-022C675F - palette data.
+
+022C65D4 - palette for f_farik0.dat portrait.
+
+02308920 - where the first dynamic file can be loaded.
+
+02348C00 - when drawing your name, the pixel data is here. changing this doesn't change what's on screen, but does affect whether you can press the OK button or not. also, if you start a new game and then save, it will actually be the displayed signature.
+
+=== 02A00000 - 02A063BF: Rest of ARM9 (except missing 0x98 bytes at the end)
+
+/sc/f_maf00.dat - 00 to 05 have gfx for magic seals (the big graphics that appear on screen when you're drawing them)

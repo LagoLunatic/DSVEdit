@@ -1,0 +1,71 @@
+
+Memory used for entities in DoS is 020CA3F0 - 020F6DEF. Each entity is 0x2A0 bytes long. They range from 0-10F.
+
+000,4: Pointer to update code.
+004,4: Pointer to draw code.
+00D,1: State of the entity. Each entity's update code handles this differently.
+01E,1: ???
+01F,1: If this isn't 0, the entity will flicker. 1E is related somehow?
+018,2: Timer.
+020,4: X pos on the screen.
+024,4: Y pos on the screen.
+028,4: Z position.
+02C,4: X pos.
+030,4: Y pos.
+034,4: Z pos.
+038,4: X velocity.
+03C,4: Y velocity.
+044,4: X friction.
+048,4: Y acceleration (gravity).
+050,4: Scale multiplier for the player's trail. 1000 means 1x.
+054,4: Scale multiplier for the player. Only does anything if the next value is nonzero.
+058,4: Enable player scaling.
+068,2: Affects the entity's graphics.
+  This is an index in the currently loaded sprite info list, 020C6260.
+06E,1: var a maybe?
+070,4: Bitfield of ?
+  00000080 - Horizontally flipped?
+074,2: Current sprite frame index.
+076,1: which palette in the global list of loaded palettes to use
+07A,1: which palette index for this enemy to use (gets added to 76)
+081,1: Opacity. 1F is fully opaque.
+082,10: Affects color tint of this entity. 1F for everything means normal colored.
+098,4: 
+09C,2: 
+0A2,2: 
+0A4,1: Controls the iframes this entity should give.
+  This is an index in list 020763DC - a list of different iframes values. Each entry is 1 byte long.
+  This value is only read when the entity is initialized, changing it after the entity already exists has no effect.
+0A6,1: Hitbox bitfield.
+  Bits:
+  0x1: Whether this entity's hitboxes are active or not.
+0A8,2: Damage.
+0AA,2: Defense.
+0AC,4: Bitfield of damage types.
+0B0,4: Bitfield of resistances.
+0B4,4: Bitfield of weaknesses.
+0B8,2: Number of iframes this entity gives.
+0BA,2: 
+0BC,2: 
+0BE,2: 
+250,4: Bitfield?
+  00000020 - Horizontally flipped?
+
+For enemies:
+258,2: Current HP.
+25A,2: Current MP.
+260,1: Enemy ID.
+26A,2: The attack value from the enemy DNA.
+
+For free souls:
+1E8,4: Affects homing?
+  Only does anything if the value at 1EC is 2.
+1EC,4: Affects homing?
+  0 - Homes toward the player.
+  1 - Circles the point (0,0)?
+  2 - Runs away from the player.
+
+For used souls:
+214,4: Pointer to the entity that used this soul (player/Dmitrii).
+21A,2: Soul index.
+21D,1: Soul index.
