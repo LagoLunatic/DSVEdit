@@ -42,6 +42,11 @@ Player format:
   46,
   48,
   4C,4: Pointer to list of hitbox pointers.
+    There are 0x12 pointers in this list.
+    Each hitbox has this format:
+    The first halfword is the number of entries in this list.
+    Each entry is a signed halfword, which is the Y offset of the top of the hitbox.
+    All of them are checked. They're used for stopping the player when they hit a ceiling, and pushing the player downwards when they hit the corner of a ceiling.
   50,2: Height in pixels.
     This is negative because it's the offset off the floor the player extends.
     This if for collision checking with tiles, not enemies.

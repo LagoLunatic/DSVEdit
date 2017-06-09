@@ -215,6 +215,15 @@
 02049C58 PlayerUpdate
 0204E854 PlayerTakeInput
 02049CE4 PlayerUpdate2
+0204CDE0 PlayerSetStateAnim
+  ; r0 - Player entity
+  ; r1 - Index in the player's state->anim mapping list
+
+0205CB14 DamagePlayer
+  ; r0 - Enemy entity
+  ; r1 - Player entity
+  ; r2 - Pointer to ?? in the stack
+02051538 PlayerUpdateStatusEffects?
 
 0205DDB4 EntityMoveToFloor
   ; Teleports entity downwards to the nearest floor.
@@ -317,11 +326,6 @@
   ; r1 - Player skill entity doing the damage
   ; r2 - Pointer to ?? in the stack
   ; Returns r0 - 0 if the enemy is still alive, 1 if it's dead.
-
-0205CB14 DamagePlayer
-  ; r0 - Enemy entity
-  ; r1 - Player entity
-  ; r2 - Pointer to ?? in the stack
 
 0203B5D0 LoadSpriteSingleGfx
   ; r0 - Entity ptr
@@ -764,6 +768,7 @@
 022A098C Object3EUpdate
 0221D168 Object3FCreate
 0221CFF0 Object3FUpdate
+0221B560 Object3FCatUpdate
 022C3108 Object40Create
 022C2FB8 Object40Update
 0229E9C0 Object41Create
@@ -976,6 +981,9 @@
 02071198 Skill36Use
 0207AA18 SkillMagnesUse
 0207C2C8 SkillPariesUse
+0207C6E0 SkillParies???
+0207A270 SkillPariesCheckDirsMoved
+0207C634 SkillPariesCheckExitingWall
 020811D8 SkillVolaticusUse
 0207DBD8 SkillRapidusFioUse
 0207F6B4 SkillVisFioUse

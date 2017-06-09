@@ -185,6 +185,11 @@ Player's current bonus elemental attribute points (AP):
 020FFE0E,2 - Bonus holy AP. Set to 0x1800 by Diamond Ring.
 020FFE10,2 - Bonus dark AP. Set to 0x1800 by Onyx Ring.
 
+020FFE9C,2 - Bitfield of currently pressed buttons.
+020FFE9E,2 - Bitfield of buttons pressed this frame.
+
+020FFF68,4 - Pointer to an entity. For Anna's rescue event, this has a pointer to the cat.
+
 021000BC,4 - Screen scrolling x pos.
 021000C0,4 - Screen scrolling y pos.
 021000C8,4 - Screen scrolling x pos for entity rendering purposes.
@@ -357,6 +362,9 @@ A 200% attack boost (triple) takes 0xFFFF (0d65535) AP.
   See 02223B08 for which items are available to be chosen in which areas.
 
 021007D5 - 0 when starting a new game, 1 when loading a save.
+
+02101308 - Pointer to glyph entity that should trigger an event when it's absorbed.
+0210130C - Pointer to ?? entity. Related to glyph that triggers an event when it's absorbed.
 
 02101418 - glyph distortion matrixes?
 0210012C - 1 when glyph is being absorbed, 0 otherwise
