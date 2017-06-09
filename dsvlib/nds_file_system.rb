@@ -50,6 +50,7 @@ class NDSFileSystem
     read_from_rom()
     extract_to_memory()
     get_assets()
+    read_free_space_from_text_file()
   end
   
   def write_to_rom(output_rom_path)
