@@ -381,6 +381,12 @@ class WarpPositionIndicator < Qt::GraphicsEllipseItem
       
       x = (x / 4).round
       y = (y / 4).round
+      max_x = (scene.width-1-5)/4
+      max_y = (scene.height-1-5)/4
+      x = [x, max_x].min
+      x = [x, 0].max
+      y = [y, max_y].min
+      y = [y, 0].max
       new_pos.setX(x*4 + 2.25)
       new_pos.setY(y*4 + 2.25)
       

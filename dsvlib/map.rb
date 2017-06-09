@@ -369,6 +369,8 @@ class DoSMap < Map
     end
     
     if GAME == "dos"
+      # TODO: sector/room indexes of abyss warp aren't set properly.
+      
       warp_rooms_x_sorted = warp_rooms.sort_by{|tile| [tile.x_pos_in_tiles, tile.y_pos_in_tiles] }
       warp_rooms_y_sorted = warp_rooms.sort_by{|tile| [tile.y_pos_in_tiles, tile.x_pos_in_tiles] }
       warp_rooms.each do |warp_room|

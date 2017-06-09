@@ -331,6 +331,8 @@ class Game
   end
   
   def fix_map_sector_and_room_indexes(area_index, sector_index)
+    # TODO also fix warps
+    
     map = get_map(area_index, sector_index)
     area = areas[area_index]
     
