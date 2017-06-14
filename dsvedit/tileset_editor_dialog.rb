@@ -9,7 +9,7 @@ class TilesetEditorDialog < Qt::Dialog
   slots "select_tile_index_on_gfx_page(int, int, const Qt::MouseButton&)"
   slots "gfx_page_changed(int)"
   slots "palette_changed(int)"
-  slots "toggle_flips(int)"
+  slots "toggle_flips(bool)"
   slots "load_tileset()"
   slots "button_box_clicked(QAbstractButton*)"
   
@@ -41,8 +41,8 @@ class TilesetEditorDialog < Qt::Dialog
     
     connect(@ui.gfx_page_index, SIGNAL("activated(int)"), self, SLOT("gfx_page_changed(int)"))
     connect(@ui.palette_index, SIGNAL("activated(int)"), self, SLOT("palette_changed(int)"))
-    connect(@ui.horizontal_flip, SIGNAL("stateChanged(int)"), self, SLOT("toggle_flips(int)"))
-    connect(@ui.vertical_flip, SIGNAL("stateChanged(int)"), self, SLOT("toggle_flips(int)"))
+    connect(@ui.horizontal_flip, SIGNAL("clicked(bool)"), self, SLOT("toggle_flips(bool)"))
+    connect(@ui.vertical_flip, SIGNAL("clicked(bool)"), self, SLOT("toggle_flips(bool)"))
     connect(@ui.reload_button, SIGNAL("released()"), self, SLOT("load_tileset()"))
     
     connect(@ui.buttonBox, SIGNAL("clicked(QAbstractButton*)"), self, SLOT("button_box_clicked(QAbstractButton*)"))
