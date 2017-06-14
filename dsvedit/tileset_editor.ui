@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1120</width>
+    <width>1140</width>
     <height>640</height>
    </rect>
   </property>
@@ -64,22 +64,36 @@
       <widget class="QLineEdit" name="palette_list_pointer"/>
      </item>
      <item>
-      <spacer name="horizontalSpacer">
-       <property name="orientation">
-        <enum>Qt::Horizontal</enum>
+      <widget class="QLabel" name="label_10">
+       <property name="text">
+        <string>Collision Tileset</string>
        </property>
-       <property name="sizeHint" stdset="0">
-        <size>
-         <width>40</width>
-         <height>20</height>
-        </size>
-       </property>
-      </spacer>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLineEdit" name="collision_tileset_pointer"/>
      </item>
      <item>
       <widget class="QPushButton" name="reload_button">
        <property name="text">
         <string>Reload</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="Line" name="line_2">
+       <property name="orientation">
+        <enum>Qt::Vertical</enum>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QCheckBox" name="display_collision">
+       <property name="layoutDirection">
+        <enum>Qt::RightToLeft</enum>
+       </property>
+       <property name="text">
+        <string>Display collision?</string>
        </property>
       </widget>
      </item>
@@ -160,24 +174,13 @@
          </item>
          <item>
           <layout class="QFormLayout" name="formLayout_2">
-           <item row="2" column="0">
-            <widget class="QLabel" name="label_4">
-             <property name="text">
-              <string>Vertical flip</string>
-             </property>
-            </widget>
-           </item>
+           <property name="fieldGrowthPolicy">
+            <enum>QFormLayout::AllNonFixedFieldsGrow</enum>
+           </property>
            <item row="1" column="0">
             <widget class="QLabel" name="label_2">
              <property name="text">
               <string>Horizontal flip</string>
-             </property>
-            </widget>
-           </item>
-           <item row="2" column="1">
-            <widget class="QCheckBox" name="vertical_flip">
-             <property name="text">
-              <string/>
              </property>
             </widget>
            </item>
@@ -188,7 +191,94 @@
              </property>
             </widget>
            </item>
+           <item row="2" column="0">
+            <widget class="QLabel" name="label_4">
+             <property name="text">
+              <string>Vertical flip</string>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="1">
+            <widget class="QCheckBox" name="vertical_flip">
+             <property name="text">
+              <string/>
+             </property>
+            </widget>
+           </item>
           </layout>
+         </item>
+         <item>
+          <widget class="Line" name="line">
+           <property name="orientation">
+            <enum>Qt::Vertical</enum>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <layout class="QGridLayout" name="gridLayout">
+           <item row="0" column="1">
+            <widget class="QCheckBox" name="has_sides_and_bottom">
+             <property name="text">
+              <string>Has sides/bottom</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="1">
+            <widget class="QCheckBox" name="has_effect">
+             <property name="text">
+              <string>Has effect</string>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="0">
+            <widget class="QLabel" name="label_11">
+             <property name="text">
+              <string>Block shape</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="0">
+            <widget class="QCheckBox" name="has_top">
+             <property name="text">
+              <string>Has top</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="0">
+            <widget class="QCheckBox" name="is_water">
+             <property name="text">
+              <string>Is water</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="2">
+            <widget class="QCheckBox" name="coll_vertical_flip">
+             <property name="text">
+              <string>V. flip</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="2">
+            <widget class="QCheckBox" name="coll_horizontal_flip">
+             <property name="text">
+              <string>H. flip</string>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="1" colspan="2">
+            <widget class="QComboBox" name="block_shape"/>
+           </item>
+          </layout>
+         </item>
+         <item>
+          <widget class="QGraphicsView" name="selected_tile_collision_graphics_view">
+           <property name="maximumSize">
+            <size>
+             <width>50</width>
+             <height>50</height>
+            </size>
+           </property>
+          </widget>
          </item>
         </layout>
        </item>

@@ -663,8 +663,7 @@ class Renderer
     bg_color = ChunkyPNG::Color::TRANSPARENT
     if tile.is_water
       bg_color = COLLISION_WATER_COLOR
-    end
-    if tile.block_effect == :damage
+    elsif tile.is_damage?
       bg_color = COLLISION_DAMAGE_COLOR
     end
     graphic_tile = ChunkyPNG::Image.new(16, 16, bg_color)
@@ -683,7 +682,7 @@ class Renderer
       end
     when 2
       # Half-height block (top half).
-      if tile.block_effect == :conveyor_belt_left
+      if tile.is_conveyor_left?
         if tile.has_top && tile.has_sides_and_bottom
           graphic_tile.rect(0, 0, 15, 15, stroke_color = color, fill_color = color)
           graphic_tile.polygon([10, 1, 4, 7, 4, 8, 10, 14], stroke_color = COLLISION_CONVEYOR_COLOR, fill_color = COLLISION_CONVEYOR_COLOR)
@@ -702,7 +701,7 @@ class Renderer
       end
     when 3
       # Half-height block (bottom half).
-      if tile.block_effect == :conveyor_belt_right
+      if tile.is_conveyor_right?
         if tile.has_top && tile.has_sides_and_bottom
           graphic_tile.rect(0, 0, 15, 15, stroke_color = color, fill_color = color)
           graphic_tile.polygon([5, 1, 11, 7, 11, 8, 5, 14], stroke_color = COLLISION_CONVEYOR_COLOR, fill_color = COLLISION_CONVEYOR_COLOR)

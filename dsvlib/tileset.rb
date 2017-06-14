@@ -242,17 +242,17 @@ class CollisionTileset < Tileset
 end
 
 class CollisionTile
-  attr_reader :tile_data,
-              :unknown_1,
-              :unknown_2,
-              :unknown_3,
-              :has_top,
-              :vertical_flip,
-              :horizontal_flip,
-              :has_sides_and_bottom,
-              :block_effect,
-              :is_water,
-              :block_shape
+  attr_reader :tile_data
+  attr_accessor :has_top,
+                :vertical_flip,
+                :horizontal_flip,
+                :has_sides_and_bottom,
+                :has_effect,
+                :is_water,
+                :block_shape,
+                :unknown_1,
+                :unknown_2,
+                :unknown_3
               
   def initialize(tile_data)
     @tile_data = tile_data
@@ -273,21 +273,30 @@ class CollisionTile
       @horizontal_flip = bit_3
     else
       @has_sides_and_bottom = bit_2
-      if bit_3
-        case block_shape
-        when 0..1
-          @block_effect = :damage
-        when 2
-          @block_effect = :conveyor_belt_left
-        when 3
-          @block_effect = :conveyor_belt_right
-        end
-      end
+      @has_effect = bit_3
     end
   end
   
   def to_data
-    raise NotImplementedError.new
+    tile_data = 0
+    tile_data |=   0b00000001 if @has_top
+    if @block_shape >= 4
+      tile_data |= 0b00000010 if @vertical_flip
+      tile_data |= 0b00000100 if @horizontal_flip
+    else
+      tile_data |= 0b00000010 if @has_sides_and_bottom
+      tile_data |= 0b00000100 if @has_effect
+    end
+    tile_data |=   0b00001000 if @is_water
+    tile_data |= (@block_shape <<  4) & 0b11110000
+    tile_data |= (@unknown_1   <<  8) & 0x0000FF00
+    tile_data |= (@unknown_2   << 16) & 0x00FF0000
+    tile_data |= (@unknown_3   << 24) & 0xFF000000
+    [tile_data].pack("V")
+  end
+  
+  def is_blank
+    false
   end
   
   def is_solid?
@@ -299,10 +308,18 @@ class CollisionTile
   end
   
   def is_damage?
-    @block_effect == :damage
+    (0..1).include?(block_shape) && has_effect
+  end
+  
+  def is_conveyor_left?
+    block_shape == 2 && has_effect
+  end
+  
+  def is_conveyor_right?
+    block_shape == 3 && has_effect
   end
   
   def is_conveyor?
-    @block_effect == :conveyor_belt_left || @block_effect == :conveyor_belt_right
+    is_conveyor_left? || is_conveyor_right?
   end
 end

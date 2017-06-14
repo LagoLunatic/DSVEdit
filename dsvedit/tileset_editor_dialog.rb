@@ -10,7 +10,10 @@ class TilesetEditorDialog < Qt::Dialog
   slots "gfx_page_changed(int)"
   slots "palette_changed(int)"
   slots "toggle_flips(bool)"
+  slots "update_collision(bool)"
+  slots "block_shape_changed(int)"
   slots "load_tileset()"
+  slots "toggle_display_collision(bool)"
   slots "button_box_clicked(QAbstractButton*)"
   
   def initialize(main_window, fs, renderer, room)
@@ -38,14 +41,50 @@ class TilesetEditorDialog < Qt::Dialog
     @ui.selected_tile_graphics_view.scale(3, 3)
     @ui.selected_tile_graphics_view.setScene(@selected_tile_graphics_scene)
     @selected_tile_graphics_scene.setBackgroundBrush(BACKGROUND_BRUSH)
+    @selected_tile_collision_graphics_scene = Qt::GraphicsScene.new
+    @ui.selected_tile_collision_graphics_view.scale(3, 3)
+    @ui.selected_tile_collision_graphics_view.setScene(@selected_tile_collision_graphics_scene)
+    @selected_tile_collision_graphics_scene.setBackgroundBrush(BACKGROUND_BRUSH)
+    
+    [
+      "Full block",
+      "???",
+      "Top half",
+      "Bottom half",
+      "Slope",
+      "???",
+      "???",
+      "???",
+      "1/2 slope",
+      "???",
+      "2/2 slope",
+      "???",
+      "1/4 slope",
+      "2/4 slope",
+      "3/4 slope",
+      "4/4 slope",
+    ].each do |block_shape|
+      @ui.block_shape.addItem(block_shape)
+    end
     
     connect(@ui.gfx_page_index, SIGNAL("activated(int)"), self, SLOT("gfx_page_changed(int)"))
     connect(@ui.palette_index, SIGNAL("activated(int)"), self, SLOT("palette_changed(int)"))
     connect(@ui.horizontal_flip, SIGNAL("clicked(bool)"), self, SLOT("toggle_flips(bool)"))
     connect(@ui.vertical_flip, SIGNAL("clicked(bool)"), self, SLOT("toggle_flips(bool)"))
     connect(@ui.reload_button, SIGNAL("released()"), self, SLOT("load_tileset()"))
+    connect(@ui.display_collision, SIGNAL("clicked(bool)"), self, SLOT("toggle_display_collision(bool)"))
+    
+    connect(@ui.has_top, SIGNAL("clicked(bool)"), self, SLOT("update_collision(bool)"))
+    connect(@ui.is_water, SIGNAL("clicked(bool)"), self, SLOT("update_collision(bool)"))
+    connect(@ui.has_sides_and_bottom, SIGNAL("clicked(bool)"), self, SLOT("update_collision(bool)"))
+    connect(@ui.has_effect, SIGNAL("clicked(bool)"), self, SLOT("update_collision(bool)"))
+    connect(@ui.coll_vertical_flip, SIGNAL("clicked(bool)"), self, SLOT("update_collision(bool)"))
+    connect(@ui.coll_horizontal_flip, SIGNAL("clicked(bool)"), self, SLOT("update_collision(bool)"))
+    connect(@ui.block_shape, SIGNAL("activated(int)"), self, SLOT("block_shape_changed(int)"))
     
     connect(@ui.buttonBox, SIGNAL("clicked(QAbstractButton*)"), self, SLOT("button_box_clicked(QAbstractButton*)"))
+    
+    @collision_mode = false
     
     self.show()
     
@@ -69,6 +108,7 @@ class TilesetEditorDialog < Qt::Dialog
     layer = room.layers.first
     if layer
       @ui.tileset_pointer.text = "%08X" % layer.tileset_pointer
+      @ui.collision_tileset_pointer.text = "%08X" % layer.collision_tileset_pointer
       @ui.tileset_type.text = "%04X" % layer.tileset_type
     end
     @ui.gfx_list_pointer.text = "%08X" % room.gfx_list_pointer
@@ -83,13 +123,16 @@ class TilesetEditorDialog < Qt::Dialog
     @tileset_type = @ui.tileset_type.text.to_i(16)
     @gfx_list_pointer = @ui.gfx_list_pointer.text.to_i(16)
     @palette_list_pointer = @ui.palette_list_pointer.text.to_i(16)
+    @collision_tileset_pointer = @ui.collision_tileset_pointer.text.to_i(16)
     
     return if @tileset_pointer == 0 || @gfx_list_pointer == 0 || @palette_list_pointer == 0
     
     @tileset = Tileset.new(@tileset_pointer, @tileset_type, @fs)
+    @collision_tileset = CollisionTileset.new(@collision_tileset_pointer, @fs)
     
     if SYSTEM == :nds
       @tiles = @tileset.tiles
+      @collision_tiles = @collision_tileset.tiles
     else
       @tiles = []
       @tileset.tiles.each_slice(16) do |row_of_tiles|
@@ -181,7 +224,19 @@ class TilesetEditorDialog < Qt::Dialog
       return
     end
     
-    render_tile(tile, tile_pixmap_item)
+    if @collision_mode
+      coll_tile = @collision_tiles[tile_index]
+      chunky_coll_tile = @renderer.render_collision_tile(coll_tile)
+      
+      pixmap = Qt::Pixmap.new
+      blob = chunky_coll_tile.to_blob
+      pixmap.loadFromData(blob, blob.length)
+      tile_pixmap_item.pixmap = pixmap
+      
+      tile_pixmap_item.setOffset(-8, -8)
+    else
+      render_tile(tile, tile_pixmap_item)
+    end
   end
   
   def render_tile(tile, tile_pixmap_item)
@@ -230,6 +285,7 @@ class TilesetEditorDialog < Qt::Dialog
   
   def load_selected_tile
     @selected_tile_graphics_scene.clear()
+    @selected_tile_collision_graphics_scene.clear()
     
     @ui.horizontal_flip.checked = @selected_tile.horizontal_flip
     @ui.vertical_flip.checked = @selected_tile.vertical_flip
@@ -247,6 +303,33 @@ class TilesetEditorDialog < Qt::Dialog
     @selection_rectangle.setRect(0, 0, @tile_width, @tile_height)
     @selection_rectangle.setPos(tile_x_pos_on_page*@tile_width, tile_y_pos_on_page*@tile_height)
     @gfx_page_graphics_scene.addItem(@selection_rectangle)
+    
+    @ui.has_top.checked = @selected_collision_tile.has_top
+    @ui.is_water.checked = @selected_collision_tile.is_water
+    if @selected_collision_tile.block_shape >= 4
+      @ui.has_sides_and_bottom.enabled = @ui.has_sides_and_bottom.checked = false
+      @ui.has_effect.enabled = @ui.has_effect.checked = false
+      @ui.coll_vertical_flip.enabled = true
+      @ui.coll_horizontal_flip.enabled = true
+      @ui.coll_vertical_flip.checked = @selected_collision_tile.vertical_flip
+      @ui.coll_horizontal_flip.checked = @selected_collision_tile.horizontal_flip
+    else
+      @ui.has_sides_and_bottom.enabled = true
+      @ui.has_effect.enabled = true
+      @ui.coll_vertical_flip.enabled = @ui.coll_vertical_flip.checked = false
+      @ui.coll_horizontal_flip.enabled = @ui.coll_horizontal_flip.checked = false
+      @ui.has_sides_and_bottom.checked = @selected_collision_tile.has_sides_and_bottom
+      @ui.has_effect.checked = @selected_collision_tile.has_effect
+    end
+    @ui.block_shape.setCurrentIndex(@selected_collision_tile.block_shape)
+    
+    chunky_coll_tile = @renderer.render_collision_tile(@selected_collision_tile)
+    selected_tile_coll_pixmap_item = Qt::GraphicsPixmapItem.new
+    pixmap = Qt::Pixmap.new
+    blob = chunky_coll_tile.to_blob
+    pixmap.loadFromData(blob, blob.length)
+    selected_tile_coll_pixmap_item.pixmap = pixmap
+    @selected_tile_collision_graphics_scene.addItem(selected_tile_coll_pixmap_item)
   end
   
   def gfx_page_changed(gfx_page_index)
@@ -311,6 +394,7 @@ class TilesetEditorDialog < Qt::Dialog
     
     @selected_tile_index = tile_index
     @selected_tile = @tiles[tile_index]
+    @selected_collision_tile = @collision_tiles[tile_index]
     
     @ui.gfx_page_index.setCurrentIndex(@selected_tile.tile_page)
     @ui.palette_index.setCurrentIndex(@selected_tile.palette_index)
@@ -340,8 +424,33 @@ class TilesetEditorDialog < Qt::Dialog
     render_tile_on_tileset(@selected_tile_index)
   end
   
+  def update_collision(checked)
+    @selected_collision_tile.has_top = @ui.has_top.checked
+    @selected_collision_tile.is_water = @ui.is_water.checked
+    @selected_collision_tile.has_sides_and_bottom = @ui.has_sides_and_bottom.checked
+    @selected_collision_tile.has_effect = @ui.has_effect.checked
+    @selected_collision_tile.vertical_flip = @ui.coll_vertical_flip.checked
+    @selected_collision_tile.horizontal_flip = @ui.coll_horizontal_flip.checked
+    
+    load_selected_tile()
+    render_tile_on_tileset(@selected_tile_index)
+  end
+  
+  def block_shape_changed(block_shape)
+    @selected_collision_tile.block_shape = block_shape
+    
+    load_selected_tile()
+    render_tile_on_tileset(@selected_tile_index)
+  end
+  
+  def toggle_display_collision(checked)
+    @collision_mode = checked
+    render_tileset()
+  end
+  
   def save_tileset
     @tileset.write_to_rom()
+    @collision_tileset.write_to_rom()
     
     # Clear the tileset cache so the changes show up in the editor.
     parent.clear_cache()
