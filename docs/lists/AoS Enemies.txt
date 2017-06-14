@@ -11,6 +11,7 @@ Enemies:
     1 In the background, cannot be hit the player or be hit.
 07 Killer Fish
 08 Bone Pillar
+  Var A: Number of them stacked on top of each other.
 09 Blue Crow
 0A Buer
 0B White Dragon
@@ -71,6 +72,7 @@ Enemies:
 3F Needles
 40 Man-Eater
 41 Fish Head
+  Var A: Number of them stacked on top of each other.
 42 Nightmare
 43 Triton
 44 Slime
@@ -102,7 +104,14 @@ Enemies:
 5E Bael
 5F Succubus
 60 Mimic
+  Var A:
+    0 Inside a candle.
+    1 Out in the open.
 61 Stolas
+  Var A: First enemy ID this Stolas can summon.
+    If 0, will use the default value of 0D (Skeleton Knight).
+  Var B: Second enemy ID this Stolas can summon.
+    If 0, will use the default value of 52 (Dead Crusader).
 62 Erinys
 63 Lubicant
 64 Basilisk
