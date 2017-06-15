@@ -543,22 +543,23 @@ class Game
   end
   
   def fix_unnamed_skills
-    case GAME
+    skill_region_name = case GAME
     when "dos"
-      soul_name_list_start = TEXT_REGIONS["Soul Names"].begin
-      NAMES_FOR_UNNAMED_SKILLS.each do |soul_id, fixed_name|
-        text_database.text_list[soul_id + soul_name_list_start].decoded_string = fixed_name
-      end
-      
-      text_database.write_to_rom()
+      "Soul Names"
+    when "por"
+      "Skill Names"
     when "ooe"
-      glyph_name_list_start = TEXT_REGIONS["Item Names"].begin
-      NAMES_FOR_UNNAMED_SKILLS.each do |glyph_id, fixed_name|
-        text_database.text_list[glyph_id + glyph_name_list_start].decoded_string = fixed_name
-      end
-      
-      text_database.write_to_rom()
+      "Item Names"
+    else
+      return
     end
+    
+    first_skill_name_index = TEXT_REGIONS[skill_region_name].begin
+    NAMES_FOR_UNNAMED_SKILLS.each do |skill_index, fixed_name|
+      text_database.text_list[skill_index + first_skill_name_index].decoded_string = fixed_name
+    end
+    
+    text_database.write_to_rom()
   end
   
 private
