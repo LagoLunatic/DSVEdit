@@ -54,6 +54,15 @@
   ; r1 - Index of the item
   ; Returns r0 - global ID+1 of the item
 
+02214F34 GiveSkill
+  ; r0 - Skill index
+  ; r1 - Number of the skill to give
+02215B88 GetOwnedSkillNum
+  ; r0 - Skill index
+02215B2C SetNumOwnedItem
+  ; r0 - Skill index
+  ; r1 - Number of the skill to set
+
 02043DF0 ShopGetItemPrice
   ; r0 - Global ID of the item (can be a skill)
   ; r1 - 
