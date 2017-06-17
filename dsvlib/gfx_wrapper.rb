@@ -4,7 +4,6 @@ class GfxWrapper
               :fs,
               :file,
               :unknown_1,
-              :unknown_2,
               :bpp,
               :size_in_512_chunks,
               :gfx_data_pointer
@@ -17,7 +16,7 @@ class GfxWrapper
     
     if SYSTEM == :nds
       @file = fs.assets_by_pointer[gfx_pointer]
-      @unknown_1, @render_mode, @canvas_width, @unknown_2 = fs.read(gfx_pointer, 4).unpack("C*")
+      @unknown_1, @render_mode, @canvas_width = fs.read(gfx_pointer, 4).unpack("CCv")
     else
       if unwrapped
         @gfx_data_pointer = gfx_pointer
@@ -69,8 +68,12 @@ class GfxWrapper
   end
   
   def write_to_rom
-    fs.write(gfx_pointer, [@unknown_1, @render_mode, @canvas_width, @unknown_2].pack("CCCC"))
-    fs.write(gfx_pointer + 4, [@canvas_width].pack("V"))
+    if SYSTEM == :nds
+      fs.write(gfx_pointer, [@unknown_1, @render_mode, @canvas_width].pack("CCv"))
+      fs.write(gfx_pointer + 4, [@canvas_width].pack("v"))
+    else
+      raise NotImplementedError.new
+    end
   end
   
   def colors_per_palette
