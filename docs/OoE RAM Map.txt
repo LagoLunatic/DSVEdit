@@ -263,6 +263,10 @@ A 1% attack boost takes 0x147 (0d327) AP.
 A 100% attack boost (double) takes 0x8000 (0d32768) AP.
 A 200% attack boost (triple) takes 0xFFFF (0d65535) AP.
 
+0210032E,2 - Current EXP Fidelis Aranea has.
+  7FFF - EXP needed for level 2.
+  FFFE - EXP needed for level 3.
+
 02100342,1 - Current glyph sleeve (0 1 or 2 for A B or C).
 
 02100344-02100353 - Bitfield of which enemies have been killed at least once so they show up in the bestiary.
@@ -355,6 +359,10 @@ A 200% attack boost (triple) takes 0xFFFF (0d65535) AP.
   0 - Normal mode.
   1 - Hard mode.
 0210079A - Max level.
+0210079C,2 - Bonus HP given by HP max ups.
+  Each HP max up gives +0x14 HP. The maximum is +0x258 HP, then any additional HP max ups do nothing. That's equivalent to 0x1E HP max ups in total.
+0210079E,2 - Bonus MP given by MP max ups.
+  Each MP max up gives +0xA MP. The maximum is +0x12C MP, then any additional MP max ups do nothing. That's equivalent to 0x1E MP max ups in total.
 
 021007A2-021007B9 - List of items currently in wooden/green chests in this area.
   There are 0xC items in this list, each is a halfword.

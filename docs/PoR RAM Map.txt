@@ -423,6 +423,10 @@ F5-F5
   0 - Player 1.
   1 - Player 2.
 02111F5B - Max level.
+02111F5C,2 - Bonus HP given by HP max ups.
+  Each HP max up gives +0xF HP. The maximum is +0x1E0 HP, then any additional HP max ups do nothing. That's equivalent to 0x20 HP max ups in total.
+02111F5E,2 - Bonus MP given by MP max ups.
+  Each MP max up gives +0xA MP. The maximum is +0x140 MP, then any additional MP max ups do nothing. That's equivalent to 0x20 MP max ups in total.
 02111F60 - Current number of shop points you have.
 02111F98 - Pointer to controlled character's entity.
 02111F9C - Pointer to partner character's entity.
