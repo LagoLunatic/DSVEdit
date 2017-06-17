@@ -5,6 +5,7 @@ class LayersEditorDialog < Qt::Dialog
   attr_reader :game
   
   slots "layer_changed(int)"
+  slots "copy_layer_pointer_to_clipboard()"
   slots "button_box_clicked(QAbstractButton*)"
   
   def initialize(main_window, room, renderer)
@@ -26,6 +27,7 @@ class LayersEditorDialog < Qt::Dialog
     end
     
     connect(@ui.layer_index, SIGNAL("activated(int)"), self, SLOT("layer_changed(int)"))
+    connect(@ui.copy_layer_pointer, SIGNAL("released()"), self, SLOT("copy_layer_pointer_to_clipboard()"))
     connect(@ui.buttonBox, SIGNAL("clicked(QAbstractButton*)"), self, SLOT("button_box_clicked(QAbstractButton*)"))
     
     if SYSTEM == :nds
@@ -110,6 +112,16 @@ class LayersEditorDialog < Qt::Dialog
   rescue FreeSpaceManager::FreeSpaceFindError => e
     @room.layers[@ui.layer_index.currentIndex].read_from_rom() # Reload layer
     Qt::MessageBox.warning(self, "Cannot expand layer", e.message)
+  end
+  
+  def copy_layer_pointer_to_clipboard
+    layer = @room.layers[@ui.layer_index.currentIndex]
+    
+    if layer
+      $qApp.clipboard.setText("%08X" % layer.layer_list_entry_ram_pointer)
+    else
+      $qApp.clipboard.setText("")
+    end
   end
   
   def button_box_clicked(button)
