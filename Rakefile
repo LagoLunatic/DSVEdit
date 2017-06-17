@@ -86,7 +86,7 @@ task :build_releases do
         "./dsvrandom/randomizer_window.rb",
         "./dsvrandom/ui_randomizer.rb",
         "./dsvrandom/version.rb",
-        "./dsvrandom/requirements",
+        "./dsvrandom/progressreqs",
         "./dsvrandom/images",
         "./dsvrandom/randomizers",
         "./dsvrandom/constants"
