@@ -244,20 +244,30 @@ class Game
     end
   end
   
-  def get_item_by_type_and_index(item_type_index, item_index)
+  def get_item_global_id_by_type_and_index(item_type_index, item_index)
     if !PICKUP_SUBTYPES_FOR_ITEMS.include?(item_type_index) && !PICKUP_SUBTYPES_FOR_SKILLS.include?(item_type_index)
       raise "Bad item type: %02X" % item_type_index
     end
     
+    if PICKUP_SUBTYPES_FOR_SKILLS.include?(item_type_index)
+      # Skills have multiple subtypes that work the same, we simplify it to use the first subtype.
+      item_type_index = PICKUP_SUBTYPES_FOR_SKILLS.first
+    end
+    
     item_type_index -= 2
     
-    global_index = 0
+    global_id = 0
     (0..item_type_index-1).each do |earlier_item_type|
-      global_index += ITEM_TYPES[earlier_item_type][:count]
+      global_id += ITEM_TYPES[earlier_item_type][:count]
     end
-    global_index += item_index
+    global_id += item_index
     
-    return items[global_index]
+    return global_id
+  end
+  
+  def get_item_by_type_and_index(item_type_index, item_index)
+    global_id = get_item_global_id_by_type_and_index(item_type_index, item_index)
+    return items[global_id]
   end
   
   def get_item_type_and_index_by_global_id(item_global_id)
