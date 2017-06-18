@@ -303,6 +303,14 @@ class CollisionTile
     block_shape == 0 && has_top && has_sides_and_bottom
   end
   
+  def is_jumpthrough_platform?
+    [2, 3].include?(block_shape) && has_top && !has_sides_and_bottom && !has_effect
+  end
+  
+  def is_bottom_half?
+    block_shape == 3 && is_jumpthrough_platform?
+  end
+  
   def is_slope?
     block_shape >= 4
   end
