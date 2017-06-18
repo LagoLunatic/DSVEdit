@@ -63,8 +63,8 @@ class TilesetEditorDialog < Qt::Dialog
       "2/4 slope",
       "3/4 slope",
       "4/4 slope",
-    ].each do |block_shape|
-      @ui.block_shape.addItem(block_shape)
+    ].each_with_index do |block_shape, i|
+      @ui.block_shape.addItem("%02X %s" % [i, block_shape])
     end
     
     connect(@ui.gfx_page_index, SIGNAL("activated(int)"), self, SLOT("gfx_page_changed(int)"))
