@@ -709,10 +709,10 @@ TEXT_COLOR_NAMES = {
 }
 
 NAMES_FOR_UNNAMED_SKILLS = {
-  0x02 => "Axe (Richter)",
-  0x03 => "Cross (Richter)",
-  0x04 => "Holy Water (Richter)",
-  0x05 => "Grand Cross (Richter)",
+  0x02 => "Axe (R)",
+  0x03 => "Cross (R)",
+  0x04 => "Holy Water (R)",
+  0x05 => "Grand Cross (R)",
   0x09 => "Genbu",
 }
 
