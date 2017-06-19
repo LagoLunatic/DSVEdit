@@ -457,7 +457,7 @@ class TilesetEditorDialog < Qt::Dialog
   
   def save_tileset
     @tileset.write_to_rom()
-    @collision_tileset.write_to_rom()
+    @collision_tileset.write_to_rom() unless SYSTEM == :gba
     
     # Clear the tileset cache so the changes show up in the editor.
     parent.clear_cache()
