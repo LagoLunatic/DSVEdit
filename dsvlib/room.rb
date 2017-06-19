@@ -113,7 +113,7 @@ class Room
   end
   
   def read_graphic_tilesets_from_rom(gfx_list_pointer)
-    @gfx_pages = GfxWrapper.from_gfx_list_pointer(gfx_list_pointer, fs)
+    @gfx_pages = RoomGfxPage.from_room_gfx_page_list(gfx_list_pointer, fs)
   rescue NDSFileSystem::ConversionError => e
     # When gfx_list_pointer is like this (e.g. 0x02195984), it just points to 00s instead of actual data.
     # What this means is that the room doesn't load any gfx pages. Instead it just keeps whatever gfx pages the previous room had loaded.
@@ -456,4 +456,39 @@ class Room
   end
   
   def inspect; to_s; end
+end
+
+class RoomGfxPage
+  attr_reader :gfx_pointer,
+              :gfx_wrapper,
+              :gfx_load_offset,
+              :first_chunk_index,
+              :num_chunks,
+              :unknown
+              
+  def initialize(pointer, fs)
+    @gfx_pointer, @gfx_load_offset, @first_chunk_index, @num_chunks, @unknown = fs.read(pointer, 8).unpack("VCCCC")
+    @gfx_wrapper = GfxWrapper.new(gfx_pointer, fs)
+  end
+  
+  def colors_per_palette
+    gfx_wrapper.colors_per_palette
+  end
+  
+  def self.from_room_gfx_page_list(gfx_list_pointer, fs)
+    gfx_pages = []
+    offset = gfx_list_pointer
+    while true
+      gfx_pointer = fs.read(offset, 4).unpack("V").first
+      
+      break if gfx_pointer == 0
+      
+      gfx_page = RoomGfxPage.new(offset, fs)
+      gfx_pages << gfx_page
+      
+      offset += 8
+    end
+    
+    return gfx_pages
+  end
 end

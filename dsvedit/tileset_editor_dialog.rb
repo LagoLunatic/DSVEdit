@@ -152,7 +152,15 @@ class TilesetEditorDialog < Qt::Dialog
       @collision_tiles = @collision_tileset.tiles
     end
     
-    @gfx_pages = GfxWrapper.from_gfx_list_pointer(@gfx_list_pointer, @fs)
+    @gfx_pages = RoomGfxPage.from_room_gfx_page_list(@gfx_list_pointer, @fs)
+    @gfx_wrappers = @gfx_pages.map{|page| page.gfx_wrapper}
+    
+    @gfx_chunks = []
+    @gfx_pages.each_with_index do |gfx_page, gfx_wrapper_index|
+      gfx_page.num_chunks.times do |i|
+        @gfx_chunks[gfx_page.gfx_load_offset-0x10+i] = [gfx_wrapper_index, gfx_page.first_chunk_index+i]
+      end
+    end
     
     if SYSTEM == :nds
       @palettes = @renderer.generate_palettes(@palette_list_pointer, 16)
@@ -262,9 +270,17 @@ class TilesetEditorDialog < Qt::Dialog
     end
     
     if SYSTEM == :nds
-      chunky_tile = @renderer.render_graphic_tile(gfx.file, palette, tile.index_on_tile_page)
+      chunky_tile = @renderer.render_graphic_tile(gfx.gfx_wrapper.file, palette, tile.index_on_tile_page)
     else
-      chunky_tile = @renderer.render_1_dimensional_minitile(gfx, palette, tile.index_on_tile_page)
+      gfx_chunk_index_on_page = (tile.index_on_tile_page & 0xC0) >> 6
+      gfx_chunk_index = tile.tile_page*4 + gfx_chunk_index_on_page
+      gfx_wrapper_index, chunk_offset = @gfx_chunks[gfx_chunk_index]
+      minitile_index_on_page = tile.index_on_tile_page & 0x3F
+      minitile_index_on_page += chunk_offset * 0x40
+      
+      gfx_wrapper = @gfx_wrappers[gfx_wrapper_index]
+      
+      chunky_tile = @renderer.render_1_dimensional_minitile(gfx_wrapper, palette, minitile_index_on_page)
     end
     
     pixmap = Qt::Pixmap.new
@@ -349,25 +365,40 @@ class TilesetEditorDialog < Qt::Dialog
     
     @gfx_page_graphics_scene.clear()
     
-    gfx = @gfx_pages[@selected_tile.tile_page]
-    
-    if gfx.nil?
-      @ui.gfx_file.text = "Invalid (gfx page index %02X)" % gfx_page_index
-      return
-    end
-    
-    if gfx.colors_per_palette == 16
-      palette = @palettes[@selected_tile.palette_index]
-    else
-      palette = @palettes_256[@selected_tile.palette_index]
-    end
-    
     if SYSTEM == :nds
-      @ui.gfx_file.text = gfx.file[:file_path]
-      chunky_image = @renderer.render_gfx_page(gfx.file, palette)
+      gfx_wrapper = @gfx_wrappers[@selected_tile.tile_page]
+      
+      if gfx_wrapper.nil?
+        @ui.gfx_file.text = "Invalid (gfx page index %02X)" % gfx_page_index
+        return
+      end
+      
+      if gfx_wrapper.colors_per_palette == 16
+        palette = @palettes[@selected_tile.palette_index]
+      else
+        palette = @palettes_256[@selected_tile.palette_index]
+      end
+      
+      @ui.gfx_file.text = gfx_wrapper.file[:file_path]
+      chunky_image = @renderer.render_gfx_page(gfx_wrapper.file, palette)
     else
+      chunky_image = ChunkyPNG::Image.new(128, 128, ChunkyPNG::Color::TRANSPARENT)
+      4.times do |i|
+        gfx_chunk_index = gfx_page_index*4 + i
+        gfx_wrapper_index, chunk_offset = @gfx_chunks[gfx_chunk_index]
+        gfx_wrapper = @gfx_wrappers[gfx_wrapper_index]
+        
+        if gfx_wrapper.colors_per_palette == 16
+          palette = @palettes[@selected_tile.palette_index]
+        else
+          palette = @palettes_256[@selected_tile.palette_index]
+        end
+        
+        chunky_chunk_image = @renderer.render_gfx_1_dimensional_mode(gfx_wrapper, palette, first_minitile_index: chunk_offset*64, max_num_minitiles: 64)
+        chunky_image.compose!(chunky_chunk_image, 0, i*32)
+      end
+      
       @ui.gfx_file.text = ""
-      chunky_image = @renderer.render_gfx_1_dimensional_mode(gfx, palette)
     end
     
     pixmap = Qt::Pixmap.new()

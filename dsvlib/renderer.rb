@@ -137,8 +137,9 @@ class Renderer
     
     tileset = Tileset.new(tileset_offset, tileset_type, fs)
     rendered_tileset = ChunkyPNG::Image.new(TILESET_WIDTH_IN_TILES*16, TILESET_HEIGHT_IN_TILES*16, ChunkyPNG::Color::TRANSPARENT)
-    palette_list = generate_palettes(palette_pages.first.palette_list_pointer, 16) # TODO: USE CORRECT PALETTE PAGE
-    if gfx_pages.any?{|gfx| gfx.colors_per_palette == 256}
+    palette_list = generate_palettes(palette_pages.first.palette_list_pointer, 16)
+    gfx_wrappers = gfx_pages.map{|gfx_page| gfx_page.gfx_wrapper}
+    if gfx_wrappers.any?{|gfx| gfx.colors_per_palette == 256}
       palette_list_256 = generate_palettes(palette_pages.first.palette_list_pointer, 256)
     end
     
@@ -147,7 +148,7 @@ class Renderer
         next
       end
       
-      gfx = gfx_pages[tile.tile_page]
+      gfx = gfx_wrappers[tile.tile_page]
       if gfx.nil?
         next # TODO: figure out why this sometimes happens.
       end
@@ -202,6 +203,17 @@ class Renderer
       
       palettes[palette_page.palette_load_offset, palette_page.num_palettes] = pals_for_page[palette_page.palette_index, palette_page.num_palettes]
     end
+    
+    gfx_chunks = []
+    gfx_wrappers = []
+    gfx_pages.each do |gfx_page|
+      gfx_wrappers << gfx_page.gfx_wrapper
+      gfx_wrapper_index = gfx_wrappers.length-1
+      
+      gfx_page.num_chunks.times do |i|
+        gfx_chunks[gfx_page.gfx_load_offset-0x10+i] = [gfx_wrapper_index, gfx_page.first_chunk_index+i]
+      end
+    end
 
     tileset.tiles.each_with_index do |tile, index_on_tileset|
       if tile.is_blank
@@ -215,13 +227,19 @@ class Renderer
         x_on_gfx_page = minitile.index_on_tile_page % 16
         y_on_gfx_page = minitile.index_on_tile_page / 16
         
-        if minitile.tile_page >= gfx_pages.length
+        if minitile.tile_page >= gfx_wrappers.length
           rendered_minitile = ChunkyPNG::Image.new(8, 8, ChunkyPNG::Color.rgba(255, 0, 0, 255))
         else
-          gfx_page = gfx_pages[minitile.tile_page]
+          gfx_chunk_index_on_page = (minitile.index_on_tile_page & 0xC0) >> 6
+          gfx_chunk_index = minitile.tile_page*4 + gfx_chunk_index_on_page
+          gfx_wrapper_index, chunk_offset = gfx_chunks[gfx_chunk_index]
+          minitile_index_on_page = minitile.index_on_tile_page & 0x3F
+          minitile_index_on_page += chunk_offset * 0x40
+          
+          gfx_page = gfx_wrappers[gfx_wrapper_index]
           palette = palettes[minitile.palette_index]
           
-          rendered_minitile = render_1_dimensional_minitile(gfx_page, palette, minitile.index_on_tile_page)
+          rendered_minitile = render_1_dimensional_minitile(gfx_page, palette, minitile_index_on_page)
         end
         
         if minitile.horizontal_flip
@@ -375,10 +393,12 @@ class Renderer
     return rendered_minitile
   end
   
-  def render_gfx_1_dimensional_mode(gfx_page, palette)
-    x = y = 0
-    width = height = 128
-    canvas_width = 128
+  def render_gfx_1_dimensional_mode(gfx_page, palette, first_minitile_index: 0, max_num_minitiles: nil)
+    width = 128
+    height = 128
+    if max_num_minitiles
+      height = (max_num_minitiles/16.0).ceil * 8
+    end
     
     rendered_gfx = ChunkyPNG::Image.new(width, height, ChunkyPNG::Color::TRANSPARENT)
     
@@ -405,9 +425,12 @@ class Renderer
     bytes_per_block = 8*8 / pixels_per_byte
     
     num_minitiles = gfx_page.gfx_data.length / bytes_per_block
+    if max_num_minitiles && num_minitiles > max_num_minitiles
+      num_minitiles = max_num_minitiles
+    end
     
     (0..num_minitiles-1).each do |minitile_index|
-      rendered_minitile = render_1_dimensional_minitile(gfx_page, palette, minitile_index)
+      rendered_minitile = render_1_dimensional_minitile(gfx_page, palette, minitile_index+first_minitile_index)
       
       minitile_x = (minitile_index % 16) * 8
       minitile_y = (minitile_index / 16) * 8
