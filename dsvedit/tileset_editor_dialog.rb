@@ -234,7 +234,7 @@ class TilesetEditorDialog < Qt::Dialog
       pixmap.loadFromData(blob, blob.length)
       tile_pixmap_item.pixmap = pixmap
       
-      tile_pixmap_item.setOffset(-8, -8)
+      tile_pixmap_item.setOffset(-@tile_width/2, -@tile_height/2)
     else
       render_tile(tile, tile_pixmap_item)
     end
@@ -280,7 +280,7 @@ class TilesetEditorDialog < Qt::Dialog
     if tile.vertical_flip
       yscale = -1
     end
-    tile_pixmap_item.setOffset(-8, -8)
+    tile_pixmap_item.setOffset(-@tile_width/2, -@tile_height/2)
     tile_pixmap_item.setTransform(Qt::Transform::fromScale(xscale, yscale))
   end
   
@@ -298,12 +298,21 @@ class TilesetEditorDialog < Qt::Dialog
     tile_x_pos_on_page = @selected_tile.index_on_tile_page % @tiles_per_gfx_page_row
     tile_y_pos_on_page = @selected_tile.index_on_tile_page / @tiles_per_gfx_page_row
     
-    @gfx_page_graphics_scene.removeItem(@selection_rectangle) if @selection_rectangle
-    @selection_rectangle = Qt::GraphicsRectItem.new
-    @selection_rectangle.setPen(RED_PEN_COLOR)
-    @selection_rectangle.setRect(0, 0, @tile_width, @tile_height)
-    @selection_rectangle.setPos(tile_x_pos_on_page*@tile_width, tile_y_pos_on_page*@tile_height)
-    @gfx_page_graphics_scene.addItem(@selection_rectangle)
+    @gfx_page_graphics_scene.removeItem(@gfx_selection_rectangle) if @gfx_selection_rectangle
+    @gfx_selection_rectangle = Qt::GraphicsRectItem.new
+    @gfx_selection_rectangle.setPen(RED_PEN_COLOR)
+    @gfx_selection_rectangle.setRect(0, 0, @tile_width, @tile_height)
+    @gfx_selection_rectangle.setPos(tile_x_pos_on_page*@tile_width, tile_y_pos_on_page*@tile_height)
+    @gfx_page_graphics_scene.addItem(@gfx_selection_rectangle)
+    
+    @tileset_graphics_scene.removeItem(@selected_tile_selection_rectangle) if @selected_tile_selection_rectangle
+    @selected_tile_selection_rectangle = Qt::GraphicsRectItem.new
+    @selected_tile_selection_rectangle.setPen(RED_PEN_COLOR)
+    @selected_tile_selection_rectangle.setRect(0, 0, @tile_width, @tile_height)
+    tile_x_pos_on_tileset = @selected_tile_index % @tiles_per_row
+    tile_y_pos_on_tileset = @selected_tile_index / @tiles_per_row
+    @selected_tile_selection_rectangle.setPos(tile_x_pos_on_tileset*@tile_width, tile_y_pos_on_tileset*@tile_height)
+    @tileset_graphics_scene.addItem(@selected_tile_selection_rectangle)
     
     return if SYSTEM == :gba
     
@@ -366,11 +375,6 @@ class TilesetEditorDialog < Qt::Dialog
     pixmap.loadFromData(blob, blob.length)
     gfx_page_pixmap_item = Qt::GraphicsPixmapItem.new(pixmap)
     @gfx_page_graphics_scene.addItem(gfx_page_pixmap_item)
-    
-    @selection_rectangle = Qt::GraphicsRectItem.new
-    @selection_rectangle.setPen(RED_PEN_COLOR)
-    @selection_rectangle.setRect(0, 0, @tile_width, @tile_height)
-    @gfx_page_graphics_scene.addItem(@selection_rectangle)
     
     load_selected_tile()
     render_tile_on_tileset(@selected_tile_index)
