@@ -285,6 +285,7 @@ Special objects:
     Bits 11-16: Nothing.
 77 Studio portrait (sealed with chains).
 78 Cogs and gate that block the way.
+  Requires sector overlay 86.
 79 Area name shown the first time you enter an area. Var A controls which area it is.
 7A Background effect from Buried Chamber of prisoner shaking the bars of the cell.
 7B Rushing water in the foreground.

@@ -426,7 +426,7 @@ What each range of entity slots is for:
 020F7354 - Another pointer to the player entity?
 
 Player's stats:
-020F735C-6B - base stats?
+020F735C-6B - Player's natural stats (base stats + level up stats).
   020F735C,2 - ATK
   020F735E,2 - DEF
   020F7360,2 - STR
@@ -434,14 +434,14 @@ Player's stats:
   020F7364,2 - INT
   020F7366,2 - LCK
   020F7368,4 - Bitfield of resistances.
-020F736C-7B - base stats + item stats
-020F737C-8B - base stats + item stats + soul stats
+020F736C-7B - Natural stats + item stats.
+020F737C-8B - Natural stats + item stats + soul stats.
 
 020F73A4 - Bitfield of passive effects currently on the player.
 
 === 020F740C - 020F746B: Third region that gets saved to the save file. 60 bytes long. Corresponds to 0464-04C3 in the save file data.
 
-020F740C - Current level.
+020F740C,2 - Current level.
 020F740E - Current player character.
   0 Soma.
   1 Julius.
@@ -461,6 +461,7 @@ Player's stats:
 020F7420 and 020F7436 - The weapon ID of the weapon you currently have equipped. The first address affects what weapon soma actually swings and the stats you get. The second address affects what the weapon name appears as in the equip menu.
 020F742C - when you get an ability soul to gives you other bugged ability souls like doppelganger, this byte holds only the extra bugged souls you get (the one you're supposed to be getting isn't included here).
 
+020F7448 - Current experience.
 020F744C - Current gold.
 
 020F7469 - Current subweapon (for Julius mode).
@@ -685,6 +686,15 @@ Here's what each actor is (index, special object id, description):
   02,1: Swing anim while in air.
   03,1: ?
   04,1: ?
+
+0222E5EC - List of player base stats. Halfwords.
+  0222E5EC,2 - Unused (would be ATK, but gets overwritten after being copied.)
+  0222E5EE,2 - DEF
+  0222E5F0,2 - STR
+  0222E5F2,2 - CON
+  0222E5F4,2 - INT
+  0222E5F6,2 - LCK
+  0222E5F8,4 - Unused (would be resistances, but gets overwritten after being copied.)
 
 0222EE24 - List of weapon gfx.
   Entry length 0xC.
