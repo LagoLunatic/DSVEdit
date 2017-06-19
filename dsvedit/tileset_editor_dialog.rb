@@ -149,6 +149,7 @@ class TilesetEditorDialog < Qt::Dialog
           @tiles += tile.minitiles[12,4]
         end
       end
+      @collision_tiles = @collision_tileset.tiles
     end
     
     @gfx_pages = GfxWrapper.from_gfx_list_pointer(@gfx_list_pointer, @fs)
@@ -304,6 +305,8 @@ class TilesetEditorDialog < Qt::Dialog
     @selection_rectangle.setPos(tile_x_pos_on_page*@tile_width, tile_y_pos_on_page*@tile_height)
     @gfx_page_graphics_scene.addItem(@selection_rectangle)
     
+    return if SYSTEM == :gba
+    
     @ui.has_top.checked = @selected_collision_tile.has_top
     @ui.is_water.checked = @selected_collision_tile.is_water
     if @selected_collision_tile.block_shape >= 4
@@ -425,6 +428,8 @@ class TilesetEditorDialog < Qt::Dialog
   end
   
   def update_collision(checked)
+    return if SYSTEM == :gba
+    
     @selected_collision_tile.has_top = @ui.has_top.checked
     @selected_collision_tile.is_water = @ui.is_water.checked
     @selected_collision_tile.has_sides_and_bottom = @ui.has_sides_and_bottom.checked
@@ -437,6 +442,8 @@ class TilesetEditorDialog < Qt::Dialog
   end
   
   def block_shape_changed(block_shape)
+    return if SYSTEM == :gba
+    
     @selected_collision_tile.block_shape = block_shape
     
     load_selected_tile()
