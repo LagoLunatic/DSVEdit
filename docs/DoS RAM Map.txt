@@ -710,6 +710,14 @@ Here's what each actor is (index, special object id, description):
 
 022C65D4 - palette for f_farik0.dat portrait.
 
+0222BE34 - List of easter egg items.
+  Entry length 0xC.
+  00,2: Item global ID+1.
+  02,2: X pos.
+  04,2: Y pos.
+  06,2: ?
+  08,4: Code pointer.
+
 02308920 - where the first dynamic file can be loaded.
 
 02348C00 - when drawing your name, the pixel data is here. changing this doesn't change what's on screen, but does affect whether you can press the OK button or not. also, if you start a new game and then save, it will actually be the displayed signature.
