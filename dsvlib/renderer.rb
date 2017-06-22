@@ -683,15 +683,24 @@ class Renderer
   end
   
   def render_collision_tile(tile)
+    color = COLLISION_SOLID_COLOR
     bg_color = ChunkyPNG::Color::TRANSPARENT
     if tile.is_water
-      bg_color = COLLISION_WATER_COLOR
+      if tile.is_slope?
+        if tile.has_top
+          bg_color = COLLISION_WATER_COLOR
+        else
+          # Water slopes with no top are water slopes instead of solid slopes, so they don't have water in the background.
+          bg_color = ChunkyPNG::Color::TRANSPARENT
+          color = COLLISION_WATER_COLOR
+        end
+      else
+        bg_color = COLLISION_WATER_COLOR
+      end
     elsif tile.is_damage?
       bg_color = COLLISION_DAMAGE_COLOR
     end
     graphic_tile = ChunkyPNG::Image.new(16, 16, bg_color)
-    
-    color = COLLISION_SOLID_COLOR
     
     case tile.block_shape
     when 0..1
@@ -767,7 +776,7 @@ class Renderer
         y_end = 15
       end
       
-      graphic_tile.polygon([0-x_offset, 0, width-1-x_offset, 15, x_end-x_offset, y_end], stroke_color = COLLISION_SOLID_COLOR, fill_color = COLLISION_SOLID_COLOR)
+      graphic_tile.polygon([0-x_offset, 0, width-1-x_offset, 15, x_end-x_offset, y_end], stroke_color = color, fill_color = color)
       if tile.horizontal_flip
         graphic_tile.mirror!
       end
