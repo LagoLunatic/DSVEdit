@@ -153,6 +153,11 @@ Enemies:
 4E Draculina
   Requires enemy overlay 38.
 4F Tin Man
+  Var A:
+    0 Normal, can't fall off ledges.
+    1 Can fall off ledges.
+      Warning: If Tin Man falls off a drop 4+ blocks tall, he will crash the game.
+      Only set var A to 1 if the only drops he can reach are 1-3 blocks tall.
 50 Polkir
 51 Nova Skeleton
 52 Gashida
