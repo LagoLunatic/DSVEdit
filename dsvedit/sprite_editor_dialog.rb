@@ -1108,6 +1108,12 @@ class SpriteEditor < Qt::Dialog
     @part_graphics_scene.setSceneRect(min_x, min_y, full_width, full_height)
   end
   
+  def closeEvent(event)
+    if @skeleton_editor
+      @skeleton_editor.close()
+    end
+  end
+  
   def inspect; to_s; end
 end
 
