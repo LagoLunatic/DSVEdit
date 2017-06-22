@@ -97,11 +97,14 @@ Weapon format:
   Byte 20: ?
   Bytes 21-24: Bitfield for the elemental damage types this weapon deals.
     Bits 1-11: Regular elemental types.
-    Bit 27: Is magical.
-      If either this bit, or any of the bits for fire/ice/lightning/dark/holy are set, enemies will use their magic defense to defend against this weapon, instead of their physical defense.
+    Bit 26: Is a subweapon.
+      All subweapons set this bit automatically, even if it's not set in the item editor.
+    Bit 27: Is a spell.
+      All spells set this bit automatically, even if it's not set in the item editor.
+      If either this bit, or any of the bits for fire/ice/lightning/dark/holy are set, enemies will use their magical defense to defend against this weapon, instead of their physical defense.
     Bit 28: Cures vampirism and kills red skeletons/axe armors.
-      This only cures the sisters if the magical bit is also set.
-      Cures Vincent and kills red skeletons/axe armors whether the magical bit is set or not.
+      This only cures the sisters if the Spell bit is also set.
+      Cures Vincent and kills red skeletons/axe armors whether the Spell bit is set or not.
     Bit 16: Unknown, set for all fist weapons (except the default fists you get when nothing is equipped).
     Bit 20: Can kill Red Skeletons/Axe Armors.
   Byte 25: Sprite to use for the weapon when you swing it. Doesn't just effect visuals, also hitboxes.
