@@ -219,6 +219,8 @@ class TilesetEditorDialog < Qt::Dialog
       
       @tileset_graphics_scene.addItem(tile_pixmap_item)
     end
+    
+    load_selected_tile()
   end
   
   def render_tile_on_tileset(tile_index)
@@ -301,6 +303,8 @@ class TilesetEditorDialog < Qt::Dialog
   end
   
   def load_selected_tile
+    return if @selected_tile.nil?
+    
     @selected_tile_graphics_scene.clear()
     @selected_tile_collision_graphics_scene.clear()
     
