@@ -50,6 +50,9 @@ Memory used for entities in DoS is 020CA3F0 - 020F6DEF. Each entity is 0x2A0 byt
 0BE,2: 
 250,4: Bitfield?
   00000020 - Horizontally flipped?
+260,1: Subtype.
+26E,2: Var A.
+270,2: Var B.
 
 For enemies:
 258,2: Current HP.

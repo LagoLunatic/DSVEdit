@@ -273,7 +273,9 @@ Special objects:
 4C An item. If it's the Chaos Ring, only appears if you have all souls.
   Var A: Flag for having picked this item up.
   Var B: Global ID of the item + 1. CE is Chaos Ring. (Different from normal items, where Var B is the local ID of the item.)
-4D Trigger to make a secret item (Konami Man/Crown/Bell) appear.
+4D Trigger to make a easter egg item (Konami Man/Crown/Bell) appear.
+  Var A: Which easter egg item this is. Index in list 0222BE34.
+  Var B: Flag for having picked this item up.
 4E Mina Hakuba doll (only appears if Aria of Sorrow is in the GBA slot).
 4F Mina event actor.
 50 Hammer event actor.

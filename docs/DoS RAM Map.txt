@@ -710,12 +710,17 @@ Here's what each actor is (index, special object id, description):
 
 022C65D4 - palette for f_farik0.dat portrait.
 
-0222BE34 - List of easter egg items.
+0222BDE0-0222BDF7 - List of rewards from the strongman game.
+  Entry length 8.
+  00,4: Pickup flag index for having spawned this reward. (Not for actually picking it up - so if you leave the room without getting it, you can't get it again.)
+  04,4: Global ID+1 of the item.
+0222BE34-0222BE57 - List of easter egg items.
   Entry length 0xC.
   00,2: Item global ID+1.
+    The icon of the easter egg item is hardcoded - changing this item ID won't change the icon. Easter egg items also don't display the item name on screen.
   02,2: X pos.
   04,2: Y pos.
-  06,2: ?
+  06,2: Unused. 0.
   08,4: Code pointer.
 
 02308920 - where the first dynamic file can be loaded.

@@ -54,9 +54,20 @@
 021E7870 GiveItem
   ; r0 - Item type (2 is consumables, etc)
   ; r1 - Item index
+021E7710 SpawnItemPickupEntity
+  ; r0 - X pos
+  ; r1 - Y pos
+  ; r2 - Z pos
+  ; r3 - Global ID+1 of the item
 021E7AB4 GetItemGlobalID+1
   ; r0 - Item type
   ; r1 - Item index
+021E7AF0 GetItemLocalIndex
+  ; r0 - Global ID+1 of the item
+  ; Returns the item's index in its type list.
+021E7B2C GetItemType
+  ; r0 - Global ID+1 of the item.
+  ; Returns the item's type (2 is consumables, etc)
 
 0202DE80 ShowItemName?
   ; r0 - Item global ID+1
