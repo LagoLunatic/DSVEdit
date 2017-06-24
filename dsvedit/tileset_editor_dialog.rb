@@ -178,6 +178,14 @@ class TilesetEditorDialog < Qt::Dialog
         
         @palettes[palette_page.palette_load_offset, palette_page.num_palettes] = pals_for_page[palette_page.palette_index, palette_page.num_palettes]
       end
+      if @gfx_pages.any?{|gfx| gfx.colors_per_palette == 256}
+        @palettes_256 = []
+        @room.palette_pages.each do |palette_page|
+          pals_for_page = @renderer.generate_palettes(palette_page.palette_list_pointer, 256)
+          
+          @palettes_256[palette_page.palette_load_offset, palette_page.num_palettes] = pals_for_page[palette_page.palette_index, palette_page.num_palettes]
+        end
+      end
     end
     
     @ui.gfx_page_index.clear()
@@ -281,6 +289,7 @@ class TilesetEditorDialog < Qt::Dialog
       gfx_chunk_index_on_page = (tile.index_on_tile_page & 0xC0) >> 6
       gfx_chunk_index = tile.tile_page*4 + gfx_chunk_index_on_page
       gfx_wrapper_index, chunk_offset = @gfx_chunks[gfx_chunk_index]
+      return if chunk_offset.nil?
       minitile_index_on_page = tile.index_on_tile_page & 0x3F
       minitile_index_on_page += chunk_offset * 0x40
       
@@ -394,6 +403,7 @@ class TilesetEditorDialog < Qt::Dialog
       4.times do |i|
         gfx_chunk_index = gfx_page_index*4 + i
         gfx_wrapper_index, chunk_offset = @gfx_chunks[gfx_chunk_index]
+        next if chunk_offset.nil?
         gfx_wrapper = @gfx_wrappers[gfx_wrapper_index]
         
         if gfx_wrapper.colors_per_palette == 16
