@@ -229,9 +229,11 @@ class Room
     new_entity_pointer = entity_list_ram_pointer
     entities.each do |entity|
       entity.entity_ram_pointer = new_entity_pointer
-      entity.write_to_rom()
       
       new_entity_pointer += 12
+    end
+    entities.each do |entity|
+      entity.write_to_rom()
     end
     fs.write(new_entity_pointer, [0x7FFF7FFF, 0, 0].pack("V*")) # Marks the end of the entity list
   end
