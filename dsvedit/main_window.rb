@@ -25,6 +25,7 @@ require_relative 'player_editor_dialog'
 require_relative 'special_object_editor_dialog'
 require_relative 'weapon_synth_editor_dialog'
 require_relative 'shop_editor_dialog'
+require_relative 'tileset_chooser_dialog'
 
 require_relative 'ui_main'
 

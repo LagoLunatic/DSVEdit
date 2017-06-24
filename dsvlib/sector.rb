@@ -38,7 +38,7 @@ class Sector
     if SECTOR_INDEX_TO_SECTOR_NAME[area_index]
       SECTOR_INDEX_TO_SECTOR_NAME[area_index][sector_index]
     else
-      ""
+      return AREA_INDEX_TO_AREA_NAME[area_index]
     end
   end
   

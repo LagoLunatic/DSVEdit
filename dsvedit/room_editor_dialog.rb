@@ -7,6 +7,7 @@ class RoomEditorDialog < Qt::Dialog
   attr_reader :game
   
   slots "reposition_room_on_map(int, int, const Qt::MouseButton&)"
+  slots "open_tileset_chooser()"
   slots "button_box_clicked(QAbstractButton*)"
   
   def initialize(main_window, room, renderer)
@@ -26,11 +27,16 @@ class RoomEditorDialog < Qt::Dialog
     connect(@map_graphics_scene, SIGNAL("clicked(int, int, const Qt::MouseButton&)"), self, SLOT("reposition_room_on_map(int, int, const Qt::MouseButton&)"))
     connect(@map_graphics_scene, SIGNAL("moved(int, int, const Qt::MouseButton&)"), self, SLOT("reposition_room_on_map(int, int, const Qt::MouseButton&)"))
     
+    connect(@ui.select_tileset_button, SIGNAL("clicked()"), self, SLOT("open_tileset_chooser()"))
     connect(@ui.buttonBox, SIGNAL("clicked(QAbstractButton*)"), self, SLOT("button_box_clicked(QAbstractButton*)"))
     
     if SYSTEM == :nds
       @ui.color_effects.hide()
       @ui.label_5.hide()
+      label_item = @ui.formLayout.itemAt(3, Qt::FormLayout::LabelRole)
+      @ui.formLayout.removeItem(label_item)
+      field_item = @ui.formLayout.itemAt(3, Qt::FormLayout::FieldRole)
+      @ui.formLayout.removeItem(field_item)
     end
     
     read_room()
@@ -40,11 +46,12 @@ class RoomEditorDialog < Qt::Dialog
   
   def read_room
     @ui.layer_list.text = "%08X" % @room.layer_list_ram_pointer
-    @ui.gfx_page_list.text = "%08X" % @room.gfx_list_pointer
-    @ui.palette_page_list.text = "%08X" % @room.palette_wrapper_pointer
     @ui.entity_list.text = "%08X" % @room.entity_list_ram_pointer
     @ui.door_list.text = "%08X" % @room.door_list_ram_pointer
     @ui.color_effects.text = "%04X" % @room.color_effects if SYSTEM == :gba
+    @ui.gfx_page_list.text = "%08X" % @room.gfx_list_pointer
+    @ui.palette_page_list.text = "%08X" % @room.palette_wrapper_pointer
+    @ui.palette_page_index.text = "%02X" % @room.palette_page_index
     
     @map_graphics_scene.clear()
     
@@ -81,29 +88,51 @@ class RoomEditorDialog < Qt::Dialog
   
   def save_room
     @room.layer_list_ram_pointer = @ui.layer_list.text.to_i(16)
-    @room.gfx_list_pointer = @ui.gfx_page_list.text.to_i(16)
-    @room.palette_wrapper_pointer = @ui.palette_page_list.text.to_i(16)
     @room.entity_list_ram_pointer = @ui.entity_list.text.to_i(16)
     @room.door_list_ram_pointer = @ui.door_list.text.to_i(16)
     @room.color_effects = @ui.color_effects.text.to_i(16) if SYSTEM == :gba
+    @room.gfx_list_pointer = @ui.gfx_page_list.text.to_i(16)
+    @room.palette_wrapper_pointer = @ui.palette_page_list.text.to_i(16)
+    @room.palette_page_index = @ui.palette_page_index.text.to_i(16)
     
     @room.write_to_rom()
     
     @game.fix_map_sector_and_room_indexes(@room.area_index, @room.sector_index)
     
     read_room()
+    parent.load_room()
+  end
+  
+  def open_tileset_chooser
+    @tileset_chooser = TilesetChooserDialog.new(self, @game, @room.sector, @renderer)
+  end
+  
+  def set_tileset(tileset_name)
+    tileset_name =~ /^(\h{8})-(\h{8})_(\h{8})-(\h{2})_(\h{8})$/
+    
+    @ui.gfx_page_list.text = $5
+    @ui.palette_page_list.text = $3
+    @ui.palette_page_index.text = $4
+    
+    tileset_pointer = $1.to_i(16)
+    collision_tileset_pointer = $2.to_i(16)
+    @room.layers.each do |layer|
+      layer.tileset_pointer = tileset_pointer
+      layer.collision_tileset_pointer = collision_tileset_pointer
+      layer.write_to_rom()
+    end
+    
+    save_room()
   end
   
   def button_box_clicked(button)
     if @ui.buttonBox.standardButton(button) == Qt::DialogButtonBox::Ok
       save_room()
-      parent.load_room()
       self.close()
     elsif @ui.buttonBox.standardButton(button) == Qt::DialogButtonBox::Cancel
       self.close()
     elsif @ui.buttonBox.standardButton(button) == Qt::DialogButtonBox::Apply
       save_room()
-      parent.load_room()
     end
   end
 end

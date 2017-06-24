@@ -30,54 +30,82 @@
       <widget class="QLineEdit" name="layer_list"/>
      </item>
      <item row="1" column="0">
-      <widget class="QLabel" name="label_3">
-       <property name="text">
-        <string>GFX Page List</string>
-       </property>
-      </widget>
-     </item>
-     <item row="1" column="1">
-      <widget class="QLineEdit" name="gfx_page_list"/>
-     </item>
-     <item row="2" column="0">
-      <widget class="QLabel" name="label_4">
-       <property name="text">
-        <string>Palette Page List</string>
-       </property>
-      </widget>
-     </item>
-     <item row="3" column="0">
       <widget class="QLabel" name="label_7">
        <property name="text">
         <string>Entity List</string>
        </property>
       </widget>
      </item>
-     <item row="4" column="0">
+     <item row="1" column="1">
+      <widget class="QLineEdit" name="entity_list"/>
+     </item>
+     <item row="2" column="0">
       <widget class="QLabel" name="label_8">
        <property name="text">
         <string>Door List</string>
        </property>
       </widget>
      </item>
-     <item row="5" column="0">
+     <item row="2" column="1">
+      <widget class="QLineEdit" name="door_list"/>
+     </item>
+     <item row="3" column="0">
       <widget class="QLabel" name="label_5">
        <property name="text">
         <string>Color Effects</string>
        </property>
       </widget>
      </item>
-     <item row="2" column="1">
+     <item row="3" column="1">
+      <widget class="QLineEdit" name="color_effects"/>
+     </item>
+    </layout>
+   </item>
+   <item>
+    <layout class="QHBoxLayout" name="horizontalLayout_2">
+     <item>
+      <widget class="QLabel" name="label_3">
+       <property name="text">
+        <string>GFX Page List</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLineEdit" name="gfx_page_list"/>
+     </item>
+     <item>
+      <widget class="QLabel" name="label_4">
+       <property name="text">
+        <string>Palette Page List</string>
+       </property>
+      </widget>
+     </item>
+     <item>
       <widget class="QLineEdit" name="palette_page_list"/>
      </item>
-     <item row="3" column="1">
-      <widget class="QLineEdit" name="entity_list"/>
+     <item>
+      <widget class="QLabel" name="label_6">
+       <property name="text">
+        <string>Palette Page Index</string>
+       </property>
+      </widget>
      </item>
-     <item row="4" column="1">
-      <widget class="QLineEdit" name="door_list"/>
+     <item>
+      <widget class="QLineEdit" name="palette_page_index">
+       <property name="maximumSize">
+        <size>
+         <width>30</width>
+         <height>16777215</height>
+        </size>
+       </property>
+      </widget>
      </item>
-     <item row="5" column="1">
-      <widget class="QLineEdit" name="color_effects"/>
+     <item>
+      <widget class="QPushButton" name="select_tileset_button">
+       <property name="text">
+        <string>Select tileset</string>
+       </property>
+      </widget>
      </item>
     </layout>
    </item>

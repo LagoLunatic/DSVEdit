@@ -15,7 +15,6 @@ class Room
               :door_list_ram_pointer,
               :gfx_pages,
               :palette_pages,
-              :palette_page_index,
               :color_effects,
               :area_index,
               :sector_index,
@@ -25,6 +24,7 @@ class Room
   attr_accessor :layer_list_ram_pointer,
                 :gfx_list_pointer,
                 :palette_wrapper_pointer,
+                :palette_page_index,
                 :entity_list_ram_pointer,
                 :door_list_ram_pointer,
                 :room_xpos_on_map,
@@ -409,11 +409,7 @@ class Room
   end
   
   def area_name
-    if SECTOR_INDEX_TO_SECTOR_NAME[area_index]
-      return SECTOR_INDEX_TO_SECTOR_NAME[area_index][sector_index]
-    else
-      return AREA_INDEX_TO_AREA_NAME[area_index]
-    end
+    sector.name
   end
   
   def self.max_number_of_layers
