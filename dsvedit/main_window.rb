@@ -712,6 +712,8 @@ class DSVEdit < Qt::MainWindow
   end
   
   def open_shop_editor
+    return unless validate_nds()
+    
     return if @shop_editor_dialog && @shop_editor_dialog.visible?
     @shop_editor_dialog = ShopEditor.new(self, game)
   end
