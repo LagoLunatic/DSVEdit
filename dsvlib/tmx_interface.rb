@@ -38,7 +38,7 @@ class TMXInterface
       game_layer.collision_tileset_pointer = props["collision_tileset"]
       game_layer.z_index = props["z_index"]
       game_layer.scroll_mode = props["scroll_mode"]
-      game_layer.opacity = ((tmx_layer.attr("opacity")||1.0).to_f*31).to_i
+      game_layer.opacity = ((tmx_layer.attr("opacity")||1.0).to_f*31).to_i if SYSTEM == :nds
       game_layer.main_gfx_page_index = props["main_gfx_page_index"]
       game_layer.tiles = from_tmx_level_data(tmx_layer.css("data").text, game_layer.width, game_layer.height)
       
@@ -215,7 +215,7 @@ class TMXInterface
   def get_block_offset_for_tileset(tileset, all_tilesets_for_room)
     block_offset = 1
     tileset_index = all_tilesets_for_room.index(tileset)
-    block_offset += 1024 * tileset_index # 1024 blocks in each tileset
+    block_offset += NUM_BLOCKS_IN_TILESET_IMAGE * tileset_index # 1024/512 blocks in each tileset (NDS/GBA)
     block_offset
   end
   
@@ -230,7 +230,7 @@ class TMXInterface
       vertical_flip    = (block & 0x40000000) != 0
       index_on_tileset = (block & ~(0x80000000 | 0x40000000 | 0x20000000))
       index_on_tileset -= 1 # TMX indexes start at 1 instead of 0.
-      index_on_tileset = index_on_tileset % 1024 # Account for the block offset for different tilesets. 1024 blocks in each tileset.
+      index_on_tileset = index_on_tileset % NUM_BLOCKS_IN_TILESET_IMAGE # Account for the block offset for different tilesets. 1024/512 blocks in each tileset (NDS/GBA).
       
       tile = Layer.tile_class.new
       tile.index_on_tileset = index_on_tileset
