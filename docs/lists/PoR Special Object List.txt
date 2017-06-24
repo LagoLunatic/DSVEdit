@@ -4,7 +4,9 @@ Special objects:
 01 Candle or other destructible piece of scenery. Var A controls the type:
   00-0D Normal objects.
   0E-0F Money chests.
-  10-19 More normal objects.
+  10-11 Normal objects.
+  12 Pharaoh head with money in it.
+  13-19 More normal objects.
   1A+ Nothing.
 02 Invisible pushable block.
   Has a red outline around it, but is otherwise invisible.
