@@ -483,14 +483,7 @@ class DSVEdit < Qt::MainWindow
     @layers_view_item = Qt::GraphicsRectItem.new
     @room_graphics_scene.addItem(@layers_view_item)
     @room.sector.load_necessary_overlay()
-    @renderer.ensure_tilesets_exist("cache/#{GAME}/rooms/", @room)
-    @room.layers.each do |layer|
-      next if layer.layer_metadata_ram_pointer == 0 # TODO
-      
-      tileset_filename = "cache/#{GAME}/rooms/#{@room.area_name}/Tilesets/#{layer.tileset_filename}.png"
-      layer_item = LayerItem.new(layer, tileset_filename)
-      layer_item.setParentItem(@layers_view_item)
-    end
+    load_layers()
     
     load_room_collision_tileset()
     
@@ -520,6 +513,31 @@ class DSVEdit < Qt::MainWindow
     Qt::MessageBox.warning(self,
       "Failed to load room",
       "Failed to load room %08X.\n#{e.message}\n\n#{e.backtrace.join("\n")}" % @room.room_metadata_ram_pointer
+    )
+  end
+  
+  def load_layers
+    @renderer.ensure_tilesets_exist("cache/#{GAME}/rooms/", @room)
+    @room.layers.each do |layer|
+      next if layer.layer_metadata_ram_pointer == 0 # TODO
+      
+      load_layer(layer)
+    end
+  rescue StandardError => e
+    Qt::MessageBox.warning(self,
+      "Failed to load layers",
+      "Failed to load layers for room %08X.\n#{e.message}\n\n#{e.backtrace.join("\n")}" % @room.room_metadata_ram_pointer
+    )
+  end
+  
+  def load_layer(layer)
+    tileset_filename = "cache/#{GAME}/rooms/#{@room.area_name}/Tilesets/#{layer.tileset_filename}.png"
+    layer_item = LayerItem.new(layer, tileset_filename)
+    layer_item.setParentItem(@layers_view_item)
+  rescue StandardError => e
+    Qt::MessageBox.warning(self,
+      "Failed to load layer",
+      "Failed to load layer %08X.\n#{e.message}\n\n#{e.backtrace.join("\n")}" % layer.layer_list_entry_ram_pointer
     )
   end
   
