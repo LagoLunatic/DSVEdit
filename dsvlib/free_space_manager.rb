@@ -185,9 +185,9 @@ module FreeSpaceManager
       if free_space
         puts "Found free space at %08X,%04X (%08X in %s)" % [file[:ram_start_offset] + free_space[:offset], length_needed, free_space[:offset], file[:file_path]]
         
-        expand_length_needed = free_space[:offset] + free_space[:length] - file[:size]
+        expand_length_needed = free_space[:offset] + length_needed - file[:size]
         if expand_length_needed > 0
-          expand_file(file, length_needed)
+          expand_file(file, expand_length_needed)
         end
         
         remove_free_space(file_path, free_space[:offset], length_needed)
@@ -209,5 +209,15 @@ module FreeSpaceManager
     # Failed to find space, so put the old data back how it was, then re-raise the error.
     write(old_pointer, old_data)
     raise e
+  end
+  
+  def initialize_copy(orig)
+    super
+    
+    orig_free_spaces = @free_spaces
+    @free_spaces = []
+    orig_free_spaces.each do |free_space|
+      @free_spaces << free_space.dup
+    end
   end
 end
