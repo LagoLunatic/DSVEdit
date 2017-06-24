@@ -31,6 +31,8 @@ module FreeSpaceManager
     end
     
     merge_overlapping_free_spaces()
+    
+    remove_fake_free_spaces()
   end
   
   def initialize_sector_overlay_free_spaces
@@ -44,10 +46,20 @@ module FreeSpaceManager
       
       @free_spaces << {path: path, offset: offset, length: length}
     end
+    
+    remove_fake_free_spaces()
   end
   
   def initialize_rom_free_space
     @free_spaces << {path: "rom.gba", offset: ROM_FREE_SPACE_START, length: ROM_FREE_SPACE_SIZE}
+    
+    remove_fake_free_spaces()
+  end
+  
+  def remove_fake_free_spaces
+    FAKE_FREE_SPACES.each do |fake_space|
+      remove_free_space(fake_space[:path], fake_space[:offset], fake_space[:length])
+    end
   end
   
   def write_free_space_to_text_file(base_directory=@filesystem_directory)

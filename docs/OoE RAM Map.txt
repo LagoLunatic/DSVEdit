@@ -605,6 +605,8 @@ when you first enter a new area, the game determines which entrance room to put 
 
 === 022C1FE0 - 022EB19F: Overlays 40-85 (Room data)
 
+022E4ABC-022E4B7B - In Kalidus Channel sector 0 (overlay 46), this space is past the end of overlay 46, but is used by the rock and sea mines puzzle.
+
 022EB1A0 - First asset loaded into RAM.
 
 022FFA90 - shanoa's hitbox data
