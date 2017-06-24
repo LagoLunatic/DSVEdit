@@ -1,7 +1,7 @@
 00 Wooden door.
 01 Pushable crates.
 02 Boss door.
-03 
+03 Boss rush boss door.
 04 Boss door (forces player to enter room).
   This boss door can be placed away from the edge of the screen and the player will automatically walk past it when entering the room.
 05 Arena door.
@@ -9,7 +9,9 @@
 07 Applies a visual effect to the room.
   Includes things like the Chaotic Realm's greyscale effect, bats in the background, etc. TODO
 08 Breakable wall.
-09 
+09 Wall that can be destroyed.
+  Var A: ???
+  Var B: Misc flag?
 0A Boss-death-conditional enemy.
   Once a certain boss death flag has been set this will spawn an enemy.
   Var A: Enemy ID to spawn.
@@ -18,14 +20,18 @@
   Once a certain event flag has been set this will spawn an enemy.
   Var A: Enemy ID to spawn.
   Var B: The index of the event flag to check (in bitfield 0200033C).
-0C 
+0C Waterfalls.
+  Causes some of the water in the room to push you down.
+  Var A:
+    0 The huge waterfall from room 00-07-21.
+    1 The small waterfalls from room 00-07-11.
 0D Bell.
   Rings when you land on top of it.
 0E Destructible.
   Var A: Which destructible. 0-D.
 0F Flame.
-10 
-11 
+10 Boss rush clear reward.
+11 Starts boss rush.
 12 Various background visuals.
   Var A:
     0 Body-length window that gets blown open.
@@ -75,22 +81,22 @@
     1E Soma floating in white space after defeating Chaos.
 21 Falling spike trap from Arena.
 22 D-pad puzzle from Arena.
-23 
-24 
+23 Water flowing down in the bath room.
+24 Mist in the bath room.
 25 Legion members emerging from the background.
 26 Damaging hand/foot of Arena background statue.
 27 
 28 
 29 Vertically moving platform.
 2A Horizontally moving platform.
-2B 
-2C 
+2B Water flowing from the large fountian in the Floating Garden.
+2C Clouds moving in the background of the Floating Garden.
 2D Statue before the stairway to the throne room.
 2E Three flames in the eyes of a background skull.
   Light up when you get near it.
-2F 
-30 
-31 
+2F Something from the Julius fight?
+30 Something from the Julius fight?
+31 Something from the Julius fight?
 32 Crumbling platform.
 33 Waterfall splashes?
 34 Swinging pendulum.

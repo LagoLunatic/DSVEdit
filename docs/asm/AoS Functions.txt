@@ -8,6 +8,10 @@
   ; r1 - Maximum entity index to check
   ; r2 - ? Create code pointer?
 
+08000500 UpdateGameState
+  ; Calls the update code function for the current game state (02000010).
+  ; If that function returns a new state value, it sets the game state to that value.
+
 08000A90 Rand
 080D812C RandClampToMax
   ; r0 - Random number
