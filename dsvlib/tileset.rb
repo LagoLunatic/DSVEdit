@@ -38,7 +38,6 @@ class Tileset
   
   def read_from_rom_gba
     @tiles = []
-    @tiles << tile_class.new("\0\0"*16) # First entry on every tileset is always blank.
     
     if tileset_type == 2
       tileset_data = fs.decompress(tileset_pointer)
@@ -47,6 +46,8 @@ class Tileset
     else
       raise "Unknown tileset type: #{tileset_type}"
     end
+    
+    @tiles << tile_class.new("\0"*tile_class.data_size) # First entry on every tileset is always blank.
     
     offset = 0
     while true
