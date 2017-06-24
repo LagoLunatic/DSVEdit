@@ -158,11 +158,7 @@ class TilesetEditorDialog < Qt::Dialog
     @gfx_chunks = []
     @gfx_pages.each_with_index do |gfx_page, gfx_wrapper_index|
       gfx_page.num_chunks.times do |i|
-        if gfx_page.gfx_load_offset < 0x10
-          puts "Unknown gfx load offset: %02X" % gfx_page.gfx_load_offset
-          next
-        end
-        @gfx_chunks[gfx_page.gfx_load_offset-0x10+i] = [gfx_wrapper_index, gfx_page.first_chunk_index+i]
+        @gfx_chunks[gfx_page.gfx_load_offset+i] = [gfx_wrapper_index, gfx_page.first_chunk_index+i]
       end
     end
     
@@ -288,8 +284,9 @@ class TilesetEditorDialog < Qt::Dialog
     else
       gfx_chunk_index_on_page = (tile.index_on_tile_page & 0xC0) >> 6
       gfx_chunk_index = tile.tile_page*4 + gfx_chunk_index_on_page
+      gfx_chunk_index += 0x10 if gfx.colors_per_palette == 16
+      gfx_chunk_index = gfx_chunk_index_on_page if gfx.colors_per_palette == 256
       gfx_wrapper_index, chunk_offset = @gfx_chunks[gfx_chunk_index]
-      return if chunk_offset.nil?
       minitile_index_on_page = tile.index_on_tile_page & 0x3F
       minitile_index_on_page += chunk_offset * 0x40
       
@@ -402,8 +399,11 @@ class TilesetEditorDialog < Qt::Dialog
       chunky_image = ChunkyPNG::Image.new(128, 128, ChunkyPNG::Color::TRANSPARENT)
       4.times do |i|
         gfx_chunk_index = gfx_page_index*4 + i
+        # HACKY TODO
+        gfx = @gfx_pages[gfx_page_index]
+        gfx_chunk_index += 0x10 if gfx.colors_per_palette == 16
+        gfx_chunk_index = 0 if gfx.colors_per_palette == 256
         gfx_wrapper_index, chunk_offset = @gfx_chunks[gfx_chunk_index]
-        next if chunk_offset.nil?
         gfx_wrapper = @gfx_wrappers[gfx_wrapper_index]
         
         if gfx_wrapper.colors_per_palette == 16

@@ -211,11 +211,7 @@ class Renderer
       gfx_wrapper_index = gfx_wrappers.length-1
       
       gfx_page.num_chunks.times do |i|
-        if gfx_page.gfx_load_offset < 0x10
-          puts "Unknown gfx load offset: %02X" % gfx_page.gfx_load_offset
-          next
-        end
-        gfx_chunks[gfx_page.gfx_load_offset-0x10+i] = [gfx_wrapper_index, gfx_page.first_chunk_index+i]
+        gfx_chunks[gfx_page.gfx_load_offset+i] = [gfx_wrapper_index, gfx_page.first_chunk_index+i]
       end
     end
 
@@ -236,15 +232,20 @@ class Renderer
         else
           gfx_chunk_index_on_page = (minitile.index_on_tile_page & 0xC0) >> 6
           gfx_chunk_index = minitile.tile_page*4 + gfx_chunk_index_on_page
+          gfx_chunk_index += 0x10 if colors_per_palette == 16
+          gfx_chunk_index = gfx_chunk_index_on_page if colors_per_palette == 256
           gfx_wrapper_index, chunk_offset = gfx_chunks[gfx_chunk_index]
-          break if chunk_offset.nil?
-          minitile_index_on_page = minitile.index_on_tile_page & 0x3F
-          minitile_index_on_page += chunk_offset * 0x40
-          
-          gfx_page = gfx_wrappers[gfx_wrapper_index]
-          palette = palettes[minitile.palette_index]
-          
-          rendered_minitile = render_1_dimensional_minitile(gfx_page, palette, minitile_index_on_page)
+          if chunk_offset.nil?
+            rendered_minitile = ChunkyPNG::Image.new(8, 8, ChunkyPNG::Color.rgba(255, 0, 0, 255))
+          else
+            minitile_index_on_page = minitile.index_on_tile_page & 0x3F
+            minitile_index_on_page += chunk_offset * 0x40
+            
+            gfx_page = gfx_wrappers[gfx_wrapper_index]
+            palette = palettes[minitile.palette_index]
+            
+            rendered_minitile = render_1_dimensional_minitile(gfx_page, palette, minitile_index_on_page)
+          end
         end
         
         if minitile.horizontal_flip
@@ -396,9 +397,6 @@ class Renderer
     end
     
     return rendered_minitile
-  rescue StandardError => e
-    puts e
-    return ChunkyPNG::Image.new(width, height, ChunkyPNG::Color.rgba(255, 0, 0, 255))
   end
   
   def render_gfx_1_dimensional_mode(gfx_page, palette, first_minitile_index: 0, max_num_minitiles: nil)
