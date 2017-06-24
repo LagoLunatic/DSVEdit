@@ -135,4 +135,10 @@ class RoomEditorDialog < Qt::Dialog
       save_room()
     end
   end
+  
+  def closeEvent(event)
+    if @tileset_chooser
+      @tileset_chooser.close()
+    end
+  end
 end
