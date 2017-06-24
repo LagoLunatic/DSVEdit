@@ -15,7 +15,6 @@ class Room
               :door_list_ram_pointer,
               :gfx_pages,
               :palette_pages,
-              :color_effects,
               :area_index,
               :sector_index,
               :room_index,
@@ -24,11 +23,12 @@ class Room
   attr_accessor :layer_list_ram_pointer,
                 :gfx_list_pointer,
                 :palette_wrapper_pointer,
-                :palette_page_index,
                 :entity_list_ram_pointer,
                 :door_list_ram_pointer,
                 :room_xpos_on_map,
                 :room_ypos_on_map,
+                :palette_page_index,
+                :color_effects,
                 :entities,
                 :doors
 
