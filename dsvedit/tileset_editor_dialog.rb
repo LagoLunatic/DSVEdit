@@ -158,6 +158,10 @@ class TilesetEditorDialog < Qt::Dialog
     @gfx_chunks = []
     @gfx_pages.each_with_index do |gfx_page, gfx_wrapper_index|
       gfx_page.num_chunks.times do |i|
+        if gfx_page.gfx_load_offset < 0x10
+          puts "Unknown gfx load offset: %02X" % gfx_page.gfx_load_offset
+          next
+        end
         @gfx_chunks[gfx_page.gfx_load_offset-0x10+i] = [gfx_wrapper_index, gfx_page.first_chunk_index+i]
       end
     end

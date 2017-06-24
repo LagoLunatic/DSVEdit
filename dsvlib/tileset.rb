@@ -44,7 +44,8 @@ class Tileset
     elsif tileset_type == 1
       tileset_data = fs.read(tileset_pointer, 0x1000)
     else
-      raise "Unknown tileset type: #{tileset_type}"
+      puts "Unknown tileset type: #{tileset_type}"
+      return
     end
     
     @tiles << tile_class.new("\0"*tile_class.data_size) # First entry on every tileset is always blank.
