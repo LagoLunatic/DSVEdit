@@ -37,6 +37,11 @@ class Area
       
       sector_index += 1
     end
+    
+    if HARDCODED_BOSSRUSH_ROOM_IDS
+      sector = Sector.new(self, sector_index, nil, game, hardcoded_room_pointers: HARDCODED_BOSSRUSH_ROOM_IDS)
+      @sectors << sector
+    end
   end
   
   def get_sector_and_room_indexes_from_map_x_y(x, y)

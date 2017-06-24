@@ -10,7 +10,7 @@ class Sector
               :room_pointers,
               :rooms
 
-  def initialize(area, sector_index, sector_ram_pointer, game, next_sector_pointer: nil)
+  def initialize(area, sector_index, sector_ram_pointer, game, next_sector_pointer: nil, hardcoded_room_pointers: nil)
     @area = area
     @sector_ram_pointer = sector_ram_pointer
     @next_sector_pointer = next_sector_pointer
@@ -19,7 +19,11 @@ class Sector
     @fs = game.fs
     @game = game
     
-    read_room_pointers_from_rom()
+    if hardcoded_room_pointers
+      @room_pointers = hardcoded_room_pointers
+    else
+      read_room_pointers_from_rom()
+    end
   end
   
   def rooms

@@ -19,6 +19,7 @@ AREA_INDEX_TO_OVERLAY_INDEX = {
      9 => nil,
     10 => nil,
     11 => nil,
+    12 => nil,
   }
 }
 
@@ -42,8 +43,24 @@ SECTOR_INDEX_TO_SECTOR_NAME = {
      9 => "Top Floor",
     10 => "Forbidden Area",
     11 => "Chaotic Realm",
+    12 => "Boss Rush",
   }
 }
+
+HARDCODED_BOSSRUSH_ROOM_IDS = [
+  0x085247B4,
+  0x0852484C,
+  0x085248E4,
+  0x0852497C,
+  0x08524A24,
+  0x08524ABC,
+  0x08524B54,
+  0x08524BEC,
+  0x08524CA4,
+  0x08524D3C,
+  0x08524DD4,
+  0x08524E5C
+]
 
 ENTITY_TYPE_DESCRIPTIONS = {
   0 => "Nothing",
