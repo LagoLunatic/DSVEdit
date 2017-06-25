@@ -85,6 +85,9 @@ Enemies:
   If var A is 0, then 1 fleaman spawns instead.
 2F Devil
   Requires enemy overlay 31.
+  Var A:
+    0 Only appears when you get close to it.
+    1 Appears instantly.
   Var B: 0 or 1, but seems unused?
 30 Guillotiner
 31 Draghignazzo
@@ -172,6 +175,26 @@ Enemies:
   If both chances fail he will do a normal attack instead.
   If either chance is guaranteed he will never do a normal attack, and just summon nonstop instead. If both chances are 0 he will never summon and instead just do normal attacks.
   If both var A and var B are 0000, it will use the default values of var A = 202F and var B = 8024. (1/8 chance to spawn Devil, 1/2 chance to spawn Valkyrie.)
+  The following enemies will glitch out somewhat when summoned by Stolas:
+    Peeping Eye
+    Spin Devil
+    Mollusca
+    Guillotiner
+    Ukoback
+    Bugbear
+    Giant Slug
+    Flying Armor
+    Puppet Master
+    Rahab
+    Paranoia
+  The following enemies won't spawn at all:
+    Procel
+    Mothman
+    Gergoth
+    Bat Company
+    Death
+    Menace
+  All other enemies besides those listed above should work correctly.
 61 Final Guard
   Requires enemy overlay 24.
 62 Malacoda
