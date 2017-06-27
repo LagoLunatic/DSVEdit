@@ -58,7 +58,7 @@ class Renderer
     end
     FileUtils::mkdir_p(File.dirname(filename))
     rendered_level.save(filename)
-    puts "Wrote #{filename}"
+    #puts "Wrote #{filename}"
   end
   
   def render_layer(folder, layer, room, collision = false)
@@ -185,7 +185,7 @@ class Renderer
     if output_filename
       FileUtils::mkdir_p(File.dirname(output_filename))
       rendered_tileset.save(output_filename, :fast_rgba)
-      puts "Wrote #{output_filename}"
+      #puts "Wrote #{output_filename}"
     end
     return rendered_tileset
   end
@@ -270,7 +270,7 @@ class Renderer
     if output_filename
       FileUtils::mkdir_p(File.dirname(output_filename))
       rendered_tileset.save(output_filename, :fast_rgba)
-      puts "Wrote #{output_filename}"
+      #puts "Wrote #{output_filename}"
     end
     return rendered_tileset
   end
@@ -683,7 +683,7 @@ class Renderer
     if output_filename
       FileUtils::mkdir_p(File.dirname(output_filename))
       rendered_tileset.save(output_filename, :fast_rgba)
-      puts "Wrote #{output_filename}"
+      #puts "Wrote #{output_filename}"
     end
     return rendered_tileset
   end
@@ -911,7 +911,7 @@ class Renderer
       FileUtils::mkdir_p(File.dirname(output_path))
       rendered_frames, _ = render_sprite(sprite_info, frame_to_render: frame_to_render)
       rendered_frames.first.save(output_path, :fast_rgba)
-      puts "Wrote #{output_path}"
+      #puts "Wrote #{output_path}"
     end
     
     return output_path
