@@ -82,6 +82,12 @@
 
 0803B9D1 EnemyDraw
 
+0803F2C8 EntityChangeAnimation
+  ; r0 - Entity
+  ; r1 - 
+  ; r2 - 
+  ; r3 - 
+
 0803F17C SpriteAnimate
   ; Call every frame to handle the animation.
   ; r0 - Entity pointer to animate

@@ -85,6 +85,9 @@ For players:
 128,4: Duplicate of y pos?
 
 For enemies:
+120,4: Bitfield of ???
+  00002000 - If set, grants SP when killed.
+    This is set when this enemy is hit by a subweapon (determined by the "is a subweapon" bit in the skill's damage types bitfield.)
 128,2: Current HP. Originally copied from the max HP from the enemy DNA.
 12A,2: The magical defense value from the enemy DNA.
 132,1: The ID of the enemy.

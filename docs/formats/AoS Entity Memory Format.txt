@@ -10,6 +10,8 @@ Memory used for entities in AoS is 020004E4 - ?. Each entity is 0x84 bytes long.
 4C,4: Y velocity.
 50,4: X acceleration.
 54,4: Y acceleration (gravity).
+64,1: Affects the entity's graphics.
+  This is an index in the currently loaded sprite info list, 0201017C.
 
 For weapons/skills:
 14,4: Pointer to the entity that used this weapon/skill (the player).

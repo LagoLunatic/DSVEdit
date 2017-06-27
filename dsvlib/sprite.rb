@@ -99,6 +99,7 @@ class Sprite
   
   def read_from_rom_by_pointer(sprite_pointer)
     @number_of_frames, @number_of_animations, @frame_list_offset, @animation_list_offset = fs.read(sprite_pointer, 12).unpack("vvVV")
+    # TODO: in AoS, there's a third pointer, after the animation list pointer.
     
     @frames = []
     offset = frame_list_offset

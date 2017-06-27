@@ -60,10 +60,21 @@ What each range of entity slots is for:
 0200052A,2 - Player's current y pos in pixels.
 0200052C - Player's current x velocity
 
+02000E40,1 - Number of entries in the current menu.
+02000E41,1 - Cursor position on the current menu.
+02000E42,1 - Paging position on menus.
+  This is controls how far down you've scrolled on menus that don't fit on screen all at once, such as the soul list.
+  It's the index of the entry that should be the first visible menu entry on screen.
+
 0200A09C,0200A0B8 - screen Y?
 
 0200A100 - Decompressed tileset data.
 0200C0EC - tileset data again?
+
+0201017C - List of sprite info for currently loaded entities.
+  The byte at +64 in an entity's memory is the index in this list.
+  Each entry is 0x10 bytes long.
+  00,4: Sprite pointer.
 
 02013144 - ???
 
