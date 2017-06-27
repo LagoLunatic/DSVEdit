@@ -163,8 +163,19 @@ class NDSFileSystem
     load_file(overlay)
   end
   
-  def load_file(file)
-    @currently_loaded_files[file[:ram_start_offset]] = file
+  def load_file(new_file)
+    # First unload any files overlapping this new one.
+    # This is so there are no conflicts where something tries to read from the new file, but reads from an older on that wasn't loaded in the exact same place but overlapped it nonetheless.
+    new_file_ram_range = (new_file[:ram_start_offset]..new_file[:ram_start_offset]+new_file[:size]-1)
+    @currently_loaded_files.each do |ram_start_offset, file|
+      ram_range = (file[:ram_start_offset]..file[:ram_start_offset]+file[:size]-1)
+      if ram_range.include?(new_file_ram_range.first) || new_file_ram_range.include?(ram_range.first)
+        @currently_loaded_files.delete(ram_start_offset)
+      end
+    end
+    
+    # Then load the new file.
+    @currently_loaded_files[new_file[:ram_start_offset]] = new_file
   end
   
   def convert_ram_address_to_path_and_offset(ram_address)
