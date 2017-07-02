@@ -22,6 +22,15 @@
 0220F81C CheckAbilityEnabled
   ; r0 - Index of the ability soul to check. 0-6.
 
+02026110 ChangeRoom
+  ; r0 - Room pointer
+02026AD0 SetDestinationRoomSectorAndRoomIndexes
+  ; r0 - Sector index
+  ; r1 - Room index
+  ; r2 - X pos (pixels)
+  ; r3 - Y pos (pixels)
+  ; Stores sector index to 020F70A6 and room index to 020F70A7.
+
 021F7928 SetEntityCollision
   ; r0 - Entity pointer
   ; r1 - Type of collision.

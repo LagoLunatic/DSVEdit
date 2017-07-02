@@ -139,4 +139,8 @@ class Entity
       false
     end
   end
+  
+  def is_boss_door?
+    is_special_object? && subtype == BOSS_DOOR_SUBTYPE
+  end
 end

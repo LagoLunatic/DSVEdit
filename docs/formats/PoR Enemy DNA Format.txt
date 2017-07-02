@@ -11,8 +11,11 @@ Byte 19: ???
 Byte 20: Attack stat.
 Byte 21: Defense stat.
 Byte 22: Magical defense stat.
-Byte 23: Chance to drop item 1
-Byte 24: Chance to drop item 2
+Byte 23: Base chance to drop item 1.
+  This is on a scale from 0 to 0x100 (decimal 256), so 0x40 is a 25% chance, 0x80 is a 50% chance, etc.
+  Note that drop chance caps out at 50%, after the bonus from luck.
+Byte 24: Base chance to drop item 2.
+  Same as above.
 Bytes 25-28: Weaknesses
 Bytes 29-32: Resistances
   Bit 32: Can cause the enemy to have corrupted graphics and palette?
