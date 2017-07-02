@@ -532,7 +532,7 @@ class Game
       y_pos *= 0x1000
     end
     
-    fs.write(TEST_ROOM_SAVE_FILE_INDEX_LOCATION, [save_file_index].pack("C"))
+    fs.write(TEST_ROOM_SAVE_FILE_INDEX_LOCATION, [save_file_index].pack("C")) if TEST_ROOM_SAVE_FILE_INDEX_LOCATION
     fs.write(TEST_ROOM_AREA_INDEX_LOCATION     , [area_index].pack("C")) if TEST_ROOM_AREA_INDEX_LOCATION
     fs.write(TEST_ROOM_SECTOR_INDEX_LOCATION   , [sector_index].pack("C"))
     fs.write(TEST_ROOM_ROOM_INDEX_LOCATION     , [room_index].pack("C"))
