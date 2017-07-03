@@ -68,8 +68,8 @@ local function display_hitboxes()
         right  = memory.readwordsigned(hitbox_ptr + 6)
         bottom = memory.readwordsigned(hitbox_ptr + 8)
         
-        if htype == 0 then -- Deleted hitbox.
-          -- We won't render these.
+        if htype == 0 then -- Deleted hitbox, or hitbox used for something else, like letting the player stand on an enemy's back.
+          -- White.
           fillcolor = "#FFFFFF3F"
           linecolor = "#FFFFFFFF"
         elseif htype == 1 then -- Can deal damage but not take it.
@@ -106,7 +106,7 @@ local function display_hitboxes()
         -- Negative y pos is interpreted as on the top screen by Desmume.
         top = math.max(top, 0)
         
-        if htype ~= 0 and bottom >= 0 then
+        if bottom >= 0 then
           gui.drawbox(left, top, right, bottom, fillcolor, linecolor)
         end
       end
