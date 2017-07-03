@@ -77,6 +77,8 @@
 021E7B2C GetItemType
   ; r0 - Global ID+1 of the item.
   ; Returns the item's type (2 is consumables, etc)
+021E7540 GiveMagicSeal
+  ; r0 - Magic seal index
 
 0202DE80 ShowItemName?
   ; r0 - Item global ID+1

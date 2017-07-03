@@ -18,4 +18,5 @@ Byte 24: Base chance to drop item 2.
   Same as above.
 Bytes 25-28: Weaknesses
 Bytes 29-32: Resistances
+  Resisting Poison/Curse/Stone/Torpor does nothing.
   Bit 32: Can cause the enemy to have corrupted graphics and palette?

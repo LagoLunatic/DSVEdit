@@ -33,4 +33,5 @@ Byte 28: Chance to drop item 2
 Bytes 29-32: Weaknesses
   Bit 26: Enemy takes extra damage? (117 -> 176)
 Bytes 33-36: Resistances
+  Resisting Poison/Curse/Stone does nothing.
   Bit 32: Can cause the enemy to have corrupted graphics and palette?

@@ -21,7 +21,9 @@ Enemies:
 04 Banshee
 05 Bone Scimitar
 06 Sea Stinger
-  Var A: TODO
+  Spawner.
+  Var A: Maximum number of Sea Stingers this spawner can have in the room at once.
+  If var A is 0 it's just a single Sea Stinger instead of a spawner.
 07 Nominon
 08 Axe Knight
   Var B:

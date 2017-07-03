@@ -49,7 +49,7 @@ Byte 29-32: Which elements this enemy is weak to. Bitfield.
   Bits 1-11: Regular elemental types.
   Bit 16: The enemy is made of flesh, it makes a fleshy sound effect and graphical effect when you attack it.
 Bytes 33-36: Which elements this enemy is resistant to. Bitfield.
-  Bits 1-11: Regular elemental types.
+  Unlike PoR/OoE, resisting Poison/Curse/Stone in DoS does actually decrease damage.
   Bit 13: Immune to time stop.
   Bit 14: Unknown. All bosses and Final Guard have this set.
   Bit 15: Immune to backstabs.
