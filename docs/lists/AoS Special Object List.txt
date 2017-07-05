@@ -7,7 +7,84 @@
 05 Arena door.
 06 Darkness door.
 07 Applies a visual effect to the room.
-  Includes things like the Chaotic Realm's greyscale effect, bats in the background, etc. TODO
+  Var A: What kind of visual effect:
+    0 - Adds bats flying and clouds floating in the background (Castle Corridor).
+      Var B: Affects the placement of the bats and clouds.
+    1 - Applies palette shifting to a certain palette.
+      Var B:
+        01 - Makes the moon flicker in the background (Castle Corridor)
+        02 - ??? (Castle Corridor)
+        03 - Animates surface of the water so it looks like it's moving (Castle Corridor)
+        04 - ??? (Castle Corridor)
+        05 - ??? (Castle Corridor)
+        06 - Makes the moon flicker in the background (Castle Corridor)
+        07 - ??? (Underground Reservoir)
+        08 - ??? (Underground Reservoir)
+        09 - ??? (Underground Reservoir)
+        0A - ??? (Underground Reservoir)
+        0B - ??? (Underground Reservoir)
+        0C - ??? (Underground Reservoir)
+        0D - ??? (The Arena)
+        0E - ??? (Underground Reservoir)
+        0F - ??? (Underground Reservoir)
+        10 - ??? (Underground Reservoir)
+        11 - ??? (Underground Reservoir)
+        12 - ??? (Underground Reservoir)
+        13 - ??? (Underground Reservoir)
+        14 - ??? (Underground Reservoir)
+        15 - ??? (Underground Reservoir)
+        16 - ??? (Underground Reservoir)
+        17 - ??? (Underground Reservoir)
+        18 - ??? (Dance Hall)
+        19 - ??? (Study)
+        1A - ??? (Clock Tower)
+        1B - Makes the moon flicker in the background (Clock Tower)
+        1C - ??? (Clock Tower)
+        1D - ??? (Forbidden Area)
+        1E - ??? (Forbidden Area)
+        1F - ??? (Forbidden Area)
+        20 - ??? (Forbidden Area)
+        21 - ??? (Floating Garden)
+        22 - ??? (Clock Tower)
+        23 - ??? (Clock Tower)
+        24 - ??? (Clock Tower)
+        25 - ??? (Chaos phase 2 room)
+        26 - ??? (Clock Tower)
+        27 - ??? (Clock Tower)
+        28 - ??? (Clock Tower)
+        29 - ??? (Inner Quarters)
+        2A - ??? (Inner Quarters)
+        2B - ??? (Inner Quarters)
+        2C - ??? (Inner Quarters)
+        2D - ??? (Inner Quarters)
+        2E - ??? (Inner Quarters)
+        2F - ??? (Inner Quarters)
+        30 - ??? (Inner Quarters)
+        31 - ??? (Inner Quarters)
+        32 - ??? (Inner Quarters)
+        33 - ??? (Top Floor)
+        34 - ??? (Top Floor)
+        35 - ??? (Top Floor)
+        36 - ??? (Inner Quarters)
+        37 - ??? (Epilogue room)
+        38 - ??? (Epilogue room)
+        39 - ??? (Epilogue room)
+        3A - ??? (Epilogue room)
+        3B - ??? (Epilogue room)
+        3C - Makes the buildings in the background flicker when lightning strikes (Inner Quarters)
+        3D - Makes the clouds in the background flicker when lightning strikes (Inner Quarters)
+        3E - Makes the edges of windows in the background flicker when lightning strikes (Inner Quarters)
+        3F - ??? (Inner Quarters)
+        40 - ??? (Inner Quarters)
+        41 - ??? (Inner Quarters)
+        42 - ??? (Chaos phase 1 room)
+    2 - Adds bats flying in the background (Top Floor).
+      Var B: Affects the placement of the bats.
+    3 - Gives the whole room a greyscale effect (Chaotic Realm)
+      Var B: 0
+    4 - Changes the music.
+      Var B: Song index.
+      Note: This doesn't work if you load into the room directly, such as with test room or if its the first room of the game. You must walk into it via a door.
 08 Breakable wall.
 09 Wall that can be destroyed.
   Var A: ???
