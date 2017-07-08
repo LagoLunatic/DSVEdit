@@ -37,6 +37,12 @@ Entity types:
   08 Ability soul candle.
     Var A: Flag for having picked up this item.
     Var B: The local ID of the soul.
+      1 - Grave Keeper
+      2 - Skeleton Blaze
+      3 - Malphas
+      4 - Kicker Skeleton
+      5 - Hippogryph
+      6 - Galamoth
 
 05 Hard mode pickup.
   Appears only on hard mode.

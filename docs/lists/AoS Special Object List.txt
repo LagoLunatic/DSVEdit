@@ -12,6 +12,7 @@
       Var B: Affects the placement of the bats and clouds.
     1 - Applies palette shifting to a certain palette.
       Var B:
+        00 - Makes the moon flicker in the background (Castle Corridor) (unused)
         01 - Makes the moon flicker in the background (Castle Corridor)
         02 - ??? (Castle Corridor)
         03 - Animates surface of the water so it looks like it's moving (Castle Corridor)
@@ -45,8 +46,8 @@
         1F - ??? (Forbidden Area)
         20 - ??? (Forbidden Area)
         21 - ??? (Floating Garden)
-        22 - ??? (Clock Tower)
-        23 - ??? (Clock Tower)
+        22 - Makes the gear platforms turn? (Clock Tower)
+        23 - Makes the gear platforms turn? (Clock Tower)
         24 - ??? (Clock Tower)
         25 - ??? (Chaos phase 2 room)
         26 - ??? (Clock Tower)
@@ -65,7 +66,7 @@
         33 - ??? (Top Floor)
         34 - ??? (Top Floor)
         35 - ??? (Top Floor)
-        36 - ??? (Inner Quarters)
+        36 - Makes the cloud background flash when lightning strikes (Inner Quarters)
         37 - ??? (Epilogue room)
         38 - ??? (Epilogue room)
         39 - ??? (Epilogue room)
@@ -77,7 +78,8 @@
         3F - ??? (Inner Quarters)
         40 - ??? (Inner Quarters)
         41 - ??? (Inner Quarters)
-        42 - ??? (Chaos phase 1 room)
+        42 - Makes the background glow and animates moving red lines (Chaos phase 1 room)
+        43 - 
     2 - Adds bats flying in the background (Top Floor).
       Var B: Affects the placement of the bats.
     3 - Gives the whole room a greyscale effect (Chaotic Realm)

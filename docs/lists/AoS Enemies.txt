@@ -54,6 +54,9 @@ Enemies:
 25 Lilith
 26 Nemesis
 27 Kyoma Demon
+  Var A:
+    0 Normal Kyoma Demon.
+    1 Just a reflection of Soma in the mirror. Doesn't attack.
 28 Chronomage
 29 Valkyrie
 2A Witch
