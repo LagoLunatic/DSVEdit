@@ -16,6 +16,7 @@ Report issues here: https://github.com/LagoLunatic/DSVEdit/issues
 * Editing player characters
 * Editing text
 * Editing which songs play in which areas
+* Editing which items are in the shop
 * Editing random chest item pools
 * Editing weapon synthesis
 * Adding a new overlay file that can be used as free space
