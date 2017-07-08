@@ -264,6 +264,37 @@ class NDSFileSystem
     end
   end
   
+  def convert_bit_index_to_arm_shifted_immediate(bit_index)
+    if !(0..0x1F).include?(bit_index)
+      raise "Invalid bit index, must be between 0x00 and 0x1F."
+    end
+    
+    if bit_index.even?
+      constant = 1
+    else
+      constant = 2
+    end
+    if bit_index == 0
+      constant_shift = 0
+      constant = 0
+    else
+      constant_shift = (0x10 - bit_index/2)
+    end
+    
+    return [constant, constant_shift]
+  end
+  
+  def replace_hardcoded_bit_constant(code_location, new_bit_index)
+    constant, constant_shift = convert_bit_index_to_arm_shifted_immediate(new_bit_index)
+    
+    # The upper nibble of the constant shift byte is some other code we don't want to overwrite.
+    old_constant_shift_byte = read(code_location+1, 1).unpack("C").first
+    old_constant_shift_byte &= 0xF0
+    constant_shift |= old_constant_shift_byte
+    
+    write(code_location, [constant, constant_shift].pack("CC"))
+  end
+  
   def is_pointer?(value)
     value >= 0x02000000 && value < 0x03000000
   end

@@ -86,26 +86,7 @@ class ShopItemPool
       
       required_flag_location = SHOP_ITEM_POOL_REQUIRED_EVENT_FLAG_HARDCODED_LOCATIONS[pool_id]
       if !required_flag_location.nil?
-        if !(0..0x1F).include?(@requirement)
-          raise "Invalid requirement, must be between 0x00 and 0x1F."
-        end
-        
-        if @requirement.even?
-          constant = 1
-        else
-          constant = 2
-        end
-        if @requirement == 0
-          constant_shift = @requirement
-        else
-          constant_shift = (0x10 - @requirement/2)
-        end
-        
-        # The upper nibble of the constant shift byte is some other code we don't want to overwrite.
-        old_constant_shift_byte = fs.read(required_flag_location+1, 1).unpack("C").first
-        old_constant_shift_byte &= 0xF0
-        constant_shift |= old_constant_shift_byte
-        fs.write(required_flag_location, [constant, constant_shift].pack("CC"))
+        fs.replace_hardcoded_bit_constant(required_flag_location, @requirement)
       end
     when "por"
       data = [@requirement] + @item_ids + [0xFFFF]
