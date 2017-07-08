@@ -121,12 +121,15 @@ class DoorItem < Qt::GraphicsRectItem
   
   attr_reader :door
   
-  def initialize(door, x, y, main_window)
+  def initialize(door, x, y, door_index, main_window)
     super(0, 0, SCREEN_WIDTH_IN_PIXELS, SCREEN_HEIGHT_IN_PIXELS)
     setPos(x, y)
     
     @main_window = main_window
     @door = door
+    @door_index = door_index
+    
+    setToolTip("Door %02X" % door_index)
     
     self.setBrush(BRUSH)
     

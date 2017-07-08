@@ -500,7 +500,7 @@ class DSVEdit < Qt::MainWindow
       x *= SCREEN_WIDTH_IN_PIXELS
       y *= SCREEN_HEIGHT_IN_PIXELS
       
-      door_item = DoorItem.new(door, x, y, self)
+      door_item = DoorItem.new(door, x, y, i, self)
       door_item.setParentItem(@doors_view_item)
     end
     
