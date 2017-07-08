@@ -3,6 +3,7 @@ Memory used for entities in OoE is 021092A0 - 0211DF5F. Each entity is 0x160 byt
 
 000,4: Pointer to update code.
 004,4: Pointer to draw code.
+008,4: Pointer to destroy code?
 00D,1: State of the entity. Each entity's update code handles this differently.
 01A,2: Frame counter.
 030,4: X pos.

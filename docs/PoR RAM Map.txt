@@ -359,6 +359,8 @@ F5-F5
 
 02111A6C - Currently owned skills.
 
+02111AAC-02111ACF - Bitfield of which enemies have been killed at least once so they show up in the bestiary.
+
 02111BA0 - Miscellaneous flags.
   Bit indexes:
   00 - Drawbridge is partially down.

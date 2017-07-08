@@ -321,8 +321,7 @@ What each range of entity slots is for:
   Each soul takes up a nibble (half a byte). So you can have up to 15 of each soul (though it only correctly displays up to 9).
 020F7110 - An unused second list of which souls you own and how many? This number gets added to the first number.
 
-020F715C - bitfield for which bosses are dead? but unlike 020F7038, changing this doesn't actually do anything like bring the boss back to life.
-  0x20 flying armor.
+020F7150-020F715F - Bitfield of which enemies have been killed at least once so they show up in the bestiary.
 
 020F7160-020F716F - Bitfield of which enemy item1s you've learned.
 020F7170-020F717F - Bitfield of which enemy item2s you've learned.
