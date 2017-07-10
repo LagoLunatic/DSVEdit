@@ -24,7 +24,7 @@ class SpriteSkeleton
   end
   
   def read_from_rom()
-    @original_filename = fs.read_by_file(skeleton_file, 0x03, 0x1D)
+    @original_filename = fs.read_by_file(skeleton_file, 0, 0x20)
     @x_offset, @y_offset = fs.read_by_file(skeleton_file, 0x22, 4).unpack("s<s<")
     @number_of_joints, @number_of_invisible_joints, @number_of_visible_joints,
       @number_of_hitboxes, @number_of_poses, @number_of_unknown2, @number_of_animations = fs.read_by_file(skeleton_file, 0x26, 7).unpack("C*")
@@ -80,7 +80,7 @@ class SpriteSkeleton
   end
   
   def write_to_rom_by_skeleton_file
-    new_data = "\0\0\0"
+    new_data = ""
     new_data << @original_filename
     new_data << [
       0, 0,
