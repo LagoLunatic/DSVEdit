@@ -149,7 +149,7 @@ class SkeletonEditorDialog < Qt::Dialog
     joint_states_for_pose = []
     
     @skeleton.joints.each_with_index do |joint, joint_index|
-      joint_change = pose[joint_index]
+      joint_change = pose.joint_changes[joint_index]
       joint_state = JointState.new
       joint_states_for_pose << joint_state
       
@@ -161,7 +161,7 @@ class SkeletonEditorDialog < Qt::Dialog
       end
       
       parent_joint = @skeleton.joints[joint.parent_id]
-      parent_joint_change = pose[joint.parent_id]
+      parent_joint_change = pose.joint_changes[joint.parent_id]
       parent_joint_state = joint_states_for_pose[joint.parent_id]
       
       joint_state.x_pos = parent_joint_state.x_pos
@@ -186,9 +186,9 @@ class SkeletonEditorDialog < Qt::Dialog
   end
   
   def tween_poses(previous_pose, next_pose, tweening_progress)
-    tweened_pose = []
-    previous_pose.each_with_index do |prev_joint_change, joint_index|
-      next_joint_change = next_pose[joint_index]
+    tweened_pose = Pose.new
+    previous_pose.joint_changes.each_with_index do |prev_joint_change, joint_index|
+      next_joint_change = next_pose.joint_changes[joint_index]
       
       prev_multiplier = 1.0 - tweening_progress
       next_multiplier = tweening_progress
@@ -197,7 +197,7 @@ class SkeletonEditorDialog < Qt::Dialog
       tweened_joint_change_data = [tweened_rotation, tweened_distance, prev_joint_change.new_frame_id].pack("vcC")
       tweened_joint_change = JointChange.new(tweened_joint_change_data)
       
-      tweened_pose << tweened_joint_change
+      tweened_pose.joint_changes << tweened_joint_change
     end
     
     tweened_states = initialize_joint_states(tweened_pose)
@@ -311,7 +311,7 @@ class SkeletonEditorDialog < Qt::Dialog
     
     @skeleton.joint_indexes_by_draw_order.each do |joint_index|
       joint = @skeleton.joints[joint_index]
-      joint_change = pose[joint_index]
+      joint_change = pose.joint_changes[joint_index]
       joint_state = @current_tweened_joint_states[joint_index]
       
       next if joint.frame_id == 0xFF
@@ -345,7 +345,7 @@ class SkeletonEditorDialog < Qt::Dialog
     if @ui.show_skeleton.checked
       @skeleton.joints.each_index do |joint_index|
         joint = @skeleton.joints[joint_index]
-        joint_change = pose[joint_index]
+        joint_change = pose.joint_changes[joint_index]
         joint_state = @current_tweened_joint_states[joint_index]
         
         ellipse = @skeleton_graphics_scene.addEllipse(joint_state.x_pos-1, joint_state.y_pos-1, 3, 3, GREY_PEN)
@@ -362,7 +362,7 @@ class SkeletonEditorDialog < Qt::Dialog
     if @ui.show_hitboxes.checked
       @skeleton.hitboxes.each do |hitbox|
         joint = @skeleton.joints[hitbox.parent_joint_id]
-        joint_change = pose[hitbox.parent_joint_id]
+        joint_change = pose.joint_changes[hitbox.parent_joint_id]
         joint_state = @current_tweened_joint_states[hitbox.parent_joint_id]
         
         x_pos = joint_state.x_pos
@@ -399,7 +399,7 @@ class SkeletonEditorDialog < Qt::Dialog
     if @ui.show_points.checked?
       @skeleton.points.each do |point|
         joint = @skeleton.joints[point.parent_joint_id]
-        joint_change = pose[point.parent_joint_id]
+        joint_change = pose.joint_changes[point.parent_joint_id]
         joint_state = @current_tweened_joint_states[point.parent_joint_id]
         
         x_pos = joint_state.x_pos

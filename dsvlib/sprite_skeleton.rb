@@ -2,6 +2,13 @@
 class SpriteSkeleton
   attr_reader :fs,
               :skeleton_file,
+              :number_of_joints,
+              :number_of_invisible_joints,
+              :number_of_visible_joints,
+              :number_of_hitboxes,
+              :number_of_poses,
+              :number_of_unknown2,
+              :number_of_animations,
               :joints,
               :poses,
               :hitboxes,
@@ -17,8 +24,10 @@ class SpriteSkeleton
   end
   
   def read_from_rom()
-    number_of_joints, number_of_invisible_joints, number_of_visible_joints,
-      number_of_hitboxes, number_of_poses, number_of_unknown2, number_of_animations = fs.read_by_file(skeleton_file, 0x26, 7).unpack("C*")
+    @original_filename = fs.read_by_file(skeleton_file, 0x03, 0x1D)
+    @x_offset, @y_offset = fs.read_by_file(skeleton_file, 0x22, 4).unpack("s<s<")
+    @number_of_joints, @number_of_invisible_joints, @number_of_visible_joints,
+      @number_of_hitboxes, @number_of_poses, @number_of_unknown2, @number_of_animations = fs.read_by_file(skeleton_file, 0x26, 7).unpack("C*")
     
     @joints = []
     offset = 0x30
@@ -31,14 +40,10 @@ class SpriteSkeleton
     
     @poses = []
     number_of_poses.times do
-      offset += 2
-      @poses << []
-      @joints.length.times do
-        joint_change_data = fs.read_by_file(skeleton_file, offset, 4)
-        joint_change = JointChange.new(joint_change_data)
-        @poses.last << joint_change
-        offset += 4
-      end
+      pose_data = fs.read_by_file(skeleton_file, offset, 2 + 4*number_of_joints)
+      pose = Pose.new.from_pose_data(pose_data)
+      @poses << pose
+      offset += 2 + 4*number_of_joints
     end
     
     @hitboxes = []
@@ -73,6 +78,71 @@ class SpriteSkeleton
       @animations << SkeletonAnimation.new(keyframes)
     end
   end
+  
+  def write_to_rom_by_skeleton_file
+    new_data = "\0\0\0"
+    new_data << @original_filename
+    new_data << [
+      0, 0,
+      @x_offset, @y_offset,
+      @number_of_joints,
+      @number_of_invisible_joints,
+      @number_of_visible_joints,
+      @number_of_hitboxes,
+      @number_of_poses,
+      @number_of_unknown2,
+      @number_of_animations,
+      0, 0, 0,
+    ].pack("CCs<s<CCCCCCCCCC")
+    
+    offset = 0x30
+    @joints.each do |joint|
+      new_data << joint.to_data
+      offset += 4
+    end
+    
+    @poses.each do |pose|
+      new_data << pose.to_data
+      offset += 2 + 4*number_of_joints
+    end
+    
+    @hitboxes.each do |hitbox|
+      new_data << hitbox.to_data
+      offset += 8
+    end
+    
+    @points.each do |point|
+      new_data << point.to_data
+      offset += 4
+    end
+    
+    new_data << @joint_indexes_by_draw_order.pack("C*")
+    offset += number_of_visible_joints
+    
+    @animations.each do |animation|
+      num_keyframes = animation.keyframes.length
+      new_data << [num_keyframes].pack("C")
+      offset += 1
+      animation.keyframes.each do |keyframe|
+        new_data << keyframe.to_data
+        offset += 3
+      end
+    end
+    
+    new_file_size = new_data.length
+    new_file_size += 0x14 # Footer size.
+    
+    padding = ""
+    if new_file_size % 0x10 != 0
+      amount_to_pad = 0x10 - (new_file_size % 0x10)
+      padding = "\0"*amount_to_pad
+      new_file_size += amount_to_pad
+    end
+    
+    new_data << padding
+    
+    fs.overwrite_file(skeleton_file, new_data)
+  end
 end
 
 class Joint
@@ -102,6 +172,47 @@ class Joint
   def vertical_flip
     @bits & 0x10 > 0
   end
+  
+  def to_data
+    [@parent_id, @frame_id, @bits, @palette].pack("CCCC")
+  end
+end
+
+class Pose
+  attr_accessor :x_offset,
+                :y_offset,
+                :joint_changes
+                
+  def initialize
+    @x_offset = 0
+    @y_offset = 0
+    @joint_changes = []
+  end
+  
+  def from_pose_data(pose_data)
+    @x_offset, @y_offset = pose_data[0,2].unpack("CC")
+    
+    joint_changes_data = pose_data[2..-1]
+    num_joints = joint_changes_data.size/4
+    @joint_changes = []
+    num_joints.times do |i|
+      joint_change_data = joint_changes_data[i*4,4]
+      joint_change = JointChange.new(joint_change_data)
+      @joint_changes << joint_change
+    end
+    
+    self
+  end
+  
+  def to_data
+    data = [@x_offset, @y_offset].pack("CC")
+    
+    joint_changes.each do |joint_change|
+      data << joint_change.to_data
+    end
+    
+    data
+  end
 end
 
 class JointChange
@@ -111,6 +222,10 @@ class JointChange
               
   def initialize(joint_data)
     @rotation, @distance, @new_frame_id = joint_data.unpack("vcC")
+  end
+  
+  def to_data
+    [@rotation, @distance, @new_frame_id].pack("vcC")
   end
 end
 
@@ -134,6 +249,18 @@ class SkeletonHitbox
   def can_take_damage
     @bits & 0x02 > 0
   end
+  
+  def to_data
+    [
+      @rotation,
+      @distance,
+      @width,
+      @height,
+      @parent_joint_id,
+      @bits,
+      @unknown3
+    ].pack("vCCCCCC")
+  end
 end
 
 class SkeletonPoint
@@ -143,6 +270,10 @@ class SkeletonPoint
               
   def initialize(point_data)
     @rotation, @distance, @parent_joint_id = point_data.unpack("vCC")
+  end
+  
+  def to_data
+    [@rotation, @distance, @parent_joint_id].pack("vCC")
   end
 end
 
@@ -155,11 +286,15 @@ class SkeletonAnimation
 end
 
 class SkeletonKeyframe
-  attr_reader :pose_id,
-              :length_in_frames,
-              :unknown
+  attr_accessor :pose_id,
+                :length_in_frames,
+                :unknown
               
   def initialize(frame_data)
     @pose_id, @length_in_frames, @unknown = frame_data.unpack("CCC")
+  end
+  
+  def to_data
+    [@pose_id, @length_in_frames, @unknown].pack("CCC")
   end
 end
