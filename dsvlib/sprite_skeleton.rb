@@ -179,18 +179,18 @@ class Joint
 end
 
 class Pose
-  attr_accessor :x_offset,
-                :y_offset,
+  attr_accessor :unknown_1,
+                :unknown_2,
                 :joint_changes
                 
   def initialize
-    @x_offset = 0
-    @y_offset = 0
+    @unknown_1 = 0
+    @unknown_2 = 0
     @joint_changes = []
   end
   
   def from_pose_data(pose_data)
-    @x_offset, @y_offset = pose_data[0,2].unpack("CC")
+    @unknown_1, @unknown_2 = pose_data[0,2].unpack("CC")
     
     joint_changes_data = pose_data[2..-1]
     num_joints = joint_changes_data.size/4
@@ -205,7 +205,7 @@ class Pose
   end
   
   def to_data
-    data = [@x_offset, @y_offset].pack("CC")
+    data = [@unknown_1, @unknown_2].pack("CC")
     
     joint_changes.each do |joint_change|
       data << joint_change.to_data
