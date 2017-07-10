@@ -277,21 +277,21 @@ What each range of entity slots is for:
 020F7024 - Bitfield of destroyable walls that have been destroyed on the map.
 020F702C-020F702D - Bitfield of which map items you have. so the lowest bit makes the lost village be fully revealed with black map tiles, the second lowest bit makes demon guest house revealed with black map tiles, etc.
 020F7038-39 - Bitfield of boss death flags.
-  0x0002 Flying Armor
-  0x0004 Balore
-  0x0008 Dmitrii
-  0x0010 Malphas
-  0x0020 Dario
-  0x0040 Puppet Master
-  0x0080 Gergoth
-  0x0100 Rahab
-  0x0200 Zephyr
-  0x0400 Bat Company
-  0x0800 Aguni
-  0x1000 Paranoia
-  0x2000 Death
-  0x4000 Doppelganger (the event in the center of the castle)
-  0x8000 Abaddon
+  01 0x0002 Flying Armor
+  02 0x0004 Balore
+  03 0x0008 Dmitrii
+  04 0x0010 Malphas
+  05 0x0020 Dario
+  06 0x0040 Puppet Master
+  07 0x0080 Gergoth
+  08 0x0100 Rahab
+  09 0x0200 Zephyr
+  0A 0x0400 Bat Company
+  0B 0x0800 Aguni
+  0C 0x1000 Paranoia
+  0D 0x2000 Death
+  0E 0x4000 Doppelganger (the event in the center of the castle)
+  0F 0x8000 Abaddon
 
 === 020F703B: End of first region that gets saved to the save file. Corresponds to 0207 in the save file data.
 
@@ -762,7 +762,9 @@ Here's what each actor is (index, special object id, description):
   1E,2: Finished seal image index.
     TODO: why is this necessary when the gfx asset ptr is there already?
 
-0222F290 - List of ???. Related to events somehow?? Entry length 4.
+0222F290-0222F2D7 - List of which magic seal is needed for each boss.
+  The boss index is the index in this list (same order as boss death flags).
+  Each entry is 4 bytes long. It's simple the magic seal index for this boss.
 
 02298D9C
 

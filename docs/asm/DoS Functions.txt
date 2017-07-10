@@ -15,6 +15,10 @@
   ;   0 - Demonstration seal.
   ;   1 - Instant autoseal.
   ;   2 - Manually drawn seal.
+022149E0 MakeMagicSealForBoss
+  ; r0 - Boss index
+  ; r1 - How to complete the magic seal (see above).
+  ; This function reads from list 0222F290, a list of which magic seal is for each boss.
 0203BE9C SetTopScreen
 02012DB0 GetEntityHitboxPtr
   ; r0 - Entity pointer

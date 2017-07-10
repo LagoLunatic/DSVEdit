@@ -317,6 +317,8 @@ Enemies:
   Var B: Normally 0. If greater than 0, then Loretta doesn't bob up and down or animate at all, she's just frozen completely still.
 93 Brauner
   Requires enemy overlay 55.
+  Var A and B are 1 for normal Brauner (teleports the player to sector 0, room 0 on death).
+  Var A and B are 0 for boss rush Brauner.
 94 The Creature
   Requires enemy overlay 60.
   Var A: 1 for boss rush. 0 for normal.
