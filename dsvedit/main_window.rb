@@ -980,7 +980,16 @@ class DSVEdit < Qt::MainWindow
   end
   
   def open_about
-    @about_dialog = Qt::MessageBox::about(self, "DSVania Editor", "DSVania Editor Version #{DSVEDIT_VERSION}\n\nCreated by LagoLunatic\n\nSource code:\nhttps://github.com/LagoLunatic/DSVEdit\n\nReport issues here:\nhttps://github.com/LagoLunatic/DSVEdit/issues")
+    @about_dialog = Qt::MessageBox.new
+    @about_dialog.setTextFormat(Qt::RichText)
+    @about_dialog.setWindowTitle("DSVania Editor")
+    text = "DSVania Editor Version #{DSVEDIT_VERSION}<br><br>" + 
+      "Created by LagoLunatic<br><br>" + 
+      "Report issues here:<br><a href=\"https://github.com/LagoLunatic/DSVEdit/issues\">https://github.com/LagoLunatic/DSVEdit/issues</a><br><br>" +
+      "Source code:<br><a href=\"https://github.com/LagoLunatic/DSVEdit\">https://github.com/LagoLunatic/DSVEdit</a>"
+    @about_dialog.setText(text)
+    @about_dialog.windowIcon = self.windowIcon
+    @about_dialog.show()
   end
   
   def inspect
