@@ -314,6 +314,18 @@ class Game
     end
   end
   
+  def magic_seals
+    @magic_seals ||= begin
+      magic_seals = []
+      
+      MAGIC_SEAL_COUNT.times do |i|
+        magic_seals << MagicSeal.new(i, fs)
+      end
+      
+      magic_seals
+    end
+  end
+  
   def get_map(area_index, sector_index)
     if GAME == "dos" && [10, 11].include?(sector_index)
       @abyss_map ||= DoSMap.new(area_index, sector_index, self)
