@@ -146,6 +146,12 @@
   ; r1 - ?
   ; Returns pointer to free space
 
+0202991C PlaySong
+  ; r0 - Song
+  ; 1003 means song 3
+02029A1C PlaySong2
+  ; r0 - Song
+
 021FC590 PlayerUpdate
 021FCC9C PlayerDraw
 021FEE28 PlayerUpdateYAccel

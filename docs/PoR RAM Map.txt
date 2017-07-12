@@ -357,7 +357,7 @@ F5-F5
 
 02111A5C - Bitfield of used byte 5s in the current room?
 
-02111A6C - Currently owned skills.
+02111A6C - Bitfield of skills you own.
 
 02111AAC-02111ACF - Bitfield of which enemies have been killed at least once so they show up in the bestiary.
 
@@ -382,7 +382,7 @@ F5-F5
   23 - Whip's Memory defeated.
 02111BB8-02111BE7 - Picked up item flags.
 
-02111BF8 - Currently owned items.
+02111BF8 - Bitfield of items you own.
 
 02111CB8 - List of ? for each skill. Each entry is a halfword.
   Bits 1-13: Current SP the player has for this subweapon.

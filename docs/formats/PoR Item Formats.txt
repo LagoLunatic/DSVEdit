@@ -184,7 +184,7 @@ Skill format:
       Cures Vincent and kills red skeletons/axe armors whether the magical bit is set or not.
   Bytes 17-20: Bitfield of player state booleans that must be false in order to use this skill. Checks bitfield 020FCB80/020FCCB0 (the player's current state booleans, first is for player 1, second is for player 2). 0 means it can be used in any state.
   Bytes 21-22:
-    For Shuriken/Yagyu Shuriken: IFrames.
+    For Seiryu, Knife, Shuriken, Yagyu Shuriken, Kunai: IFrames.
     For Dual Crushes: Voice file 1 ID.
   Bytes 23-24:
     For Subweapons/Spells: Which stat or status effect to affect.
