@@ -809,7 +809,7 @@ GLYPH_UNION_FORMAT = [
   [2, "Icon"],
   [2, "Unknown 4"],
   [2, "Swing Anim"],
-  [1, "Unknown 8"],
+  [1, "IFrames"],
   [1, "Unknown 9"],
 ]
 RELIC_FORMAT = [

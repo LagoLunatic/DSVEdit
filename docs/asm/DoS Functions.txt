@@ -184,6 +184,10 @@
   ; r2 - Resistances
   ; r3 - Weaknesses
   ; Only stores these if the entity's hitbox is active (entity+A6)
+02014374 SetIframes
+  ; r0 - Entity pointer
+  ; r1 - Iframes
+  ; Stores r1 to entity+B8 if the entity's hitbox is active (entity+A6)
 
 02024D74 MapTileSetExplored
 
