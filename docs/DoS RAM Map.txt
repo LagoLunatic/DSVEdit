@@ -56,6 +56,9 @@ Each list of assets has this format:
   01,1: The warp room's y pos on the map.
   These warp rooms are in the same order as list 020F71A8 (bitfield of what warp rooms you've visited).
 
+0209A554-0209A563 - List of room indexes in the Demon Guest House sector for each room in the slide puzzle.
+  The first entry is for the blank room, entries 01-0F are for rooms 1-15.
+
 0209A630 - List of songs that play in each sector.
   Entry length 4.
   the list starts 4 bytes later, the first entry is blank.
