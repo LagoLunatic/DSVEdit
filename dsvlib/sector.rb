@@ -68,6 +68,8 @@ private
   end
   
   def read_rooms_from_rom
+    fs.load_overlay(AREAS_OVERLAY) if AREAS_OVERLAY
+    
     load_necessary_overlay()
     
     rooms = []
