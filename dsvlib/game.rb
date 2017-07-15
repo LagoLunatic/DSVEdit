@@ -458,8 +458,9 @@ class Game
   def fix_top_screen_on_new_game
     return unless GAME == "ooe" && REGION == :usa
     
-    fs.load_overlay(20)
+    fs.load_overlay(20) # Specifically for OoE
     fs.write(NEW_GAME_STARTING_TOP_SCREEN_TYPE_OFFSET, [0x05].pack("C"))
+    fs.load_overlay(AREAS_OVERLAY) # Load back OoE's main overlay for area and sector data
   end
   
   def apply_armips_patch(patch_name)
