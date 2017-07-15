@@ -103,6 +103,24 @@ class Game
     room
   end
   
+  def room_by_str(room_str)
+    room_str =~ /^(\h\h)-(\h\h)-(\h\h)$/
+    area_index, sector_index, room_index = $1.to_i(16), $2.to_i(16), $3.to_i(16)
+    return areas[area_index].sectors[sector_index].rooms[room_index]
+  end
+  
+  def entity_by_str(entity_str)
+    entity_str =~ /^(\h\h)-(\h\h)-(\h\h)_(\h+)$/
+    area_index, sector_index, room_index, entity_index = $1.to_i(16), $2.to_i(16), $3.to_i(16), $4.to_i(16)
+    return areas[area_index].sectors[sector_index].rooms[room_index].entities[entity_index]
+  end
+  
+  def door_by_str(door_str)
+    door_str =~ /^(\h\h)-(\h\h)-(\h\h)_(\h+)$/
+    area_index, sector_index, room_index, door_index = $1.to_i(16), $2.to_i(16), $3.to_i(16), $4.to_i(16)
+    return areas[area_index].sectors[sector_index].rooms[room_index].doors[door_index]
+  end
+  
   def enemy_dnas
     @enemy_dnas ||= begin
       enemy_dnas = []
