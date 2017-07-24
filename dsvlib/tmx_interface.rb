@@ -5,9 +5,6 @@ class TMXInterface
   class ImportError < StandardError ; end
   
   def read(filename, room)
-    match = File.basename(filename).match(/^room_\h+-\h+-\h+_(\h+)\.tmx$/)
-    room_metadata_ram_pointer = match[1].to_i(16)
-    
     tiled_room = File.read(filename)
     xml = Nokogiri::XML(tiled_room)
     
@@ -40,7 +37,7 @@ class TMXInterface
       game_layer.scroll_mode = props["scroll_mode"]
       game_layer.opacity = ((tmx_layer.attr("opacity")||1.0).to_f*31).to_i if SYSTEM == :nds
       game_layer.main_gfx_page_index = props["main_gfx_page_index"]
-      game_layer.tiles = from_tmx_level_data(tmx_layer.css("data").text, game_layer.width, game_layer.height)
+      game_layer.tiles = from_tmx_level_data(tmx_layer.css("data").text)
       
       game_layer.write_to_rom()
     end
@@ -219,7 +216,7 @@ class TMXInterface
     block_offset
   end
   
-  def from_tmx_level_data(tile_data_string, width, height)
+  def from_tmx_level_data(tile_data_string)
     tmx_tiles = tile_data_string.scan(/\d+/).map{|str| str.to_i}
     
     game_tiles = []
