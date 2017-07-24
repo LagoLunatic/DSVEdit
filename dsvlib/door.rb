@@ -91,4 +91,9 @@ class Door
       dest_door
     end
   end
+  
+  def door_str
+    door_index = room.doors.index(self)
+    "#{room.room_str}_%03X" % door_index
+  end
 end
