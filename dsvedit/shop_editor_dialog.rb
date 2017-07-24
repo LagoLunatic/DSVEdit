@@ -16,6 +16,13 @@ class ShopEditor < Qt::Dialog
     @game = game
     
     @pools = []
+    if GAME == "ooe"
+      SHOP_HARDCODED_ITEM_POOL_COUNT.times do |i|
+        @pools << OoEHardcodedShopItemPool.new(i, game.fs)
+        pool_name = "%02X (Hardcoded)" % i
+        @ui.pool_index.addItem(pool_name)
+      end
+    end
     SHOP_ITEM_POOL_COUNT.times do |i|
       @pools << ShopItemPool.new(i, game.fs)
       pool_name = "%02X" % i
@@ -76,16 +83,20 @@ class ShopEditor < Qt::Dialog
       @ui.label.text = "Required event flag"
     elsif GAME == "por" && @pool.is_a?(ShopPointItemPool)
       @ui.label.text = "Required shop points (1000P)"
-    elsif GAME == "por"
+    elsif GAME == "por" || @pool.is_a?(OoEHardcodedShopItemPool)
       @ui.label.text = "Required boss death flag"
     else
       @ui.label.text = "Requirement"
     end
     
     @ui.item_index.clear()
-    @pool.item_ids.each do |global_id|
+    @pool.item_ids.each_with_index do |global_id, item_index|
       item = @game.items[global_id-1]
-      @ui.item_index.addItem("%03X %s" % [global_id, item.name])
+      slot_name = "%03X %s" % [global_id, item.name]
+      if @pool.slot_is_arm_shifted_immediate?(item_index)
+        slot_name = "(!) #{slot_name}"
+      end
+      @ui.item_index.addItem(slot_name)
     end
   end
   
@@ -108,10 +119,24 @@ class ShopEditor < Qt::Dialog
     return if item_index == -1
     
     item_id = row_index + @available_shop_item_range.first
+    
+    if @pool.is_a?(OoEHardcodedShopItemPool) && !@pool.slot_can_have_item_id?(item_index, item_id+1)
+      message = "This particular hardcoded item slot is coded as an ARM shifted immediate.\n"
+      message += "This item's ID (#{"%03X" % (item_id+1)}) cannot be represented as an ARM shifted immediate.\n\n"
+      message += "Basically: This slot needs to have an item ID that is less than 0x100, or an item ID that is a multiple of 4 (e.g. 7D or 14C).\n\n"
+      message += "This limitation only applies to slots with the (!) at the front of them, so you can put this item in one of the ones without the (!) instead."
+      Qt::MessageBox.warning(self, "Cannot put this item in this slot", message)
+      return
+    end
+    
     @pool.item_ids[item_index] = item_id+1
     
     item = @game.items[item_id]
-    @ui.item_index.currentItem.text = "%03X %s" % [item_id+1, item.name]
+    slot_name = "%03X %s" % [item_id+1, item.name]
+    if @pool.slot_is_arm_shifted_immediate?(item_index)
+      slot_name = "(!) #{slot_name}"
+    end
+    @ui.item_index.currentItem.text = slot_name
   end
   
   def requirement_changed
@@ -125,6 +150,8 @@ class ShopEditor < Qt::Dialog
   
   def save_changes
     @pool.write_to_rom()
+  rescue NDSFileSystem::ArmShiftedImmediateError => e
+    Qt::MessageBox.warning(self, "Error changing requirement", e.message)
   end
   
   def button_box_clicked(button)

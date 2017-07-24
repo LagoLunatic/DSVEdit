@@ -6,6 +6,7 @@ class NDSFileSystem
   class ConversionError < StandardError ; end
   class OffsetPastEndOfFileError < StandardError ; end
   class FileExpandError < StandardError ; end
+  class ArmShiftedImmediateError < StandardError ; end
   
   include FreeSpaceManager
   
@@ -264,9 +265,86 @@ class NDSFileSystem
     end
   end
   
+  def convert_arm_shifted_immediate_to_integer(constant, constant_shift)
+    constant_shift &= 0xF
+    unless constant_shift == 0
+      constant_shift = (0x10 - constant_shift)*2
+    end
+    integer = constant << constant_shift
+    return integer
+  end
+  
+  def read_arm_shifted_immediate_integer(code_location)
+    constant, constant_shift = read(code_location, 2).unpack("CC")
+    
+    return convert_arm_shifted_immediate_to_integer(constant, constant_shift)
+  end
+  
+  def convert_integer_to_arm_shifted_immediate(integer)
+    if integer <= 0xFF
+      constant_shift = 0
+      constant = integer
+    else
+      binary_string = "%b" % integer
+      num_trailing_zeros = binary_string.length - binary_string.rindex("1") - 1
+      if num_trailing_zeros.odd?
+        # Arm shifted immediates cannot be shifted by an odd number of bytes.
+        num_trailing_zeros -= 1
+      end
+      if num_trailing_zeros == 0
+        raise ArmShiftedImmediateError.new("Invalid value for an arm shifted immediate.")
+      end
+      constant = integer >> num_trailing_zeros
+      if constant >= 0x100
+        raise ArmShiftedImmediateError.new("Invalid value for an arm shifted immediate.")
+      end
+      constant_shift = (0x10 - num_trailing_zeros/2)
+    end
+    
+    return [constant, constant_shift]
+  end
+  
+  def replace_arm_shifted_immediate_integer(code_location, new_integer)
+    constant, constant_shift = convert_integer_to_arm_shifted_immediate(new_integer)
+    
+    # The upper nibble of the constant shift byte is some other code we don't want to overwrite.
+    old_constant_shift_byte = read(code_location+1, 1).unpack("C").first
+    old_constant_shift_byte &= 0xF0
+    constant_shift |= old_constant_shift_byte
+    
+    write(code_location, [constant, constant_shift].pack("CC"))
+  end
+  
+  def convert_arm_shifted_immediate_to_bit_index(constant, constant_shift)
+    bit = convert_arm_shifted_immediate_to_integer(constant, constant_shift)
+    
+    if bit == 0
+      return 0
+    else
+      # Get the number of bits this was shifted by.
+      # This is so we can get the bit index instead of the bit.
+      # For example, instead of bit 0x200, we want index 9.
+      # We do this by converting to a string and counting the number of 0s in it.
+      binary_string = "%b" % bit
+      bit_index = binary_string.count("0")
+      if binary_string.count("1") != 1
+        # There's more than one bit set. This shouldn't happen since there's only supposed to be one single bit here.
+        # So just default to bit 0.
+        bit_index = 0
+      end
+      return bit_index
+    end
+  end
+  
+  def read_hardcoded_bit_constant(code_location)
+    constant, constant_shift = read(code_location, 2).unpack("CC")
+    
+    return convert_arm_shifted_immediate_to_bit_index(constant, constant_shift)
+  end
+  
   def convert_bit_index_to_arm_shifted_immediate(bit_index)
     if !(0..0x1F).include?(bit_index)
-      raise "Invalid bit index, must be between 0x00 and 0x1F."
+      raise ArmShiftedImmediateError.new("Invalid bit index, must be between 0x00 and 0x1F.")
     end
     
     if bit_index.even?

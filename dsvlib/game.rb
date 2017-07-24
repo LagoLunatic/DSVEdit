@@ -320,6 +320,12 @@ class Game
     @shop_item_pools ||= begin
       shop_item_pools = []
       
+      if GAME == "ooe"
+        SHOP_HARDCODED_ITEM_POOL_COUNT.times do |i|
+          shop_item_pools << OoEHardcodedShopItemPool.new(i, fs)
+        end
+      end
+      
       SHOP_ITEM_POOL_COUNT.times do |i|
         shop_item_pools << ShopItemPool.new(i, fs)
       end

@@ -36,27 +36,7 @@ class ShopItemPool
       if required_flag_location.nil?
         @requirement = nil
       else
-        constant, constant_shift = fs.read(required_flag_location, 2).unpack("CC")
-        constant_shift &= 0xF
-        unless constant_shift == 0
-          constant_shift = (0x10 - constant_shift)*2
-        end
-        required_event_flag_bit = constant << constant_shift
-        if required_event_flag_bit == 0
-          @requirement = 0
-        else
-          # Get the number of bits this was shifted by.
-          # This is so we can get the event flag index instead of the bit.
-          # For example, instead of bit 0x200, we want index 9.
-          # We do this by converting to a string and counting the number of 0s in it.
-          binary_string = "%b" % required_event_flag_bit
-          @requirement = binary_string.count("0")
-          if binary_string.count("1") != 1
-            # There's more than 1 bit set. This shouldn't happen since there's only supposed to be one required event.
-            # So just default to flag 0.
-            @requirement = 0
-          end
-        end
+        @requirement = fs.read_hardcoded_bit_constant(required_flag_location)
       end
     when "por"
       @requirement = fs.read(@item_pool_pointer, 2).unpack("v").first
@@ -140,5 +120,80 @@ class ShopPointItemPool
     end
     data += [0xFFFF, 0xFFFF]
     fs.write(@item_pool_pointer, data.pack("v*"))
+  end
+end
+
+class OoEHardcodedShopItemPool
+  attr_reader :pool_id,
+              :fs
+  attr_accessor :item_ids,
+                :requirement
+  
+  def initialize(pool_id, fs)
+    if GAME != "ooe"
+      raise "Only OoE has hardcoded shop item pools."
+    end
+    
+    @pool_id = pool_id
+    @fs = fs
+    
+    read_from_rom()
+  end
+  
+  def read_from_rom
+    @item_ids = []
+    @requirement = nil
+    
+    hardcoded_pool_data = SHOP_HARDCODED_ITEM_POOLS[pool_id]
+    if hardcoded_pool_data[:requirement].nil?
+      @requirement = nil
+    else
+      @requirement = fs.read_hardcoded_bit_constant(hardcoded_pool_data[:requirement])
+    end
+    
+    hardcoded_pool_data[:items].each do |item_id_pointer, type|
+      if type == :arm_shifted_immediate
+        item_id = fs.read_arm_shifted_immediate_integer(item_id_pointer)
+      elsif type == :word
+        item_id = fs.read(item_id_pointer, 4).unpack("V").first
+      end
+      @item_ids << item_id
+    end
+  end
+  
+  def write_to_rom
+    hardcoded_pool_data = SHOP_HARDCODED_ITEM_POOLS[pool_id]
+    
+    hardcoded_pool_data[:items].each_with_index do |(item_id_pointer, type), i|
+      item_id = @item_ids[i]
+      if type == :arm_shifted_immediate
+        fs.replace_arm_shifted_immediate_integer(item_id_pointer, item_id)
+      elsif type == :word
+        fs.write(item_id_pointer, [item_id].pack("V"))
+      end
+    end
+    
+    if !hardcoded_pool_data[:requirement].nil?
+      fs.replace_hardcoded_bit_constant(hardcoded_pool_data[:requirement], @requirement)
+    end
+  end
+  
+  def slot_is_arm_shifted_immediate?(item_index)
+    item_slot_type = SHOP_HARDCODED_ITEM_POOLS[pool_id][:items].values[item_index]
+    return item_slot_type == :arm_shifted_immediate
+  end
+  
+  def slot_can_have_item_id?(item_index, item_id)
+    item_slot_type = SHOP_HARDCODED_ITEM_POOLS[pool_id][:items].values[item_index]
+    if item_slot_type == :arm_shifted_immediate
+      begin
+        fs.convert_integer_to_arm_shifted_immediate(item_id)
+        return true
+      rescue NDSFileSystem::ArmShiftedImmediateError
+        return false
+      end
+    else
+      true
+    end
   end
 end

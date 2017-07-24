@@ -1217,6 +1217,37 @@ TEST_ROOM_OVERLAY = 20
 
 SHOP_ITEM_POOL_LIST = 0x022228D4
 SHOP_ITEM_POOL_COUNT = 0x24
+SHOP_HARDCODED_ITEM_POOL_COUNT = 3
+SHOP_HARDCODED_ITEM_POOLS = [
+  {
+    requirement: nil,
+    items: {
+      0x02200184 => :arm_shifted_immediate,
+      0x02200190 => :arm_shifted_immediate,
+      0x0220019C => :arm_shifted_immediate,
+      0x022001A8 => :arm_shifted_immediate,
+      0x022001B4 => :arm_shifted_immediate,
+      0x02200324 => :word, # loaded by 0x022001C0
+      0x022001CC => :arm_shifted_immediate,
+    }
+  },
+  {
+    requirement: 0x022001FC,
+    items: {
+      0x02200328 => :word, # loaded by 0x02200208 and 0x022001E0
+      0x02200330 => :word, # loaded by 0x02200214
+      0x02200334 => :word, # loaded by 0x02200220
+    }
+  },
+  {
+    requirement: 0x02200250,
+    items: {
+      0x02200338 => :word, # loaded by 0x0220025C and 0x02200234
+      0x02200268 => :arm_shifted_immediate,
+      0x0220033C => :word, # loaded by 0x02200274
+    }
+  },
+]
 
 FAKE_FREE_SPACES = [
   {path: "/ftc/overlay9_46", offset: 0x022E4ABC-0x022C1FE0, length: 0xC0}
