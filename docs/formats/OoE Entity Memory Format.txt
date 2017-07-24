@@ -69,7 +69,7 @@ For enemies:
 For glyphs:
 0D6,2: For glyphs, ?
 0D8,4: For glyphs, ?
-0DC,4: For glyphs, has the picked up flag to set.
+0DC,4: For glyphs, has the pickup flag to set.
 12C,1: For glyphs, has the type of the glyph.
   1 - Arm glyph.
   2 - Back glyph.

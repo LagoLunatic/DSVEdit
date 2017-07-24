@@ -380,7 +380,7 @@ F5-F5
   20 - Currently in the middle of fighting Whip's Memory.
   21 - Already attempted to defeat Whip's Memory once and failed.
   23 - Whip's Memory defeated.
-02111BB8-02111BE7 - Picked up item flags.
+02111BB8-02111BE7 - Bitfield of pickup flags.
 
 02111BF8 - Bitfield of items you own.
 

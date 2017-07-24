@@ -372,7 +372,7 @@ What each range of entity slots is for:
   1D 20000000 - Event 73? except 73 doesn't have it set
   1E 40000000 - Event 74
   1F 80000000 - Event 75
-020F7190-020F719F - Bitfield of flags for what items you've picked up.
+020F7190-020F719F - Bitfield of pickup flags.
 020F71A8-020F71A9 - Bitfield of flags for what warp rooms you've visited.
   0001 - Lost Village, automatically unlocked.
   0002 - Demon Guest House.
