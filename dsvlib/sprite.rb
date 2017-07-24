@@ -429,8 +429,6 @@ end
 
 class Frame
   attr_reader :unknown,
-              :number_of_hitboxes,
-              :first_hitbox_offset,
               :part_indexes,
               :part_offsets,
               :parts,
@@ -438,7 +436,9 @@ class Frame
               :hitbox_offsets,
               :hitboxes
   attr_accessor :number_of_parts,
-                :first_part_offset
+                :first_part_offset,
+                :number_of_hitboxes,
+                :first_hitbox_offset
   
   def initialize(frame_data)
     if SYSTEM == :nds
