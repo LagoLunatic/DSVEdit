@@ -77,6 +77,10 @@ class ShopItemPool
       fs.write(@item_pool_pointer, data.pack("v*"))
     end
   end
+  
+  def slot_is_arm_shifted_immediate?(i)
+    false
+  end
 end
 
 class ShopPointItemPool
@@ -120,6 +124,10 @@ class ShopPointItemPool
     end
     data += [0xFFFF, 0xFFFF]
     fs.write(@item_pool_pointer, data.pack("v*"))
+  end
+  
+  def slot_is_arm_shifted_immediate?(i)
+    false
   end
 end
 
@@ -186,14 +194,9 @@ class OoEHardcodedShopItemPool
   def slot_can_have_item_id?(item_index, item_id)
     item_slot_type = SHOP_HARDCODED_ITEM_POOLS[pool_id][:items].values[item_index]
     if item_slot_type == :arm_shifted_immediate
-      begin
-        fs.convert_integer_to_arm_shifted_immediate(item_id)
-        return true
-      rescue NDSFileSystem::ArmShiftedImmediateError
-        return false
-      end
+      return fs.check_integer_can_be_an_arm_shifted_immediate?(item_id)
     else
-      true
+      return true
     end
   end
 end

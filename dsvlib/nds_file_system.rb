@@ -280,6 +280,27 @@ class NDSFileSystem
     return convert_arm_shifted_immediate_to_integer(constant, constant_shift)
   end
   
+  def check_integer_can_be_an_arm_shifted_immediate?(integer)
+    if integer <= 0xFF
+      return true
+    else
+      binary_string = "%b" % integer
+      num_trailing_zeros = binary_string.length - binary_string.rindex("1") - 1
+      if num_trailing_zeros.odd?
+        # Arm shifted immediates cannot be shifted by an odd number of bytes.
+        num_trailing_zeros -= 1
+      end
+      if num_trailing_zeros == 0
+        return false
+      end
+      constant = integer >> num_trailing_zeros
+      if constant >= 0x100
+        return false
+      end
+      return true
+    end
+  end
+  
   def convert_integer_to_arm_shifted_immediate(integer)
     if integer <= 0xFF
       constant_shift = 0
