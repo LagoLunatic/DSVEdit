@@ -211,7 +211,7 @@ class MapEditorDialog < Qt::Dialog
       end
       
       new_tile = @selected_map_tile.dup
-      new_tile.sector_index, new_tile.room_index = @area.get_sector_and_room_indexes_from_map_x_y(x, y)
+      new_tile.sector_index, new_tile.room_index = @area.get_sector_and_room_indexes_from_map_x_y(x, y) || [0, 0]
       new_tile.y_pos = y
       new_tile.x_pos = x
       @map.tiles << new_tile
@@ -223,7 +223,7 @@ class MapEditorDialog < Qt::Dialog
   def change_map_tile(old_tile)
     index = @map.tiles.index(old_tile)
     new_tile = @selected_map_tile.dup
-    new_tile.sector_index, new_tile.room_index = @area.get_sector_and_room_indexes_from_map_x_y(old_tile.x_pos, old_tile.y_pos)
+    new_tile.sector_index, new_tile.room_index = @area.get_sector_and_room_indexes_from_map_x_y(old_tile.x_pos, old_tile.y_pos) || [0, 0]
     new_tile.y_pos = old_tile.y_pos
     new_tile.x_pos = old_tile.x_pos
     @map.tiles[index] = new_tile

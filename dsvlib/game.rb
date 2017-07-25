@@ -383,7 +383,7 @@ class Game
     area = areas[area_index]
     
     map.tiles.each do |tile|
-      tile.sector_index, tile.room_index = area.get_sector_and_room_indexes_from_map_x_y(tile.x_pos, tile.y_pos)
+      tile.sector_index, tile.room_index = area.get_sector_and_room_indexes_from_map_x_y(tile.x_pos, tile.y_pos) || [0, 0]
     end
     map.write_to_rom()
   end

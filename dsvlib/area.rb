@@ -46,6 +46,11 @@ class Area
   
   def get_sector_and_room_indexes_from_map_x_y(x, y)
     sectors.each_with_index do |sector, sector_index|
+      if GAME == "dos" && (0xA..0x10).include?(sector_index)
+        # Areas not on the main Dracula's Castle map.
+        next
+      end
+      
       sector.rooms.each_with_index do |room, room_index|
         xrange = (room.room_xpos_on_map..room.room_xpos_on_map+room.main_layer_width-1)
         yrange = (room.room_ypos_on_map..room.room_ypos_on_map+room.main_layer_height-1)
@@ -55,7 +60,7 @@ class Area
       end
     end
     
-    return [0, 0]
+    return nil
   end
   
   def name
