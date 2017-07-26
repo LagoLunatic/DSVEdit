@@ -13,6 +13,9 @@
 
 020CA5DC - List of code pointers for each game state (020F6284).
 
+020BFDC0-020BFDF7 - List of which items count as cakes for the "Build Your Strength 3" quest. Global ID+1s.
+  The items are: Pancake, Wheat Roll, Sachertorte, NY Cheesecake, Mille-feuille, Tarte au Poire, Gateau Fraise, Kugelhopf, Green Tea Cake, Gateau Marron, Langues de Chat, Financier, Birthday Cake.
+
 020CDAFC-020DF15B - List of assets.
   Entry length 0x20.
   Asset indexes are indexes in this list.
@@ -73,8 +76,8 @@
 
 020E3A34-020E3B13 - Lists of sectors. Each entry is a pointer to a list of rooms for the sector.
 
-020E3CFC - Skills.
-020E3B14 - List of extra data for each skill. Only for subweapons and spells.
+020E3B14-020E3CF9 - List of extra data for each skill. Only for subweapons and spells.
+020E3CFC-020E471B - Skill data.
 
 020F49E8 - List of breakable walls for each area.
   0,2: Sprite frame index to use.

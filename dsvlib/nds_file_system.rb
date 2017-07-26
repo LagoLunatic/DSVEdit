@@ -313,11 +313,11 @@ class NDSFileSystem
         num_trailing_zeros -= 1
       end
       if num_trailing_zeros == 0
-        raise ArmShiftedImmediateError.new("Invalid value for an arm shifted immediate.")
+        raise ArmShiftedImmediateError.new("Invalid value for an arm shifted immediate: %X." % integer)
       end
       constant = integer >> num_trailing_zeros
       if constant >= 0x100
-        raise ArmShiftedImmediateError.new("Invalid value for an arm shifted immediate.")
+        raise ArmShiftedImmediateError.new("Invalid value for an arm shifted immediate: %X." % integer)
       end
       constant_shift = (0x10 - num_trailing_zeros/2)
     end
@@ -365,7 +365,7 @@ class NDSFileSystem
   
   def convert_bit_index_to_arm_shifted_immediate(bit_index)
     if !(0..0x1F).include?(bit_index)
-      raise ArmShiftedImmediateError.new("Invalid bit index, must be between 0x00 and 0x1F.")
+      raise ArmShiftedImmediateError.new("Invalid bit index: %X, must be between 00 and 1F." % bit_index)
     end
     
     if bit_index.even?

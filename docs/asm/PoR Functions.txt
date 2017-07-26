@@ -59,7 +59,11 @@
   ; r1 - Number of the skill to give
 02215B88 GetOwnedSkillNum
   ; r0 - Skill index
-02215B2C SetNumOwnedItem
+02215BBC GetOwnedSkillNum2
+  ; r0 - Skill index
+  ; This is effectively the same as GetOwnedSkillNum.
+  ; The only difference is that it adds the return value of GetOwnedSkillNum and function 02215B24 together and returns that. But function 02215B24 simply always returns 0, so it has no effect. (02215B24 was probably used for debugging something and commented out in the release build.)
+02215B2C SetNumOwnedSkill
   ; r0 - Skill index
   ; r1 - Number of the skill to set
 
@@ -67,6 +71,10 @@
   ; r0 - Global ID of the item (can be a skill)
   ; r1 - 
   ; r2 - 
+
+02214D70 SkillGetCurrentSP
+  ; r0 - Skill index
+  ; Returns the current SP the player has for this skill.
 
 02207C9C CheckItemEquippedAndActive
   ; r0 - Slot (0 for weapon, 3 for head armor, etc)
