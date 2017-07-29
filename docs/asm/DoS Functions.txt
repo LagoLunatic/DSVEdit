@@ -25,6 +25,9 @@
 021D5210 DestroyIceBlocks
 0220F81C CheckAbilityEnabled
   ; r0 - Index of the ability soul to check. 0-6.
+0220F760 SetAbilityEnabled
+  ; r0 - Index of the ability soul to set. 0-6.
+  ; r1 - 0 to turn the ability soul off, 1 to turn it on.
 
 02026110 ChangeRoom
   ; r0 - Room pointer

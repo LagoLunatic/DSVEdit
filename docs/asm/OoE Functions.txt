@@ -944,6 +944,7 @@
 020ADB74 Object8CUpdate
 
 ; Skill-specific code
+02070890 SkillMeleeUse ; Shared by all melee glyphs
 02070890 SkillConfodereUse
 02070890 SkillVolConfodereUse
 02070890 SkillMelioConfodereUse
