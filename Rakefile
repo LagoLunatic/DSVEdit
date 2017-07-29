@@ -83,6 +83,7 @@ task :build_releases do
       FileUtils.cp_r [
         "./dsvrandom/dsvrandom.rb",
         "./dsvrandom/completability_checker.rb",
+        "./dsvrandom/door_completability_checker.rb",
         "./dsvrandom/randomizer.rb",
         "./dsvrandom/randomizer_window.rb",
         "./dsvrandom/ui_randomizer.rb",
@@ -90,6 +91,7 @@ task :build_releases do
         "./dsvrandom/seedgen_adjectives.txt",
         "./dsvrandom/seedgen_nouns.txt",
         "./dsvrandom/progressreqs",
+        "./dsvrandom/roomedits",
         "./dsvrandom/images",
         "./dsvrandom/randomizers",
         "./dsvrandom/constants"
