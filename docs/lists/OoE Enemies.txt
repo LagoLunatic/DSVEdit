@@ -193,6 +193,10 @@ Enemies:
 63 Great Knight
 64 King Skeleton
 65 Winged Skeleton
+  Spawner.
+  Spawns Winged Skeletons at random intervals, with var A being the minimum number of frames between spawns, and (var A + var B) being the maximum number of frames.
+  If var B is 0, it uses the default values of var A being 0x168 and var B being 0x78.
+  If var A is 0, it's not a spawner, instead it's just a single Winged Guard (but it has the stats and drops of a Winged Skeleton).
 66 Final Knight
   Requires enemy overlay 36.
 67 Jiang Shi

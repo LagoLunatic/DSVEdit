@@ -407,6 +407,7 @@ REUSED_ENEMY_INFO = {
   0x5F => {init_code: 0x0228D23C, gfx_sheet_ptr_index: 0, palette_offset: 0, palette_list_ptr_index: 0}, # automaton zx27
   0x61 => {palette_offset: 2}, # gorgon head -> medusa head
   0x62 => {init_code: 0x02207208, gfx_sheet_ptr_index: 1, palette_offset: 0, palette_list_ptr_index: 1, sprite_ptr_index: 1}, # mad snatcher -> mad butcher
+  0x65 => {palette_offset: 1}, # winged skeleton -> winged guard
   0x69 => {palette_offset: 9}, # double hammer
   0x6A => {palette_offset: 0xC}, # weapon master
 }
