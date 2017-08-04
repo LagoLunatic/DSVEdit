@@ -136,31 +136,19 @@ class SpriteEditor < Qt::Dialog
     
     weapon_items = []
     skill_items = []
-    max_weapon_gfx_index = 0
-    max_skill_gfx_index = 0
     ITEM_TYPES.each do |item_type|
       (0..item_type[:count]-1).each do |index|
         item = GenericEditable.new(index, item_type, fs)
         if item.kind == :skill
-          if item["Sprite"] && item["Sprite"] > max_skill_gfx_index
-            max_skill_gfx_index = item["Sprite"]
-          end
           skill_items << item
         else
-          if item["Sprite"] && item["Sprite"] > max_weapon_gfx_index
-            max_weapon_gfx_index = item["Sprite"]
-          end
           weapon_items << item
         end
       end
     end
-    if GAME == "ooe"
-      max_weapon_gfx_index -= 1
-    end
-    max_skill_gfx_index -= 1
     
     @weapons = []
-    (0..max_weapon_gfx_index).each do |weapon_gfx_index|
+    (0..WEAPON_GFX_COUNT-1).each do |weapon_gfx_index|
       weapon = WeaponGfx.new(weapon_gfx_index, fs)
       @weapons << weapon
       if GAME == "ooe"
@@ -183,7 +171,7 @@ class SpriteEditor < Qt::Dialog
     end
     
     @skills = []
-    (0..max_skill_gfx_index).each do |skill_gfx_index|
+    (0..SKILL_GFX_COUNT-1).each do |skill_gfx_index|
       skill = SkillGfx.new(skill_gfx_index, fs)
       @skills << skill
       items = skill_items.select{|item| item["Sprite"] == skill_gfx_index+1}
