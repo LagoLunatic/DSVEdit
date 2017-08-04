@@ -85,6 +85,12 @@
   4,2: Used for something, but doesn't seem to affect anything?
   6,2: Unused.
 
+020F4E84 - List of sprite info for portraits.
+  Each entry is 0xC bytes long.
+  00,4: Sprite pointer.
+  04,4: GFX asset pointer.
+  08,4: Palette list pointer.
+
 === 020F61BF: End of most of ARM9.
 
 020F61D0 - Number times the player has soft reset the game with select+start+L+R.

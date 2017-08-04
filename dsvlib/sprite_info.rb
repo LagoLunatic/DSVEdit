@@ -153,49 +153,51 @@ class SpriteInfo
     
     
     
-    if possible_gfx_pointers.empty? && gfx_files_to_load.empty?
-      raise CreateCodeReadError.new("Failed to find any possible sprite gfx pointers.")
-    end
-    
-    valid_gfx_pointers = possible_gfx_pointers.select do |pointer|
-      check_if_valid_gfx_pointer(pointer, fs)
-    end
-    possible_palette_pointers -= valid_gfx_pointers
-    
-    if gfx_files_to_load.empty?
-      if gfx_wrapper.nil?
-        if valid_gfx_pointers.empty?
-          raise CreateCodeReadError.new("Failed to find any valid sprite gfx pointers.")
-        end
-        if gfx_sheet_ptr_index >= valid_gfx_pointers.length
-          raise CreateCodeReadError.new("Failed to find enough valid sprite gfx pointers to match the reused sprite gfx sheet index. (#{valid_gfx_pointers.length} found, #{gfx_sheet_ptr_index+1} needed.)")
-        end
-        
-        gfx_wrapper = valid_gfx_pointers[gfx_sheet_ptr_index]
+    if palette_pointer.nil?
+      if possible_gfx_pointers.empty? && gfx_files_to_load.empty?
+        raise CreateCodeReadError.new("Failed to find any possible sprite gfx pointers.")
       end
       
-      gfx_file_pointers = unpack_gfx_pointer_list(gfx_wrapper, fs)
+      valid_gfx_pointers = possible_gfx_pointers.select do |pointer|
+        check_if_valid_gfx_pointer(pointer, fs)
+      end
+      possible_palette_pointers -= valid_gfx_pointers
+      
+      if gfx_files_to_load.empty?
+        if gfx_wrapper.nil?
+          if valid_gfx_pointers.empty?
+            raise CreateCodeReadError.new("Failed to find any valid sprite gfx pointers.")
+          end
+          if gfx_sheet_ptr_index >= valid_gfx_pointers.length
+            raise CreateCodeReadError.new("Failed to find enough valid sprite gfx pointers to match the reused sprite gfx sheet index. (#{valid_gfx_pointers.length} found, #{gfx_sheet_ptr_index+1} needed.)")
+          end
+          
+          gfx_wrapper = valid_gfx_pointers[gfx_sheet_ptr_index]
+        end
+        
+        gfx_file_pointers = unpack_gfx_pointer_list(gfx_wrapper, fs)
+      end
+      possible_palette_pointers -= gfx_files_to_load.map{|gfx| gfx.gfx_pointer}
+      
+      
+      
+      if possible_palette_pointers.empty?
+        raise CreateCodeReadError.new("Failed to find any possible sprite palette pointers.")
+      end
+      
+      valid_palette_pointers = possible_palette_pointers.select do |pointer|
+        check_if_valid_palette_pointer(pointer, fs)
+      end
+      
+      if valid_palette_pointers.empty?
+        raise CreateCodeReadError.new("Failed to find any valid sprite palette pointers.")
+      end
+      if palette_list_ptr_index >= valid_palette_pointers.length
+        raise CreateCodeReadError.new("Failed to find enough valid sprite palette pointers to match the reused sprite palette list index. (#{valid_palette_pointers.length} found, #{palette_list_ptr_index+1} needed.)")
+      end
+      
+      palette_pointer = valid_palette_pointers[palette_list_ptr_index]
     end
-    possible_palette_pointers -= gfx_files_to_load.map{|gfx| gfx.gfx_pointer}
-    
-    
-    
-    if possible_palette_pointers.empty?
-      raise CreateCodeReadError.new("Failed to find any possible sprite palette pointers.")
-    end
-    
-    valid_palette_pointers = possible_palette_pointers.select do |pointer|
-      check_if_valid_palette_pointer(pointer, fs)
-    end
-    
-    if valid_palette_pointers.empty?
-      raise CreateCodeReadError.new("Failed to find any valid sprite palette pointers.")
-    end
-    if palette_list_ptr_index >= valid_palette_pointers.length
-      raise CreateCodeReadError.new("Failed to find enough valid sprite palette pointers to match the reused sprite palette list index. (#{valid_palette_pointers.length} found, #{palette_list_ptr_index+1} needed.)")
-    end
-    
-    palette_pointer = valid_palette_pointers[palette_list_ptr_index]
     
     
     
@@ -225,7 +227,7 @@ class SpriteInfo
       if palette_pointer_to_load
         palette_pointer = palette_pointer_to_load
       end
-      if sprite_files_to_load.length > 0
+      if sprite_files_to_load.length > 0 && reused_info[:sprite].nil?
         sprite_file_pointer = sprite_files_to_load.first[:asset_pointer]
       end
       if skeleton_files_to_load.length > 0

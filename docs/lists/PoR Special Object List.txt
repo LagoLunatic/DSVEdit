@@ -277,6 +277,7 @@ Special objects:
     Bits 1-6: Room index of destination room.
     Bits 7-10: Sector index of the destination room.
     Bits 11-16: Nothing.
+  This portrait's palette is stored the Lost Gallery's sector overlay. If you place this portrait outside of the Lost Gallery it will have the wrong colors but will otherwise function normally.
 76 Portrait to 13th Street, Forgotten City, Burnt Paradise, or Dark Academy. (Uses different picture frame than 1A.)
   Note that it can still bring you to any area you set, but it will only display the right visuals for the above areas.
   Var A: Area index of the destination room.
