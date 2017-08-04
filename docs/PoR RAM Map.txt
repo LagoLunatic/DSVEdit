@@ -391,7 +391,7 @@ F5-F5
   23 - Whip's Memory defeated.
 02111BB8-02111BE7 - Bitfield of pickup flags.
 
-02111BF8 - Bitfield of items you own.
+02111BF8 - Bitfield of items you own. (Owned item info.)
 
 02111CB8 - List of ? for each skill. Each entry is a halfword.
   Bits 1-13: Current SP the player has for this subweapon.

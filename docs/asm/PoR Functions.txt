@@ -137,6 +137,16 @@
   ; r2 - GFX list ptr
   ; r3 - Palette list ptr
 020217C8 LoadSprite2
+  ; r0 - Entity ptr
+  ; r1 - Sprite ptr
+  ; r2 - GFX list ptr
+  ; r3 - Palette list ptr
+
+0200E954 LoadPalette
+  ; r0 - Palette list pointer
+  ; r1 - 0?
+  ; r2 - 0?
+  ; Returns the index in the globally loaded palette list that this palette got loaded into. (This index then gets stored at entity+86 and entity+88.)
 
 0200EF40 SpriteDrawEntity
   ; A number of entities have this has their draw code.
@@ -230,6 +240,10 @@
   ; Only does anything if the entity's hitbox is active (entity+A6)
   ; Gets the entity's iframes index from entity+A4.
   ; Then gets the actual iframes from list 020BE4C8 and stores that to entity+B8.
+
+0207B520 InitializePortrait
+  ; r0 - Entity pointer
+  ; r1 - Which portrait sprite to use (index in list 020F4E84)
 
 ; Enemy-specific code
 0222D5DC EnemyZombieCreate

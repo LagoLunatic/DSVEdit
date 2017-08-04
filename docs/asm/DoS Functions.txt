@@ -37,6 +37,15 @@
   ; r2 - X pos (pixels)
   ; r3 - Y pos (pixels)
   ; Stores sector index to 020F70A6 and room index to 020F70A7.
+02026A2C TriggerRoomTransition
+  ; Call this after SetDestinationRoomSectorAndRoomIndexes so the room actually changes.
+
+02029A54 PlaySfxAtPos
+  ; r0 - Sfx index
+  ; r1 - x pos
+  ; r2 - y pos
+  ; r3 - z pos
+02029B38 PlaySfxAtPos2
 
 021F7928 SetEntityCollision
   ; r0 - Entity pointer

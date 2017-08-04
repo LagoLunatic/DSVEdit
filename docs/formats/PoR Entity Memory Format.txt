@@ -30,6 +30,9 @@ Memory used for entities in PoR is 020FC500 - 0211173F. Each entity is 0x160 byt
 07E,2: Current keyframe index in this animation.
 080,2: Bitfield?
 084,2: Current sprite frame index.
+086,2: Palette index in the list of globally loaded palettes.
+088,2: Palette index in the list of globally loaded palettes. Unused?
+08A,2: Palette offset for this entity. Gets added to 86.
 08C,2: Affects how this entity is rendered.
   0 - Normal.
   1 - Transparency is rendered as white.

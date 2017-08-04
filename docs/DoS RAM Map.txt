@@ -389,7 +389,7 @@ What each range of entity slots is for:
 020F71B4-020F71B5 - Bitfield relating to the number of times you've visited Hammer's shop. TODO
 020F71B6-020F71B7 - Bitfield relating to the number of times you've visited Yoko's shop. TODO
 
-020F71BC-020F7227 - List of which items you own and how many.
+020F71BC-020F7227 - List of which items you own and how many. (Owned item info.)
   Each item takes up a nibble (half a byte). So you can have up to 15 of each item (though it only correctly displays up to 9).
 
 020F7228-020F7233 - The player's control config settings.
