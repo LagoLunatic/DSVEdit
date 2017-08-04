@@ -925,9 +925,11 @@ class DSVEdit < Qt::MainWindow
       end
       
       Qt.execute_in_main_thread do
-        @progress_dialog.setValue(@progress_dialog.maximum) unless @progress_dialog.wasCanceled
-        @progress_dialog.close()
-        @progress_dialog = nil
+        if @progress_dialog
+          @progress_dialog.setValue(@progress_dialog.maximum) unless @progress_dialog.wasCanceled
+          @progress_dialog.close()
+          @progress_dialog = nil
+        end
         
         symbol_file_out_path = File.join(File.dirname(output_rom_path), "built_rom_#{GAME}.sym")
         FileUtils.cp("./docs/asm/#{GAME} Functions.txt", symbol_file_out_path)
