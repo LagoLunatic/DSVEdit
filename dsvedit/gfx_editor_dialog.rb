@@ -46,7 +46,7 @@ class GfxEditorDialog < Qt::Dialog
       gfx_file = @fs.files_by_path[@ui.gfx_file_name.text.strip]
       if gfx_file.nil?
         possible_asset_pointer = @ui.gfx_file_name.text.to_i(16)
-        if fs.is_pointer?(possible_asset_pointer)
+        if @fs.is_pointer?(possible_asset_pointer)
           gfx_file = @fs.assets_by_pointer[possible_asset_pointer]
         end
       end

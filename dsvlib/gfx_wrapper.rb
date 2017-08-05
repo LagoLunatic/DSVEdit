@@ -52,7 +52,7 @@ class GfxWrapper
   
   def write_gfx_data(new_gfx_data)
     if SYSTEM == :nds
-      fs.write_by_file(gfx.file[:file_path], 0, gfx_data_bytes.pack("C*"))
+      fs.write_by_file(file[:file_path], 0, new_gfx_data)
     else
       if @bpp == 4 || @bpp == 8
         fs.compress_write(gfx_data_pointer, new_gfx_data)
