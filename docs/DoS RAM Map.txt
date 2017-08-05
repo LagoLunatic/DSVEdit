@@ -775,6 +775,13 @@ Here's what each actor is (index, special object id, description):
 
 022C65D4 - palette for f_farik0.dat portrait.
 
+0222BD90-0222BDA7 - List of red soul wall blockade data.
+  Entry length 6.
+  The red wall's var A is the index in this list.
+  00,2: Sprite frame index to use.
+  02,2: Miscellaneous flag index
+  04,2: The soul index of the soul that opens this wall.
+
 0222BDE0-0222BDF7 - List of rewards from the strongman game.
   Entry length 8.
   00,4: Pickup flag index for having spawned this reward. (Not for actually picking it up - so if you leave the room without getting it, you can't get it again.)
