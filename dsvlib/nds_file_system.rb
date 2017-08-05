@@ -491,7 +491,6 @@ class NDSFileSystem
     @files[file_id] = new_file
     @files_by_path[new_file[:file_path]] = new_file
     
-    path = File.join(@filesystem_directory, file_path)
     @opened_files_cache[file_path] = "\0"*file_size
     @uncommitted_files << file_path
     
@@ -510,6 +509,10 @@ class NDSFileSystem
     write_new_table_sizes_to_header()
     
     load_overlay(NEW_OVERLAY_ID)
+  end
+  
+  def has_free_space_overlay?
+    !!(NEW_OVERLAY_ID && @overlays[NEW_OVERLAY_ID])
   end
   
   def write_new_table_sizes_to_header
