@@ -28,6 +28,13 @@
   ; r2 - y pos
   ; r3 - z pos
 
+02032D90 TeleportPlayer
+  ; r0 - Area index
+  ; r1 - Sector index
+  ; r2 - Room index
+  ; r3 - X pos (pixels)
+  ; [r13] - Y pos (pixels)
+
 021E43E4 GiveItem
   ; r0 - Item type (2 is consumables, etc)
   ; r1 - Item index

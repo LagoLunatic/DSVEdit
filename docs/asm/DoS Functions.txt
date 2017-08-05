@@ -79,6 +79,10 @@
 021E7870 GiveItem
   ; r0 - Item type (2 is consumables, etc)
   ; r1 - Item index
+021E78F0 SetOwnedItemNumber
+  ; r0 - Item type (2 is consumables, etc)
+  ; r1 - Item index
+  ; r2 - Number of the item to set
 021E7710 SpawnItemPickupEntity
   ; r0 - X pos
   ; r1 - Y pos
@@ -167,6 +171,8 @@
 021FC590 PlayerUpdate
 021FCC9C PlayerDraw
 021FEE28 PlayerUpdateYAccel
+
+021F64BC PlayerEnableControl
 
 021D9668 ActorSpawn
 021D9288 ActorSetVelocity
