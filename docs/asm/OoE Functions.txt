@@ -78,6 +78,11 @@
   ; Sets/clears bit 0x10 of the owned item info (see above).
   ; r0 - Global ID+1 of the item
   ; r1 - 1 to set the item as owned. 0 to set the item as never owned.
+02063724 SetItemEverOwned2
+  ; Sets/clears bit 0x80 of the owned item info (see above).
+  ; r0 - Global ID+1 of the item
+  ; r1 - 1 to set the item as owned. 0 to set the item as never owned.
+  ; Only known difference between bit 0x10 and 0x80 is that 0x10 is set for all items, while 0x80 is set for all except for max ups.
 020637C8 SetRelicEquipped
   ; Sets/clears bit 0x40 of the owned item info (see above).
   ; r0 - Global ID+1 of the item
@@ -98,6 +103,24 @@
   ; r0 - Pointer to the money entity to delete
   ; r1 - Pointer to the player entity
   ; r2 - Pointer to ??? in the stack
+
+02063268 GetItemIDByTypeIndex
+  ; r0 - Item type (2 is arm glyphs, etc)
+  ; r1 - Index of the item
+  ; Returns the global ID+1 of the item
+020622B8 GetItemTypeFirstID
+  ; r0 - Item type
+  ; Returns the global ID+1 of the first item of this type.
+  ; The item types are:
+  ; 2 - Arm glyphs
+  ; 3 - Back glyphs
+  ; 4 - Glyph unions
+  ; 5 - Consumables
+  ; 6 - Body armor
+  ; 7 - Head armor
+  ; 8 - Leg armor
+  ; 9 - Accessories
+  ; A - Weapons (unused)
 
 022018C4 ShopGetItemPrice
   ; r0 - Global ID+1 of the item
