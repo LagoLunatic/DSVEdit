@@ -43,11 +43,14 @@
   ; r1 - Item index
   ; Reduces the number of this item you have by 1.
   ; If you already have 0, ???
-021E4428 SetNumOwnedItem
+021E4428 SetOwnedItemNum
   ; r0 - Item type (2 is consumables, etc)
   ; r1 - Item index
   ; r2 - Number to set
   ; Doesn't add or subtract, simply overrides the number of the item you own with r2.
+021E45A4 GetOwnedItemNum
+  ; r0 - Item type (2 is consumables, etc)
+  ; r1 - Item index
 021E54B4 PickupItem
   ; The player picks up an item, deleting the entity, showing the item's name in the corner, etc.
   ; r0 - Pointer to the item entity to delete
