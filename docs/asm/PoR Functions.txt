@@ -38,6 +38,11 @@
 021E43E4 GiveItem
   ; r0 - Item type (2 is consumables, etc)
   ; r1 - Item index
+021E4374 RemoveItem
+  ; r0 - Item type (2 is consumables, etc)
+  ; r1 - Item index
+  ; Reduces the number of this item you have by 1.
+  ; If you already have 0, ???
 021E4428 SetNumOwnedItem
   ; r0 - Item type (2 is consumables, etc)
   ; r1 - Item index

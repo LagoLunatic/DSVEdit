@@ -121,6 +121,14 @@ Enemies:
 30 Crossbow Armor
 31 Lilith
 32 Skeleton Flail
+  Var A: Which direction to face:
+    0 - Faces whichever direction the player was in when they first entered the room.
+    1 - Always faces left.
+    2 - Always faces right.
+  Var B: Number of steps to the right he will take.
+    After taking that many steps and then attacking he goes back left the same number of steps, attacks again, and repeats.
+    He won't stop walking early, he will always take that number of steps. He will walk over cliffs ignoring gravity. He can walk up and down slopes however. He won't walk through walls, but will walk against them until he has reached the correct number of steps.
+    If 0, defaults to 4 instead.
 33 Skeleton Gunman
   Var A:
     Lowest nibble (000F):

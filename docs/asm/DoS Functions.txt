@@ -46,6 +46,8 @@
   ; r2 - y pos
   ; r3 - z pos
 02029B38 PlaySfxAtPos2
+02029BF0 PlaySfx
+  ; r0 - Sfx index
 
 021F7928 SetEntityCollision
   ; r0 - Entity pointer
