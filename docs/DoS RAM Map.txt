@@ -243,16 +243,20 @@ What each range of entity slots is for:
 020F6DF5 - 00 or 01. Affects the above variable.
 020F6DF9 - 0 is normal, 3 is inside a mirror.
 
-020F6DFC-020F6DFF - Bitfield.
-  0x00000001 - Disables controls. Used during events.
+020F6DFC-020F6DFF - Bitfield of global game flags.
+  0x00000001 - Disables controls. Used during events and while warping.
   0x00000002 - Set during boss fights. Disables suspending, keeps boss doors shut, and turns mirrors into boss mirrors.
   0x00000008 - A magic seal is currently in progress (either an example automatic one or a manual one).
   0x00000020 - ? something related to input? or magic seals?
   0x00000040 - In player death state. The player won't actually die from this bit alone, but it does disable doors and make Yoko scream.
   0x00000080 - Hides the HUD.
   0x00000400 - Can't enter doors.
+  0x00040000 - Used whenever an event is active, even if the player has control, such as during the prologue fight.
   0x00100000 - Freezes Soma. He won't animate, take damage, be affected by gravity or momentum, or respond to player input. Used when loading the next room.
-  0x02000000 - if 2nd bit is set, enemies are hidden. they're still moving around, but are invisible and can't damage soma. this bit doesn't always seem to work though? it worked against zombie, but not some other enemies.
+  0x02000000 - Set in rooms with mirrors. Can affect zombie somehow, sometimes making him invisible?
+  0x08000000 - Set when the game is paused.
+  0x10000000 - Makes all enemy souls drops have a 100% chance. Used during the prologue.
+  0x40000000 - Set when you haven't saved the game once yet. Disables suspending.
 
 020F6E09,1 - Current magic seal index being drawn.
 020F6E0B - ??? related to paranoia somehow?

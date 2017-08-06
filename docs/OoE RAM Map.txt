@@ -154,8 +154,10 @@ Requirement lists for kill quests:
 
 020FFC88 - normally 0. 12 when in paries state. 12 prevents pausing.
 
-020FFC8C-020FFC8F - Bitfield. Seems to be similar to 020F6DFC from DoS.
-  0x00000002 - Set during boss fights. Disables suspending and keeps boss doors shut.
+020FFC8C-020FFC8F - Bitfield of global game flags.
+  0x00000001 - ? can't use magic tickets
+  0x00000002 - Set during boss fights. Disables suspending, magical tickets, and keeps boss doors shut.
+  0x80000000 - ? can't use magic tickets
 
 020FFC9C - Pointer to current room.
 020FFCA0 - Pointer to next room to transition into.

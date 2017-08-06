@@ -265,9 +265,9 @@ F5-F5
 
 === 0211173F: End of entities currently loaded into memory.
 
-0211174C - Bitfield. Seems to be similar to 020F6DFC from DoS.
+0211174C - Bitfield of global game flags.
   0x00000001 - Disables pausing and switching to or calling your partner.
-  0x00000002 - Set during boss fights. Disables suspending and keeps boss doors shut.
+  0x00000002 - Set during boss fights. Disables suspending, magical tickets, and keeps boss doors shut.
   0x00000040 - Player is dying. Manually setting this bit causes the player to die instantly regardless of their HP, complete with screaming.
   0x00000080 - Set during events?
   0x00040000 - Set during events and in Wind and Vincent's rooms?
@@ -390,6 +390,8 @@ F5-F5
   21 - Already attempted to defeat Whip's Memory once and failed.
   23 - Whip's Memory defeated.
 02111BB8-02111BE7 - Bitfield of pickup flags.
+
+02111BF0,4 - Bit 0x1 must be set in order to use magical tickets. It's set when you first enter the shop.
 
 02111BF8 - Bitfield of items you own. (Owned item info.)
 
