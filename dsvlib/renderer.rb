@@ -583,6 +583,10 @@ class Renderer
   def import_gfx_page(input_filename, gfx, palette_list_pointer, colors_per_palette, palette_index)
     input_image = ChunkyPNG::Image.from_file(input_filename)
     
+    save_gfx_page(input_image, gfx, palette_list_pointer, colors_per_palette, palette_index)
+  end
+  
+  def save_gfx_page(input_image, gfx, palette_list_pointer, colors_per_palette, palette_index)
     if input_image.width != input_image.height || ![128, 256].include?(input_image.width)
       raise GFXImportError.new("Invalid image size. Image must be 128x128 or 256x256.")
     end
@@ -621,9 +625,13 @@ class Renderer
     gfx.write_to_rom()
   end
   
-  def import_gfx_page_1_dimensional_mode(input_filename, gfx, palette_list_pointer, colors_per_palette, palette_index)
+  def import_gfx_page(input_filename, gfx, palette_list_pointer, colors_per_palette, palette_index)
     input_image = ChunkyPNG::Image.from_file(input_filename)
     
+    save_gfx_page_1_dimensional_mode(input_image, gfx, palette_list_pointer, colors_per_palette, palette_index)
+  end
+  
+  def save_gfx_page_1_dimensional_mode(input_image, gfx, palette_list_pointer, colors_per_palette, palette_index)
     colors = generate_palettes(palette_list_pointer, colors_per_palette)[palette_index]
     colors[0] = ChunkyPNG::Color::TRANSPARENT
     
