@@ -81,10 +81,13 @@
 021E7870 GiveItem
   ; r0 - Item type (2 is consumables, etc)
   ; r1 - Item index
-021E78F0 SetOwnedItemNumber
+021E78F0 SetOwnedItemNum
   ; r0 - Item type (2 is consumables, etc)
   ; r1 - Item index
   ; r2 - Number of the item to set
+021E79CC GetOwnedItemNum
+  ; r0 - Item type (2 is consumables, etc)
+  ; r1 - Item index
 021E7710 SpawnItemPickupEntity
   ; r0 - X pos
   ; r1 - Y pos

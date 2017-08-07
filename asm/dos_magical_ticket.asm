@@ -37,8 +37,6 @@
   bl 021F64BCh
   
   ; Below block is copy pasted, it triggers the game to unpause.
-  ; mov     r0,44h
-  ; bl      2029BF0h ; These two lines play the "unpausing" SFX, but we comment these out because we want the "use consumable" SFX instead.
   mov     r0,0h
   mvn     r1,0Fh
   mov     r2,8h
@@ -54,10 +52,6 @@
   
   mov r4, 42h ; This tells the rest of the consumable code to use one of the consumable, and play the consumable-used SFX.
   b 0x021EF0F8 ; Return to the consumable code.
-  
-  ; Alternate code to not use one of the tickets up:
-  ; mov r0, 42h ; This is the SFX that will be played.
-  ; b 0x021EF264 ; Return to the consumable code.
   
   .pool
 
