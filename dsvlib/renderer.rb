@@ -808,7 +808,7 @@ class Renderer
     return graphic_tile
   end
   
-  def render_map(map, scale = 1)
+  def render_map(map, scale = 1, hardcoded_transition_rooms=[])
     if map.tiles.any?
       map_width_in_blocks = map.tiles.map{|tile| tile.x_pos}.max + 1
       map_height_in_blocks = map.tiles.map{|tile| tile.y_pos}.max + 1
@@ -826,7 +826,7 @@ class Renderer
         next
       end
       
-      fill_tile, lines_tile = render_map_tile(tile)
+      fill_tile, lines_tile = render_map_tile(tile, hardcoded_transition_rooms=hardcoded_transition_rooms)
       
       fill_img.compose!(fill_tile, tile.x_pos*4, tile.y_pos*4)
       lines_img.compose!(lines_tile, tile.x_pos*4, tile.y_pos*4)
@@ -841,7 +841,7 @@ class Renderer
     return img
   end
   
-  def render_map_tile(tile)
+  def render_map_tile(tile, hardcoded_transition_rooms=[])
     @fill_color            ||= ChunkyPNG::Color.rgba(*MAP_FILL_COLOR)
     @save_fill_color       ||= ChunkyPNG::Color.rgba(*MAP_SAVE_FILL_COLOR)
     @warp_fill_color       ||= ChunkyPNG::Color.rgba(*MAP_WARP_FILL_COLOR)
@@ -857,9 +857,17 @@ class Renderer
     @door_pixels           ||= [line_color, door_color, door_center_color, door_color, line_color]
     @secret_door_pixels    ||= [line_color, secret_door_color, secret_door_color, secret_door_color, line_color]
     
+    is_hardcoded_transition = false
+    hardcoded_transition_rooms.each do |room|
+      if ["dos", "aos"].include?(GAME) && tile.sector_index == room.sector_index && tile.room_index == room.room_index
+        is_hardcoded_transition = true
+        break
+      end
+    end
+    
     color = if tile.is_blank
       ChunkyPNG::Color::TRANSPARENT
-    elsif tile.is_transition
+    elsif tile.is_transition || is_hardcoded_transition
       transition_fill_color
     elsif tile.is_entrance
       entrance_fill_color
