@@ -52,7 +52,7 @@ class Door
     elsif y_pos == room.main_layer_height
       return :down
     else
-      raise "Unknown direction for door #{door_str}"
+      return nil
     end
   end
   
