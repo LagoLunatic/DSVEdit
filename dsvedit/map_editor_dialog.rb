@@ -288,6 +288,8 @@ class MapEditorDialog < Qt::Dialog
       
       @selected_warp_room = @map.warp_rooms.first
       
+      selected_warp_room_changed(@selected_warp_room, @position_indicators.first)
+      
       @ui.edit_warps_button.text = "Edit Map"
       
       if GAME == "dos"
@@ -313,13 +315,18 @@ class MapEditorDialog < Qt::Dialog
     @selected_warp_room.area_name_index = warp_name_index
   end
   
-  def selected_warp_room_changed(warp_room)
+  def selected_warp_room_changed(warp_room, selected_position_indicator)
     @selected_warp_room = warp_room
     
     if GAME == "dos"
       warp_name_index = @selected_warp_room.area_name_index
       @ui.warp_name.setCurrentIndex(warp_name_index)
     end
+    
+    @position_indicators.each do |position_indicator|
+      position_indicator.setBrush(Qt::Brush.new(Qt::Color.new(255, 255, 255, 127)))
+    end
+    selected_position_indicator.setBrush(Qt::Brush.new(Qt::Color.new(255, 255, 255, 255)))
   end
   
   def save_changes
@@ -362,7 +369,6 @@ class WarpPositionIndicator < Qt::GraphicsEllipseItem
     @map_editor = map_editor
     
     setPos(warp_room.x_pos_in_tiles*4 + 2.25, warp_room.y_pos_in_tiles*4 + 2.25)
-    setOpacity(0.5)
     setFlag(Qt::GraphicsItem::ItemIsMovable)
     setFlag(Qt::GraphicsItem::ItemSendsGeometryChanges)
     
@@ -401,7 +407,7 @@ class WarpPositionIndicator < Qt::GraphicsEllipseItem
   end
   
   def mouseReleaseEvent(event)
-    @map_editor.selected_warp_room_changed(@warp_room)
+    @map_editor.selected_warp_room_changed(@warp_room, self)
     super(event)
   end
 end
