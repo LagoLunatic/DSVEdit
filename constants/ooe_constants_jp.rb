@@ -218,7 +218,9 @@ TEXT_REGIONS = {
   "Enemy Descriptions" => (0x353..0x3CB),
   "Music Names (Unused)" => (0x3CC..0x3E8),
   "Misc" => (0x3E9..0x424),
-  "Menus" => (0x425..0x67C),
+  "Menus 1" => (0x425..0x551),
+  "Quest Names" => (0x552..0x575),
+  "Menus 2" => (0x576..0x67C),
   "Events" => (0x67D..0x781)
 }
 TEXT_REGIONS_OVERLAYS = {
@@ -229,7 +231,9 @@ TEXT_REGIONS_OVERLAYS = {
   "Enemy Descriptions" => 0,
   "Music Names (Unused)" => 0,
   "Misc" => 0,
-  "Menus" => 0,
+  "Menus 1" => 0,
+  "Quest Names" => 0,
+  "Menus 2" => 0,
   "Events" => 0
 }
 STRING_DATABASE_START_OFFSET = 0x021DCEA0
@@ -332,6 +336,38 @@ TEST_ROOM_ROOM_INDEX_LOCATION      = 0x022130E8 + 0x40
 TEST_ROOM_X_POS_LOCATION           = 0x022130E8 + 0xA0
 TEST_ROOM_Y_POS_LOCATION           = 0x022130E8 + 0xA4
 TEST_ROOM_OVERLAY = TEST_ROOM_OVERLAY-1
+
+SHOP_ITEM_POOL_LIST = 0x02222634
+SHOP_HARDCODED_ITEM_POOLS = [
+  {
+    requirement: nil,
+    items: {
+      0x021FFFA4 => :arm_shifted_immediate,
+      0x021FFFB0 => :arm_shifted_immediate,
+      0x021FFFBC => :arm_shifted_immediate,
+      0x021FFFC8 => :arm_shifted_immediate,
+      0x021FFFD4 => :arm_shifted_immediate,
+      0x02200144 => :word, # loaded by 0x021FFFE0
+      0x021FFFEC => :arm_shifted_immediate,
+    }
+  },
+  {
+    requirement: 0x0220001C,
+    items: {
+      0x02200148 => :word, # loaded by 0x02200028 and 0x02200000
+      0x02200150 => :word, # loaded by 0x02200034
+      0x02200154 => :word, # loaded by 0x02200040
+    }
+  },
+  {
+    requirement: 0x02200070,
+    items: {
+      0x02200158 => :word, # loaded by 0x0220007C and 0x02200054
+      0x02200088 => :arm_shifted_immediate,
+      0x0220015C => :word, # loaded by 0x02200094
+    }
+  },
+]
 
 FAKE_FREE_SPACES = [
   {path: "/ftc/overlay9_45", offset: 0x022E467C-0x022C1BA0, length: 0xC0}
