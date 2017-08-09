@@ -295,6 +295,8 @@ class DSVEdit < Qt::MainWindow
     self.setWindowTitle("DSVania Editor #{DSVEDIT_VERSION} - #{folder_name}")
   rescue Game::InvalidFileError, NDSFileSystem::InvalidFileError
     Qt::MessageBox.warning(self, "Invalid file", "Selected ROM file is not a DSVania or is not a supported region.")
+  rescue NDSFileSystem::InvalidRevisionError => e
+    Qt::MessageBox.warning(self, "Invalid revision", e.message)
   end
   
   def open_folder(folder_path)

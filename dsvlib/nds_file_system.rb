@@ -3,6 +3,7 @@ require 'fileutils'
 
 class NDSFileSystem
   class InvalidFileError < StandardError ; end
+  class InvalidRevisionError < StandardError ; end
   class ConversionError < StandardError ; end
   class OffsetPastEndOfFileError < StandardError ; end
   class FileExpandError < StandardError ; end
@@ -581,6 +582,14 @@ private
     raise InvalidFileError.new("Not a DSVania") unless %w(CASTLEVANIA1 CASTLEVANIA2 CASTLEVANIA3).include?(@game_name)
     @game_code = header[0x0C,4]
     raise InvalidFileError.new("This region is not supported") unless %w(ACVE ACBE YR9E ACVJ ACBJ YR9J).include?(@game_code)
+    
+    @rom_version = header[0x1E,1].unpack("C").first
+    
+    if REGION == :jp && ["dos", "por"].include?(GAME)
+      raise InvalidRevisionError.new("This ROM revision is not supported. For the Japanese version of #{LONG_GAME_NAME}, only revision 01 is supported.") unless @rom_version == 1
+    else
+      raise InvalidRevisionError.new("This ROM revision is not supported. For the Japanese version of #{LONG_GAME_NAME}, only the original version is supported.") unless @rom_version == 0
+    end
     
     @arm9_rom_offset, @arm9_entry_address, @arm9_ram_offset, @arm9_size = header[0x20,16].unpack("VVVV")
     @arm7_rom_offset, @arm7_entry_address, @arm7_ram_offset, @arm7_size = header[0x30,16].unpack("VVVV")
