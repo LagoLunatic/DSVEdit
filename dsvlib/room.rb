@@ -454,7 +454,7 @@ class Room
   end
   
   def room_str
-    "%02X-%02X-%02X" % [area_index, sector_index, room_index]
+    @room_str ||= "%02X-%02X-%02X" % [area_index, sector_index, room_index]
   end
   
   def inspect; to_s; end

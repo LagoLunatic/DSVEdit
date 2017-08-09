@@ -47,9 +47,9 @@ class Door
       return :left
     elsif y_pos == 0xFF
       return :up
-    elsif x_pos == room.main_layer_width
+    elsif x_pos == room.width
       return :right
-    elsif y_pos == room.main_layer_height
+    elsif y_pos == room.height
       return :down
     else
       return nil
@@ -92,7 +92,6 @@ class Door
   end
   
   def door_str
-    door_index = room.doors.index(self)
-    "#{room.room_str}_%03X" % door_index
+    @door_str ||= "#{room.room_str}_%03X" % room.doors.index(self)
   end
 end
