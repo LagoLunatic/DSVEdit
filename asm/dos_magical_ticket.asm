@@ -18,7 +18,7 @@
   ; Don't let the player use magical tickets during boss fights.
   ldr r0, =020F6DFCh
   ldr r0, [r0] ; Load the bitfield of global flags.
-  ldr r1, =0C0040007h ; Check the flags to make sure we're not in the middle of a boss fight, an event, and that the player has saved the game at least once.
+  mov r1, 0C0000007h ; Check the flags to make sure we're not in the middle of a boss fight, an event, and that the player has saved the game at least once.
   ands r0, r0, r1
   bne 0x021EF0F8 ; Return to the consumable code if any of those bits are set.
   

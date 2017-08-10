@@ -30,8 +30,8 @@
   mov r0, 42h ; This is the SFX that will be played on use.
   b 0x021EF264 ; Return to the consumable code after the part where it would remove the item from your inventory.
 
-; Change the global flags checked to not care that the game hasn't been saved once yet.
-.org @FreeSpace+0x78
-  .word 0x80040007
+; Change the global flags checked to not care that the game hasn't been saved once yet (bit 0x40000000). In its place we check the bit that makes soul drops have a 100% drop chance (bit 0x10000000), so that the player can't use magical tickets during the prologue.
+.org @FreeSpace+0x08
+  mov r1, 90000007h
 
 .close

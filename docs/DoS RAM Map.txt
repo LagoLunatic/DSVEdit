@@ -251,7 +251,7 @@ What each range of entity slots is for:
   0x00000040 - In player death state. The player won't actually die from this bit alone, but it does disable doors and make Yoko scream.
   0x00000080 - Hides the HUD.
   0x00000400 - Can't enter doors.
-  0x00040000 - Used whenever an event is active, even if the player has control, such as during the prologue fight.
+  0x00040000 - Used whenever an event is active, even if the player has control, such as during the prologue fight. Also set when the player is in a transition room.
   0x00100000 - Freezes Soma. He won't animate, take damage, be affected by gravity or momentum, or respond to player input. Used when loading the next room.
   0x02000000 - Set in rooms with mirrors. Can affect zombie somehow, sometimes making him invisible?
   0x08000000 - Set when the game is paused.
