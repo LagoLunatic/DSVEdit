@@ -392,7 +392,7 @@ class Game
   def get_transition_rooms
     transition_rooms = []
     
-    if GAME == "dos" # TODO AoS
+    if GAME == "dos" || GAME == "aos"
       transition_room_pointers = fs.read_until_end_marker(TRANSITION_ROOM_LIST_POINTER, [0, 0, 0, 0]).unpack("V*")
       
       transition_rooms = transition_room_pointers.map do |pointer|
