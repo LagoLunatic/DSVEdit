@@ -698,7 +698,7 @@ class Renderer
     gfx.write_to_rom()
   end
   
-  def import_gfx_page(input_filename, gfx, palette_list_pointer, colors_per_palette, palette_index)
+  def import_gfx_page_1_dimensional_mode(input_filename, gfx, palette_list_pointer, colors_per_palette, palette_index)
     input_image = ChunkyPNG::Image.from_file(input_filename)
     
     save_gfx_page_1_dimensional_mode(input_image, gfx, palette_list_pointer, colors_per_palette, palette_index)
