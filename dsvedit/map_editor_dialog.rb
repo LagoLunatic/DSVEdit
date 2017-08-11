@@ -400,7 +400,6 @@ class WarpPositionIndicator < Qt::GraphicsEllipseItem
       
       @warp_room.x_pos_in_tiles = x
       @warp_room.y_pos_in_tiles = y
-      @warp_room.write_to_rom()
       
       return super(change, Qt::Variant.new(new_pos))
     end
