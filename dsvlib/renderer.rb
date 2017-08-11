@@ -580,6 +580,79 @@ class Renderer
     return game_colors.pack("v*")
   end
   
+  # Limits an image to a given palette in a way that looks good.
+  def convert_image_to_palette(image, palette)
+    new_image = ChunkyPNG::Image.new(image.width, image.height)
+    
+    image.width.times do |x|
+      image.height.times do |y|
+        old_color = image[x,y]
+        new_color = get_nearest_color(old_color, palette)
+        
+        new_image[x,y] = new_color
+      end
+    end
+    
+    return new_image
+  end
+  
+  # Picks a color from a palette that is visually the closest to the given color.
+  # Based off Aseprite's code: https://github.com/aseprite/aseprite/blob/cc7bde6cd1d9ab74c31ccfa1bf41a000150a1fb2/src/doc/palette.cpp#L226-L272
+  def get_nearest_color(color, palette)
+    if palette.include?(color)
+      return color
+    end
+    
+    min_dist = Float::INFINITY
+    value = nil
+    
+    col_diff_g = []
+    col_diff_r = []
+    col_diff_b = []
+    col_diff_a = []
+    128.times do |i|
+      col_diff_g[i] = 0
+      col_diff_r[i] = 0
+      col_diff_b[i] = 0
+      col_diff_a[i] = 0
+    end
+    (1..63).each do |i|
+      k = i*i
+      col_diff_g[i] = col_diff_g[128-i] = k * 59 * 59
+      col_diff_r[i] = col_diff_r[128-i] = k * 30 * 30
+      col_diff_b[i] = col_diff_b[128-i] = k * 11 * 11
+      col_diff_a[i] = col_diff_a[128-i] = k * 8 * 8
+    end
+    
+    palette.each do |indexed_color|
+      r1 = ChunkyPNG::Color.r(color)         >> 3
+      r2 = ChunkyPNG::Color.r(indexed_color) >> 3
+      g1 = ChunkyPNG::Color.g(color)         >> 3
+      g2 = ChunkyPNG::Color.g(indexed_color) >> 3
+      b1 = ChunkyPNG::Color.b(color)         >> 3
+      b2 = ChunkyPNG::Color.b(indexed_color) >> 3
+      a1 = ChunkyPNG::Color.a(color)         >> 3
+      a2 = ChunkyPNG::Color.a(indexed_color) >> 3
+      
+      coldiff = col_diff_g[g2 - g1 & 127]
+      if coldiff < min_dist
+        coldiff += col_diff_r[r2 - r1 & 127]
+        if coldiff < min_dist
+          coldiff += col_diff_b[b2 - b1 & 127]
+          if coldiff < min_dist
+            coldiff += col_diff_a[a2 - a1 & 127]
+            if coldiff < min_dist
+              min_dist = coldiff
+              value = indexed_color
+            end
+          end
+        end
+      end
+    end
+    
+    return value
+  end
+  
   def import_gfx_page(input_filename, gfx, palette_list_pointer, colors_per_palette, palette_index)
     input_image = ChunkyPNG::Image.from_file(input_filename)
     
