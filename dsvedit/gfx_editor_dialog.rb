@@ -25,6 +25,9 @@ class GfxEditorDialog < Qt::Dialog
     @gfx_file_graphics_scene = Qt::GraphicsScene.new
     @ui.gfx_file_graphics_view.setScene(@gfx_file_graphics_scene)
     
+    @palette_graphics_scene = Qt::GraphicsScene.new
+    @ui.palette_graphics_view.setScene(@palette_graphics_scene)
+    
     connect(@ui.view_button, SIGNAL("clicked()"), self, SLOT("load_gfx_file_and_palette_list()"))
     connect(@ui.palette_index, SIGNAL("activated(int)"), self, SLOT("palette_changed(int)"))
     connect(@ui.one_dimensional_mode, SIGNAL("stateChanged(int)"), self, SLOT("toggle_one_dimensional_mapping_mode(int)"))
@@ -132,7 +135,22 @@ class GfxEditorDialog < Qt::Dialog
     
     load_gfx()
     
+    load_palette_image()
+    
     @ui.palette_index.setCurrentIndex(palette_index)
+  end
+  
+  def load_palette_image
+    palette = @palettes[@palette_index]
+    palette_image = @renderer.convert_palette_to_palette_swatches_image(palette)
+    
+    pixmap = Qt::Pixmap.new
+    blob = palette_image.to_blob
+    pixmap.loadFromData(blob, blob.length)
+    palette_pixmap_item = Qt::GraphicsPixmapItem.new(pixmap)
+    @palette_graphics_scene.clear()
+    @palette_graphics_scene.addItem(palette_pixmap_item)
+    @palette_graphics_scene.setSceneRect(0, 0, 256, 256)
   end
   
   def toggle_one_dimensional_mapping_mode(checked)

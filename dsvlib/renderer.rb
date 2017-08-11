@@ -493,6 +493,11 @@ class Renderer
   end
   
   def export_palette_to_palette_swatches_file(palette, file_path)
+    image = convert_palette_to_palette_swatches_image(palette)
+    image.save(file_path)
+  end
+  
+  def convert_palette_to_palette_swatches_image(palette)
     image = ChunkyPNG::Image.new(16, palette.size/16)
     palette.each_with_index do |color, i|
       x = i % 16
@@ -500,7 +505,8 @@ class Renderer
       image[x,y] = color
     end
     image.resample_nearest_neighbor!(image.width*16, image.height*16) # Make the color swatches 16 by 16 instead of a single pixel.
-    image.save(file_path)
+    
+    return image
   end
   
   def import_palette_from_palette_swatches_file(file_path, colors_per_palette)
