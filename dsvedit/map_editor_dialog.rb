@@ -184,7 +184,9 @@ class MapEditorDialog < Qt::Dialog
     when Qt::LeftButton
       if old_tile
         change_map_tile(old_tile)
-      else
+      elsif @map.is_a?(DoSMap)
+        # Do nothing.
+      else # PoR/OoE
         add_map_tile(x, y)
       end
     when Qt::RightButton
