@@ -26,6 +26,7 @@ class SpriteEditor < Qt::Dialog
   slots "reload_sprite()"
   slots "export_sprite()"
   slots "open_skeleton_editor()"
+  slots "open_in_gfx_editor()"
   slots "click_gfx_scene(int, int, const Qt::MouseButton&)"
   slots "drag_gfx_scene(int, int, const Qt::MouseButton&)"
   slots "stop_dragging_gfx_scene(int, int, const Qt::MouseButton&)"
@@ -97,6 +98,7 @@ class SpriteEditor < Qt::Dialog
     connect(@ui.reload_button, SIGNAL("clicked()"), self, SLOT("reload_sprite()"))
     connect(@ui.export_button, SIGNAL("clicked()"), self, SLOT("export_sprite()"))
     connect(@ui.view_skeleton_button, SIGNAL("clicked()"), self, SLOT("open_skeleton_editor()"))
+    connect(@ui.open_in_gfx_editor, SIGNAL("clicked()"), self, SLOT("open_in_gfx_editor()"))
     connect(@ui.animation_add, SIGNAL("clicked()"), self, SLOT("add_animation()"))
     connect(@ui.animation_remove, SIGNAL("clicked()"), self, SLOT("remove_animation()"))
     connect(@ui.frame_add, SIGNAL("clicked()"), self, SLOT("add_frame()"))
@@ -759,6 +761,15 @@ class SpriteEditor < Qt::Dialog
     if @sprite_info.skeleton_file
       @skeleton_editor = SkeletonEditorDialog.new(self, @sprite_info, game.fs, @renderer)
     end
+  end
+  
+  def open_in_gfx_editor
+    gfx_and_palette_data = {
+      gfx_file_name: @gfx_pages_with_blanks[@gfx_page_index].file[:file_path],
+      palette_pointer: @sprite_info.palette_pointer,
+      palette_index: @ui.palette_index.currentIndex,
+    }
+    parent.open_gfx_editor(gfx_and_palette_data)
   end
   
   def save_sprite

@@ -657,9 +657,9 @@ class DSVEdit < Qt::MainWindow
     @item_editor = ItemEditor.new(self, game.fs)
   end
   
-  def open_gfx_editor
+  def open_gfx_editor(gfx_and_palette_data=nil)
     return if @gfx_editor && @gfx_editor.visible?
-    @gfx_editor = GfxEditorDialog.new(self, game.fs, @renderer)
+    @gfx_editor = GfxEditorDialog.new(self, game.fs, @renderer, gfx_and_palette_data)
   end
   
   def open_music_editor

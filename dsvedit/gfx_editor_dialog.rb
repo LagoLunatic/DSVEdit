@@ -10,7 +10,7 @@ class GfxEditorDialog < Qt::Dialog
   slots "import_palette()"
   slots "generate_palette_from_multiple_files()"
   
-  def initialize(parent, fs, renderer)
+  def initialize(parent, fs, renderer, gfx_and_palette_data=nil)
     super(parent, Qt::WindowTitleHint | Qt::WindowSystemMenuHint)
     
     @fs = fs
@@ -36,6 +36,13 @@ class GfxEditorDialog < Qt::Dialog
     if SYSTEM == :gba
       @ui.one_dimensional_mode.checked = true
       @ui.label_2.text = "GFX pointer"
+    end
+    
+    if gfx_and_palette_data
+      @ui.gfx_file_name.text = gfx_and_palette_data[:gfx_file_name]
+      @ui.palette_pointer.text = "%08X" % gfx_and_palette_data[:palette_pointer]
+      load_gfx_file_and_palette_list()
+      palette_changed(gfx_and_palette_data[:palette_index])
     end
     
     self.show()
