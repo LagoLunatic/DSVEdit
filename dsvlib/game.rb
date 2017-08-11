@@ -378,13 +378,12 @@ class Game
   
   def fix_map_sector_and_room_indexes(area_index, sector_index)
     # TODO also fix warps
-    # TODO also for abyss
     
     map = get_map(area_index, sector_index)
     area = areas[area_index]
     
     map.tiles.each do |tile|
-      tile.sector_index, tile.room_index = area.get_sector_and_room_indexes_from_map_x_y(tile.x_pos, tile.y_pos) || [0, 0]
+      tile.sector_index, tile.room_index = area.get_sector_and_room_indexes_from_map_x_y(tile.x_pos, tile.y_pos, map.is_abyss) || [0, 0]
     end
     map.write_to_rom()
   end

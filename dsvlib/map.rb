@@ -108,6 +108,10 @@ class Map
       fs.write(@row_widths_list_pointer + row, [@row_widths[row]].pack("C"))
     end
   end
+  
+  def is_abyss
+    false
+  end
 end
 
 class MapTile

@@ -44,11 +44,19 @@ class Area
     end
   end
   
-  def get_sector_and_room_indexes_from_map_x_y(x, y)
+  def get_sector_and_room_indexes_from_map_x_y(x, y, abyss=false)
     sectors.each_with_index do |sector, sector_index|
-      if GAME == "dos" && (0xA..0x10).include?(sector_index)
-        # Areas not on the main Dracula's Castle map.
+      if GAME == "dos" && (0xC..0x10).include?(sector_index)
+        # Areas not on either map.
         next
+      end
+      
+      if GAME == "dos" && abyss
+        # Exclude areas on the main Dracula Castle map.
+        next if (0..9).include?(sector_index)
+      elsif GAME == "dos" && !abyss
+        # Exclude areas on the Abyss map.
+        next if (0xA..0xB).include?(sector_index)
       end
       
       sector.rooms.each_with_index do |room, room_index|
