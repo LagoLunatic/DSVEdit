@@ -172,7 +172,7 @@ class GenericEditorWidget < Qt::Widget
     initial_color = Qt::Color.new(r, g, b, a)
     color = Qt::ColorDialog.getColor(initial_color, self, "Select color", Qt::ColorDialog::ShowAlphaChannel)
     
-    if !color.isValid
+    unless color.isValid
       # User clicked cancel.
       return
     end

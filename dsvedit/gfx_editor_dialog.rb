@@ -8,6 +8,7 @@ class GfxEditorDialog < Qt::Dialog
   slots "export_file()"
   slots "import_gfx()"
   slots "import_palette()"
+  slots "palette_clicked(int, int, const Qt::MouseButton&)"
   slots "generate_palette_from_multiple_files()"
   
   def initialize(parent, fs, renderer, gfx_and_palette_data=nil)
@@ -25,8 +26,9 @@ class GfxEditorDialog < Qt::Dialog
     @gfx_file_graphics_scene = Qt::GraphicsScene.new
     @ui.gfx_file_graphics_view.setScene(@gfx_file_graphics_scene)
     
-    @palette_graphics_scene = Qt::GraphicsScene.new
+    @palette_graphics_scene = ClickableGraphicsScene.new
     @ui.palette_graphics_view.setScene(@palette_graphics_scene)
+    connect(@palette_graphics_scene, SIGNAL("clicked(int, int, const Qt::MouseButton&)"), self, SLOT("palette_clicked(int, int, const Qt::MouseButton&)"))
     
     connect(@ui.view_button, SIGNAL("clicked()"), self, SLOT("load_gfx_file_and_palette_list()"))
     connect(@ui.palette_index, SIGNAL("activated(int)"), self, SLOT("palette_changed(int)"))
@@ -85,6 +87,8 @@ class GfxEditorDialog < Qt::Dialog
     @gfx = gfx
     
     load_gfx()
+    
+    load_palette_image()
     
     @ui.palette_index.clear()
     @palettes.each_index do |i|
@@ -153,6 +157,35 @@ class GfxEditorDialog < Qt::Dialog
     @palette_graphics_scene.setSceneRect(0, 0, 256, 256)
   end
   
+  def palette_clicked(x, y, button)
+    return unless (0..@palette_graphics_scene.width-1).include?(x) && (0..@palette_graphics_scene.height-1).include?(y)
+    
+    clicked_palette_index = (x/16) + (y/16) * 16
+    
+    if clicked_palette_index >= @gfx.colors_per_palette
+      return
+    end
+    
+    palette = @palettes[@palette_index]
+    initial_chunky_color = palette[clicked_palette_index]
+    r, g, b = ChunkyPNG::Color.to_truecolor_bytes(initial_chunky_color)
+    initial_color = Qt::Color.new(r, g, b)
+    color = Qt::ColorDialog.getColor(initial_color, self, "Select color")
+    
+    unless color.isValid
+      # User clicked cancel.
+      return
+    end
+    
+    new_chunky_color = ChunkyPNG::Color.rgb(color.red, color.green, color.blue)
+    palette[clicked_palette_index] = new_chunky_color
+    @renderer.save_palette(palette, @palette_pointer, @palette_index, @gfx.colors_per_palette)
+    
+    load_palettes(@gfx.colors_per_palette)
+    load_gfx()
+    load_palette_image()
+  end
+  
   def toggle_one_dimensional_mapping_mode(checked)
     return if @gfx.nil? || @palettes.nil? || @palette_index.nil?
     load_gfx()
@@ -201,7 +234,6 @@ class GfxEditorDialog < Qt::Dialog
       return
     end
     
-    load_palettes(@gfx.colors_per_palette)
     load_gfx()
   end
   
@@ -227,6 +259,7 @@ class GfxEditorDialog < Qt::Dialog
     
     load_palettes(@gfx.colors_per_palette)
     load_gfx()
+    load_palette_image()
   end
   
   def generate_palette_from_multiple_files
@@ -250,5 +283,6 @@ class GfxEditorDialog < Qt::Dialog
     
     load_palettes(@gfx.colors_per_palette)
     load_gfx()
+    load_palette_image()
   end
 end
