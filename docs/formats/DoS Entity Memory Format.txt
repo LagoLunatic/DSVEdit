@@ -55,6 +55,7 @@ Memory used for entities in DoS is 020CA3F0 - 020F6DEF. Each entity is 0x2A0 byt
 270,2: Var B.
 
 For enemies:
+154,2: Max HP.
 258,2: Current HP.
 25A,2: Current MP.
 260,1: Enemy ID.

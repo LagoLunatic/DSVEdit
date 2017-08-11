@@ -191,6 +191,13 @@
   ; Makes an enemy turn towards the player.
   ; r0 - Enemy entity pointer
 
+021C23E0 EntityMoveToFloor
+  ; Teleports entity downwards to the nearest floor.
+  ; r0 - Pointer to entity
+  ; r1 - Pointer to ??. May have the physical size of this entity?
+  ;   For gergoth, this is 02306E64.
+  ;   04,2: Height in pixels.
+
 021C4CFC CheckContactDamagePlayer
   ; Makes an enemy damage the player if touching.
   ; r0 - Enemy entity pointer

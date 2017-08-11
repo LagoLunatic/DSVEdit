@@ -16,6 +16,10 @@
 0201BB58 AssetGetName
   ; r0 - Asset index
   ; Returns 020CDAFC+(r0*0x20)+6, where the asset's filename starts
+0201BA0C AssetLoadSpriteFile?
+021DCA34 LoadEntityAssets
+  ; r0 - Entity subtype
+  ; r1 - Entity type (1 for enemies to use list 020CD88C, 2 for special objects to use list 020E19DC)
 
 02015AFC LoadPalette
   ; r0 - Palette list pointer

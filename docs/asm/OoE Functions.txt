@@ -35,6 +35,13 @@
 02038C1C ChangeRoom
   ; r0 - New room pointer
 
+0203AFD0 TeleportPlayer
+  ; r0 - Area index
+  ; r1 - Sector index
+  ; r2 - Room index
+  ; r3 - X pos (pixels)
+  ; [r13] - Y pos (pixels)
+
 0204FB1C CalcExpNeededForLevel
   ; Figures out the total EXP for a given level.
   ; The formula is: level*(level+1)*(level+2+level*2)

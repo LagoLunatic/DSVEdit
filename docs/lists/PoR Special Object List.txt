@@ -240,6 +240,8 @@ Special objects:
     01 Door at bottom left.
     02 Door at center left and center right.
     03 Door at center left.
+  This object loads the sprite data for the blue flames that appear in front of the 13th Street and Burnt Paradise portrait. Therefore this portrait must be in any room with either of those portraits, and it must be before the portraits in the room's entity list so it loads the sprite before those portraits get a chance to load in. If this object is not placed correctly, the portraits will causes crashes or serious visual bugs.
+  Alternatively just nop out the line of code at 02079014 and the portraits will no longer try to use the flame visual at all (but will still stop the player from entering early).
 60 Crumbling block from Great Stairway.
 61 The 3D background from City of Haze.
   Requires sector overlay 93.
