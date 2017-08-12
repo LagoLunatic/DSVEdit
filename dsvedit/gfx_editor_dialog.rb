@@ -132,6 +132,16 @@ class GfxEditorDialog < Qt::Dialog
     @gfx_file_graphics_scene.clear()
     @gfx_file_graphics_scene.addItem(gfx_page_pixmap_item)
     @gfx_file_graphics_scene.setSceneRect(0, 0, @gfx.canvas_width*8, @gfx.canvas_width*8)
+  rescue GBADummyFilesystem::ReadError => e
+    message = "There was an error trying to load the GFX asset #{@ui.gfx_file_name.text}.\n"
+    message << "Are you sure this is a valid GFX asset?"
+    if SYSTEM == :gba
+      message << "\n\nNote that the GFX editor does not yet support displaying Aria of Sorrow's weapon GFX."
+    end
+    Qt::MessageBox.warning(self,
+      "Error loading GFX",
+      message
+    )
   end
   
   def palette_changed(palette_index)
