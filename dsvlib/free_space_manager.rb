@@ -200,7 +200,7 @@ module FreeSpaceManager
     raise FreeSpaceFindError.new("Failed to find any free space!")
   end
   
-  def free_old_space_and_find_new_free_space(old_pointer, old_length, new_length_needed, overlay_id)
+  def free_old_space_and_find_new_free_space(old_pointer, old_length, new_length_needed, overlay_id = nil)
     old_data = read(old_pointer, old_length)
     free_unused_space(old_pointer, old_length)
     

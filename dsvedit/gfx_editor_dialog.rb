@@ -242,6 +242,12 @@ class GfxEditorDialog < Qt::Dialog
         e.message
       )
       return
+    rescue GBADummyFilesystem::CompressedDataTooLarge => e
+      Qt::MessageBox.warning(self,
+        "Compressed write error",
+        e.message
+      )
+      return
     end
     
     load_gfx()

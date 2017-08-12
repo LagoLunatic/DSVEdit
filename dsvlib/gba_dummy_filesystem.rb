@@ -1,6 +1,7 @@
 
 class GBADummyFilesystem
   class ReadError < StandardError ; end
+  class CompressedDataTooLarge < StandardError ; end
   
   include FreeSpaceManager
   
@@ -11,6 +12,7 @@ class GBADummyFilesystem
     input_rom_path = File.join(@filesystem_directory, "rom.gba")
     @rom = File.open(input_rom_path, "rb") {|file| file.read}
     read_free_space_from_text_file()
+    read_original_compressed_sizes_from_text_file()
   end
   
   def open_and_extract_rom(input_rom_path, filesystem_directory)
@@ -18,6 +20,7 @@ class GBADummyFilesystem
     @rom = File.open(input_rom_path, "rb") {|file| file.read}
     extract_to_hard_drive()
     read_free_space_from_text_file()
+    read_original_compressed_sizes_from_text_file()
   end
   
   def extract_to_hard_drive
@@ -29,6 +32,10 @@ class GBADummyFilesystem
     end
     
     freespace_file = File.join(@filesystem_directory, "_dsvedit_freespace.txt")
+    if File.file?(freespace_file)
+      FileUtils.rm(freespace_file)
+    end
+    freespace_file = File.join(@filesystem_directory, "_dsvedit_orig_compressed_sizes.txt")
     if File.file?(freespace_file)
       FileUtils.rm(freespace_file)
     end
@@ -99,7 +106,11 @@ class GBADummyFilesystem
   def decompress_and_get_compressed_size(address)
     offset = convert_address(address)
     decompressed_data, compressed_size = GBALZ77.decompress(rom[offset..-1])
-    #@original_compressed_sizes[address] = compressed_size # TODO preserve
+    if @original_compressed_sizes[address].nil?
+      # Never read from this compressed data before so we don't know what its original length is.
+      # Preserve this value forever so we can tell whether new data being written here would overwrite stuff after this or not.
+      @original_compressed_sizes[address] = compressed_size
+    end
     return [decompressed_data[4..-1], compressed_size]
   end
   
@@ -113,11 +124,17 @@ class GBADummyFilesystem
     
     compr_data = GBALZ77.compress(new_data)
     
-    # TODO: check if new compressed length is bigger than original compressed length and raise an error
-    #p [compr_data.length, @compressed_length]
-    #if compr_data.length > @compressed_length
-    #  raise "New GFX data too large"
-    #end
+    orig_compressed_size = @original_compressed_sizes[address]
+    if orig_compressed_size.nil?
+      # Read from the compressed data to figure out what its original compressed size is if we've never done so before.
+      decompress(address)
+      orig_compressed_size = @original_compressed_sizes[address]
+    end
+    
+    puts "Old size: %06X, new size: %06X" % [orig_compressed_size, compr_data.length]
+    if compr_data.length > orig_compressed_size
+      raise CompressedDataTooLarge.new("New compressed data too large. The original data was 0x%06X bytes long, the new data is 0x%06X bytes long." % [orig_compressed_size, compr_data.length])
+    end
     
     write(address, compr_data)
   end
@@ -151,6 +168,7 @@ class GBADummyFilesystem
     @has_uncommitted_changes = false
     
     write_free_space_to_text_file(base_directory)
+    write_original_compressed_sizes_to_text_file(base_directory)
     
     puts "Done."
   end
@@ -175,5 +193,46 @@ class GBADummyFilesystem
   
   def is_pointer?(value)
     value >= 0x08000000 && value < 0x09000000
+  end
+  
+  def read_original_compressed_sizes_from_text_file
+    @original_compressed_sizes = {}
+    
+    if @filesystem_directory.nil?
+      return
+    end
+    
+    orig_sizes_file = File.join(@filesystem_directory, "_dsvedit_orig_compressed_sizes.txt")
+    if !File.file?(orig_sizes_file)
+      return
+    end
+    
+    file_contents = File.read(orig_sizes_file)
+    orig_size_strs = file_contents.scan(/^(\h+) (\h+)$/)
+    orig_size_strs.each do |address, orig_size|
+      address = address.to_i(16)
+      orig_size = orig_size.to_i(16)
+      @original_compressed_sizes[address] = orig_size
+    end
+  end
+  
+  def write_original_compressed_sizes_to_text_file(base_directory=@filesystem_directory)
+    if base_directory.nil?
+      return
+    end
+    
+    output_string = ""
+    output_string << "This file lists locations of LZ77 compressed data in the ROM, and what the original compressed length of that data was.\n"
+    output_string << "DSVEdit reads from this file so it knows whether certain new compressed data can fit in the old spot without overwriting anything.\n"
+    output_string << "Don't modify this file manually unless you know what you're doing.\n\n"
+    
+    @original_compressed_sizes.each do |address, orig_size|
+      output_string << "%08X %06X\n" % [address, orig_size]
+    end
+    
+    orig_sizes_file = File.join(base_directory, "_dsvedit_orig_compressed_sizes.txt")
+    File.open(orig_sizes_file, "w") do |f|
+      f.write(output_string)
+    end
   end
 end
