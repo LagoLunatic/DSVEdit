@@ -145,6 +145,8 @@
   ; r2 - GFX asset ptr
   ; r3 - Palette list ptr
 0201C2D8 LoadSpriteSingleGfx2
+0201A990 LoadCommonSprite
+  ; r0 - Entity
 
 0200EE44 GetSpriteInfoPointer
   ; r0 - Index in the currently loaded sprite info list, 020C6260. This is from +68 in the entity.

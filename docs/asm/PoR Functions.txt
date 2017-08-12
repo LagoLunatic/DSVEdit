@@ -150,16 +150,18 @@
   ; Min random number is -r0. Max is r0-1.
 02013008 RandMax2?
 
-020216B0 LoadSprite
+020216B0 LoadSpriteMultiGfx
   ; r0 - Entity ptr
   ; r1 - Sprite ptr
   ; r2 - GFX list ptr
   ; r3 - Palette list ptr
-020217C8 LoadSprite2
+020217C8 LoadSpriteSingleGfx
   ; r0 - Entity ptr
   ; r1 - Sprite ptr
-  ; r2 - GFX list ptr
+  ; r2 - GFX asset ptr
   ; r3 - Palette list ptr
+0201FECC LoadCommonSprite
+  ; r0 - Entity
 
 0200E954 LoadPalette
   ; r0 - Palette list pointer
@@ -178,8 +180,6 @@
 0200F5B8 SpriteDrawPart
   ; r0 - Pointer to entity
   ; r1 - Pointer to part
-
-0201FECC InitializeVisibleEntity?
 
 0206DC34 BossRushTimerUpdate
 0206DC38 BossRushTimerDraw

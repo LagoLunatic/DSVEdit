@@ -386,6 +386,8 @@
   ; r1 - Sprite ptr
   ; r2 - GFX list ptr
   ; r3 - Palette list ptr
+0203C834 LoadCommonSprite
+  ; r0 - Entity
 
 02030684 InitializeSprite
   ; r0 - Entity

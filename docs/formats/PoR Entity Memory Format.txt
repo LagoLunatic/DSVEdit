@@ -20,6 +20,8 @@ Memory used for entities in PoR is 020FC500 - 0211173F. Each entity is 0x160 byt
 040,4: Y velocity.
 048,4: X friction.
 04C,4: Y acceleration (gravity).
+066,2: Min random dist? (For the portrait blocking flames)
+068,2: Max random dist? (For the portrait blocking flames)
 06C,2: Affects the entity's graphics.
   This is an index in the currently loaded sprite info list, 020FA200.
 074,4: Bitfield related to sprite drawing.

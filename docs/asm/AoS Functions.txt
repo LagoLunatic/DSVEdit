@@ -79,6 +79,8 @@
   ; r2 - Palette pointer
   ; r3 - 0? Palette offset?
   ; [r13,0] - Sprite ptr
+0804DF3C LoadCommonSprite
+  ; r0 - Entity
 
 0803B9D1 EnemyDraw
 
