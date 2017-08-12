@@ -400,18 +400,10 @@ class Renderer
   end
   
   def render_gfx_1_dimensional_mode(gfx_page, palette, first_minitile_index: 0, max_num_minitiles: nil)
-    width = 128
-    height = 128
-    if max_num_minitiles
-      height = (max_num_minitiles/16.0).ceil * 8
-    end
-    
-    rendered_gfx = ChunkyPNG::Image.new(width, height, ChunkyPNG::Color::TRANSPARENT)
-    
     if gfx_page.nil?
       # Invalid graphics, render a red rectangle instead.
       
-      rendered_gfx = ChunkyPNG::Image.new(width, height, ChunkyPNG::Color.rgba(255, 0, 0, 255))
+      rendered_gfx = ChunkyPNG::Image.new(128, 128, ChunkyPNG::Color.rgba(255, 0, 0, 255))
       return rendered_gfx
     end
     if palette.nil?
@@ -434,6 +426,11 @@ class Renderer
     if max_num_minitiles && num_minitiles > max_num_minitiles
       num_minitiles = max_num_minitiles
     end
+    
+    width = 128
+    height = (num_minitiles/16.0).ceil * 8
+    
+    rendered_gfx = ChunkyPNG::Image.new(width, height, ChunkyPNG::Color::TRANSPARENT)
     
     (0..num_minitiles-1).each do |minitile_index|
       rendered_minitile = render_1_dimensional_minitile(gfx_page, palette, minitile_index+first_minitile_index)
@@ -716,8 +713,18 @@ class Renderer
     
     colors = colors.map{|color| color & 0b11111000111110001111100011111111} # Get rid of unnecessary bits so equality checks work correctly.
     
+    if gfx.colors_per_palette == 16
+      pixels_per_byte = 2
+    elsif gfx.colors_per_palette == 256
+      pixels_per_byte = 1
+    else
+      raise "Unknown colors per palette: #{gfx.colors_per_palette}"
+    end
+    bytes_per_block = 8*8 / pixels_per_byte
+    num_minitiles = gfx.gfx_data.length / bytes_per_block
+    
     gfx_data_bytes = []
-    (0..256-1).each do |block_num|
+    (0..num_minitiles-1).each do |block_num|
       (0..64-1).each do |pixel_num|
         block_x = (block_num % 16) * 8
         block_y = (block_num / 16) * 8
