@@ -2,6 +2,20 @@
 class EntityLayerItem < Qt::GraphicsRectItem
   attr_reader :entities
   
+  VILLAGER_EVENT_FLAG_TO_NAME = {
+    0x2A => "Jacob",
+    0x2D => "Abram",
+    0x32 => "Laura",
+    0x38 => "Eugen",
+    0x3C => "Aeon",
+    0x40 => "Marcel",
+    0x47 => "Serge",
+    0x4B => "Anna",
+    0x4F => "Monica",
+    0x53 => "Irina",
+    0x57 => "Daniela",
+  }
+  
   def initialize(entities, main_window, game, renderer)
     super()
     
@@ -31,6 +45,11 @@ class EntityLayerItem < Qt::GraphicsRectItem
     elsif GAME == "dos" && entity.is_special_object? && entity.subtype == 0x01 && entity.var_a == 0 # soul candle
       pointer = OTHER_SPRITES.find{|spr| spr[:desc] == "Destructibles 0"}[:pointer]
       sprite_info = SpriteInfo.extract_gfx_and_palette_and_sprite_from_create_code(pointer, @fs, nil, {})
+      add_sprite_item_for_entity(entity, sprite_info, 0)
+    elsif entity.is_villager? && VILLAGER_EVENT_FLAG_TO_NAME.keys.include?(entity.var_a)
+      villager_name = VILLAGER_EVENT_FLAG_TO_NAME[entity.var_a]
+      villager_info = OTHER_SPRITES.find{|other| other[:desc] == "#{villager_name} event actor"}
+      sprite_info = SpriteInfo.extract_gfx_and_palette_and_sprite_from_create_code(pointer, @fs, nil, villager_info)
       add_sprite_item_for_entity(entity, sprite_info, 0)
     elsif GAME == "aos" && entity.is_pickup? && (5..8).include?(entity.subtype) # soul candle
       soul_candle_sprite = COMMON_SPRITE.merge(palette_offset: 4)
