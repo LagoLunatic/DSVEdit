@@ -2,9 +2,8 @@
 class Player < GenericEditable
   attr_reader :index
   
-  def initialize(index, fs)
+  def initialize(index, game)
     @index = index
-    @fs = fs
     
     player_type = {
       name: "Players",
@@ -13,6 +12,6 @@ class Player < GenericEditable
       kind: :player,
       format: PLAYER_LIST_FORMAT
     }
-    super(index, player_type, fs)
+    super(index, player_type, game)
   end
 end

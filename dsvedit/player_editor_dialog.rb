@@ -4,12 +4,13 @@ require_relative 'ui_player_editor'
 class PlayerEditor < Qt::Dialog
   slots "button_pressed(QAbstractButton*)"
   
-  def initialize(main_window, fs)
+  def initialize(main_window, game)
     super(main_window, Qt::WindowTitleHint | Qt::WindowSystemMenuHint)
     @ui = Ui_PlayerEditor.new
     @ui.setup_ui(self)
     
-    @fs = fs
+    @game = game
+    @fs = game.fs
     
     player_type = {
       name: "Players",
@@ -18,7 +19,7 @@ class PlayerEditor < Qt::Dialog
       kind: :player,
       format: PLAYER_LIST_FORMAT
     }
-    @editor_widget = GenericEditorWidget.new(fs, player_type, main_window.game.player_format_doc)
+    @editor_widget = GenericEditorWidget.new(game.fs, game, player_type, main_window.game.player_format_doc)
     @ui.horizontalLayout.addWidget(@editor_widget)
     
     connect(@ui.buttonBox, SIGNAL("clicked(QAbstractButton*)"), self, SLOT("button_pressed(QAbstractButton*)"))

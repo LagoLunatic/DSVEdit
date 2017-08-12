@@ -2,9 +2,8 @@
 class EnemyDNA < GenericEditable
   attr_reader :enemy_id
   
-  def initialize(enemy_id, fs)
+  def initialize(enemy_id, game)
     @enemy_id = enemy_id
-    @fs = fs
     
     enemy_type = {
       name: "Enemies",
@@ -13,7 +12,7 @@ class EnemyDNA < GenericEditable
       kind: :enemy,
       format: ENEMY_DNA_FORMAT
     }
-    super(enemy_id, enemy_type, fs)
+    super(enemy_id, enemy_type, game)
   end
   
   def extract_gfx_and_palette_and_sprite_from_init_ai

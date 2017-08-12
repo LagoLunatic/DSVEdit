@@ -7,6 +7,7 @@ class GenericEditable
               :kind,
               :item_type_name,
               :fs,
+              :game,
               :name,
               :description,
               :attributes,
@@ -15,9 +16,14 @@ class GenericEditable
               :attribute_bitfields,
               :attribute_bitfield_lengths
   
-  def initialize(index, item_type, fs)
+  def initialize(index, item_type, game, data_fs = nil)
     @index = index
-    @fs = fs
+    @game = game
+    if data_fs
+      @fs = data_fs
+    else
+      @fs = game.fs
+    end
     format_length = item_type[:format].inject(0){|sum, attr| sum += attr[0]}
     @ram_pointer = item_type[:list_pointer] + index*format_length
     @data_format = item_type[:format]
@@ -66,13 +72,13 @@ class GenericEditable
     
     case kind
     when :enemy
-      @name = Text.new(TEXT_REGIONS["Enemy Names"].begin + index, fs).decoded_string
-      @description = Text.new(TEXT_REGIONS["Enemy Descriptions"].begin + index, fs).decoded_string
+      @name = game.text_database.text_list[TEXT_REGIONS["Enemy Names"].begin + index].decoded_string
+      @description = game.text_database.text_list[TEXT_REGIONS["Enemy Descriptions"].begin + index].decoded_string
     when :skill
       case GAME
       when "dos"
-        @name = Text.new(TEXT_REGIONS["Soul Names"].begin + index, fs).decoded_string
-        @description = Text.new(TEXT_REGIONS["Soul Descriptions"].begin + index, fs).decoded_string
+        @name = game.text_database.text_list[TEXT_REGIONS["Soul Names"].begin + index].decoded_string
+        @description = game.text_database.text_list[TEXT_REGIONS["Soul Descriptions"].begin + index].decoded_string
       when "aos"
         if @item_type_name == "Julius Skills"
           @name = ["Cross", "Holy Water", "Axe", "Grand Cross"][index]
@@ -84,32 +90,32 @@ class GenericEditable
           zero_index = index - 1
           case @item_type_name
           when "Red Souls"
-            @name = Text.new(TEXT_REGIONS["Red Soul Names"].begin + zero_index, fs).decoded_string
-            @description = Text.new(TEXT_REGIONS["Red Soul Descriptions"].begin + zero_index, fs).decoded_string
+            @name = game.text_database.text_list[TEXT_REGIONS["Red Soul Names"].begin + zero_index].decoded_string
+            @description = game.text_database.text_list[TEXT_REGIONS["Red Soul Descriptions"].begin + zero_index].decoded_string
           when "Blue Souls"
-            @name = Text.new(TEXT_REGIONS["Blue Soul Names"].begin + zero_index, fs).decoded_string
-            @description = Text.new(TEXT_REGIONS["Blue Soul Descriptions"].begin + zero_index, fs).decoded_string
+            @name = game.text_database.text_list[TEXT_REGIONS["Blue Soul Names"].begin + zero_index].decoded_string
+            @description = game.text_database.text_list[TEXT_REGIONS["Blue Soul Descriptions"].begin + zero_index].decoded_string
           when "Yellow Souls"
-            @name = Text.new(TEXT_REGIONS["Yellow Soul Names"].begin + zero_index, fs).decoded_string
-            @description = Text.new(TEXT_REGIONS["Yellow Soul Descriptions"].begin + zero_index, fs).decoded_string
+            @name = game.text_database.text_list[TEXT_REGIONS["Yellow Soul Names"].begin + zero_index].decoded_string
+            @description = game.text_database.text_list[TEXT_REGIONS["Yellow Soul Descriptions"].begin + zero_index].decoded_string
           when "Ability Souls"
-            @name = Text.new(TEXT_REGIONS["Ability Soul Names"].begin + zero_index, fs).decoded_string
-            @description = Text.new(TEXT_REGIONS["Ability Soul Descriptions"].begin + zero_index, fs).decoded_string
+            @name = game.text_database.text_list[TEXT_REGIONS["Ability Soul Names"].begin + zero_index].decoded_string
+            @description = game.text_database.text_list[TEXT_REGIONS["Ability Soul Descriptions"].begin + zero_index].decoded_string
           end
         end
       when "por"
-        @name = Text.new(TEXT_REGIONS["Skill Names"].begin + index, fs).decoded_string
-        @description = Text.new(TEXT_REGIONS["Skill Descriptions"].begin + index, fs).decoded_string
+        @name = game.text_database.text_list[TEXT_REGIONS["Skill Names"].begin + index].decoded_string
+        @description = game.text_database.text_list[TEXT_REGIONS["Skill Descriptions"].begin + index].decoded_string
       when "ooe"
-        @name = Text.new(TEXT_REGIONS["Item Names"].begin + self["Item ID"], fs).decoded_string
-        @description = Text.new(TEXT_REGIONS["Item Descriptions"].begin + self["Item ID"], fs).decoded_string
+        @name = game.text_database.text_list[TEXT_REGIONS["Item Names"].begin + self["Item ID"]].decoded_string
+        @description = game.text_database.text_list[TEXT_REGIONS["Item Descriptions"].begin + self["Item ID"]].decoded_string
       end
     when :player
       @name = PLAYER_NAMES[index]
       @description = ""
     else # item
-      @name = Text.new(TEXT_REGIONS["Item Names"].begin + self["Item ID"], fs).decoded_string
-      @description = Text.new(TEXT_REGIONS["Item Descriptions"].begin + self["Item ID"], fs).decoded_string
+      @name = game.text_database.text_list[TEXT_REGIONS["Item Names"].begin + self["Item ID"]].decoded_string
+      @description = game.text_database.text_list[TEXT_REGIONS["Item Descriptions"].begin + self["Item ID"]].decoded_string
     end
     
     @name = @name.strip.gsub("\\n", "")

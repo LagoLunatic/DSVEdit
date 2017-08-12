@@ -2,13 +2,13 @@
 require_relative 'ui_generic_editor'
 
 class GenericEditorWidget < Qt::Widget
-  attr_reader :fs
+  attr_reader :fs, :game
   
   slots "item_changed(int)"
   slots "open_icon_chooser()"
   slots "open_color_chooser()"
   
-  def initialize(fs, item_type, format_doc)
+  def initialize(fs, game, item_type, format_doc)
     super()
     @ui = Ui_GenericEditorWidget.new
     @ui.setup_ui(self)
@@ -19,12 +19,13 @@ class GenericEditorWidget < Qt::Widget
     @ui.horizontalLayout.setStretch(2, 8)
     
     @fs = fs
+    @game = game
     
     @item_type_name = item_type[:name]
     
     @items = []
     (0..item_type[:count]-1).each do |index|
-      item = GenericEditable.new(index, item_type, fs)
+      item = GenericEditable.new(index, item_type, game, fs)
       @items << item
       @ui.item_list.addItem("%02X %s" % [index, item.name])
     end

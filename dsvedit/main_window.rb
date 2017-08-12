@@ -639,7 +639,7 @@ class DSVEdit < Qt::MainWindow
   
   def open_enemy_dna_dialog
     return if @enemy_dialog && @enemy_dialog.visible?
-    @enemy_dialog = EnemyEditor.new(self, game.fs)
+    @enemy_dialog = EnemyEditor.new(self, game)
   end
   
   def open_text_editor
@@ -654,7 +654,7 @@ class DSVEdit < Qt::MainWindow
     
   def open_item_editor
     return if @item_editor && @item_editor.visible?
-    @item_editor = ItemEditor.new(self, game.fs)
+    @item_editor = ItemEditor.new(self, game)
   end
   
   def open_gfx_editor(gfx_and_palette_data=nil)
@@ -700,7 +700,7 @@ class DSVEdit < Qt::MainWindow
     end
     
     return if @player_editor_dialog && @player_editor_dialog.visible?
-    @player_editor_dialog = PlayerEditor.new(self, game.fs)
+    @player_editor_dialog = PlayerEditor.new(self, game)
   end
   
   def open_special_object_editor

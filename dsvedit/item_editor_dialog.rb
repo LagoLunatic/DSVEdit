@@ -6,12 +6,13 @@ require_relative 'ui_item_editor'
 class ItemEditor < Qt::Dialog
   slots "button_pressed(QAbstractButton*)"
   
-  def initialize(main_window, fs)
+  def initialize(main_window, game)
     super(main_window, Qt::WindowTitleHint | Qt::WindowSystemMenuHint)
     @ui = Ui_ItemEditor.new
     @ui.setup_ui(self)
     
-    @fs = fs
+    @game = game
+    @fs = game.fs
     
     ITEM_TYPES.each do |item_type|
       doc_name = case item_type[:name]
@@ -50,7 +51,7 @@ class ItemEditor < Qt::Dialog
       end
       doc = main_window.game.item_format_docs[doc_name]
       
-      tab = GenericEditorWidget.new(fs, item_type, doc)
+      tab = GenericEditorWidget.new(game.fs, game, item_type, doc)
       name = item_type[:name]
       @ui.tabWidget.addTab(tab, name)
     end

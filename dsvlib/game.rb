@@ -126,7 +126,7 @@ class Game
       enemy_dnas = []
       
       ENEMY_IDS.each do |enemy_id|
-        enemy_dna = EnemyDNA.new(enemy_id, fs)
+        enemy_dna = EnemyDNA.new(enemy_id, self)
         enemy_dnas << enemy_dna
       end
       
@@ -152,7 +152,7 @@ class Game
       players = []
       
       (0..PLAYER_COUNT-1).each do |index|
-        player = Player.new(index, fs)
+        player = Player.new(index, self)
         players << player
       end
       
@@ -254,7 +254,7 @@ class Game
       
       ITEM_TYPES.each do |item_type|
         (0..item_type[:count]-1).each do |index|
-          items << GenericEditable.new(index, item_type, fs)
+          items << GenericEditable.new(index, item_type, self)
         end
       end
       

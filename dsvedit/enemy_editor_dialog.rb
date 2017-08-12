@@ -4,12 +4,13 @@ require_relative 'ui_enemy_editor'
 class EnemyEditor < Qt::Dialog
   slots "button_pressed(QAbstractButton*)"
   
-  def initialize(main_window, fs)
+  def initialize(main_window, game)
     super(main_window, Qt::WindowTitleHint | Qt::WindowSystemMenuHint)
     @ui = Ui_EnemyDNAEditor.new
     @ui.setup_ui(self)
     
-    @fs = fs
+    @game = game
+    @fs = game.fs
     
     enemy_type = {
       name: "Enemies",
@@ -18,7 +19,7 @@ class EnemyEditor < Qt::Dialog
       kind: :enemy,
       format: ENEMY_DNA_FORMAT
     }
-    @editor_widget = GenericEditorWidget.new(fs, enemy_type, main_window.game.enemy_format_doc)
+    @editor_widget = GenericEditorWidget.new(game.fs, game, enemy_type, main_window.game.enemy_format_doc)
     @ui.horizontalLayout.addWidget(@editor_widget)
     
     connect(@ui.buttonBox, SIGNAL("clicked(QAbstractButton*)"), self, SLOT("button_pressed(QAbstractButton*)"))

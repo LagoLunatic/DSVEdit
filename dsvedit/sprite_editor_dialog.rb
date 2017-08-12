@@ -115,11 +115,8 @@ class SpriteEditor < Qt::Dialog
   end
   
   def initialize_sprite_lists
-    @enemies = []
-    ENEMY_IDS.each do |enemy_id|
-      enemy = EnemyDNA.new(enemy_id, fs)
-      @enemies << enemy
-      @ui.enemy_list.addItem("%02X %s" % [enemy_id, enemy.name])
+    @game.enemy_dnas.each_with_index do |enemy_dna, enemy_id|
+      @ui.enemy_list.addItem("%02X %s" % [enemy_id, enemy_dna.name])
     end
     
     @special_objects = []
@@ -138,14 +135,11 @@ class SpriteEditor < Qt::Dialog
     
     weapon_items = []
     skill_items = []
-    ITEM_TYPES.each do |item_type|
-      (0..item_type[:count]-1).each do |index|
-        item = GenericEditable.new(index, item_type, fs)
-        if item.kind == :skill
-          skill_items << item
-        else
-          weapon_items << item
-        end
+    game.items.each do |item|
+      if item.kind == :skill
+        skill_items << item
+      else
+        weapon_items << item
       end
     end
     
@@ -223,7 +217,7 @@ class SpriteEditor < Qt::Dialog
   
   def enemy_changed(enemy_id)
     begin
-      @sprite_info = EnemyDNA.new(enemy_id, @fs).extract_gfx_and_palette_and_sprite_from_init_ai
+      @sprite_info = @game.enemy_dnas[enemy_id].extract_gfx_and_palette_and_sprite_from_init_ai
     rescue StandardError => e
       Qt::MessageBox.warning(self,
         "Enemy sprite extraction failed",
@@ -246,7 +240,7 @@ class SpriteEditor < Qt::Dialog
     end
     
     begin
-      @sprite_info = SpecialObjectType.new(special_object_id, @fs).extract_gfx_and_palette_and_sprite_from_create_code
+      @sprite_info = @game.special_objects[special_object_id].extract_gfx_and_palette_and_sprite_from_create_code
     rescue StandardError => e
       Qt::MessageBox.warning(self,
         "Special object sprite extraction failed",
