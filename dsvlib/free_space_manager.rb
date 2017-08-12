@@ -97,6 +97,14 @@ module FreeSpaceManager
     merge_overlapping_free_spaces()
   end
   
+  def mark_space_unused(file_path, offset_in_file, length)
+    # Marks some space as unused like free_unused_space, but does NOT overwrite it with null bytes.
+    return if length <= 0
+    
+    @free_spaces << {path: file_path, offset: offset_in_file, length: length}
+    merge_overlapping_free_spaces()
+  end
+  
   def remove_free_space(file_path, offset_in_file, length)
     return if @free_spaces.nil? # Only open in memory
     
@@ -166,11 +174,14 @@ module FreeSpaceManager
     files_to_check = []
     
     if SYSTEM == :nds
-      # Check the specific overlay first, then arm9 if there's no free space in the overlay.
+      # Check the specific overlay first, then arm9 if there's no free space in the overlay, and the free space overlay as a last resort.
       if overlay_id
         files_to_check << File.join("/ftc", "overlay9_#{overlay_id}")
       end
       files_to_check << File.join("/ftc", "arm9.bin")
+      if has_free_space_overlay?
+        files_to_check << File.join("/ftc", "overlay9_#{NEW_OVERLAY_ID}")
+      end
     else
       files_to_check << "rom.gba"
     end
