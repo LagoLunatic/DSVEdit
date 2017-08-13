@@ -1,0 +1,48 @@
+
+080E15A8 - List of red souls.
+
+080E9644 - List of enemy DNA.
+
+082097D4 - Soma's palette.
+  0801462E - Has it hardcoded.
+
+084F10B4 - Has pointer to Soma's update function.
+084F10B8 - Has pointer to Julius's update function.
+
+085255FC - List of palette shifts.
+  Entry length 8.
+  0,4: Palette list pointer.
+  4,2: Palette index.
+  6,2: Duration in frames to stay on this palette.
+
+08525FB0 - List of warp points.
+  Entry length 8.
+  00,2: X pos on the map in tiles.
+  02,2: Y pos on the map in tiles.
+  04,4: Room pointer of the warp point.
+
+08526004 - List of breakable wall gfx/palette/sprites.
+
+08526064 - List of breakable walls.
+  Entry length 0xC.
+  Var A of the breakable wall entity is index in this list.
+  00,2: Sprite frame
+  02,1: Palette
+  03,1: Affects sprite
+  04,1: 
+  05,1: 
+  06,1:
+  07,1:
+  08,1: 
+  09,1: 
+
+Shop item pools:
+08526C04
+08526C1C
+08526C40
+  These aren't item IDs though. They're indexes in list 085269FC.
+
+085269FC - List of items that can be in the shop.
+  Each entry is 4 bytes long.
+  00,1: Item type.
+  01,1: Item index.

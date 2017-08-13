@@ -279,6 +279,7 @@ What each range of entity slots is for:
 020F7009 - Room index to save to the save file.
 020F7018,4 - Player's x pos that should be stored in the save file.
 020F701C,4 - Player's y pos that should be stored in the save file.
+020F7020,4 - Player's z pos that should be stored in the save file.
   These are set to the player's position when he enters a room so suspend will work.
   When you save the game they're set to the center of the upperleftmost screen.
 020F7024 - Bitfield of destroyable walls that have been destroyed on the map.

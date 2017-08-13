@@ -10,6 +10,14 @@ Entity types:
 
 03 Generic candle.
   Unaffected by subtype.
+  Var A: Affects candle graphic.
+  Var B: Affects amount of money this candle can drop.
+    0 - 1 or 10G
+    1 - 10 or 50G
+    2 - 50 or 100G
+    3 - 100 or 500G
+    4 - 500 or 1000G
+    5 - 1000 or 2000G
 
 04 Pickup. Subtype:
   00 Nothing?
