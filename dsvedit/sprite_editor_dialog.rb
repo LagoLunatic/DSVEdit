@@ -266,10 +266,10 @@ class SpriteEditor < Qt::Dialog
       sprite_pointer = weapon.sprite_file_pointer
       skeleton_file = nil
       if SYSTEM == :gba
-        @unwrapped_gfx = true
+        unwrapped_gfx = true
       end
       
-      @sprite_info = SpriteInfo.new(gfx_file_pointers, palette_pointer, palette_offset, sprite_pointer, skeleton_file, @fs, unwrapped_gfx: @unwrapped_gfx)
+      @sprite_info = SpriteInfo.new(gfx_file_pointers, palette_pointer, palette_offset, sprite_pointer, skeleton_file, @fs, unwrapped_gfx: unwrapped_gfx)
     rescue StandardError => e
       Qt::MessageBox.warning(self,
         "Weapon sprite extraction failed",
@@ -760,9 +760,10 @@ class SpriteEditor < Qt::Dialog
   def open_in_gfx_editor
     return if @sprite_info.nil? || @gfx_pages_with_blanks.nil?
     
-    if @unwrapped_gfx
+    gfx = @gfx_pages_with_blanks[@gfx_page_index]
+    if gfx.unwrapped
       Qt::MessageBox.warning(self,
-        "Can't editor AoS weapons",
+        "Can't edit AoS weapons",
         "The GFX editor currently cannot edit weapons in AoS."
       )
       return
@@ -770,9 +771,9 @@ class SpriteEditor < Qt::Dialog
     
     gfx_and_palette_data = {}
     if SYSTEM == :nds
-      gfx_and_palette_data[:gfx_file_name] = @gfx_pages_with_blanks[@gfx_page_index].file[:file_path]
+      gfx_and_palette_data[:gfx_file_name] = gfx.file[:file_path]
     else
-      gfx_and_palette_data[:gfx_file_name] = "%08X" % @gfx_pages_with_blanks[@gfx_page_index].gfx_pointer
+      gfx_and_palette_data[:gfx_file_name] = "%08X" % gfx.gfx_pointer
     end
     gfx_and_palette_data[:palette_pointer] = @sprite_info.palette_pointer
     gfx_and_palette_data[:palette_index] = @ui.palette_index.currentIndex

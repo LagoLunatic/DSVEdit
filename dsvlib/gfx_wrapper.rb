@@ -6,13 +6,15 @@ class GfxWrapper
               :unknown_1,
               :bpp,
               :size_in_512_chunks,
-              :gfx_data_pointer
+              :gfx_data_pointer,
+              :unwrapped
   attr_accessor :render_mode,
                 :canvas_width
               
   def initialize(gfx_pointer, fs, unwrapped: false)
     @gfx_pointer = gfx_pointer
     @fs = fs
+    @unwrapped = unwrapped
     
     if SYSTEM == :nds
       @file = fs.assets_by_pointer[gfx_pointer]
