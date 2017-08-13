@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>1260</width>
-    <height>540</height>
+    <height>568</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -153,16 +153,41 @@
            </property>
           </widget>
          </item>
+        </layout>
+       </item>
+       <item>
+        <layout class="QHBoxLayout" name="horizontalLayout_13">
          <item>
-          <widget class="QPushButton" name="export_button">
-           <property name="maximumSize">
+          <widget class="QPushButton" name="darkfunction_export">
+           <property name="text">
+            <string>Export to darkFunction</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="darkfunction_import">
+           <property name="text">
+            <string>Import from darkFunction</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <spacer name="horizontalSpacer">
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
             <size>
-             <width>60</width>
-             <height>16777215</height>
+             <width>40</width>
+             <height>20</height>
             </size>
            </property>
+          </spacer>
+         </item>
+         <item>
+          <widget class="QPushButton" name="export_as_png_button">
            <property name="text">
-            <string>Export</string>
+            <string>Export frames as PNG</string>
            </property>
           </widget>
          </item>

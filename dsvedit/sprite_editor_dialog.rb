@@ -24,7 +24,9 @@ class SpriteEditor < Qt::Dialog
   slots "toggle_animation_paused()"
   slots "advance_frame()"
   slots "reload_sprite()"
-  slots "export_sprite()"
+  slots "export_to_darkfunction()"
+  slots "import_from_darkfunction()"
+  slots "export_sprite_frames_as_png()"
   slots "open_skeleton_editor()"
   slots "open_in_gfx_editor()"
   slots "click_gfx_scene(int, int, const Qt::MouseButton&)"
@@ -96,7 +98,9 @@ class SpriteEditor < Qt::Dialog
     connect(@ui.part_vertical_flip, SIGNAL("clicked(bool)"), self, SLOT("toggle_part_flips(bool)"))
     connect(@ui.toggle_paused_button, SIGNAL("clicked()"), self, SLOT("toggle_animation_paused()"))
     connect(@ui.reload_button, SIGNAL("clicked()"), self, SLOT("reload_sprite()"))
-    connect(@ui.export_button, SIGNAL("clicked()"), self, SLOT("export_sprite()"))
+    connect(@ui.darkfunction_export, SIGNAL("clicked()"), self, SLOT("export_to_darkfunction()"))
+    connect(@ui.darkfunction_import, SIGNAL("clicked()"), self, SLOT("import_from_darkfunction()"))
+    connect(@ui.export_as_png_button, SIGNAL("clicked()"), self, SLOT("export_sprite_frames_as_png()"))
     connect(@ui.view_skeleton_button, SIGNAL("clicked()"), self, SLOT("open_skeleton_editor()"))
     connect(@ui.open_in_gfx_editor, SIGNAL("clicked()"), self, SLOT("open_in_gfx_editor()"))
     connect(@ui.animation_add, SIGNAL("clicked()"), self, SLOT("add_animation()"))
@@ -821,14 +825,44 @@ class SpriteEditor < Qt::Dialog
     load_sprite()
   end
   
-  def export_sprite
-    return if @sprite.nil?
-    
+  def sprite_name
     if @sprite.sprite_file
       sprite_name = @sprite.sprite_file[:name]
+      if sprite_name =~ /\.dat$/
+        sprite_name = sprite_name[0..-5]
+      end
     else
       sprite_name = "%08X" % @sprite.sprite_pointer
     end
+    
+    return sprite_name
+  end
+  
+  def export_to_darkfunction
+    return if @sprite.nil?
+    
+    output_folder = "./gfx/darkfunction_sprites/#{sprite_name}"
+    FileUtils.mkdir_p(output_folder)
+    
+    DarkFunctionInterface.export(output_folder, sprite_name, @sprite_info, @fs, @renderer)
+    
+    Qt::MessageBox.warning(self,
+      "Exported to darkFunction",
+      "This sprite has been exported in darkFunction's format to the folder #{output_folder}"
+    )
+  end
+  
+  def import_from_darkfunction
+    return if @sprite.nil?
+    
+    folder = "./gfx/darkfunction_sprites/#{sprite_name}"
+    DarkFunctionInterface.import(folder, sprite_name, @sprite_info, @fs, @renderer)
+    
+    reload_sprite()
+  end
+  
+  def export_sprite_frames_as_png
+    return if @sprite.nil?
     
     output_folder = "./gfx/exported_sprites/#{sprite_name}"
     FileUtils.mkdir_p(output_folder)
@@ -842,7 +876,7 @@ class SpriteEditor < Qt::Dialog
     
     Qt::MessageBox.warning(self,
       "Exported sprite frames",
-      "All frames of this sprite have been exported to the folder #{output_folder}"
+      "All frames of this sprite have been exported as PNG files to the folder #{output_folder}"
     )
   end
   
