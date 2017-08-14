@@ -142,7 +142,7 @@ class DarkFunctionInterface
           xml.anim(:name => hash[:name], :loops => 0) {
             hash[:frame_delays].each_with_index do |frame_delay, i|
               xml.cell(:index => "%02X" % i,
-                       :delay => frame_delay.delay/2 # darkFunction runs at 30fps, the game engine runs at 60fps.
+                       :delay => frame_delay.delay
               ) {
                 frame = sprite.frames[frame_delay.frame_index]
                 part_z_index = 0
@@ -234,7 +234,7 @@ class DarkFunctionInterface
       df_cells = df_anim.css("cell")
       df_cells.each do |df_cell|
         frame_delay = FrameDelay.new
-        frame_delay.delay = df_cell["delay"].to_i * 2 # darkFunction runs at 30fps, the game engine runs at 60fps.
+        frame_delay.delay = df_cell["delay"].to_i
         sprite.frame_delays << frame_delay
         animation.number_of_frames += 1 unless df_anim[:name].start_with?("unanimated")
         
