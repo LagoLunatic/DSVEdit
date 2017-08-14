@@ -8,12 +8,13 @@ class DarkFunctionInterface
     palettes = renderer.generate_palettes(sprite_info.palette_pointer, 16)
     
     num_gfx_pages = sprite_info.gfx_pages.size
+    num_palettes = palettes.size
     num_gfx_palette_combos = num_gfx_pages*palettes.size
     gfx_page_canvas_width = sprite_info.gfx_pages.first.canvas_width*8
     gfx_page_width = gfx_page_canvas_width
     
-    big_gfx_page_width = Math.sqrt(num_gfx_palette_combos).ceil
-    big_gfx_page_height = (num_gfx_palette_combos / big_gfx_page_width.to_f).ceil
+    big_gfx_page_width = num_gfx_pages
+    big_gfx_page_height = num_palettes
     
     # Make sure the big gfx page is at least 256 pixels wide for the hitboxes.
     if gfx_page_width == 128
@@ -201,10 +202,7 @@ class DarkFunctionInterface
     gfx_page_canvas_width = sprite_info.gfx_pages.first.canvas_width*8
     gfx_page_width = gfx_page_canvas_width
     num_gfx_pages = sprite_info.gfx_pages.size
-    palettes = renderer.generate_palettes(sprite_info.palette_pointer, 16)
-    num_palettes = palettes.size
-    num_gfx_palette_combos = num_gfx_pages*palettes.size
-    big_gfx_page_width = Math.sqrt(num_gfx_palette_combos).ceil
+    big_gfx_page_width = num_gfx_pages
     
     sprites_file = File.read(input_path + "/#{name}.sprites")
     anim_file = File.read(input_path + "/#{name}.anim")
