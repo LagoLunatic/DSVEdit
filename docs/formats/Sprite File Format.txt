@@ -73,7 +73,9 @@ List of animations:
 Each entry is 8 bytes long.
 This list doesn't exist for enemies with a skeleton file.
   Bytes 1-4: Number of frames this animation has.
-  Bytes 5-8: Pointer to the first frame delay for this animation, relative to the start of the list of frame delays. Meaning 0x00 is the first frame delay, 0x08 is the second frame delay, etc. (At runtime the game engine converts this to a ram pointer, probably as a performance optimization.)
+  Bytes 5-8: Varies depending on whether this is a sprite file or a sprite without an individual file:
+    For sprite files: This value is useless. This is NOT a pointer to the first hitbox to use. However, at runtime, the game replaces this with an absolute pointer to the first frame delay for this animation, which is used. Instead, the first frame delay for this animation is simply the next frame delay in the frame delay list after the last animation's last frame delay.
+    For sprites without files: Absolute pointer to the first frame delay to use. 0 if this animation has 0 frames.
 
 File footer:
   Bytes 1-2: Number of frames this sprite has, duplicate of 0x24 in the header.

@@ -87,11 +87,12 @@ class Sprite
     end
     
     @animations = []
+    remaining_frame_delays = frame_delays.dup
     unless animation_list_offset == 0
       (animation_list_offset..file_footer_offset-1).step(8) do |offset|
         animation_data = fs.read_by_file(sprite_file[:file_path], offset, 8)
         animation = Animation.new.from_data(animation_data, offset)
-        animation.initialize_frame_delays(frame_delays, @frame_delays_by_offset)
+        animation.initialize_frame_delays_from_sprite_file(frame_delays, remaining_frame_delays)
         @animations << animation
       end
     end
@@ -170,7 +171,7 @@ class Sprite
     end
     
     @animations.each do |animation|
-      animation.initialize_frame_delays(frame_delays, @frame_delays_by_offset)
+      animation.initialize_frame_delays_from_pointer(frame_delays, @frame_delays_by_offset)
     end
   end
   
@@ -646,7 +647,15 @@ class Animation
     return self
   end
   
-  def initialize_frame_delays(all_frame_delays, all_frame_delays_by_offset)
+  def initialize_frame_delays_from_sprite_file(all_frame_delays, all_remaining_frame_delays)
+    if all_remaining_frame_delays.length < number_of_frames
+      raise "Not enough frame delays left"
+    end
+    @frame_delays = all_remaining_frame_delays.shift(number_of_frames)
+    @frame_delay_indexes = @frame_delays.map{|frame_delay| all_frame_delays.index(frame_delay)}
+  end
+  
+  def initialize_frame_delays_from_pointer(all_frame_delays, all_frame_delays_by_offset)
     @frame_delay_offsets = (@first_frame_delay_offset..@first_frame_delay_offset+@number_of_frames*FrameDelay.data_size-1).step(FrameDelay.data_size).to_a
     @frame_delays = @frame_delay_offsets.map{|offset| all_frame_delays_by_offset[offset]}
     @frame_delay_indexes = @frame_delays.map{|frame_delay| all_frame_delays.index(frame_delay)}
