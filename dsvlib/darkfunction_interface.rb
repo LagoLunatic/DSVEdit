@@ -93,12 +93,54 @@ class DarkFunctionInterface
       f.write(builder.to_xml)
     end
     
+    # We need to preserve unanimated frames by creating dummy animations containing them.
+    # This also doubles as preserving the proper order of animated frames.
+    animations_plus_unanimated_frames = []
+    max_seen_frame_index = -1
+    num_unanimated_frames = 0
+    sprite.animations.each_with_index do |animation, animation_index|
+      unanimated_frame_indexes_to_insert = []
+      
+      animation.frame_delays.each do |frame_delay|
+        if frame_delay.frame_index <= max_seen_frame_index
+          # Do nothing. This is just a duplicated frame.
+        elsif frame_delay.frame_index == max_seen_frame_index + 1
+          # This is the next sequential frame.
+          max_seen_frame_index = frame_delay.frame_index
+        else
+          # It skipped a frame (or multiple frames). We must insert these as unanimated frames before this next animation so that it's correctly preserved.
+          unanimated_frame_indexes_to_insert += (max_seen_frame_index+1..frame_delay.frame_index-1).to_a
+          max_seen_frame_index = frame_delay.frame_index-1
+        end
+      end
+      
+      unanimated_frame_indexes_to_insert.each do |unanimated_frame_index|
+        dummy_frame_delay = FrameDelay.new
+        dummy_frame_delay.frame_index = unanimated_frame_index
+        
+        animations_plus_unanimated_frames << {name: "unanimated frame %02X" % num_unanimated_frames, frame_delays: [dummy_frame_delay]}
+        num_unanimated_frames += 1
+      end
+      
+      animations_plus_unanimated_frames << {name: "%02X" % animation_index, frame_delays: animation.frame_delays}
+    end
+    
+    if max_seen_frame_index < sprite.frames.size-1
+      (max_seen_frame_index+1..sprite.frames.size-1).each do |unanimated_frame_index|
+        dummy_frame_delay = FrameDelay.new
+        dummy_frame_delay.frame_index = unanimated_frame_index
+        
+        animations_plus_unanimated_frames << {name: "unanimated frame %02X" % num_unanimated_frames, frame_delays: [dummy_frame_delay]}
+        num_unanimated_frames += 1
+      end
+    end
+    
     builder = Nokogiri::XML::Builder.new do |xml|
       xml.animations(:spriteSheet => "#{name}.sprites", 
                      :ver => "1.2") {
-        sprite.animations.each_with_index do |anim, i|
-          xml.anim(:name => "%02X" % i, :loops => 0) {
-            anim.frame_delays.each_with_index do |frame_delay, i|
+        animations_plus_unanimated_frames.each do |hash|
+          xml.anim(:name => hash[:name], :loops => 0) {
+            hash[:frame_delays].each_with_index do |frame_delay, i|
               xml.cell(:index => "%02X" % i,
                        :delay => frame_delay.delay/2 # darkFunction runs at 30fps, the game engine runs at 60fps.
               ) {
@@ -183,16 +225,18 @@ class DarkFunctionInterface
     xml = Nokogiri::XML(anim_file)
     df_anims = xml.css("anim")
     df_anims.each do |df_anim|
-      animation = Animation.new
-      animation.first_frame_delay_offset = sprite.frame_delays.size*FrameDelay.data_size
-      sprite.animations << animation
+      unless df_anim[:name].start_with?("unanimated")
+        animation = Animation.new
+        animation.first_frame_delay_offset = sprite.frame_delays.size*FrameDelay.data_size
+        sprite.animations << animation
+      end
       
       df_cells = df_anim.css("cell")
       df_cells.each do |df_cell|
         frame_delay = FrameDelay.new
         frame_delay.delay = df_cell["delay"].to_i * 2 # darkFunction runs at 30fps, the game engine runs at 60fps.
         sprite.frame_delays << frame_delay
-        animation.number_of_frames += 1
+        animation.number_of_frames += 1 unless df_anim[:name].start_with?("unanimated")
         
         frame_index = sprite.frames.size
         frame = Frame.new
