@@ -249,7 +249,8 @@ class DarkFunctionInterface
     end
     
     df_anims.each do |df_anim|
-      unless df_anim[:name].start_with?("unanimated")
+      animated = df_anim[:name] !~ /^unanimated frame (\h+)$/
+      if animated
         animation = Animation.new
         animation.first_frame_delay_offset = sprite.frame_delays.size*FrameDelay.data_size
         sprite.animations << animation
@@ -257,10 +258,12 @@ class DarkFunctionInterface
       
       df_cells = df_anim.css("cell")
       df_cells.each do |df_cell|
-        frame_delay = FrameDelay.new
-        frame_delay.delay = df_cell["delay"].to_i
-        sprite.frame_delays << frame_delay
-        animation.number_of_frames += 1 unless df_anim[:name].start_with?("unanimated")
+        if animated
+          frame_delay = FrameDelay.new
+          frame_delay.delay = df_cell["delay"].to_i
+          sprite.frame_delays << frame_delay
+          animation.number_of_frames += 1
+        end
         
         frame, this_frames_parts, this_frames_hitboxes, this_frames_unique_part_and_hitbox_strs = import_frame(
           df_cell, df_unique_parts, gfx_page_width, big_gfx_page_width, num_gfx_pages, gfx_page_canvas_width
@@ -269,7 +272,7 @@ class DarkFunctionInterface
         duplicated_frame_and_part_names = each_frames_unique_part_and_hitbox_strs.find do |frame_index, other_frames_unique_part_and_hitbox_strs|
           this_frames_unique_part_and_hitbox_strs == other_frames_unique_part_and_hitbox_strs
         end
-        if duplicated_frame_and_part_names
+        if duplicated_frame_and_part_names && animated
           duplicated_frame_index = duplicated_frame_and_part_names[0]
           frame_delay.frame_index = duplicated_frame_index
         else
@@ -280,7 +283,10 @@ class DarkFunctionInterface
             frame_index = sprite.frames.size
           end
           
-          frame_delay.frame_index = frame_index
+          if animated
+            frame_delay.frame_index = frame_index
+          end
+          
           sprite.frames[frame_index] = frame
           all_created_frames[frame_index] = {
             frame: frame,
