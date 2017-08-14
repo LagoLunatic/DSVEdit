@@ -64,12 +64,12 @@ class Sprite
     
     @frames = []
     offset = frame_list_offset
-    disposable_hitbox_list = hitboxes.dup
+    remaining_hitboxes = hitboxes.dup
     number_of_frames.times do
       frame_data = fs.read_by_file(sprite_file[:file_path], offset, 12)
       frame = Frame.new.from_data(frame_data)
       frame.initialize_parts(parts, @parts_by_offset)
-      frame.initialize_hitboxes_from_sprite_file(disposable_hitbox_list)
+      frame.initialize_hitboxes_from_sprite_file(hitboxes, remaining_hitboxes)
       @frames << frame
       
       offset += 12
@@ -330,11 +330,11 @@ class Sprite
       ]
     end
     
-    get_unique_parts_by_index = {}
+    unique_parts_by_index = {}
     grouped_parts.each do |data, similar_parts|
       similar_parts.each do |part|
         part_index = self.parts.index(part)
-        get_unique_parts_by_index[part_index] = {
+        unique_parts_by_index[part_index] = {
           unique_part: similar_parts.first,
           x_pos: part.x_pos,
           y_pos: part.y_pos,
@@ -344,7 +344,32 @@ class Sprite
       end
     end
     
-    return get_unique_parts_by_index
+    return unique_parts_by_index
+  end
+  
+  def get_unique_hitboxes_by_index
+    grouped_hitboxes = self.hitboxes.group_by do |hitbox|
+      [
+        #hitbox.x_pos,
+        #hitbox.y_pos,
+        hitbox.width,
+        hitbox.height
+      ]
+    end
+    
+    unique_hitboxes_by_index = {}
+    grouped_hitboxes.each do |data, similar_hitboxes|
+      similar_hitboxes.each do |hitbox|
+        hitbox_index = self.hitboxes.index(hitbox)
+        unique_hitboxes_by_index[hitbox_index] = {
+          unique_hitbox: similar_hitboxes.first,
+          x_pos: hitbox.x_pos,
+          y_pos: hitbox.y_pos,
+        }
+      end
+    end
+    
+    return unique_hitboxes_by_index
   end
 end
 
@@ -514,11 +539,12 @@ class Frame
     @part_indexes = @parts.map{|part| all_sprite_parts.index(part)}
   end
   
-  def initialize_hitboxes_from_sprite_file(all_sprite_hitboxes)
-    if all_sprite_hitboxes.length < number_of_hitboxes
+  def initialize_hitboxes_from_sprite_file(all_sprite_hitboxes, all_remaining_sprite_hitboxes)
+    if all_remaining_sprite_hitboxes.length < number_of_hitboxes
       raise "Not enough hitboxes left"
     end
-    @hitboxes = all_sprite_hitboxes.shift(number_of_hitboxes)
+    @hitboxes = all_remaining_sprite_hitboxes.shift(number_of_hitboxes)
+    @hitbox_indexes = @hitboxes.map{|hitbox| all_sprite_hitboxes.index(hitbox)}
   end
   
   def initialize_hitboxes_from_pointer(all_sprite_hitboxes, all_sprite_hitboxes_by_offset)
@@ -527,7 +553,7 @@ class Frame
     if @hitboxes.include?(nil)
       raise "Couldn't find hitboxes"
     end
-    @hitbox_indexes = @hitboxes.map{|part| all_sprite_hitboxes.index(part)}
+    @hitbox_indexes = @hitboxes.map{|hitbox| all_sprite_hitboxes.index(hitbox)}
   end
   
   def to_data

@@ -9,10 +9,23 @@ class DarkFunctionInterface
     
     num_gfx_pages = sprite_info.gfx_pages.size
     num_gfx_palette_combos = num_gfx_pages*palettes.size
-    big_gfx_page_width = Math.sqrt(num_gfx_palette_combos).ceil
-    big_gfx_page_height = (num_gfx_palette_combos / big_gfx_page_width.to_f).ceil
     gfx_page_canvas_width = sprite_info.gfx_pages.first.canvas_width*8
     gfx_page_width = gfx_page_canvas_width
+    
+    big_gfx_page_width = Math.sqrt(num_gfx_palette_combos).ceil
+    big_gfx_page_height = (num_gfx_palette_combos / big_gfx_page_width.to_f).ceil
+    
+    # Make sure the big gfx page is at least 256 pixels wide for the hitboxes.
+    if gfx_page_width == 128
+      big_gfx_page_width = [big_gfx_page_width, 2].max
+    end
+    # Add an extra 256 pixels to the height for the hitboxes.
+    if gfx_page_width == 128
+      big_gfx_page_height += 2
+    else
+      big_gfx_page_height += 1
+    end
+    
     big_gfx_page = ChunkyPNG::Image.new(big_gfx_page_width*gfx_page_width, big_gfx_page_height*gfx_page_width)
     palettes.each_with_index do |palette, palette_index|
       sprite_info.gfx_pages.each_with_index do |gfx_page, gfx_page_index|
@@ -24,10 +37,17 @@ class DarkFunctionInterface
         big_gfx_page.compose!(chunky_gfx_page, x_on_big_gfx_page, y_on_big_gfx_page)
       end
     end
+    hitbox_red_rect = ChunkyPNG::Image.new(big_gfx_page_width*gfx_page_width, 256, ChunkyPNG::Color.rgba(0xFF, 0, 0, 0x3f))
+    hitbox_red_x_off = 0
+    hitbox_red_y_off = big_gfx_page.height-hitbox_red_rect.height
+    big_gfx_page.compose!(hitbox_red_rect, hitbox_red_x_off, hitbox_red_y_off)
     big_gfx_page.save(output_path + "/#{name}.png")
     
     unique_parts_by_index = sprite.get_unique_parts_by_index()
     unique_parts = unique_parts_by_index.values.map{|dup_data| dup_data[:unique_part]}.uniq
+    
+    unique_hitboxes_by_index = sprite.get_unique_hitboxes_by_index()
+    unique_hitboxes = unique_hitboxes_by_index.values.map{|dup_data| dup_data[:unique_hitbox]}.uniq
     
     builder = Nokogiri::XML::Builder.new do |xml|
       xml.img(:name => "#{name}.png", 
@@ -50,6 +70,16 @@ class DarkFunctionInterface
                       :y => part.gfx_y_offset + big_gfx_y_offset,
                       :w => part.width,
                       :h => part.height
+              )
+            end
+            
+            unique_hitboxes.each_with_index do |hitbox, i|
+              hitbox_index = sprite.hitboxes.index(hitbox)
+              xml.spr(:name => "hitbox%02X" % hitbox_index,
+                      :x => hitbox_red_x_off,
+                      :y => hitbox_red_y_off,
+                      :w => hitbox.width,
+                      :h => hitbox.height
               )
             end
           }
@@ -78,7 +108,6 @@ class DarkFunctionInterface
                   # darkFunction places parts so that their center is at the position given.
                   # But the game engine places it so that the part's upper left corner is at the position given.
                   # So we need to add half the part's width and height so it matches up.
-                  #part = sprite.parts[part_index]
                   dup_data = unique_parts_by_index[part_index]
                   part = dup_data[:unique_part]
                   x = dup_data[:x_pos]
@@ -90,11 +119,23 @@ class DarkFunctionInterface
                           :x => x + part.width/2,
                           :y => y + part.height/2,
                           :z => part_z_index,
-                          :angle => 0,
                           :flipH => horizontal_flip ? 1 : 0,
                           :flipV => vertical_flip ? 1 : 0
                   )
                   part_z_index += 1
+                end
+                
+                frame.hitbox_indexes.each do |hitbox_index|
+                  dup_data = unique_hitboxes_by_index[hitbox_index]
+                  hitbox = dup_data[:unique_hitbox]
+                  x = dup_data[:x_pos]
+                  y = dup_data[:y_pos]
+                  unique_hitbox_index = sprite.hitboxes.index(hitbox)
+                  xml.spr(:name => "/hitbox%02X" % unique_hitbox_index,
+                          :x => x + hitbox.width/2,
+                          :y => y + hitbox.height/2,
+                          :z => 999 # We want hitboxes to appear below the graphics.
+                  )
                 end
               }
             end
@@ -129,12 +170,14 @@ class DarkFunctionInterface
     xml.css("spr").each do |df_spr|
       df_unique_parts["/" + df_spr["name"]] = df_spr
     end
+    p df_unique_parts.keys
     
     # Empty the arrays so we can create them from scratch.
     sprite.frames.clear()
     sprite.parts.clear()
-    sprite.frame_delays.clear()
+    sprite.hitboxes.clear()
     sprite.animations.clear()
+    sprite.frame_delays.clear()
     
     xml = Nokogiri::XML(anim_file)
     df_anims = xml.css("anim")
@@ -154,36 +197,51 @@ class DarkFunctionInterface
         frame_delay.frame_index = frame_index
         frame = Frame.new
         frame.first_part_offset = sprite.parts.size*Part.data_size
+        frame.first_hitbox_offset = sprite.hitboxes.size*Hitbox.data_size
         sprite.frames << frame
         
         df_sprs = df_cell.css("spr")
         df_sprs_z_sorted = df_sprs.sort_by{|df_spr| df_spr["z"].to_i}
         df_sprs_z_sorted.each do |df_spr|
-          part = Part.new
-          frame.number_of_parts += 1
-          
-          df_unique_part = df_unique_parts[df_spr["name"]]
-          x_on_big_gfx_page = df_unique_part["x"].to_i
-          y_on_big_gfx_page = df_unique_part["y"].to_i
-          part.gfx_x_offset = x_on_big_gfx_page % gfx_page_width
-          part.gfx_y_offset = y_on_big_gfx_page % gfx_page_width
-          part.width = df_unique_part["w"].to_i
-          part.height = df_unique_part["h"].to_i
-          gfx_page_index_on_big_gfx_page = (x_on_big_gfx_page / gfx_page_width) + (y_on_big_gfx_page / gfx_page_width * big_gfx_page_width)
-          gfx_page_index = gfx_page_index_on_big_gfx_page % num_gfx_pages
-          if gfx_page_canvas_width == 256
-            # 256x256 pages take up 4 times the space of 128x128 pages.
-            gfx_page_index = gfx_page_index * 4
+          if df_spr["name"].start_with?("/hitbox")
+            hitbox = Hitbox.new
+            frame.number_of_hitboxes += 1
+            
+            df_unique_hitbox = df_unique_parts[df_spr["name"]]
+            hitbox.width = df_unique_hitbox["w"].to_i
+            hitbox.height = df_unique_hitbox["h"].to_i
+            
+            hitbox.x_pos = df_spr["x"].to_i - hitbox.width/2
+            hitbox.y_pos = df_spr["y"].to_i - hitbox.height/2
+            
+            sprite.hitboxes << hitbox
+          else
+            part = Part.new
+            frame.number_of_parts += 1
+            
+            df_unique_part = df_unique_parts[df_spr["name"]]
+            x_on_big_gfx_page = df_unique_part["x"].to_i
+            y_on_big_gfx_page = df_unique_part["y"].to_i
+            part.gfx_x_offset = x_on_big_gfx_page % gfx_page_width
+            part.gfx_y_offset = y_on_big_gfx_page % gfx_page_width
+            part.width = df_unique_part["w"].to_i
+            part.height = df_unique_part["h"].to_i
+            gfx_page_index_on_big_gfx_page = (x_on_big_gfx_page / gfx_page_width) + (y_on_big_gfx_page / gfx_page_width * big_gfx_page_width)
+            gfx_page_index = gfx_page_index_on_big_gfx_page % num_gfx_pages
+            if gfx_page_canvas_width == 256
+              # 256x256 pages take up 4 times the space of 128x128 pages.
+              gfx_page_index = gfx_page_index * 4
+            end
+            part.gfx_page_index = gfx_page_index
+            part.palette_index = gfx_page_index_on_big_gfx_page / num_gfx_pages
+            
+            part.x_pos = df_spr["x"].to_i - part.width/2
+            part.y_pos = df_spr["y"].to_i - part.height/2
+            part.horizontal_flip = (df_spr["flipH"].to_i == 1)
+            part.vertical_flip = (df_spr["flipV"].to_i == 1)
+            
+            sprite.parts << part
           end
-          part.gfx_page_index = gfx_page_index
-          part.palette_index = gfx_page_index_on_big_gfx_page / num_gfx_pages
-          
-          part.x_pos = df_spr["x"].to_i - part.width/2
-          part.y_pos = df_spr["y"].to_i - part.height/2
-          part.horizontal_flip = (df_spr["flipH"].to_i == 1)
-          part.vertical_flip = (df_spr["flipV"].to_i == 1)
-          
-          sprite.parts << part
         end
       end
     end
