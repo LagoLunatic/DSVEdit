@@ -170,7 +170,6 @@ class DarkFunctionInterface
     xml.css("spr").each do |df_spr|
       df_unique_parts["/" + df_spr["name"]] = df_spr
     end
-    p df_unique_parts.keys
     
     # Empty the arrays so we can create them from scratch.
     sprite.frames.clear()
@@ -178,6 +177,8 @@ class DarkFunctionInterface
     sprite.hitboxes.clear()
     sprite.animations.clear()
     sprite.frame_delays.clear()
+    
+    each_frames_unique_part_names = {}
     
     xml = Nokogiri::XML(anim_file)
     df_anims = xml.css("anim")
@@ -194,11 +195,13 @@ class DarkFunctionInterface
         animation.number_of_frames += 1
         
         frame_index = sprite.frames.size
-        frame_delay.frame_index = frame_index
         frame = Frame.new
         frame.first_part_offset = sprite.parts.size*Part.data_size
         frame.first_hitbox_offset = sprite.hitboxes.size*Hitbox.data_size
-        sprite.frames << frame
+        
+        this_frames_unique_part_names = []
+        this_frames_parts = []
+        this_frames_hitboxes = []
         
         df_sprs = df_cell.css("spr")
         df_sprs_z_sorted = df_sprs.sort_by{|df_spr| df_spr["z"].to_i}
@@ -207,6 +210,7 @@ class DarkFunctionInterface
             hitbox = Hitbox.new
             frame.number_of_hitboxes += 1
             
+            this_frames_unique_part_names << df_spr["name"]
             df_unique_hitbox = df_unique_parts[df_spr["name"]]
             hitbox.width = df_unique_hitbox["w"].to_i
             hitbox.height = df_unique_hitbox["h"].to_i
@@ -214,11 +218,12 @@ class DarkFunctionInterface
             hitbox.x_pos = df_spr["x"].to_i - hitbox.width/2
             hitbox.y_pos = df_spr["y"].to_i - hitbox.height/2
             
-            sprite.hitboxes << hitbox
+            this_frames_hitboxes << hitbox
           else
             part = Part.new
             frame.number_of_parts += 1
             
+            this_frames_unique_part_names << df_spr["name"]
             df_unique_part = df_unique_parts[df_spr["name"]]
             x_on_big_gfx_page = df_unique_part["x"].to_i
             y_on_big_gfx_page = df_unique_part["y"].to_i
@@ -240,8 +245,22 @@ class DarkFunctionInterface
             part.horizontal_flip = (df_spr["flipH"].to_i == 1)
             part.vertical_flip = (df_spr["flipV"].to_i == 1)
             
-            sprite.parts << part
+            this_frames_parts << part
           end
+        end
+        
+        duplicated_frame_and_part_names = each_frames_unique_part_names.find do |frame_index, other_frames_unique_part_names|
+          this_frames_unique_part_names == other_frames_unique_part_names
+        end
+        if duplicated_frame_and_part_names
+          duplicated_frame_index = duplicated_frame_and_part_names[0]
+          frame_delay.frame_index = duplicated_frame_index
+        else
+          frame_delay.frame_index = frame_index
+          sprite.frames << frame
+          each_frames_unique_part_names[frame_index] = this_frames_unique_part_names
+          sprite.parts.concat(this_frames_parts)
+          sprite.hitboxes.concat(this_frames_hitboxes)
         end
       end
     end
