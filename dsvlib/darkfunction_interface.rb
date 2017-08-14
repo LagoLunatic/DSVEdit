@@ -102,7 +102,6 @@ class DarkFunctionInterface
         all_unanimated_frames.delete(frame_delay.frame_index)
       end
     end
-    num_unanimated_frames = 0
     sprite.animations.each_with_index do |animation, animation_index|
       unanimated_frame_indexes_to_insert = []
       
@@ -123,8 +122,7 @@ class DarkFunctionInterface
         dummy_frame_delay = FrameDelay.new
         dummy_frame_delay.frame_index = unanimated_frame_index
         
-        animations_plus_unanimated_frames << {name: "unanimated frame %02X" % num_unanimated_frames, frame_delays: [dummy_frame_delay]}
-        num_unanimated_frames += 1
+        animations_plus_unanimated_frames << {name: "unanimated frame %02X" % unanimated_frame_index, frame_delays: [dummy_frame_delay]}
       end
       
       animations_plus_unanimated_frames << {name: "%02X" % animation_index, frame_delays: animation.frame_delays}
@@ -135,8 +133,7 @@ class DarkFunctionInterface
         dummy_frame_delay = FrameDelay.new
         dummy_frame_delay.frame_index = unanimated_frame_index
         
-        animations_plus_unanimated_frames << {name: "unanimated frame %02X" % num_unanimated_frames, frame_delays: [dummy_frame_delay]}
-        num_unanimated_frames += 1
+        animations_plus_unanimated_frames << {name: "unanimated frame %02X" % unanimated_frame_index, frame_delays: [dummy_frame_delay]}
       end
     end
     
@@ -225,10 +222,32 @@ class DarkFunctionInterface
     sprite.animations.clear()
     sprite.frame_delays.clear()
     
+    all_created_frames = []
     each_frames_unique_part_names = {}
     
     xml = Nokogiri::XML(anim_file)
     df_anims = xml.css("anim")
+    
+    # We need to preserve the frame index of unanimated frames since these are referenced directly by the game's code, not through animations.
+    # Create the unanimated frames first in their proper spots.
+    df_anims.each do |df_anim|
+      if df_anim[:name] =~ /^unanimated frame (\h+)$/
+        unanimated_frame_index = $1.to_i(16)
+        
+        df_cell = df_anim.css("cell").first
+        frame, this_frames_parts, this_frames_hitboxes, this_frames_unique_part_names = import_frame(
+          df_cell, df_unique_parts, gfx_page_width, big_gfx_page_width, num_gfx_pages, gfx_page_canvas_width
+        )
+        sprite.frames[unanimated_frame_index] = frame
+        all_created_frames[unanimated_frame_index] = {
+          frame: frame,
+          frame_parts: this_frames_parts,
+          frame_hitboxes: this_frames_hitboxes
+        }
+        each_frames_unique_part_names[unanimated_frame_index] = this_frames_unique_part_names
+      end
+    end
+    
     df_anims.each do |df_anim|
       unless df_anim[:name].start_with?("unanimated")
         animation = Animation.new
@@ -243,60 +262,9 @@ class DarkFunctionInterface
         sprite.frame_delays << frame_delay
         animation.number_of_frames += 1 unless df_anim[:name].start_with?("unanimated")
         
-        frame_index = sprite.frames.size
-        frame = Frame.new
-        frame.first_part_offset = sprite.parts.size*Part.data_size
-        frame.first_hitbox_offset = sprite.hitboxes.size*Hitbox.data_size
-        
-        this_frames_unique_part_names = []
-        this_frames_parts = []
-        this_frames_hitboxes = []
-        
-        df_sprs = df_cell.css("spr")
-        df_sprs_z_sorted = df_sprs.sort_by{|df_spr| df_spr["z"].to_i}
-        df_sprs_z_sorted.each do |df_spr|
-          if df_spr["name"].start_with?("/hitbox")
-            hitbox = Hitbox.new
-            frame.number_of_hitboxes += 1
-            
-            this_frames_unique_part_names << df_spr["name"]
-            df_unique_hitbox = df_unique_parts[df_spr["name"]]
-            hitbox.width = df_unique_hitbox["w"].to_i
-            hitbox.height = df_unique_hitbox["h"].to_i
-            
-            hitbox.x_pos = df_spr["x"].to_i - hitbox.width/2
-            hitbox.y_pos = df_spr["y"].to_i - hitbox.height/2
-            
-            this_frames_hitboxes << hitbox
-          else
-            part = Part.new
-            frame.number_of_parts += 1
-            
-            this_frames_unique_part_names << df_spr["name"]
-            df_unique_part = df_unique_parts[df_spr["name"]]
-            x_on_big_gfx_page = df_unique_part["x"].to_i
-            y_on_big_gfx_page = df_unique_part["y"].to_i
-            part.gfx_x_offset = x_on_big_gfx_page % gfx_page_width
-            part.gfx_y_offset = y_on_big_gfx_page % gfx_page_width
-            part.width = df_unique_part["w"].to_i
-            part.height = df_unique_part["h"].to_i
-            gfx_page_index_on_big_gfx_page = (x_on_big_gfx_page / gfx_page_width) + (y_on_big_gfx_page / gfx_page_width * big_gfx_page_width)
-            gfx_page_index = gfx_page_index_on_big_gfx_page % num_gfx_pages
-            if gfx_page_canvas_width == 256
-              # 256x256 pages take up 4 times the space of 128x128 pages.
-              gfx_page_index = gfx_page_index * 4
-            end
-            part.gfx_page_index = gfx_page_index
-            part.palette_index = gfx_page_index_on_big_gfx_page / num_gfx_pages
-            
-            part.x_pos = df_spr["x"].to_i - part.width/2
-            part.y_pos = df_spr["y"].to_i - part.height/2
-            part.horizontal_flip = (df_spr["flipH"].to_i == 1)
-            part.vertical_flip = (df_spr["flipV"].to_i == 1)
-            
-            this_frames_parts << part
-          end
-        end
+        frame, this_frames_parts, this_frames_hitboxes, this_frames_unique_part_names = import_frame(
+          df_cell, df_unique_parts, gfx_page_width, big_gfx_page_width, num_gfx_pages, gfx_page_canvas_width
+        )
         
         duplicated_frame_and_part_names = each_frames_unique_part_names.find do |frame_index, other_frames_unique_part_names|
           this_frames_unique_part_names == other_frames_unique_part_names
@@ -305,15 +273,99 @@ class DarkFunctionInterface
           duplicated_frame_index = duplicated_frame_and_part_names[0]
           frame_delay.frame_index = duplicated_frame_index
         else
+          next_blank_frame_index = sprite.frames.index(nil)
+          if next_blank_frame_index
+            frame_index = next_blank_frame_index
+          else
+            frame_index = sprite.frames.size
+          end
+          
           frame_delay.frame_index = frame_index
-          sprite.frames << frame
+          sprite.frames[frame_index] = frame
+          all_created_frames[frame_index] = {
+            frame: frame,
+            frame_parts: this_frames_parts,
+            frame_hitboxes: this_frames_hitboxes
+          }
           each_frames_unique_part_names[frame_index] = this_frames_unique_part_names
-          sprite.parts.concat(this_frames_parts)
-          sprite.hitboxes.concat(this_frames_hitboxes)
         end
       end
     end
     
+    all_created_frames.each_with_index do |data, i|
+      if data.nil?
+        # A blank spot caused by the user reducing the number of frames, but an unanimated frame remaining that we have to keep in place.
+        # Create a dummy frame to get rid of the blank spot.
+        frame_index = i
+        frame = Frame.new
+        sprite.frames[frame_index] = frame
+      else
+        frame = data[:frame]
+        this_frames_parts = data[:frame_parts]
+        this_frames_hitboxes = data[:frame_hitboxes]
+        frame.first_part_offset = sprite.parts.size*Part.data_size
+        frame.first_hitbox_offset = sprite.hitboxes.size*Hitbox.data_size
+        sprite.parts.concat(this_frames_parts)
+        sprite.hitboxes.concat(this_frames_hitboxes)
+      end
+    end
+    
     sprite.write_to_rom()
+  end
+  
+  def self.import_frame(df_cell, df_unique_parts, gfx_page_width, big_gfx_page_width, num_gfx_pages, gfx_page_canvas_width)
+    frame = Frame.new
+    
+    this_frames_unique_part_names = []
+    this_frames_parts = []
+    this_frames_hitboxes = []
+    
+    df_sprs = df_cell.css("spr")
+    df_sprs_z_sorted = df_sprs.sort_by{|df_spr| df_spr["z"].to_i}
+    df_sprs_z_sorted.each do |df_spr|
+      if df_spr["name"].start_with?("/hitbox")
+        hitbox = Hitbox.new
+        frame.number_of_hitboxes += 1
+        
+        this_frames_unique_part_names << df_spr["name"]
+        df_unique_hitbox = df_unique_parts[df_spr["name"]]
+        hitbox.width = df_unique_hitbox["w"].to_i
+        hitbox.height = df_unique_hitbox["h"].to_i
+        
+        hitbox.x_pos = df_spr["x"].to_i - hitbox.width/2
+        hitbox.y_pos = df_spr["y"].to_i - hitbox.height/2
+        
+        this_frames_hitboxes << hitbox
+      else
+        part = Part.new
+        frame.number_of_parts += 1
+        
+        this_frames_unique_part_names << df_spr["name"]
+        df_unique_part = df_unique_parts[df_spr["name"]]
+        x_on_big_gfx_page = df_unique_part["x"].to_i
+        y_on_big_gfx_page = df_unique_part["y"].to_i
+        part.gfx_x_offset = x_on_big_gfx_page % gfx_page_width
+        part.gfx_y_offset = y_on_big_gfx_page % gfx_page_width
+        part.width = df_unique_part["w"].to_i
+        part.height = df_unique_part["h"].to_i
+        gfx_page_index_on_big_gfx_page = (x_on_big_gfx_page / gfx_page_width) + (y_on_big_gfx_page / gfx_page_width * big_gfx_page_width)
+        gfx_page_index = gfx_page_index_on_big_gfx_page % num_gfx_pages
+        if gfx_page_canvas_width == 256
+          # 256x256 pages take up 4 times the space of 128x128 pages.
+          gfx_page_index = gfx_page_index * 4
+        end
+        part.gfx_page_index = gfx_page_index
+        part.palette_index = gfx_page_index_on_big_gfx_page / num_gfx_pages
+        
+        part.x_pos = df_spr["x"].to_i - part.width/2
+        part.y_pos = df_spr["y"].to_i - part.height/2
+        part.horizontal_flip = (df_spr["flipH"].to_i == 1)
+        part.vertical_flip = (df_spr["flipV"].to_i == 1)
+        
+        this_frames_parts << part
+      end
+    end
+    
+    return [frame, this_frames_parts, this_frames_hitboxes, this_frames_unique_part_names]
   end
 end
