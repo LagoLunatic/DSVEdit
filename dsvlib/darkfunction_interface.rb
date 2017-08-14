@@ -94,9 +94,14 @@ class DarkFunctionInterface
     end
     
     # We need to preserve unanimated frames by creating dummy animations containing them.
-    # This also doubles as preserving the proper order of animated frames.
     animations_plus_unanimated_frames = []
     max_seen_frame_index = -1
+    all_unanimated_frames = (0..sprite.frames.size-1).to_a
+    sprite.animations.each do |animation|
+      animation.frame_delays.each do |frame_delay|
+        all_unanimated_frames.delete(frame_delay.frame_index)
+      end
+    end
     num_unanimated_frames = 0
     sprite.animations.each_with_index do |animation, animation_index|
       unanimated_frame_indexes_to_insert = []
@@ -109,7 +114,7 @@ class DarkFunctionInterface
           max_seen_frame_index = frame_delay.frame_index
         else
           # It skipped a frame (or multiple frames). We must insert these as unanimated frames before this next animation so that it's correctly preserved.
-          unanimated_frame_indexes_to_insert += (max_seen_frame_index+1..frame_delay.frame_index-1).to_a
+          unanimated_frame_indexes_to_insert += ((max_seen_frame_index+1..frame_delay.frame_index-1).to_a & all_unanimated_frames)
           max_seen_frame_index = frame_delay.frame_index-1
         end
       end
