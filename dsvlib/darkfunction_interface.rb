@@ -223,7 +223,7 @@ class DarkFunctionInterface
     sprite.frame_delays.clear()
     
     all_created_frames = []
-    each_frames_unique_part_names = {}
+    each_frames_unique_part_and_hitbox_strs = {}
     
     xml = Nokogiri::XML(anim_file)
     df_anims = xml.css("anim")
@@ -235,7 +235,7 @@ class DarkFunctionInterface
         unanimated_frame_index = $1.to_i(16)
         
         df_cell = df_anim.css("cell").first
-        frame, this_frames_parts, this_frames_hitboxes, this_frames_unique_part_names = import_frame(
+        frame, this_frames_parts, this_frames_hitboxes, this_frames_unique_part_and_hitbox_strs = import_frame(
           df_cell, df_unique_parts, gfx_page_width, big_gfx_page_width, num_gfx_pages, gfx_page_canvas_width
         )
         sprite.frames[unanimated_frame_index] = frame
@@ -244,7 +244,7 @@ class DarkFunctionInterface
           frame_parts: this_frames_parts,
           frame_hitboxes: this_frames_hitboxes
         }
-        each_frames_unique_part_names[unanimated_frame_index] = this_frames_unique_part_names
+        each_frames_unique_part_and_hitbox_strs[unanimated_frame_index] = this_frames_unique_part_and_hitbox_strs
       end
     end
     
@@ -262,12 +262,12 @@ class DarkFunctionInterface
         sprite.frame_delays << frame_delay
         animation.number_of_frames += 1 unless df_anim[:name].start_with?("unanimated")
         
-        frame, this_frames_parts, this_frames_hitboxes, this_frames_unique_part_names = import_frame(
+        frame, this_frames_parts, this_frames_hitboxes, this_frames_unique_part_and_hitbox_strs = import_frame(
           df_cell, df_unique_parts, gfx_page_width, big_gfx_page_width, num_gfx_pages, gfx_page_canvas_width
         )
         
-        duplicated_frame_and_part_names = each_frames_unique_part_names.find do |frame_index, other_frames_unique_part_names|
-          this_frames_unique_part_names == other_frames_unique_part_names
+        duplicated_frame_and_part_names = each_frames_unique_part_and_hitbox_strs.find do |frame_index, other_frames_unique_part_and_hitbox_strs|
+          this_frames_unique_part_and_hitbox_strs == other_frames_unique_part_and_hitbox_strs
         end
         if duplicated_frame_and_part_names
           duplicated_frame_index = duplicated_frame_and_part_names[0]
@@ -287,7 +287,7 @@ class DarkFunctionInterface
             frame_parts: this_frames_parts,
             frame_hitboxes: this_frames_hitboxes
           }
-          each_frames_unique_part_names[frame_index] = this_frames_unique_part_names
+          each_frames_unique_part_and_hitbox_strs[frame_index] = this_frames_unique_part_and_hitbox_strs
         end
       end
     end
@@ -316,7 +316,7 @@ class DarkFunctionInterface
   def self.import_frame(df_cell, df_unique_parts, gfx_page_width, big_gfx_page_width, num_gfx_pages, gfx_page_canvas_width)
     frame = Frame.new
     
-    this_frames_unique_part_names = []
+    this_frames_unique_part_and_hitbox_strs = []
     this_frames_parts = []
     this_frames_hitboxes = []
     
@@ -327,7 +327,6 @@ class DarkFunctionInterface
         hitbox = Hitbox.new
         frame.number_of_hitboxes += 1
         
-        this_frames_unique_part_names << df_spr["name"]
         df_unique_hitbox = df_unique_parts[df_spr["name"]]
         hitbox.width = df_unique_hitbox["w"].to_i
         hitbox.height = df_unique_hitbox["h"].to_i
@@ -336,11 +335,11 @@ class DarkFunctionInterface
         hitbox.y_pos = df_spr["y"].to_i - hitbox.height/2
         
         this_frames_hitboxes << hitbox
+        this_frames_unique_part_and_hitbox_strs << hitbox.to_data
       else
         part = Part.new
         frame.number_of_parts += 1
         
-        this_frames_unique_part_names << df_spr["name"]
         df_unique_part = df_unique_parts[df_spr["name"]]
         x_on_big_gfx_page = df_unique_part["x"].to_i
         y_on_big_gfx_page = df_unique_part["y"].to_i
@@ -363,9 +362,10 @@ class DarkFunctionInterface
         part.vertical_flip = (df_spr["flipV"].to_i == 1)
         
         this_frames_parts << part
+        this_frames_unique_part_and_hitbox_strs << part.to_data
       end
     end
     
-    return [frame, this_frames_parts, this_frames_hitboxes, this_frames_unique_part_names]
+    return [frame, this_frames_parts, this_frames_hitboxes, this_frames_unique_part_and_hitbox_strs]
   end
 end
