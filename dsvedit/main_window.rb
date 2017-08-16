@@ -150,8 +150,6 @@ class DSVEdit < Qt::MainWindow
     
     disable_menu_actions()
     
-    clear_cache()
-    
     self.show()
     
     if @settings[:last_used_folder] && File.directory?(@settings[:last_used_folder])
@@ -280,6 +278,8 @@ class DSVEdit < Qt::MainWindow
     
     close_open_dialogs()
     
+    clear_cache()
+    
     game = Game.new
     game.initialize_from_rom(rom_path, extract_to_hard_drive = true)
     @game = game
@@ -304,6 +304,8 @@ class DSVEdit < Qt::MainWindow
     return if cancelled
     
     close_open_dialogs()
+    
+    clear_cache()
     
     game = Game.new
     game.initialize_from_folder(folder_path)
@@ -549,8 +551,6 @@ class DSVEdit < Qt::MainWindow
   
   def load_room_collision_tileset
     @collision_view_item = Qt::GraphicsRectItem.new
-    
-    return if SYSTEM == :gba
     
     @room_graphics_scene.addItem(@collision_view_item)
     if @room.layers.length > 0

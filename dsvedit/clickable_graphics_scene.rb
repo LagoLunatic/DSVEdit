@@ -23,7 +23,7 @@ class ClickableGraphicsScene < Qt::GraphicsScene
   def mouseReleaseEvent(event)
     x = event.scenePos().x.to_i
     y = event.scenePos().y.to_i
-    emit released(x, y, event.buttons)
+    emit released(x, y, event.button)
     
     super(event)
   end
