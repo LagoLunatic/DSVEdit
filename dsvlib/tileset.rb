@@ -19,13 +19,13 @@ class Tileset
   
   def read_from_rom_nds
     @tiles = []
-    @tiles << tile_class.new(0) # First entry on every tileset is always blank.
+    @tiles << tile_class.new("\0"*tile_class.data_size) # First entry on every tileset is always blank.
     
     tileset_data = fs.read(tileset_pointer, 4*LENGTH_OF_TILESET_IN_BLOCKS, allow_length_to_exceed_end_of_file: true)
     
     offset = 0
     while true
-      tile_data = tileset_data[offset, 4].unpack("V").first
+      tile_data = tileset_data[offset, 4]
       
       @tiles << tile_class.new(tile_data)
       
@@ -39,7 +39,7 @@ class Tileset
   def read_from_rom_gba
     @tiles = []
     
-    if tileset_type == 2
+    if tileset_type == 2 || self.is_a?(CollisionTileset)
       tileset_data = fs.decompress(tileset_pointer)
     elsif tileset_type == 1
       tileset_data = fs.read(tileset_pointer, 0x1000)
@@ -48,7 +48,14 @@ class Tileset
       return
     end
     
-    @tiles << tile_class.new("\0"*tile_class.data_size) # First entry on every tileset is always blank.
+    # First entry on every tileset is always blank.
+    if self.is_a?(CollisionTileset)
+      16.times do
+        @tiles << tile_class.new("\0"*tile_class.data_size)
+      end
+    else
+      @tiles << tile_class.new("\0"*tile_class.data_size)
+    end
     
     offset = 0
     while true
@@ -102,6 +109,8 @@ class TilesetTile
                 :palette_index
               
   def initialize(tile_data)
+    tile_data = tile_data.unpack("V").first
+    
     @index_on_tile_page = (tile_data & 0b00000000_00000000_00000000_00111111)
     @unknown_1          = (tile_data & 0b00000000_00000000_00001111_11000000) >> 6
     @tile_page          = (tile_data & 0b00000000_00000001_11110000_00000000) >> 12
@@ -128,6 +137,10 @@ class TilesetTile
   def is_blank
     # This indicates the tile is completely blank, no graphics or collision.
     index_on_tile_page == 0 && tile_page == 0
+  end
+  
+  def self.data_size
+    4
   end
 end
 
@@ -234,10 +247,6 @@ class CollisionTileset < Tileset
     end
   end
   
-  def read_from_rom_gba
-    @tiles = [] # TODO
-  end
-  
   def tile_class
     CollisionTile
   end
@@ -257,12 +266,18 @@ class CollisionTile
                 :unknown_3
               
   def initialize(tile_data)
-    @tile_data = tile_data
+    if SYSTEM == :gba
+      @tile_data = tile_data.unpack("C")
+    else
+      @tile_data = tile_data.unpack("CCCC")
+    end
     
-    collision_data     = (tile_data & 0x000000FF)
-    @unknown_1         = (tile_data & 0x0000FF00) >> 8
-    @unknown_2         = (tile_data & 0x00FF0000) >> 16
-    @unknown_3         = (tile_data & 0xFF000000) >> 24
+    collision_data     = @tile_data[0]
+    if SYSTEM == :nds
+      @unknown_1         = @tile_data[1]
+      @unknown_2         = @tile_data[2]
+      @unknown_3         = @tile_data[3]
+    end
     
     @has_top     = (collision_data & 0b00000001) > 0
     bit_2        = (collision_data & 0b00000010) > 0
@@ -331,5 +346,13 @@ class CollisionTile
   
   def is_conveyor?
     is_conveyor_left? || is_conveyor_right?
+  end
+  
+  def self.data_size
+    if SYSTEM == :nds
+      4
+    else
+      1
+    end
   end
 end

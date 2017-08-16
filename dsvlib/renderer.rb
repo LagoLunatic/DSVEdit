@@ -764,14 +764,39 @@ class Renderer
     end
     
     collision_tileset = CollisionTileset.new(collision_tileset_offset, fs)
-    rendered_tileset = ChunkyPNG::Image.new(TILESET_WIDTH_IN_TILES*16, TILESET_HEIGHT_IN_TILES*16, ChunkyPNG::Color::TRANSPARENT)
+    rendered_tileset = ChunkyPNG::Image.new(TILESET_WIDTH_IN_TILES*TILE_WIDTH, TILESET_HEIGHT_IN_TILES*TILE_HEIGHT, ChunkyPNG::Color::TRANSPARENT)
     
-    collision_tileset.tiles.each_with_index do |tile, index_on_tileset|
-      graphic_tile = render_collision_tile(tile)
-      
-      x_on_tileset = index_on_tileset % 16
-      y_on_tileset = index_on_tileset / 16
-      rendered_tileset.compose!(graphic_tile, x_on_tileset*16, y_on_tileset*16)
+    if SYSTEM == :nds
+      collision_tileset.tiles.each_with_index do |tile, index_on_tileset|
+        graphic_tile = render_collision_tile(tile)
+        
+        x_on_tileset = index_on_tileset % TILESET_WIDTH_IN_TILES
+        y_on_tileset = index_on_tileset / TILESET_WIDTH_IN_TILES
+        rendered_tileset.compose!(graphic_tile, x_on_tileset*16, y_on_tileset*16)
+      end
+    else
+      tileset_width = 16*4
+      collision_tileset.tiles.each_slice(16).each_with_index do |big_tile, index_on_tileset|
+        x_on_tileset = index_on_tileset % TILESET_WIDTH_IN_TILES
+        y_on_tileset = index_on_tileset / TILESET_WIDTH_IN_TILES
+        
+        minitile_x = 0
+        minitile_y = 0
+        big_tile.each_with_index do |minitile|
+          graphic_tile = render_collision_tile(minitile)
+          graphic_tile = graphic_tile.resize(8, 8)
+          
+          x = x_on_tileset*4 + minitile_x
+          y = y_on_tileset*4 + minitile_y
+          rendered_tileset.compose!(graphic_tile, x*8, y*8)
+          
+          minitile_x += 1
+          if minitile_x > 3
+            minitile_x = 0
+            minitile_y += 1
+          end
+        end
+      end
     end
     
     if output_filename
@@ -811,7 +836,7 @@ class Renderer
         graphic_tile.rect(0, 0, 15, 15, stroke_color = color, fill_color = COLLISION_SEMISOLID_COLOR)
           
         # Add an upwards pointing arrow for jumpthrough platforms.
-        graphic_tile.polygon([4, 4, 7, 1, 8, 1, 11, 4, 8, 4, 8, 6, 7, 6, 7, 4], stroke_color = color, fill_color = color)
+        graphic_tile.polygon([3, 7, 7, 3, 8, 3, 12, 7, 8, 7, 8, 12, 7, 12, 7, 7], stroke_color = color, fill_color = color)
       elsif tile.has_sides_and_bottom
         graphic_tile.polygon([0, 0, 7, 7, 15, 0, 15, 15, 0, 15], stroke_color = color, fill_color = color)
       end
