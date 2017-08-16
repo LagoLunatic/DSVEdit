@@ -112,7 +112,7 @@ class Renderer
         render_tileset(layer.tileset_pointer, layer.tileset_type, room.palette_pages, room.gfx_pages, layer.colors_per_palette, layer.collision_tileset_pointer, tileset_filename)
       end
       
-      if collision
+      if collision && layer.collision_tileset_pointer != 0
         collision_tileset_filename = "#{folder}/#{room.area_name}/Tilesets/#{layer.tileset_filename}_collision.png"
         
         if !File.exist?(collision_tileset_filename)
