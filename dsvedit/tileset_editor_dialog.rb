@@ -210,6 +210,7 @@ class TilesetEditorDialog < Qt::Dialog
     
     @ui.palette_index.clear()
     @palettes.each_with_index do |palette, i|
+      break if i >= 0x40 # The engine only loads up to 0x40 palettes correctly, so don't even display more than that.
       @ui.palette_index.addItem("%02X" % i)
     end
     
