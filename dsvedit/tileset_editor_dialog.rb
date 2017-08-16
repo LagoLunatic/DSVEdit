@@ -149,7 +149,21 @@ class TilesetEditorDialog < Qt::Dialog
           @tiles += tile.minitiles[12,4]
         end
       end
-      @collision_tiles = @collision_tileset.tiles
+      @collision_tiles = []
+      @collision_tileset.tiles.each_slice(256) do |row_of_big_tiles|
+        row_of_big_tiles.each_slice(16) do |big_tile|
+          @collision_tiles += big_tile[0,4]
+        end
+        row_of_big_tiles.each_slice(16) do |big_tile|
+          @collision_tiles += big_tile[4,4]
+        end
+        row_of_big_tiles.each_slice(16) do |big_tile|
+          @collision_tiles += big_tile[8,4]
+        end
+        row_of_big_tiles.each_slice(16) do |big_tile|
+          @collision_tiles += big_tile[12,4]
+        end
+      end
     end
     
     @gfx_pages = RoomGfxPage.from_room_gfx_page_list(@gfx_list_pointer, @fs)

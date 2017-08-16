@@ -784,7 +784,6 @@ class Renderer
         minitile_y = 0
         big_tile.each_with_index do |minitile|
           graphic_tile = render_collision_tile(minitile)
-          graphic_tile = graphic_tile.resize(8, 8)
           
           x = x_on_tileset*4 + minitile_x
           y = y_on_tileset*4 + minitile_y
@@ -899,6 +898,9 @@ class Renderer
       else
         puts "Unknown block shape: #{tile.block_shape}"
         graphic_tile.rect(1, 1, 14, 14, stroke_color = color, fill_color = ChunkyPNG::Color.rgba(0, 255, 0, 255))
+        if SYSTEM == :gba
+          graphic_tile = graphic_tile.resize(8, 8)
+        end
         return graphic_tile
       end
       
@@ -914,6 +916,10 @@ class Renderer
       if tile.horizontal_flip
         graphic_tile.mirror!
       end
+    end
+    
+    if SYSTEM == :gba
+      graphic_tile = graphic_tile.resize(8, 8)
     end
     
     return graphic_tile
