@@ -39,6 +39,10 @@ class RoomEditorDialog < Qt::Dialog
       @ui.formLayout.removeItem(field_item)
     end
     
+    if !["por", "ooe"].include?(GAME)
+      @ui.palette_page_index.enabled = false
+    end
+    
     read_room()
     
     self.show()
@@ -93,7 +97,9 @@ class RoomEditorDialog < Qt::Dialog
     @room.color_effects = @ui.color_effects.text.to_i(16) if SYSTEM == :gba
     @room.gfx_list_pointer = @ui.gfx_page_list.text.to_i(16)
     @room.palette_wrapper_pointer = @ui.palette_page_list.text.to_i(16)
-    @room.palette_page_index = @ui.palette_page_index.text.to_i(16)
+    if ["por", "ooe"].include?(GAME)
+      @room.palette_page_index = @ui.palette_page_index.text.to_i(16)
+    end
     
     @room.write_to_rom()
     
