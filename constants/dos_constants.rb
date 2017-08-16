@@ -356,6 +356,7 @@ REUSED_SPECIAL_OBJECT_INFO = {
   0x0B => {init_code:         -1},
   0x0E => {init_code:         -1},
   0x11 => {init_code:         -1},
+  0x13 => {init_code:         -1},
   0x1D => COMMON_SPRITE, # wooden door
   0x22 => {init_code:         -1},
   0x25 => COMMON_SPRITE, # boss door
