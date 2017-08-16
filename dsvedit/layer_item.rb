@@ -2,14 +2,16 @@
 class LayerItem < Qt::GraphicsRectItem
   attr_reader :layer
   
-  def initialize(layer, tileset_filename)
+  def initialize(layer, tileset_filename, collision=false)
     super()
     
     @layer = layer
     @tileset = Qt::Pixmap.new(tileset_filename)
     
-    setZValue(-layer.z_index)
-    setOpacity(layer.opacity/31.0)
+    if !collision
+      setZValue(-layer.z_index)
+      setOpacity(layer.opacity/31.0)
+    end
     
     render_layer()
   end

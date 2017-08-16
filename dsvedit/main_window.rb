@@ -557,7 +557,7 @@ class DSVEdit < Qt::MainWindow
       @renderer.ensure_tilesets_exist("cache/#{GAME}/rooms/", @room, collision=true)
       tileset_filename = "cache/#{GAME}/rooms/#{@room.area_name}/Tilesets/#{@room.layers.first.tileset_filename}_collision.png"
       layer = @room.layers.first
-      layer_item = LayerItem.new(layer, tileset_filename)
+      layer_item = LayerItem.new(layer, tileset_filename, collision=true)
       layer_item.setParentItem(@collision_view_item)
     end
   rescue StandardError => e
