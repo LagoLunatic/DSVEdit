@@ -841,6 +841,14 @@ class SpriteEditor < Qt::Dialog
   def export_to_darkfunction
     return if @sprite.nil?
     
+    if @sprite.sprite_file.nil?
+      Qt::MessageBox.warning(self,
+        "Sprite has no file",
+        "This sprite is hardcoded and has no standalone sprite file.\nCannot export/import this sprite."
+      )
+      return
+    end
+    
     output_folder = "./gfx/darkfunction_sprites/#{sprite_name}"
     FileUtils.mkdir_p(output_folder)
     
@@ -850,15 +858,33 @@ class SpriteEditor < Qt::Dialog
       "Exported to darkFunction",
       "This sprite has been exported in darkFunction's format to the folder #{output_folder}"
     )
+  rescue DarkFunctionInterface::ExportError => e
+    Qt::MessageBox.warning(self,
+      "Failed to export to darkFunction",
+      e.message
+    )
   end
   
   def import_from_darkfunction
     return if @sprite.nil?
     
+    if @sprite.sprite_file.nil?
+      Qt::MessageBox.warning(self,
+        "Sprite has no file",
+        "This sprite is hardcoded and has no standalone sprite file.\nCannot export/import this sprite."
+      )
+      return
+    end
+    
     folder = "./gfx/darkfunction_sprites/#{sprite_name}"
     DarkFunctionInterface.import(folder, sprite_name, @sprite_info, @fs, @renderer)
     
     reload_sprite()
+  rescue DarkFunctionInterface::ImportError => e
+    Qt::MessageBox.warning(self,
+      "Failed to import from darkFunction",
+      e.message
+    )
   end
   
   def export_sprite_frames_as_png

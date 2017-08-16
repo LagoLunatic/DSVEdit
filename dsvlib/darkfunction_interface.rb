@@ -2,6 +2,9 @@
 require 'nokogiri'
 
 class DarkFunctionInterface
+  class ExportError < StandardError ; end
+  class ImportError < StandardError ; end
+  
   def self.export(output_path, name, sprite_info, fs, renderer)
     sprite = sprite_info.sprite
     
@@ -66,7 +69,7 @@ class DarkFunctionInterface
               i_on_big_gfx_page = gfx_page_index + (part.palette_index*num_gfx_pages)
               big_gfx_x_offset = (i_on_big_gfx_page % big_gfx_page_width) * gfx_page_width
               big_gfx_y_offset = (i_on_big_gfx_page / big_gfx_page_width) * gfx_page_width
-              xml.spr(:name => "%02X" % part_index,
+              xml.spr(:name => "part%02X" % part_index,
                       :x => part.gfx_x_offset + big_gfx_x_offset,
                       :y => part.gfx_y_offset + big_gfx_y_offset,
                       :w => part.width,
@@ -160,7 +163,7 @@ class DarkFunctionInterface
                   horizontal_flip = dup_data[:horizontal_flip]
                   vertical_flip = dup_data[:vertical_flip]
                   unique_part_index = sprite.parts.index(part)
-                  xml.spr(:name => "/%02X" % unique_part_index,
+                  xml.spr(:name => "/part%02X" % unique_part_index,
                           :x => x + part.width/2,
                           :y => y + part.height/2,
                           :z => part_z_index,
@@ -332,6 +335,9 @@ class DarkFunctionInterface
         frame.number_of_hitboxes += 1
         
         df_unique_hitbox = df_unique_parts[df_spr["name"]]
+        if df_unique_hitbox.nil?
+          raise ImportError.new("Failed to find hitbox with name #{df_spr["name"]}")
+        end
         hitbox.width = df_unique_hitbox["w"].to_i
         hitbox.height = df_unique_hitbox["h"].to_i
         
@@ -345,6 +351,9 @@ class DarkFunctionInterface
         frame.number_of_parts += 1
         
         df_unique_part = df_unique_parts[df_spr["name"]]
+        if df_unique_part.nil?
+          raise ImportError.new("Failed to find part with name #{df_spr["name"]}")
+        end
         x_on_big_gfx_page = df_unique_part["x"].to_i
         y_on_big_gfx_page = df_unique_part["y"].to_i
         part.gfx_x_offset = x_on_big_gfx_page % gfx_page_width
