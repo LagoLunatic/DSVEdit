@@ -49,6 +49,7 @@ Memory used for entities in PoR is 020FC500 - 0211173F. Each entity is 0x160 byt
 0A4,1: Controls the iframes this entity should give.
   This is an index in list 020BE4C8 - a list of different iframes values. Each entry is 1 byte long.
   This value is only read when the entity is initialized, changing it after the entity already exists has no effect.
+0A5,1: 
 0A6,1: Hitbox bitfield.
   Bits:
   0x1: Whether this entity's hitboxes are active or not.
@@ -60,11 +61,18 @@ Memory used for entities in PoR is 020FC500 - 0211173F. Each entity is 0x160 byt
 0B4,4: Bitfield of weaknesses.
 0B8,2: Number of iframes this entity gives.
 0BA,2: 
-0BC,2: 
+0BC,2: Set by function 02014F54. Related to player's kick damage?
 0BE,2: 
 0C0,2: Magical defense.
+0C2,2: 
+0C4,4: 
+0C8,4: On-hurt-player callback.
+  This function pointer is called when the entity collides with the player.
+0CC,4: On-damaged callback.
+  This function pointer is called when the entity collides with a player weapon.
 0DC,2: Counter?
 0DE,2: Counter?
+0EC,2: Pointer to child entity?
 0FC,2: 
 120,4: Bitfield of ???.
 149,1: 

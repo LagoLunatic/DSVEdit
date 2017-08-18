@@ -179,6 +179,7 @@
   ; r1 - Y pos
   ; r2 - Z pos
   ; r3 - Medal index.
+  ;   Medal index starts at 0 for Arthroverta.
   ;   The item in the chest will be the item with the global ID+1 of D7+medal index.
   ;   The pickup flag used will be 16F+medal index.
 

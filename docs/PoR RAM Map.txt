@@ -415,6 +415,9 @@ F5-F5
   1 - Richter/Maria mode.
   2 - Sisters mode.
   3 - Old Axe Armor mode.
+  4 - Boss rush mode.
+  5 - Shop mode.
+  6 - Some kind of debug mode. No room entities get loaded in this mode.
 02111F52 - Current game mode?
   0 - Jonathan/Charlotte mode.
   1 - Sisters mode.

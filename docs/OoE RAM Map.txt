@@ -289,11 +289,13 @@ A 200% attack boost (triple) takes 0xFFFF (0d65535) AP.
   0x100 - can trigger event in minera prison island where albus gives you the first part of dominus?
   0x200 - seen event in minera prison island where albus gives you the glyph.
 
-02100398-021003C3 - Bitfield of pickup flags.
+02100398-021003C7 - Bitfield of pickup flags.
   Bit indexes:
-  21 - Lapiste puzzle
-  24 - Vol Ignis puzzle
-  28 - Vol Fulgur puzzle
+  021 - Lapiste puzzle
+  024 - Vol Ignis puzzle
+  028 - Vol Fulgur puzzle
+  160-16D - Whether you've successfully beaten the boss for a given no-damage blue chest without taking damage.
+  170-17D - Whether you've taken the medal from a no-damage blue chest.
 
 021003CC-021003D3 - which areas on the world map have been unlocked. each area takes up 2 bits. the lower bit makes the area visible on the map but not selectable. the higher bit makes it both visible and accessible, overriding the lower bit. the order the areas are in is the same as their area index - so the lowest 2 bits of the first byte are dracula's castle, etc.
 

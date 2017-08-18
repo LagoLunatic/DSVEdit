@@ -310,6 +310,11 @@ What each range of entity slots is for:
 020F707C,4 - Screen scrolling x pos for entity rendering purposes.
 020F7080,4 - Screen scrolling y pos for entity rendering purposes.
 
+020F7094,2 - Screen scrolling minimum x pos.
+020F7096,2 - Screen scrolling minimum y pos.
+020F7098,2 - Screen scrolling maximum x pos.
+020F709A,2 - Screen scrolling maximum y pos.
+
 020F70A6,1 - Destination room sector index.
 020F70A7,1 - Destination room room index.
 
@@ -418,11 +423,11 @@ What each range of entity slots is for:
   If you set more than one button bit for a single control, then either of the buttons you set will trigger that control.
 
 020F7254 - Bitfield of what Magic Seals the player owns.
-020F7256 - current game mode:
+020F7256 - Current game mode:
   0 - Soma mode.
   1 - Julius mode.
   2 - Boss rush.
-  3 - ???. No room entities get loaded in this mode.
+  3 - Some kind of debug mode. No room entities get loaded in this mode.
   This variable affects various things, like whether you can press select to switch the top screen, how boss doors act, whether killing a boss triggers a magic seal, etc.
 020F7257 - When this is 1 the Julius mode HUD is displayed on the bottom screen and pausing doesn't bring up a menu. (For Julius mode.) When higher than 1 the Julius HUD is not displayed, but pausing still doesn't bring up the menu.
 020F7259 - Difficulty.
@@ -546,7 +551,12 @@ Stuff related to currently loaded tilesets:
   Each is a word.
   FFFFFFFF indicates an unused slot.
 
-02115384,0211538C - currently playing song.
+02115384 - Currently playing song.
+0211538C - Previously playing song.
+
+021528E4 - Inside the sound_data.sdat file, specifically the INFO section, this has a list of the SSEQ, SBNK (instruments), and volume for each song.
+
+02195780 - Something related to playing songs, 0 for no songs, 1 for songs??
 
 0222B8E0 - list of sprite pointers for area titles. the first one is shows the upper half of the gfx page. the second one shows the bottom half of the gfx page.
 0222B8E8 - list of gfx files for area titles. each area in the list is 8 bytes long. the first number is a gfx page pointer, the second is either 0 or 1. the 0 or 1 is for which sprite pointer to use. 0 means the top half, 1 means the bottom half.

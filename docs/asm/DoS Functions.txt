@@ -61,6 +61,18 @@
   ; r1 - Y pos of the block in pixels
   ; Used by the floors in Gergoth's tower that change depending on the state.
 
+02074F20 FloatConvertFromInt
+  ; r0 - Integer
+  ; Returns r0 - The integer converted to a float
+02074FEC FloatMultiply
+  ; r0 - First float number to multiply
+  ; r1 - Second float number to multiply
+  ; Returns r0 - Result
+02074DA8 FloatConvertToInt
+  ; r0 - Float
+  ; Returns r0 - The float converted to an integer
+; Online tool for converting between int and float represented as hex: https://gregstoll.dyndns.org/~gregstoll/floattohex/
+
 020059F0 BaloreBlockCreateRect
   ; These arguments are all in pixels, not blocks.
   ; r0 - X pos
@@ -174,6 +186,35 @@
   ; 1003 means song 3
 02029A1C PlaySong2
   ; r0 - Song
+0202968C GetSongForSector
+  ; r0 - Current sector index
+  ; Returns the song to play in this sector.
+  ; Note that the Julius-mode specific songs are hardcoded.
+  ; If the sector is 5 (Condemned Tower and Mine of Judgement) and the y pos on the map is 0x17 or higher, it's hardcoded to check sector 0x10's song instead of sector 5 (so that Mine of Judgement can have different music from Condemned Tower).
+0202988C SetCurrentlyPlayingSongIndex
+  ; r0 - Song index to set
+  ; Stores it to 02115384. This does not change the song playing itself.
+020299B0 UpdateCurrentlyPlayingSong
+  ; Plays the current song index (02115384) unless it's equal to the previous song index (0211538C). Then it updates 0211538C.
+
+0204F4D8 PlayBGMOrSfX???
+  ; r0 - Song index
+  ; r1 - 0?
+  ; r2 - 0?
+  ; r3 - 0?
+0204E3C0 PlayBGMOrSfX???2
+  ; r0 - Song index
+  ; r1 - 0?
+  ; r2 - 0?
+  ; r3 - 0?
+0204F168 Sound???
+02058D1C Sound???2
+  ; this reads from the list of songs in the INFO section of sound_data.sdat, at 02195780. it may be what actually plays the songs directly.
+
+0200705C GetCurrentSector
+02007104 GetCurrentSectorRoomIndexesFromMap
+  ; r0 - 0 if in the castle, 1 if in the abyss, 2 if not on any map.
+  ; Returns the sector/room index data from the current map tile. The low 6 bits are the room index, then the next 4 bits are the sector index.
 
 021FC590 PlayerUpdate
 021FCC9C PlayerDraw
