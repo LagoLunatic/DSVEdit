@@ -142,6 +142,19 @@
   04,1:
 
 020FC48C - Bitfield of what buttons the player is pressing.
+  0001 - A
+  0002 - B
+  0004 - Select
+  0008 - Start
+  0010 - Right
+  0020 - Left
+  0040 - Up
+  0080 - Down
+  0100 - R
+  0200 - L
+  0400 - X
+  0800 - Y
+  2000 - Debug
 
 020FC4B4,1 - Whether touch screen has been touched for at least 2 frames.
 020FC4B5,1 - Whether touch screen has been touched for exactly 2 frames.
@@ -270,6 +283,7 @@ F5-F5
   0x00000002 - Set during boss fights. Disables suspending, magical tickets, and keeps boss doors shut.
   0x00000040 - Player is dying. Manually setting this bit causes the player to die instantly regardless of their HP, complete with screaming.
   0x00000080 - Set during events?
+  0x00004000 - related to adrenaline gear?
   0x00040000 - Set during events and in Wind and Vincent's rooms?
   0x00100000 - Set when going through a door.
   0x01000000 - Set for a frame when entering the sisters' room.
@@ -285,8 +299,14 @@ F5-F5
   00000200 - Currently switching players.
 
 02111768 - Pointer to the current room's metadata.
-0211176C - Pointer to the current room's metadata. This is updated one frame before 02111768.
+0211176C - Pointer to next room to transition into.
 02111770 - Pointer to the door the player most recently walked through.
+02111778,2 - Current room's x pos on the map.
+0211177A,2 - Current room's x pos on the map.
+0211177C,2 - Player 1's x pos on the map.
+0211177E,2 - Player 2's x pos on the map.
+02111780,2 - Player 1's y pos on the map.
+02111782,2 - Player 2's y pos on the map.
 02111785 - Current area index?
 
 02111790 - Which type of door the player is currently walking through.
@@ -328,6 +348,7 @@ F5-F5
 021119AC,1 - Room index to save to the save file.
 021119BC,4 - X pos to save to the save file.
 021119C0,4 - Y pos to save to the save file.
+021119C4,4 - Z pos to save to the save file.
 
 021119D0,4 - Bitfield of which map items you've bought.
 
@@ -439,7 +460,7 @@ F5-F5
 02111F57 - Which player number you're controlling.
   0 - Player 1.
   1 - Player 2.
-02111F5B - Max level.
+02111F5B - Max level cap.
 02111F5C,2 - Bonus HP given by HP max ups.
   Each HP max up gives +0xF HP. The maximum is +0x1E0 HP, then any additional HP max ups do nothing. That's equivalent to 0x20 HP max ups in total.
 02111F5E,2 - Bonus MP given by MP max ups.
@@ -552,6 +573,8 @@ TODO: What are the other 2 for? It's not for the "recent" tab.
     0100 - Turn off and layer will be invisible?
 
 0211ABE0 - Start of list of globally loaded palettes.
+
+02122BF8,2 - number of frames to keep the game logic paused
 
 0213291C - List of hitboxes. Each entry is 0x14 bytes long, containing two hitboxes 0xA bytes long each.
   The index in this list for a particular entity is at offset+0xA7 in the entity memory.

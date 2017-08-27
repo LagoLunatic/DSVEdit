@@ -359,7 +359,8 @@ Special objects:
 9B Event - Meeting Death for the first time.
 9C Event - 
 9D Event - Stella in her boss room.
-9E Event - 
+9E Event - In front of the portrait to Forest of Doom, Charlotte refuses to enter unless you've talked to Wind about Stella's Locket.
+  Requires sector overlay 86.
 9F Event - 
 A0 Event - Death in his boss room.
 A1 Event - At the barrier that blocks the way to the Throne Room.

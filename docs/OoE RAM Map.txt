@@ -152,6 +152,8 @@ Requirement lists for kill quests:
 
 === 020F6B3F: End of most of ARM9.
 
+020FFC46 - number of frames to pause the game logic
+
 020FFC88 - normally 0. 12 when in paries state. 12 prevents pausing.
 
 020FFC8C-020FFC8F - Bitfield of global game flags.
@@ -332,6 +334,9 @@ A 200% attack boost (triple) takes 0xFFFF (0d65535) AP.
 02100689,1 - Number of Werewolves (enemy 3D) killed.
 0210068A,1 - Number of Jiang Shi (enemy 67) killed.
 
+021006C0,4 - X pos to save to the save file.
+021006C4,4 - Y pos to save to the save file.
+021006C8,4 - Z pos to save to the save file.
 021006CC,1 - Area index to be saved to the save file.
 021006CD,1 - Sector index to be saved to the save file.
 021006CE,1 - Room index to be saved to the save file.

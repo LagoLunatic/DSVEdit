@@ -222,6 +222,11 @@
 
 021F64BC PlayerEnableControl
 
+0220106C CalcDamageToPlayer
+  ; Calculates the damage an enemy should do to the player.
+  ; r0 - Base damage.
+  ; r1 - Damage types bitfield.
+
 021D9668 ActorSpawn
 021D9288 ActorSetVelocity
 021D9114 ActorCheckXPos

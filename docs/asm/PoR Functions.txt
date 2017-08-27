@@ -144,6 +144,8 @@
 0220A038 CalcDamageToPlayer
   ; Calculates the damage an enemy should do to the player.
   ; r0 - Player number to damage. 0 or 1.
+  ; r1 - Base damage.
+  ; r2 - Damage types bitfield.
 
 02012F68 Rand
 02012F30 RandMax
