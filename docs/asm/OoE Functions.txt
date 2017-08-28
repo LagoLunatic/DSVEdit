@@ -398,6 +398,10 @@
 0202BE2C EntityGetSpritePointer
   ; r0 - Entity
 
+02030390 SetSpriteAnim
+  ; r0 - Entity+0x78
+  ; r1 - Anim index to set
+
 02065A94 LoadSkeleton
   ; r0 - Entity
   ; r1 - Skeleton ptr
@@ -418,6 +422,9 @@
 0204E6D8 CreatePlayer
   ; r0 - Player character index
 0204E328 NewgameGiveStartingItems
+0204D054 Newgame???
+  ; r0 - Starting X pos
+  ; r1 - Starting Y pos
 
 02046144 MapSetRoomExplored
   ; r0 - Area index

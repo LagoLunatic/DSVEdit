@@ -6,6 +6,11 @@
 082097D4 - Soma's palette.
   0801462E - Has it hardcoded.
 
+084F0D8C,1 - New game starting sector index.
+084F0D8D,1 - New game starting room index.
+084F0D92,2 - New game starting X pos.
+084F0D94,2 - New game starting Y pos.
+
 084F10B4 - Has pointer to Soma's update function.
 084F10B8 - Has pointer to Julius's update function.
 

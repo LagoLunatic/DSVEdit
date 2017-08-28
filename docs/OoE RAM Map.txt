@@ -28,6 +28,9 @@
   01,1: ?
   Wygol's entry seems to affect its map somehow, but otherwise this doesn't seem to have any effect.
 
+020D7FB4,4 - Starting X pos on new game.
+020D7FB8,4 - Starting Y pos on new game.
+
 020B6210 - something related to shanoa. changing this area at random seriously affects shanoa, from her physics to her graphics, corrupting everything about her.
 
 020C9854-020D7477 - Most palette data.

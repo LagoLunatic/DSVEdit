@@ -549,6 +549,18 @@ class Game
     fs.write(NEW_GAME_STARTING_ROOM_INDEX_OFFSET, [room_index].pack("C"))
   end
   
+  def set_starting_position(x_pos, y_pos)
+    if SYSTEM == :nds
+      x_pos *= 0x1000
+      y_pos *= 0x1000
+      fs.write(NEW_GAME_STARTING_X_POS_OFFSET, [x_pos].pack("V"))
+      fs.write(NEW_GAME_STARTING_Y_POS_OFFSET, [y_pos].pack("V"))
+    else
+      fs.write(NEW_GAME_STARTING_X_POS_OFFSET, [x_pos].pack("v"))
+      fs.write(NEW_GAME_STARTING_Y_POS_OFFSET, [y_pos].pack("v"))
+    end
+  end
+  
   def add_new_overlay
     fs.add_new_overlay_file()
     apply_armips_patch("#{GAME}_load_new_overlay")

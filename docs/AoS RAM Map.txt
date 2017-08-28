@@ -33,6 +33,9 @@
 
 020000B4 - List of map tiles you've explored. Each takes up 1 bit.
 
+02000336,2 - ?
+  Initialized to 200 on starting a new game. That initial value is at 084F0D92 in ROM.
+
 0200033C - Event flags.
 
 020003CC - Has the room pointer to load when loading a save.
