@@ -160,7 +160,7 @@
 1F Warp point.
 20 Event.
   Var A: Which event.
-    03 First room of game?
+    03 Cutscene at the start of the game.
     04 Meeting Graham for the first time.
     05 Meeting Yoko for the first time.
     06 Meeting J for the first time.
@@ -169,15 +169,18 @@
     09 Graham stabs Yoko.
     0A Balore?
     15 Fight with Julius?
+      The Julius enemy must be in the room for this event to work.
     16 Before Chaos, "you're not alone".
     17 Epilogue?
     18 Epilogue?
     19 Meeting Hammer for the first time.
-    1A First room of game?
-    1B First room of game?
-    1C First room of game?
+    1A Hammer in the first room of the game.
+    1B Mina in the first room of the game.
+      This is also responsible for replacing the Castle Corridor BGM with ambient wind sounds.
+    1C Yoko in the first room of the game.
     1D Epilogue?
     1E Soma floating in white space after defeating Chaos.
+  Var B: Unused. Event 03 has this set to 3A, but it doesn't seem to have any effect for any event.
 21 Falling spike trap from Arena.
 22 D-pad puzzle from Arena.
 23 Water flowing down in the bath room.

@@ -461,6 +461,10 @@ REUSED_ENEMY_INFO = {
   0x68 => {init_code: 0x08091430, palette_offset: 3}, # flame demon
   0x69 => {init_code: 0x0808E024, palette_offset: 2}, # shadow knight
   0x6A => {gfx_wrapper: 0x08118F00, sprite: 0x0821C190, palette: 0x0820A780}, # headhunter
+  0x6C => {init_code: -1}, # legion, TODO. 081CC06C and 081CC074 are the gfx pages. these are in a list at 081190C4.
+  0x6D => {init_code: -1}, # balore, TODO
+  0x6E => {init_code: -1}, # julius, TODO
+  0x6F => {init_code: -1}, # graham, TODO
 }
 ENEMY_FILES_TO_LOAD_LIST = nil
 BEST_SPRITE_FRAME_FOR_ENEMY = {

@@ -4,6 +4,8 @@ Memory used for entities in AoS is 020004E4 - ?. Each entity is 0x84 bytes long.
 00,4: Pointer to update code.
 04,4: Pointer to draw code.
 22,2: Frame counter.
+30,2: Var A.
+32,2: Var B.
 40,4: X pos.
 44,4: Y pos. (on screen??)
 48,4: X velocity.
