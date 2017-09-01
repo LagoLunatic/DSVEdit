@@ -93,6 +93,7 @@ class TilesetEditorDialog < Qt::Dialog
     
     @collision_mode = false
     
+    @selected_tile = nil
     @selected_tiles = []
     @selection_x = 0
     @selection_y = 0
@@ -239,6 +240,11 @@ class TilesetEditorDialog < Qt::Dialog
   def render_tileset
     @tileset_graphics_scene.clear()
     
+    @cursor_item = Qt::GraphicsPixmapItem.new
+    @cursor_item.setZValue(10)
+    @tileset_graphics_scene.addItem(@cursor_item)
+    render_selected_tiles_to_cursor_item()
+    
     @tileset_pixmap_items = []
     @tiles.each_with_index do |tile, index_on_tileset|
       if index_on_tileset == 0
@@ -350,7 +356,11 @@ class TilesetEditorDialog < Qt::Dialog
     
     @selection_tiles_pixmaps = []
     @selected_tiles.each_with_index do |tile, i|
-      chunky_tile = render_tile(tile)
+      if @collision_mode
+        chunky_tile = @renderer.render_collision_tile(tile)
+      else
+        chunky_tile = render_tile(tile)
+      end
       
       pixmap = Qt::Pixmap.new
       blob = chunky_tile.to_blob
@@ -476,11 +486,13 @@ class TilesetEditorDialog < Qt::Dialog
     load_selected_tile()
     render_tile_on_tileset(@selected_tile_index)
     
-    @selected_tiles.each do |tile|
-      tile.palette_index = palette_index
-    end
-    if @cursor_item
-      render_selected_tiles_to_cursor_item()
+    unless @collision_mode
+      @selected_tiles.each do |tile|
+        tile.palette_index = palette_index
+      end
+      if @cursor_item
+        render_selected_tiles_to_cursor_item()
+      end
     end
   end
   
@@ -508,12 +520,23 @@ class TilesetEditorDialog < Qt::Dialog
         new_tile = @selected_tiles[i_in_selection]
         
         i_on_tileset = x + y*@tileset_width
-        tile = @tiles[i_on_tileset]
-        tile.index_on_tile_page = new_tile.index_on_tile_page
-        tile.tile_page = new_tile.tile_page
-        tile.horizontal_flip = new_tile.horizontal_flip
-        tile.vertical_flip = new_tile.vertical_flip
-        tile.palette_index = new_tile.palette_index
+        if @collision_mode
+          coll_tile = @collision_tiles[i_on_tileset]
+          coll_tile.has_top = new_tile.has_top
+          coll_tile.vertical_flip = new_tile.vertical_flip
+          coll_tile.horizontal_flip = new_tile.horizontal_flip
+          coll_tile.has_sides_and_bottom = new_tile.has_sides_and_bottom
+          coll_tile.has_effect = new_tile.has_effect
+          coll_tile.is_water = new_tile.is_water
+          coll_tile.block_shape = new_tile.block_shape
+        else
+          tile = @tiles[i_on_tileset]
+          tile.index_on_tile_page = new_tile.index_on_tile_page
+          tile.tile_page = new_tile.tile_page
+          tile.horizontal_flip = new_tile.horizontal_flip
+          tile.vertical_flip = new_tile.vertical_flip
+          tile.palette_index = new_tile.palette_index
+        end
         
         pixmap = @selection_tiles_pixmaps[i_in_selection]
         tile_pixmap_item = @tileset_pixmap_items[i_on_tileset]
@@ -548,11 +571,6 @@ class TilesetEditorDialog < Qt::Dialog
     
     select_tile(i)
     
-    if !@cursor_item
-      @cursor_item = Qt::GraphicsPixmapItem.new
-      @tileset_graphics_scene.addItem(@cursor_item)
-    end
-    
     @selection_origin = Qt::Point.new(mouse_x/@tile_width, mouse_y/@tile_height)
     
     @selection_rectangle = Qt::GraphicsRectItem.new
@@ -570,7 +588,7 @@ class TilesetEditorDialog < Qt::Dialog
   def mouse_released_on_tileset(x, y, button)
     case button
     when Qt::RightButton
-      stop_selecting()
+      stop_selecting_on_tileset()
     end
   end
   
@@ -603,6 +621,11 @@ class TilesetEditorDialog < Qt::Dialog
             i = x + y*@selection_width
             tile = @selected_tiles[i]
             tile.vertical_flip = !tile.vertical_flip
+            if @collision_mode
+              # Vertical flip is weird for collision slopes, it really just inverts the collision.
+              # So to achieve a true vertical flip we need to also horizontal flip at the same time.
+              tile.horizontal_flip = !tile.horizontal_flip
+            end
             new_selected_tiles << tile
           end
         end
@@ -634,7 +657,7 @@ class TilesetEditorDialog < Qt::Dialog
     
     @selected_tile_index = tile_index
     @selected_tile = @tiles[tile_index].dup
-    @selected_collision_tile = @collision_tiles[tile_index]
+    @selected_collision_tile = @collision_tiles[tile_index].dup
     
     @ui.gfx_page_index.setCurrentIndex(@selected_tile.tile_page)
     @ui.palette_index.setCurrentIndex(@selected_tile.palette_index)
@@ -676,10 +699,23 @@ class TilesetEditorDialog < Qt::Dialog
         curr_x = @selection_x + x_off
         curr_y = @selection_y + y_off
         i = curr_x + curr_y*@tileset_width
-        tile = @tiles[i].dup
+        if @collision_mode
+          tile = @collision_tiles[i].dup
+        else
+          tile = @tiles[i].dup
+        end
         @selected_tiles << tile
       end
     end
+  end
+  
+  def stop_selecting_on_tileset
+    @selection_origin = nil
+    
+    render_selected_tiles_to_cursor_item()
+    
+    @gfx_page_graphics_scene.removeItem(@selection_rectangle) if @selection_rectangle
+    @tileset_graphics_scene.removeItem(@selection_rectangle) if @selection_rectangle
   end
   
   def update_selection_on_gfx_page(mouse_x, mouse_y)
@@ -688,23 +724,31 @@ class TilesetEditorDialog < Qt::Dialog
     max_w = max_h = 127
     update_selection_rectangle(mouse_x, mouse_y, max_w, max_h)
     
-    @selected_tiles = []
-    @selection_height.times do |y_off|
-      @selection_width.times do |x_off|
-        curr_x = @selection_x + x_off
-        curr_y = @selection_y + y_off
-        i = curr_x + curr_y*@tiles_per_gfx_page_row
-        tile = @selected_tile.dup
-        tile.index_on_tile_page = i
-        @selected_tiles << tile
+    unless @collision_mode
+      @selected_tiles = []
+      @selection_height.times do |y_off|
+        @selection_width.times do |x_off|
+          curr_x = @selection_x + x_off
+          curr_y = @selection_y + y_off
+          i = curr_x + curr_y*@tiles_per_gfx_page_row
+          if @collision_mode
+            tile = @selected_collision_tile.dup
+          else
+            tile = @selected_tile.dup
+          end
+          tile.index_on_tile_page = i
+          @selected_tiles << tile
+        end
       end
     end
   end
   
-  def stop_selecting
+  def stop_selecting_on_gfx_page
     @selection_origin = nil
     
-    render_selected_tiles_to_cursor_item()
+    unless @collision_mode
+      render_selected_tiles_to_cursor_item()
+    end
     
     @gfx_page_graphics_scene.removeItem(@selection_rectangle) if @selection_rectangle
     @tileset_graphics_scene.removeItem(@selection_rectangle) if @selection_rectangle
@@ -739,7 +783,7 @@ class TilesetEditorDialog < Qt::Dialog
   end
   
   def mouse_released_on_gfx_page(mouse_x, mouse_y, button)
-    stop_selecting()
+    stop_selecting_on_gfx_page()
   end
   
   def toggle_flips(checked)
@@ -759,6 +803,20 @@ class TilesetEditorDialog < Qt::Dialog
     @selected_collision_tile.vertical_flip = @ui.coll_vertical_flip.checked
     @selected_collision_tile.horizontal_flip = @ui.coll_horizontal_flip.checked
     
+    if @collision_mode
+      @selected_tiles.each do |tile|
+        tile.has_top = @ui.has_top.checked
+        tile.is_water = @ui.is_water.checked
+        tile.has_sides_and_bottom = @ui.has_sides_and_bottom.checked
+        tile.has_effect = @ui.has_effect.checked
+        tile.vertical_flip = @ui.coll_vertical_flip.checked
+        tile.horizontal_flip = @ui.coll_horizontal_flip.checked
+      end
+      if @cursor_item
+        render_selected_tiles_to_cursor_item()
+      end
+    end
+    
     load_selected_tile()
     render_tile_on_tileset(@selected_tile_index)
   end
@@ -768,13 +826,31 @@ class TilesetEditorDialog < Qt::Dialog
     
     @selected_collision_tile.block_shape = block_shape
     
+    if @collision_mode
+      @selected_tiles.each do |tile|
+        tile.block_shape = block_shape
+      end
+      if @cursor_item
+        render_selected_tiles_to_cursor_item()
+      end
+    end
+    
     load_selected_tile()
     render_tile_on_tileset(@selected_tile_index)
   end
   
   def toggle_display_collision(checked)
     @collision_mode = checked
+    
+    @selected_tiles = []
+    @selection_x = 0
+    @selection_y = 0
+    @selection_width = 0
+    @selection_height = 0
+    
     render_tileset()
+    
+    select_tile(0)
   end
   
   def save_tileset
