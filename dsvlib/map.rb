@@ -372,7 +372,9 @@ class DoSMap < Map
       end
     end
     
-    if GAME == "dos"
+    if is_abyss
+      # Do nothing.
+    elsif GAME == "dos"
       # TODO: sector/room indexes of abyss warp aren't set properly.
       
       warp_rooms_x_sorted = warp_rooms.sort_by{|tile| [tile.x_pos_in_tiles, tile.y_pos_in_tiles] }
@@ -394,7 +396,7 @@ class DoSMap < Map
         
         warp_room.write_to_rom()
       end
-    else
+    elsif GAME == "aos"
       warp_rooms.each do |warp_room|
         warp_tile = @tiles.find{|tile| tile.x_pos == warp_room.x_pos_in_tiles && tile.y_pos == warp_room.y_pos_in_tiles}
         room = game.areas[0].sectors[warp_tile.sector_index].rooms[warp_tile.room_index]
