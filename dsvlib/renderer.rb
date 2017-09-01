@@ -859,6 +859,8 @@ class Renderer
           
           # Add an upwards pointing arrow for jumpthrough platforms.
           graphic_tile.polygon([4, 4, 7, 1, 8, 1, 11, 4, 8, 4, 8, 6, 7, 6, 7, 4], stroke_color = color, fill_color = color)
+        elsif tile.has_sides_and_bottom
+          graphic_tile.polygon([0, 0, 7, 3, 15, 0, 15, 7, 0, 7], stroke_color = color, fill_color = color)
         end
       end
     when 3
@@ -881,6 +883,8 @@ class Renderer
           
           # Add an upwards pointing arrow for jumpthrough platforms.
           graphic_tile.polygon([4, 12, 7, 9, 8, 9, 11, 12, 8, 12, 8, 14, 7, 14, 7, 12], stroke_color = color, fill_color = color)
+        elsif tile.has_sides_and_bottom
+          graphic_tile.polygon([0, 8, 7, 8+3, 15, 8, 15, 15, 0, 15], stroke_color = color, fill_color = color)
         end
       end
     when 4..15
