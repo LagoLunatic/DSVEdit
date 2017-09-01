@@ -389,6 +389,9 @@ class DoSMap < Map
         if warp_tile && !warp_tile.is_blank
           warp_room.sector_index = warp_tile.sector_index
           warp_room.room_index = warp_tile.room_index
+        elsif warp_room.x_pos_in_tiles == 54 && warp_room.y_pos_in_tiles == 42
+          warp_room.sector_index = 0xB
+          warp_room.room_index = 0x23
         else
           warp_room.sector_index = 0
           warp_room.room_index = 0
