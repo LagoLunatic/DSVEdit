@@ -92,6 +92,7 @@ class TilesetEditorDialog < Qt::Dialog
     connect(@ui.buttonBox, SIGNAL("clicked(QAbstractButton*)"), self, SLOT("button_box_clicked(QAbstractButton*)"))
     
     @collision_mode = false
+    @ui.edit_collision_group.hide()
     
     @selected_tile = nil
     @selected_tiles = []
@@ -851,6 +852,14 @@ class TilesetEditorDialog < Qt::Dialog
     render_tileset()
     
     select_tile(0)
+    
+    if @collision_mode
+      @ui.edit_graphics_group.hide()
+      @ui.edit_collision_group.show()
+    else
+      @ui.edit_collision_group.hide()
+      @ui.edit_graphics_group.show()
+    end
   end
   
   def save_tileset
