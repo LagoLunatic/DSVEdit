@@ -231,6 +231,9 @@
   ; Returns r0 - The float converted to an integer
 ; Online tool for converting between int and float represented as hex: https://gregstoll.dyndns.org/~gregstoll/floattohex/
 
+020BD93C Divide
+  ; Divides r0 by r1 and returns the result.
+
 02208218 CheckPlayerPushColliding
   ; Checks if the player is walking into a certain entity.
   ; r0 - Entity to check if the player is pushing.

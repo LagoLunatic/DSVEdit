@@ -572,9 +572,52 @@ TODO: What are the other 2 for? It's not for the "recent" tab.
   60,2: Bitfield of ?.
     0100 - Turn off and layer will be invisible?
 
+02112A98 - Start of skeleton joints data.
+  Each joint takes up 0x100 bytes.
+  00,4: X pos?
+    If this joint inherits its parent's rotation, it copies 00,4 from its parent to here. If it doesn't inherit, it copies 08,4 from its parent instead.
+    This copy code is around 021D6A9C.
+  04,4: Y pos?
+    Copied like above, just for Y pos instead.
+  08,4: X pos with rotation applied?
+  0C,4: Y pos with rotation applied?
+  10,4: ??? in subpixels
+    Copied from joint change data 00,2 then multiplied by 0x1000 to convert to subpixels
+    always -1000 decimal pixels?
+  14,4: ??? in subpixels
+    Copied from joint change data 02,2 then multiplied by 0x1000 to convert to subpixels
+    always -1000 decimal pixels?
+  18,4: Current rotation.
+    This is recalculated every frame by using this formula:
+      curr_rot += (next_rot-curr_rot) / frames_left
+    The code to do that starts at 021D6BDC.
+  1C,4: Next pose's rotation.
+    Copied from joint change data 04,2.
+  20,4: Current distance in subpixels.
+    This is recalculated every frame by using this formula:
+      curr_dist += (next_dist-curr_dist) / frames_left
+    The code to do that starts at 021D6AFC.
+  24,4: Next pose's distance in subpixels.
+    Copied from joint change data 06,1 then multiplied by 0x1000 to convert to subpixels.
+  28,4: Bitfield.
+    Copied from joint change data 07,1.
+    1 Whether this joint inherits the rotation of its parent?
+    2 H flip?
+    4 V flip?
+  2C,4: Number of frames left to continue tweening this pose.
+  40,4: Parent joint ID.
+  50,4: Copied from joint data 03,1
+  54,4: Copied from joint data 02,1
+  60,4: Pointer to a function that does something related to hit detection.
+  64,4: Pointer to the main entity.
+  80,4: Pointer to the main entity.
+
+02112CB8 - List of pointers to joint entities.
+  The pointers are to each joint's entity, so to get the joint data itself (in list 02112A98) go to this entity, and the pointer at entity+158 will be a pointer to the joint data.
+
 0211ABE0 - Start of list of globally loaded palettes.
 
-02122BF8,2 - number of frames to keep the game logic paused
+02122BF8,2 - Number of frames to keep the game logic paused.
 
 0213291C - List of hitboxes. Each entry is 0x14 bytes long, containing two hitboxes 0xA bytes long each.
   The index in this list for a particular entity is at offset+0xA7 in the entity memory.

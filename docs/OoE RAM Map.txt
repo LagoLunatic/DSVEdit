@@ -155,7 +155,7 @@ Requirement lists for kill quests:
 
 === 020F6B3F: End of most of ARM9.
 
-020FFC46 - number of frames to pause the game logic
+020FFC46 - Number of frames to keep the game logic paused.
 
 020FFC88 - normally 0. 12 when in paries state. 12 prevents pausing.
 

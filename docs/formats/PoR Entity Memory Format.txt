@@ -109,6 +109,9 @@ For enemies:
 138,2: The attack value from the enemy DNA.
 13A,2: The physical defense value from the enemy DNA.
 
+For skeletally animated joints:
+158,4: Pointer to the joint data for this joint (in list 02112A98).
+
 For skills:
 11A,1: The ID of the skill.
 11E,1: The skill multiplier. (1 or 2.)
