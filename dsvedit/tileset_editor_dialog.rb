@@ -37,7 +37,7 @@ class TilesetEditorDialog < Qt::Dialog
     connect(@tileset_graphics_scene, SIGNAL("released(int, int, const Qt::MouseButton&)"), self, SLOT("mouse_released_on_tileset(int, int, const Qt::MouseButton&)"))
     
     @gfx_page_graphics_scene = ClickableGraphicsScene.new
-    @ui.gfx_page_graphics_view.scale(3, 3)
+    @ui.gfx_page_graphics_view.scale(2, 2)
     @ui.gfx_page_graphics_view.setScene(@gfx_page_graphics_scene)
     @gfx_page_graphics_scene.setBackgroundBrush(BACKGROUND_BRUSH)
     connect(@gfx_page_graphics_scene, SIGNAL("clicked(int, int, const Qt::MouseButton&)"), self, SLOT("mouse_clicked_on_gfx_page(int, int, const Qt::MouseButton&)"))
@@ -622,11 +622,6 @@ class TilesetEditorDialog < Qt::Dialog
             i = x + y*@selection_width
             tile = @selected_tiles[i]
             tile.vertical_flip = !tile.vertical_flip
-            if @collision_mode
-              # Vertical flip is weird for collision slopes, it really just inverts the collision.
-              # So to achieve a true vertical flip we need to also horizontal flip at the same time.
-              tile.horizontal_flip = !tile.horizontal_flip
-            end
             new_selected_tiles << tile
           end
         end
@@ -722,24 +717,24 @@ class TilesetEditorDialog < Qt::Dialog
   def update_selection_on_gfx_page(mouse_x, mouse_y)
     return unless @selection_origin
     
-    max_w = max_h = 127
+    max_w = (@gfx_page_graphics_scene.width-1).to_i
+    max_h = (@gfx_page_graphics_scene.height-1).to_i
     update_selection_rectangle(mouse_x, mouse_y, max_w, max_h)
     
-    unless @collision_mode
-      @selected_tiles = []
-      @selection_height.times do |y_off|
-        @selection_width.times do |x_off|
-          curr_x = @selection_x + x_off
-          curr_y = @selection_y + y_off
+    @selected_tiles = []
+    @selection_height.times do |y_off|
+      @selection_width.times do |x_off|
+        curr_x = @selection_x + x_off
+        curr_y = @selection_y + y_off
+        if @collision_mode
+          i = curr_x + curr_y*16
+          tile = @available_collision_tiles[i].dup
+        else
           i = curr_x + curr_y*@tiles_per_gfx_page_row
-          if @collision_mode
-            tile = @selected_collision_tile.dup
-          else
-            tile = @selected_tile.dup
-          end
+          tile = @selected_tile.dup
           tile.index_on_tile_page = i
-          @selected_tiles << tile
         end
+        @selected_tiles << tile
       end
     end
   end
@@ -747,19 +742,22 @@ class TilesetEditorDialog < Qt::Dialog
   def stop_selecting_on_gfx_page
     @selection_origin = nil
     
-    unless @collision_mode
-      render_selected_tiles_to_cursor_item()
-    end
+    render_selected_tiles_to_cursor_item()
     
     @gfx_page_graphics_scene.removeItem(@selection_rectangle) if @selection_rectangle
     @tileset_graphics_scene.removeItem(@selection_rectangle) if @selection_rectangle
   end
   
   def mouse_clicked_on_gfx_page(mouse_x, mouse_y, button)
-    return unless (0..127).include?(mouse_x) && (0..127).include?(mouse_y)
+    return unless (0..@gfx_page_graphics_scene.width-1).include?(mouse_x) && (0..@gfx_page_graphics_scene.height-1).include?(mouse_y)
     
-    i = mouse_x/@tile_width + mouse_y/@tile_width*@tiles_per_gfx_page_row
-    @selected_tile.index_on_tile_page = i
+    if @collision_mode
+      i = mouse_x/@tile_width + mouse_y/@tile_width*16
+      @selected_collision_tile = @available_collision_tiles[i].dup
+    else
+      i = mouse_x/@tile_width + mouse_y/@tile_width*@tiles_per_gfx_page_row
+      @selected_tile.index_on_tile_page = i
+    end
     
     load_selected_tile()
     
@@ -856,9 +854,37 @@ class TilesetEditorDialog < Qt::Dialog
     if @collision_mode
       @ui.edit_graphics_group.hide()
       @ui.edit_collision_group.show()
+      
+      @gfx_page_graphics_scene.clear()
+      
+      @gfx_page_graphics_scene.setSceneRect(0, 0, 256, 256)
+      
+      x = 0
+      
+      @available_collision_tiles = []
+      16.times do |y|
+        16.times do |x|
+          tile_data = (x << 4) | y
+          coll_tile = CollisionTile.new([tile_data].pack("V"))
+          @available_collision_tiles << coll_tile
+          
+          chunky_coll_tile = @renderer.render_collision_tile(coll_tile)
+          
+          pixmap = Qt::Pixmap.new
+          blob = chunky_coll_tile.to_blob
+          pixmap.loadFromData(blob, blob.length)
+          tile_pixmap_item = Qt::GraphicsPixmapItem.new
+          tile_pixmap_item.pixmap = pixmap
+          tile_pixmap_item.setPos(x*@tile_width, y*@tile_height)
+          @gfx_page_graphics_scene.addItem(tile_pixmap_item)
+        end
+      end
     else
       @ui.edit_collision_group.hide()
       @ui.edit_graphics_group.show()
+      
+      @gfx_page_graphics_scene.setSceneRect(0, 0, 128, 128)
+      gfx_page_changed(@selected_tile.tile_page || 0)
     end
   end
   
