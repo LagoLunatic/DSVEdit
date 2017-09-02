@@ -163,7 +163,7 @@ class GfxEditorDialog < Qt::Dialog
     message = "There was an error trying to load the GFX asset(s) #{@ui.gfx_file_names.text}.\n"
     message << "Are you sure this is a valid GFX asset?"
     if SYSTEM == :gba
-      message << "\n\nNote that the GFX editor does not yet support displaying Aria of Sorrow's weapon GFX."
+      message << "\n\nNote that the GFX editor does not yet support displaying Aria of Sorrow's weapon or icon GFX."
     end
     Qt::MessageBox.warning(self,
       "Error loading GFX",
