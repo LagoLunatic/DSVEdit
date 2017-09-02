@@ -182,7 +182,7 @@ class DarkFunctionInterface
                   xml.spr(:name => "/hitbox%02X" % unique_hitbox_index,
                           :x => x + hitbox.width/2,
                           :y => y + hitbox.height/2,
-                          :z => -999 # We want hitboxes to appear above the graphics.
+                          :z => 999 # We want hitboxes to appear below the graphics.
                   )
                 end
               }
