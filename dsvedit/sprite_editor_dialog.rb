@@ -153,6 +153,8 @@ class SpriteEditor < Qt::Dialog
       @weapons << weapon
       if GAME == "ooe"
         items = weapon_items.select{|item| item["Sprite"] == weapon_gfx_index+1}
+      elsif GAME == "aos"
+        items = weapon_items.select{|item| item["GFX Index"] == weapon_gfx_index}
       else
         items = weapon_items.select{|item| item["Sprite"] == weapon_gfx_index}
       end
