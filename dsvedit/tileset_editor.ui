@@ -100,6 +100,13 @@
     </layout>
    </item>
    <item>
+    <widget class="QLabel" name="label_12">
+     <property name="text">
+      <string>Right click and drag to select tiles. Left click to edit tiles. X key to flip selection horizontally. Y key to flip selection vertically.</string>
+     </property>
+    </widget>
+   </item>
+   <item>
     <layout class="QHBoxLayout" name="horizontalLayout_3">
      <item>
       <widget class="QGraphicsView" name="tileset_graphics_view">
