@@ -658,9 +658,11 @@ class TilesetEditorDialog < Qt::Dialog
     @ui.gfx_page_index.setCurrentIndex(@selected_tile.tile_page)
     @ui.palette_index.setCurrentIndex(@selected_tile.palette_index)
     
-    if old_selected_tile.nil? || old_selected_tile.tile_page != @selected_tile.tile_page || old_selected_tile.palette_index != @selected_tile.palette_index
-      gfx_page_changed(@selected_tile.tile_page)
-      palette_changed(@selected_tile.palette_index)
+    unless @collision_mode
+      if old_selected_tile.nil? || old_selected_tile.tile_page != @selected_tile.tile_page || old_selected_tile.palette_index != @selected_tile.palette_index
+        gfx_page_changed(@selected_tile.tile_page)
+        palette_changed(@selected_tile.palette_index)
+      end
     end
     
     load_selected_tile()
@@ -858,8 +860,6 @@ class TilesetEditorDialog < Qt::Dialog
       @gfx_page_graphics_scene.clear()
       
       @gfx_page_graphics_scene.setSceneRect(0, 0, 256, 256)
-      
-      x = 0
       
       @available_collision_tiles = []
       16.times do |y|
