@@ -43,11 +43,14 @@ class GfxEditorDialog < Qt::Dialog
     if SYSTEM == :gba
       @ui.one_dimensional_mode.checked = true
       @ui.label_2.text = "GFX pointer(s)"
+    else
+      @ui.unwrapped_gfx.hide()
     end
     
     if gfx_and_palette_data
       @ui.gfx_file_names.text = gfx_and_palette_data[:gfx_file_names]
       @ui.palette_pointer.text = "%08X" % gfx_and_palette_data[:palette_pointer]
+      @ui.unwrapped_gfx.checked = gfx_and_palette_data[:unwrapped_gfx] if SYSTEM == :gba
       load_gfx_file_and_palette_list()
       gfx_page_index = gfx_and_palette_data[:gfx_page_index]
       if (0..@gfx_pages.size-1).include?(gfx_page_index)
@@ -83,7 +86,11 @@ class GfxEditorDialog < Qt::Dialog
         gfx_pages << gfx
       else
         gfx_pointer = gfx_file_name.to_i(16)
-        gfx = GfxWrapper.new(gfx_pointer, @fs)
+        if @ui.unwrapped_gfx.checked
+          gfx = GfxWrapper.new(gfx_pointer, @fs, unwrapped: true)
+        else
+          gfx = GfxWrapper.new(gfx_pointer, @fs)
+        end
         gfx_pages << gfx
       end
     end
@@ -163,7 +170,7 @@ class GfxEditorDialog < Qt::Dialog
     message = "There was an error trying to load the GFX asset(s) #{@ui.gfx_file_names.text}.\n"
     message << "Are you sure this is a valid GFX asset?"
     if SYSTEM == :gba
-      message << "\n\nNote that the GFX editor does not yet support displaying Aria of Sorrow's weapon or icon GFX."
+      message << "\n\nNote that if the GFX you're trying to edit is for weapons or icons in AoS, you should check the \"Unwrapped GFX pointer\" checkbox for it to work correctly."
     end
     Qt::MessageBox.warning(self,
       "Error loading GFX",

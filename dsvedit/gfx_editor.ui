@@ -62,11 +62,25 @@
     </layout>
    </item>
    <item>
-    <widget class="QCheckBox" name="one_dimensional_mode">
-     <property name="text">
-      <string>One dimensional mode</string>
-     </property>
-    </widget>
+    <layout class="QHBoxLayout" name="horizontalLayout_2">
+     <item>
+      <widget class="QCheckBox" name="one_dimensional_mode">
+       <property name="text">
+        <string>One dimensional mode</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QCheckBox" name="unwrapped_gfx">
+       <property name="toolTip">
+        <string>Check this for weapon graphics and item icons in AoS.</string>
+       </property>
+       <property name="text">
+        <string>Unwrapped GFX pointer</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
    </item>
    <item>
     <widget class="QLabel" name="info_label">

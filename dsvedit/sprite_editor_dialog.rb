@@ -765,13 +765,6 @@ class SpriteEditor < Qt::Dialog
     return if @sprite_info.nil? || @gfx_pages_with_blanks.nil?
     
     gfx_pages = @gfx_pages_with_blanks.compact
-    if gfx_pages.first.unwrapped
-      Qt::MessageBox.warning(self,
-        "Can't edit AoS weapons",
-        "The GFX editor currently cannot edit weapons in AoS."
-      )
-      return
-    end
     
     gfx_and_palette_data = {}
     if SYSTEM == :nds
@@ -784,6 +777,7 @@ class SpriteEditor < Qt::Dialog
     gfx_and_palette_data[:gfx_page_index] = gfx_page_index_without_blanks
     gfx_and_palette_data[:palette_pointer] = @sprite_info.palette_pointer
     gfx_and_palette_data[:palette_index] = @palette_index
+    gfx_and_palette_data[:unwrapped_gfx] = gfx_pages.first.unwrapped
     
     parent.open_gfx_editor(gfx_and_palette_data)
   end
