@@ -53,5 +53,5 @@ Entity types:
     0 - Entities will disappear if the condition is NOT met.
     1 - Entities will disappear if the condition IS met.
 
-09 ???
-
+09 Font loader.
+  Seems unused in OoE.

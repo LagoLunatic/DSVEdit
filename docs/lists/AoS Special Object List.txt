@@ -1,4 +1,7 @@
 00 Wooden door.
+  Var A: Which door visual to use.
+    0 Normal.
+    1 Alterate. Unused.
 01 Pushable crates.
 02 Boss door.
   Var A is is how the door acts:

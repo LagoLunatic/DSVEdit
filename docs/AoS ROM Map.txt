@@ -6,6 +6,10 @@
 082097D4 - Soma's palette.
   0801462E - Has it hardcoded.
 
+080E11C4 - Soma's sprite pointer.
+  This sprite has no animations and only a single static frame composed of two parts placed on top of each other.
+  This is basically just a dummy to put Soma's top and bottom halves together from how they're arranged in VRAM.
+
 084F0D8C,1 - New game starting sector index.
 084F0D8D,1 - New game starting room index.
 084F0D92,2 - New game starting X pos.

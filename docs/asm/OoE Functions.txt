@@ -390,6 +390,19 @@
 0203C834 LoadCommonSprite
   ; r0 - Entity
 
+02064B48 LoadRoomEntities
+  ; r0 - Room's entity list pointer
+0206485C LoadRoomSpecialObjects
+  ; r0 - Room's entity list pointer
+020645E0 LoadRoomEnemies
+  ; r0 - Room's entity list pointer
+020647E0 LoadRoomPickups
+  ; r0 - Room's entity list pointer
+02064A58 LoadRoomFontLoaders
+  ; r0 - Room's entity list pointer
+020642B0 LoadRoomEntity
+  ; r0 - Pointer to the entity in the room's entity list.
+
 02030684 InitializeSprite
   ; r0 - Entity
 020306A4 ???Sprite
