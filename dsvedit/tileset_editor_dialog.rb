@@ -396,8 +396,6 @@ class TilesetEditorDialog < Qt::Dialog
     tile_x_pos_on_page = @selected_tile.index_on_tile_page % @tiles_per_gfx_page_row
     tile_y_pos_on_page = @selected_tile.index_on_tile_page / @tiles_per_gfx_page_row
     
-    return if SYSTEM == :gba
-    
     @ui.has_top.checked = @selected_collision_tile.has_top
     @ui.is_water.checked = @selected_collision_tile.is_water
     if @selected_collision_tile.block_shape >= 4
@@ -795,8 +793,6 @@ class TilesetEditorDialog < Qt::Dialog
   end
   
   def update_collision(checked)
-    return if SYSTEM == :gba
-    
     @selected_collision_tile.has_top = @ui.has_top.checked
     @selected_collision_tile.is_water = @ui.is_water.checked
     @selected_collision_tile.has_sides_and_bottom = @ui.has_sides_and_bottom.checked
@@ -823,8 +819,6 @@ class TilesetEditorDialog < Qt::Dialog
   end
   
   def block_shape_changed(block_shape)
-    return if SYSTEM == :gba
-    
     @selected_collision_tile.block_shape = block_shape
     
     if @collision_mode
@@ -890,7 +884,7 @@ class TilesetEditorDialog < Qt::Dialog
   
   def save_tileset
     @tileset.write_to_rom()
-    @collision_tileset.write_to_rom() unless SYSTEM == :gba
+    @collision_tileset.write_to_rom()
     
     # Clear the tileset cache so the changes show up in the editor.
     parent.clear_cache()
