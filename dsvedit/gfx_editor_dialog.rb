@@ -274,6 +274,8 @@ class GfxEditorDialog < Qt::Dialog
   def import_gfx
     return if @palettes.nil? || @palette_index.nil?
     
+    input_images = []
+    has_colors_outside_palette = false
     @gfx_pages.each do |gfx|
       if SYSTEM == :nds
         gfx_name = gfx.file[:name]
@@ -289,34 +291,48 @@ class GfxEditorDialog < Qt::Dialog
         return
       end
       
-      success = import_gfx_from_path(gfx_file_path, gfx)
-      return unless success
-    end
-  end
-  
-  def import_gfx_from_path(gfx_file_path, gfx)
-    begin
-      if @ui.one_dimensional_mode.checked
-        @renderer.import_gfx_page_1_dimensional_mode(gfx_file_path, gfx, @palette_pointer, @colors_per_palette, @palette_index)
-      else
-        @renderer.import_gfx_page(gfx_file_path, gfx, @palette_pointer, @colors_per_palette, @palette_index)
+      input_image = ChunkyPNG::Image.from_file(gfx_file_path)
+      input_images << input_image
+      
+      if !@renderer.check_image_uses_palette(input_image, @palette_pointer, @colors_per_palette, @palette_index)
+        has_colors_outside_palette = true
       end
-    rescue Renderer::GFXImportError => e
-      Qt::MessageBox.warning(self,
-        "GFX import error",
-        e.message
-      )
-      return false
-    rescue GBADummyFilesystem::CompressedDataTooLarge => e
-      Qt::MessageBox.warning(self,
-        "Compressed write error",
-        e.message
-      )
-      return false
+    end
+    
+    if has_colors_outside_palette
+      response = Qt::MessageBox.question(self, "Convert colors", "One or more of the images you're trying to import have colors that aren't in the current palette (%08X-%02X).\n\nWould you like DSVEdit to convert the colors in the image to the closest-looking colors that are in this palette?\nIf not, no images will be imported." % [@palette_pointer, @palette_index],
+        Qt::MessageBox::Cancel | Qt::MessageBox::Yes, Qt::MessageBox::Cancel)
+      
+      if response == Qt::MessageBox::Yes
+        should_convert_image_to_palette = true
+      elsif response == Qt::MessageBox::Cancel
+        return
+      end
+    else
+      should_convert_image_to_palette = false
+    end
+    
+    @gfx_pages.each_with_index do |gfx, i|
+      input_image = input_images[i]
+      
+      if @ui.one_dimensional_mode.checked
+        @renderer.save_gfx_page_1_dimensional_mode(input_image, gfx, @palette_pointer, @colors_per_palette, @palette_index, should_convert_image_to_palette: should_convert_image_to_palette)
+      else
+        @renderer.save_gfx_page(input_image, gfx, @palette_pointer, @colors_per_palette, @palette_index, should_convert_image_to_palette: should_convert_image_to_palette)
+      end
     end
     
     load_gfx()
-    return true
+  rescue Renderer::GFXImportError => e
+    Qt::MessageBox.warning(self,
+      "GFX import error",
+      e.message
+    )
+  rescue GBADummyFilesystem::CompressedDataTooLarge => e
+    Qt::MessageBox.warning(self,
+      "Compressed write error",
+      e.message
+    )
   end
   
   def import_palette

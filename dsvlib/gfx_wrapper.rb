@@ -18,6 +18,9 @@ class GfxWrapper
     
     if SYSTEM == :nds
       @file = fs.assets_by_pointer[gfx_pointer]
+      if @file.nil?
+        raise "Failed to find GFX file with asset pointer: %08X" % gfx_pointer
+      end
       @unknown_1, @render_mode, @canvas_width = fs.read(gfx_pointer, 4).unpack("CCv")
     else
       if unwrapped

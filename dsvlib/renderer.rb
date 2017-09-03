@@ -605,6 +605,9 @@ class Renderer
     if palette.include?(color)
       return color
     end
+    if (color & 0xFF) == 0 # Transparent
+      return palette[0]
+    end
     
     min_dist = Float::INFINITY
     value = nil
@@ -656,13 +659,30 @@ class Renderer
     return value
   end
   
-  def import_gfx_page(input_filename, gfx, palette_list_pointer, colors_per_palette, palette_index)
-    input_image = ChunkyPNG::Image.from_file(input_filename)
+  # Checks whether all the colors in a given image are within a given palette.
+  def check_image_uses_palette(input_image, palette_list_pointer, colors_per_palette, palette_index)
+    colors = generate_palettes(palette_list_pointer, colors_per_palette)[palette_index]
+    colors[0] = ChunkyPNG::Color::TRANSPARENT
     
-    save_gfx_page(input_image, gfx, palette_list_pointer, colors_per_palette, palette_index)
+    colors = colors.map{|color| color & 0b11111000111110001111100011111111} # Get rid of unnecessary bits so equality checks work correctly.
+    
+    input_image.pixels.each_with_index do |pixel, i|
+      if pixel & 0xFF == 0 # Transparent
+        # Do nothing
+      else
+        pixel &= 0b11111000111110001111100011111111
+        color_index = colors.index(pixel)
+        
+        if color_index.nil?
+          return false
+        end
+      end
+    end
+    
+    return true
   end
   
-  def save_gfx_page(input_image, gfx, palette_list_pointer, colors_per_palette, palette_index)
+  def save_gfx_page(input_image, gfx, palette_list_pointer, colors_per_palette, palette_index, should_convert_image_to_palette: false)
     if input_image.width != input_image.height || ![128, 256].include?(input_image.width)
       raise GFXImportError.new("Invalid image size. Image must be 128x128 or 256x256.")
     end
@@ -671,6 +691,10 @@ class Renderer
     colors[0] = ChunkyPNG::Color::TRANSPARENT
     
     colors = colors.map{|color| color & 0b11111000111110001111100011111111} # Get rid of unnecessary bits so equality checks work correctly.
+    
+    if should_convert_image_to_palette
+      input_image = convert_image_to_palette(input_image, colors)
+    end
     
     gfx_data_bytes = []
     input_image.pixels.each_with_index do |pixel, i|
@@ -701,17 +725,15 @@ class Renderer
     gfx.write_to_rom()
   end
   
-  def import_gfx_page_1_dimensional_mode(input_filename, gfx, palette_list_pointer, colors_per_palette, palette_index)
-    input_image = ChunkyPNG::Image.from_file(input_filename)
-    
-    save_gfx_page_1_dimensional_mode(input_image, gfx, palette_list_pointer, colors_per_palette, palette_index)
-  end
-  
-  def save_gfx_page_1_dimensional_mode(input_image, gfx, palette_list_pointer, colors_per_palette, palette_index)
+  def save_gfx_page_1_dimensional_mode(input_image, gfx, palette_list_pointer, colors_per_palette, palette_index, should_convert_image_to_palette: false)
     colors = generate_palettes(palette_list_pointer, colors_per_palette)[palette_index]
     colors[0] = ChunkyPNG::Color::TRANSPARENT
     
     colors = colors.map{|color| color & 0b11111000111110001111100011111111} # Get rid of unnecessary bits so equality checks work correctly.
+    
+    if should_convert_image_to_palette
+      input_image = convert_image_to_palette(input_image, colors)
+    end
     
     if gfx.colors_per_palette == 16
       pixels_per_byte = 2
