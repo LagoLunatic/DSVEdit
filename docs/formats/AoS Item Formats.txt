@@ -32,8 +32,8 @@ Weapon format:
   0E,1: Mind stat.
   0F,1: Luck stat.
   10,2: Bitfield for the elemental damage types this weapon deals.
-  12,1: Weapon sprite index.
-  13,1: ?
+  12,1: Weapon GFX index.
+  13,1: Weapon sprite index.
   14,1: ?
   15,1: Palette index.
   16,1: Anim?

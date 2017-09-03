@@ -85,6 +85,29 @@
 0804DF3C LoadCommonSprite
   ; r0 - Entity
 
+0803B800 LoadGFX
+  ; r0 - GFX wrapper pointer
+  ; r1 - ?
+08039E90 LoadGFX2
+  ; Run for GFX types 0 and 1 (uncompressed and compressed)
+  ; r0 - GFX wrapper pointer
+  ; r1 - ?
+  ; 08039FC4-0803A02C is where it copies uncompressed GFX to VRAM, one row at a time.
+0803B9B4 LoadGFXCompressed
+0803D8B4 GetVRAMOffset
+  ; r0 - The desired VRAM index to get, in terms of 128x32px chunks. 0-F.
+  ; The way these indexes would map out visually to VRAM is like this:
+  ;   [    0    ] [    4    ]
+  ;   [    1    ] [    5    ]
+  ;   [    2    ] [    6    ]
+  ;   [    3    ] [    7    ]
+  ;   [    8    ] [    C    ]
+  ;   [    9    ] [    D    ]
+  ;   [    A    ] [    E    ]
+  ;   [    B    ] [    F    ]
+  ; This mapping is stored in ROM at 080E2B04.
+  ; Returns - The first free offset in VRAM. This is in terms of 8x8px tiles, so the return value must be multiplied by 0x20 to get the offset in bytes.
+
 0803B9D1 EnemyDraw
 
 0803F2C8 EntityChangeAnimation

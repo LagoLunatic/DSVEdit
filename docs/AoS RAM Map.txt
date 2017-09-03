@@ -81,8 +81,10 @@ What each range of entity slots is for:
 
 02013144 - ???
 
-020131BF - Index of the red soul you last used.
+020131BF,1 - Index of the red soul you last used.
   This is only updated when you use a red soul, not just when you equip it.
+020131C0,1 - Index of the weapon you last used.
+  This is only updated when you swing a weapon, not just when you equip it.
 
 020131D6,2 - Related to how much damage the player just took.
   0 - Player didn't just take damage.
