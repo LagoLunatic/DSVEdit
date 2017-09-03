@@ -21,6 +21,8 @@ class SkillGfx
       gfx_asset_index, sprite_asset_index, gfx_pointer, unknown, @palette_pointer = fs.read(SKILL_GFX_LIST_START + skill_gfx_index*16, 16).unpack("vvVVV")
       @gfx_file_pointer = fs.assets[gfx_asset_index][:asset_pointer]
       @sprite_file_pointer = fs.assets[sprite_asset_index][:asset_pointer]
+    when "aos"
+      @gfx_file_pointer, @palette_pointer, @sprite_file_pointer = fs.read(SKILL_GFX_LIST_START + skill_gfx_index*12, 12).unpack("VVV")
     end
   end
   
