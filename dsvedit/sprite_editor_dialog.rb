@@ -271,11 +271,8 @@ class SpriteEditor < Qt::Dialog
       palette_offset = 0
       sprite_pointer = weapon.sprite_file_pointer
       skeleton_file = nil
-      if SYSTEM == :gba
-        unwrapped_gfx = true
-      end
       
-      @sprite_info = SpriteInfo.new(gfx_file_pointers, palette_pointer, palette_offset, sprite_pointer, skeleton_file, @fs, unwrapped_gfx: unwrapped_gfx)
+      @sprite_info = SpriteInfo.new(gfx_file_pointers, palette_pointer, palette_offset, sprite_pointer, skeleton_file, @fs)
     rescue StandardError => e
       Qt::MessageBox.warning(self,
         "Weapon sprite extraction failed",
@@ -779,7 +776,6 @@ class SpriteEditor < Qt::Dialog
     gfx_and_palette_data[:gfx_page_index] = gfx_page_index_without_blanks
     gfx_and_palette_data[:palette_pointer] = @sprite_info.palette_pointer
     gfx_and_palette_data[:palette_index] = @palette_index
-    gfx_and_palette_data[:unwrapped_gfx] = gfx_pages.first.unwrapped
     
     parent.open_gfx_editor(gfx_and_palette_data)
   end
@@ -1149,6 +1145,13 @@ class SpriteEditor < Qt::Dialog
     part = @sprite.parts[@current_part_index]
     ensure_gfx_pages_for_palette_exist(@palette_index)
     chunky_gfx_page = @rendered_gfx_pages_by_palette[@palette_index][@gfx_page_index]
+    
+    if chunky_gfx_page.nil?
+      # Invalid gfx page index, so just render a big red square.
+      first_canvas_width = @gfx_pages_with_blanks.first.canvas_width
+      chunky_gfx_page = @renderer.render_gfx(nil, nil, 0, 0, first_canvas_width*8, first_canvas_width*8, canvas_width=first_canvas_width*8)
+    end
+    
     chunky_part = @renderer.render_sprite_part(part, chunky_gfx_page)
     
     pixmap = Qt::Pixmap.new

@@ -7,14 +7,14 @@ class GfxWrapper
               :bpp,
               :size_in_512_chunks,
               :gfx_data_pointer,
-              :unwrapped
+              :data_type,
+              :compressed
   attr_accessor :render_mode,
                 :canvas_width
               
-  def initialize(gfx_pointer, fs, unwrapped: false)
+  def initialize(gfx_pointer, fs)
     @gfx_pointer = gfx_pointer
     @fs = fs
-    @unwrapped = unwrapped
     
     if SYSTEM == :nds
       @file = fs.assets_by_pointer[gfx_pointer]
@@ -23,22 +23,30 @@ class GfxWrapper
       end
       @unknown_1, @render_mode, @canvas_width = fs.read(gfx_pointer, 4).unpack("CCv")
     else
-      if unwrapped
-        @gfx_data_pointer = gfx_pointer
-        @render_mode = 1
-        @canvas_width = 0x10
-        @size_in_512_chunks = 0x10
+      @data_type, @bpp, @unknown_3, @size_in_512_chunks = fs.read(gfx_pointer, 4).unpack("CCCC")
+      @render_mode = case bpp
+      when 4
+        1
+      when 8
+        2
       else
-        @unknown_1, @bpp, @unknown_3, @size_in_512_chunks, @gfx_data_pointer = fs.read(gfx_pointer, 8).unpack("CCCCV")
-        @render_mode = case bpp
-        when 4
-          1
-        when 8
-          2
-        else
-          raise "Unknown bpp: #{bpp}"
-        end
-        @canvas_width = 0x10
+        raise "Unknown bpp: #{bpp}"
+      end
+      @canvas_width = 0x10
+      
+      case data_type
+      when 0
+        @compressed = false
+      when 1
+        @compressed = true
+      else
+        raise "Unknown GFX wrapper data type: %02X" % data_type
+      end
+      
+      if compressed
+        @gfx_data_pointer = fs.read(gfx_pointer+4, 4).unpack("V").first
+      else
+        @gfx_data_pointer = gfx_pointer+4
       end
     end
   end
@@ -47,10 +55,10 @@ class GfxWrapper
     if SYSTEM == :nds
       fs.read_by_file(file[:file_path], 0, 0x2000*render_mode, allow_reading_into_next_file_in_ram: true)
     else
-      @gfx_data ||= if @bpp == 4 || @bpp == 8
+      @gfx_data ||= if compressed
         fs.decompress(gfx_data_pointer)
       else
-        fs.read(gfx_data_pointer+4, 512*size_in_512_chunks)
+        fs.read(gfx_data_pointer, 512*size_in_512_chunks)
       end
     end
   end
@@ -59,13 +67,13 @@ class GfxWrapper
     if SYSTEM == :nds
       fs.write_by_file(file[:file_path], 0, new_gfx_data)
     else
-      if @bpp == 4 || @bpp == 8
+      if compressed
         fs.compress_write(gfx_data_pointer, new_gfx_data)
       else
-        if new_gfx_data.length > 0x2000
+        if new_gfx_data.length > 512*size_in_512_chunks
           raise "New GFX data too large"
         end
-        fs.write(gfx_data_pointer+4, new_gfx_data)
+        fs.write(gfx_data_pointer, new_gfx_data)
       end
       
       @gfx_data = nil # Clear gfx data cache

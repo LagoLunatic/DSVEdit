@@ -498,7 +498,7 @@ BEST_SPRITE_FRAME_FOR_ENEMY = {
 }
 BEST_SPRITE_OFFSET_FOR_ENEMY = {}
 
-COMMON_SPRITE = {desc: "Common", sprite: 0x0820ED60, gfx_files: [0x081C15F4], palette: 0x082099FC, palette_offset: 3, unwrapped_gfx: true}
+COMMON_SPRITE = {desc: "Common", sprite: 0x0820ED60, gfx_files: [0x081C15F4], palette: 0x082099FC, palette_offset: 3}
 
 OVERLAY_FILE_FOR_SPECIAL_OBJECT = {}
 REUSED_SPECIAL_OBJECT_INFO = {

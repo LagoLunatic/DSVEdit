@@ -1144,11 +1144,22 @@ class Renderer
           palette = palettes[part.palette_index+palette_offset]
         end
         
-        if one_dimensional_mode
-          rendered_gfx_files_by_palette[part.palette_index+palette_offset][part.gfx_page_index] ||= render_gfx_1_dimensional_mode(gfx_page, palette || dummy_palette)
-        else
-          gfx_file = gfx_page.file
-          rendered_gfx_files_by_palette[part.palette_index+palette_offset][part.gfx_page_index] ||= render_gfx(gfx_file, palette || dummy_palette, 0, 0, canvas_width*8, canvas_width*8, canvas_width=canvas_width*8)
+        rendered_gfx_files_by_palette[part.palette_index+palette_offset][part.gfx_page_index] ||= begin
+          if one_dimensional_mode
+            rendered_gfx_file = render_gfx_1_dimensional_mode(gfx_page, palette || dummy_palette)
+          else
+            gfx_file = gfx_page.file
+            rendered_gfx_file = render_gfx(gfx_file, palette || dummy_palette, 0, 0, canvas_width*8, canvas_width*8, canvas_width=canvas_width*8)
+          end
+          
+          if rendered_gfx_file.height < 128
+            # One of those partial GFX pages from AoS. We pad it to 128px tall so parts that go past the bottom don't cause errors.
+            padded_gfx_file = ChunkyPNG::Image.new(128, 128)
+            padded_gfx_file.compose!(rendered_gfx_file)
+            rendered_gfx_file = padded_gfx_file
+          end
+          
+          rendered_gfx_file
         end
       end
       
@@ -1260,7 +1271,7 @@ class Renderer
       end
     else
       ITEM_ICONS_GFX_POINTERS.each do |gfx_pointer|
-        gfx_page = GfxWrapper.new(gfx_pointer, fs, unwrapped: true)
+        gfx_page = GfxWrapper.new(gfx_pointer, fs)
         gfx_pages << gfx_page
       end
     end

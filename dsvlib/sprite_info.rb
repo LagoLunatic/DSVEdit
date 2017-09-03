@@ -10,7 +10,7 @@ class SpriteInfo
               :sprite,
               :gfx_pages
   
-  def initialize(gfx_file_pointers, palette_pointer, palette_offset, sprite_file_pointer, skeleton_file, fs, unwrapped_gfx: false)
+  def initialize(gfx_file_pointers, palette_pointer, palette_offset, sprite_file_pointer, skeleton_file, fs)
     @gfx_file_pointers = gfx_file_pointers
     @palette_pointer = palette_pointer
     @palette_offset = palette_offset
@@ -20,7 +20,7 @@ class SpriteInfo
     @sprite = Sprite.new(sprite_file_pointer, fs)
     
     @gfx_pages = @gfx_file_pointers.map do |gfx_pointer|
-      GfxWrapper.new(gfx_pointer, fs, unwrapped: unwrapped_gfx)
+      GfxWrapper.new(gfx_pointer, fs)
     end
   end
   
@@ -53,13 +53,12 @@ class SpriteInfo
     gfx_file_pointers      = reused_info[:gfx_files] || nil
     gfx_wrapper            = reused_info[:gfx_wrapper] || nil
     palette_pointer        = reused_info[:palette] || nil
-    unwrapped_gfx          = reused_info[:unwrapped_gfx] || false
     
     if sprite_file_pointer && gfx_file_pointers && palette_pointer
-      return SpriteInfo.new(gfx_file_pointers, palette_pointer, palette_offset, sprite_file_pointer, nil, fs, unwrapped_gfx: unwrapped_gfx)
+      return SpriteInfo.new(gfx_file_pointers, palette_pointer, palette_offset, sprite_file_pointer, nil, fs)
     elsif sprite_file_pointer && gfx_wrapper && palette_pointer
       gfx_file_pointers = unpack_gfx_pointer_list(gfx_wrapper, fs)
-      return SpriteInfo.new(gfx_file_pointers, palette_pointer, palette_offset, sprite_file_pointer, nil, fs, unwrapped_gfx: unwrapped_gfx)
+      return SpriteInfo.new(gfx_file_pointers, palette_pointer, palette_offset, sprite_file_pointer, nil, fs)
     end
     
     if init_code_pointer == -1
@@ -129,7 +128,7 @@ class SpriteInfo
         gfx_file_pointers = gfx_files_to_load.map{|gfx| gfx.file[:asset_pointer]}
         sprite_file_pointer = sprite_files_to_load.first[:asset_pointer]
         
-        return SpriteInfo.new(gfx_file_pointers, palette_pointer_to_load, palette_offset, sprite_file_pointer, skeleton_files_to_load.first, fs, unwrapped_gfx: unwrapped_gfx)
+        return SpriteInfo.new(gfx_file_pointers, palette_pointer_to_load, palette_offset, sprite_file_pointer, skeleton_files_to_load.first, fs)
       end
     end
     
@@ -235,7 +234,7 @@ class SpriteInfo
       end
     end
     
-    return SpriteInfo.new(gfx_file_pointers, palette_pointer, palette_offset, sprite_file_pointer, skeleton_file, fs, unwrapped_gfx: unwrapped_gfx)
+    return SpriteInfo.new(gfx_file_pointers, palette_pointer, palette_offset, sprite_file_pointer, skeleton_file, fs)
   end
   
   def self.unpack_gfx_pointer_list(gfx_wrapper, fs)
