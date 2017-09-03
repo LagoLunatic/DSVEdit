@@ -56,8 +56,11 @@
 08012744 LoadSave
   ; r0 - Save file to load. 0 is the first file, 2 is the second file, 4 is the third file.
 
-080D7910 PlaySfx
-  ; r0 - Sfx index
+080D7910 PlaySound
+  ; r0 - Sound index
+
+08013EEC PlaySong
+  ; r0 - Sound index
 
 08001980 GetRoomPointer
   ; r0 - Sector index

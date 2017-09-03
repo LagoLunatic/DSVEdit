@@ -663,8 +663,6 @@ class DSVEdit < Qt::MainWindow
   end
   
   def open_music_editor
-    return unless validate_nds()
-    
     return if @music_editor && @music_editor.visible?
     @music_editor = MusicEditor.new(self, game)
   end

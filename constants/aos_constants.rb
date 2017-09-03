@@ -177,6 +177,7 @@ TEXT_REGIONS = {
   "Ability Soul Descriptions" => (0x257..0x25C),
   "Enemy Names" => (0x25D..0x2CD),
   "Enemy Descriptions" => (0x2CE..0x33E),
+  "Music Names" => (0x393..0x3AF),
 }
 TEXT_REGIONS_OVERLAYS = {
   "Character Names" => 0,
@@ -229,8 +230,8 @@ SKILL_GLOBAL_ID_RANGE = (0x88..0xFA)
 SKILL_LOCAL_ID_RANGE = nil # souls in AoS are split into multiple different types.
 PICKUP_GLOBAL_ID_RANGE = (0..0xFA)
 
-PICKUP_SUBTYPES_FOR_ITEMS = (0x02..0x04) # TODO
-PICKUP_SUBTYPES_FOR_SKILLS = (0x05..0xFF) # TODO
+PICKUP_SUBTYPES_FOR_ITEMS = (0x02..0x04)
+PICKUP_SUBTYPES_FOR_SKILLS = (0x05..0xFF)
 
 NEW_GAME_STARTING_AREA_INDEX_OFFSET = nil
 NEW_GAME_STARTING_SECTOR_INDEX_OFFSET = 0x084F0D8C
@@ -620,6 +621,58 @@ MAP_LINE_COLOR = [248, 248, 248, 255]
 MAP_DOOR_COLOR = [0, 200, 200, 255]
 MAP_DOOR_CENTER_PIXEL_COLOR = MAP_DOOR_COLOR
 MAP_SECRET_DOOR_COLOR = [248, 248, 0, 255]
+
+AREA_MUSIC_LIST_START_OFFSET = nil
+SECTOR_MUSIC_LIST_START_OFFSET = 0x084F106C
+AVAILABLE_BGM_POOL_START_OFFSET = nil
+SONG_INDEX_TO_TEXT_INDEX = [
+  "Silence",
+  0x393,
+  0x394,
+  0x395,
+  0x396,
+  0x397,
+  0x398,
+  0x399,
+  0x39A,
+  0x39B,
+  0x39C,
+  0x39D,
+  0x39E,
+  0x39F,
+  0x3A0,
+  0x3A1,
+  0x3A2,
+  0x3A3,
+  0x3A4,
+  0x3A5,
+  0x3A7,
+  0x3A8,
+  0x3A9,
+  "Premonition (Duplicate)",
+  0x3AD,
+  "Premonition (Duplicate 2)",
+  0x3AB,
+  0x3AC,
+  "Forbidden Area (Duplicate)",
+  "Prologue(Theme of Mina) (Duplicate)",
+  "Hammer's Shop (Duplicate)",
+  0x3A6,
+  0x3AA,
+  0x3AE,
+  "Dracula's fate (Duplicate)",
+  0x3AF,
+  "You're Not Alone (Duplicate)",
+  "Ambience",
+  "Ambience (Duplicate)",
+  "Rushing Water Ambience",
+  "Ambience (Legion?)",
+  "Ambience (Legion)",
+  "Ambience (???)",
+  "Ambience (??? 2)",
+  "Ambience (??? 3)",
+  "Ambience (Before Chaos)",
+]
 
 NEW_OVERLAY_ID = nil
 NEW_OVERLAY_FREE_SPACE_START = nil

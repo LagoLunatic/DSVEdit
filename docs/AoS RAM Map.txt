@@ -127,3 +127,7 @@ Player's button config:
 02013380 - ??? for yellow souls. each soul takes up half a byte.
 
 02013400 - player's current resistances?
+
+020254CC - Override song index.
+  This is set by certain objects when they override the currently playing song to something else, like in the first room of the game and the room that warps you to Chaos.
+  However, simply setting this value by itself doesn't do anything.

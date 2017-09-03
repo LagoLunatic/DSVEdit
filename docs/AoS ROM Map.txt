@@ -1,4 +1,9 @@
 
+080E0DF8 - List of songs->text indexes for sound test mode.
+  Entry length 4.
+  00,2: Song index.
+  02,2: Text index.
+
 080E15A8 - List of red souls.
 
 080E9644 - List of enemy DNA.
@@ -14,6 +19,9 @@
 084F0D8D,1 - New game starting room index.
 084F0D92,2 - New game starting X pos.
 084F0D94,2 - New game starting Y pos.
+
+084F106C - List of songs that play in each sector.
+  Halfwords.
 
 084F10B4 - Has pointer to Soma's update function.
 084F10B8 - Has pointer to Julius's update function.
@@ -44,6 +52,11 @@
   07,1:
   08,1: 
   09,1: 
+
+08526650 - List of pointers to event create functions (for object 20).
+  The event object's var A is the index in this list.
+085266D8 - List of pointers to event update functions (for object 20).
+  The event object's var A is the index in this list.
 
 Shop item pools:
 08526C04

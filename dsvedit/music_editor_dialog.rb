@@ -18,12 +18,16 @@ class MusicEditor < Qt::Dialog
       @ui.area_index.addItem("%02X %s" % [area_index, area_name])
     end
     SECTOR_INDEX_TO_SECTOR_NAME[0].each do |sector_index, sector_name|
+      sector = game.areas[0].sectors[sector_index]
+      break if sector.is_hardcoded # For the Boss Rush sector in AoS
+      
       @ui.sector_index.addItem("%02X %s" % [sector_index, sector_name])
     end
     
     SONG_INDEX_TO_TEXT_INDEX.each_with_index do |text_index, song_index|
       if text_index.is_a?(Integer)
         song_name = game.text_database.text_list[text_index].decoded_string.strip
+        song_name = song_name.strip.gsub("\\n", "")
       else
         song_name = text_index # No string for this song name, so this is a manually specified name.
       end

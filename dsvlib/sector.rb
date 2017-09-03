@@ -8,7 +8,8 @@ class Sector
               :area_index,
               :sector_index,
               :room_pointers,
-              :rooms
+              :rooms,
+              :is_hardcoded
 
   def initialize(area, sector_index, sector_ram_pointer, game, next_sector_pointer: nil, hardcoded_room_pointers: nil)
     @area = area
@@ -21,6 +22,7 @@ class Sector
     
     if hardcoded_room_pointers
       @room_pointers = hardcoded_room_pointers
+      @is_hardcoded = true
     else
       read_room_pointers_from_rom()
     end
