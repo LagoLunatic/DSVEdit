@@ -415,6 +415,7 @@ class Part
         flip_bits, @unused = part_data.unpack("ccvCCCCCCCC")
       
       @palette_index = 0
+      @gfx_page_index = 0
       
       @vertical_flip   = (flip_bits & 0b00000001) > 0
       @horizontal_flip = (flip_bits & 0b00000010) > 0
