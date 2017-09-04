@@ -716,18 +716,8 @@ class DSVEdit < Qt::MainWindow
   end
   
   def open_shop_editor
-    return unless validate_nds()
-    
     return if @shop_editor_dialog && @shop_editor_dialog.visible?
     @shop_editor_dialog = ShopEditor.new(self, game)
-  end
-  
-  def validate_nds
-    if SYSTEM == :gba
-      Qt::MessageBox.warning(self, "AoS not supported", "This tool doesn't support AoS yet.")
-      return false
-    end
-    return true
   end
   
   def add_new_overlay

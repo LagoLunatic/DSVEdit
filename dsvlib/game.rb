@@ -4,6 +4,7 @@ require 'open3'
 class Game
   class InvalidFileError < StandardError ; end
   class RoomFindError < StandardError ; end
+  class ShopAllowableItemPoolTooLargeError < StandardError ; end
   
   attr_reader :areas,
               :fs,
@@ -327,7 +328,7 @@ class Game
       end
       
       SHOP_ITEM_POOL_COUNT.times do |i|
-        shop_item_pools << ShopItemPool.new(i, fs)
+        shop_item_pools << ShopItemPool.new(i, self)
       end
       
       if GAME == "por"
@@ -335,6 +336,50 @@ class Game
       end
       
       shop_item_pools
+    end
+  end
+  
+  def shop_allowable_items
+    @shop_allowable_items ||= begin
+      if GAME != "aos"
+        raise "Only AoS has a list of allowable shop items"
+      end
+      
+      shop_allowable_items = []
+      
+      SHOP_NUM_ALLOWABLE_ITEMS.times do |i|
+        shop_allowable_items << ShopAllowableItem.new(i, fs)
+      end
+      
+      shop_allowable_items
+    end
+  end
+  
+  def update_shop_allowable_items(shop_pools)
+    if GAME != "aos"
+      raise "Only AoS has a list of allowable shop items"
+    end
+    
+    all_item_ids = []
+    shop_pools.each do |pool|
+      all_item_ids += pool.item_ids
+    end
+    all_item_ids.uniq!
+    
+    if all_item_ids.length > SHOP_NUM_ALLOWABLE_ITEMS
+      raise ShopAllowableItemPoolTooLargeError.new("Too many unique shop items!\nIn AoS, the maximum number of unique items that can be in the shop, shared across all pools, is 0x%02X.\nYou have set 0x%02X unique items in the shop." % [SHOP_NUM_ALLOWABLE_ITEMS, all_item_ids.length])
+    end
+    
+    @shop_allowable_items.each_with_index do |shop_allowable_item, i|
+      if i >= all_item_ids.length
+        # There's more than enough room in the allowable items list, so we don't need to keep writing.
+        break
+      end
+      new_item_id = all_item_ids[i]
+      new_item_type, new_item_index = get_item_type_and_index_by_global_id(new_item_id-1)
+      shop_allowable_item.item_type = new_item_type
+      shop_allowable_item.item_index = new_item_index
+      shop_allowable_item.write_to_rom()
     end
   end
   

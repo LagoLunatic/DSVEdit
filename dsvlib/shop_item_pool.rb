@@ -1,13 +1,15 @@
 
 class ShopItemPool
   attr_reader :pool_id,
-              :fs
+              :fs,
+              :game
   attr_accessor :item_ids,
                 :requirement
   
-  def initialize(pool_id, fs)
+  def initialize(pool_id, game)
     @pool_id = pool_id
-    @fs = fs
+    @fs = game.fs
+    @game = game
     
     read_from_rom()
   end
@@ -26,7 +28,12 @@ class ShopItemPool
       @requirement = nil
       
       num_items = fs.read(@item_pool_pointer, 1).unpack("C").first
-      @item_ids = fs.read(@item_pool_pointer+1, num_items).unpack("C*")
+      @allowable_item_indexes = fs.read(@item_pool_pointer+1, num_items).unpack("C*")
+      @item_ids = @allowable_item_indexes.map do |index|
+        allowable_item = game.shop_allowable_items[index]
+        item_id = game.get_item_global_id_by_type_and_index(allowable_item.item_type, allowable_item.item_index)
+        item_id + 1
+      end
     when "dos"
       num_items_location = SHOP_ITEM_POOL_LENGTH_HARDCODED_LOCATIONS[pool_id]
       num_items = fs.read(num_items_location, 1).unpack("C").first
@@ -61,6 +68,21 @@ class ShopItemPool
   def write_to_rom
     case GAME
     when "aos"
+      @allowable_item_indexes = @item_ids.map do |item_id|
+        item_type, item_index = game.get_item_type_and_index_by_global_id(item_id-1)
+        allowable_item = game.shop_allowable_items.find do |allowable_item|
+          allowable_item.item_type == item_type && allowable_item.item_index == item_index
+        end
+        
+        if allowable_item.nil?
+          raise "!!!"
+        end
+        
+        allowable_item_index = game.shop_allowable_items.index(allowable_item)
+        allowable_item_index
+      end
+      
+      fs.write(@item_pool_pointer+1, @allowable_item_indexes.pack("C*"))
     when "dos"
       fs.write(@item_pool_pointer, @item_ids.pack("C*"))
       
@@ -198,5 +220,23 @@ class OoEHardcodedShopItemPool
     else
       return true
     end
+  end
+end
+
+class ShopAllowableItem
+  attr_reader :allowable_item_index,
+              :fs,
+              :unknown
+  attr_accessor :item_type,
+                :item_index
+  
+  def initialize(allowable_item_index, fs)
+    @fs = fs
+    @allowable_item_index = allowable_item_index
+    @item_type, @item_index, @unknown = fs.read(SHOP_ALLOWABLE_ITEMS_LIST + allowable_item_index*4, 4).unpack("CCv")
+  end
+  
+  def write_to_rom
+    fs.write(SHOP_ALLOWABLE_ITEMS_LIST + allowable_item_index*4, [@item_type, @item_index, @unknown].pack("CCv"))
   end
 end

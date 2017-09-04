@@ -24,7 +24,7 @@ class ShopEditor < Qt::Dialog
       end
     end
     SHOP_ITEM_POOL_COUNT.times do |i|
-      @pools << ShopItemPool.new(i, game.fs)
+      @pools << ShopItemPool.new(i, game)
       pool_name = "%02X" % i
       
       if GAME == "ooe"
@@ -149,9 +149,15 @@ class ShopEditor < Qt::Dialog
   end
   
   def save_changes
+    if GAME == "aos"
+      @game.update_shop_allowable_items(@pools)
+    end
+    
     @pool.write_to_rom()
   rescue NDSFileSystem::ArmShiftedImmediateError => e
     Qt::MessageBox.warning(self, "Error changing requirement", e.message)
+  rescue Game::ShopAllowableItemPoolTooLargeError => e
+    Qt::MessageBox.warning(self, "Too many unique items", e.message)
   end
   
   def button_box_clicked(button)
