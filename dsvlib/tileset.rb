@@ -159,7 +159,7 @@ class GBATilesetTile
   end
   
   def is_blank
-    false # TODO
+    @minitiles.all?{|mt| mt.is_blank}
   end
   
   def self.data_size
@@ -193,11 +193,12 @@ class MiniTile
   end
   
   def is_blank
-    false
+    # This indicates the tile is completely blank, no graphics or collision.
+    index_on_tile_page == 0 && tile_page == 0
   end
 end
 
-class GBA256TilesetTile
+class GBA256TilesetTile < GBATilesetTile
   attr_reader :minitiles
               
   def initialize(tile_data)
@@ -205,14 +206,6 @@ class GBA256TilesetTile
     tile_data.unpack("C*").each do |minitile_data|
       @minitiles << MiniTile256.new(minitile_data)
     end
-  end
-  
-  def to_data
-    @minitiles.map{|mt| mt.to_data}.join
-  end
-  
-  def is_blank
-    false # TODO
   end
   
   def self.data_size
