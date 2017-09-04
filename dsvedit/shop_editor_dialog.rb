@@ -153,7 +153,9 @@ class ShopEditor < Qt::Dialog
       @game.update_shop_allowable_items(@pools)
     end
     
-    @pool.write_to_rom()
+    @pools.each do |pool|
+      pool.write_to_rom()
+    end
   rescue NDSFileSystem::ArmShiftedImmediateError => e
     Qt::MessageBox.warning(self, "Error changing requirement", e.message)
   rescue Game::ShopAllowableItemPoolTooLargeError => e
