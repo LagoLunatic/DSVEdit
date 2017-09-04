@@ -145,8 +145,22 @@ class TilesetEditorDialog < Qt::Dialog
     
     return if @tileset_pointer == 0 || @gfx_list_pointer == 0 || @palette_list_pointer == 0
     
-    @tileset = Tileset.new(@tileset_pointer, @tileset_type, @fs)
-    @collision_tileset = CollisionTileset.new(@collision_tileset_pointer, @fs)
+    begin
+      @tileset = Tileset.new(@tileset_pointer, @tileset_type, @fs)
+    rescue GBALZ77::DecompressionError => e
+      Qt::MessageBox.warning(self,
+        "Decompression error",
+        "The tileset data doesn't appear to be compressed.\nThe Tileset Type may be incorrect."
+      )
+    end
+    begin
+      @collision_tileset = CollisionTileset.new(@collision_tileset_pointer, @fs)
+    rescue GBALZ77::DecompressionError => e
+      Qt::MessageBox.warning(self,
+        "Decompression error",
+        "The collision tileset data doesn't appear to be compressed.\nThe Tileset Type may be incorrect."
+      )
+    end
     
     if SYSTEM == :nds
       @tiles = @tileset.tiles
