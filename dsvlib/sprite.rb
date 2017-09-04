@@ -99,8 +99,11 @@ class Sprite
   end
   
   def read_from_rom_by_pointer(sprite_pointer)
-    @number_of_frames, @number_of_animations, @frame_list_offset, @animation_list_offset = fs.read(sprite_pointer, 12).unpack("vvVV")
-    # TODO: in AoS, there's a third pointer, after the animation list pointer.
+    if SYSTEM == :nds
+      @number_of_frames, @number_of_animations, @frame_list_offset, @animation_list_offset = fs.read(sprite_pointer, 12).unpack("vvVV")
+    else
+      @number_of_frames, @number_of_animations, @frame_list_offset, unknown, @animation_list_offset = fs.read(sprite_pointer, 16).unpack("vvVVV")
+    end
     
     @frames = []
     offset = frame_list_offset
@@ -147,16 +150,18 @@ class Sprite
     if animation_list_offset && animation_list_offset != 0
       offset = animation_list_offset
       number_of_animations.times do
-        animation_data = fs.read(offset, Animation.data_size)
-        animation = Animation.new.from_data(animation_data, offset)
+        if SYSTEM == :nds
+          animation_data = fs.read(offset, Animation.data_size)
+          animation = Animation.new.from_data(animation_data, offset)
+        else
+          animation_pointer = fs.read(offset, 4).unpack("V").first
+          animation_data = fs.read(animation_pointer, Animation.data_size)
+          animation = Animation.new.from_data(animation_data, animation_pointer)
+        end
+        
         @animations << animation
         
         offset += Animation.data_size
-        
-        if SYSTEM == :gba
-          # On GBA the frame delays come right after the animation itself, rather than being pointed to separately.
-          offset += FrameDelay.data_size*animation.number_of_frames
-        end
       end
       
       animations.each do |animation|

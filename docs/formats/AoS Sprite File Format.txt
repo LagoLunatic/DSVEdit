@@ -1,4 +1,11 @@
 
+Sprite header format:
+00,2: Number of frames this sprite has.
+02,2: Number of animations this sprite has.
+04,4: Pointer to the start of the list of the sprite's frames.
+08,4: Pointer to the start of the list of the sprite's animations?
+0C,4: Pointer to the start of the list of ??? that affects the sprite's animation?
+
 Sprite parts:
 Each part is 0xC bytes long.
   00,1: X pos (signed).
@@ -22,3 +29,15 @@ Each part is 0xC bytes long.
     Bit 2: Horizontal flip.
   0B,1: Affects palette?
     If the lowest bit of this value is set, then it changes the palette of this part, but only if the entity has the lowest bit of the value at entity+62 set as well.
+
+Animations:
+Each animation is 0x4 bytes long.
+  00,1: Number of frames in this animation.
+  01,1: ?
+  02,2: Function index. Index in list 080E2B34, which is a list of pointers to functions to call.
+
+List of frame delays:
+Each frame delay is 8 bytes long.
+  00,1: Frame index to use.
+  01,1: Delay (in frames) for this frame to be displayed.
+  02,2: ?
