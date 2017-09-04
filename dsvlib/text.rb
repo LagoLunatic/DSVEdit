@@ -165,6 +165,7 @@ class Text
       byte = char.unpack("C").first
       
       char = if skip_next
+        skip_next = false
         ""
       elsif multipart
         curr_is_command = true
