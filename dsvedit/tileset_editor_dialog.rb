@@ -296,8 +296,8 @@ class TilesetEditorDialog < Qt::Dialog
   def render_tile(tile)
     gfx = @gfx_pages[tile.tile_page]
     if gfx.nil?
-      puts "GFX is nil, tileset %08X" % @tileset_pointer
-      return # TODO: figure out why this sometimes happens.
+      # Invalid gfx page index
+      return ChunkyPNG::Image.new(@tile_width, @tile_height)
     end
     
     if tile.palette_index == 0xFF # TODO. 255 seems to have some special meaning besides an actual palette index.
@@ -433,7 +433,7 @@ class TilesetEditorDialog < Qt::Dialog
       gfx_wrapper = @gfx_wrappers[@selected_tile.tile_page]
       
       if gfx_wrapper.nil?
-        @ui.gfx_file.text = "Invalid (gfx page index %02X)" % gfx_page_index
+        @ui.gfx_file.text = "Invalid (gfx page index %02X)" % @selected_tile.tile_page
         return
       end
       
@@ -448,9 +448,15 @@ class TilesetEditorDialog < Qt::Dialog
     else
       chunky_image = ChunkyPNG::Image.new(128, 128, ChunkyPNG::Color::TRANSPARENT)
       4.times do |i|
-        gfx_chunk_index = gfx_page_index*4 + i
+        gfx_chunk_index = @selected_tile.tile_page*4 + i
         # HACKY TODO
-        gfx = @gfx_pages[gfx_page_index]
+        gfx = @gfx_pages[@selected_tile.tile_page]
+        
+        if gfx.nil?
+          @ui.gfx_file.text = "Invalid (gfx page index %02X)" % @selected_tile.tile_page
+          return
+        end
+        
         gfx_chunk_index += 0x10 if gfx.colors_per_palette == 16
         gfx_chunk_index = 0 if gfx.colors_per_palette == 256
         gfx_wrapper_index, chunk_offset = @gfx_chunks[gfx_chunk_index]
@@ -609,6 +615,15 @@ class TilesetEditorDialog < Qt::Dialog
         
         @selected_tiles = new_selected_tiles
         render_selected_tiles_to_cursor_item()
+        
+        if @selected_tiles.size > 0
+          if @collision_mode
+            @selected_collision_tile = @selected_tiles.first
+          else
+            @selected_tile = @selected_tiles.first
+          end
+          load_selected_tile()
+        end
       end
     when Qt::Key_Y
       # Flip selection vertically.
@@ -626,7 +641,18 @@ class TilesetEditorDialog < Qt::Dialog
         
         @selected_tiles = new_selected_tiles
         render_selected_tiles_to_cursor_item()
+        
+        if @selected_tiles.size > 0
+          if @collision_mode
+            @selected_collision_tile = @selected_tiles.first
+          else
+            @selected_tile = @selected_tiles.first
+          end
+          load_selected_tile()
+        end
       end
+      
+      load_selected_tile()
     end
     
     super(event)
@@ -676,8 +702,10 @@ class TilesetEditorDialog < Qt::Dialog
     
     @selection_x = [mouse_x, @selection_origin.x].min
     @selection_y = [mouse_y, @selection_origin.y].min
-    @selection_width = [mouse_x, @selection_origin.x].max - @selection_x + 1
-    @selection_height = [mouse_y, @selection_origin.y].max - @selection_y + 1
+    selection_right_x = [mouse_x, @selection_origin.x].max
+    selection_bottom_y = [mouse_y, @selection_origin.y].max
+    @selection_width = selection_right_x - @selection_x + 1
+    @selection_height = selection_bottom_y - @selection_y + 1
     
     @selection_rectangle.setRect(@selection_x*@tile_width, @selection_y*@tile_height, @selection_width*@tile_width, @selection_height*@tile_height)
   end
@@ -685,8 +713,8 @@ class TilesetEditorDialog < Qt::Dialog
   def update_selection_on_tileset(mouse_x, mouse_y)
     return unless @selection_origin
     
-    max_w = @tileset_width*@tile_width
-    max_h = @tileset_height*@tile_height
+    max_w = @tileset_width*@tile_width - 1
+    max_h = @tileset_height*@tile_height - 1
     update_selection_rectangle(mouse_x, mouse_y, max_w, max_h)
     
     @selected_tiles = []
@@ -853,7 +881,7 @@ class TilesetEditorDialog < Qt::Dialog
       
       @gfx_page_graphics_scene.clear()
       
-      @gfx_page_graphics_scene.setSceneRect(0, 0, 256, 256)
+      @gfx_page_graphics_scene.setSceneRect(0, 0, 16*@tile_width, 16*@tile_height)
       
       @available_collision_tiles = []
       16.times do |y|
