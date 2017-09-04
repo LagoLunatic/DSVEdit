@@ -52,6 +52,8 @@ class Text
     if SYSTEM == :nds
       region_name = TEXT_REGIONS.find{|name, range| range.include?(text_id)}[0]
       TEXT_REGIONS_OVERLAYS[region_name]
+    else
+      nil
     end
   end
   
@@ -133,7 +135,7 @@ class Text
         end
         
         if SYSTEM == :gba
-          raise TextEncodeError.new("AoS text encoding TODO")
+          encode_command_gba(command, data)
         elsif REGION == :jp
           encode_command_jp(command, data)
         else
@@ -141,7 +143,7 @@ class Text
         end
       else
         if SYSTEM == :gba
-          raise TextEncodeError.new("AoS text encoding TODO")
+          encode_char_gba(str)
         elsif REGION == :jp
           encode_char_jp(str)
         else
@@ -300,7 +302,13 @@ class Text
     decoded_string = string.each_char.map do |char|
       byte = char.unpack("C").first
       
-      char = if byte < 0x20
+      char = if multipart
+        curr_is_command = true
+        
+        multipart = false
+        command_number = previous_byte
+        decode_multipart_command(command_number, byte, data_format_string)
+      elsif byte < 0x20
         curr_is_command = true
         
         command_number = byte
@@ -467,6 +475,70 @@ class Text
       end
     when "\\n"
       [0xE6].pack("C")
+    else
+      raise TextEncodeError.new("Failed to encode command: #{command} #{data}")
+    end
+  end
+  
+  def encode_char_gba(str)
+    #if str == '’'
+    #  return [0xAF].pack("C")
+    #elsif str == '”'
+    #  return [0xB1].pack("C")
+    #end
+    
+    byte = str.unpack("C").first
+    char = case byte
+    when 0x20..0x7A # Ascii text
+      [byte].pack("C")
+    when 0x0A # Newline
+      # Ignore
+      ""
+    end
+    
+    char
+  end
+  
+  def encode_command_gba(command, data)
+    case command
+    when "RAW"
+      byte = data.to_i(16)
+      [byte].pack("C")
+    when "BUTTON"
+      button_index = %w(L R A B X Y LEFT RIGHT UP DOWN).index(data)
+      [0xB + button_index].pack("C")
+    when "PORTRAIT"
+      byte = data.to_i(16)
+      [0x3, byte].pack("CC")
+    when "NEWCHAR"
+      [0x4].pack("C")
+    when "SAMECHAR"
+      [0x9].pack("C")
+    when "WAITINPUT"
+      [0x5].pack("C")
+    when "NAME"
+      byte = data.to_i(16)
+      [0x7, byte].pack("CC")
+    when "NEXTACTION"
+      [0x2, 0x01].pack("CC")
+    when "CHOICE"
+      [0x2, 0x03].pack("CC")
+    when "COMMAND2"
+      byte = data.to_i(16)
+      [0x2, byte].pack("CC")
+    when "ENDCHOICE"
+      byte = data.to_i(16)
+      [0x1, byte].pack("Cn")
+    when "TEXTCOLOR"
+      color_name = data
+      byte = TEXT_COLOR_NAMES.key(color_name)
+      if byte
+        [0x8, byte].pack("CC")
+      else
+        [0x8, data.to_i(16)].pack("CC")
+      end
+    when "\\n"
+      [0x6].pack("C")
     else
       raise TextEncodeError.new("Failed to encode command: #{command} #{data}")
     end
