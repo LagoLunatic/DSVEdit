@@ -40,13 +40,34 @@
 
 020003CC - Has the room pointer to load when loading a save.
 
-0200037E - Boss death flags.
+0200037E,2 - Boss death flags.
+  00 0001 Graham
+  01 0002 Death
+  02 0004 Julius
+  03 0008 (Unused)
+  04 0010 Headhunter
+  05 0020 Legion
+  06 0040 Balore
+  07 0080 Chaos
+  08 0100 (Unused)
+  09 0200 (Unused)
+  0A 0400 Manticore
+  0B 0800 Creaking Skull
+  0C 1000 Big Golem
+  0D 2000 (Unused)
+  0E 4000 (Unused)
+  0F 8000 Great Armor
 
 020003D4 - Bitfield of entity used byte 5s in the current room.
   Byte 5 must be unique for all entities in the room.
   Unlike the DSVanias, a byte 5 of 0 must also be unique, and doesn't make an entity exempt.
 
 020003F4 - Currently selected warp room on the warp select screen.
+
+02000430,1 - Which shop item pool to use. 0 1 or 2.
+  This is set when you enter the Buy menu of Hammer's shop.
+  Shop pool 1 is unlocked by boss death flag 04 (Headhunter) being set.
+  Shop pool 2 is unlocked by boss death flag 01 (Death) being set.
 
 === 020004E4-??: Entity memory. Each entity is 0x84 bytes long. Entities range from 00-CF (at least, maybe more).
 
@@ -74,12 +95,18 @@ What each range of entity slots is for:
 0200A100 - Decompressed tileset data.
 0200C0EC - tileset data again?
 
-0201017C - List of sprite info for currently loaded entities.
+02010170 - List of sprite info for currently loaded entities.
   The byte at +64 in an entity's memory is the index in this list.
   Each entry is 0x10 bytes long.
-  00,4: Sprite pointer.
+  00,2: 
+  02,2: 
+  04,4: 
+  08,4: 
+  0C,4: Sprite pointer.
 
 02013144 - ???
+
+02013160,4 - Pointer to an entity?
 
 020131BF,1 - Index of the red soul you last used.
   This is only updated when you use a red soul, not just when you equip it.
@@ -118,6 +145,7 @@ What each range of entity slots is for:
   1 - Julius mode.
 02013269 - Currently equipped red soul.
 02013396 - Bitfield of currently equipped ability souls.
+0201326D - Currently equpped accessory.
 
 Player's button config:
 02013398,2 - Attack

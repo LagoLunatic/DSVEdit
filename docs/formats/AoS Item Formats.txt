@@ -60,6 +60,7 @@ Red soul format:
   0C,2: Bitfield of damage types this soul does.
   0E,2: Varies by code pointer.
     08025785/08028EC1: Which projectile to throw.
+      This is an index in list 084F12C8, entry length 0x18.
       0 Rock Armor
       1 Waiter Skeleton
       2 Bomber Armor

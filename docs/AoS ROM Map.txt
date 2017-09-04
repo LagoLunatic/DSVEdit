@@ -47,6 +47,38 @@
 084F10B4 - Has pointer to Soma's update function.
 084F10B8 - Has pointer to Julius's update function.
 
+084F128C - differentiates evil butcher/ripper knives
+  Entry length 0x10.
+  00,4: GFX pointer
+  04,4: Palette pointer
+  08,4: Sprite pointer
+  0C,
+
+084F12C8 - Has data to differentiate projectile red souls that share the same code pointer 08025785/08028EC1.
+  The red soul data's var A is the index in this list.
+  Entry length 0x18.
+  00,4: X velocity.
+  04,4: Initial Y velocity.
+  08,4: Y acceleration (gravity).
+  0C,1: Skill GFX index.
+  0D,1: Sprite frame index.
+  0E,1: Sprite animation index.
+  0F,1: Palette index?
+  10,2: SFX to play on throw.
+    0 means no SFX.
+  12,2: Bitfield affecting the behavior of the projectile.
+    ?
+    0001 - Whether this projectile's sprite should be animated as opposed to a static frame.
+      If set, the projectile's animation is set to the animation index at 0E.
+      If not, the projectile's frame is set to the frame index at 0D.
+    0002 - Breaks on contact with the floor?
+    0008 - If set, this entity's pointer gets stored to 02013160.
+    0080 - runs code at 0802583C
+    0200 
+    0400 
+  14,2: 
+  16,?
+
 085255FC - List of palette shifts.
   Entry length 8.
   0,4: Palette list pointer.
@@ -80,12 +112,13 @@
   The event object's var A is the index in this list.
 
 Shop item pools:
-08526C04
-08526C1C
-08526C40
-  These aren't item IDs though. They're indexes in list 085269FC.
-
-085269FC - List of items that can be in the shop.
+08526C6C-08526C77 - List of shop item pools:
+  08526C04
+  08526C1C
+  08526C40
+  In each of those item pools, the first byte is the number of items in this pool.
+  Then each item also takes up one byte. But these aren't item IDs - they're indexes in list 085269FC.
+085269FC - List of allowable items that can be in the shop.
   Each entry is 4 bytes long.
   00,1: Item type.
   01,1: Item index.

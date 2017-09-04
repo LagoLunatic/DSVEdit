@@ -4,6 +4,7 @@ Memory used for entities in AoS is 020004E4 - ?. Each entity is 0x84 bytes long.
 00,4: Pointer to update code.
 04,4: Pointer to draw code.
 22,2: Frame counter.
+24,4: 
 30,2: Var A.
 32,2: Var B.
 40,4: X pos.
@@ -17,6 +18,12 @@ Memory used for entities in AoS is 020004E4 - ?. Each entity is 0x84 bytes long.
 64,1: Affects the entity's graphics.
   This is an index in the currently loaded sprite info list, 0201017C.
 65,1: Current sprite frame.
+68,4: Pointer to the entity's current animation?
+6C,1: Related to sprite? Bitfield?
+6E,1: Current keyframe index in this animation.
 
 For weapons/skills:
 14,4: Pointer to the entity that used this weapon/skill (the player).
+
+For red souls:
+1E,2: Var A.

@@ -6,27 +6,49 @@
 02 Boss door.
   Var A is is how the door acts:
     00 Door outside the boss room that opens when you touch it.
+      Note that if the player enters the room through this door it will act locked like one inside the boss room and not open when the player touches it.
     01 Door inside the boss room that opens when the boss is killed.
   Var B is the boss this door is for:
     00 Graham
     01 Death
     02 Julius
-    03 
+    03 (Unused)
     04 Headhunter
     05 Legion
     06 Balore
     07 Chaos
-    08 
-    09 
+    08 (Unused)
+    09 (Unused)
     0A Manticore
     0B Creaking Skull
     0C Big Golem
-    0D 
-    0E 
+    0D (Unused)
+    0E (Unused)
     0F Great Armor
 03 Boss rush boss door.
 04 Boss door (forces player to enter room).
   This boss door can be placed away from the edge of the screen and the player will automatically walk past it when entering the room.
+  Var A is is how the door acts:
+    00 Door outside the boss room that opens when you touch it.
+      Note that if the player enters the room through this door it will act locked like one inside the boss room and not open when the player touches it.
+    01 Door inside the boss room that opens when the boss is killed.
+  Var B is the boss this door is for:
+    00 Graham
+    01 Death
+    02 Julius
+    03 (Unused)
+    04 Headhunter
+    05 Legion
+    06 Balore
+    07 Chaos
+    08 (Unused)
+    09 (Unused)
+    0A Manticore
+    0B Creaking Skull
+    0C Big Golem
+    0D (Unused)
+    0E (Unused)
+    0F Great Armor
 05 Arena door.
 06 Darkness door.
 07 Applies a visual effect to the room.
