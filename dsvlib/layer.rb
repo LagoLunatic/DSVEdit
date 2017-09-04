@@ -155,7 +155,7 @@ class Layer
       fs.write(layer_list_entry_ram_pointer+12, [layer_metadata_ram_pointer].pack("V"))
     else
       fs.write(layer_list_entry_ram_pointer+2, [bg_control].pack("v"))
-      #fs.write(layer_list_entry_ram_pointer+6, [height*0x100].pack("v")) if GAME == "aos" # TODO CHECK
+      fs.write(layer_list_entry_ram_pointer+6, [height*0x100].pack("v")) # Unlike in DoS this doesn't seem necessary for jumpthrough platforms to work, but do it anyway.
       fs.write(layer_list_entry_ram_pointer+4, [main_gfx_page_index].pack("C"))
       fs.write(layer_list_entry_ram_pointer+8, [layer_metadata_ram_pointer].pack("V"))
     end
