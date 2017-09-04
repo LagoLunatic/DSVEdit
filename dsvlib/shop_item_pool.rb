@@ -25,14 +25,20 @@ class ShopItemPool
     
     case GAME
     when "aos"
-      @requirement = nil
-      
       num_items = fs.read(@item_pool_pointer, 1).unpack("C").first
       @allowable_item_indexes = fs.read(@item_pool_pointer+1, num_items).unpack("C*")
       @item_ids = @allowable_item_indexes.map do |index|
         allowable_item = game.shop_allowable_items[index]
         item_id = game.get_item_global_id_by_type_and_index(allowable_item.item_type, allowable_item.item_index)
         item_id + 1
+      end
+      
+      required_flag_location = SHOP_ITEM_POOL_REQUIRED_EVENT_FLAG_HARDCODED_LOCATIONS[pool_id]
+      if required_flag_location.nil?
+        @requirement = nil
+      else
+        bit = fs.read(required_flag_location, 1).unpack("C").first
+        @requirement = fs.convert_integer_to_bit_index(bit)
       end
     when "dos"
       num_items_location = SHOP_ITEM_POOL_LENGTH_HARDCODED_LOCATIONS[pool_id]
@@ -83,6 +89,12 @@ class ShopItemPool
       end
       
       fs.write(@item_pool_pointer+1, @allowable_item_indexes.pack("C*"))
+      
+      required_flag_location = SHOP_ITEM_POOL_REQUIRED_EVENT_FLAG_HARDCODED_LOCATIONS[pool_id]
+      if !required_flag_location.nil?
+        new_bit = fs.convert_bit_index_to_integer(@requirement)
+        fs.write(required_flag_location, [new_bit].pack("C"))
+      end
     when "dos"
       fs.write(@item_pool_pointer, @item_ids.pack("C*"))
       

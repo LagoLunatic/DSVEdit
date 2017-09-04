@@ -139,6 +139,29 @@ class GBADummyFilesystem
     write(address, compr_data)
   end
   
+  def convert_integer_to_bit_index(bit)
+    if bit == 0
+      return 0
+    else
+      # Get the number of bits this was shifted by.
+      # This is so we can get the bit index instead of the bit.
+      # For example, instead of bit 0x200, we want index 9.
+      # We do this by converting to a string and counting the number of 0s in it.
+      binary_string = "%b" % bit
+      bit_index = binary_string.count("0")
+      if binary_string.count("1") != 1
+        # There's more than one bit set. This shouldn't happen since there's only supposed to be one single bit here.
+        # So just default to bit 0.
+        bit_index = 0
+      end
+      return bit_index
+    end
+  end
+  
+  def convert_bit_index_to_integer(new_bit_index)
+    return 1 << new_bit_index
+  end
+  
   def load_overlay(overlay_id)
     # Do nothing.
   end
