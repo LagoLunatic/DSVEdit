@@ -14,7 +14,12 @@ class TilesetEditorDialog < Qt::Dialog
   slots "gfx_page_changed(int)"
   slots "palette_changed(int)"
   slots "toggle_flips(bool)"
-  slots "update_collision(bool)"
+  slots "update_collision_has_top(bool)"
+  slots "update_collision_is_water(bool)"
+  slots "update_collision_has_sides_and_bottom(bool)"
+  slots "update_collision_has_effect(bool)"
+  slots "update_collision_vertical_flip(bool)"
+  slots "update_collision_horizontal_flip(bool)"
   slots "block_shape_changed(int)"
   slots "load_tileset()"
   slots "toggle_display_collision(bool)"
@@ -81,12 +86,12 @@ class TilesetEditorDialog < Qt::Dialog
     connect(@ui.reload_button, SIGNAL("released()"), self, SLOT("load_tileset()"))
     connect(@ui.display_collision, SIGNAL("clicked(bool)"), self, SLOT("toggle_display_collision(bool)"))
     
-    connect(@ui.has_top, SIGNAL("clicked(bool)"), self, SLOT("update_collision(bool)"))
-    connect(@ui.is_water, SIGNAL("clicked(bool)"), self, SLOT("update_collision(bool)"))
-    connect(@ui.has_sides_and_bottom, SIGNAL("clicked(bool)"), self, SLOT("update_collision(bool)"))
-    connect(@ui.has_effect, SIGNAL("clicked(bool)"), self, SLOT("update_collision(bool)"))
-    connect(@ui.coll_vertical_flip, SIGNAL("clicked(bool)"), self, SLOT("update_collision(bool)"))
-    connect(@ui.coll_horizontal_flip, SIGNAL("clicked(bool)"), self, SLOT("update_collision(bool)"))
+    connect(@ui.has_top, SIGNAL("clicked(bool)"), self, SLOT("update_collision_has_top(bool)"))
+    connect(@ui.is_water, SIGNAL("clicked(bool)"), self, SLOT("update_collision_is_water(bool)"))
+    connect(@ui.has_sides_and_bottom, SIGNAL("clicked(bool)"), self, SLOT("update_collision_has_sides_and_bottom(bool)"))
+    connect(@ui.has_effect, SIGNAL("clicked(bool)"), self, SLOT("update_collision_has_effect(bool)"))
+    connect(@ui.coll_vertical_flip, SIGNAL("clicked(bool)"), self, SLOT("update_collision_vertical_flip(bool)"))
+    connect(@ui.coll_horizontal_flip, SIGNAL("clicked(bool)"), self, SLOT("update_collision_horizontal_flip(bool)"))
     connect(@ui.block_shape, SIGNAL("activated(int)"), self, SLOT("block_shape_changed(int)"))
     
     connect(@ui.buttonBox, SIGNAL("clicked(QAbstractButton*)"), self, SLOT("button_box_clicked(QAbstractButton*)"))
@@ -839,26 +844,84 @@ class TilesetEditorDialog < Qt::Dialog
     render_tile_on_tileset(@selected_tile_index)
   end
   
-  def update_collision(checked)
+  def update_collision_has_top(checked)
     @selected_collision_tile.has_top = @ui.has_top.checked
+    
+    @selected_tiles.each do |tile|
+      tile.has_top = @ui.has_top.checked
+    end
+    if @cursor_item
+      render_selected_tiles_to_cursor_item()
+    end
+    
+    load_selected_tile()
+    render_tile_on_tileset(@selected_tile_index)
+  end
+  
+  def update_collision_is_water(checked)
     @selected_collision_tile.is_water = @ui.is_water.checked
+    
+    @selected_tiles.each do |tile|
+      tile.is_water = @ui.is_water.checked
+    end
+    if @cursor_item
+      render_selected_tiles_to_cursor_item()
+    end
+    
+    load_selected_tile()
+    render_tile_on_tileset(@selected_tile_index)
+  end
+  
+  def update_collision_has_sides_and_bottom(checked)
     @selected_collision_tile.has_sides_and_bottom = @ui.has_sides_and_bottom.checked
+    
+    @selected_tiles.each do |tile|
+      tile.has_sides_and_bottom = @ui.has_sides_and_bottom.checked
+    end
+    if @cursor_item
+      render_selected_tiles_to_cursor_item()
+    end
+    
+    load_selected_tile()
+    render_tile_on_tileset(@selected_tile_index)
+  end
+  
+  def update_collision_has_effect(checked)
     @selected_collision_tile.has_effect = @ui.has_effect.checked
+    
+    @selected_tiles.each do |tile|
+      tile.has_effect = @ui.has_effect.checked
+    end
+    if @cursor_item
+      render_selected_tiles_to_cursor_item()
+    end
+    
+    load_selected_tile()
+    render_tile_on_tileset(@selected_tile_index)
+  end
+  
+  def update_collision_vertical_flip(checked)
     @selected_collision_tile.vertical_flip = @ui.coll_vertical_flip.checked
+    
+    @selected_tiles.each do |tile|
+      tile.vertical_flip = @ui.coll_vertical_flip.checked
+    end
+    if @cursor_item
+      render_selected_tiles_to_cursor_item()
+    end
+    
+    load_selected_tile()
+    render_tile_on_tileset(@selected_tile_index)
+  end
+  
+  def update_collision_horizontal_flip(checked)
     @selected_collision_tile.horizontal_flip = @ui.coll_horizontal_flip.checked
     
-    if @collision_mode
-      @selected_tiles.each do |tile|
-        tile.has_top = @ui.has_top.checked
-        tile.is_water = @ui.is_water.checked
-        tile.has_sides_and_bottom = @ui.has_sides_and_bottom.checked
-        tile.has_effect = @ui.has_effect.checked
-        tile.vertical_flip = @ui.coll_vertical_flip.checked
-        tile.horizontal_flip = @ui.coll_horizontal_flip.checked
-      end
-      if @cursor_item
-        render_selected_tiles_to_cursor_item()
-      end
+    @selected_tiles.each do |tile|
+      tile.horizontal_flip = @ui.coll_horizontal_flip.checked
+    end
+    if @cursor_item
+      render_selected_tiles_to_cursor_item()
     end
     
     load_selected_tile()
