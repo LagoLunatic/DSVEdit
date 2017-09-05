@@ -469,6 +469,8 @@ OTHER_SPRITES = [
   {pointer: 0x0222BD1C, desc: "Chair 3"},
   {pointer: 0x0222BD28, desc: "Chair 4"},
   
+  {pointer: 0x02215AC4, desc: "Magic seal"},
+  
   {pointer: 0x0203D4A0, desc: "Nintendo splash screen"},
   {pointer: 0x0203D564, desc: "Konami splash screen"},
   {pointer: 0x0203D8A8, desc: "Main menu"},
@@ -490,7 +492,7 @@ MONEY_FRAME_IN_COMMON_SPRITE = 0xEF
 CANDLE_SPRITE = COMMON_SPRITE
 MONEY_SPRITE = COMMON_SPRITE
 
-OVERLAY_FILES_WITH_SPRITE_DATA = [2]
+OVERLAY_FILES_WITH_SPRITE_DATA = [2, 3]
 
 TEXT_LIST_START_OFFSET = 0x0222F300
 TEXT_RANGE = (0..0x50A)
