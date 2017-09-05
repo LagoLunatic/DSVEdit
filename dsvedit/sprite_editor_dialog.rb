@@ -176,7 +176,14 @@ class SpriteEditor < Qt::Dialog
     (0..SKILL_GFX_COUNT-1).each do |skill_gfx_index|
       skill = SkillGfx.new(skill_gfx_index, fs)
       @skills << skill
-      items = skill_items.select{|item| item["Sprite"] == skill_gfx_index+1}
+      if GAME == "aos"
+        skill_indexes = RED_SOUL_INDEX_TO_SKILL_GFX_INDEX.select do |red_soul_index, red_soul_gfx_index|
+          red_soul_gfx_index == skill_gfx_index
+        end
+        items = skill_indexes.map{|red_soul_index, red_soul_gfx_index| game.items[SKILL_GLOBAL_ID_RANGE.begin + red_soul_index]}
+      else
+        items = skill_items.select{|item| item["Sprite"] == skill_gfx_index+1}
+      end
       if items.any?
         skill_name = items.map do |item|
           if item.name.empty?
@@ -188,7 +195,12 @@ class SpriteEditor < Qt::Dialog
       else
         skill_name = "Unused"
       end
-      @ui.skill_list.addItem("%02X %s" % [skill_gfx_index + 1, skill_name])
+      
+      if GAME == "aos"
+        @ui.skill_list.addItem("%02X %s" % [skill_gfx_index, skill_name])
+      else
+        @ui.skill_list.addItem("%02X %s" % [skill_gfx_index + 1, skill_name])
+      end
     end
     
     OTHER_SPRITES.each_with_index do |other_sprite, id|
