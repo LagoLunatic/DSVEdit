@@ -367,6 +367,13 @@ class TilesetEditorDialog < Qt::Dialog
   end
   
   def render_selected_tiles_to_cursor_item
+    if @selection_width == 0 || @selection_height == 0
+      # No cursor to render, just use a blank pixmap to avoid libpng warnings in the console.
+      @selection_tiles_pixmaps = []
+      @cursor_item.pixmap = Qt::Pixmap.new
+      return
+    end
+    
     chunky_tiles_rect = ChunkyPNG::Image.new(@selection_width*@tile_width, @selection_height*@tile_height)
     
     @selection_tiles_pixmaps = []
@@ -752,7 +759,6 @@ class TilesetEditorDialog < Qt::Dialog
     
     render_selected_tiles_to_cursor_item()
     
-    @gfx_page_graphics_scene.removeItem(@selection_rectangle) if @selection_rectangle
     @tileset_graphics_scene.removeItem(@selection_rectangle) if @selection_rectangle
   end
   
@@ -787,7 +793,6 @@ class TilesetEditorDialog < Qt::Dialog
     render_selected_tiles_to_cursor_item()
     
     @gfx_page_graphics_scene.removeItem(@selection_rectangle) if @selection_rectangle
-    @tileset_graphics_scene.removeItem(@selection_rectangle) if @selection_rectangle
   end
   
   def mouse_clicked_on_gfx_page(mouse_x, mouse_y, button)
