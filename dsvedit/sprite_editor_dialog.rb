@@ -203,6 +203,14 @@ class SpriteEditor < Qt::Dialog
       end
     end
     
+    if GAME == "aos"
+      blue_soul_type = 6
+      ITEM_TYPES[6-2][:count].times do |blue_soul_index|
+        skill = game.get_item_by_type_and_index(blue_soul_type, blue_soul_index)
+        @ui.skill_list.addItem("%02X %s" % [blue_soul_index, skill.name])
+      end
+    end
+    
     OTHER_SPRITES.each_with_index do |other_sprite, id|
       @ui.other_sprites_list.addItem("%02X %s" % [id, other_sprite[:desc]])
     end
@@ -302,15 +310,31 @@ class SpriteEditor < Qt::Dialog
   
   def skill_changed(skill_gfx_index)
     begin
-      skill = @skills[skill_gfx_index]
-      
-      gfx_file_pointers = [skill.gfx_file_pointer]
-      palette_pointer = skill.palette_pointer
-      palette_offset = 0
-      sprite_pointer = skill.sprite_file_pointer
-      skeleton_file = nil
-      
-      @sprite_info = SpriteInfo.new(gfx_file_pointers, palette_pointer, palette_offset, sprite_pointer, skeleton_file, @fs)
+      if GAME == "aos" && skill_gfx_index >= SKILL_GFX_COUNT
+        # Blue souls in AoS work differently.
+        # Instead of having a skill GFX entry they have their pointers hardcoded into their update code, similar to enemies/objects.
+        blue_soul_type = 6
+        blue_soul_index = skill_gfx_index-SKILL_GFX_COUNT
+        
+        blue_soul_reused_sprite_info = BLUE_SOUL_REUSED_SPRITE_INFO[blue_soul_index] || {}
+        if blue_soul_reused_sprite_info[:init_code] == -1
+          load_blank_sprite()
+          return
+        end
+        
+        skill = game.get_item_by_type_and_index(blue_soul_type, blue_soul_index)
+        @sprite_info = SpriteInfo.extract_gfx_and_palette_and_sprite_from_create_code(skill["Code"], fs, nil, blue_soul_reused_sprite_info)
+      else
+        skill = @skills[skill_gfx_index]
+        
+        gfx_file_pointers = [skill.gfx_file_pointer]
+        palette_pointer = skill.palette_pointer
+        palette_offset = 0
+        sprite_pointer = skill.sprite_file_pointer
+        skeleton_file = nil
+        
+        @sprite_info = SpriteInfo.new(gfx_file_pointers, palette_pointer, palette_offset, sprite_pointer, skeleton_file, @fs)
+      end
     rescue StandardError => e
       Qt::MessageBox.warning(self,
         "Skill sprite extraction failed",

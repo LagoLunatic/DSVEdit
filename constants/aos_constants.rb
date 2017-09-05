@@ -657,6 +657,17 @@ RED_SOUL_INDEX_TO_SKILL_GFX_INDEX = {
   0x36 => 0x1B,
   0x37 => 0x01,
 }
+BLUE_SOUL_REUSED_SPRITE_INFO = {
+  0x00 => {init_code: -1}, # ---
+  0x02 => {init_code: -1}, # giant bat
+  0x03 => {init_code: -1}, # black panther
+  0x04 => {init_code: 0x0802FE02}, # buer
+  0x06 => {init_code: 0x0802FAC0}, # giant ghost
+  0x0F => {init_code: -1}, # medusa head
+  0x12 => {init_code: 0x0802ECFE}, # devil
+  0x13 => {init_code: 0x0802ECFE}, # manticore
+  0x14 => {init_code: 0x08031949}, # curly
+}
 
 MAP_TILE_METADATA_LIST_START_OFFSET = nil
 MAP_TILE_METADATA_START_OFFSET = 0x08116650

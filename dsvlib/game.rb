@@ -11,6 +11,7 @@ class Game
               :folder,
               :text_database,
               :rooms_by_metadata_pointer
+  attr_accessor :room_loaded_gfx
   
   def initialize_from_folder(input_folder_path)
     header_path = File.join(input_folder_path, "ftc", "ndsheader.bin")
@@ -81,6 +82,8 @@ class Game
     end
     
     @text_database = TextDatabase.new(fs)
+    
+    @room_loaded_gfx = {}
   end
   
   def each_room
@@ -268,7 +271,7 @@ class Game
       raise "Bad item type: %02X" % item_type_index
     end
     
-    if PICKUP_SUBTYPES_FOR_SKILLS.include?(item_type_index)
+    if PICKUP_SUBTYPES_FOR_SKILLS.include?(item_type_index) && GAME != "aos"
       # Skills have multiple subtypes that work the same, we simplify it to use the first subtype.
       item_type_index = PICKUP_SUBTYPES_FOR_SKILLS.first
     end
