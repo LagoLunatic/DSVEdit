@@ -72,21 +72,27 @@ Using them is pretty straightforward, but note that all numbers are in hexadecim
 
 ### How to edit GFX and palettes
 
-The GFX/palette editor is in Tools -> GFX Editor.
-You need two things in order to use it: the file path of the GFX to edit (e.g. /sc/f_zombie1.dat) and the RAM pointer to the palette list (e.g. 022B7F4C).
-You can edit just the GFX, just the palette, or completely replace both the GFX and palette.
+You can use the GFX editor to edit just the GFX, just the palette, or completely replace both the GFX and palette.
+If what you want to edit is listed in the Sprite Editor, you can simply open it up in the Sprite Editor and click the "Open in GFX Editor".
+The GFX/palette editor is in .
+If it's not in the sprite editor, first manually open the GFX editor from Tools -> GFX Editor. Then input the file path or pointer for the GFX you want to edit (e.g. /sc/f_zombie1.dat or 022C95F4) and the pointer to the palette list (e.g. 022B7F4C). Then press the View button to load the GFX and palette.
+You can work with multiple GFX files at the same time by separating them with commas, like this: /sc/f_peep0.dat, /sc/f_peep1.dat
 
 Editing just the GFX:
-Click Export, then edit the exported image. You can only use the colors already in the palette. When you're done click Import GFX.
+Click Export, then edit the exported image(s) located in the ./gfx folder with an external image editor. When you're done click Import GFX.
+If the only colors you used in your modified image(s) are colors within the current palette, then the image(s) will import successfully.
+But if you used colors that aren't in that palette, you will be given an option to convert the image to the current palette: If you select Yes to this option, DSVEdit will automatically modify your image so that it uses the proper colors and then import that. If you select Cancel nothing will be imported and you can instead go back and manually modify the image to use the proper colors. Either way the palette itself will not be modified.
 
 Editing just the palette:
-Click Export, then edit the exported palette image. You can't increase the total number of colors in the palette. The first color of every palette is always rendered as transparent, so don't bother changing it to anything else. When you're done click Import Palette.
+You can edit the palette from within the GFX editor by clicking on one of the color swatches on the right side and selecting a new color.
+But you can also edit the palette in an external image editor. Click Export, then edit the exported palette image located in the ./gfx folder. When you're done click Import Palette.
+Note that you can't increase the total number of colors in the palette. And the first color of every palette is always rendered as transparent, so even if you change it to something else it won't have any effect.
 
 Replacing both the GFX and the palette:
-First you need to find all GFX files that use the palette you want to edit. Go through all of those and export them one by one. If you miss any GFX files that use this palette, then the ones you missed will wind up having a messed up palette when you're done.
+First find all the GFX files that share the palette you want to edit. Input the file paths for all of those separated by commas, then export all of them at the same time. If you miss any GFX files that use this palette, then the ones you missed will wind up having a messed up palette when you're done.
 Then you can edit these images however you want, but remember the total number of colors shared throughout these images can't be more than the size of the palette.
 When you're done editing them click Generate palette from file(s), hold down Ctrl or Shift and select all the files you exported. This will make a new palette from the colors used in these edited images.
-Finally go through each of the GFX files one by one and click Import GFX.
+Finally click Import GFX to import all the modified images.
 
 ### Running from source
 
