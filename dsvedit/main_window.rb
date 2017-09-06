@@ -96,6 +96,8 @@ class DSVEdit < Qt::MainWindow
     
     @tiled = TMXInterface.new
     
+    @open_dialogs = []
+    
     connect(@ui.actionOpen_Folder, SIGNAL("activated()"), self, SLOT("open_folder_dialog()"))
     connect(@ui.actionExtract_ROM, SIGNAL("activated()"), self, SLOT("extract_rom_dialog()"))
     connect(@ui.actionSave, SIGNAL("activated()"), self, SLOT("save_files()"))
@@ -220,24 +222,10 @@ class DSVEdit < Qt::MainWindow
   end
   
   def close_open_dialogs
-    @edit_room_data_dialog.close() if @edit_room_data_dialog
-    @edit_layers_dialog.close() if @edit_layers_dialog
-    @enemy_dialog.close() if @enemy_dialog
-    @text_editor.close() if @text_editor
-    @sprite_editor.close() if @sprite_editor
-    @gfx_editor.close() if @gfx_editor
-    @music_editor.close() if @music_editor
-    @item_editor.close() if @item_editor
-    @item_pool_editor.close() if @item_pool_editor
-    @tileset_editor.close() if @tileset_editor
-    @map_editor_dialog.close() if @map_editor_dialog
-    @player_editor_dialog.close() if @player_editor_dialog
-    @special_object_editor_dialog.close() if @special_object_editor_dialog
-    @weapon_synth_editor_dialog.close() if @weapon_synth_editor_dialog
-    @shop_editor_dialog.close() if @shop_editor_dialog
-    @entity_search_dialog.close() if @entity_search_dialog
-    @entity_editor.close() if @entity_editor
-    @settings_dialog.close() if @settings_dialog
+    @open_dialogs.each do |dialog|
+      dialog.close()
+    end
+    @open_dialogs = []
   end
   
   def clear_cache
@@ -568,13 +556,11 @@ class DSVEdit < Qt::MainWindow
   end
   
   def edit_room_data
-    return if @edit_room_data_dialog && @edit_room_data_dialog.visible?
-    @edit_room_data_dialog = RoomEditorDialog.new(self, @room, @renderer)
+    @open_dialogs << RoomEditorDialog.new(self, @room, @renderer)
   end
   
   def edit_layers
-    return if @edit_layers_dialog && @edit_layers_dialog.visible?
-    @edit_layers_dialog = LayersEditorDialog.new(self, @room, @renderer)
+    @open_dialogs << LayersEditorDialog.new(self, @room, @renderer)
   end
   
   def add_new_layer
@@ -638,57 +624,47 @@ class DSVEdit < Qt::MainWindow
   end
   
   def open_enemy_dna_dialog
-    return if @enemy_dialog && @enemy_dialog.visible?
-    @enemy_dialog = EnemyEditor.new(self, game)
+    @open_dialogs << EnemyEditor.new(self, game)
   end
   
   def open_text_editor
-    return if @text_editor && @text_editor.visible?
-    @text_editor = TextEditor.new(self, game.fs)
+    @open_dialogs << TextEditor.new(self, game.fs)
   end
   
   def open_sprite_editor
-    return if @sprite_editor && @sprite_editor.visible?
-    @sprite_editor = SpriteEditor.new(self, game, @renderer)
+    @open_dialogs << SpriteEditor.new(self, game, @renderer)
   end
     
   def open_item_editor
-    return if @item_editor && @item_editor.visible?
-    @item_editor = ItemEditor.new(self, game)
+    @open_dialogs << ItemEditor.new(self, game)
   end
   
   def open_gfx_editor(gfx_and_palette_data=nil)
-    return if @gfx_editor && @gfx_editor.visible?
-    @gfx_editor = GfxEditorDialog.new(self, game.fs, @renderer, gfx_and_palette_data)
+    @open_dialogs << GfxEditorDialog.new(self, game.fs, @renderer, gfx_and_palette_data)
   end
   
   def open_music_editor
-    return if @music_editor && @music_editor.visible?
-    @music_editor = MusicEditor.new(self, game)
+    @open_dialogs << MusicEditor.new(self, game)
   end
   
   def open_item_pool_editor
-    return if @item_pool_editor && @item_pool_editor.visible?
     if GAME == "ooe"
-      @item_pool_editor = ItemPoolEditor.new(self, game)
+      @open_dialogs << ItemPoolEditor.new(self, game)
     else
       Qt::MessageBox.warning(self, "Can't edit item pools", "Only OoE has random chest item pools.")
     end
   end
   
   def open_tileset_editor
-    return if @tileset_editor && @tileset_editor.visible?
-    @tileset_editor = TilesetEditorDialog.new(self, game.fs, @renderer, @room)
+    @open_dialogs << TilesetEditorDialog.new(self, game.fs, @renderer, @room)
   end
   
   def open_entity_search
-    return if @entity_search_dialog && @entity_search_dialog.visible?
-    @entity_search_dialog = EntitySearchDialog.new(self)
+    @open_dialogs << EntitySearchDialog.new(self)
   end
   
   def open_map_editor
-    return if @map_editor_dialog && @map_editor_dialog.visible?
-    @map_editor_dialog = MapEditorDialog.new(self, game, @renderer, @area_index, @sector_index)
+    @open_dialogs << MapEditorDialog.new(self, game, @renderer, @area_index, @sector_index)
   end
   
   def open_player_editor
@@ -697,27 +673,23 @@ class DSVEdit < Qt::MainWindow
       return
     end
     
-    return if @player_editor_dialog && @player_editor_dialog.visible?
-    @player_editor_dialog = PlayerEditor.new(self, game)
+    @open_dialogs << PlayerEditor.new(self, game)
   end
   
   def open_special_object_editor
-    return if @special_object_editor_dialog && @special_object_editor_dialog.visible?
-    @special_object_editor_dialog = SpecialObjectEditor.new(self, game)
+    @open_dialogs << SpecialObjectEditor.new(self, game)
   end
   
   def open_weapon_synth_editor
-    return if @weapon_synth_editor_dialog && @weapon_synth_editor_dialog.visible?
     if GAME == "dos"
-      @weapon_synth_editor_dialog = WeaponSynthEditor.new(self, game)
+      @open_dialogs << WeaponSynthEditor.new(self, game)
     else
       Qt::MessageBox.warning(self, "Can't edit weapon synths", "Only DoS has weapon synths.")
     end
   end
   
   def open_shop_editor
-    return if @shop_editor_dialog && @shop_editor_dialog.visible?
-    @shop_editor_dialog = ShopEditor.new(self, game)
+    @open_dialogs << ShopEditor.new(self, game)
   end
   
   def add_new_overlay
@@ -753,17 +725,15 @@ class DSVEdit < Qt::MainWindow
   end
   
   def open_entity_editor(entity = nil)
-    return if @entity_editor && @entity_editor.visible?
     if @room.entities.empty?
       Qt::MessageBox.warning(self, "No entities to edit", "This room has no entities.\nYou can add one by going to Edit -> Add Entity or pressing A.")
       return
     end
-    @entity_editor = EntityEditorDialog.new(self, @room.entities, entity)
+    @open_dialogs << EntityEditorDialog.new(self, @room.entities, entity)
   end
   
   def open_settings
-    return if @settings_dialog && @settings_dialog.visible?
-    @settings_dialog = SettingsDialog.new(self, @settings)
+    @open_dialogs << SettingsDialog.new(self, @settings)
   end
   
   def load_settings
