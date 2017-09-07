@@ -548,6 +548,8 @@
 0802E960 SkillAluraUneUse
 0802EFB0 SkillDevilUse
 0802EFB0 SkillManticoreUse
+0802EDD4 SkillDevilManticoreSparksUpdate
+  ; This is the update code for the sparks that follow behind you when using Devil or Manticore.
 0802EFB0 SkillCurlyUse
 0802F1A4 SkillSkyFishUse
 080310AC SkillImpUse

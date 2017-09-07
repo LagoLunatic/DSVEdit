@@ -873,7 +873,7 @@ class SpriteEditor < Qt::Dialog
       return
     end
     
-    output_folder = "./gfx/darkfunction_sprites/#{sprite_name}"
+    output_folder = "./darkfunction_sprites/#{sprite_name}"
     FileUtils.mkdir_p(output_folder)
     
     DarkFunctionInterface.export(output_folder, sprite_name, @sprite_info, @fs, @renderer)
@@ -900,7 +900,7 @@ class SpriteEditor < Qt::Dialog
       return
     end
     
-    folder = "./gfx/darkfunction_sprites/#{sprite_name}"
+    folder = "./darkfunction_sprites/#{sprite_name}"
     DarkFunctionInterface.import(folder, sprite_name, @sprite_info, @fs, @renderer)
     
     reload_sprite()
