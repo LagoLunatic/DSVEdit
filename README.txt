@@ -1,5 +1,7 @@
 
-DSVEdit (DSVania Editor) is a work-in-progress editor for the three Castlevania games for the Nintendo DS: Dawn of Sorrow, Portrait of Ruin, and Order of Ecclesia. It's currently compatible with the US and Japanese versions. It also has beta support for Aria of Sorrow (US version only).
+DSVEdit (DSVania Editor) is an editor for the three Castlevania games for the Nintendo DS: Dawn of Sorrow, Portrait of Ruin, and Order of Ecclesia, as well as Aria of Sorrow for the GBA. It supports both the US and Japanese versions of the DS games, while only the US version of Aria of Sorrow is supported.
+
+Download the latest release: https://github.com/LagoLunatic/DSVEdit/releases
 
 Source code: https://github.com/LagoLunatic/DSVEdit
 Report issues here: https://github.com/LagoLunatic/DSVEdit/issues
@@ -15,6 +17,7 @@ Report issues here: https://github.com/LagoLunatic/DSVEdit/issues
 * Editing area maps
 * Editing player characters
 * Editing text
+* Editing tilesets
 * Editing which songs play in which areas
 * Editing which items are in the shop
 * Editing random chest item pools
@@ -30,7 +33,7 @@ Install Visual C++ Redistributable for Visual Studio 2015: https://www.microsoft
 
 ### How to open a game ROM
 
-Go to File -> Extract ROM and select the .nds file you want to open. DSVEdit will then extract all the files from the game, which can take a minute. The files will be placed in a folder with the same name as the .nds file (e.g. "Dawn of Sorrow.nds" extracts to "Dawn of Sorrow".)
+Go to File -> Extract ROM and select the .nds or .gba file you want to open. DSVEdit will then extract all the files from the game, which can take a minute. The files will be placed in a folder with the same name as the ROM file (e.g. "Dawn of Sorrow.nds" extracts to "Dawn of Sorrow".)
 Once it's done extracting DSVEdit will automatically open up the folder containing the extracted files. Then you can edit the game from there.
 
 If you already extracted the files before, you can instead go to File -> Open Folder and select the folder with the extracted files in it, instead of extracting the files every time.
@@ -72,9 +75,11 @@ Using them is pretty straightforward, but note that all numbers are in hexadecim
 
 ### How to edit GFX and palettes
 
+GFX refers to static images that compose the game's assets. They are indexed color images that support either 16 colors or 256 colors, and are either 128 or 256 pixels wide. GFX aren't to be confused with sprites - see the following section for details on sprites.
+A palette is a list of colors available for GFX to use.
+
 You can use the GFX editor to edit just the GFX, just the palette, or completely replace both the GFX and palette.
 If what you want to edit is listed in the Sprite Editor, you can simply open it up in the Sprite Editor and click the "Open in GFX Editor".
-The GFX/palette editor is in .
 If it's not in the sprite editor, first manually open the GFX editor from Tools -> GFX Editor. Then input the file path or pointer for the GFX you want to edit (e.g. /sc/f_zombie1.dat or 022C95F4) and the pointer to the palette list (e.g. 022B7F4C). Then press the View button to load the GFX and palette.
 You can work with multiple GFX files at the same time by separating them with commas, like this: /sc/f_peep0.dat, /sc/f_peep1.dat
 
@@ -93,6 +98,24 @@ First find all the GFX files that share the palette you want to edit. Input the 
 Then you can edit these images however you want, but remember the total number of colors shared throughout these images can't be more than the size of the palette.
 When you're done editing them click Generate palette from file(s), hold down Ctrl or Shift and select all the files you exported. This will make a new palette from the colors used in these edited images.
 Finally click Import GFX to import all the modified images.
+
+### How to edit sprites
+
+A "sprite" in DSVEdit terms is a combination of one or more images, palettes, and hitboxes arranged into various frames, which may also be animated.
+Enemies, objects, weapons, skills, players, menus, etc, all use sprites.
+
+In order to edit a sprite, first open Tools -> Sprite Editor, and locate the sprite you want to edit.
+Although the sprite editor itself has limited editing abilities, it's better to use an external program called darkFunction Editor: http://darkfunction.com/editor/
+Once you have installed darkFunction, click "Export to darkFunction" in the sprite editor and DSVEdit will convert the selected sprite to darkFunction's format and save them to the ./darkfunction_sprites folder. You can then open the sprite up in darkFunction to edit it.
+
+DSVEdit will have exported two different files:
+The file with the .sprites extension defines the various parts of the image you have to work with. When opening this in darkFunction, make sure you select "Define sprites", not "Combine images".
+The file with the .anim extension defines the animations and unanimated frames in this sprite.
+
+After editing the exported files in darkFunction, first make sure to save your changes by pressing Ctrl+S in darkFunction. Then go back to the sprite editor in DSVEdit and click "Import from darkFunction". You should now see the changes you made reflected in DSVEdit.
+
+Note: Currently DSVEdit's darkFunction exporter/importer only supports sprites in standalone files - ones that have both a pointer and a filename in the "Sprite file" field, like this: 021155E0 (/so/p_zombi.dat)
+Compiled sprites, the ones with only a pointer in the "Sprite file" field and no filename, are not yet supported, but a future version of DSVEdit may support these as well.
 
 ### Running from source
 
