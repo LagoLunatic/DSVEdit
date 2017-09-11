@@ -58,9 +58,9 @@ class TextDatabase
           next_string_ram_pointer = fs.expand_file_and_get_end_of_file_ram_address(text.string_ram_pointer, text.encoded_string.length + header_footer_length)
         end
         
-        # Misc strings and AoS strings must be aligned to the nearest 4 bytes or they won't be displayed.
+        # System strings and AoS strings must be aligned to the nearest 4 bytes or they won't be displayed.
         region_name = TEXT_REGIONS.find{|name, range| range.include?(text.text_id)}[0]
-        if GAME == "aos" || (region_name == "Misc" && next_string_ram_pointer % 4 != 0)
+        if GAME == "aos" || (region_name == "System" && next_string_ram_pointer % 4 != 0)
           next_string_ram_pointer = ((next_string_ram_pointer / 4) * 4) + 4
         end
         
