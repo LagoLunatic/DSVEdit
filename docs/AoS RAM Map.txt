@@ -69,7 +69,7 @@
   Shop pool 1 is unlocked by boss death flag 04 (Headhunter) being set.
   Shop pool 2 is unlocked by boss death flag 01 (Death) being set.
 
-=== 020004E4-??: Entity memory. Each entity is 0x84 bytes long. Entities range from 00-CF (at least, maybe more).
+=== 020004E4-02007863: Entity memory. Each entity is 0x84 bytes long. Entities range from 00-DF.
 
 What each range of entity slots is for:
 00-00 - Player.
@@ -90,7 +90,12 @@ What each range of entity slots is for:
   This is controls how far down you've scrolled on menus that don't fit on screen all at once, such as the soul list.
   It's the index of the entry that should be the first visible menu entry on screen.
 
+=== 02007863: End of entities currently loaded into memory.
+
 0200A09C,0200A0B8 - screen Y?
+
+0200A0A0,4 - X distance the screen moved this frame.
+0200A0A4,4 - Y distance the screen moved this frame.
 
 0200A100 - Decompressed tileset data.
 0200C0EC - tileset data again?

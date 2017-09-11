@@ -6,6 +6,7 @@
 02012D20 GetEntitySlot
   ; r0 - Minimum entity index to check
   ; r1 - Maximum entity index to check
+  ; r2 - Update function pointer for the new entity
 
 02012B60 UpdateAllEntities
 02012784 ProcessInput

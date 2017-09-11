@@ -6,7 +6,7 @@
 02028C58 GetEntitySlot
   ; r0 - Minimum entity index to check
   ; r1 - Maximum entity index to check
-  ; r2 - Code pointer for the entity
+  ; r2 - Update function pointer for the new entity
 02028C1C DeleteEntity
   ; r0 - Entity pointer
 
@@ -17,6 +17,21 @@
   ; r0 - State
   ; r1 - ??? 10
   ; r2 - ??? 1
+
+020395FC LoadOverlayForSector
+  ; r0 - Area index
+  ; r1 - Sector index
+  ; Loads the overlay for this sector.
+0203964C GetOverlayForSector
+  ; r0 - Area index
+  ; r1 - Sector index
+  ; Returns the overlay index for this sector.
+
+022AB170 GetAreaSectorRoomIndexesForRoom
+  ; r0 - Room pointer.
+  ; r1 - Pointer to where on the stack the area index should get stored.
+  ; r2 - Pointer to where on the stack the sector index should get stored.
+  ; r3 - Pointer to where on the stack the room index should get stored.
 
 020657F8 SetTopScreen
   ; r0 - Top screen value
@@ -389,6 +404,10 @@
   ; r3 - Palette list ptr
 0203C834 LoadCommonSprite
   ; r0 - Entity
+
+0202BD8C GetSpriteInfo
+  ; r0 - Index in currently loaded sprite infos list
+  ; Returns: Pointer to the entry in that list (or 0 if the index is invalid)
 
 02064B48 LoadRoomEntities
   ; r0 - Room's entity list pointer

@@ -4,9 +4,9 @@ Memory used for entities in DoS is 020CA3F0 - 020F6DEF. Each entity is 0x2A0 byt
 000,4: Pointer to update code.
 004,4: Pointer to draw code.
 00D,1: State of the entity. Each entity's update code handles this differently.
+018,2: Timer.
 01E,1: ???
 01F,1: If this isn't 0, the entity will flicker. 1E is related somehow?
-018,2: Timer.
 020,4: X pos on the screen.
 024,4: Y pos on the screen.
 028,4: Z position.
@@ -20,11 +20,11 @@ Memory used for entities in DoS is 020CA3F0 - 020F6DEF. Each entity is 0x2A0 byt
 050,4: Scale multiplier for the player's trail. 1000 means 1x.
 054,4: Scale multiplier for the player. Only does anything if the next value is nonzero.
 058,4: Enable player scaling.
-068,2: Affects the entity's graphics.
+068,2: Sprite info index.
   This is an index in the currently loaded sprite info list, 020C6260.
 06E,1: var a maybe?
 070,4: Bitfield of ?
-  00000080 - Horizontally flipped?
+  00000080 - Horizontally flipped.
 074,2: Current sprite frame index.
 076,1: which palette in the global list of loaded palettes to use
 07A,1: which palette index for this enemy to use (gets added to 76)
@@ -39,6 +39,8 @@ Memory used for entities in DoS is 020CA3F0 - 020F6DEF. Each entity is 0x2A0 byt
 0A6,1: Hitbox bitfield.
   Bits:
   0x1: Whether this entity's hitboxes are active or not.
+0A7,1: Hitbox index.
+  This is an index in list 0210AF18.
 0A8,2: Damage.
 0AA,2: Defense.
 0AC,4: Bitfield of damage types.
@@ -48,11 +50,17 @@ Memory used for entities in DoS is 020CA3F0 - 020F6DEF. Each entity is 0x2A0 byt
 0BA,2: 
 0BC,2: 
 0BE,2: 
+0C8,4: On-hit-other callback function.
+0CC,4: On-get-hit callback function.
+0E4,4: Bitfield of ?
 250,4: Bitfield?
   00000020 - Horizontally flipped?
 260,1: Subtype.
 26E,2: Var A.
 270,2: Var B.
+
+For players:
+0D0,4: Bitfield of player state booleans.
 
 For enemies:
 154,2: Max HP.

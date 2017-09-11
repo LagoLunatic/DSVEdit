@@ -6,6 +6,7 @@
 02012B10 GetEntitySlot
   ; r0 - Minimum entity index to check
   ; r1 - Maximum entity index to check
+  ; r2 - Update function pointer for the new entity
 
 021C3A00 EnemyCheckDrops
 0221029C GetNumOwnedSoul
@@ -49,12 +50,53 @@
 02029BF0 PlaySfx
   ; r0 - Sfx index
 
+021C2958 EnemyMove?
+  ; r0 - Entity
+  ; r1 - X velocity to set in subpixels per frame
+  ; r2 - Pointer to ??? 02299DF8 for skeleton enemy. maybe hitbox?
+  ; r3 - D? Bitfield?
+  ; This also makes the enemy face the player?
+
+021C3388 MoveXVel
+  ; r0 - Entity
+  ; entity.x += entity.x_vel
+021C3374 MoveYVel
+  ; r0 - Entity
+  ; entity.y += entity.y_vel
+
+021C3408 EnemyUpdateVelocity??
+
 021F7928 SetEntityCollision
   ; r0 - Entity pointer
   ; r1 - Type of collision.
   ;   0 - A jump-through platform you can slide on.
   ;   1 - A jump-through platform you can fall through.
   ;   3 - A completely solid block.
+
+; Hitbox format:
+; 00,2: Left x
+; 02,2: Top y
+; 04,2: Right x
+; 06,2: Bottom y
+; 08,4: Which of this entity's hitboxes to use (0 or 1)
+; 0C,4: Hitbox type
+02013188 OffsetHitbox
+  ; r0 - Pointer to entity
+  ; r1 - x pos
+  ; r2 - y pos
+  ; r3 - z pos (unused)
+  ; [r13] - Hitbox (relative to the entity's center)
+  ; Offsets the hitbox by the x/y positions, and also accounts for the entity being horizontally flipped. In other words it converts the hitbox's positioning from being relative to the entity's center to being relative to the room's upper left corner.
+02013BB4 CheckEntityPlayerCollision
+  ; r0 - Pointer to hitbox in the stack
+  ; r1 - Entity to check
+  ; This function will check if the entity collides with the player or any of the player's weapons/skill (entities 05-2C).
+  ; Returns: 0 if no collision, 1 if getting hit by a player's attack, or 2 if hitting the player.
+02013E14 CheckEntityEntityCollision
+  ; r0 - Pointer to hitbox in the stack
+  ; r1 - Entity A
+  ; r2 - Entity B
+  ; If there is a collision it calls entity A's on-hit-other callback and entity B's on-get-hit callback.
 
 02005C54 SetBlockCollision
   ; r0 - X pos of the block in pixels
@@ -539,6 +581,8 @@
 021AC308 Object08Update
 021A59CC Object09Create
 021A5ADC Object09Update
+021A5F60 Object09OnGetHit
+021A5F9C Object09OnHitOther
 021B1E60 Object0ACreate
 021B1EDC Object0AUpdate
 021B1C78 Object0BCreate

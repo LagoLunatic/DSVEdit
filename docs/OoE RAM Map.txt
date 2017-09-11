@@ -54,6 +54,8 @@
     0100 - Font.
   06,1A: Filename. The end is padded with null bytes.
 
+020ECAA0,4 - When in a transition room, this is the current sector index that is loaded.
+
 020ECBB8 - List of which assets to load for each sector.
   This is a list of pointers, one for each area.
   Each of those pointers points to a list of pointers, one for each sector in that area.
@@ -168,7 +170,7 @@ Requirement lists for kill quests:
 020FFCA0 - Pointer to next room to transition into.
 020FFCB0,2 - ?
 020FFCB4,2 - ?
-020FFCB9 - Current area index.
+020FFCB9,1 - Current area index.
 
 Player's current stats:
 020FFD5C,2 - ATK
@@ -466,9 +468,11 @@ F0-F0 ?
 
 === 0211DF5F: End of entities currently loaded into memory.
 
-0211E0C0 - List of sprite info for currently loaded entities.
+0211E0C0-0211F0BF - List of sprite info for currently loaded entities.
   The halfword at +6C in an entity's memory is the index in this list.
   Each entry is 0x10 bytes long.
+  00,2: 
+  02,2: 
   08,4: Affects GFX.
   0C,4: Sprite pointer.
 
@@ -498,6 +502,8 @@ F0-F0 ?
     0100 - Turn off and layer will be invisible?
 
 when you first enter a new area, the game determines which entrance room to put you at by the sector/room indexes listed on the map metadata. so if you switch the indexes of the first and second entrance the game will put you at the second instead.
+
+02149028,4 - Currently loaded sector overlay index.
 
 0214E700 - pixel data for map.
 

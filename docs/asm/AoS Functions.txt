@@ -6,7 +6,7 @@
 08000DA0 GetEntitySlot
   ; r0 - Minimum entity index to check
   ; r1 - Maximum entity index to check
-  ; r2 - ? Create code pointer?
+  ; r2 - Update function pointer for the new entity
 
 08000500 UpdateGameState
   ; Calls the update code function for the current game state (02000010).

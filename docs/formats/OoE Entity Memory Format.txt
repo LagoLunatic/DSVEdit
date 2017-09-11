@@ -15,7 +15,7 @@ Memory used for entities in OoE is 021092A0 - 0211DF5F. Each entity is 0x160 byt
 04C,4: Y acceleration (gravity).
 064,2: Rotation.
   Every 0x4000 is equivalent to 90 degrees.
-06C,2: Affects the entity's graphics.
+06C,2: Sprite info index.
   This is an index in the currently loaded sprite info list, 0211E0C0.
 074,4: Bitfield.
   Bit 0x04: For skeletally animated enemies, this bit must be set or the parts won't be rotated at all.

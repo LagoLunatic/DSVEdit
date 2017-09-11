@@ -5,17 +5,18 @@ Memory used for entities in AoS is 020004E4 - ?. Each entity is 0x84 bytes long.
 04,4: Pointer to draw code.
 22,2: Frame counter.
 24,4: 
+2C,4: X acceleration?
 30,2: Var A.
 32,2: Var B.
-40,4: X pos.
-44,4: Y pos. (on screen??)
+40,4: X pos on the screen. (Note: This is the only X pos, unlike the DSVanias. There is no X pos in the room.)
+44,4: Y pos on the screen. (Note: This is the only Y pos, unlike the DSVanias. There is no Y pos in the room.)
 48,4: X velocity.
 4C,4: Y velocity.
 50,4: X acceleration.
 54,4: Y acceleration (gravity).
 62,1: Affects palette?
   If the lowest bit of this value is set, then it changes the palette of this entity's sprite, but only for the parts that have the lowest bit of the value at part+0B set as well.
-64,1: Affects the entity's graphics.
+64,1: Sprite info index.
   This is an index in the currently loaded sprite info list, 0201017C.
 65,1: Current sprite frame.
 68,4: Pointer to the entity's current animation?
