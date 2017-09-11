@@ -91,6 +91,7 @@ task :build_releases do
         "./dsvrandom/seedgen_adjectives.txt",
         "./dsvrandom/seedgen_nouns.txt",
         "./dsvrandom/progressreqs",
+        "./dsvrandom/assets",
         "./dsvrandom/roomedits",
         "./dsvrandom/images",
         "./dsvrandom/randomizers",
