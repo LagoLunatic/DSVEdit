@@ -266,6 +266,18 @@ class NDSFileSystem
     end
   end
   
+  def reload_file_from_disk(file_path)
+    if @uncommitted_files.include?(file_path)
+      puts "Cannot reload file as it has unsaved changes: #{file_path}"
+      return
+    end
+    
+    if @opened_files_cache[file_path]
+      @opened_files_cache[file_path] = nil
+      puts "Successfully reloaded #{file_path}"
+    end
+  end
+  
   def convert_arm_shifted_immediate_to_integer(constant, constant_shift)
     constant_shift &= 0xF
     unless constant_shift == 0

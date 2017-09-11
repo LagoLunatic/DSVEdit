@@ -168,7 +168,7 @@ class GBADummyFilesystem
   
   def files_without_dirs
     # This is for the progress dialog when writing to the rom. Give it a dummy max value of 1.
-    ["rom.gba"]
+    {nil => {:name => "rom.gba", :type => :file, :start_offset => 0, :end_offset => 0 + @rom.size, :ram_start_offset => 0x08000000, :size => @rom.size, :file_path => "rom.gba"}}
   end
   
   def read_until_end_marker(address, end_markers)

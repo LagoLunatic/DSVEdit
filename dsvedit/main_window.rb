@@ -35,6 +35,7 @@ class DSVEdit < Qt::MainWindow
   slots "extract_rom_dialog()"
   slots "open_folder_dialog()"
   slots "save_files()"
+  slots "files_changed_on_hard_drive(QString)"
   slots "edit_room_data()"
   slots "edit_layers()"
   slots "open_entity_editor()"
@@ -97,6 +98,9 @@ class DSVEdit < Qt::MainWindow
     @tiled = TMXInterface.new
     
     @open_dialogs = []
+    
+    @filesystem_watcher = Qt::FileSystemWatcher.new
+    connect(@filesystem_watcher, SIGNAL("fileChanged(QString)"), self, SLOT("files_changed_on_hard_drive(QString)"))
     
     connect(@ui.actionOpen_Folder, SIGNAL("activated()"), self, SLOT("open_folder_dialog()"))
     connect(@ui.actionExtract_ROM, SIGNAL("activated()"), self, SLOT("extract_rom_dialog()"))
@@ -273,6 +277,8 @@ class DSVEdit < Qt::MainWindow
     @game = game
     @renderer = Renderer.new(game.fs)
     
+    update_filesystem_watcher()
+    
     enable_menu_actions()
     
     initialize_dropdowns()
@@ -300,6 +306,8 @@ class DSVEdit < Qt::MainWindow
     @game = game
     @renderer = Renderer.new(game.fs)
     
+    update_filesystem_watcher()
+    
     enable_menu_actions()
     
     initialize_dropdowns()
@@ -310,6 +318,29 @@ class DSVEdit < Qt::MainWindow
     self.setWindowTitle("DSVania Editor #{DSVEDIT_VERSION} - #{folder_name}")
   rescue Game::InvalidFileError, NDSFileSystem::InvalidFileError
     Qt::MessageBox.warning(self, "Invalid file", "Selected folder is not a DSVania.")
+  end
+  
+  def update_filesystem_watcher
+    # First clear all existing watched paths.
+    @filesystem_watcher.removePaths(@filesystem_watcher.files + @filesystem_watcher.directories)
+    
+    # Then watch all paths for the current project.
+    base_directory = game.folder
+    game.fs.all_files.each do |file|
+      next unless file[:type] == :file
+      
+      full_path = File.join(base_directory, file[:file_path])
+      @filesystem_watcher.addPath(full_path)
+    end
+  end
+  
+  def files_changed_on_hard_drive(full_path)
+    # Reload a file from the disk if it was changed.
+    # Note that files that the user currently has uncommitted changes in will not be reloaded.
+    base_dir_path = Pathname.new(@settings[:last_used_folder])
+    absolute_path = Pathname.new(full_path)
+    relative_path = "/" + absolute_path.relative_path_from(base_dir_path).to_s
+    game.fs.reload_file_from_disk(relative_path)
   end
   
   def initialize_dropdowns

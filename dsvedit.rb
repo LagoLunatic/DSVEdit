@@ -6,6 +6,7 @@ begin
   require 'fileutils'
   require 'yaml'
   require 'logger'
+  require 'pathname'
 
   require_relative 'dsvlib'
 
