@@ -339,7 +339,10 @@ class DSVEdit < Qt::MainWindow
     # Note that files that the user currently has uncommitted changes in will not be reloaded.
     base_dir_path = Pathname.new(@settings[:last_used_folder])
     absolute_path = Pathname.new(full_path)
-    relative_path = "/" + absolute_path.relative_path_from(base_dir_path).to_s
+    relative_path = absolute_path.relative_path_from(base_dir_path).to_s
+    if relative_path.include?("/")
+      relative_path = "/" + relative_path
+    end
     game.fs.reload_file_from_disk(relative_path)
   end
   

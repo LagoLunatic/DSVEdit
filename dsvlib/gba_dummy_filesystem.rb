@@ -162,6 +162,17 @@ class GBADummyFilesystem
     return 1 << new_bit_index
   end
   
+  def reload_file_from_disk(file_path)
+    if @has_uncommitted_changes
+      puts "Cannot reload file as it has unsaved changes: #{file_path}"
+      return
+    end
+    
+    rom_path = File.join(@filesystem_directory, "rom.gba")
+    @rom = File.open(rom_path, "rb") {|file| file.read}
+    puts "Successfully reloaded #{file_path}"
+  end
+  
   def load_overlay(overlay_id)
     # Do nothing.
   end
@@ -169,6 +180,10 @@ class GBADummyFilesystem
   def files_without_dirs
     # This is for the progress dialog when writing to the rom. Give it a dummy max value of 1.
     {nil => {:name => "rom.gba", :type => :file, :start_offset => 0, :end_offset => 0 + @rom.size, :ram_start_offset => 0x08000000, :size => @rom.size, :file_path => "rom.gba"}}
+  end
+  
+  def all_files
+    [{:name => "rom.gba", :type => :file, :start_offset => 0, :end_offset => 0 + @rom.size, :ram_start_offset => 0x08000000, :size => @rom.size, :file_path => "rom.gba"}]
   end
   
   def read_until_end_marker(address, end_markers)
