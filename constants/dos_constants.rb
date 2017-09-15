@@ -582,6 +582,8 @@ BOSS_ID_TO_BOSS_INDEX = {
 
 AREA_NAME_SUBTYPE = 0x06
 
+SAVE_POINT_SUBTYPE = 0x30
+
 ITEM_LOCAL_ID_RANGES = {
   0x02 => (0x00..0x41), # consumable
   0x03 => (0x01..0x4E), # weapon
