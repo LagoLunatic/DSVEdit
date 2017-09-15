@@ -120,11 +120,11 @@ class GenericEditable
   end
   
   def name
-    @name || game.text_database.text_list[@name_text_id].decoded_string.gsub("\\n", "")
+    @name || game.text_database.text_list[@name_text_id].decoded_string.strip.gsub("\\n", "")
   end
   
   def description
-    @description || game.text_database.text_list[@description_text_id].decoded_string.gsub("\\n", "")
+    @description || game.text_database.text_list[@description_text_id].decoded_string.strip.gsub("\\n", "")
   end
   
   def write_to_rom
