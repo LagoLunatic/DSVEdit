@@ -258,6 +258,9 @@
   ; r0 - 0 if in the castle, 1 if in the abyss, 2 if not on any map.
   ; Returns the sector/room index data from the current map tile. The low 6 bits are the room index, then the next 4 bits are the sector index.
 
+02000D80 CheckAoSInGBASlot
+  ; Returns the value located at 020C0740 in RAM.
+
 021FC590 PlayerUpdate
 021FCC9C PlayerDraw
 021FEE28 PlayerUpdateYAccel

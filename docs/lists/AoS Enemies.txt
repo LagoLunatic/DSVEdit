@@ -136,6 +136,11 @@ Enemies:
   Var A:
     0 Inside a candle.
     1 Out in the open.
+  Var B: Color of the fake money bag.
+    0 Blue (Fake $500)
+    1 Orange (Fake $1000)
+    2 Gold (Fake $2000)
+    Note that none of these bag colors look exactly like the real deal, the highlights aren't bright enough.
 61 Stolas
   Var A: First enemy ID this Stolas can summon.
     If 0, will use the default value of 0D (Skeleton Knight).
