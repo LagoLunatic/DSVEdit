@@ -332,7 +332,7 @@ What each range of entity slots is for:
 
 === 020F70D0 - 020F732B: Second region that gets saved to the save file. 25C bytes long. Corresponds to 0208-0463 in the save file data.
 
-020F70D0 - List of which souls you own and how many.
+020F70D0 - List of which souls you own and how many. (Owned skill info.)
   Each soul takes up a nibble (half a byte). So you can have up to 15 of each soul (though it only correctly displays up to 9).
 020F7110 - An unused second list of which souls you own and how many? This number gets added to the first number.
 

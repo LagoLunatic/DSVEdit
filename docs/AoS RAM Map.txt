@@ -112,6 +112,25 @@ What each range of entity slots is for:
 02013144 - ???
 
 02013160,4 - Pointer to an entity?
+02013164,4 - Pointer to the entity of the currently equipped yellow soul (should be 02000DA8 if the player has a yellow soul equipped, or 0 otherwise).
+
+020131B8,4 - Bitfield affecting what the player can and can't do.
+  001 - The player is not affected by level collision when this flag is on, allowing them to pass through walls floors and ceilings freely.
+    Note that if the player is standing when this flag is activated they will not start falling automatically, they will be able to walk left and right even if that results in them walking on thin air. If the player jumps then they will start being affected by gravity as normal, and fall through the floor.
+  002 - ???
+  004 - Prevents the player's regular midair animations from being used.
+    This flag is used while jumpkicking.
+  008 - Makes the player immune to hard landings. No matter how far you fall you'll instantly be walking again.
+  010 - Gravity no longer affects the player. If you walk off an edge the player will just float and continue moving straight left/right. If you jump you will fly upwards without slowing down, and even fly right through ceilings. But if the player takes damage they will be affected by gravity while in the hurt animation, but once they land on solid ground gravity will go back to having no affect.
+  020 - Player cannot move left or right. There are effectively invisible walls to the left and right of the player at all times.
+    Taking damage clears this flag.
+  040 - ???
+  080 - Weapons disabled.
+  100 - Red souls disabled.
+  200 - Blue souls disabled.
+  400 - Yellow souls disabled.
+  800 - The player's animation never changes, it just loops whatever animation the player was in when this flag was set.
+    Taking damage clears this flag.
 
 020131BF,1 - Index of the red soul you last used.
   This is only updated when you use a red soul, not just when you equip it.
@@ -149,6 +168,8 @@ What each range of entity slots is for:
   0 - Soma mode.
   1 - Julius mode.
 02013269 - Currently equipped red soul.
+0201326A - Currently equipped blue soul.
+0201326B - Currently equipped yellow soul.
 02013396 - Bitfield of currently equipped ability souls.
 0201326D - Currently equpped accessory.
 
