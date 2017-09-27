@@ -162,7 +162,25 @@ What each range of entity slots is for:
 02013286 - ???
 020131F2
 
-02013260 - ?
+02013260 - Bitfield of effects on the player.
+  00000100 - Flying Armor. Fall slowly. The visual Flying Armor does not appear, you need to actual soul for that.
+  00000200 - Giant Bat. Setting this bit without using the actual Giant Bat soul doesn't actually do anything. Unsetting this bit when the player is transformed into a bat does bug the transformation out though.
+  00000400 - Black Panther. The player moves faster and uses the dashing sprite with visible waves, but this doesn't make the waves do damage to enemies, you need the actual soul for that.
+  00000800 - ??? Cannot jump, and falls extremely slowly (about 3x slower than Flying Armor).
+  00001000 - Devil/Manticore/Curly. Setting this bit without using those souls doesn't do anything. But preventing those souls from setting this bit bugs the transformation out and softlocks the game, there will just be a white silhouette of Soma floating in the air and not controllable.
+  00002000 - Final Guard. Immune to all damage, GUARD text will appear instead when hit.
+  00004000 - Undine. Walk on water.
+  00008000 - Skula. Walk underwater.
+  00010000 - Succubus. Attacking an enemy with a weapon heals the player for 5 HP per hit.
+  00020000 - Iron Golem. Getting hit does not knock the player back.
+  00040000 - Mimic
+  00080000 - Arc Demon
+  00100000 - Flesh Golem
+  00200000 - Tsuchinoko
+  00400000 - Zombie Officer
+  00800000 - Dead Warrior
+  01000000 - Peeping Eye
+  02000000 - Erinys
 
 02013266 - Current game mode.
   0 - Soma mode.

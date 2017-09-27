@@ -82,6 +82,53 @@ Red soul format:
 
 Blue soul format:
   0xC bytes long.
+  00,4: Code pointer.
+  04,1: Mana cost.
+  05,1: Activation type.
+    If 1, the player needs to hold down R to keep the soul activated.
+    if 2, the player can press R to toggle between the soul being on and off.
+  06,2: ??? Always 0.
+    Not entirely unused since it does get read and stored in the soul's entity memory at offset 1A. But then it doesn't seem like the value ever gets read from the entity memory.
+  08,4: Varies.
+    For Flying Armor and Black Panther, this is a bitfield of what special player effect bits to set at 02013260.
+    For Witch/Giant Ghost: Should be 0 to use the Witch shield, or 1 to use the Giant Ghost barrier.
+    For Devil/Manticore/Curly: Which transformed visual to use. 0 for Devil, 1 for Manticore, or 1 for Curly.
 
 Yellow soul format:
   0xC bytes long.
+  00,4: Code pointer.
+    08032205 - Sets a special player effect bit on in 02013260 in RAM.
+    0803226D - Increases a stat.
+    080322A1 - Grants immunity to a status effect.
+    Otherwise it's soul-specific code.
+  04,2: ???
+  06,2: For stat increasers, which stat to raise.
+    0 - STR
+    1 - CON
+    2 - INT
+    3 - LCK
+  08,4: Varies.
+    For stat increasers, it's the amount to increase the stat by.
+    For special player effect granters, it's which bit(s) to set. See the RAM doc entry on value 02013260 for details, but this is a brief list:
+      00000100 - Flying Armor
+      00000200 - Giant Bat
+      00000400 - Black Panther
+      00000800 - ???
+      00001000 - Devil/Manticore/Curly
+      00002000 - Final Guard
+      00004000 - Undine
+      00008000 - Skula
+      00010000 - Succubus
+      00020000 - Iron Golem
+      00040000 - Mimic
+      00080000 - Arc Demon
+      00100000 - Flesh Golem
+      00200000 - Tsuchinoko
+      00400000 - Zombie Officer
+      00800000 - Dead Warrior
+      01000000 - Peeping Eye
+      02000000 - Erinys
+    For status effect immunity granters, it's the bit corresponding to the damage type of the status effect:
+      040 - Poison
+      080 - Curse
+      100 - Stone

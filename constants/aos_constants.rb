@@ -280,7 +280,7 @@ WEAPON_FORMAT = [
   [2, "Icon"],
   [4, "Price"],
   [1, "Attack Type"],
-  [1, "Unknown 4"],
+  [1, "Unknown 1"],
   [1, "Attack"],
   [1, "Defense"],
   [1, "Constitution"],
@@ -290,12 +290,12 @@ WEAPON_FORMAT = [
   [2, "Effects", :bitfield],
   [1, "GFX Index"],
   [1, "Sprite Index"],
-  [1, "Unknown 10"],
+  [1, "Unknown 2"],
   [1, "Palette"],
   [1, "? anim??"],
   [1, "IFrames"],
   [2, "Swing Sound"],
-  [2, "Unknown 13"],
+  [2, "Unknown 3"],
 ]
 ARMOR_FORMAT = [
   # length: 20
@@ -303,7 +303,7 @@ ARMOR_FORMAT = [
   [2, "Icon"],
   [4, "Price"],
   [1, "Type"],
-  [1, "Unknown 4"],
+  [1, "Unknown 1"],
   [1, "Attack"],
   [1, "Defense"],
   [1, "Constitution"],
@@ -311,8 +311,8 @@ ARMOR_FORMAT = [
   [1, "Mind"],
   [1, "Luck"],
   [2, "Resistances", :bitfield],
-  [1, "Unknown 8"],
-  [1, "Unknown 9"],
+  [1, "Unknown 2"],
+  [1, "Unknown 3"],
 ]
 RED_SOUL_FORMAT = [
   # length: 16
@@ -320,7 +320,7 @@ RED_SOUL_FORMAT = [
   [2, "Use anim"],
   [2, "Mana cost"],
   [1, "Max at once"],
-  [1, "Unknown 3"],
+  [1, "Unknown 1"],
   [2, "DMG multiplier"],
   [2, "Effects", :bitfield],
   [2, "Var A"],
@@ -329,17 +329,16 @@ BLUE_SOUL_FORMAT = [
   # length: 12
   [4, "Code"],
   [1, "Mana cost"],
-  [1, "Hold/Press R"],
-  [2, "Unknown 2"],
-  [4, "Unknown 3"],
+  [1, "Hold or Press R"],
+  [2, "Unknown 1"],
+  [4, "Player effect/Varies"],
 ]
 YELLOW_SOUL_FORMAT = [
   # length: 12
   [4, "Code"],
   [2, "Unknown 1"],
   [2, "Stat to raise"],
-  [2, "Amount to raise"],
-  [2, "Unknown 4"],
+  [4, "Player effect/Stat pts"],
 ]
 JULIUS_SKILL_FORMAT = RED_SOUL_FORMAT
 ITEM_TYPES = [

@@ -201,6 +201,7 @@ Enemies:
   Requires enemy overlay 36.
 67 Jiang Shi
   Requires enemy overlay 29.
+  Since Jiang Shi doesn't die, boss doors don't open themselves up when you defeat him. You need to add special object 24 with var A = 1 into the same room as Jiang Shi for the doors to open when he dies.
 68 Demon Lord
 69 Double Hammer
 6A Weapon Master

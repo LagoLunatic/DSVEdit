@@ -28,3 +28,7 @@ For weapons/skills:
 
 For red souls:
 1E,2: Var A.
+
+For blue souls:
+1A,2: Unknown 1 from the blue soul data.
+1C,4: "Player effect/Varies" from the blue soul data.

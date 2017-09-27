@@ -39,7 +39,9 @@
   ; r2 - ??? 1
 
 020AA508 PlaySfxAtPos
-  ; r0 - Sfx index
+  ; r0 - Sfx index?
+  ;   This has more data than just the sfx index in it.
+  ;   For example, 4401015C is the value for Brachyura's SHAAAAWW voice line. 
   ; r1 - x pos
   ; r2 - y pos
   ; r3 - z pos

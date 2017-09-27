@@ -106,8 +106,11 @@ Special Objects:
   Requires sector overlay 43.
   Prevents using Volaticus in rooms that have this object in them.
   Var A: 0 for normal. 1 to display the message saying that Volaticus cannot be used. This message will appear every time you exit and re-enter the Training Hall.
-24 Opens boss doors after a full minute has passed.
-  Only opens boss doors that have Var A = 1 (the type that usually opens when there are no enemies left in the room).
+24 Opens Large Cavern boss doors.
+  When Jiang Shi is in the room and is defeated, this object will open the boss doors (since Jiang Shi technically doesn't die, the boss doors won't open themselves without this).
+  If var A is 0, then after 60 seconds it will open boss doors even if there are still enemies left alive in the room. This is used in Large Cavern rooms other than the boss room.
+  If var A is 1, it does not open doors after 60 seconds. But it still opens doors when Jiang Shi dies, so this should be used in Jiang Shi's room.
+  (Note that it only opens boss doors that have var A = 1, the type that usually would open when there are no enemies left in the room.)
 25 Cross.
   Requires sector overlay 62.
 26 Rat running around.
