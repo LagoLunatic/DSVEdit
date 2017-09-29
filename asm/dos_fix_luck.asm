@@ -27,7 +27,7 @@
 .org 0x021C3BE4
   mov r0, 2000h
 .org 0x021C3BD0
-  add r9, r0, r7, lsr 2h ; Add luck*8 to drop chance and put it in r9. r7 currently has luck*0x20 (from before) so we actually divide r7 by 4 to get luck*8.
+  add r9, r0, r7, asr 2h ; Add luck*8 to drop chance and put it in r9. r7 currently has luck*0x20 (from before) so we actually divide r7 by 4 to get luck*8.
 .org 0x021C3BE0
   moveq r9, r9, lsl 1h ; Double drop chance if rare ring is equipped (same as in the original code).
 
