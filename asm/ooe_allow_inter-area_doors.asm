@@ -5,6 +5,8 @@
 ; In the vanilla game, doors are not designed to take you between two different areas, and trying to use them like that results in a number of bugs, namely crashes, improperly loaded tilesets, and the wrong map being on the top screen.
 ; This patch fixes these bugs so that doors work correctly even when the source room and destination room are in different areas.
 
+; Incomplete - This patch still causes crashes and incorrectly loaded tilesets in many circumstances.
+
 @Overlay86Start equ 0x0234C200 ; Where the free space overlay is loaded in RAM.
 @FreeSpace equ 0x0234C200 ; This should be set to a location in the free space overlay that is unused. If you've already used the default location in your own hack, just change this value to somewhere free.
 
