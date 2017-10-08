@@ -51,6 +51,17 @@
 
 02038C1C ChangeRoom
   ; r0 - New room pointer
+02039508 GetAreaSectorRoomIndexesByRoomPointer
+  ; r0 - Room pointer to search for
+  ; r1 - Pointer to where in the stack to store the area index
+  ; r2 - Pointer to where in the stack to store the sector index
+  ; r3 - Pointer to where in the stack to store the room index
+  ; Returns r0 - 1 if successfully found the room, 0 otherwise.
+
+020398FC LoadTilesetsForSector
+  ; r0 - Area index
+  ; r1 - Sector index (or -1 to use the last sector index a transition room was loading, which is stored at 020ECABC)
+  ; r2 - ?
 
 0203AFD0 TeleportPlayer
   ; r0 - Area index
