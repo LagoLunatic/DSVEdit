@@ -56,6 +56,13 @@
   beq @CheckAreaIndexIsDifferent
   nop
   nop
+; But the transition rooms don't keep track of the currently loaded tileset's area index, so we need to store the area index inside the same word as the sector index is stored (the lower halfword as the sector index, the upper halfword as the area index).
+.org 0x02039A84
+  b @StoreLoadedSectorAreaIndexes
+.org 0x020393F8
+  ldrsh r12, [r4, 8h]
+.org 0x020394EC
+  nop ; Get rid of the initial sector index value set when the player loads in via a save. It's not necessary for it to work and just complicates things.
 ; And finally, we change the line of code that reads the current area index to read one of the area indexes from the stack.
 .org 0x02039410
   ldr r0, [r13, r5, lsl 2h] ; r5 is 0 if the player is trying to enter the left door, 1 if trying to enter the right door.
@@ -101,13 +108,16 @@
 
 ; If the sector indexes of the source and destination are the same, we need to also check the area indexes.
 @CheckAreaIndexIsDifferent:
-  ldr r0, =020FFCB9h
-  ldrb r0, [r0] ; Load the current area index the player is in.
+  ldrsh r0, [r4, 0Ah] ; Load the area index of the currently loaded tileset.
   ldr r1, [r13, r5, lsl 2h] ; Load the destination area index.
   cmp r0, r1
   addeq r13, r13, 14h ; If the area indexes are the same, return from the function without loading the tileset.
   popeq r3-r9, r15
   b 0203940Ch ; Otherwise, continue on with loading the tileset.
+@StoreLoadedSectorAreaIndexes:
+  strh r0, [r1, 8h]
+  strh r5, [r1, 0Ah]
+  b 02039A88h
 
 
 
