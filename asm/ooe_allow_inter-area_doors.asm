@@ -49,6 +49,13 @@
   nop
   nop
   nop
+; Then the code checks if the source and destination sector indexes are the same, and if so, it returns from the function without loading the tileset.
+; But even if the sector indexes are the same, if the area indexes are different, we still need it to load the tileset.
+; So we go to free space if the sector indexes are the same and check the area index as well (see below).
+.org 0x02039400
+  beq @CheckAreaIndexIsDifferent
+  nop
+  nop
 ; And finally, we change the line of code that reads the current area index to read one of the area indexes from the stack.
 .org 0x02039410
   ldr r0, [r13, r5, lsl 2h] ; r5 is 0 if the player is trying to enter the left door, 1 if trying to enter the right door.
@@ -91,6 +98,16 @@
   str r0, [r13]
   str r1, [r13, 4h]
   b 020393ECh
+
+; If the sector indexes of the source and destination are the same, we need to also check the area indexes.
+@CheckAreaIndexIsDifferent:
+  ldr r0, =020FFCB9h
+  ldrb r0, [r0] ; Load the current area index the player is in.
+  ldr r1, [r13, r5, lsl 2h] ; Load the destination area index.
+  cmp r0, r1
+  addeq r13, r13, 14h ; If the area indexes are the same, return from the function without loading the tileset.
+  popeq r3-r9, r15
+  b 0203940Ch ; Otherwise, continue on with loading the tileset.
 
 
 
