@@ -97,8 +97,8 @@
 ; Continuation of bug 3 (synchronous tileset loading) fix.
 @LoadTilesetCheckUsePreviousAreaIndex:
   ; Check if r5 is -1, which indicates we are synchronously loading.
-  mvn r0, 0h
-  cmp r5, r0
+  mvn r1, 0h
+  cmp r5, r1
   bne @ReturnToOriginalCode ; If it's not -1, we're async loading, so just go back to the original code without doing anything.
   b @LoadTilesetUsePreviousAreaIndex ; Otherwise, load the previous area index.
 
@@ -116,6 +116,7 @@
   ; Otherwise, we actually use the previous area index if it's not -1.
   mov r5, r1
   b @ReturnToOriginalCode
+
 
 
 ; Continuation of bug 4 (top screen map doesn't reload) fix.
