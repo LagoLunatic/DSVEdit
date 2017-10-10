@@ -274,8 +274,17 @@ class NDSFileSystem
     
     if @opened_files_cache[file_path]
       @opened_files_cache[file_path] = nil
-      puts "Successfully reloaded #{file_path}"
     end
+    
+    file = files_by_path[file_path]
+    old_file_size = file[:size]
+    file[:size] = File.size(File.join(@filesystem_directory, file_path))
+    
+    if file[:overlay_id] && old_file_size != file[:size]
+      update_overlay_length(file)
+    end
+    
+    puts "Successfully reloaded #{file_path}"
   end
   
   def convert_arm_shifted_immediate_to_integer(constant, constant_shift)
