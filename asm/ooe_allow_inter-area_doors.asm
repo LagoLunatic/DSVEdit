@@ -138,7 +138,7 @@
 @LoadTilesetUsePreviousAreaIndex:
   ldr r1, =020ECAA8h
   ldr r1, [r1] ; Load the previous area index value from 020ECAA8.
-  cmp r1, r0 ; If the previous area index is also -1, that we're not in a transition room.
+  cmp r1, r0 ; If the previous area index is also -1, then we're not in a transition room.
   ldreq r1, =020FFCB9h ; If not in a transition room, load the current area index the player is in from 020FFCB9 and use that, like what the vanilla code at 02038D1C was doing originally before we replaced it.
   ldreqb r5, [r1]
   beq @ReturnToOriginalCode
