@@ -322,7 +322,10 @@ class DSVEdit < Qt::MainWindow
   
   def update_filesystem_watcher
     # First clear all existing watched paths.
-    @filesystem_watcher.removePaths(@filesystem_watcher.files + @filesystem_watcher.directories)
+    paths_to_remove = @filesystem_watcher.files + @filesystem_watcher.directories
+    if paths_to_remove.any?
+      @filesystem_watcher.removePaths(paths_to_remove)
+    end
     
     # Then watch all paths for the current project.
     base_directory = game.folder
