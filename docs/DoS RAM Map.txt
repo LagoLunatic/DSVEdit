@@ -146,6 +146,9 @@ There are 41 entries in the list total.
 020C75F4 - changes for each room. can be 10, 13, 14, FFFFFFFF
 020C7729
 
+020C7EA0 - List of sprites in the OAM.
+  Entry length 0x10.
+
 020CA388,2 - Bitfield of what buttons the player is pressing.
   0001 - A
   0002 - B
@@ -424,6 +427,7 @@ What each range of entity slots is for:
     0800 - Y
   If you set more than one button bit for a single control, then either of the buttons you set will trigger that control.
 
+020F7252,1 - ID of the enemy on the top screen enemy info panel.
 020F7254 - Bitfield of what Magic Seals the player owns.
 020F7256 - Current game mode:
   0 - Soma mode.
@@ -511,6 +515,11 @@ Player's stats:
 
 020F7596 - The maximum address that can be corrupted by the broken map code by getting out of bounds (aka memory corruption).
   Also remember bits can only be set on by memory corruption, never off.
+
+020F759C,4 - ???
+
+020F75A4,2 - Timer for how many more frames to display the name of the last soul you got in the upper right corner of the screen.
+020F75A6,2 - Timer for how many more frames to display the name of the last item you got in the lower right corner of the screen.
 
 020F75A8 - Has a pointer to the first (collision) layer for the current room.
 

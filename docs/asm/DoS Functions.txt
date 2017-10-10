@@ -10,6 +10,7 @@
 
 021C3A00 EnemyCheckDrops
 0221029C GetNumOwnedSoul
+  ; r0 - Soul index
 02215774 MakeMagicSeal
   ; r0 - Which magic seal.
   ; r1 - How to complete the magic seal.
@@ -88,12 +89,12 @@
   ; [r13] - Hitbox (relative to the entity's center)
   ; Offsets the hitbox by the x/y positions, and also accounts for the entity being horizontally flipped. In other words it converts the hitbox's positioning from being relative to the entity's center to being relative to the room's upper left corner.
 02013BB4 CheckEntityPlayerCollision
-  ; r0 - Pointer to hitbox in the stack
+  ; r0 - Pointer to hitbox pair in the stack
   ; r1 - Entity to check
   ; This function will check if the entity collides with the player or any of the player's weapons/skill (entities 05-2C).
   ; Returns: 0 if no collision, 1 if getting hit by a player's attack, or 2 if hitting the player.
 02013E14 CheckEntityEntityCollision
-  ; r0 - Pointer to hitbox in the stack
+  ; r0 - Pointer to hitbox pair in the stack
   ; r1 - Entity A
   ; r2 - Entity B
   ; If there is a collision it calls entity A's on-hit-other callback and entity B's on-get-hit callback.
@@ -159,14 +160,65 @@
 021E7540 GiveMagicSeal
   ; r0 - Magic seal index
 
-0202DE80 ShowItemName?
+021E88AC TouchItemPickup
+  ; r0 - Pickup entity pointer
+
+0202DE80 ShowItemName
   ; r0 - Item global ID+1
-  ; r1 - ?
-0202DEC8 ShowItemName2?
-  ; r0 - ?
+  ; r1 - Number of frames to show the item name in the corner of the screen.
+0202DEC8 ShowItemName2
+  ; r0 - ? 0
   ; r1 - Item global ID
-  ; r2 - ?
-  ; r3 - ?
+  ; r2 - X pos (of right edge of text box)
+  ; r3 - Y pos (of top edge of text box)
+0202E184 ShowSoulName
+  ; r0 - Soul index
+  ; r1 - Number of frames to show the soul name in the corner of the screen.
+0202E320 ShowSoulName2
+  ; r0 - Soul index
+  ; r1 - X pos (of right edge of text box)
+  ; r2 - Y pos (of top edge of text box)
+02008F68 ShowItemOrSoulName3?
+  ; r0 - 1
+  ; r1 - 0
+02008FBC ShowItemOrSoulName4?
+  ; r0 - 0
+  ; r1 - affects the OAM slot to use? 48 for souls, 50 for items
+  ; r2 - 60
+  ; r3 - 8
+  ; [r13] - FF
+  ; [r13,4] - 0
+02009DF4 ShowItemOrSoulName5
+  ; r0 - 0
+02009040 ShowItemOrSoulName6
+  ; r0 - 0
+  ; r1 - affects the OAM slot to use? 48 for souls, 50 for items
+  ; r2 - FF
+  ; r3 - 0
+
+02009F74 RenderText
+  ; r0 - Pointer to string.
+  ; r1 - ? 0
+  ; r2 - Pointer to where in the stack to store a halfword of the width of the text in pixels.
+  ; r3 - ? 0
+  ; [r13] - ? 0
+  ; This function creates a text sprite in the OAM at the upper left corner of the screen.
+  ; You should call SetOAMData after this so it's in the right location.
+0202ED4C SetOAMData
+  ; r0 - X pos
+  ; r1 - Y pos
+  ; r2 - Palette (-1?)
+  ; r3 - first OAM slot to use (offset, so that 0 here means OAM slot 0x1E). (0xE for soul names, 0x19 for item names)
+  ; [r13] - last OAM slot to use (offset, so that 0 here means OAM slot 0x1E). (0x10 for soul names, 0x1B for item names)
+
+0203B308 SetEnemyOnTopScreen
+  ; r0 - Enemy ID
+0203A644 RenderEnemyInfoOnTopScreen?
+  ; r0 - Enemy ID
+  ; r1 - ? 0
+  ; r2 - ? 0
+  ; r3 - ? 020F8164
+0203A598 UpdateEnemyInfoOnTopScreen?
 
 021E7C60 SpawnSoul
   ; r0 - x pos

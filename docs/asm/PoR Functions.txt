@@ -41,6 +41,9 @@
   ; r2 - Room index
   ; r3 - X pos (pixels)
   ; [r13] - Y pos (pixels)
+  ; Note that you should call TriggerRoomTransition immediately after calling this for it to actually work.
+  ; Calling TeleportPlayer without TriggerRoomTransition will just bug out the game.
+02032CF4 TriggerRoomTransition
 
 021E43E4 GiveItem
   ; r0 - Item type (2 is consumables, etc)

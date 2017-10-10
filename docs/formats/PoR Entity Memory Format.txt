@@ -75,6 +75,10 @@ Memory used for entities in PoR is 020FC500 - 0211173F. Each entity is 0x160 byt
 0EC,2: Pointer to child entity?
 0FC,2: 
 120,4: Bitfield of ???.
+132,1: Subtype.
+133,1: Byte 5.
+13C,2: Var A.
+13E,2: Var B.
 149,1: 
 
 For players:

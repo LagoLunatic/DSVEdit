@@ -307,7 +307,7 @@ F5-F5
 0211177E,2 - Player 2's x pos on the map.
 02111780,2 - Player 1's y pos on the map.
 02111782,2 - Player 2's y pos on the map.
-02111785 - Current area index?
+02111785,1 - Current area index.
 
 02111790 - Which type of door the player is currently walking through.
   0 - Not walking through a door right now.
@@ -384,6 +384,11 @@ F5-F5
 
 021119FC,02111A08,02111F90 - Screen scrolling X pos.
 02111A00,02111A0C,02111F94 - Screen scrolling Y pos.
+
+02111A32,1 - Destination sector index of TeleportPlayer
+02111A33,1 - Destination room index of TeleportPlayer
+02111A34,2 - Destination x pos (in pixels) of TeleportPlayer
+02111A36,2 - Destination y pos (in pixels) of TeleportPlayer
 
 02111A5C - Bitfield of used byte 5s in the current room?
 
