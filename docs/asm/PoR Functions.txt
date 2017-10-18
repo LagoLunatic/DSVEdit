@@ -17,10 +17,18 @@
 0201BB58 AssetGetName
   ; r0 - Asset index
   ; Returns 020CDAFC+(r0*0x20)+6, where the asset's filename starts
-0201BA0C AssetLoadSpriteFile?
 021DCA34 LoadEntityAssets
   ; r0 - Entity subtype
   ; r1 - Entity type (1 for enemies to use list 020CD88C, 2 for special objects to use list 020E19DC)
+021DCB14 GetEntityAssetPointerByIndex
+  ; r0 - Entity subtype
+  ; r1 - Entity type (1 or 2)
+  ; r2 - Index of the asset in this entity's list of assets
+021DCA94 GetEntityAsset???
+  ; r0 - Entity subtype
+  ; r1 - Entity type (1 or 2)
+  ; r2 - Index of the asset in this entity's list of assets
+0201BA0C LoadOneEntityAsset?
 
 02015AFC LoadPalette
   ; r0 - Palette list pointer
@@ -70,6 +78,35 @@
   ; [r13,0] - ?
 021E4574 GetOwnedItemNum
   ; r0 - Global ID+1 of the item
+
+021DDA28 MakeItemPickup1?
+  ; r0 - Item room entity (the one placed in the level editor)
+021E4F14 MakeItemPickup2?
+  ; r0 - Item room entity (the one placed in the level editor)
+  ; r1 - 1?
+021E5090 MakeItemPickup3?
+  ; r0 - Item room entity (the one placed in the level editor)
+  ; r1 - Pointer to item data
+  ; r2 - Update function
+  ; r3 - Draw function
+  ; [r13] - On-touch function?
+  ; [r13,4] - 1?
+0202C62C LoadGFXNeededForItem
+  ; r0 - Pointer to item data
+  ; r1 - Item pickup entity pointer + 0xD0
+  ; r2 - 0?
+0202C8B0 ItemIconGFXPage???
+  ; r0 - Index of the page of icons
+0202CC60 LoadItemIconGFXPage
+  ; r0 - Index of the page of icons
+  ; Returns: GFX asset pointer of this page of item icons, or 0 if it failed to load the gfx asset.
+021E6020 InitializeItemPickupGravity
+  ; r0 - Item pickup entity
+  ; Sets Y velocity to 0x1000 and the gravity (Y accel) to 0x199.
+021E5BB4 ItemPickupUpdate
+021E60A0 ItemPickupDraw
+021E5FF8 ItemPickup???
+021E51E4 TouchItemPickup?
 
 021E46C4 GetItemPointerByTypeIndex
   ; r0 - Item type (2 is consumable, etc)
@@ -139,6 +176,12 @@
 
 021F5004 SwitchPlayers
 021F5AC0 CheckCanSwitchPlayers
+
+02012E44 DeleteEntity
+  ; r0 - Entity pointer
+
+0201291C DummyUpdate
+  ; Does nothing, immediately returns.
 
 02208C28 CalcPlayerAttack
   ; r0 - ?
