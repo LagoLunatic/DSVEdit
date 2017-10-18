@@ -81,6 +81,11 @@ class MapEditorDialog < Qt::Dialog
     connect(@ui.is_entrance, SIGNAL("stateChanged(int)"), self, SLOT("reload_available_tiles(int)"))
     connect(@ui.is_blank, SIGNAL("stateChanged(int)"), self, SLOT("reload_available_tiles(int)"))
     
+    if !["por", "ooe"].include?(GAME)
+      @ui.used_tiles_label.hide()
+      @ui.used_tiles_number.hide()
+    end
+    
     case GAME
     when "dos", "aos"
       @ui.is_secret.disabled = true
@@ -139,6 +144,8 @@ class MapEditorDialog < Qt::Dialog
     pixmap.loadFromData(blob, blob.length)
     map_pixmap_item = Qt::GraphicsPixmapItem.new(pixmap)
     @map_graphics_scene.addItem(map_pixmap_item)
+    
+    update_used_tiles_number()
   end
   
   def load_selected_map_tile
@@ -217,6 +224,8 @@ class MapEditorDialog < Qt::Dialog
       new_tile.y_pos = y
       new_tile.x_pos = x
       @map.tiles << new_tile
+      
+      update_used_tiles_number()
     else
       Qt::MessageBox.warning(self, "Can't add more tiles", "Can't add any more tiles to maps in PoR or OoE.\nPlease delete some tiles with right click so you can add more.")
     end
@@ -255,6 +264,8 @@ class MapEditorDialog < Qt::Dialog
       
       index = @map.tiles.index(old_tile)
       @map.tiles.delete_at(index)
+      
+      update_used_tiles_number()
     end
   end
   
@@ -329,6 +340,10 @@ class MapEditorDialog < Qt::Dialog
       position_indicator.setBrush(Qt::Brush.new(Qt::Color.new(255, 255, 255, 127)))
     end
     selected_position_indicator.setBrush(Qt::Brush.new(Qt::Color.new(255, 255, 255, 255)))
+  end
+  
+  def update_used_tiles_number
+    @ui.used_tiles_number.text = "#{@map.tiles.length}/#{@map.number_of_tiles}"
   end
   
   def save_changes

@@ -127,6 +127,20 @@
        </property>
       </spacer>
      </item>
+     <item>
+      <widget class="QLabel" name="used_tiles_label">
+       <property name="text">
+        <string>Map tiles used:</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLabel" name="used_tiles_number">
+       <property name="text">
+        <string>999/999</string>
+       </property>
+      </widget>
+     </item>
     </layout>
    </item>
    <item>
