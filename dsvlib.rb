@@ -36,6 +36,7 @@ require_relative 'dsvlib/magic_seal'
 require_relative 'dsvlib/renderer'
 require_relative 'dsvlib/tmx_interface'
 require_relative 'dsvlib/darkfunction_interface.rb'
+require_relative 'dsvlib/spriter_interface.rb'
 
 if defined?(Ocra)
   orig_verbosity = $VERBOSE

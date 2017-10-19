@@ -11,6 +11,7 @@ ocratemp.iss
 crashlog.txt
 /gfx
 /darkfunction_sprites
+/spriter_skeletons
 /wip
 /asm/ftc
 /dsvrandom

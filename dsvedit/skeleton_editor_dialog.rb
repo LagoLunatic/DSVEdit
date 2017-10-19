@@ -18,6 +18,7 @@ class SkeletonEditorDialog < Qt::Dialog
   slots "animation_keyframe_changed_no_tween(int)"
   slots "toggle_animation_paused()"
   slots "advance_tweenframe()"
+  slots "export_to_spriter()"
   slots "button_box_clicked(QAbstractButton*)"
   
   def initialize(parent, sprite_info, fs, renderer)
@@ -47,6 +48,7 @@ class SkeletonEditorDialog < Qt::Dialog
     connect(@ui.animation_index, SIGNAL("activated(int)"), self, SLOT("animation_changed(int)"))
     connect(@ui.seek_slider, SIGNAL("valueChanged(int)"), self, SLOT("animation_keyframe_changed_no_tween(int)"))
     connect(@ui.toggle_paused_button, SIGNAL("clicked()"), self, SLOT("toggle_animation_paused()"))
+    connect(@ui.spriter_export, SIGNAL("clicked()"), self, SLOT("export_to_spriter()"))
     connect(@ui.buttonBox, SIGNAL("clicked(QAbstractButton*)"), self, SLOT("button_box_clicked(QAbstractButton*)"))
     
     self.show()
@@ -444,6 +446,32 @@ class SkeletonEditorDialog < Qt::Dialog
   
   def toggle_show_points(checked)
     update_drawn_joints()
+  end
+  
+  def skeleton_name
+    skeleton_name = @sprite_info.skeleton_file[:name]
+    if skeleton_name =~ /\.jnt$/
+      skeleton_name = skeleton_name[0..-5]
+    end
+    
+    return skeleton_name
+  end
+  
+  def export_to_spriter
+    output_folder = "./spriter_skeletons/#{skeleton_name}"
+    FileUtils.mkdir_p(output_folder)
+    
+    SpriterInterface.export(output_folder, skeleton_name, @skeleton, @sprite_info, @fs, @renderer)
+    
+    Qt::MessageBox.warning(self,
+      "Exported to Spriter",
+      "This skeleton has been exported in Spriter's format to the folder #{output_folder}"
+    )
+  rescue SpriterInterface::ExportError => e
+    Qt::MessageBox.warning(self,
+      "Failed to export to Spriter",
+      e.message
+    )
   end
   
   def button_box_clicked(button)
