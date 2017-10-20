@@ -1,10 +1,10 @@
 Arm glyph format:
-  32 bytes long.
-  Bytes 1-2: Item ID.
-  Bytes 3-4: Damage multiplier.
-  Bytes 5-8: Pointer to code run when using the glyph.
-  Byte 9: Sprite.
-  Byte 10:
+  0x20 bytes long.
+  00,2: Item ID.
+  02,2: Damage multiplier.
+  04,4: Pointer to code run when using the glyph.
+  08,1: Sprite.
+  09,1:
     Bit 1: ?
     Bit 2: If set, the player doesn't play a swinging animation when using this glyph.
     Bits 3-8: Glyph union type. This value for both arms is used by function 0206E610 to determine what glyph union to use.
@@ -28,28 +28,28 @@ Arm glyph format:
       11 Dark
       12 Nitesco
       13 Dominus
-  Byte 11: Maximum number of this projectile you can have in the room at once (per arm).
-  Byte 12: Mana cost of using this glyph.
-  Bytes 13-16: Bitfield for what elemental damage types this glyph does.
+  0A,1: Maximum number of this projectile you can have in the room at once (per arm).
+  0B,1: Mana cost of using this glyph.
+  0C,4: Bitfield for what elemental damage types this glyph does.
     If it does either Strike or Slash damage, it will use the player's strength for damage calculation.
     If it does neither Strike nor Slash then it uses the player's intelligence.
-  Bytes 17-20: Bitfield of player state booleans that must be false in order to use this glyph. Checks bitfield 021098F0 (the player's current state booleans). 0 means it can be used in any state.
-  Bytes 21-22: Icon.
+  10,4: Bitfield of player state booleans that must be false in order to use this glyph. Checks bitfield 021098F0 (the player's current state booleans). 0 means it can be used in any state.
+  14,2: Icon.
     Normal icons go up to 004F. Higher than that and the glyph will be invisible or have bugged graphics.
     But if you increase this value to 3CD0 or higher, the glyph won't appear it all, it won't even be invisible.
-  Bytes 23-24: Bitfield.
+  16,2: Bitfield.
     Least significant bit first.
     Bit 2: Makes the swinging sound effect and Shanoa's shouts come from off the left of the screen instead of the center.
     Bit 5: On for melee glyphs. Off for projectile glyphs. Effect unknown.
     Bit 7: If on, sprite part palette indexes will be used as palette indexes, unlike many weapons, where it's used as an indicator that the part should be partially transparent.
-  Bytes 25-26: Varies by code pointer.
+  18,2: Varies by code pointer.
     For melee weapons: Animation Shanoa plays when swinging this weapon.
       This is an index in the player's swing animations list (either the Y or X button list).
       3 Overhead swing.
     For shields: ?
-  Byte 27: IFrames. An enemy hit by this glyph will be invulnerable to glyphs on the arm you used for this number of frames.
-  Byte 28: Delay in frames before you're allowed to use this glyph again after you use it once.
-  Byte 29-32: Swing sound?
+  1A,1: IFrames. An enemy hit by this glyph will be invulnerable to glyphs on the arm you used for this number of frames.
+  1B,1: Delay in frames before you're allowed to use this glyph again after you use it once.
+  1C,4: Swing sound?
     bits 0x00000FFF
     bits 0x0F000000
       if greater than 2:
@@ -57,22 +57,22 @@ Arm glyph format:
     bit  0x40000000: if set, no swing sound
 
 Back glyph format:
-  28 bytes long.
-  Bytes 1-2: Item ID.
-  Bytes 3-4: Damage multiplier.
-  Bytes 5-8: Pointer to code run when using the glyph.
-  Byte 9: Sprite.
-  Byte 10:
-  Byte 11: Maximum number of this projectile you can have in the room at once.
-  Byte 12: Mana cost.
-  Bytes 13-16: Bitfield for what elemental damage types this glyph does.
+  0x1C bytes long.
+  00,2: Item ID.
+  02,2: Damage multiplier.
+  04,4: Pointer to code run when using the glyph.
+  08,1: Sprite.
+  09,1:
+  0A,1: Maximum number of this projectile you can have in the room at once.
+  0B,1: Mana cost.
+  0C,4: Bitfield for what elemental damage types this glyph does.
     If it does either Strike or Slash damage, it will use the player's strength for damage calculation.
     If it does neither Strike nor Slash then it uses the player's intelligence.
-  Bytes 17-20: Bitfield of player state booleans that must be false in order to use this glyph. Checks bitfield 021098F0 (the player's current state booleans). 0 means it can be used in any state.
-  Bytes 21-22: Icon.
+  10,4: Bitfield of player state booleans that must be false in order to use this glyph. Checks bitfield 021098F0 (the player's current state booleans). 0 means it can be used in any state.
+  14,2: Icon.
     Normal icons go up to 004F. Higher than that and the glyph will be invisible or have bugged graphics.
     But if you increase this value to 3CD0 or higher, the glyph won't appear it all, it won't even be invisible.
-  Byte 23-24: Varies depending on the code being run.
+  16,2: Varies depending on the code being run.
     For 0207F6B4: Which stat to temporarily boost:
       0 Doesn't affect any stats, but "HP Max Up" text appears.
       1 Doesn't affect any stats, but "MP Max Up" text appears.
@@ -88,74 +88,75 @@ Back glyph format:
       2 Arma Chiroptera
       3 Arma Machina
       4 Albus
-  Bytes 25-28:
+  18,4:
 
 Glyph union format:
-  28 bytes long.
-  Bytes 1-2: Item ID.
-  Bytes 3-4: Damage multiplier.
-  Bytes 5-8: Pointer to code run when using the glyph.
-  Byte 9: Sprite.
-  Byte 10:
+  0x1C bytes long.
+  00,2: Item ID.
+  02,2: Damage multiplier.
+  04,4: Pointer to code run when using the glyph.
+  08,1: Sprite.
+  09,1:
     Bit 1: ?
     Bit 2: If set, the player doesn't play a swinging animation when using this glyph.
     Bits 3-8: Unused.
-  Byte 11: Maximum number of this projectile you can have in the room at once.
-  Byte 12: Mana cost of using this glyph.
-  Bytes 13-16: Bitfield for what elemental damage types this glyph does.
+  0A,1: Maximum number of this projectile you can have in the room at once.
+  0B,1: Mana cost of using this glyph.
+  0C,4: Bitfield for what elemental damage types this glyph does.
     If it does either Strike or Slash damage, it will use the player's strength for damage calculation.
     If it does neither Strike nor Slash then it uses the player's intelligence.
     Bit 28: Set for Dominus only. Doesn't seem to affect anything?
-  Bytes 17-20: Bitfield of player state booleans that must be false in order to use this glyph. Checks bitfield 021098F0 (the player's current state booleans). 0 means it can be used in any state.
-  Bytes 21-22: Icon.
+  10,4: Bitfield of player state booleans that must be false in order to use this glyph. Checks bitfield 021098F0 (the player's current state booleans). 0 means it can be used in any state.
+  14,2: Icon.
     Normal icons go up to 004F. Higher than that and the glyph will be invisible or have bugged graphics.
     But if you increase this value to 3CD0 or higher, the glyph won't appear it all, it won't even be invisible.
-  Bytes 23-24: Bitfield
+  16,2: Bitfield
     Bit 1: ?
-  Bytes 25-26: Animation Shanoa plays when using this Union.
+  18,2: Animation Shanoa plays when using this Union.
     This is an index in the player's swing animations list (the Y button list).
-  Byte 27: ?
-  Byte 28: ?
+  1A,1: ?
+  1B,1: ?
 
 Relic format:
-  12 bytes long.
-  Bytes 1-2: Item ID.
-  Bytes 3-4: Icon.
+  0xC bytes long.
+  00,2: Item ID.
+  02,2: Icon.
     Normal icons go up to 004F. Higher than that and the glyph will be invisible or have bugged graphics.
     But if you increase this value to 3CD0 or higher, the glyph won't appear it all, it won't even be invisible.
-  Bytes 5-12: Always 0.
+  04,4: Always 0.
+  08,4: Always 0.
 
 Armor format:
-  20 bytes long.
-  Bytes 1-2: Item ID.
-  Bytes 3-4:
+  0x14 bytes long.
+  00,2: Item ID.
+  02,2:
     Least significant bit first.
     Bits 1-11: Icon.
     Bits 12-13: Icon palette.
     Bits 14-16: Unused?
-  Bytes 5-8: Store price of the item.
-  Byte 9: 02 for accessories, 01 for other types of armor.
-  Byte 10: ???
-  Byte 11: Defense stat.
-  Byte 12: Strength stat (signed).
-  Byte 13: Constitution stat (signed).
-  Byte 14: Intelligence stat (signed).
-  Byte 15: Mind stat (signed).
-  Byte 16: Luck stat (signed).
-  Bytes 17-18: Bitfield for what elemental resistances this armor gives you.
-  Byte 19:
-  Byte 20:
+  04,4: Store price of the item.
+  08,1: 02 for accessories, 01 for other types of armor.
+  09,1: ???
+  0A,1: Defense stat.
+  0B,1: Strength stat (signed).
+  0C,1: Constitution stat (signed).
+  0D,1: Intelligence stat (signed).
+  0E,1: Mind stat (signed).
+  0F,1: Luck stat (signed).
+  10,2: Bitfield for what elemental resistances this armor gives you.
+  12,1:
+  13,1:
 
 Consumable format:
-  12 bytes long.
-  Bytes 1-2: Item ID.
-  Bytes 3-4:
+  0xC bytes long.
+  00,2: Item ID.
+  02,2:
     Least significant bit first.
     Bits 1-11: Icon.
     Bits 12-13: Icon palette.
     Bits 14-16: Unused?
-  Bytes 5-8: Store price of the item.
-  Byte 9: Type of the consumable.
+  04,4: Store price of the item.
+  08,1: Type of the consumable.
     0 Restores HP.
       Var A: Amount of HP to restore.
     1 Restores MP.
@@ -176,6 +177,6 @@ Consumable format:
     B Increases attribute points.
       Var A: The amount of attribute points to give.
       Which type of attribute points to give is automatically calculated depending on the global ID of this item. It will increase attribute global ID - 0x9C.
-  Byte 10: Always 00, no effect.
-  Bytes 11-12: Var A.
+  09,1: Always 00, no effect.
+  0A,2: Var A.
     See above for what this does depending on the consumable type.

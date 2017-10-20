@@ -1,37 +1,38 @@
-OoE Enemy DNA (36 bytes long):
-Bytes 1-4: Enemy create code.
-Bytes 5-8: Enemy update code.
-Bytes 9-10: Item 1. Global ID of the item + 1.
-Bytes 11-12: Item 2
-Byte 13: Palette offset to use when this enemy is petrified.
-Byte 14: Attribute points given when killed.
-  Each Master Ring you have equipped doubles this number.
-  Albus starts with two Master Rings equipped, so he always receives 4 times this number.
-Bytes 15-16: Max HP
-Bytes 17-18: EXP
-Byte 19: Blood color.
-  This is the palette offset for the blood to use in the common sprite. Offset 0 uses palette 2, etc.
-  0 Dark Red
-  1 Bright red
-  2 Orange
-  3 Green
-  4 Blue
-  5 Purple
-  6 Brown
-  7 Grey
-  8 Black
-  Etc.
-Byte 20: ??? Unused?
-Bytes 21-22: Glyph drop. Global ID of the glyph + 1.
-  The enemy can only drop a glyph on death if its AI is coded to drop a glyph.
-Byte 23: Chance to drop glyph
-Byte 24: Attack.
-Byte 25: Defense.
-Byte 26: Magical defense.
-Byte 27: Chance to drop item 1
-Byte 28: Chance to drop item 2
-Bytes 29-32: Weaknesses
-  Bit 26: Enemy takes extra damage? (117 -> 176)
-Bytes 33-36: Resistances
-  Resisting Poison/Curse/Stone does nothing.
-  Bit 32: Can cause the enemy to have corrupted graphics and palette?
+OoE Enemy DNA:
+  0x24 bytes long.
+  00,4: Enemy create code.
+  04,4: Enemy update code.
+  08,2: Item 1. Global ID of the item + 1.
+  0A,2: Item 2
+  0C,1: Palette offset to use when this enemy is petrified.
+  0D,1: Attribute points given when killed.
+    Each Master Ring you have equipped doubles this number.
+    Albus starts with two Master Rings equipped, so he always receives 4 times this number.
+  0E,2: Max HP
+  10,2: EXP
+  12,1: Blood color.
+    This is the palette offset for the blood to use in the common sprite. Offset 0 uses palette 2, etc.
+    0 Dark Red
+    1 Bright red
+    2 Orange
+    3 Green
+    4 Blue
+    5 Purple
+    6 Brown
+    7 Grey
+    8 Black
+    Etc.
+  13,1: ??? Unused?
+  14,2: Glyph drop. Global ID of the glyph + 1.
+    The enemy can only drop a glyph on death if its AI is coded to drop a glyph.
+  16,1: Chance to drop glyph
+  17,1: Attack.
+  18,1: Defense.
+  19,1: Magical defense.
+  1A,1: Chance to drop item 1
+  1B,1: Chance to drop item 2
+  1C,4: Weaknesses
+    Bit 26: Enemy takes extra damage? (117 -> 176)
+  20,4: Resistances
+    Resisting Poison/Curse/Stone does nothing.
+    Bit 32: Can cause the enemy to have corrupted graphics and palette?

@@ -1,13 +1,13 @@
 Consumable format:
-  12 bytes long.
-  Bytes 1-2: Item ID.
-  Bytes 3-4:
+  0xC bytes long.
+  00,2: Item ID.
+  02,2:
     Least significant bit first.
     Bits 1-11: Icon.
     Bits 12-13: Icon palette.
     Bits 14-16: Unused?
-  Bytes 5-8: Store price of the item.
-  Byte 9: Type of the consumable.
+  04,4: Store price of the item.
+  08,1: Type of the consumable.
     0 Restores HP.
       Var A: Amount of HP to restore.
     1 Restores MP.
@@ -21,48 +21,48 @@ Consumable format:
     6 Cannot be used. This type is used for magical tickets, but their effect is hardcoded.
     7 HP Max Up
     8 MP Max Up
-  Byte 10: Always 00, no effect.
-  Bytes 11-12: Var A.
+  09,1: Always 00, no effect.
+  0A,2: Var A.
     See above for what this does depending on the consumable type.
 
 Armor format:
-  24 bytes long.
-  Bytes 1-2: Item ID.
-  Bytes 3-4:
+  0x18 bytes long.
+  00,2: Item ID.
+  02,2:
     Least significant bit first.
     Bits 1-11: Icon.
     Bits 12-13: Icon palette.
     Bits 14-16: Unused?
-  Bytes 5-8: Store price of the item.
-  Byte 9: 02 for accessories, 01 for other types of armor.
-  Byte 10: 
-  Byte 11: Bitfield for who can equip this item.
+  04,4: Store price of the item.
+  08,1: 02 for accessories, 01 for other types of armor.
+  09,1: 
+  0A,1: Bitfield for who can equip this item.
     Least significant bit first.
     Bit 1: Jonathan can equip the item.
     Bit 2: Charlotte can equip the item.
-  Byte 12: Attack stat? Unused for rings/body armor
-  Byte 13: Defense stat.
-  Byte 14: Strength stat (signed).
-  Byte 15: Constitution stat (signed).
-  Byte 16: Intelligence stat (signed).
-  Byte 17: Mind stat (signed).
-  Byte 18: Luck stat (signed).
-  Byte 19:
-  Byte 20:
-  Bytes 21-22: Bitfield for what elemental resistances this armor gives you.
-  Byte 23:
-  Byte 24:
+  0B,1: Attack stat? Unused for rings/body armor
+  0C,1: Defense stat.
+  0D,1: Strength stat (signed).
+  0E,1: Constitution stat (signed).
+  0F,1: Intelligence stat (signed).
+  10,1: Mind stat (signed).
+  11,1: Luck stat (signed).
+  12,1:
+  13,1:
+  14,2: Bitfield for what elemental resistances this armor gives you.
+  16,1:
+  17,1:
 
 Weapon format:
-  32 bytes long.
-  Bytes 1-2: Item ID.
-  Bytes 3-4:
+  0x20 bytes long.
+  00,2: Item ID.
+  02,2:
     Least significant bit first.
     Bits 1-11: Icon.
     Bits 12-13: Icon palette.
     Bits 14-16: Unused?
-  Bytes 5-8: Store price of the item.
-  Byte 9: Animation the player character plays when swinging the weapon.
+  04,4: Store price of the item.
+  08,1: Animation the player character plays when swinging the weapon.
     00: Fast stab.
     02: Slash.
     03: Fast overhead swing.
@@ -72,7 +72,7 @@ Weapon format:
     07: Punch.
     08: Whip.
     09: Book.
-  Byte 10: Special effect.
+  09,1: Special effect.
     00: No effect.
     01: Nebula.
     02: Flame Whip.
@@ -82,20 +82,20 @@ Weapon format:
     06: Illusion Fist.
     07: Tori (throw the weapon diagonally upwards, then it comes back to you).
     08+: Crash.
-  Byte 11: Bitfield for who can equip this item.
+  0A,1: Bitfield for who can equip this item.
     Least significant bit first.
     Bit 1: Jonathan can equip the item.
     Bit 2: Charlotte can equip the item.
-  Byte 12: Attack stat.
-  Byte 13: Defense stat.
-  Byte 14: Strength stat (signed).
-  Byte 15: Constitution stat (signed).
-  Byte 16: Intelligence stat (signed).
-  Byte 17: Mind stat (signed).
-  Byte 18: Luck stat (signed).
-  Byte 19: ?
-  Byte 20: ?
-  Bytes 21-24: Bitfield for the elemental damage types this weapon deals.
+  0B,1: Attack stat.
+  0C,1: Defense stat.
+  0D,1: Strength stat (signed).
+  0E,1: Constitution stat (signed).
+  0F,1: Intelligence stat (signed).
+  10,1: Mind stat (signed).
+  11,1: Luck stat (signed).
+  12,1: ?
+  13,1: ?
+  14,4: Bitfield for the elemental damage types this weapon deals.
     Bits 1-11: Regular elemental types.
     Bit 26: Is a subweapon.
       All subweapons set this bit automatically, even if it's not set in the item editor.
@@ -109,8 +109,8 @@ Weapon format:
       Cures Vincent and kills red skeletons/axe armors whether the Spell bit is set or not.
     Bit 16: Unknown, set for all fist weapons (except the default fists you get when nothing is equipped).
     Bit 20: Can kill Red Skeletons/Axe Armors.
-  Byte 25: Sprite to use for the weapon when you swing it. Doesn't just effect visuals, also hitboxes.
-  Byte 26: Palette offset/critical type.
+  18,1: Sprite to use for the weapon when you swing it. Doesn't just effect visuals, also hitboxes.
+  19,1: Palette offset/critical type.
     Bits 1-6: Critical type. Affects critical animation, MP cost, and what code is run for the critical. This is an index in the list at 0221F070.
       00 No crit.
       01 Normal crit.
@@ -133,9 +133,9 @@ Weapon format:
       12 Spinning art?
       13 Spinning art?
     Bits 7-8: Palette offset.
-  Byte 27: IFrames. An enemy hit by this weapon will be invulnerable to weapons for this number of frames.
-  Byte 28: 
-  Byte 29-30: Bitfield affecting the attack animation and super attack animation.
+  1A,1: IFrames. An enemy hit by this weapon will be invulnerable to weapons for this number of frames.
+  1B,1: 
+  1C,2: Bitfield affecting the attack animation and super attack animation.
     Least significant bit first.
     Bit 1: Animation doesn't get interrupted when the player lands.
     Bit 2: Weapon doesn't follow the player, it floats in the air where the player started swinging it.
@@ -153,27 +153,27 @@ Weapon format:
     Bit 14: Can whip diagonally downward (if you have Whip Skill 2 relic).
     Bit 15:
     Bit 16:
-  Bytes 31-32: Swinging sound effect of the weapon.
+  1E,2: Swinging sound effect of the weapon.
 
 Skill format:
-  24 bytes long.
-  Bytes 1-4: Code pointer.
-  Byte 5: Sprite.
-  Byte 6: Type.
+  0x18 bytes long.
+  00,4: Code pointer.
+  04,1: Sprite.
+  05,1: Type.
     0 - Subweapon/Spell.
     1 - Dual Crush.
     3 - Relic.
-  Byte 7:
+  06,1:
     Bit 1: Something with dual crushes?
     Bit 2:
     Bit 3: Is a spell.
       This will make it equippable by Charlotte instead of Jonathan.
     Bit 4: If set, neither Jonathan nor Charlotte can equip this skill.
     Bits 5-8: Unused?
-  Byte 8: 
-  Bytes 9-10: Mana cost.
-  Bytes 11-12: Damage multiplier.
-  Bytes 13-16: Bitfield for what elemental damage types this skill does.
+  07,1: 
+  08,2: Mana cost.
+  0A,2: Damage multiplier.
+  0C,4: Bitfield for what elemental damage types this skill does.
     Bits 1-11: Regular elemental types.
     Bit 18: Reflects projectiles.
     Bit 27: Is magical.
@@ -182,21 +182,21 @@ Skill format:
     Bit 28: Cures vampirism and kills red skeletons/axe armors.
       This only cures the sisters if the magical bit is also set.
       Cures Vincent and kills red skeletons/axe armors whether the magical bit is set or not.
-  Bytes 17-20: Bitfield of player state booleans that must be false in order to use this skill. Checks bitfield 020FCB80/020FCCB0 (the player's current state booleans, first is for player 1, second is for player 2). 0 means it can be used in any state.
-  Bytes 21-22:
+  10,4: Bitfield of player state booleans that must be false in order to use this skill. Checks bitfield 020FCB80/020FCCB0 (the player's current state booleans, first is for player 1, second is for player 2). 0 means it can be used in any state.
+  14,2:
     For Seiryu, Knife, Shuriken, Yagyu Shuriken, Kunai: IFrames.
     For Dual Crushes: Voice file 1 ID.
-  Bytes 23-24:
+  16,2:
     For Subweapons/Spells: Which stat or status effect to affect.
     For Dual Crushes: Voice file 2 ID.
 
 Extra skill data format:
   6 bytes long.
-  Bytes 1-2:
+  00,2:
     Bits 1-4: Maximum number of this projectile you can have in the room at once.
     Bits 5-16: (For subweapons) Additional max you get when you've mastered this subweapon.
     Bits 5-16: (For spells) Number of frames this spell takes to charge up.
-  Bytes 3-4: Number of SP points this subweapon takes to master.
-  Bytes 5-6: Price of this skill.
+  02,2: Number of SP points this subweapon takes to master.
+  04,2: Price of this skill.
     This is in increments of decimal 1000 gold.
     For example if you want the price of this skill to be decimal 200,000, set to this to 0xC8 (decimal 200).

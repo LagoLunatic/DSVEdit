@@ -2,88 +2,91 @@
 Sprite files are located in the /so/ folder, have a p_ prefix, followed by the file path version of the entity's name, and have the .dat extension.
 Example: /so/p_zombi.dat
 
-Bytes 00-03: Magic bytes, always 0xBEEFF00D.
-Bytes 04-07: Offset within this file to the start of the list of sprite parts. Always 0x40.
-Bytes 08-0B: Offset within this file to the start of the list of hitboxes.
-Bytes 0C-0F: Offset within this file to the start of the list of the sprite's frames.
-Bytes 10-13: Offset within this file to the start of the list of frame delays.
+00,4: Magic bytes, always 0xBEEFF00D.
+04,4: Offset within this file to the start of the list of sprite parts. Always 0x40.
+08,4: Offset within this file to the start of the list of hitboxes.
+0C,4: Offset within this file to the start of the list of the sprite's frames.
+10,4: Offset within this file to the start of the list of frame delays.
   This list doesn't exist for enemies with a skeleton file, so the pointer is just 0 in that case.
-Bytes 14-17: Offset within this file to the start of the list of animations.
+14,4: Offset within this file to the start of the list of animations.
   This list doesn't exist for enemies with a skeleton file, so the pointer is just 0 in that case.
-Bytes 18-1B: 0x00.
-Bytes 1C-1F: 0x00.
-Bytes 20-23: Offset within this file to the start of the file footer.
-Bytes 24-27: Number of frames this sprite has.
-Bytes 28-2B: Number of animations this sprite has.
-Bytes 2C-2F: Length of this file in bytes.
-Bytes 30-3F: 0x00.
+18,4: 0x00.
+1C,4: 0x00.
+20,4: Offset within this file to the start of the file footer.
+24,4: Number of frames this sprite has.
+28,4: Number of animations this sprite has.
+2C,4: Length of this file in bytes.
+30,4: 0x00.
+34,4: 0x00.
+38,4: 0x00.
+3C,4: 0x00.
 
 Some sprites don't have their own file. Instead they are all stored together in an overlay file (overlay 2 in DoS). These sprites without individual files work slightly different from sprite files. Mainly they just have absolute pointers instead of pointers that are relative within the sprite file. Also, these don't have a full header - instead the pointer to the sprite points to a mini-header with this format:
-Bytes 1-2: Number of frames this sprite has.
-Bytes 3-4: Number of animations this sprite has.
-Bytes 5-8: Absolute pointer to the start of the list of the sprite's frames.
-Bytes 9-12: Absolute pointer to the start of the list of the sprite's animations.
+  00,2: Number of frames this sprite has.
+  02,2: Number of animations this sprite has.
+  04,4: Absolute pointer to the start of the list of the sprite's frames.
+  08,4: Absolute pointer to the start of the list of the sprite's animations.
 
 List of sprite parts:
-Each part is 16 bytes long.
-  Bytes 1-2: x offset. positive means offset backwards, negative means offset forward.
-  Bytes 3-4: y offset. positive means offset downwards, negative means offset upwards.
-  Bytes 5-6: x pos in pixels for where in the gfx file to look for this part.
-  Bytes 7-8: y pos in pixels for where in the gfx file to look for this part.
-  Bytes 9-10: Width of this part in pixels.
-  Bytes 11-12: Height of this part in pixels.
-  Byte 13: GFX page index to use.
-  Byte 14: Flip bits.
+Each part is 0x10 bytes long.
+  00,2: x offset. positive means offset backwards, negative means offset forward.
+  02,2: y offset. positive means offset downwards, negative means offset upwards.
+  04,2: x pos in pixels for where in the gfx file to look for this part.
+  06,2: y pos in pixels for where in the gfx file to look for this part.
+  08,2: Width of this part in pixels.
+  0A,2: Height of this part in pixels.
+  0C,1: GFX page index to use.
+  0D,1: Flip bits.
     Least significant bit first.
     Bit 1: Vertical flip
     Bit 2: Horizontal flip.
     Bit 3: Unused.
     Bit 4: Used by some parts in Hanged Bones, Skeleton Tree, and Brauner, but has no apparent effect.
     Bits 5-8: Unused.
-  Bytes 15-16: Palette index to use.
+  0E,2: Palette index to use.
     For weapons, the palette index is always 0. Instead, if this value is greater than 0, it means the part starts out as already somewhat faded out/transparent.
 
 List of hitboxes:
 Each hitbox is 8 bytes long.
-  Bytes 1-2: x pos (signed).
-  Bytes 3-4: y pos (signed).
-  Bytes 5-6: Width.
-  Bytes 7-8: Height.
+ 00,2: x pos (signed).
+ 02,2: y pos (signed).
+ 04,2: Width.
+ 06,2: Height.
 
 List of sprite frames:
-Each frame is 12 bytes long.
-  Bytes 1-2: 00 00
-  Byte 3: The number of hitboxes this frame has.
-  Byte 4: The number of parts this frame has.
-  Bytes 5-8: Varies depending on whether this is a sprite file or a sprite without an individual file:
+Each frame is 0xC bytes long.
+  00,2: 00 00
+  02,1: The number of hitboxes this frame has.
+  03,1: The number of parts this frame has.
+  04,4: Varies depending on whether this is a sprite file or a sprite without an individual file:
     For sprite files: This value is useless; it's just the index of this frame multiplied by 8. Or, if this frame has no hitboxes, this value will be 0. This is NOT a pointer to the first hitbox to use. However, at runtime, the game replaces this with an absolute pointer to the first hitbox for this frame, which is used. Instead, the first hitbox for this frame is simply the next hitbox in the hitbox list after the last frame's last hitbox.
     For sprites without files: Absolute pointer to the first hitbox to use. 0 if this frame has 0 hitboxes.
-  Bytes 9-12: Pointer to the first part to use.
+  08,4: Pointer to the first part to use.
     Inside the sprite file, this pointer is relative to the start of the part list initially (meaning 0 refers to the first part).
     But at runtime, the game replaces it with an absolute pointer after 1 frame, presumably as a performance optimization.
 
 List of frame delays:
 Each frame delay is 8 bytes long.
 This list doesn't exist for enemies with a skeleton file.
-  Bytes 1-2: Frame index to use.
-  Bytes 3-4: Delay (in frames) for this frame to be displayed.
-  Bytes 5-8: Unknown. Normally 0, sometimes 0x40.
+  00,2: Frame index to use.
+  02,2: Delay (in frames) for this frame to be displayed.
+  04,4: Unknown. Normally 0, sometimes 0x40.
 
 List of animations:
 Each entry is 8 bytes long.
 This list doesn't exist for enemies with a skeleton file.
-  Bytes 1-4: Number of frames this animation has.
-  Bytes 5-8: Varies depending on whether this is a sprite file or a sprite without an individual file:
+  00,4: Number of frames this animation has.
+  04,4: Varies depending on whether this is a sprite file or a sprite without an individual file:
     For sprite files: This value is useless. This is NOT a pointer to the first hitbox to use. However, at runtime, the game replaces this with an absolute pointer to the first frame delay for this animation, which is used. Instead, the first frame delay for this animation is simply the next frame delay in the frame delay list after the last animation's last frame delay.
     For sprites without files: Absolute pointer to the first frame delay to use. 0 if this animation has 0 frames.
 
 File footer:
-  Bytes 1-2: Number of frames this sprite has, duplicate of 0x24 in the header.
-  Bytes 3-4: Number of animations this sprite has, duplicate of 0x28 in the header.
-  Bytes 5-8: Length of this file in bytes, duplicate of 0x2C in the header.
+  00,2: Number of frames this sprite has, duplicate of 0x24 in the header.
+  02,2: Number of animations this sprite has, duplicate of 0x28 in the header.
+  04,4: Length of this file in bytes, duplicate of 0x2C in the header.
     At runtime this gets replaced with a pointer to the start of the sprite's frames.
-  Bytes 9-12: Can either be the length of this file in bytes, or just 0.
+  08,4: Can either be the length of this file in bytes, or just 0.
     At runtime this gets replaced with a pointer to the start of the sprite's animations.
-  Bytes 13-16: 00 00 00 00
-  Bytes 17-20: 00 00 00 00
+  0C,4: 00 00 00 00
+  10,4: 00 00 00 00
   Rest of the file: Padded with 0s so that the filesize is a multiple of 0x10.

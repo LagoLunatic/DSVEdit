@@ -1,13 +1,14 @@
 
-Room metadata (32 bytes long):
-Bytes 1-4: Always 0.
-Bytes 5-8: Always 0.
-Bytes 9-12: Pointer to layer list for this room.
-Bytes 13-16: Pointer to tileset wrapper A for this room.
-Bytes 17-20: Pointer to palette wrapper for this room.
-Bytes 21-24: Pointer to entity list for this room.
-Bytes 25-28: Pointer to door list for this room.
-Bytes 29-32: Varies by game. See below.
+Room metadata:
+  0x20 bytes long.
+  00,4: Always 0.
+  04,4: Always 0.
+  08,4: Pointer to layer list for this room.
+  0C,4: Pointer to tileset wrapper A for this room.
+  10,4: Pointer to palette wrapper for this room.
+  14,4: Pointer to entity list for this room.
+  18,4: Pointer to door list for this room.
+  1C,4: Varies by game. See below.
 
 Last 4 bytes of room metadata (DoS):
 Most significant bit first.
@@ -27,70 +28,82 @@ Most significant bit first.
   Bits 26-32: Number of doors this room has.
 
 Layer list:
-Always 64 bytes long. Each entry takes up 16 bytes, so the maximum number of layers in a room is 4.
+Always 0x40 bytes long. Each entry takes up 0x10 bytes, so the maximum number of layers in a room is 4.
 If a room has less than 4 layers, the remaining entries will simply be filled with all 00s to indicate those should be ignored.
 Whichever layer is first in the layer list will be used for collision.
-Format for each entry here:
-Byte 1: Z-Index to draw the layer at.
-  Lower values are closer to the screen. 00 is in front of everything.
-  The actual z-axis position is calculated as:
-  0x7000-(this_number*0x180)
-Byte 2: How the layer scrolls.
-  This is an index in the list of scroll modes, which is different between games.
-Byte 3: Opacity of the layer. 0 is invisible, 0x1F is fully visible.
-  In OoE 0 looks fully visible, so the lowest you can get there is 1.
-Byte 4: Unknown.
-Bytes 5-6: Unknown.
-Bytes 7-8: Should be equal to the layer's height in pixels.
-  This is used by the collision checker to tell if the player is standing on a jump-through platform.
-  If you set this value too small, for example setting it to C0 in a room 2 screens tall, then the player won't be able to properly stand on jump-through platforms below that point in the level.
-  Note that in PoR and OoE this value is automatically calculated every time you enter a room, so the bug described above can only happen in DoS.
-Byte 9: Render mode of the layer. 00 and 01 are normal 16 color mode. Anything higher is 256 color mode. However different areas require a different, specific value. TODO: Figure out how this works.
-Byte 10: Affects palette somehow?
-Byte 11-12: Affects tileset and palette somehow? Only has an effect when in 256 color mode.
-Byte 13-16: Pointer to layer metadata.
 
-Layer metadata (16 bytes long):
-Byte 1: Number of screens wide this layer is (maximum 15 screens wide).
-Byte 2: Number of screens tall this layer is (maximum 15 screens tall).
-Byte 3: Always 0.
-Byte 4: Always 0.
-Bytes 5-8: Pointer to the visual tileset used by this layer.
-Bytes 9-12: Pointer to the collision tileset used by this layer.
-Bytes 13-16: Pointer to this layer's tile data.
+Layer list entry format:
+  0x10 bytes long.
+  00,1: Z-Index to draw the layer at.
+    Lower values are closer to the screen. 00 is in front of everything.
+    The actual z-axis position is calculated as:
+    0x7000-(this_number*0x180)
+  01,1: How the layer scrolls.
+    This is an index in the list of scroll modes, which is different between games.
+  02,1: Opacity of the layer. 0 is invisible, 0x1F is fully visible.
+    In OoE 0 looks fully visible, so the lowest you can get there is 1.
+  03,1: Unknown.
+  04,2: Unknown.
+  06,2: Should be equal to the layer's height in pixels.
+    This is used by the collision checker to tell if the player is standing on a jump-through platform.
+    If you set this value too small, for example setting it to C0 in a room 2 screens tall, then the player won't be able to properly stand on jump-through platforms below that point in the level.
+    Note that in PoR and OoE this value is automatically calculated every time you enter a room, so the bug described above can only happen in DoS.
+  08,1: Render mode of the layer. 00 and 01 are normal 16 color mode. Anything higher is 256 color mode. However different areas require a different, specific value. TODO: Figure out how this works.
+  09,1: Affects palette somehow?
+  0A,2: Affects tileset and palette somehow? Only has an effect when in 256 color mode.
+  0C,4: Pointer to layer metadata.
 
-Layer tile data:
-List of this layer's tiles. Each tile is 2 bytes long. Each screen is 16 blocks wide and 12 blocks tall. So each screen takes up 384 bytes here.
-Format for each tile here:
+Layer metadata:
+  0x10 bytes long.
+  00,1: Number of screens wide this layer is (maximum 15 screens wide).
+  01,1: Number of screens tall this layer is (maximum 15 screens tall).
+  02,1: Always 0.
+  03,1: Always 0.
+  04,4: Pointer to the visual tileset used by this layer.
+  08,4: Pointer to the collision tileset used by this layer.
+  0C,4: Pointer to this layer's tile data.
+
+Layer tile data list:
+List of this layer's tiles. Each tile is 2 bytes long.
+Each screen is 0x10 blocks wide and 0xC blocks tall (in decimal: 16x12).
+So each screen takes up 0x180 bytes here (0x10*0xC*2 = 0x180).
+
+Layer tile format:
 Most significant bit first.
   First bit is whether the tile is flipped vertically.
   Second bit is whether the tile is flipped horizontally.
   Remaining 14 bits are the index of which tile to use from the tileset, 1 meaning the first tile on the tileset, 0 meaning a blank tile.
 
 Entity list:
-Each entity is 12 bytes long.
+Each entity is 0xC bytes long.
 Stop reading from this list when the first two bytes of an entity are FF 7F. The other ten bytes of this dummy entity don't matter.
 
 Entity format:
-Bytes 1-2: Entity's x position in the room, in pixels. (Signed.)
-Bytes 3-4: Entity's y position in the room, in pixels. (Signed.)
-Byte 5: ???
-Byte 6: Entity type. See entity type list for details.
-Byte 7: Entity subtype.
-Byte 8: ???
-Bytes 9-10: Entity variable A.
-Bytes 11-12: Entity variable B.
+  0xC bytes long.
+  00,2: Entity's x position in the room, in pixels. (Signed.)
+  02,2: Entity's y position in the room, in pixels. (Signed.)
+  04,1: Byte 5.
+  05,1: Entity type. See entity type list for details.
+  06,1: Entity subtype.
+  07,1: Byte 8.
+  08,2: Entity variable A.
+  0A,2: Entity variable B.
 
 Door list:
-Each door is 16 bytes long.
+Each door is 0x10 bytes long.
 The number of doors the room has is stored in the room's metadata.
 
 Door format:
-Bytes 1-4: Pointer to destination room's metadata.
-Byte 5: X position in screens of the loading zone that triggers the transition. A loading zone is the same width and height of a screen. 0xFF means -1 (i.e. off the left edge of the room). 0x80 to 0xFE aren't valid values, the loading zone simply won't appear. The loading zone also won't appear if it would overlap the room itself.
-Byte 6: Y position in screens of the loading zone that triggers the transition. See above.
-Bytes 7-8: Destination X offset in pixels to where the player should be placed. Unused.
-Bytes 9-10: Destination Y offset in pixels to where the player should be placed. Unused.
-Bytes 11-12: Destination X offset again. Acts the same as bytes 7-8. Can be stacked with bytes 7-8 to offset even further. Used.
-Bytes 13-14: Destination Y offset again. Acts the same as bytes 9-10. Can be stacked with bytes 9-10 to offset even further. Used.
-Bytes 15-16: Unused and no apparent effect.
+  0x10 bytes long.
+  00,4: Pointer to destination room's metadata.
+  04,1: X position in screens of the loading zone that triggers the transition.
+    A loading zone is the same width and height of a screen.
+    0xFF means -1 (i.e. off the left edge of the room).
+    0x80 to 0xFE aren't valid values, the loading zone simply won't appear.
+    The loading zone also won't appear if it would overlap the room itself.
+  05,1: Y position in screens of the loading zone that triggers the transition. See above.
+  06,2: Destination X offset in pixels to where the player should be placed. Unused.
+  08,2: Destination Y offset in pixels to where the player should be placed. Unused.
+  0A,2: Destination X offset again. Acts the same as bytes 7-8. Can be stacked with bytes 7-8 to offset even further. Used.
+  0C,2: Destination Y offset again. Acts the same as bytes 9-10. Can be stacked with bytes 9-10 to offset even further. Used.
+  0E,2: Unused and no apparent effect.

@@ -1,22 +1,23 @@
-PoR Enemy DNA (32 bytes long):
-Bytes 1-4: Enemy create code.
-Bytes 5-8: Enemy update code.
-Bytes 9-10: Item 1. Global ID of the item + 1. Can be a skill.
-Bytes 11-12: Item 2
-Byte 13: Palette offset to use when this enemy is petrified.
-Byte 14: SP.
-Bytes 15-16: Max HP.
-Bytes 17-18: EXP.
-Byte 19: ???
-Byte 20: Attack stat.
-Byte 21: Defense stat.
-Byte 22: Magical defense stat.
-Byte 23: Base chance to drop item 1.
-  This is on a scale from 0 to 0x100 (decimal 256), so 0x40 is a 25% chance, 0x80 is a 50% chance, etc.
-  Note that drop chance caps out at 50%, after the bonus from luck.
-Byte 24: Base chance to drop item 2.
-  Same as above.
-Bytes 25-28: Weaknesses
-Bytes 29-32: Resistances
-  Resisting Poison/Curse/Stone/Torpor does nothing.
-  Bit 32: Can cause the enemy to have corrupted graphics and palette?
+PoR Enemy DNA:
+  0x20 bytes long.
+  00,4: Enemy create code.
+  04,4: Enemy update code.
+  08,2: Item 1. Global ID of the item + 1. Can be a skill.
+  0A,2: Item 2
+  0C,1: Palette offset to use when this enemy is petrified.
+  0D,1: SP.
+  0E,2: Max HP.
+  10,2: EXP.
+  12,1: ???
+  13,1: Attack stat.
+  14,1: Defense stat.
+  15,1: Magical defense stat.
+  16,1: Base chance to drop item 1.
+    This is on a scale from 0 to 0x100 (decimal 256), so 0x40 is a 25% chance, 0x80 is a 50% chance, etc.
+    Note that drop chance caps out at 50%, after the bonus from luck.
+  17,1: Base chance to drop item 2.
+    Same as above.
+  18,4: Weaknesses
+  1C,4: Resistances
+    Resisting Poison/Curse/Stone/Torpor does nothing.
+    Bit 32: Can cause the enemy to have corrupted graphics and palette?

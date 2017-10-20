@@ -2,48 +2,48 @@
 Tileset:
 Each block in the tileset is 4 bytes long.
 Starts from the first real tile, not the blank tile.
-Bits   1-6: Index of the tile on the tile page.
-Bits  7-12: Seems unused.
-Bits 13-17: Tile page index.
-Bit     18: Horizontal flip.
-Bit     19: Vertical flip.
-Bits 20-24: Seems unused.
-Bits 25-32: Palette index.
+  Bits   1-6: Index of the tile on the tile page.
+  Bits  7-12: Seems unused.
+  Bits 13-17: Tile page index.
+  Bit     18: Horizontal flip.
+  Bit     19: Vertical flip.
+  Bits 20-24: Seems unused.
+  Bits 25-32: Palette index.
 
 Collision tileset:
 Each block in the tileset is 4 bytes long.
 Starts from the first real tile, not the blank tile.
-Byte 1: The collision of this tile. See Tile collision values.
-Byte 2: 00
-Byte 3: 0B or ED
-Byte 4: 3C
+  00,1: The collision of this tile. See Tile collision values.
+  01,1: 00
+  02,1: 0B or ED
+  03,1: 3C
 
 Tile collision values:
 Bitfield. Least significant bit first.
-Bit 1: Platform you can jump up through. Combine with bit 2 to get a fully solid block.
-Bit 2: Varies depending on the value of bits 5-8:
-  0-3 - Solid bottom, left, and right, but top pushes you downwards and out to either the left or right.
-  4-F - Floor slope when 0, ceiling slope when 1. (Vertical flip.)
-Bit 3: Varies depending on the value of bits 5-8:
-  0-1 - Damage. Gets overridden by water.
-  2   - Conveyor belt left.
-  3   - Conveyor belt right.
-  4-F - When 0, slopes from top left to bottom right. When 1, slopes from bottom left to top right. (Horizontal flip.)
-Bit 4: Water. Overrides damage.
-Bit 5-8: Shape of the block:
-  0000 - Full block.
-  0001 - ??? Same as 0?
-  0010 - Half-height block (top half).
-  0011 - Half-height block (bottom half).
-  0100 - Normal slope.
-  0101 - ???
-  0110 - ???
-  0111 - ???
-  1000 - 2-part slope, highest part.
-  1001 - ???
-  1010 - 2-part slope, lowest part.
-  1011 - ???
-  1100 - 4-part slope, highest part.
-  1101 - 4-part slope, higher-middle part.
-  1110 - 4-part slope, lower-middle part.
-  1111 - 4-part slope, lowest part.
+  Bit 1: Platform you can jump up through. Combine with bit 2 to get a fully solid block.
+  Bit 2: Varies depending on the value of bits 5-8:
+    0-3 - Solid bottom, left, and right, but top pushes you downwards and out to either the left or right.
+    4-F - Floor slope when 0, ceiling slope when 1. (Vertical flip.)
+  Bit 3: Varies depending on the value of bits 5-8:
+    0-1 - Damage. Gets overridden by water.
+    2   - Conveyor belt left.
+    3   - Conveyor belt right.
+    4-F - When 0, slopes from top left to bottom right. When 1, slopes from bottom left to top right. (Horizontal flip.)
+  Bit 4: Water. Overrides damage.
+  Bit 5-8: Shape of the block:
+    0000 - Full block.
+    0001 - ??? Same as 0?
+    0010 - Half-height block (top half).
+    0011 - Half-height block (bottom half).
+    0100 - Normal slope.
+    0101 - ???
+    0110 - ???
+    0111 - ???
+    1000 - 2-part slope, highest part.
+    1001 - ???
+    1010 - 2-part slope, lowest part.
+    1011 - ???
+    1100 - 4-part slope, highest part.
+    1101 - 4-part slope, higher-middle part.
+    1110 - 4-part slope, lower-middle part.
+    1111 - 4-part slope, lowest part.
