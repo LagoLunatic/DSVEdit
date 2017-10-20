@@ -392,10 +392,11 @@
 
 0205D0D8 CheckPlayerClose
   ; r0 - Entity to check how close the player is to it
-  ; r1 - Minimum X pos to the left (negative)
-  ; r2 - Minimum Y pos upwards (negative)
-  ; r3 - Maximum X pos to the right (positive)
-  ; [r13,0] - Maximum Y pos downwards (positive)
+  ; r1 - Minimum X pos to the left in pixels (negative)
+  ; r2 - Minimum Y pos upwards in pixels (negative)
+  ; r3 - Maximum X pos to the right in pixels (positive)
+  ; [r13,0] - Maximum Y pos downwards in pixels (positive)
+  ; Returns: 0 if the player is out of range, 1 if in range.
 0205CE48 GetPlayerXPos
   ; r0 - Entity calling this function?
 

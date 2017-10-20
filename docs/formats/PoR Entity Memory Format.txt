@@ -10,6 +10,7 @@ Memory used for entities in PoR is 020FC500 - 0211173F. Each entity is 0x160 byt
 012,2: 
 014,2: Frame counter 1.
 016,2: Frame counter 2.
+021,1: 1F?
 024,4: X pos on the screen.
 028,4: Y pos on the screen.
 02C,4: Z position.
@@ -25,6 +26,7 @@ Memory used for entities in PoR is 020FC500 - 0211173F. Each entity is 0x160 byt
 06C,2: Sprite info index.
   This is an index in the currently loaded sprite info list, 020FA200.
 074,4: Bitfield related to sprite drawing.
+  0020 
   0080 Horizontal flip.
   8000 
 078,4: Pointer to sprite animation list.
@@ -40,6 +42,7 @@ Memory used for entities in PoR is 020FC500 - 0211173F. Each entity is 0x160 byt
   1 - Transparency is rendered as white.
   2 - Sprite is rendered as black, transparency is normal.
   3 - Sprite and transparency are transparent.
+08E,2: ??? 8000
 090,4: Color tint 1?
 094,4: Color tint 2?
 098,4: Color tint 3?
@@ -75,6 +78,8 @@ Memory used for entities in PoR is 020FC500 - 0211173F. Each entity is 0x160 byt
 0EC,2: Pointer to child entity?
 0FC,2: 
 120,4: Bitfield of ???.
+  0x20 - ? something checked many times by enemies.
+12E,2: 
 132,1: Subtype.
 133,1: Byte 5.
 13C,2: Var A.

@@ -141,6 +141,9 @@
   00,2: 
   04,1:
 
+020FBC64 - List of sprites in the OAM.
+  Entry length 0x10.
+
 020FC48C - Bitfield of what buttons the player is pressing.
   0001 - A
   0002 - B
@@ -283,6 +286,7 @@ F5-F5
   0x00000002 - Set during boss fights. Disables suspending, magical tickets, and keeps boss doors shut.
   0x00000040 - Player is dying. Manually setting this bit causes the player to die instantly regardless of their HP, complete with screaming.
   0x00000080 - Set during events?
+  0x00002000 - related to status effects on enemies?
   0x00004000 - related to adrenaline gear?
   0x00040000 - Set during events and in Wind and Vincent's rooms?
   0x00100000 - Set when going through a door.

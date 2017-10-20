@@ -53,6 +53,10 @@
   ; Calling TeleportPlayer without TriggerRoomTransition will just bug out the game.
 02032CF4 TriggerRoomTransition
 
+02054784 SetOAMDataForElementalSymbols
+  ; r2 - X
+  ; r3 - Y
+
 021E43E4 GiveItem
   ; r0 - Item type (2 is consumables, etc)
   ; r1 - Item index
@@ -197,9 +201,11 @@
 02012F68 Rand
 02012F30 RandMax
   ; Max random number is r0-1. Min is 0.
+02013008 RandMax2
+  ; Max random number is r0-1. Min is 0.
+  ; How does this differ from RandMax??
 02013024 RandMaxRandSign
   ; Min random number is -r0. Max is r0-1.
-02013008 RandMax2?
 
 020216B0 LoadSpriteMultiGfx
   ; r0 - Entity ptr
@@ -233,6 +239,57 @@
   ; r2 - 0?
   ; Returns the index in the globally loaded palette list that this palette got loaded into. (This index then gets stored at entity+86 and entity+88.)
 
+021D7E80 EntityMoveToFloor
+  ; Teleports entity downwards to the nearest floor.
+  ; r0 - Pointer to entity
+  ; r1 - Pointer to ??. May have the physical size of this entity?
+  ;   For skeleton, this is 022B21A0.
+  ;   04,2: ?? in pixels.
+
+0200E8EC EntityInitializeSprite
+  ; r0 - Entity
+  ; Calculates the pointer to this entity's sprite info in the currently loaded sprite info list.
+  ; Then calls EntityInitializeSprite2 with r0=sprite_info_pointer and r1=entity_pointer+0x78.
+02010E6C EntityInitializeSprite2
+  ; r0 - Pointer to a currently loaded sprite info (in list 020FA200).
+  ; r1 - Pointer to animation data within the entity memory (entity_pointer+0x78).
+  ; This function sets the entity's sprite animation list pointer (at entity+0x78). And then stores 0 to the unknown bitfield at entity+0x80.
+
+021D8D4C FacePlayer
+  ; r0 - Entity
+  ; Faces the controlled player by either setting or unsetting the horizontal flip bit (bit 0x80 of bitfield entity+0x74).
+  ; Not 100% sure on some of the exact details here, it does something depending on whether bit 0x20 of bitfield entity+0x120 is set or not.
+
+020140F4 ???InEnemyCreateCode
+  ; r0 - Entity
+  ; gets sprite info pointer... and doesn't use it.
+  ; gets hitbox pointer
+
+0201DF8C ???EnemyStoreEntityPointerSomewhere
+  ; r0 - Entity
+  ; r1 - 0?
+  ; stores entity pointer at 0x020E66E8+r1*0xC
+  ; stores 0 (single byte) right after the place the entity pointer got stored.
+  ; used by the Skeleton enemy's create code if var B is not 0.
+
+021DAB70 EnemyCheckStatusEffects
+  ; r0 - Enemy entity
+  ; r1 - Bitfield of ???. Maybe which status effects to check??
+  ; Returns r0 - 1 if the enemy is frozen and shouldn't move at all. 0 if the enemy can still move.
+  ; The enemy AI calls this, and if the return value isn't 0 the AI returns early.
+
+021D8A28 CheckPlayerClose
+  ; r0 - Entity to check how close the player is to it
+  ; r1 - Minimum X pos to the left in pixels (negative)
+  ; r2 - Minimum Y pos upwards in pixels (negative)
+  ; r3 - Maximum X pos to the right in pixels (positive)
+  ; [r13,0] - Maximum Y pos downwards in pixels (positive)
+  ; Returns: 0 if the player is out of range, 1 if in range.
+
+020108B0 GetSpriteInfoPointer
+  ; r0 - Index in the currently loaded sprite info list, 020FA200. This is from entity+0x6C.
+  ; Returns r0 - Pointer to the entry in that list. (0x020FA200 + index*0x10)
+
 0200EF40 SpriteDrawEntity
   ; A number of entities have this has their draw code.
   ; r0 - Pointer to entity
@@ -249,6 +306,10 @@
   ; r0 - Entity
   ; r1 - Anim index to set
   ; r2 - ??? entity+80
+
+021DB0A4 GenericDraw
+  ; The draw function for enemies, enemy projectiles, player skills, skill pickups, special objects, dust, explosions, etc.
+  ; Not used for players, item pickups, destructibles, or particles from destroyed destructibles/enemies.
 
 0206DC34 BossRushTimerUpdate
 0206DC38 BossRushTimerDraw
@@ -344,6 +405,16 @@
   ; r0 - Entity pointer
   ; r1 - Which portrait sprite to use (index in list 020F4E84)
 
+02010788 EntityInitSpriteAndPalette
+  ; r0 - Child entity
+  ; r1 - Sprite pointer
+  ; r2 - Palette list pointer
+
+02020858 EntityInitSpriteAndPaletteFromParent
+  ; r0 - Parent entity
+  ; r1 - Child entity
+  ; Initializes the child with the sprite and palette of the parent.
+
 ; Enemy-specific code
 0222D5DC EnemyZombieCreate
 0222D828 EnemyZombieUpdate
@@ -351,6 +422,12 @@
 0222E86C EnemyBatUpdate
 022451A4 EnemySkeletonCreate
 022452D0 EnemySkeletonUpdate
+022459D4 EnemySkeletonSpawnBrokenPieces
+02245BFC EnemySkeletonBrokenPieceUpdate
+02245E10 EnemySkeletonSpawnBoneProjectile
+  ; r0 - Parent skeleton entity
+  ; r1 - 0 or 1?
+02246034 EnemySkeletonBoneProjectileUpdate
 02297320 EnemyAxeArmorCreate
 022974F4 EnemyAxeArmorUpdate
 0226D430 EnemyDeathMaskCreate

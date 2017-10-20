@@ -14,6 +14,7 @@ Enemies:
     Var A: Delay in frames between spawning each bat.
     Var B: Usually 0. If greater than 0, ???. Somehow affects spawn rate.
 02 Skeleton
+  Var B: If not 0, calls func 0201DF8C when created? Unknown effect.
 03 Axe Armor
 04 Death Mask
 05 Zacchino
