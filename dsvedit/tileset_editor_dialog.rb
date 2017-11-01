@@ -221,6 +221,8 @@ class TilesetEditorDialog < Qt::Dialog
     else
       @palettes = []
       @room.palette_pages.each do |palette_page|
+        next if palette_page.palette_type == 1 # Foreground palette
+        
         pals_for_page = @renderer.generate_palettes(palette_page.palette_list_pointer, 16)
         
         @palettes[palette_page.palette_load_offset, palette_page.num_palettes] = pals_for_page[palette_page.palette_index, palette_page.num_palettes]
@@ -228,6 +230,8 @@ class TilesetEditorDialog < Qt::Dialog
       if @gfx_pages.any?{|gfx| gfx.colors_per_palette == 256}
         @palettes_256 = []
         @room.palette_pages.each do |palette_page|
+          next if palette_page.palette_type == 1 # Foreground palette
+          
           pals_for_page = @renderer.generate_palettes(palette_page.palette_list_pointer, 256)
           
           @palettes_256[palette_page.palette_load_offset, palette_page.num_palettes] = pals_for_page[palette_page.palette_index, palette_page.num_palettes]

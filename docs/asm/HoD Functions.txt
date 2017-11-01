@@ -1,4 +1,8 @@
 
+080BD754 Decompress
+  ; r0 - Source pointer to the LZ77-compressed data to be decompressed
+  ; r1 - Destination pointer where the decompressed data should be stored
+
 08009398 ChangeRoom
   ; r0 - Room pointer
   ; r1 - Dest X

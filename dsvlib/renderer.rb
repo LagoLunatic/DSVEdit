@@ -199,6 +199,8 @@ class Renderer
     rendered_tileset = ChunkyPNG::Image.new(TILESET_WIDTH_IN_TILES*TILE_WIDTH, TILESET_HEIGHT_IN_TILES*TILE_HEIGHT, ChunkyPNG::Color::TRANSPARENT)
     palettes = []
     palette_pages.each do |palette_page|
+      next if palette_page.palette_type == 1 # Foreground palette
+      
       pals_for_page = generate_palettes(palette_page.palette_list_pointer, colors_per_palette)
       
       palettes[palette_page.palette_load_offset, palette_page.num_palettes] = pals_for_page[palette_page.palette_index, palette_page.num_palettes]
