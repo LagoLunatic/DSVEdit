@@ -27,9 +27,9 @@ Weapon format:
   09,1: ?
   0A,1: Attack stat.
   0B,1: Defense stat.
-  0C,1: Constitution stat.
-  0D,1: Intelligence stat.
-  0E,1: Mind stat.
+  0C,1: Strength stat.
+  0D,1: Constitution stat.
+  0E,1: Intelligence stat.
   0F,1: Luck stat.
   10,2: Bitfield for the elemental damage types this weapon deals.
   12,1: Weapon GFX index.
@@ -43,6 +43,21 @@ Weapon format:
 
 Body armor and Accessory format:
   0x14 bytes long.
+  00,2: Item ID.
+  02,2: Icon.
+  04,4: Price.
+  08,1: Type:
+    0 - Body armor.
+    1 - Accessory.
+  09,1: ?
+  0A,1: Attack stat.
+  0B,1: Defense stat.
+  0C,1: Strength stat.
+  0D,1: Constitution stat.
+  0E,1: Intelligence stat.
+  0F,1: Luck stat.
+  10,2: Bitfield for what elemental resistances this armor gives you.
+  12,2: ?
 
 Red soul format:
   0x10 bytes long.
