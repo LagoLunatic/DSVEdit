@@ -183,10 +183,27 @@ class Room
   
   def read_door_list_from_rom(door_list_ram_pointer)
     @doors = []
-    (0..number_of_doors-1).each do |i|
-      door_pointer = door_list_ram_pointer + i*Door.data_size
+    
+    if GAME == "hod"
+      i = 0
+      while true
+        door_pointer = door_list_ram_pointer + i*Door.data_size
+        
+        dest_room_pointer = fs.read(door_pointer, 4).unpack("V").first
+        break unless fs.is_pointer?(dest_room_pointer)
+        
+        @doors << Door.new(self, game).read_from_rom(door_pointer)
+        
+        i += 1
+      end
       
-      @doors << Door.new(self, game).read_from_rom(door_pointer)
+      @number_of_doors = doors.length
+    else
+      (0..number_of_doors-1).each do |i|
+        door_pointer = door_list_ram_pointer + i*Door.data_size
+        
+        @doors << Door.new(self, game).read_from_rom(door_pointer)
+      end
     end
     
     @original_number_of_doors = doors.length
@@ -217,7 +234,6 @@ class Room
       unk_5 = (extra_data   & 0b01000000_00000000_00000000_00000000) >> 30
       unk_6 = (extra_data   & 0b10000000_00000000_00000000_00000000) >> 31
       #p "%X %X %X %X" % [unk_1, unk_2, unk_5, unk_6]
-      @number_of_doors    = 2
       @color_effects      = 0
       @room_xpos_on_map   = 0
       @room_ypos_on_map   = 0
