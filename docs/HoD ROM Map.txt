@@ -1,6 +1,8 @@
 
 0801A3E0 - something related to item types? used by enemy drop code
 
+080C42F4-080C4303 - List of GFX pages containing item icons.
+
 0849507C - List of warp rooms.
   Entry length 0xC.
   00,2: X pos of the warp room on the map.
