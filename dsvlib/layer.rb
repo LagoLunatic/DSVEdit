@@ -71,7 +71,7 @@ class Layer
     
     tile_data_string = fs.read(layer_tiledata_ram_start_offset, SIZE_OF_A_SCREEN_IN_BYTES*width*height)
     @tiles = tile_data_string.unpack("v*").map do |tile_data|
-      Layer.tile_class.new.from_game_data(tile_data)
+      LayerTile.new.from_game_data(tile_data)
     end
   end
   
@@ -130,7 +130,7 @@ class Layer
         # Pad the layer with empty blocks vertically if layer's height was increased.
         new_row = []
         width_in_blocks.times do
-          new_row << Layer.tile_class.new.from_game_data(0)
+          new_row << LayerTile.new.from_game_data(0)
         end
         tile_rows << new_row
       end
@@ -141,7 +141,7 @@ class Layer
         
         (width_in_blocks - row.length).times do
           # Pad the layer with empty blocks horizontally if layer's width was increased.
-          row << Layer.tile_class.new.from_game_data(0)
+          row << LayerTile.new.from_game_data(0)
         end
         
         row
@@ -166,14 +166,6 @@ class Layer
     end
     tile_data = tiles.map(&:to_tile_data).pack("v*")
     fs.write(layer_tiledata_ram_start_offset, tile_data)
-  end
-  
-  def self.tile_class
-    if SYSTEM == :nds
-      Tile
-    else
-      GBATile
-    end
   end
   
   def self.layer_list_entry_size
@@ -207,28 +199,7 @@ class Layer
   end
 end
 
-class Tile
-  attr_accessor :index_on_tileset,
-                :horizontal_flip,
-                :vertical_flip
-  
-  def from_game_data(tile_data)
-    @index_on_tileset = (tile_data & 0b0011111111111111)
-    @horizontal_flip  = (tile_data & 0b0100000000000000) != 0
-    @vertical_flip    = (tile_data & 0b1000000000000000) != 0
-    
-    return self
-  end
-  
-  def to_tile_data
-    tile_data = index_on_tileset
-    tile_data |= 0b0100000000000000 if horizontal_flip
-    tile_data |= 0b1000000000000000 if vertical_flip
-    tile_data
-  end
-end
-
-class GBATile
+class LayerTile
   attr_accessor :index_on_tileset,
                 :horizontal_flip,
                 :vertical_flip
