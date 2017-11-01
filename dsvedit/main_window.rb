@@ -452,8 +452,6 @@ class DSVEdit < Qt::MainWindow
   end
   
   def update_room_position_indicator
-    return if GAME == "hod" # TODO
-    
     @position_indicator.setPos(@room.room_xpos_on_map*4 + 2.25, @room.room_ypos_on_map*4 + 2.25)
     if @room.layers.length > 0
       @position_indicator.setRect(-2, -2, 4*@room.main_layer_width, 4*@room.main_layer_height)
@@ -494,15 +492,41 @@ class DSVEdit < Qt::MainWindow
     x = x / 4
     y = y / 4
     
-    tile = @map.tiles.find do |tile|
-      tile.x_pos == x && tile.y_pos == y
+    if GAME == "hod"
+      tile = @map.tiles.find do |tile|
+        tile.x_pos == x && tile.y_pos == y
+      end
+      
+      
+      if tile.nil? || tile.is_blank
+        return
+      end
+      
+      # In HoD the map tile doesn't have the sector/room indexes so we need to search through all rooms in the game to find a matching one.
+      matched_room = nil
+      game.each_room do |room|
+        if (room.room_xpos_on_map..room.room_xpos_on_map+room.width-1).include?(x) && (room.room_ypos_on_map..room.room_ypos_on_map+room.height-1).include?(y)
+          matched_room = room
+          break
+        end
+      end
+      
+      if matched_room.nil?
+        return
+      end
+      
+      sector_and_room_indexes_changed(matched_room.sector_index, matched_room.room_index)
+    else
+      tile = @map.tiles.find do |tile|
+        tile.x_pos == x && tile.y_pos == y
+      end
+      
+      if tile.nil? || tile.is_blank
+        return
+      end
+      
+      sector_and_room_indexes_changed(tile.sector_index, tile.room_index)
     end
-    
-    if tile.nil? || tile.is_blank
-      return
-    end
-    
-    sector_and_room_indexes_changed(tile.sector_index, tile.room_index)
   end
   
   def load_room
@@ -644,8 +668,6 @@ class DSVEdit < Qt::MainWindow
   end
   
   def load_map()
-    return if GAME == "hod" # TODO
-    
     @map_graphics_scene.clear()
     
     @map = game.get_map(@area_index, @sector_index)

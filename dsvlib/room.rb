@@ -227,16 +227,14 @@ class Room
       @palette_page_index = 0 # Always 0 in AoS
     elsif GAME == "hod"
       # TODO
-      unk_1 = (extra_data   & 0b00000000_00000000_00000000_11111111)
-      unk_2 = (extra_data   & 0b00000000_00000000_11111111_00000000) >> 8
-      @room_xpos_on_map = (extra_data   & 0b00000000_01111111_00000000_00000000) >> 16
-      @room_ypos_on_map = (extra_data   & 0b00111111_10000000_00000000_00000000) >> 23
-      unk_5 = (extra_data   & 0b01000000_00000000_00000000_00000000) >> 30
-      unk_6 = (extra_data   & 0b10000000_00000000_00000000_00000000) >> 31
+      unk_1               = (extra_data & 0b00000000_00000000_00000000_11111111)
+      unk_2               = (extra_data & 0b00000000_00000000_11111111_00000000) >> 8
+      @room_xpos_on_map   = (extra_data & 0b00000000_01111111_00000000_00000000) >> 16
+      @room_ypos_on_map   = (extra_data & 0b00111111_10000000_00000000_00000000) >> 23
+      unk_5               = (extra_data & 0b01000000_00000000_00000000_00000000) >> 30
+      unk_6               = (extra_data & 0b10000000_00000000_00000000_00000000) >> 31
       #p "%X %X %X %X" % [unk_1, unk_2, unk_5, unk_6]
       @color_effects      = 0
-      @room_xpos_on_map   = 0
-      @room_ypos_on_map   = 0
       @palette_page_index = 0 # Always 0 in HoD
     else # PoR or OoE
       @number_of_doors    = (extra_data & 0b00000000_00000000_00000000_01111111)

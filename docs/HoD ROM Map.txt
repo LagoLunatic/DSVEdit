@@ -1,4 +1,19 @@
 
+0801A3E0 - something related to item types? used by enemy drop code
+
+0849507C - List of warp rooms.
+  Entry length 0xC.
+  00,2: X pos of the warp room on the map.
+  02,2: Y pos of the warp room on the map.
+  04,4: Room pointer of this warp room in Castle A.
+  08,4: Room pointer of this warp room in Castle B.
+    Note that these two pointers are used when warping when pressing down.
+    When switching castles by pressing up, it simply uses the door in the room overlapping the room.
+
+084950DC - might be list of music for each sector?
+
+08495FAE - font data?
+
 084B24A4-084B25F3 - Consumable item data.
 084B25F4-084B265F - Weapon item data.
 084B2660-084B2C5F - Armor item data.

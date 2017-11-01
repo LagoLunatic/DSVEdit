@@ -1,0 +1,8 @@
+
+08009398 ChangeRoom
+  ; r0 - Room pointer
+  ; r1 - Dest X
+  ; r2 - Dest X
+
+080BB560 PlaySong
+  ; r0 - Song index

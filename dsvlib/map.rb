@@ -457,10 +457,17 @@ class DoSMapTile
     @is_blank       = tile_metadata == 0xFFFF
     
     unless is_blank
-      @is_save        =  tile_metadata & 0b10000000_00000000 > 0
-      @is_warp        =  tile_metadata & 0b01000000_00000000 > 0
-      @sector_index   = (tile_metadata & 0b00000011_11000000) >> 6
-      @room_index     =  tile_metadata & 0b00000000_00111111
+      if GAME == "hod"
+        @is_save        =  tile_metadata & 0b10000000_00000000 > 0
+        @is_warp        =  tile_metadata & 0b01000000_00000000 > 0
+        @is_entrance    =  tile_metadata & 0b00100000_00000000 > 0
+        unk_3           = (tile_metadata & 0b00001111_00000000) >> 8 # music?
+      else
+        @is_save        =  tile_metadata & 0b10000000_00000000 > 0
+        @is_warp        =  tile_metadata & 0b01000000_00000000 > 0
+        @sector_index   = (tile_metadata & 0b00000011_11000000) >> 6
+        @room_index     =  tile_metadata & 0b00000000_00111111
+      end
     end
     
     @y_pos          = @tile_index / map_width

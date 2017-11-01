@@ -1,4 +1,14 @@
 
+02000068,4 - Current room pointer.
+
+02000076,2 - currently playing song?
+
+020003A8,1 - ? music related
+
+020003B8,4 - Current room's entity list pointer.
+
+02000DAF - current enemy index selected in the bestiary.
+
 02018784,1 - Currently equipped weapon.
 
 02018528,4 - Bitfield of damage types the player currently deals?
