@@ -144,6 +144,10 @@ class Entity
     is_special_object? && subtype == BOSS_DOOR_SUBTYPE
   end
   
+  def is_wooden_door?
+    is_special_object? && subtype == WOODEN_DOOR_SUBTYPE
+  end
+  
   def is_save_point?
     is_special_object? && subtype == SAVE_POINT_SUBTYPE
   end
