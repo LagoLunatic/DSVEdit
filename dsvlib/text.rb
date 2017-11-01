@@ -268,7 +268,7 @@ class Text
           command
         end
       elsif halfword >= 0x8140
-        curr_is_command = true
+        curr_is_command = false
         
         shift_jis = font_character_mapping_jp(halfword)
         shift_jis.chr(Encoding::SHIFT_JIS).encode("UTF-8")
