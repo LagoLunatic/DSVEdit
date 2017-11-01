@@ -1,0 +1,49 @@
+Consumable format:
+  0xC bytes long.
+  00,2: Item ID.
+  02,2: Icon.
+  04,1: Type of the consumable.
+    0 Restores HP.
+      Var A: Amount of HP to restore.
+    1 Restores MP.
+      Var A: Amount of MP to restore.
+    2 Cures a status effect.
+      Var A: Bitfield of status effects to cure. Bit 1 for poison, 2 for curse, 4 for petrify.
+    3 Makes the player invincible.
+      Var A: Number of frames to be invincible.
+    4 Cannot be used.
+  05,1: ?
+  06,2: Var A.
+    See above for what this does depending on the consumable type.
+  08,4: ?
+
+Weapon format:
+  0xC bytes long.
+  00,2: Item ID.
+  02,2: Icon.
+  04,2: special effects?
+  06,1: Strength stat.
+  07,1: Defense stat.
+  08,1: Intelligence stat.
+  09,1: Luck stat.
+  0A,2: Bitfield for the elemental damage types this weapon deals.
+
+Body armor and Accessory format:
+  0xC bytes long.
+  00,2: Item ID.
+  02,2: Icon.
+  04,1: Multiple:
+    Bits 0-2: Type of armor:
+      0 - Accessory.
+      1 - Hand armor.
+      2 - Body armor.
+      3 - Head armor.
+      4 - Leg armor.
+    Bit 3: ??? Set only for Crush Boots.
+    Bits 4-7: Unused?
+  05,1: ?
+  06,1: Strength stat.
+  07,1: Defense stat.
+  08,1: Intelligence stat.
+  09,1: Luck stat.
+  0A,2: Bitfield for what elemental resistances this armor gives you.

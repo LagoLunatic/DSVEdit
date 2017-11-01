@@ -67,13 +67,10 @@ HARDCODED_BOSSRUSH_ROOM_IDS = [
 
 ENTITY_TYPE_DESCRIPTIONS = {
   # TODO
-  0 => "Nothing",
-  1 => "Enemy",
-  2 => "Special object",
-  3 => "Candle",
-  4 => "Pickup",
-  5 => "Hard mode pickup",
-  6 => "All-souls-found pickup",
+  0 => "Enemy",
+  1 => "Special object",
+  2 => "Candle",
+  3 => "Pickup",
 }
 
 ENEMY_IDS = (0x00..0x70).to_a
@@ -210,17 +207,13 @@ GLYPH_ICONS_PALETTE_POINTER = nil
 ITEM_ICONS_GFX_POINTERS = [0x080E8A04, 0x080EAA08, 0x080ECA0C, 0x080EEA10]
 
 CONSUMABLE_FORMAT = [
-  # length: 16
+  # length: 12
   [2, "Item ID"],
   [2, "Icon"],
+  [1, "Type"],
   [1, "Unknown 1"],
-  [1, "Unknown 2"],
-  [1, "Unknown 3"],
-  [1, "Unknown 4"],
-  [1, "Unknown 5"],
-  [1, "Unknown 6"],
-  [1, "Unknown 7"],
-  [1, "Unknown 8"],
+  [2, "Var A"],
+  [4, "Unknown 2"],
 ]
 WEAPON_FORMAT = [
   # length: 12
@@ -234,17 +227,16 @@ WEAPON_FORMAT = [
   [2, "Effects", :bitfield],
 ]
 ARMOR_FORMAT = [
-  # length: 20
+  # length: 12
   [2, "Item ID"],
   [2, "Icon"],
-  [1, "Type?"],
-  [1, "Unknown 2"],
+  [1, "Type"],
+  [1, "Unknown 1"],
   [1, "Strength"],
   [1, "Defense"],
   [1, "Intelligence"],
   [1, "Luck"],
-  [1, "resist?"],
-  [1, "Unknown 8"],
+  [2, "Resistances", :bitfield],
 ]
 SPELLBOOK_FORMAT = [
   # length: 4
@@ -309,16 +301,32 @@ ITEM_BITFIELD_ATTRIBUTES = {
     "Unknown 6",
     "Unknown 7",
     "Unknown 8",
+    "Unknown 9",
+    "Unknown 10",
+    "Unknown 11",
+    "Unknown 12",
+    "Unknown 13",
+    "Unknown 14",
+    "Unknown 15",
+    "Unknown 16",
   ],
   "Resistances" => [
+    "Poison",
+    "Curse",
+    "Stone",
     "Fire",
     "Ice",
     "Thunder",
     "Wind",
-    "Unknown 5",
-    "Unknown 6",
-    "Unknown 7",
     "Unknown 8",
+    "Unknown 9",
+    "Unknown 10",
+    "Unknown 11",
+    "Unknown 12",
+    "Unknown 13",
+    "Unknown 14",
+    "Unknown 15",
+    "Unknown 16",
   ],
 }
 

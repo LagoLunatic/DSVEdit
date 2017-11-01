@@ -3,10 +3,42 @@
   ; r0 - Source pointer to the LZ77-compressed data to be decompressed
   ; r1 - Destination pointer where the decompressed data should be stored
 
+08000C5C GetEntitySlot
+  ; r0 - Minimum entity index to check
+  ; r1 - Maximum entity index to check
+  ; r2 - Update function pointer for the new entity
+08000CC8 DeleteEntity
+  ; r0 - Pointer to the entity to delete.
+
 08009398 ChangeRoom
   ; r0 - Room pointer
   ; r1 - Dest X
   ; r2 - Dest X
+
+0800B288 LoadItemIconGFX
+  ; r0 - Icon index
+
+08010F8C LoadObjectPalette
+  ; r0 - Palette list pointer
+  ; r1 - Palette index of the first palette in the list to load
+  ; r2 - Number of palettes to load
+  ; r3 - Index to load the palettes at in palette RAM (e.g. 9 to replace the 9th object palette)
+
+08077DF4 RemoveStatusEffects
+  ; r0 - Bitfield of status effects to remove:
+  ;   0x1 - Poison
+  ;   0x2 - Curse
+  ;   0x4 - Petrify
+
+08077B84 MakePlayerInvincible
+  ; For when the player uses a Medicine Jar.
+  ; r0 - Number of frames to be invincible.
+
+08010638 GenericDraw
+  ; Used by enemies, the player, and parts of the UI.
+
+08000DE8 DummyUpdate
+  ; Does nothing, immediately returns.
 
 080BB560 PlaySong
   ; r0 - Song index

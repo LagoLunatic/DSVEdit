@@ -79,7 +79,7 @@ What each range of entity slots is for:
 1B-48 - Room entities, including enemies and special objects.
 49-CF - Various small things including particles and enemy projectiles.
 
-020004E4 - Players's entity memory.
+020004E4 - Player's entity memory.
 02000526,2 - Player's current x pos in pixels.
 0200052A,2 - Player's current y pos in pixels.
 0200052C - Player's current x velocity

@@ -1,0 +1,114 @@
+Enemies:
+00 Bat
+01 Tiny Slime
+02 Slime
+03 Medusa Head
+04 Zombie
+05 Skeleton
+06 Fleaman
+07 Bone Soldier
+08 Armor Knight
+09 Giant Bat
+0A Ghost
+0B Bone Pillar
+0C Large Ghost
+0D White Dragon
+0E Rock Armor
+0F White Dragon Lv2
+10 Lizard Man
+11 Living Armor
+12 Ectoplasm
+13 Skeleton Blaze
+14 Big Skeleton
+15 Flying Bone
+16 Peeping Eye
+17 Skeleton Flail
+18 Skeleton Spear
+19 Red Skeleton
+1A Skeleton Rib
+1B Bone Thrower
+1C Skeleton Ape
+1D Gate Guarder
+1E Golem
+1F Skull Knight
+20 Tiny Devil
+21 Scarecrow
+22 Skeleton Spider
+23 Man-eater
+24 Axe Armor
+25 Witch
+26 Siren 
+27 Bomber Armor
+28 Minotaur
+29 Balloon
+2A Big Balloon
+2B Bone Archer
+2C Ruler Sword
+2D Disc Armor
+2E Devil
+2F Merman
+30 Fishman
+31 Arabaki
+32 Ruler Sword Lv2
+33 Feather Demon
+34 Guardian Armor
+35 Boomerang Armor
+36 Giant Merman
+37 Max Slimer
+38 Fleaman Armor
+39 Gold Medusa
+3A Mimic
+3B White Dragon Lv3
+3C Skeleton Mirror
+3D O
+3E Harpy
+3F Axe Armor Lv2
+40 Specter
+41 Bronze Guarder
+42 Peeping Big
+43 Legion (saint)
+44 Shadow
+45 Melty Zombie
+46 Bone Liquid
+47 Ruler Sword Lv3
+48 Poison Lizard
+49 Pazuzu
+4A Spriggan
+4B Gorgon
+4C Blaze Master
+4D Arthro Skeleton
+4E Rare Ghost
+4F Skeleton Glass
+50 Victory Armor
+51 Hammer-Hammer
+52 Disc Armor Lv2
+53 Minotaur Lv2
+54 Legion (corpse)
+55 Talos
+56 Death
+57 Death
+58 Pixie
+59 Sylph
+5A Master Lizard
+5B Owl
+5C Clear Bone
+5D Jp Bonepillar
+5E Simon Wraith
+5F Pike Master
+60 Cyclops
+61 Maxim
+62 Dracula Wraith
+63 Dracula Wraith
+64 NULL
+65 NULL
+66 NULL
+67 NULL
+68 NULL
+69 NULL
+6A NULL
+6B NULL
+6C NULL
+6D NULL
+6E NULL
+6F NULL
+70 NULL

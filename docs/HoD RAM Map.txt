@@ -3,11 +3,31 @@
 
 02000076,2 - currently playing song?
 
+02000330 - Bitfield of pickup flags.
+
 020003A8,1 - ? music related
+
+020003B0-020003B7 - Bitfield of entity used byte 5s in the current room.
+  Byte 5 must be unique for all entities in the room.
+  Unlike the DSVanias, a byte 5 of 0 must also be unique, and doesn't make an entity exempt.
 
 020003B8,4 - Current room's entity list pointer.
 
 02000DAF - current enemy index selected in the bestiary.
+
+=== 02000418-02007C17: Entity memory. Each entity is 0x80 bytes long. Entities range from 00-EF.
+
+What each range of entity slots is for:
+00-00 - Player.
+
+02000418 - Player's entity memory.
+
+=== 02007C17: End of entities currently loaded into memory.
+
+0201852E,2 - Bitfield of status effects on the player.
+  0x1 - Poison
+  0x2 - Curse
+  0x4 - Petrify
 
 02018784,1 - Currently equipped weapon.
 

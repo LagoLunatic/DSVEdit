@@ -1,0 +1,10 @@
+
+Memory used for entities in HoD is 02000418 - 02007C17. Each entity is 0x80 bytes long. They range from 0-EF.
+
+00,4: Pointer to update code.
+04,4: Pointer to draw code.
+38,2: Var A.
+3A,2: Var B.
+3E,1: Subtype (byte 7).
+3F,1: Low 6 bits of byte 5 (byte 5 & 0x3F).
+40,2: Remaining number of frames to be invincible for (for when the player uses a Medicine Jar).
