@@ -156,13 +156,20 @@ class TMXInterface
                        :width => SCREEN_WIDTH_IN_PIXELS,
                        :height => SCREEN_HEIGHT_IN_PIXELS) {
               
+              if GAME == "hod"
+                dest_x_unused = "%02X" % door.dest_x_unused
+                dest_y_unused = "%02X" % door.dest_y_unused
+              else
+                dest_x_unused = "%04X" % door.dest_x_unused
+                dest_y_unused = "%04X" % door.dest_y_unused
+              end
               xml.properties {
                 xml.property(:name => "door_ram_pointer", :value => "%08X" % door.door_ram_pointer)
                 xml.property(:name => "destination_room", :value => "%08X" % door.destination_room_metadata_ram_pointer)
                 xml.property(:name => "dest_x", :value => "%04X" % door.dest_x)
                 xml.property(:name => "dest_y", :value => "%04X" % door.dest_y)
-                xml.property(:name => "dest_x_unused", :value => "%04X" % door.dest_x_unused)
-                xml.property(:name => "dest_y_unused", :value => "%04X" % door.dest_y_unused)
+                xml.property(:name => "dest_x_unused", :value => dest_x_unused)
+                xml.property(:name => "dest_y_unused", :value => dest_y_unused)
               }
               
             }

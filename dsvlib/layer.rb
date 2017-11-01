@@ -36,10 +36,15 @@ class Layer
       @z_index, @scroll_mode, @opacity, _, _, 
         @main_gfx_page_index, _, _, _,
         @layer_metadata_ram_pointer = fs.read(layer_list_entry_ram_pointer, 16).unpack("CCCCVCCCCV")
-    else
+    elsif GAME == "aos"
       @z_index, @scroll_mode, @bg_control, 
         @main_gfx_page_index, _, _, _,
         @layer_metadata_ram_pointer = fs.read(layer_list_entry_ram_pointer, 12).unpack("CCvCCCCV")
+      @opacity = 0x1F
+    elsif GAME == "hod"
+      @z_index, @scroll_mode, @bg_control,
+        @layer_metadata_ram_pointer = fs.read(layer_list_entry_ram_pointer, 12).unpack("CCvV")
+      @main_gfx_page_index = 0 # TODO
       @opacity = 0x1F
     end
   end

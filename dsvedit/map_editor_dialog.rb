@@ -20,7 +20,7 @@ class MapEditorDialog < Qt::Dialog
     @renderer = renderer
     @area = game.areas[area_index]
     
-    if GAME == "dos" || GAME == "aos"
+    if GAME == "dos" || GAME == "aos" || GAME == "hod"
       @map = DoSMap.new(area_index, sector_index, game)
     else
       @map = Map.new(area_index, sector_index, game)
@@ -49,7 +49,7 @@ class MapEditorDialog < Qt::Dialog
     
     @available_tiles = []
     case GAME
-    when "dos", "aos"
+    when "dos", "aos", "hod"
       (0..0xF).each do |line_type|
         tile = DoSMapTile.new(0, line_type, line_type, 16)
         @available_tiles << tile

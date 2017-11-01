@@ -57,6 +57,8 @@ class RoomEditorDialog < Qt::Dialog
     @ui.palette_page_list.text = "%08X" % @room.palette_wrapper_pointer
     @ui.palette_page_index.text = "%02X" % @room.palette_page_index
     
+    return if GAME == "hod" # TODO
+    
     @map_graphics_scene.clear()
     
     @map = game.get_map(@room.area_index, @room.sector_index)
@@ -70,6 +72,8 @@ class RoomEditorDialog < Qt::Dialog
   end
   
   def update_room_position_indicator
+    return if GAME == "hod" # TODO
+    
     @position_indicator.setPos(@room.room_xpos_on_map*4 + 2.25, @room.room_ypos_on_map*4 + 2.25)
     if @room.layers.length > 0
       @position_indicator.setRect(-2, -2, 4*@room.main_layer_width, 4*@room.main_layer_height)

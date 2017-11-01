@@ -45,21 +45,32 @@ class Room
   end
   
   def read_from_rom
-    if SYSTEM == :nds
-      room_metadata = fs.read(room_metadata_ram_pointer, 32).unpack("V*")
-      extra_data = room_metadata[7]
+    if GAME == "hod"
+      room_metadata = fs.read(room_metadata_ram_pointer, 36).unpack("V*")
+      @layer_list_ram_pointer = room_metadata[2]
+      @gfx_list_pointer = room_metadata[3]
+      @palette_wrapper_pointer = room_metadata[5]
+      @entity_list_ram_pointer = room_metadata[6]
+      @door_list_ram_pointer = room_metadata[7]
+      extra_data = room_metadata[8]
       read_extra_data_from_rom(extra_data)
     else
-      room_metadata = fs.read(room_metadata_ram_pointer, 36).unpack("V*")
-      extra_data = room_metadata[7]
-      extra_data_2 = room_metadata[8]
-      read_extra_data_from_rom(extra_data, extra_data_2)
+      if SYSTEM == :nds
+        room_metadata = fs.read(room_metadata_ram_pointer, 32).unpack("V*")
+        extra_data = room_metadata[7]
+        read_extra_data_from_rom(extra_data)
+      else
+        room_metadata = fs.read(room_metadata_ram_pointer, 36).unpack("V*")
+        extra_data = room_metadata[7]
+        extra_data_2 = room_metadata[8]
+        read_extra_data_from_rom(extra_data, extra_data_2)
+      end
+      @layer_list_ram_pointer = room_metadata[2]
+      @gfx_list_pointer = room_metadata[3]
+      @palette_wrapper_pointer = room_metadata[4]
+      @entity_list_ram_pointer = room_metadata[5]
+      @door_list_ram_pointer = room_metadata[6]
     end
-    @layer_list_ram_pointer = room_metadata[2]
-    @gfx_list_pointer = room_metadata[3]
-    @palette_wrapper_pointer = room_metadata[4]
-    @entity_list_ram_pointer = room_metadata[5]
-    @door_list_ram_pointer = room_metadata[6]
     
     read_layer_list_from_rom(layer_list_ram_pointer)
     read_graphic_tilesets_from_rom(gfx_list_pointer)
@@ -83,7 +94,7 @@ class Room
         layer = Layer.new(self, layer_list_ram_pointer + i*16, fs)
         layer.read_from_rom()
         @layers << layer
-      else
+      elsif GAME == "aos"
         break if i == 3 # Maximum of 3 layers per room.
         
         layer_data = fs.read(layer_list_ram_pointer + i*12).unpack("VVV")
@@ -92,6 +103,22 @@ class Room
         end
         
         layer = Layer.new(self, layer_list_ram_pointer + i*12, fs)
+        layer.read_from_rom()
+        if layer.layer_metadata_ram_pointer != 0 # TODO
+          @layers << layer
+          if color_effects & 0xC0 == 0x40 && color_effects & 1<<(i+1) > 0
+            layer.opacity = 0x0F # HACK
+          end
+        end
+      elsif GAME == "hod"
+        break if i == 3 # Maximum of 3 layers per room.
+        
+        layer_data = fs.read(layer_list_ram_pointer + i*8).unpack("VV")
+        if layer_data[1] == 0
+          break
+        end
+        
+        layer = Layer.new(self, layer_list_ram_pointer + i*8, fs)
         layer.read_from_rom()
         if layer.layer_metadata_ram_pointer != 0 # TODO
           @layers << layer
@@ -137,6 +164,10 @@ class Room
     i = 0
     @entities = []
     while true
+      if entity_list_ram_pointer == 0 && GAME == "hod"
+        break
+      end
+      
       entity_pointer = entity_list_ram_pointer + i*12
       if fs.read(entity_pointer, 2).unpack("v").first == 0x7FFF
         break
@@ -153,7 +184,7 @@ class Room
   def read_door_list_from_rom(door_list_ram_pointer)
     @doors = []
     (0..number_of_doors-1).each do |i|
-      door_pointer = door_list_ram_pointer + i*16
+      door_pointer = door_list_ram_pointer + i*Door.data_size
       
       @doors << Door.new(self, game).read_from_rom(door_pointer)
     end
@@ -177,7 +208,21 @@ class Room
       @room_xpos_on_map   = (extra_data_2 & 0b00000000_01111111_00000000_00000000) >> 16
       @room_ypos_on_map   = (extra_data_2 & 0b00111111_10000000_00000000_00000000) >> 23
       @palette_page_index = 0 # Always 0 in AoS
-    else
+    elsif GAME == "hod"
+      # TODO
+      unk_1 = (extra_data   & 0b00000000_00000000_00000000_11111111)
+      unk_2 = (extra_data   & 0b00000000_00000000_11111111_00000000) >> 8
+      @room_xpos_on_map = (extra_data   & 0b00000000_01111111_00000000_00000000) >> 16
+      @room_ypos_on_map = (extra_data   & 0b00111111_10000000_00000000_00000000) >> 23
+      unk_5 = (extra_data   & 0b01000000_00000000_00000000_00000000) >> 30
+      unk_6 = (extra_data   & 0b10000000_00000000_00000000_00000000) >> 31
+      #p "%X %X %X %X" % [unk_1, unk_2, unk_5, unk_6]
+      @number_of_doors    = 2
+      @color_effects      = 0
+      @room_xpos_on_map   = 0
+      @room_ypos_on_map   = 0
+      @palette_page_index = 0 # Always 0 in HoD
+    else # PoR or OoE
       @number_of_doors    = (extra_data & 0b00000000_00000000_00000000_01111111)
       @room_xpos_on_map   = (extra_data & 0b00000000_00000000_00111111_10000000) >> 7
       @room_ypos_on_map   = (extra_data & 0b00000000_00011111_11000000_00000000) >> 14
@@ -468,8 +513,16 @@ class RoomGfxPage
               :num_chunks,
               :unknown
               
-  def initialize(pointer, fs)
-    @gfx_pointer, @gfx_load_offset, @first_chunk_index, @num_chunks, @unknown = fs.read(pointer, 8).unpack("VCCCC")
+  def initialize(pointer, fs, gfx_load_offset=nil)
+    if GAME == "hod"
+      @gfx_pointer = fs.read(pointer, 4).unpack("V").first
+      @gfx_load_offset = gfx_load_offset
+      @first_chunk_index = 0
+      @num_chunks = 4
+      @unknown = 0
+    else
+      @gfx_pointer, @gfx_load_offset, @first_chunk_index, @num_chunks, @unknown = fs.read(pointer, 8).unpack("VCCCC")
+    end
     @gfx_wrapper = GfxWrapper.new(gfx_pointer, fs)
   end
   
@@ -480,15 +533,21 @@ class RoomGfxPage
   def self.from_room_gfx_page_list(gfx_list_pointer, fs)
     gfx_pages = []
     offset = gfx_list_pointer
+    hod_gfx_load_offset = 0x10
     while true
       gfx_pointer = fs.read(offset, 4).unpack("V").first
       
       break if gfx_pointer == 0
       
-      gfx_page = RoomGfxPage.new(offset, fs)
+      gfx_page = RoomGfxPage.new(offset, fs, hod_gfx_load_offset)
       gfx_pages << gfx_page
       
-      offset += 8
+      if GAME == "hod"
+        offset += 4
+        hod_gfx_load_offset += 4
+      else
+        offset += 8
+      end
     end
     
     return gfx_pages

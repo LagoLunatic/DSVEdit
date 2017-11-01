@@ -452,6 +452,8 @@ class DSVEdit < Qt::MainWindow
   end
   
   def update_room_position_indicator
+    return if GAME == "hod" # TODO
+    
     @position_indicator.setPos(@room.room_xpos_on_map*4 + 2.25, @room.room_ypos_on_map*4 + 2.25)
     if @room.layers.length > 0
       @position_indicator.setRect(-2, -2, 4*@room.main_layer_width, 4*@room.main_layer_height)
@@ -642,6 +644,8 @@ class DSVEdit < Qt::MainWindow
   end
   
   def load_map()
+    return if GAME == "hod" # TODO
+    
     @map_graphics_scene.clear()
     
     @map = game.get_map(@area_index, @sector_index)

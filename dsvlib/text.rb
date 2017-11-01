@@ -25,7 +25,9 @@ class Text
     @text_ram_pointer = TEXT_LIST_START_OFFSET + 4*text_id
     @string_ram_pointer = fs.read(@text_ram_pointer, 4).unpack("V").first
     
-    if SYSTEM == :gba
+    if GAME == "hod"
+      @encoded_string = fs.read_until_end_marker(string_ram_pointer+2, [0x0A, 0xF0]) # Skip the first 2 bytes which are always 00 00.
+    elsif SYSTEM == :gba
       @encoded_string = fs.read_until_end_marker(string_ram_pointer+2, [0x0A]) # Skip the first 2 bytes which are always 01 00.
     elsif REGION == :jp
       @encoded_string = fs.read_until_end_marker(string_ram_pointer+2, [0x0A, 0xF0]) # Skip the first 2 bytes which are always 00 00.
@@ -79,6 +81,12 @@ class Text
     return char_number
   end
   
+  def font_character_mapping_hod(index)
+    index -= 0x8540
+    shift_jis = fs.read(0x080C5508 + index*4, 2).unpack("v").first
+    return shift_jis
+  end
+  
   def reverse_font_character_mapping_jp(shift_jis)
     offset = 0
     file_path = "/font/LD937728.DAT"
@@ -112,7 +120,9 @@ class Text
   end
   
   def decode_string(string)
-    if SYSTEM == :gba
+    if GAME == "hod"
+      decode_string_hod(string)
+    elsif SYSTEM == :gba
       decode_string_gba(string)
     elsif REGION == :jp
       decode_string_jp(string)
@@ -134,7 +144,9 @@ class Text
           data = $2
         end
         
-        if SYSTEM == :gba
+        if GAME == "hod"
+          raise TextEncodeError.new("HoD text encoding TODO")
+        elsif SYSTEM == :gba
           encode_command_gba(command, data)
         elsif REGION == :jp
           encode_command_jp(command, data)
@@ -142,7 +154,9 @@ class Text
           encode_command_usa(command, data)
         end
       else
-        if SYSTEM == :gba
+        if GAME == "hod"
+          raise TextEncodeError.new("HoD text encoding TODO")
+        elsif SYSTEM == :gba
           encode_char_gba(str)
         elsif REGION == :jp
           encode_char_jp(str)
@@ -356,6 +370,66 @@ class Text
       prev_was_command = curr_is_command
       
       i += 1
+      
+      char
+    end.join
+    
+    return decoded_string
+  end
+  
+  def decode_string_hod(string)
+    data_format_string = "0x%04X"
+    previous_halfword = nil
+    multipart = false
+    curr_is_command = nil
+    prev_was_command = nil
+    decoded_string = string.unpack("v*").map do |char|
+      halfword = char
+      
+      char = if multipart
+        curr_is_command = true
+        
+        multipart = false
+        command_number = previous_halfword & 0x00FF
+        decode_multipart_command(command_number, halfword, data_format_string)
+      elsif halfword & 0xFF00 == 0xF000
+        curr_is_command = true
+        
+        command_number = halfword & 0x00FF
+        command = decode_command(command_number, data_format_string)
+        
+        if (0x0B..0x1A).include?(command_number) # BUTTON
+          curr_is_command = false
+        end
+        
+        if command == :multipart
+          multipart = true
+          ""
+        else
+          command
+        end
+      elsif halfword >= 0x8140 && halfword <= 0x853F
+        curr_is_command = false
+        
+        shift_jis = halfword#font_character_mapping_jp(halfword)
+        shift_jis.chr(Encoding::SHIFT_JIS).encode("UTF-8") rescue "#"
+      elsif halfword >= 0x8540 # lowercase letter
+        curr_is_command = false
+        
+        shift_jis = font_character_mapping_hod(halfword)
+        shift_jis.chr(Encoding::SHIFT_JIS).encode("UTF-8") rescue "#"
+      else
+        prev_was_command = false
+        "{RAW #{data_format_string}}" % halfword
+      end
+      
+      if curr_is_command != prev_was_command && !prev_was_command.nil? && previous_halfword != 0xF006 && halfword != 0xF006
+        # Add a newline between a block of commands and some text for readability.
+        char = "\n#{char}"
+      end
+      
+      previous_halfword = halfword
+      prev_was_command = curr_is_command
       
       char
     end.join

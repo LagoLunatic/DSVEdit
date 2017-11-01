@@ -21,11 +21,18 @@ class Door
   def read_from_rom(door_ram_pointer)
     @door_ram_pointer = door_ram_pointer
     
-    @destination_room_metadata_ram_pointer,
-      @x_pos, @y_pos,
-      @dest_x_unused, @dest_y_unused,
-      @dest_x, @dest_y,
-      @unknown = fs.read(door_ram_pointer, 16).unpack("VCCvvvvv")
+    if GAME == "hod"
+      @destination_room_metadata_ram_pointer,
+        @x_pos, @y_pos,
+        @dest_x_unused, @dest_y_unused,
+        @dest_x, @dest_y = fs.read(door_ram_pointer, 12).unpack("VCCCCvv")
+    else
+      @destination_room_metadata_ram_pointer,
+        @x_pos, @y_pos,
+        @dest_x_unused, @dest_y_unused,
+        @dest_x, @dest_y,
+        @unknown = fs.read(door_ram_pointer, 16).unpack("VCCvvvvv")
+    end
     
     return self
   end
@@ -38,8 +45,13 @@ class Door
     end
     
     fs.write(door_ram_pointer, [destination_room_metadata_ram_pointer].pack("V"))
-    fs.write(door_ram_pointer+4, [x_pos, y_pos].pack("C*"))
-    fs.write(door_ram_pointer+6, [dest_x_unused, dest_y_unused, dest_x, dest_y, 0].pack("v*"))
+    fs.write(door_ram_pointer+4, [x_pos, y_pos].pack("CC"))
+    
+    if GAME == "hod"
+      fs.write(door_ram_pointer+6, [dest_x_unused, dest_y_unused, dest_x, dest_y, 0].pack("CCvv"))
+    else
+      fs.write(door_ram_pointer+6, [dest_x_unused, dest_y_unused, dest_x, dest_y, 0].pack("vvvv"))
+    end
   end
   
   def direction
@@ -89,6 +101,14 @@ class Door
     
     # Returns nil if there's no matching dest door
     dest_door
+  end
+  
+  def self.data_size
+    if GAME == "hod"
+      12
+    else
+      16
+    end
   end
   
   def door_str

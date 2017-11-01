@@ -401,7 +401,7 @@ class Game
   def get_map(area_index, sector_index)
     if GAME == "dos" && [10, 11].include?(sector_index)
       @abyss_map ||= DoSMap.new(area_index, sector_index, self)
-    elsif GAME == "dos" || GAME == "aos"
+    elsif GAME == "dos" || GAME == "aos" || GAME == "hod"
       @castle_map ||= DoSMap.new(area_index, sector_index, self)
     else
       @maps ||= begin
@@ -705,6 +705,9 @@ private
       when "CASTLEVANIA2A2CE"
         suppress_warnings { load './constants/gba_constants.rb' }
         suppress_warnings { load './constants/aos_constants.rb' }
+      when "CASTLEVANIA1ACHE"
+        suppress_warnings { load './constants/gba_constants.rb' }
+        suppress_warnings { load './constants/hod_constants.rb' }
       else
         raise InvalidFileError.new("Specified game is not a DSVania or is not a supported region.")
       end

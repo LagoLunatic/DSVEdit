@@ -1,0 +1,4 @@
+
+02018784,1 - Currently equipped weapon.
+
+02018528,4 - Bitfield of damage types the player currently deals?

@@ -165,7 +165,7 @@ class EntityLayerItem < Qt::GraphicsRectItem
       graphics_item.setParentItem(self)
     end
   rescue StandardError => e
-    if DEBUG
+    if false#DEBUG
       unless e.message =~ /has no sprite/
         Qt::MessageBox.warning(@main_window,
           "Sprite error",
