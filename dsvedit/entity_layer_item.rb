@@ -55,6 +55,13 @@ class EntityLayerItem < Qt::GraphicsRectItem
       soul_candle_sprite = COMMON_SPRITE.merge(palette_offset: 4)
       sprite_info = SpriteInfo.extract_gfx_and_palette_and_sprite_from_create_code(soul_candle_sprite[:pointer], @fs, soul_candle_sprite[:overlay], soul_candle_sprite)
       add_sprite_item_for_entity(entity, sprite_info, 0x6B)
+    elsif GAME == "hod" && entity.is_pickup? && entity.subtype == 9 && (0..1).include?(entity.var_b) # max up
+      chunky_image = @renderer.render_icon(0xB + entity.var_b, 1)
+      
+      graphics_item = EntityChunkyItem.new(chunky_image, entity, @main_window)
+      graphics_item.setOffset(-8, -16)
+      graphics_item.setPos(entity.x_pos, entity.y_pos)
+      graphics_item.setParentItem(self)
     elsif entity.is_glyph_statue?
       pointer = OTHER_SPRITES.find{|spr| spr[:desc] == "Glyph statue"}[:pointer]
       sprite_info = SpriteInfo.extract_gfx_and_palette_and_sprite_from_create_code(pointer, @fs, nil, {})
