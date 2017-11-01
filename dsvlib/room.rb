@@ -532,6 +532,7 @@ class RoomGfxPage
   
   def self.from_room_gfx_page_list(gfx_list_pointer, fs)
     gfx_pages = []
+    i = 0
     offset = gfx_list_pointer
     hod_gfx_load_offset = 0x10
     while true
@@ -542,9 +543,13 @@ class RoomGfxPage
       gfx_page = RoomGfxPage.new(offset, fs, hod_gfx_load_offset)
       gfx_pages << gfx_page
       
+      i += 1
       if GAME == "hod"
         offset += 4
         hod_gfx_load_offset += 4
+        if i >= 4
+          break
+        end
       else
         offset += 8
       end
