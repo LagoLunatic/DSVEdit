@@ -731,7 +731,7 @@ class DSVEdit < Qt::MainWindow
   end
   
   def open_player_editor
-    if GAME == "aos"
+    if SYSTEM == :gba
       Qt::MessageBox.warning(self, "Can't edit players", "Players are hardcoded in AoS and cannot be edited with this tool.")
       return
     end
