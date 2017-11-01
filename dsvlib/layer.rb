@@ -231,12 +231,10 @@ end
 class GBATile
   attr_accessor :index_on_tileset,
                 :horizontal_flip,
-                :vertical_flip,
-                :unknown
+                :vertical_flip
   
   def from_game_data(tile_data)
-    @index_on_tileset = (tile_data & 0b0000000011111111)
-    @unknown          = (tile_data & 0b0011111100000000)
+    @index_on_tileset = (tile_data & 0b0011111111111111)
     @horizontal_flip  = (tile_data & 0b0100000000000000) != 0
     @vertical_flip    = (tile_data & 0b1000000000000000) != 0
     
