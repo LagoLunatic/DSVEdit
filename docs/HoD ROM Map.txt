@@ -14,6 +14,9 @@
 
 084950DC - might be list of music for each sector?
 
+08494EA4 - List of special object create code pointers.
+08494F6C - List of special object update code pointers.
+
 08495FAE - font data?
 
 084B24A4-084B25F3 - Consumable item data.
