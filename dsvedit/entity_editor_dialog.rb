@@ -17,7 +17,12 @@ class EntityEditorDialog < Qt::Dialog
     
     @game = main_window.game
     
-    (0..0xFF).each do |i|
+    if GAME == "hod"
+      max_type = 3
+    else
+      max_type = 0xFF
+    end
+    (0..max_type).each do |i|
       description = ENTITY_TYPE_DESCRIPTIONS[i] || "Unused"
       @ui.type.addItem("%02X %s" % [i, description])
     end
@@ -70,14 +75,21 @@ class EntityEditorDialog < Qt::Dialog
     (0..0xFF).each do |subtype|
       subtype_name = ""
       
-      if type == 1
+      if type == ENEMY_ENTITY_TYPE
         if subtype < @game.enemy_dnas.length
           subtype_name = @game.enemy_dnas[subtype].name
         end
-      elsif type == 2
+      elsif type == SPECIAL_OBJECT_ENTITY_TYPE
         subtype_name = (game.special_object_docs[subtype] || " ").lines.first.strip[0..100]
-      elsif type == 4 || (type == 7 && ["por", "ooe"].include?(GAME)) || (type == 6 && GAME == "por")
-        if subtype == 0
+      elsif type == PICKUP_ENTITY_TYPE || (type == 7 && ["por", "ooe"].include?(GAME)) || (type == 6 && GAME == "por")
+        if GAME == "hod"
+          if PICKUP_SUBTYPES_FOR_ITEMS.include?(subtype)
+            p subtype
+            subtype_name = ITEM_TYPES[subtype-3][:name]
+          else
+            subtype_name = "Crash"
+          end
+        elsif subtype == 0
           subtype_name = "Heart"
         elsif subtype == 1
           subtype_name = "Money"
@@ -103,9 +115,9 @@ class EntityEditorDialog < Qt::Dialog
   
   def subtype_changed(subtype)
     case @ui.type.currentIndex
-    when 1
+    when ENEMY_ENTITY_TYPE
       @ui.entity_doc.setPlainText(game.enemy_docs[subtype])
-    when 2
+    when SPECIAL_OBJECT_ENTITY_TYPE
       @ui.entity_doc.setPlainText(game.special_object_docs[subtype])
     else
       @ui.entity_doc.setPlainText(game.entity_type_docs[@ui.type.currentIndex])

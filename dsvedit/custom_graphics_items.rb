@@ -73,13 +73,13 @@ class EntityRectItem < Qt::GraphicsRectItem
     setCursor(Qt::Cursor.new(Qt::SizeAllCursor))
     
     case entity.type
-    when 0
+    when NOTHING_ENTITY_TYPE
       self.setBrush(NOTHING_BRUSH)
-    when 1
+    when ENEMY_ENTITY_TYPE
       self.setBrush(ENEMY_BRUSH)
-    when 2
+    when SPECIAL_OBJECT_ENTITY_TYPE
       self.setBrush(SPECIAL_OBJECT_BRUSH)
-    when 3
+    when CANDLE_ENTITY_TYPE
       self.setBrush(CANDLE_BRUSH)
     else
       self.setBrush(OTHER_BRUSH)

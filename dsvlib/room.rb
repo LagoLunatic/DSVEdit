@@ -320,7 +320,13 @@ class Room
         # If two entities in the same room share a byte 5, one of them won't appear.
         entity.byte_5 = i
         
-        fs.write(entity.entity_ram_pointer+4, [entity.byte_5].pack("C"))
+        if GAME == "hod"
+          byte_5_and_type  = (entity.type   &  0x3) << 6
+          byte_5_and_type |= (entity.byte_5 & 0x3F)
+          fs.write(entity.entity_ram_pointer+4, [byte_5_and_type].pack("C"))
+        else
+          fs.write(entity.entity_ram_pointer+4, [entity.byte_5].pack("C"))
+        end
       end
     end
   end

@@ -21,7 +21,14 @@ class Entity
     @entity_ram_pointer = entity_ram_pointer
     
     @x_pos, @y_pos = fs.read(entity_ram_pointer,4).unpack("s*")
-    @byte_5, @type, @subtype, @byte_8 = fs.read(entity_ram_pointer+4,4).unpack("C*")
+    if GAME == "hod"
+      byte_5_and_type, @subtype, @unknown, @byte_8 = fs.read(entity_ram_pointer+4,4).unpack("C*")
+      @type   = (byte_5_and_type & 0xC0) >> 6
+      @byte_5 =  byte_5_and_type & 0x3F
+      puts "XX!!! #{@unknown}" if @unknown != 0
+    else
+      @byte_5, @type, @subtype, @byte_8 = fs.read(entity_ram_pointer+4,4).unpack("C*")
+    end
     @var_a, @var_b = fs.read(entity_ram_pointer+8,4).unpack("v*")
     
     return self
@@ -41,20 +48,35 @@ class Entity
   end
   
   def to_data
-    [
-      x_pos,
-      y_pos,
-      byte_5,
-      type,
-      subtype,
-      byte_8,
-      var_a,
-      var_b
-    ].pack("ssCCCCvv")
+    if GAME == "hod"
+      byte_5_and_type  = (@type   &  0x3) << 6
+      byte_5_and_type |= (@byte_5 & 0x3F)
+      [
+        x_pos,
+        y_pos,
+        byte_5_and_type,
+        subtype,
+        @unknown,
+        byte_8,
+        var_a,
+        var_b
+      ].pack("ssCCCCvv")
+    else
+      [
+        x_pos,
+        y_pos,
+        byte_5,
+        type,
+        subtype,
+        byte_8,
+        var_a,
+        var_b
+      ].pack("ssCCCCvv")
+    end
   end
   
   def is_enemy?
-    type == 0x01
+    type == ENEMY_ENTITY_TYPE
   end
   
   def is_common_enemy?
@@ -66,15 +88,15 @@ class Entity
   end
   
   def is_special_object?
-    type == 0x02
+    type == SPECIAL_OBJECT_ENTITY_TYPE
   end
   
   def is_candle?
-    type == 0x03
+    type == CANDLE_ENTITY_TYPE
   end
   
   def is_normal_pickup?
-    type == 0x04
+    type == PICKUP_ENTITY_TYPE
   end
   
   def is_hidden_pickup?

@@ -276,7 +276,11 @@ class Game
       item_type_index = PICKUP_SUBTYPES_FOR_SKILLS.first
     end
     
-    item_type_index -= 2
+    if GAME == "hod"
+      item_type_index -= 3
+    else
+      item_type_index -= 2
+    end
     
     global_id = 0
     (0..item_type_index-1).each do |earlier_item_type|
@@ -297,7 +301,11 @@ class Game
     ITEM_TYPES.each_with_index do |item_type, i|
       this_item_type_global_id_range = (this_item_type_first_global_id..this_item_type_first_global_id+item_type[:count]-1)
       if this_item_type_global_id_range.include?(item_global_id)
-        item_type_index = i + 2
+        if GAME == "hod"
+          item_type_index = i + 3
+        else
+          item_type_index = i + 2
+        end
         item_index = item_global_id - this_item_type_first_global_id
         return [item_type_index, item_index]
       end

@@ -1,0 +1,53 @@
+Entity types:
+
+00 Enemy.
+  Subtype determines which enemy. It's equal to ID of enemy in the bestiary, except starting at 0 instead of at 1.
+
+01 Special object.
+  Subtype determines which object. See special object list for details on each object.
+
+02 Candle.
+  Subtype: Affects what this candle drops:
+    0 - A heart. Small heart if Var B is 0, big heart otherwise.
+    1 - Money. Var B affects the amount of money:
+      0 - $1
+      1 - $5
+      2 - $25
+      3 - $100
+      4 - $250
+      5 - $400
+      6 - $400
+    2 - A subweapon. Var B affects the subweapon:
+      0 - Holy Book
+      1 - Boomerang
+      2 - Axe
+      3 - Holy Water
+      4 - Fist
+      5 - Dagger
+    3 - An item. Var B is the ID of the item.
+
+03 Pickup. Subtype:
+  00-02 Crash?
+  03 Item: Consumable.
+    Var A: Flag for having picked up this item.
+    Var B: The index of the consumable.
+  04 Item: Weapon.
+    Var A: Flag for having picked up this item.
+    Var B: The index of the weapon.
+  05 Item: Body armor/accessory.
+    Var A: Flag for having picked up this item.
+    Var B: The index of the armor.
+  06 Item: Spellbook.
+    Var A: Flag for having picked up this item.
+    Var B: The index of the spellbook.
+  07 Item: Relic.
+    Var A: Flag for having picked up this item.
+    Var B: The index of the relic.
+  08 Item: Furniture.
+    Var A: Flag for having picked up this item.
+    Var B: The index of the furniture.
+  09 Max up.
+    Var A: Flag for having picked up this max up.
+    Var B: The type of max up:
+      0 - Life max up.
+      1 - Heart max up.
