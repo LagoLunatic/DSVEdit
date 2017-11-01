@@ -518,9 +518,6 @@ class DSVEdit < Qt::MainWindow
     
     load_room_collision_tileset()
     
-    @entities_view_item = EntityLayerItem.new(@room.entities, self, game, @renderer)
-    @room_graphics_scene.addItem(@entities_view_item)
-    
     @doors_view_item = Qt::GraphicsRectItem.new
     @room_graphics_scene.addItem(@doors_view_item)
     @room.doors.each_with_index do |door, i|
@@ -534,6 +531,9 @@ class DSVEdit < Qt::MainWindow
       door_item = DoorItem.new(door, x, y, i, self)
       door_item.setParentItem(@doors_view_item)
     end
+    
+    @entities_view_item = EntityLayerItem.new(@room.entities, self, game, @renderer)
+    @room_graphics_scene.addItem(@entities_view_item)
     
     update_room_bounding_rect()
     
