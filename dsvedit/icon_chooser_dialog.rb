@@ -50,6 +50,11 @@ class IconChooserDialog < Qt::Dialog
     
     @palettes = @renderer.generate_palettes(@palette_pointer, 16)
     
+    if GAME == "aos"
+      # In AoS only the first 5 out of the 7 item icon palettes work since the last 2 get overwritten in the object palette RAM by other palettes.
+      @palettes = @palettes[0,5]
+    end
+    
     @gfx_page_pixmaps_by_palette = {}
     
     @ui.gfx_page_index.clear()

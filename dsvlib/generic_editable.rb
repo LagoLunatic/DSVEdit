@@ -172,7 +172,9 @@ class GenericEditable
     when "aos"
       icon_index    = (icon_data & 0b00000000_11111111)
       palette_index = (icon_data & 0b11111111_00000000) >> 8
-      [icon_index-1, 2] # TODO figure out palette index
+      # palette_index in AoS is the index in the GBA's object palette RAM.
+      # The palette list for item icons gets loaded at offset 4, so to compensate for this we subtract 4 here (and add 4 when writing it back).
+      [icon_index-1, palette_index-4]
     else
       icon_index    = (icon_data & 0b00000111_11111111)
       palette_index = (icon_data & 0b11111000_00000000) >> 11
@@ -187,7 +189,7 @@ class GenericEditable
       icon_data |= palette_index << 8
       icon_data
     when "aos"
-      palette_index = 6
+      palette_index += 4
       icon_data  = icon_index + 1
       icon_data |= palette_index << 8
       icon_data
