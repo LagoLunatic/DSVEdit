@@ -85,6 +85,11 @@
   4,2: Used for something, but doesn't seem to affect anything?
   6,2: Unused.
 
+020F4E7C,1 - The boss death flag index needed to unlock the 13th Street portrait.
+  This is 0A, for Mummy Man.
+020F4E80,1 - The boss death flag index needed to unlock the Burnt Paradise portrait.
+  This is 09, for The Creature.
+
 020F4E84 - List of sprite info for portraits.
   Each entry is 0xC bytes long.
   00,4: Sprite pointer.
@@ -357,25 +362,25 @@ F5-F5
 021119D0,4 - Bitfield of which map items you've bought.
 
 021119DC - Boss death flags.
-  01 Dullahan
-  02 Behemoth
-  03 Dragon Zombie in Buried Chamber
-  04 Keremet
-  05 Legion
-  06 Dagon
-  07 Astarte
-  08 Werewolf
-  09 The Creature
-  0A Mummy Man
-  0B Medusa
-  0C Whip's Memory
-  0D Stella
-  0E Stella & Loretta
-  0F Brauner
-  10 Death
-  11 Dracula
-  14 ??? Used in Gergoth's room in Boss Rush Course 1.
-  19 Doppelganger, resets when you leave the nest of evil.
+  01 00000002 Dullahan
+  02 00000004 Behemoth
+  03 00000008 Dragon Zombie in Buried Chamber
+  04 00000010 Keremet
+  05 00000020 Legion
+  06 00000040 Dagon
+  07 00000080 Astarte
+  08 00000100 Werewolf
+  09 00000200 The Creature
+  0A 00000400 Mummy Man
+  0B 00000800 Medusa
+  0C 00001000 Whip's Memory
+  0D 00002000 Stella
+  0E 00004000 Stella & Loretta
+  0F 00008000 Brauner
+  10 00010000 Death
+  11 00020000 Dracula
+  14 00100000 ??? Used in Gergoth's room in Boss Rush Course 1.
+  19 02000000 Doppelganger, resets when you leave the nest of evil.
 
 021119E0,4 - Total playtime (in frames)
 

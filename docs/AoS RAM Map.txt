@@ -113,6 +113,7 @@ What each range of entity slots is for:
 
 02013160,4 - Pointer to an entity?
 02013164,4 - Pointer to the entity of the currently equipped yellow soul (should be 02000DA8 if the player has a yellow soul equipped, or 0 otherwise).
+02013168,4 - Pointer to the player entity (020004E4).
 
 020131B8,4 - Bitfield affecting what the player can and can't do.
   001 - The player is not affected by level collision when this flag is on, allowing them to pass through walls floors and ceilings freely.

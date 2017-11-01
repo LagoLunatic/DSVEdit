@@ -43,6 +43,9 @@
 02060CC0 PlaySfx???
   ; Has some internal role in playing sfx?
 
+02050544 ShowTextPopup
+  ; r0 - Text index of the text to display.
+
 02032D90 TeleportPlayer
   ; r0 - Area index
   ; r1 - Sector index

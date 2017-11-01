@@ -78,6 +78,25 @@
   ;   0 - Player stays at the same x pos, eventually slipping off the entity.
   ;   1 - Player's x pos is moved as this entity moves.
 
+0806E29C CheckPlayerClose
+  ; r0 - Entity to check how close the player is to it
+  ; r1 - Max X distance
+  ; r2 - Max Y distance
+  ; Returns: 0 if the player is out of range, 1 if in range.
+08068AD4 CheckEntityCloseToPoint
+  ; r0 - Entity A pointer
+  ; r1 - Point's X pos
+  ; r2 - Point's Y pos
+  ; r3 - Max X distance
+  ; [r13] - Max Y distance
+  ; Returns: 0 if the entity is out of range, 1 if in range.
+
+0806CAF8 MoveByVelocity
+  ; r0 - 
+  ; r1 - Number of subpixels to move??
+  ; r2 - 
+  ; r3 - 
+
 0806E0D0 LoadSprite
   ; r0 - Entity ptr
   ; r1 - GFX asset ptr
