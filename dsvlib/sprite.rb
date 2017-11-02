@@ -533,8 +533,12 @@ class Frame
   def from_data(frame_data)
     if SYSTEM == :nds
       @unknown, @number_of_hitboxes, @number_of_parts, @first_hitbox_offset, @first_part_offset = frame_data.unpack("vCCVV")
-    else
+    elsif GAME == "aos"
       @unknown, @number_of_hitboxes, @number_of_parts, @unknown_2, @first_hitbox_offset, @first_part_offset = frame_data.unpack("VCCvVV")
+    else # hod
+      @unk1, @unk2, @unk3, @number_of_parts, @unk5, @first_part_offset = frame_data.unpack("ccvvvV")
+      @number_of_hitboxes = 0
+      @first_hitbox_offset = 0
     end
     
     return self
@@ -587,8 +591,10 @@ class Frame
   def self.data_size
     if SYSTEM == :nds
       12
-    else
+    elsif GAME == "aos"
       16
+    else # hod
+      12
     end
   end
 end

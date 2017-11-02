@@ -3,8 +3,15 @@ Memory used for entities in HoD is 02000418 - 02007C17. Each entity is 0x80 byte
 
 00,4: Pointer to update code.
 04,4: Pointer to draw code.
+12,2: X pos in pixels on the screen.
 38,2: Var A.
 3A,2: Var B.
 3E,1: Subtype.
 3F,1: Low 6 bits of byte 5 (byte 5 & 0x3F).
 40,2: Remaining number of frames to be invincible for (for when the player uses a Medicine Jar).
+66,1: Sprite info index.
+  This is an index in the currently loaded sprite info list, 020154FC.
+67,1: Current sprite frame.
+68,4: Pointer to animation list?
+6C,1: Bitfield related to sprite?
+6E,1: Current animation index?

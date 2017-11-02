@@ -24,6 +24,15 @@ What each range of entity slots is for:
 
 === 02007C17: End of entities currently loaded into memory.
 
+020154FC - List of sprite info for currently loaded entities.
+  The byte at +66 in an entity's memory is the index in this list.
+  Each entry is 0x10 bytes long.
+  00,2: 
+  02,2: 
+  04,4: 
+  08,4: 
+  0C,4: Sprite pointer.
+
 0201852E,2 - Bitfield of status effects on the player.
   0x1 - Poison
   0x2 - Curse
