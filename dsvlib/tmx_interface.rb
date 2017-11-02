@@ -236,7 +236,7 @@ class TMXInterface
       index_on_tileset -= 1 # TMX indexes start at 1 instead of 0.
       index_on_tileset = index_on_tileset % NUM_BLOCKS_IN_TILESET_IMAGE # Account for the block offset for different tilesets. 1024/512 blocks in each tileset (NDS/GBA).
       
-      tile = Layer.tile_class.new
+      tile = LayerTile.new
       tile.index_on_tileset = index_on_tileset
       tile.horizontal_flip = horizontal_flip
       tile.vertical_flip = vertical_flip
