@@ -73,7 +73,12 @@ class GenericEditable
     case kind
     when :enemy
       if GAME == "hod" && index > 0x63
-        @name = ""
+        # Enemies not in the bestiary.
+        if game.enemy_docs[index]
+          @name = game.enemy_docs[index].split("\n").first
+        else
+          @name = ""
+        end
       else
         @name_text_id = TEXT_REGIONS["Enemy Names"].begin + index
       end
