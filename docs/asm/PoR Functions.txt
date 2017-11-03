@@ -401,6 +401,30 @@
   ; r2 - On-hurt-player callback to store at +C8
   ; r3 - On-damaged callback to store at +CC
 
+021D386C CalculateDropChance
+  ; r0 - The base item drop chance from the enemy DNA.
+  ; Returns: The drop chance, out of decimal 10000. For example, 528 means a 5.28% drop chance. Note that drop chances cap at 50% (5000).
+
+02055210 DrawTextToTopScreen?
+  ; r0 - 
+  ; r1 - 
+  ; r2 - 
+  ; r3 - 
+  ; [r13] - X pos (in terms of 8x8 tiles)
+  ; [r13,4] - Y pos (in terms of 8x8 tiles)
+  ; [r13,8] - Text index to draw
+  ; [r13,C] - 
+0200A2A0 DrawNumberText?
+  ; r0 - 
+  ; r1 - 
+  ; r2 - 
+  ; r3 - 
+  ; [r13] - X pos (in terms of 8x8 tiles)
+  ; [r13,4] - Y pos (in terms of 8x8 tiles)
+  ; [r13,8] - Integer to draw
+  ; [r13,C] - 
+  ; [r13,10] - 
+
 02014EA0 DamagePlayer?
 02014EC4 TakeDamage?
 

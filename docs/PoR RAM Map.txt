@@ -163,6 +163,7 @@
   0400 - X
   0800 - Y
   2000 - Debug
+020FC48E - Bitfield of what buttons the player pressed this frame.
 
 020FC4B4,1 - Whether touch screen has been touched for at least 2 frames.
 020FC4B5,1 - Whether touch screen has been touched for exactly 2 frames.
@@ -495,6 +496,15 @@ F5-F5
   02111FCE,2 - Unused?
   02111FD0,4 - Bitfield of resistances.
 02111FD4 - Player 1's current stats, with bonus stats added.
+  02111FD4,2 - ATK
+  02111FD6,2 - DEF
+  02111FD8,2 - STR
+  02111FDA,2 - CON
+  02111FDC,2 - INT
+  02111FDE,2 - MND
+  02111FE0,2 - LCK
+  02111FE2,2 - Unused?
+  02111FE4,4 - Bitfield of resistances.
 02111FE8 - Player 1's bonus stats.
   02111FF8,4 - Not bonus resistances, instead this is 0 or 1 to indicate whether any bonuses are active.
 02111FFC - Player 2's current base stats??
@@ -632,6 +642,9 @@ TODO: What are the other 2 for? It's not for the "recent" tab.
 0211ABE0 - Start of list of globally loaded palettes.
 
 02122BF8,2 - Number of frames to keep the game logic paused.
+
+0213174C - List of text currently displayed??
+  Entry length 0x3C.
 
 0213291C - List of hitboxes. Each entry is 0x14 bytes long, containing two hitboxes 0xA bytes long each.
   The index in this list for a particular entity is at offset+0xA7 in the entity memory.
