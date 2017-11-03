@@ -1,7 +1,28 @@
 
+0200000C,1 - Game state.
+  00 - Konami logo screen.
+  01 - Title screen.
+  02 - Game start.
+  03 - Ingame.
+  04 - Select boss rush difficulty.
+  06 - Sound mode.
+  0C - Nintendo logo screen.
+0200000D,1 - Game substate.
+
 02000068,4 - Current room pointer.
 
 02000076,2 - currently playing song?
+
+=== 0200008C - 0200035B: Section that gets saved to the save file. 2D0 bytes long.
+
+0200030C,1 - something related to which save you saved in?
+  Bit 0: 0 if the player saved in Castle A, 1 if in Castle B.
+  Bits 1-7: X pos on the map the player saved in.
+0200030D,1 - something related to which save you saved in?
+  Bits 0-5: Y pos on the map the player saved in.
+  Bits 6-7: ???
+
+02000318 - Bitfield of ? flags.
 
 02000330 - Bitfield of pickup flags.
 
@@ -13,6 +34,11 @@
 
 02000358,4 - Boss death flags.
   08 00000100 Max Slimer
+
+=== 0200035B: End of section that gets saved to the save file.
+
+020003A8,1 - ???
+  Bits 3-5: Index in list 080E2120 to get the position the player should be in when loading a save file.
 
 020003B8,4 - Current room's entity list pointer.
 

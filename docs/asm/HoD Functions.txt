@@ -10,10 +10,13 @@
 08000CC8 DeleteEntity
   ; r0 - Pointer to the entity to delete.
 
+0800B7A8 LoadSave
+  ; r0 - Save file to load. 0 is the first file, 2 is the second file, 4 is the third file.
+
 08009398 ChangeRoom
   ; r0 - Room pointer
-  ; r1 - Dest X
-  ; r2 - Dest X
+  ; r1 - Dest X in pixels
+  ; r2 - Dest Y in pixels
 
 0800B288 LoadItemIconGFX
   ; r0 - Icon index

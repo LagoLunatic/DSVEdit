@@ -640,11 +640,19 @@ class Game
     end
     
     fs.write(TEST_ROOM_SAVE_FILE_INDEX_LOCATION, [save_file_index].pack("C")) if TEST_ROOM_SAVE_FILE_INDEX_LOCATION
-    fs.write(TEST_ROOM_AREA_INDEX_LOCATION     , [area_index].pack("C")) if TEST_ROOM_AREA_INDEX_LOCATION
-    fs.write(TEST_ROOM_SECTOR_INDEX_LOCATION   , [sector_index].pack("C"))
-    fs.write(TEST_ROOM_ROOM_INDEX_LOCATION     , [room_index].pack("C"))
-    fs.write(TEST_ROOM_X_POS_LOCATION          , [x_pos].pack("V"))
-    fs.write(TEST_ROOM_Y_POS_LOCATION          , [y_pos].pack("V"))
+    
+    if GAME == "hod"
+      room = areas[area_index].sectors[sector_index].rooms[room_index]
+      fs.write(TEST_ROOM_POINTER_LOCATION, [room.room_metadata_ram_pointer].pack("V"))
+      fs.write(TEST_ROOM_X_POS_LOCATION          , [x_pos].pack("v"))
+      fs.write(TEST_ROOM_Y_POS_LOCATION          , [y_pos].pack("v"))
+    else
+      fs.write(TEST_ROOM_AREA_INDEX_LOCATION     , [area_index].pack("C")) if TEST_ROOM_AREA_INDEX_LOCATION
+      fs.write(TEST_ROOM_SECTOR_INDEX_LOCATION   , [sector_index].pack("C"))
+      fs.write(TEST_ROOM_ROOM_INDEX_LOCATION     , [room_index].pack("C"))
+      fs.write(TEST_ROOM_X_POS_LOCATION          , [x_pos].pack("V"))
+      fs.write(TEST_ROOM_Y_POS_LOCATION          , [y_pos].pack("V"))
+    end
     
     # In OoE the test room overlay and area overlay are loaded at the same spot.
     # So after we're done with the test room overlay we need to load the area overlay back.
