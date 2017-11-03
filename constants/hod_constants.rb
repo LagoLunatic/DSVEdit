@@ -79,9 +79,9 @@ ENTITY_TYPE_DESCRIPTIONS = {
   3 => "Pickup",
 }
 
-ENEMY_IDS = (0x00..0x70).to_a
-COMMON_ENEMY_IDS = (0x00..0x6F).to_a # TODO
-BOSS_IDS = (0x70..0x70).to_a # TODO
+ENEMY_IDS = (0x00..0xF9).to_a
+COMMON_ENEMY_IDS = (0x00..0x60).to_a # TODO
+BOSS_IDS = (0x61..0x63).to_a # TODO
 
 BOSS_DOOR_SUBTYPE = 0 # TODO
 BOSS_ID_TO_BOSS_INDEX = { # TODO
@@ -381,7 +381,7 @@ REUSED_ENEMY_INFO = {
   # TODO 61 maxim
   # TODO 62 dracula wraith
   # TODO 63 dracula wraith
-  # TODO 64-70
+  # TODO: 64+
 }
 ENEMY_FILES_TO_LOAD_LIST = nil
 BEST_SPRITE_FRAME_FOR_ENEMY = {
@@ -412,6 +412,7 @@ BEST_SPRITE_FRAME_FOR_ENEMY = {
   0x4D => 0x1F, # arthro skeleton
   0x4E => 0x13, # rare ghost
   0x5E => 0x07, # simon wraith
+  # TODO: 64+
 }
 BEST_SPRITE_OFFSET_FOR_ENEMY = {}
 

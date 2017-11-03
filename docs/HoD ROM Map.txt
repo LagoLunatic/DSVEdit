@@ -3,6 +3,17 @@
 
 080C42F4-080C4303 - List of GFX pages containing item icons.
 
+080C7E38-080CA15F - Enemy DNA list.
+
+080E2120 - List of x/y positions when for the player when starting a new game or loading a save.
+  Entry length 6.
+  00,2: X pos.
+  02,2: Y pos.
+  04,2: ?
+  Entry 00 is for ?
+  Entry 01 is for starting a new game.
+  Entry 02 is for loading a save.
+
 0849507C - List of warp rooms.
   Entry length 0xC.
   00,2: X pos of the warp room on the map.

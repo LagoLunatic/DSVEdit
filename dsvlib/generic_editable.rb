@@ -72,7 +72,11 @@ class GenericEditable
     
     case kind
     when :enemy
-      @name_text_id = TEXT_REGIONS["Enemy Names"].begin + index
+      if GAME == "hod" && index > 0x63
+        @name = ""
+      else
+        @name_text_id = TEXT_REGIONS["Enemy Names"].begin + index
+      end
       
       if GAME == "hod"
         @description = ""
