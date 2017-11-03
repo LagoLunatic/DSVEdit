@@ -639,6 +639,10 @@ class Game
       y_pos *= 0x1000
     end
     
+    if GAME == "aos"
+      save_file_index *= 2
+    end
+    
     fs.write(TEST_ROOM_SAVE_FILE_INDEX_LOCATION, [save_file_index].pack("C")) if TEST_ROOM_SAVE_FILE_INDEX_LOCATION
     
     if GAME == "hod"

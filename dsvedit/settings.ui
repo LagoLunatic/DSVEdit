@@ -19,6 +19,16 @@
      <item row="0" column="1">
       <widget class="QLineEdit" name="tiled_path"/>
      </item>
+     <item row="1" column="1">
+      <widget class="QLineEdit" name="nds_emulator_path"/>
+     </item>
+     <item row="1" column="0">
+      <widget class="QLabel" name="label_2">
+       <property name="text">
+        <string>NDS Emulator Path</string>
+       </property>
+      </widget>
+     </item>
      <item row="0" column="2">
       <widget class="QPushButton" name="tiled_path_browse_button">
        <property name="text">
@@ -33,15 +43,12 @@
        </property>
       </widget>
      </item>
-     <item row="1" column="0">
-      <widget class="QLabel" name="label_2">
+     <item row="2" column="0">
+      <widget class="QLabel" name="label_3">
        <property name="text">
-        <string>NDS Emulator Path</string>
+        <string>GBA Emulator Path</string>
        </property>
       </widget>
-     </item>
-     <item row="1" column="1">
-      <widget class="QLineEdit" name="nds_emulator_path"/>
      </item>
      <item row="1" column="2">
       <widget class="QPushButton" name="nds_emulator_path_browse_button">
@@ -50,20 +57,30 @@
        </property>
       </widget>
      </item>
-     <item row="2" column="0">
-      <widget class="QLabel" name="label_3">
+     <item row="2" column="2">
+      <widget class="QPushButton" name="gba_emulator_path_browse_button">
        <property name="text">
-        <string>GBA Emulator Path</string>
+        <string>Browse</string>
        </property>
       </widget>
      </item>
      <item row="2" column="1">
       <widget class="QLineEdit" name="gba_emulator_path"/>
      </item>
-     <item row="2" column="2">
-      <widget class="QPushButton" name="gba_emulator_path_browse_button">
+     <item row="3" column="1">
+      <widget class="QComboBox" name="test_room_save_file">
+       <property name="maximumSize">
+        <size>
+         <width>80</width>
+         <height>16777215</height>
+        </size>
+       </property>
+      </widget>
+     </item>
+     <item row="3" column="0">
+      <widget class="QLabel" name="label_4">
        <property name="text">
-        <string>Browse</string>
+        <string>Test Room Save</string>
        </property>
       </widget>
      </item>

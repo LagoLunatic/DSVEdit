@@ -993,7 +993,7 @@ class DSVEdit < Qt::MainWindow
   end
   
   def build_and_test
-    save_file_index = 0
+    save_file_index = @settings[:test_room_save_file_index] || 0
     scene_pos = @ui.room_graphics_view.mapToScene(@ui.room_graphics_view.mapFromGlobal(Qt::Cursor.pos))
     x_pos = scene_pos.x
     y_pos = scene_pos.y

@@ -14,9 +14,14 @@ class SettingsDialog < Qt::Dialog
     
     @settings = settings
     
+    (0..2).each do |save_file_i|
+      @ui.test_room_save_file.addItem("File #{save_file_i+1}")
+    end
+    
     @ui.tiled_path.text = @settings[:tiled_path]
     @ui.nds_emulator_path.text = @settings[:emulator_path]
     @ui.gba_emulator_path.text = @settings[:gba_emulator_path]
+    @ui.test_room_save_file.currentIndex = @settings[:test_room_save_file_index] || 0
     
     connect(@ui.tiled_path_browse_button, SIGNAL("clicked()"), self, SLOT("browse_for_tiled_path()"))
     connect(@ui.nds_emulator_path_browse_button, SIGNAL("clicked()"), self, SLOT("browse_for_nds_emulator_path()"))
@@ -56,6 +61,7 @@ class SettingsDialog < Qt::Dialog
       @settings[:tiled_path] = @ui.tiled_path.text
       @settings[:emulator_path] = @ui.nds_emulator_path.text
       @settings[:gba_emulator_path] = @ui.gba_emulator_path.text
+      @settings[:test_room_save_file_index] = @ui.test_room_save_file.currentIndex
     end
   end
 end
