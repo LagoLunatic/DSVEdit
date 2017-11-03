@@ -343,9 +343,75 @@ ITEM_BITFIELD_ATTRIBUTES = {
 
 OVERLAY_FILE_FOR_ENEMY_AI = {}
 REUSED_ENEMY_INFO = {
+  0x03 => {palette_offset: 1}, # medusa head
+  # TODO 09 giant bat
+  # TODO 10 lizard man
+  # TODO 1D gate guarder
+  # TODO 1E golem
+  # TODO 25 witch
+  # TODO 27 bomber armor
+  # TODO 28 minotaur
+  0x32 => {palette_offset: 4}, # ruler sword lv2 (todo look into if this is correct)
+  # TODO 34 guardian armor
+  # TODO 35 boomerang armor
+  0x3D => {palette_offset: 1}, # O
+  # TODO 3F axe armor lv2
+  # TODO 41 bronze guarder
+  # TODO 43 legion (saint)
+  # TODO 44 shadow
+  0x46 => {palette_offset: 2}, # bone liquid
+  # TODO 47 ruler sword lv3
+  # TODO 48 poison lizard
+  0x49 => {palette_offset: 1}, # pazuzu
+  # TODO 4C blaze master
+  # TODO 4F skeleton glass
+  # TODO 51 hammer-hammer
+  # TODO 52 disc armor lv2
+  # TODO 53 minotaur lv2
+  # TODO 54 legion (corpse) glitchy
+  # TODO 55 talos
+  # TODO 56 death
+  # TODO 57 death
+  # TODO 58 pixie
+  # TODO 59 sylph
+  # TODO 5C clear bone
+  # TODO 5D jp bonepillar
+  # TODO 5F pike master
+  # TODO 60 cyclops
+  # TODO 61 maxim
+  # TODO 62 dracula wraith
+  # TODO 63 dracula wraith
+  # TODO 64-70
 }
 ENEMY_FILES_TO_LOAD_LIST = nil
 BEST_SPRITE_FRAME_FOR_ENEMY = {
+  0x01 => 0x12, # tiny slime
+  0x02 => 0x04, # slime
+  0x06 => 0x08, # fleaman
+  0x07 => 0x0B, # bone soldier
+  0x0A => 0x04, # ghost
+  0x0E => 0x05, # rock armor
+  0x0F => 0x03, # white dragon lv2
+  0x11 => 0x10, # living armor
+  0x16 => 0x26, # peeping eye
+  0x17 => 0x10, # skeleton flail
+  0x1A => 0x03, # skeleton rib
+  0x1B => 0x05, # bone thrower
+  0x1F => 0x71, # skull knight
+  0x21 => 0x01, # scarecrow
+  0x22 => 0x1E, # skeleton spider
+  0x29 => 0x17, # balloon
+  0x2A => 0x18, # big balloon
+  0x33 => 0x04, # feather demon
+  0x3A => 0x10, # mimic
+  0x3B => 0x06, # white dragon lv3
+  0x3C => 0x0B, # skeleton mirror
+  0x3D => 0x03, # O
+  0x40 => 0x0A, # specter
+  0x49 => 0x0C, # pazuzu
+  0x4D => 0x1F, # arthro skeleton
+  0x4E => 0x13, # rare ghost
+  0x5E => 0x07, # simon wraith
 }
 BEST_SPRITE_OFFSET_FOR_ENEMY = {}
 

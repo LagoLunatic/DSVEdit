@@ -11,6 +11,9 @@
   Byte 5 must be unique for all entities in the room.
   Unlike the DSVanias, a byte 5 of 0 must also be unique, and doesn't make an entity exempt.
 
+02000358,4 - Boss death flags.
+  08 00000100 Max Slimer
+
 020003B8,4 - Current room's entity list pointer.
 
 02000DAF - current enemy index selected in the bestiary.
