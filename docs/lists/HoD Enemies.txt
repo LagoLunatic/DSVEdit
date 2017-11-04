@@ -106,23 +106,23 @@ Enemies:
 68 
 69 
 6A 
-6B 
+6B Floating Corpse
 6C 
-6D 
-6E 
-6F 
-70 
-71 
+6D Pazuzu (breaks out of wall)
+6E Skeleton Mirror (in mirror)
+6F Revenge Armor
+70 Slime (comes from pipe)
+71 Skeleton Glass (in glass)
 72 
 73 
 74 
 75 
 76 
-77 Talos (Chase)
+77 Talos (chase)
   Talos when he chases you in the first room of the game.
 78 
 79 
-7A 
+7A Red Skeleton (drips down)
 7B 
 7C 
 7D 
