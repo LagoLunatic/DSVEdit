@@ -48,7 +48,7 @@ class Door
     fs.write(door_ram_pointer+4, [x_pos, y_pos].pack("CC"))
     
     if GAME == "hod"
-      fs.write(door_ram_pointer+6, [dest_x_unused, dest_y_unused, dest_x, dest_y, 0].pack("CCvv"))
+      fs.write(door_ram_pointer+6, [dest_x_unused, dest_y_unused, dest_x, dest_y].pack("CCvv"))
     else
       fs.write(door_ram_pointer+6, [dest_x_unused, dest_y_unused, dest_x, dest_y, 0].pack("vvvv"))
     end

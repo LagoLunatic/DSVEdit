@@ -30,7 +30,8 @@ class Room
                 :palette_page_index,
                 :color_effects,
                 :entities,
-                :doors
+                :doors,
+                :enemy_gfx_list_pointer
 
   def initialize(sector, room_metadata_ram_pointer, area_index, sector_index, room_index, game)
     @room_metadata_ram_pointer = room_metadata_ram_pointer
@@ -46,13 +47,17 @@ class Room
   
   def read_from_rom
     if GAME == "hod"
-      room_metadata = fs.read(room_metadata_ram_pointer, 36).unpack("V*")
-      @layer_list_ram_pointer = room_metadata[2]
-      @gfx_list_pointer = room_metadata[3]
-      @palette_wrapper_pointer = room_metadata[5]
-      @entity_list_ram_pointer = room_metadata[6]
-      @door_list_ram_pointer = room_metadata[7]
-      extra_data = room_metadata[8]
+      room_metadata = fs.read(room_metadata_ram_pointer, 36).unpack("vvVVVVVVVV")
+      @lcd_control = room_metadata[0] # TODO
+      @state_swap_event_flag = room_metadata[1] # TODO
+      @alternate_state_room_pointer = room_metadata[2] # TODO
+      @layer_list_ram_pointer = room_metadata[3]
+      @gfx_list_pointer = room_metadata[4]
+      @enemy_gfx_list_pointer = room_metadata[5] # TODO
+      @palette_wrapper_pointer = room_metadata[6]
+      @entity_list_ram_pointer = room_metadata[7]
+      @door_list_ram_pointer = room_metadata[8]
+      extra_data = room_metadata[9]
       read_extra_data_from_rom(extra_data)
     else
       if SYSTEM == :nds
@@ -226,16 +231,14 @@ class Room
       @room_ypos_on_map   = (extra_data_2 & 0b00111111_10000000_00000000_00000000) >> 23
       @palette_page_index = 0 # Always 0 in AoS
     elsif GAME == "hod"
-      # TODO
-      unk_1               = (extra_data & 0b00000000_00000000_00000000_11111111)
-      unk_2               = (extra_data & 0b00000000_00000000_11111111_00000000) >> 8
-      @room_xpos_on_map   = (extra_data & 0b00000000_01111111_00000000_00000000) >> 16
-      @room_ypos_on_map   = (extra_data & 0b00111111_10000000_00000000_00000000) >> 23
-      unk_5               = (extra_data & 0b01000000_00000000_00000000_00000000) >> 30
-      unk_6               = (extra_data & 0b10000000_00000000_00000000_00000000) >> 31
-      #p "%X %X %X %X" % [unk_1, unk_2, unk_5, unk_6]
-      @color_effects      = 0
-      @palette_page_index = 0 # Always 0 in HoD
+      @palette_shift_func  = (extra_data & 0b00000000_00000000_00000000_11111111)
+      @palette_shift_index = (extra_data & 0b00000000_00000000_11111111_00000000) >> 8
+      @room_xpos_on_map    = (extra_data & 0b00000000_01111111_00000000_00000000) >> 16
+      @room_ypos_on_map    = (extra_data & 0b00111111_10000000_00000000_00000000) >> 23
+      @is_castle_b         = (extra_data & 0b01000000_00000000_00000000_00000000) >> 30
+      @has_save_right_wall = (extra_data & 0b10000000_00000000_00000000_00000000) >> 31 # TODO
+      @color_effects       = 0
+      @palette_page_index  = 0 # Always 0 in HoD
     else # PoR or OoE
       @number_of_doors    = (extra_data & 0b00000000_00000000_00000000_01111111)
       @room_xpos_on_map   = (extra_data & 0b00000000_00000000_00111111_10000000) >> 7
@@ -343,18 +346,22 @@ class Room
         raise WriteError.new("Cannot add new doors to a room with no layers. Add a new layer first.")
       end
       
-      old_length = @original_number_of_doors*16
-      new_length = doors.length*16
+      old_length = @original_number_of_doors*Door.data_size
+      new_length = doors.length*Door.data_size
       
       new_door_list_pointer = fs.free_old_space_and_find_new_free_space(door_list_ram_pointer, old_length, new_length, overlay_id)
       
       @original_number_of_doors = doors.length
       
       @door_list_ram_pointer = new_door_list_pointer
-      fs.write(room_metadata_ram_pointer+6*4, [door_list_ram_pointer].pack("V"))
+      if GAME == "hod"
+        fs.write(room_metadata_ram_pointer+7*4, [door_list_ram_pointer].pack("V"))
+      else
+        fs.write(room_metadata_ram_pointer+6*4, [door_list_ram_pointer].pack("V"))
+      end
     elsif doors.length < @original_number_of_doors
-      old_length = @original_number_of_doors*16
-      new_length = doors.length*16
+      old_length = @original_number_of_doors*Door.data_size
+      new_length = doors.length*Door.data_size
       
       fs.free_unused_space(door_list_ram_pointer + new_length, old_length - new_length)
       
@@ -366,7 +373,7 @@ class Room
       door.door_ram_pointer = new_door_pointer
       door.write_to_rom()
       
-      new_door_pointer += 16
+      new_door_pointer += Door.data_size
     end
     
     @number_of_doors = doors.length
@@ -379,6 +386,8 @@ class Room
       extra_data |= (@number_of_doors         ) & 0b00000000_00000000_11111111_11111111
       extra_data |= (@room_xpos_on_map   << 16) & 0b00000000_00111111_00000000_00000000
       extra_data |= (@room_ypos_on_map   << 23) & 0b00011111_10000000_00000000_00000000
+      
+      fs.write(room_metadata_ram_pointer+7*4, [extra_data].pack("V"))
     elsif GAME == "aos"
       extra_data_2 = 0
       extra_data   |= (@number_of_doors         ) & 0b00000000_00000000_11111111_11111111
@@ -386,14 +395,25 @@ class Room
       extra_data_2 |= (@room_xpos_on_map   << 16) & 0b00000000_00111111_00000000_00000000
       extra_data_2 |= (@room_ypos_on_map   << 23) & 0b00011111_10000000_00000000_00000000
       
+      fs.write(room_metadata_ram_pointer+7*4, [extra_data].pack("V"))
       fs.write(room_metadata_ram_pointer+8*4, [extra_data_2].pack("V"))
+    elsif GAME == "hod"
+      extra_data |= (@palette_shift_func       ) & 0b00000000_00000000_00000000_11111111
+      extra_data |= (@palette_shift_index  << 8) & 0b00000000_00000000_11111111_00000000
+      extra_data |= (@room_xpos_on_map    << 16) & 0b00000000_01111111_00000000_00000000
+      extra_data |= (@room_ypos_on_map    << 23) & 0b00111111_10000000_00000000_00000000
+      extra_data |= (@is_castle_b         << 30) & 0b01000000_00000000_00000000_00000000
+      extra_data |= (@has_save_right_wall << 31) & 0b10000000_00000000_00000000_00000000
+      
+      fs.write(room_metadata_ram_pointer+8*4, [extra_data].pack("V"))
     else
       extra_data |= (@number_of_doors         ) & 0b00000000_00000000_00000000_01111111
       extra_data |= (@room_xpos_on_map   <<  7) & 0b00000000_00000000_00111111_10000000
       extra_data |= (@room_ypos_on_map   << 14) & 0b00000000_00011111_11000000_00000000
       extra_data |= (@palette_page_index << 23) & 0b00001111_10000000_00000000_00000000
+      
+      fs.write(room_metadata_ram_pointer+7*4, [extra_data].pack("V"))
     end
-    fs.write(room_metadata_ram_pointer+7*4, [extra_data].pack("V"))
   end
   
   def add_new_layer

@@ -40,6 +40,12 @@ class LayersEditorDialog < Qt::Dialog
       @ui.gridLayout.addWidget(@ui.bg_control, 2, 3)
       @ui.gridLayout.addWidget(@ui.label_11, 2, 2)
     end
+    if GAME == "hod"
+      @ui.scroll_mode.hide()
+      @ui.label_10.hide()
+      @ui.gridLayout.addWidget(@ui.visual_effect, 2, 1)
+      @ui.gridLayout.addWidget(@ui.label_12, 2, 0)
+    end
     
     layer_changed(0)
     
@@ -56,6 +62,7 @@ class LayersEditorDialog < Qt::Dialog
     @ui.z_index.text = "%02X" % layer.z_index
     @ui.scroll_mode.text = "%02X" % layer.scroll_mode
     @ui.bg_control.text = "%04X" % layer.bg_control if SYSTEM == :gba
+    @ui.visual_effect.text = "%02X" % layer.visual_effect if GAME == "hod"
     @ui.opacity.value = layer.opacity
     @ui.tileset_type.text = "%04X" % layer.tileset_type
     @ui.tileset.text = "%08X" % layer.tileset_pointer

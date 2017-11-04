@@ -43,5 +43,14 @@
 08000DE8 DummyUpdate
   ; Does nothing, immediately returns.
 
+08008802 SetColorSpecialEffects
+  ; r0 - 
+  ; r1 - 
+  ; r2 - Color special effects.
+
+08001628 CheckPlayerTouchingCeiling?
+  ; r0 - X pos
+  ; r1 - Y pos
+
 080BB560 PlaySong
   ; r0 - Song index

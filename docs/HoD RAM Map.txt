@@ -10,6 +10,7 @@
 0200000D,1 - Game substate.
 
 02000068,4 - Current room pointer.
+0200006C,4 - ?? room pointer.
 
 02000076,2 - currently playing song?
 
@@ -53,6 +54,8 @@ What each range of entity slots is for:
 
 === 02007C17: End of entities currently loaded into memory.
 
+0201524D - 1 if in a save room with a right wall??
+
 020154FC - List of sprite info for currently loaded entities.
   The byte at +66 in an entity's memory is the index in this list.
   Each entry is 0x10 bytes long.
@@ -70,3 +73,5 @@ What each range of entity slots is for:
 02018784,1 - Currently equipped weapon.
 
 02018528,4 - Bitfield of damage types the player currently deals?
+
+0200A46C,1 - visual effect?

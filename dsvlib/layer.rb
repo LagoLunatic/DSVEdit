@@ -11,6 +11,7 @@ class Layer
                 :opacity,
                 :main_gfx_page_index,
                 :bg_control,
+                :visual_effect,
                 :tileset_type,
                 :width,
                 :height,
@@ -42,10 +43,14 @@ class Layer
         @layer_metadata_ram_pointer = fs.read(layer_list_entry_ram_pointer, 12).unpack("CCvCCCCV")
       @opacity = 0x1F
     elsif GAME == "hod"
-      @z_index, @scroll_mode, @bg_control,
-        @layer_metadata_ram_pointer = fs.read(layer_list_entry_ram_pointer, 12).unpack("CCvV")
+      @z_index, @visual_effect, @bg_control,
+        @layer_metadata_ram_pointer = fs.read(layer_list_entry_ram_pointer, 8).unpack("CCvV")
       @main_gfx_page_index = 0 # TODO
+      @scroll_mode = 0 # TODO
       @opacity = 0x1F
+      if visual_effect == 0xD
+        @opacity = 0x0F
+      end
     end
   end
   
@@ -152,17 +157,23 @@ class Layer
     
     fs.write(layer_metadata_ram_pointer, [width, height, tileset_type].pack("CCv"))
     fs.write(layer_metadata_ram_pointer+4, [tileset_pointer, collision_tileset_pointer].pack("VV"))
-    fs.write(layer_list_entry_ram_pointer, [z_index, scroll_mode].pack("CC"))
+    fs.write(layer_list_entry_ram_pointer, [z_index].pack("C"))
     if SYSTEM == :nds
+      fs.write(layer_list_entry_ram_pointer+1, [scroll_mode].pack("C"))
       fs.write(layer_list_entry_ram_pointer+2, [opacity].pack("C"))
       fs.write(layer_list_entry_ram_pointer+6, [height*0xC0].pack("v")) if GAME == "dos"
       fs.write(layer_list_entry_ram_pointer+8, [main_gfx_page_index].pack("C"))
       fs.write(layer_list_entry_ram_pointer+12, [layer_metadata_ram_pointer].pack("V"))
-    else
+    elsif GAME == "aos"
+      fs.write(layer_list_entry_ram_pointer+1, [scroll_mode].pack("C"))
       fs.write(layer_list_entry_ram_pointer+2, [bg_control].pack("v"))
       fs.write(layer_list_entry_ram_pointer+6, [height*0x100].pack("v")) # Unlike in DoS this doesn't seem necessary for jumpthrough platforms to work, but do it anyway.
       fs.write(layer_list_entry_ram_pointer+4, [main_gfx_page_index].pack("C"))
       fs.write(layer_list_entry_ram_pointer+8, [layer_metadata_ram_pointer].pack("V"))
+    else # HoD
+      fs.write(layer_list_entry_ram_pointer+1, [visual_effect].pack("C"))
+      fs.write(layer_list_entry_ram_pointer+2, [bg_control].pack("v"))
+      fs.write(layer_list_entry_ram_pointer+4, [layer_metadata_ram_pointer].pack("V"))
     end
     tile_data = tiles.map(&:to_tile_data).pack("v*")
     fs.write(layer_tiledata_ram_start_offset, tile_data)
