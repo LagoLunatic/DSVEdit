@@ -39,7 +39,7 @@ class Tileset
   def read_from_rom_gba
     @tiles = []
     
-    if tileset_type == 2 || self.is_a?(CollisionTileset)
+    if self.is_a?(CollisionTileset) || (tileset_type & 0x2) > 0
       tileset_data = fs.decompress(tileset_pointer)
     elsif tileset_type == 1
       tileset_data = fs.read(tileset_pointer, 0x1000)
@@ -72,29 +72,46 @@ class Tileset
   
   def write_to_rom
     tileset_data = ""
-    @tiles[1..-1].each_with_index do |tile, i|
+    
+    if self.is_a?(CollisionTileset)
+      tiles_to_write = @tiles[16..-1]
+    else
+      tiles_to_write = @tiles[1..-1]
+    end
+    tiles_to_write.each_with_index do |tile, i|
       tileset_data << tile.to_data
     end
     
     if SYSTEM == :nds
       fs.write(tileset_pointer, tileset_data)
-    else
+    elsif self.is_a?(CollisionTileset) || (tileset_type & 0x2) > 0
       fs.compress_write(tileset_pointer, tileset_data)
+    else
+      fs.write(tileset_pointer, tileset_data)
     end
   end
   
   def tile_class
     if SYSTEM == :gba
-      case tileset_type
-      when 2
-        GBATilesetTile
-      when 1
+      if tileset_type & 0x1 > 0
         GBA256TilesetTile
       else
-        raise "Unknown tileset type: #{tileset_type}"
+        GBATilesetTile
       end
     else
       TilesetTile
+    end
+  end
+  
+  def colors_per_palette
+    if SYSTEM == :gba
+      if tileset_type & 0x1 > 0
+        256
+      else
+        16
+      end
+    else
+      raise "Tilesets don't have a colors_per_palette in the DSVanias"
     end
   end
 end
