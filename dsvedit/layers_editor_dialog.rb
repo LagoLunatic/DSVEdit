@@ -45,6 +45,9 @@ class LayersEditorDialog < Qt::Dialog
       @ui.label_10.hide()
       @ui.gridLayout.addWidget(@ui.visual_effect, 2, 1)
       @ui.gridLayout.addWidget(@ui.label_12, 2, 0)
+    else
+      @ui.visual_effect.hide()
+      @ui.label_12.hide()
     end
     
     layer_changed(0)
