@@ -9,7 +9,8 @@ class Entity
                 :subtype,
                 :byte_8,
                 :var_a,
-                :var_b
+                :var_b,
+                :candle_offset_up
   
   def initialize(room, fs)
     @room = room
@@ -22,10 +23,9 @@ class Entity
     
     @x_pos, @y_pos = fs.read(entity_ram_pointer,4).unpack("s*")
     if GAME == "hod"
-      byte_5_and_type, @subtype, @unknown, @byte_8 = fs.read(entity_ram_pointer+4,4).unpack("C*")
+      byte_5_and_type, @subtype, @candle_offset_up, @byte_8 = fs.read(entity_ram_pointer+4,4).unpack("C*")
       @type   = (byte_5_and_type & 0xC0) >> 6
       @byte_5 =  byte_5_and_type & 0x3F
-      puts "XX!!! #{@unknown}" if @unknown != 0
     else
       @byte_5, @type, @subtype, @byte_8 = fs.read(entity_ram_pointer+4,4).unpack("C*")
     end
@@ -56,7 +56,7 @@ class Entity
         y_pos,
         byte_5_and_type,
         subtype,
-        @unknown,
+        candle_offset_up,
         byte_8,
         var_a,
         var_b

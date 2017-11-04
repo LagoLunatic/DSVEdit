@@ -47,6 +47,7 @@ class TMXInterface
     tiled_entities.each do |tmx_entity|
       props = extract_properties(tmx_entity)
       validate_properties(props, "Entity", ["05", "06 (type)", "07 (subtype)", "08", "09 (var_a)", "11 (var_b)"])
+      validate_properties(props, "Entity", ["candle_offset_up"]) if GAME == "hod"
       
       entity = Entity.new(room, room.fs)
       
@@ -58,6 +59,7 @@ class TMXInterface
       entity.byte_8 = props["08"]
       entity.var_a = props["09 (var_a)"]
       entity.var_b = props["11 (var_b)"]
+      entity.candle_offset_up = props["candle_offset_up"] if GAME == "hod"
       
       room.entities << entity
     end
@@ -189,6 +191,7 @@ class TMXInterface
                 xml.property(:name => "08", :value => "%02X" % entity.byte_8)
                 xml.property(:name => "09 (var_a)", :value => "%04X" % entity.var_a)
                 xml.property(:name => "11 (var_b)", :value => "%04X" % entity.var_b)
+                xml.property(:name => "candle_offset_up", :value => "%02X" % entity.candle_offset_up) if GAME == "hod"
               }
             }
           end
