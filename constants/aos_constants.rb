@@ -487,10 +487,12 @@ REUSED_ENEMY_INFO = {
   0x68 => {init_code: 0x08091430, palette_offset: 3}, # flame demon
   0x69 => {init_code: 0x0808E024, palette_offset: 2}, # shadow knight
   0x6A => {gfx_wrapper: 0x08118F00, sprite: 0x0821C190, palette: 0x0820A780}, # headhunter
-  0x6C => {init_code: -1}, # legion, TODO. 081CC06C and 081CC074 are the gfx pages. these are in a list at 081190C4.
-  0x6D => {init_code: -1}, # balore, TODO
-  0x6E => {init_code: -1}, # julius, TODO
-  0x6F => {init_code: -1}, # graham, TODO
+  0x6B => {gfx_wrapper: 0x08119498}, # death
+  0x6C => {gfx_wrapper: 0x081190C0, sprite: 0x082258fc, palette: 0x0820AC4C}, # legion
+  0x6D => {gfx_wrapper: 0x081193FC, sprite: 0x08244220}, # balore
+  0x6E => {gfx_wrapper: 0x08119520}, # julius
+  0x6F => {init_code: 0x0811870C}, # graham
+  0x70 => {gfx_wrapper: 0x081191CC, palette: 0x0820AD70}, # chaos
 }
 ENEMY_FILES_TO_LOAD_LIST = nil
 BEST_SPRITE_FRAME_FOR_ENEMY = {
@@ -520,6 +522,10 @@ BEST_SPRITE_FRAME_FOR_ENEMY = {
   0x67 => 0x11,
   0x68 => 0x05,
   0x69 => 0x12,
+  0x6A => 0x02,
+  0x6B => 0x33,
+  0x6C => 0x34,
+  0x70 => 0x02,
 }
 BEST_SPRITE_OFFSET_FOR_ENEMY = {}
 
@@ -533,6 +539,7 @@ REUSED_SPECIAL_OBJECT_INFO = {
   0x03 => COMMON_SPRITE.merge(palette_offset: 2),
   0x04 => COMMON_SPRITE.merge(palette_offset: 2),
   0x05 => COMMON_SPRITE,
+  0x06 => {init_code:         -1}, # darkness door
   0x07 => {init_code:         -1},
   0x08 => {init_code: 0x08526004},
   0x09 => {init_code: 0x08526004},
@@ -611,6 +618,23 @@ OTHER_SPRITES = [
   {desc: "unknown", pointer: 0x08526530},
   {desc: "unknown", pointer: 0x08526540},
   {desc: "unknown", pointer: 0x08526550},
+  
+  {desc: "xxxxxx", pointer: 0x081186C4},
+  {desc: "xxxxxx", pointer: 0x081186D0},
+  {desc: "Mina event actor", pointer: 0x081186DC},
+  {desc: "Arikado event actor", pointer: 0x081186E8},
+  {desc: "Yoko event actor", pointer: 0x081186F4},
+  {desc: "Hammer event actor", pointer: 0x08118700},
+  {desc: "Graham event actor", pointer: 0x08118718},
+  {desc: "J", pointer: 0x08118724},
+  {desc: "J 2", sprite: 0x08252748, palette: 0x0820C028, gfx_files: [0x081F42A4, 0x081F52A8, 0x081F62AC, 0x081F72B0]},
+  {desc: "xxxxxx", pointer: 0x0811873C},
+  {desc: "xxxxxx", pointer: 0x08118748},
+  {desc: "xxxxxx", pointer: 0x08118754},
+  {desc: "Somacula event actor", pointer: 0x08118760},
+  
+  {desc: "Giant Bat", pointer: 0x080B5C38, gfx_wrapper: 0x0811940C},
+  {desc: "Chaos 2", gfx_wrapper: 0x08119224, palette: 0x0820AD70, sprite: 0x08226B58},
 ]
 
 CANDLE_FRAME_IN_COMMON_SPRITE = 0x1E

@@ -416,11 +416,28 @@ class Part
       @x_pos, @y_pos,
         @unknown, @gfx_x_offset, @gfx_y_offset,
         @width, @height,
-        @unknown_1, @gfx_page_index,
+        @object_size_and_shape, @gfx_page_index,
         flip_bits, @unused = part_data.unpack("ccvCCCCCCCC")
       
       @palette_index = 0
-      @gfx_page_index = 0 if GAME == "aos" # TODO HACK
+      
+      # TODO: when saving, update object size and shape as well.
+      object_size  = (@object_size_and_shape & 0x30) >> 4
+      object_shape =  @object_size_and_shape & 0x03
+      possible_sizes = {
+        square: [[8, 8], [16, 16], [32, 32], [64, 64]],
+        horizontal: [[16, 8], [32, 8], [32, 16], [64, 32]],
+        vertical: [[8, 16], [8, 32], [16, 32], [32, 64]],
+      }
+      shape_name = case object_shape
+      when 0
+        :square
+      when 1
+        :horizontal
+      when 2
+        :vertical
+      end
+      size = possible_sizes[shape_name][object_size]
       
       @vertical_flip   = (flip_bits & 0b00000001) > 0
       @horizontal_flip = (flip_bits & 0b00000010) > 0

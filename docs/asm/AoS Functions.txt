@@ -107,7 +107,7 @@
   ; r0 - Entity
 
 0803B800 LoadGFX
-  ; r0 - GFX wrapper pointer
+  ; r0 - GFX wrapper or list pointer
   ; r1 - ?
 08039E90 LoadGFX2
   ; Run for GFX types 0 and 1 (uncompressed and compressed)
@@ -128,6 +128,12 @@
   ;   [    B    ] [    F    ]
   ; This mapping is stored in ROM at 080E2B04.
   ; Returns - The first free offset in VRAM. This is in terms of 8x8px tiles, so the return value must be multiplied by 0x20 to get the offset in bytes.
+
+0803C7B4 LoadObjectPalette
+  ; r0 - Palette list pointer
+  ; r1 - Palette index of the first palette in the list to load
+  ; r2 - Number of palettes to load
+  ; r3 - Index to load the palettes at in palette RAM (e.g. 9 to replace the 9th object palette)
 
 0803B9D1 EnemyDraw
 
@@ -377,6 +383,8 @@
 080D5DF4 EnemyGrahamUpdate
 080A1E38 EnemyChaosCreate
 080A4340 EnemyChaosUpdate
+080A712C EnemyChaos2Create
+080A6ED4 EnemyChaos2Update
 
 ; Special object-specific code
 0804D9DC Object00Create
