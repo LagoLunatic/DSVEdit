@@ -299,10 +299,15 @@ class CollisionTile
     end
     tile_data |=   0b00001000 if @is_water
     tile_data |= (@block_shape <<  4) & 0b11110000
-    tile_data |= (@unknown_1   <<  8) & 0x0000FF00
-    tile_data |= (@unknown_2   << 16) & 0x00FF0000
-    tile_data |= (@unknown_3   << 24) & 0xFF000000
-    [tile_data].pack("V")
+    if SYSTEM == :nds
+      tile_data |= (@unknown_1   <<  8) & 0x0000FF00
+      tile_data |= (@unknown_2   << 16) & 0x00FF0000
+      tile_data |= (@unknown_3   << 24) & 0xFF000000
+      
+      [tile_data].pack("V")
+    else
+      [tile_data].pack("C")
+    end
   end
   
   def is_blank
