@@ -344,15 +344,19 @@ class TilesetEditorDialog < Qt::Dialog
     else
       gfx_chunk_index_on_page = (tile.index_on_tile_page & 0xC0) >> 6
       gfx_chunk_index = tile.tile_page*4 + gfx_chunk_index_on_page
-      gfx_chunk_index += 0x10 if gfx.colors_per_palette == 16
-      gfx_chunk_index = gfx_chunk_index_on_page if gfx.colors_per_palette == 256
+      gfx_chunk_index += 0x10 if @tileset.colors_per_palette == 16
+      gfx_chunk_index = gfx_chunk_index_on_page if @tileset.colors_per_palette == 256
       gfx_wrapper_index, chunk_offset = @gfx_chunks[gfx_chunk_index]
-      minitile_index_on_page = tile.index_on_tile_page & 0x3F
-      minitile_index_on_page += chunk_offset * 0x40
-      
-      gfx_wrapper = @gfx_wrappers[gfx_wrapper_index]
-      
-      chunky_tile = @renderer.render_1_dimensional_minitile(gfx_wrapper, palette, minitile_index_on_page)
+      if chunk_offset.nil?
+        chunky_tile = ChunkyPNG::Image.new(8, 8, ChunkyPNG::Color.rgba(255, 0, 0, 255))
+      else
+        minitile_index_on_page = tile.index_on_tile_page & 0x3F
+        minitile_index_on_page += chunk_offset * 0x40
+        
+        gfx_wrapper = @gfx_wrappers[gfx_wrapper_index]
+        
+        chunky_tile = @renderer.render_1_dimensional_minitile(gfx_wrapper, palette, minitile_index_on_page)
+      end
     end
     
     if tile.horizontal_flip
@@ -480,18 +484,15 @@ class TilesetEditorDialog < Qt::Dialog
       gfx_pointers_used_on_this_page = []
       4.times do |i|
         gfx_chunk_index = @selected_tile.tile_page*4 + i
-        # HACKY TODO
-        gfx = @gfx_pages[@selected_tile.tile_page]
-        
-        if gfx.nil?
-          @ui.gfx_file.text = "Invalid (gfx page index %02X)" % @selected_tile.tile_page
-          return
-        end
-        
-        gfx_chunk_index += 0x10 if gfx.colors_per_palette == 16
-        gfx_chunk_index = 0 if gfx.colors_per_palette == 256
+        gfx_chunk_index += 0x10 if @tileset.colors_per_palette == 16
+        gfx_chunk_index = 0 if @tileset.colors_per_palette == 256
         gfx_wrapper_index, chunk_offset = @gfx_chunks[gfx_chunk_index]
-        gfx_wrapper = @gfx_wrappers[gfx_wrapper_index]
+        
+        if chunk_offset.nil?
+          return
+        else
+          gfx_wrapper = @gfx_wrappers[gfx_wrapper_index]
+        end
         
         if gfx_wrapper.colors_per_palette == 16
           palette = @palettes[@selected_tile.palette_index]
