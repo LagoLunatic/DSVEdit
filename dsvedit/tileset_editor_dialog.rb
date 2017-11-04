@@ -1002,24 +1002,30 @@ class TilesetEditorDialog < Qt::Dialog
     
     # Clear the tileset cache so the changes show up in the editor.
     parent.clear_cache()
+    
+    return true
   rescue GBADummyFilesystem::CompressedDataTooLarge => e
     Qt::MessageBox.warning(self,
       "Compressed write error",
       e.message
     )
-    return
+    return false
   end
   
   def button_box_clicked(button)
     if @ui.buttonBox.standardButton(button) == Qt::DialogButtonBox::Ok
-      save_tileset()
-      parent.load_room()
-      self.close()
+      success = save_tileset()
+      if success
+        parent.load_room()
+        self.close()
+      end
     elsif @ui.buttonBox.standardButton(button) == Qt::DialogButtonBox::Cancel
       self.close()
     elsif @ui.buttonBox.standardButton(button) == Qt::DialogButtonBox::Apply
-      save_tileset()
-      parent.load_room()
+      success = save_tileset()
+      if success
+        parent.load_room()
+      end
     end
   end
   
