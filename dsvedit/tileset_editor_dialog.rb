@@ -477,6 +477,7 @@ class TilesetEditorDialog < Qt::Dialog
       chunky_image = @renderer.render_gfx_page(gfx_wrapper.file, palette)
     else
       chunky_image = ChunkyPNG::Image.new(128, 128, ChunkyPNG::Color::TRANSPARENT)
+      gfx_pointers_used_on_this_page = []
       4.times do |i|
         gfx_chunk_index = @selected_tile.tile_page*4 + i
         # HACKY TODO
@@ -500,9 +501,12 @@ class TilesetEditorDialog < Qt::Dialog
         
         chunky_chunk_image = @renderer.render_gfx_1_dimensional_mode(gfx_wrapper, palette, first_minitile_index: chunk_offset*64, max_num_minitiles: 64)
         chunky_image.compose!(chunky_chunk_image, 0, i*32)
+        
+        gfx_pointers_used_on_this_page << gfx_wrapper.gfx_pointer
       end
       
-      @ui.gfx_file.text = ""
+      gfx_pointers_used_on_this_page.uniq!
+      @ui.gfx_file.text = gfx_pointers_used_on_this_page.map{|ptr| "%08X" % ptr}.join(", ")
     end
     
     pixmap = Qt::Pixmap.new()
