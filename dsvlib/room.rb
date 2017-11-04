@@ -553,10 +553,10 @@ class RoomGfxPage
               :num_chunks,
               :unknown
               
-  def initialize(pointer, fs, gfx_load_offset=nil)
+  def initialize(pointer, fs, hod_gfx_load_offset=nil)
     if GAME == "hod"
       @gfx_pointer = fs.read(pointer, 4).unpack("V").first
-      @gfx_load_offset = gfx_load_offset
+      @gfx_load_offset = hod_gfx_load_offset
       @first_chunk_index = 0
       @num_chunks = 4
       @unknown = 0
@@ -574,11 +574,30 @@ class RoomGfxPage
     gfx_pages = []
     i = 0
     offset = gfx_list_pointer
-    hod_gfx_load_offset = 0x10
     while true
       gfx_pointer = fs.read(offset, 4).unpack("V").first
       
-      break if gfx_pointer == 0
+      if GAME == "hod"
+        if gfx_pointer == 0
+          i += 1
+          offset += 4
+          if i >= 4
+            break
+          end
+          next
+        end
+      else
+        break if gfx_pointer == 0
+      end
+      
+      if GAME == "hod"
+        if i == 3
+          # The one at position 3 in HoD is always a 256 color GFX page that needs to be positioned differently.
+          hod_gfx_load_offset = 0 
+        else
+          hod_gfx_load_offset = 0x10 + i*4
+        end
+      end
       
       gfx_page = RoomGfxPage.new(offset, fs, hod_gfx_load_offset)
       gfx_pages << gfx_page
@@ -586,7 +605,6 @@ class RoomGfxPage
       i += 1
       if GAME == "hod"
         offset += 4
-        hod_gfx_load_offset += 4
         if i >= 4
           break
         end
