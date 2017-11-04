@@ -32,6 +32,12 @@
 
 08498C34 - List of save rooms.
 
+084B173C - List of pointers to event create functions (for object 26).
+  The event object's var A is the index in this list.
+
+084B173C - List of create code pointers for events.
+  Var A of the event entity is the index in this list.
+
 084B24A4-084B25F3 - Consumable item data.
 084B25F4-084B265F - Weapon item data.
 084B2660-084B2C5F - Armor item data.

@@ -5,8 +5,31 @@
 03 Wall in save room?
 04 
 05 Wooden door.
-06 
-07 
+06 Boss door.
+  Var A is is how the door acts:
+    00 Door outside the boss room that opens when you touch it.
+      Note that if the player enters the room through this door it will act locked like one inside the boss room and not open when the player touches it.
+    01 Door inside the boss room that opens when the boss is killed.
+  Var B is the boss this door is for:
+    01 Giant Bat
+    02 Skull Knight
+    03 Living Armor
+    04 Golem
+    05 Minotaur
+    06 Devil
+    07 Giant Merman
+    08 Max Slimer
+    09 Peeping Big
+    0A Legion (saint)
+    0B Shadow
+    0C Minotaur Lv2
+    0D Legion (corpse)
+    0E Talos
+    0F Death
+    10 Cyclops
+    11 Talos (chase)
+    12 Pazuzu
+07 Lights up dark rooms?
 08 
 09 
 0A 
@@ -15,7 +38,9 @@
 0D stone blockade?
 0E blood waterfall?
 0F 
-10 cracked wall?
+10 Cracked wall that can be broken with the Crushing Stone.
+  Var A: ??? Either 0 or FFFF
+  Var B: Event flag index for whether this wall has been destroyed.
 11 
 12 
 13 
@@ -30,23 +55,44 @@
 1B 
 1C 
 1D 
-1E 
+1E Statue and ramp in the second room of the game.
 1F Elevator.
+  Var A: Which elevator it is. Affects the number of floors and distance between the floors.
+    0 Has 4 floors, each 0x200 pixels apart.
+    1 Has 4 floors, each 0x1A8 pixels apart.
+    2 Has 2 floors, 0x210 pixels apart. This also doubles as the lift that raises you into the center of the castle.
 20 
 21 
 22 
 23 
 24 
-25 
-26 
+25 Spikes.
+  These are invisible, the spike graphics should be part of the room's tiles.
+  Var A: Affects the width of the spike hitbox somehow.
+26 Event.
+  Var A: Which event.
+    01 Meeting Death in the Marble Corridor.
+  Var B: Event flag set when this event is completed.
 27 
 28 
 29 
-2A 
-2B 
-2C 
+2A Furniture in the furniture room.
+  Also changes the music.
+2B Guillotine blade trap.
+  Var A: Sprite frame index to use.
+    0 Guillotine blade trap.
+    1-5 Bloody bones laying around for decoration.
+  Var B: ?
+2C Ceiling breakable by the Crush Boots.
+  Var A: Event flag index for whether this ceiling has been broken or not yet.
 2D Locked floor gate.
+  Var A:
+    0 Left half of the gate.
+    1 Right half of the gate.
+  Var B: Event flag index for whether this gate has been unlocked.
 2E 
 2F 
-30 
+30 Destroyable hand statue holding something shiny.
+  Var B: Event flag to set when destroyed.
+  Destroying this normally unlocks the floor gate to the center of the castle, but you can change var B to set any other event flag.
 31 

@@ -381,6 +381,7 @@ REUSED_ENEMY_INFO = {
   # TODO 61 maxim
   # TODO 62 dracula wraith
   # TODO 63 dracula wraith
+  0x6D => {palette_offset: 2}, # pazuzu (breaks through wall)
   # TODO: 64+
 }
 ENEMY_FILES_TO_LOAD_LIST = nil
@@ -420,9 +421,16 @@ COMMON_SPRITE = {desc: "Common", sprite: 0x0812CE34, gfx_files: [0x080E89FC], pa
 
 OVERLAY_FILE_FOR_SPECIAL_OBJECT = {}
 REUSED_SPECIAL_OBJECT_INFO = {
+  0x01 => {palette_offset: 2}, # warp point
+  0x05 => {init_code: 0x0801C950}, # wooden door
+  0x06 => {init_code: 0x0801D088, palette_offset: 1},
+  0x25 => {init_code: -1}, # spikes
+  0x26 => {init_code: -1}, # event
 }
 SPECIAL_OBJECT_FILES_TO_LOAD_LIST = nil
 BEST_SPRITE_FRAME_FOR_SPECIAL_OBJECT = {
+  0x05 => 0x01,
+  0x06 => 0x52,
   0x19 => 0x03,
 }
 BEST_SPRITE_OFFSET_FOR_SPECIAL_OBJECT = {}

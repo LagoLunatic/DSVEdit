@@ -23,18 +23,36 @@
   Bits 0-5: Y pos on the map the player saved in.
   Bits 6-7: ???
 
-02000318 - Bitfield of ? flags.
+02000314-0200031F - Bitfield of event flags.
+  Includes which ceilings the player has destroyed with the Crush Boots.
 
 02000330 - Bitfield of pickup flags.
+
+02000358,4 - Bitfield of boss death flags.
+  01 00000002 Giant Bat
+  02 00000004 Skull Knight
+  03 00000008 Living Armor
+  04 00000010 Golem
+  05 00000020 Minotaur
+  06 00000040 Devil
+  07 00000080 Giant Merman
+  08 00000100 Max Slimer
+  09 00000200 Peeping Big
+  0A 00000400 Legion (saint)
+  0B 00000800 Shadow
+  0C 00001000 Minotaur Lv2
+  0D 00002000 Legion (corpse)
+  0E 00004000 Talos
+  0F 00008000 Death
+  10 00010000 Cyclops
+  11 00020000 Talos (chase)
+  12 00040000 Pazuzu
 
 020003A8,1 - ? music related
 
 020003B0-020003B7 - Bitfield of entity used byte 5s in the current room.
   Byte 5 must be unique for all entities in the room.
   Unlike the DSVanias, a byte 5 of 0 must also be unique, and doesn't make an entity exempt.
-
-02000358,4 - Boss death flags.
-  08 00000100 Max Slimer
 
 === 0200035B: End of section that gets saved to the save file.
 

@@ -22,6 +22,10 @@ Enemies:
 14 Big Skeleton
 15 Flying Bone
 16 Peeping Eye
+  Var A:
+    0 ?
+    1 ?
+    2 Spawns Peeping Big when killed.
 17 Skeleton Flail
 18 Skeleton Spear
 19 Red Skeleton
@@ -108,7 +112,7 @@ Enemies:
 6A 
 6B Floating Corpse
 6C 
-6D Pazuzu (breaks out of wall)
+6D Pazuzu (breaks through wall)
 6E Skeleton Mirror (in mirror)
 6F Revenge Armor
 70 Slime (comes from pipe)
@@ -120,7 +124,10 @@ Enemies:
 76 
 77 Talos (chase)
   Talos when he chases you in the first room of the game.
-78 
+78 Peeping Eye (behind curtain)
+  Var A:
+    0 Behind curtain.
+    1 Behind window.
 79 
 7A Red Skeleton (drips down)
 7B 
