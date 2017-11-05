@@ -287,7 +287,10 @@ Special objects:
     Bits 1-6: Room index of destination room.
     Bits 7-10: Sector index of the destination room.
     Bits 11-16: Nothing.
-77 Studio portrait (sealed with chains).
+77 Studio portrait.
+  Sealed with 4 chains. Each of these chains disappears with a different boss death flag being set: Werewolf, The Creature, Medusa, and Mummy Man.
+  When the player goes into the portrait, the black effect emanating out from it actually comes from the sprite of the small square-framed portrait usually in the same room as the studio portrait. If that small portrait sprite is not currently loaded, going into the studio portrait will crash the game on real hardware, and cause visual bugs on emulator.
+  Therefore you should always make sure there is an object 76 or 87 in the same room as the studio portrait. (Note that objects 1A and 86 won't work, they use a different sprite.) This dummy portrait doesn't have to be visible - you can just place it above the room so the player will never see it, but it will still load its sprite.
 78 Cogs and gate that block the way.
   Requires sector overlay 86.
 79 Area name shown the first time you enter an area. Var A controls which area it is.

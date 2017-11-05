@@ -92,10 +92,15 @@ What each range of entity slots is for:
 
 === 02007863: End of entities currently loaded into memory.
 
-0200A09C,0200A0B8 - screen Y?
+0200A094,4 - Pointer to ???
+
+0200A09A,2 - Screen scrolling X pos in pixels.
+0200A09E,2 - Screen scrolling Y pos in pixels.
 
 0200A0A0,4 - X distance the screen moved this frame.
 0200A0A4,4 - Y distance the screen moved this frame.
+
+0200A0B8 - screen Y?
 
 0200A100 - Decompressed tileset data.
 0200C0EC - tileset data again?
@@ -108,6 +113,8 @@ What each range of entity slots is for:
   04,4: 
   08,4: 
   0C,4: Sprite pointer.
+
+02013110,4 - Pointer to the player entity (020004E4).
 
 02013144 - ???
 

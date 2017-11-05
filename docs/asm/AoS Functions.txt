@@ -72,6 +72,16 @@
   ; r0 - Warp room index
   ; Returns pointer to the warp point in list 08525FBC.
 
+08011A44 CheckShouldEnterDoor
+  ; r0 - Pointer to the player entity
+  ; Returns 1 if the player should enter a door (either because they're out of bounds of the room or because they're touching a special collision tile) or 0 if they shouldn't enter a door.
+
+08001FE8 GetCollisionData
+  ; r0 - Pointer to entity to use as the base position to check
+  ; r1 - X offset to check
+  ; r2 - Y offset to check
+  ; Returns the collision data of the tile at the designated point.
+
 08021278 SetEntityCollision
   ; r0 - Entity pointer
   ; r1 - Whether this platform is slippery or has friction.

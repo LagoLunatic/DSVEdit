@@ -133,6 +133,10 @@
   ; r0 - Sector index
   ; r1 - Room index.
 
+02027154 CheckShouldEnterDoor
+  ; r0 - Pointer to the player entity
+  ; Returns 1 if the player should enter a door (because they're out of bounds of the room) or 0 if they shouldn't enter a door.
+
 021E7870 GiveItem
   ; r0 - Item type (2 is consumables, etc)
   ; r1 - Item index

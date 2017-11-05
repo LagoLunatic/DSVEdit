@@ -9,6 +9,7 @@
   ; r2 - Update function pointer for the new entity
 
 02012B60 UpdateAllEntities
+02012960 DrawAllEntities
 02012784 ProcessInput
 
 0201BB6C AssetGetPointer
@@ -292,6 +293,9 @@
 020108B0 GetSpriteInfoPointer
   ; r0 - Index in the currently loaded sprite info list, 020FA200. This is from entity+0x6C.
   ; Returns r0 - Pointer to the entry in that list. (0x020FA200 + index*0x10)
+0200E76C GetSpritePointer
+  ; r0 - Entity pointer
+  ; Returns the pointer to the entity's sprite data, from the currently loaded sprite info list.
 
 0200EF40 SpriteDrawEntity
   ; A number of entities have this has their draw code.

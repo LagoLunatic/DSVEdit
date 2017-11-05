@@ -8,9 +8,10 @@ Memory used for entities in AoS is 020004E4 - 02007863. Each entity is 0x84 byte
 2C,4: X acceleration?
 30,2: Var A.
 32,2: Var B.
-40,4: X pos on the screen. (Note: This is the only X pos, unlike the DSVanias. There is no X pos in the room.)
-  In AoS 0x10000 subpixels are equivalent to 1 pixel, unlike 0x1000 subpixels per pixel in the DSVanias.
-44,4: Y pos on the screen. (Note: This is the only Y pos, unlike the DSVanias. There is no Y pos in the room.)
+42,2: X pos on the screen in pixels.
+  Note: This is the only X pos, unlike the DSVanias. There is no X pos in the room.
+46,2: Y pos on the screen.
+  Note: This is the only Y pos, unlike the DSVanias. There is no Y pos in the room.
 48,4: X velocity.
 4C,4: Y velocity.
 50,4: X acceleration.
