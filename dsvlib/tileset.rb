@@ -73,7 +73,7 @@ class Tileset
   def write_to_rom
     tileset_data = ""
     
-    if self.is_a?(CollisionTileset)
+    if self.is_a?(CollisionTileset) && SYSTEM == :gba
       tiles_to_write = @tiles[16..-1]
     else
       tiles_to_write = @tiles[1..-1]
