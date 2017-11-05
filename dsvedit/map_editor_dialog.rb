@@ -87,7 +87,7 @@ class MapEditorDialog < Qt::Dialog
     end
     
     case GAME
-    when "dos", "aos"
+    when "dos", "aos", "hod"
       @ui.is_secret.disabled = true
       @ui.is_transition.disabled = true
       @ui.is_entrance.disabled = true
@@ -242,7 +242,7 @@ class MapEditorDialog < Qt::Dialog
   
   def delete_map_tile(old_tile)
     case GAME
-    when "dos", "aos"
+    when "dos", "aos", "hod"
       index = @map.tiles.index(old_tile)
       new_tile = @available_tiles[0].dup
       new_tile.sector_index = nil
