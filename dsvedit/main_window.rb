@@ -93,6 +93,7 @@ class DSVEdit < Qt::MainWindow
     @map_graphics_scene.setSceneRect(0, 0, 64*4+1, 48*4+1)
     @ui.map_graphics_view.scale(2, 2)
     @ui.map_graphics_view.setScene(@map_graphics_scene)
+    @map_graphics_scene.setBackgroundBrush(MapEditorDialog::BACKGROUND_BRUSH)
     connect(@map_graphics_scene, SIGNAL("clicked(int, int, const Qt::MouseButton&)"), self, SLOT("change_room_by_map_x_and_y(int, int, const Qt::MouseButton&)"))
     
     @tiled = TMXInterface.new
@@ -503,8 +504,11 @@ class DSVEdit < Qt::MainWindow
       end
       
       # In HoD the map tile doesn't have the sector/room indexes so we need to search through all rooms in the game to find a matching one.
+      in_castle_b = @sector_index.odd?
       matched_room = nil
       game.each_room do |room|
+        next if room.sector_index.odd? != in_castle_b # We only want to check rooms in the same castle the user in already in.
+        
         if (room.room_xpos_on_map..room.room_xpos_on_map+room.width-1).include?(x) && (room.room_ypos_on_map..room.room_ypos_on_map+room.height-1).include?(y)
           matched_room = room
           break
