@@ -562,14 +562,7 @@ class DSVEdit < Qt::MainWindow
     @doors_view_item = Qt::GraphicsRectItem.new
     @room_graphics_scene.addItem(@doors_view_item)
     @room.doors.each_with_index do |door, i|
-      x = door.x_pos
-      y = door.y_pos
-      x = -1 if x == 0xFF
-      y = -1 if y == 0xFF
-      x *= SCREEN_WIDTH_IN_PIXELS
-      y *= SCREEN_HEIGHT_IN_PIXELS
-      
-      door_item = DoorItem.new(door, x, y, i, self)
+      door_item = DoorItem.new(door, i, self)
       door_item.setParentItem(@doors_view_item)
     end
     
@@ -817,7 +810,7 @@ class DSVEdit < Qt::MainWindow
       Qt::MessageBox.warning(self, "No doors to edit", "This room has no doors.\nYou can add one by going to Edit -> Add Door or pressing A.")
       return
     end
-    @open_dialogs << DoorEditorDialog.new(self, @room.doors, door)
+    @open_dialogs << DoorEditorDialog.new(self, @renderer, @room.doors, door)
   end
   
   def open_settings

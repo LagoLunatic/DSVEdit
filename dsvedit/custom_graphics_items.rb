@@ -122,8 +122,15 @@ class DoorItem < Qt::GraphicsRectItem
   
   attr_reader :door
   
-  def initialize(door, x, y, door_index, main_window)
+  def initialize(door, door_index, main_window)
     super(0, 0, SCREEN_WIDTH_IN_PIXELS, SCREEN_HEIGHT_IN_PIXELS)
+    
+    x = door.x_pos
+    y = door.y_pos
+    x = -1 if x == 0xFF
+    y = -1 if y == 0xFF
+    x *= SCREEN_WIDTH_IN_PIXELS
+    y *= SCREEN_HEIGHT_IN_PIXELS
     setPos(x, y)
     
     @main_window = main_window
@@ -166,4 +173,66 @@ class DoorItem < Qt::GraphicsRectItem
     @main_window.update_room_bounding_rect()
     super(event)
   end
+end
+
+class DoorDestinationMarkerItem < Qt::GraphicsRectItem
+  BRUSH = Qt::Brush.new(Qt::Color.new(255, 127, 0, 120))
+  
+  attr_reader :door
+  
+  def initialize(door, door_editor)
+    @width = SCREEN_WIDTH_IN_PIXELS
+    @height = SCREEN_HEIGHT_IN_PIXELS
+    if GAME == "hod"
+      @height -= 0x60
+    end
+    super(0, 0, @width, @height)
+    
+    x = door.dest_x
+    y = door.dest_y
+    setPos(x, y)
+    
+    @door_editor = door_editor
+    @door = door
+    @dest_room_width = door.destination_room.width*SCREEN_WIDTH_IN_PIXELS
+    @dest_room_height = door.destination_room.height*SCREEN_HEIGHT_IN_PIXELS
+    
+    self.setBrush(BRUSH)
+    
+    setFlag(Qt::GraphicsItem::ItemIsMovable)
+    setFlag(Qt::GraphicsItem::ItemSendsGeometryChanges)
+    
+    setCursor(Qt::Cursor.new(Qt::SizeAllCursor))
+  end
+  
+  def itemChange(change, value)
+    if change == ItemPositionChange && scene()
+      new_pos = value.toPointF()
+      x = (new_pos.x / 0x10).round
+      y = (new_pos.y / 0x10).round
+      x = x * 0x10
+      y = y * 0x10
+      #x = [x, 0x7FFF].min
+      #x = [x, -0x7FFF].max
+      #y = [y, 0x7FFF].min
+      #y = [y, -0x7FFF].max
+      x = [x, @dest_room_width-@width].min
+      x = [x, 0].max
+      y = [y, @dest_room_height-@height].min
+      y = [y, 0].max
+      new_pos.setX(x)
+      new_pos.setY(y)
+      
+      @door_editor.update_dest_x_and_y_fields(x, y)
+      
+      return super(change, Qt::Variant.new(new_pos))
+    end
+    
+    return super(change, value)
+  end
+
+  #def mouseReleaseEvent(event)
+  #  @main_window.update_room_bounding_rect()
+  #  super(event)
+  #end
 end

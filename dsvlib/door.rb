@@ -69,14 +69,12 @@ class Door
     end
   end
   
+  def destination_room
+    game.get_room_by_metadata_pointer(destination_room_metadata_ram_pointer)
+  end
+  
   def destination_door
-    dest_room = nil
-    game.each_room do |room|
-      if room.room_metadata_ram_pointer == destination_room_metadata_ram_pointer
-        dest_room = room
-        break
-      end
-    end
+    dest_room = destination_room
     if dest_room.nil?
       raise "Door has invalid destination room: %08X" % destination_room_metadata_ram_pointer
     end
