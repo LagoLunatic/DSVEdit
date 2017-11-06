@@ -94,6 +94,7 @@ class EntityRectItem < Qt::GraphicsRectItem
       y = new_pos.y
       
       if $qApp.keyboardModifiers & Qt::ControlModifier == 0
+        # Snap to 16x16 grid unless Ctrl is held down.
         x = (x / 16).round * 16
         y = (y / 16).round * 16
         new_pos.setX(x)

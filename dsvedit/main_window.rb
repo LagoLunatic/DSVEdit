@@ -26,6 +26,7 @@ require_relative 'special_object_editor_dialog'
 require_relative 'weapon_synth_editor_dialog'
 require_relative 'shop_editor_dialog'
 require_relative 'tileset_chooser_dialog'
+require_relative 'door_editor_dialog'
 
 require_relative 'ui_main'
 
@@ -39,6 +40,7 @@ class DSVEdit < Qt::MainWindow
   slots "edit_room_data()"
   slots "edit_layers()"
   slots "open_entity_editor()"
+  slots "open_door_editor()"
   slots "add_new_layer()"
   slots "add_new_entity()"
   slots "update_visible_view_items()"
@@ -109,6 +111,7 @@ class DSVEdit < Qt::MainWindow
     connect(@ui.actionEdit_Room_Props, SIGNAL("activated()"), self, SLOT("edit_room_data()"))
     connect(@ui.actionEdit_Layers, SIGNAL("activated()"), self, SLOT("edit_layers()"))
     connect(@ui.actionEdit_Entities, SIGNAL("activated()"), self, SLOT("open_entity_editor()"))
+    connect(@ui.actionEdit_Doors, SIGNAL("activated()"), self, SLOT("open_door_editor()"))
     connect(@ui.actionAdd_New_Layer, SIGNAL("activated()"), self, SLOT("add_new_layer()"))
     connect(@ui.actionAdd_Entity, SIGNAL("activated()"), self, SLOT("add_new_entity()"))
     connect(@ui.actionEntities, SIGNAL("activated()"), self, SLOT("update_visible_view_items()"))
@@ -169,6 +172,7 @@ class DSVEdit < Qt::MainWindow
     @ui.actionEdit_Room_Props.setEnabled(false);
     @ui.actionEdit_Layers.setEnabled(false);
     @ui.actionEdit_Entities.setEnabled(false);
+    @ui.actionEdit_Doors.setEnabled(false);
     @ui.actionAdd_New_Layer.setEnabled(false);
     @ui.actionAdd_Entity.setEnabled(false);
     @ui.actionEntities.setEnabled(false);
@@ -200,6 +204,7 @@ class DSVEdit < Qt::MainWindow
     @ui.actionEdit_Room_Props.setEnabled(true);
     @ui.actionEdit_Layers.setEnabled(true);
     @ui.actionEdit_Entities.setEnabled(true);
+    @ui.actionEdit_Doors.setEnabled(true);
     @ui.actionAdd_New_Layer.setEnabled(true);
     @ui.actionAdd_Entity.setEnabled(true);
     @ui.actionEntities.setEnabled(true);
@@ -482,10 +487,18 @@ class DSVEdit < Qt::MainWindow
     return unless button == Qt::RightButton
     
     item = @room_graphics_scene.itemAt(x, y)
-    if item && (item.is_a?(EntityChunkyItem) || item.is_a?(EntityRectItem))
+    return if item.nil?
+    
+    if item.is_a?(EntityChunkyItem) || item.is_a?(EntityRectItem)
       open_entity_editor(item.entity)
-    elsif item && item.is_a?(DoorItem)
-      change_room_by_metadata(item.door.destination_room_metadata_ram_pointer)
+    elsif item.is_a?(DoorItem)
+      if $qApp.keyboardModifiers & Qt::ShiftModifier == 0
+        # Enter the door if shift is not held down.
+        change_room_by_metadata(item.door.destination_room_metadata_ram_pointer)
+      else
+        # Edit the entity if shift is held down.
+        open_door_editor(item.door)
+      end
     end
   end
   
@@ -797,6 +810,14 @@ class DSVEdit < Qt::MainWindow
       return
     end
     @open_dialogs << EntityEditorDialog.new(self, @room.entities, entity)
+  end
+  
+  def open_door_editor(door = nil)
+    if @room.doors.empty?
+      Qt::MessageBox.warning(self, "No doors to edit", "This room has no doors.\nYou can add one by going to Edit -> Add Door or pressing A.")
+      return
+    end
+    @open_dialogs << DoorEditorDialog.new(self, @room.doors, door)
   end
   
   def open_settings

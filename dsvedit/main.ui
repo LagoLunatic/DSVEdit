@@ -235,6 +235,7 @@
     <addaction name="actionEdit_Room_Props"/>
     <addaction name="actionEdit_Layers"/>
     <addaction name="actionEdit_Entities"/>
+    <addaction name="actionEdit_Doors"/>
     <addaction name="actionAdd_New_Layer"/>
     <addaction name="actionAdd_Entity"/>
    </widget>
@@ -490,6 +491,11 @@
   <action name="actionShop_Editor">
    <property name="text">
     <string>Shop Editor</string>
+   </property>
+  </action>
+  <action name="actionEdit_Doors">
+   <property name="text">
+    <string>Edit Doors</string>
    </property>
   </action>
  </widget>

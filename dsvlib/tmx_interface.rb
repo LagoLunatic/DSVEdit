@@ -69,7 +69,7 @@ class TMXInterface
     room.doors = []
     tiled_doors.each do |tiled_door|
       props = extract_properties(tiled_door)
-      validate_properties(props, "Door", %w(dest_x dest_y dest_x_unused dest_y_unused destination_room))
+      validate_properties(props, "Door", %w(dest_x dest_y dest_x_2 dest_y_2 destination_room))
       
       door = Door.new(room, room.game)
       
@@ -83,8 +83,8 @@ class TMXInterface
       door.y_pos = y
       door.dest_x = props["dest_x"]
       door.dest_y = props["dest_y"]
-      door.dest_x_unused = props["dest_x_unused"]
-      door.dest_y_unused = props["dest_y_unused"]
+      door.dest_x_2 = props["dest_x_2"]
+      door.dest_y_2 = props["dest_y_2"]
       door.destination_room_metadata_ram_pointer = props["destination_room"]
       
       room.doors << door
@@ -159,19 +159,19 @@ class TMXInterface
                        :height => SCREEN_HEIGHT_IN_PIXELS) {
               
               if GAME == "hod"
-                dest_x_unused = "%02X" % door.dest_x_unused
-                dest_y_unused = "%02X" % door.dest_y_unused
+                dest_x_2 = "%02X" % door.dest_x_2
+                dest_y_2 = "%02X" % door.dest_y_2
               else
-                dest_x_unused = "%04X" % door.dest_x_unused
-                dest_y_unused = "%04X" % door.dest_y_unused
+                dest_x_2 = "%04X" % door.dest_x_2
+                dest_y_2 = "%04X" % door.dest_y_2
               end
               xml.properties {
                 xml.property(:name => "door_ram_pointer", :value => "%08X" % door.door_ram_pointer)
                 xml.property(:name => "destination_room", :value => "%08X" % door.destination_room_metadata_ram_pointer)
                 xml.property(:name => "dest_x", :value => "%04X" % door.dest_x)
                 xml.property(:name => "dest_y", :value => "%04X" % door.dest_y)
-                xml.property(:name => "dest_x_unused", :value => dest_x_unused)
-                xml.property(:name => "dest_y_unused", :value => dest_y_unused)
+                xml.property(:name => "dest_x_2", :value => dest_x_2)
+                xml.property(:name => "dest_y_2", :value => dest_y_2)
               }
               
             }

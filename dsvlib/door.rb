@@ -7,10 +7,11 @@ class Door
                 :destination_room_metadata_ram_pointer,
                 :x_pos,
                 :y_pos,
-                :dest_x_unused,
-                :dest_y_unused,
+                :dest_x_2,
+                :dest_y_2,
                 :dest_x,
-                :dest_y
+                :dest_y,
+                :unused
   
   def initialize(room, game)
     @room = room
@@ -24,14 +25,14 @@ class Door
     if GAME == "hod"
       @destination_room_metadata_ram_pointer,
         @x_pos, @y_pos,
-        @dest_x_unused, @dest_y_unused,
+        @dest_x_2, @dest_y_2,
         @dest_x, @dest_y = fs.read(door_ram_pointer, 12).unpack("VCCCCvv")
     else
       @destination_room_metadata_ram_pointer,
         @x_pos, @y_pos,
-        @dest_x_unused, @dest_y_unused,
+        @dest_x_2, @dest_y_2,
         @dest_x, @dest_y,
-        @unknown = fs.read(door_ram_pointer, 16).unpack("VCCvvvvv")
+        @unused = fs.read(door_ram_pointer, 16).unpack("VCCvvvvv")
     end
     
     return self
@@ -48,9 +49,9 @@ class Door
     fs.write(door_ram_pointer+4, [x_pos, y_pos].pack("CC"))
     
     if GAME == "hod"
-      fs.write(door_ram_pointer+6, [dest_x_unused, dest_y_unused, dest_x, dest_y].pack("CCvv"))
+      fs.write(door_ram_pointer+6, [dest_x_2, dest_y_2, dest_x, dest_y].pack("CCvv"))
     else
-      fs.write(door_ram_pointer+6, [dest_x_unused, dest_y_unused, dest_x, dest_y, 0].pack("vvvv"))
+      fs.write(door_ram_pointer+6, [dest_x_2, dest_y_2, dest_x, dest_y, 0].pack("vvvv"))
     end
   end
   
