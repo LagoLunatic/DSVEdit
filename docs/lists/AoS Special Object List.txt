@@ -176,12 +176,12 @@
     0 Full of money.
     1 Full of Rippers.
 19 Skull that moves around in a rectangular path.
-1A 
+1A Nothing, unused.
 1B Button that reverses conveyor belts.
 1C Save point.
   Object 1D must also be in the room for the save point to work?
 1D Walls of save room/warp room.
-1E 
+1E Nothing, unused.
 1F Warp point.
 20 Event.
   Var A: Which event.
@@ -211,9 +211,11 @@
 23 Water flowing down in the bath room.
 24 Mist in the bath room.
 25 Legion members emerging from the background.
-26 Damaging hand/foot of Arena background statue.
-27 
-28 
+26 Statue in the background of the Arena that attacks you with its hand and foot.
+27 The damaging hand from one of the background statues in the Arena.
+  This object shouldn't be placed manually, it should be spawned automatically by object 26.
+28 The damaging foot from one of the background statues in the Arena.
+  This object shouldn't be placed manually, it should be spawned automatically by object 26.
 29 Vertically moving platform.
 2A Horizontally moving platform.
 2B Water flowing from the large fountian in the Floating Garden.

@@ -23,6 +23,8 @@
   Bits 0-5: Y pos on the map the player saved in.
   Bits 6-7: ???
 
+02000310,4 - Bitfield of breakable walls destroyed.
+
 02000314-0200031F - Bitfield of event flags.
   Includes which ceilings the player has destroyed with the Crush Boots.
 

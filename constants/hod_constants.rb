@@ -422,6 +422,7 @@ COMMON_SPRITE = {desc: "Common", sprite: 0x0812CE34, gfx_files: [0x080E89FC], pa
 OVERLAY_FILE_FOR_SPECIAL_OBJECT = {}
 REUSED_SPECIAL_OBJECT_INFO = {
   0x01 => {palette_offset: 2}, # warp point
+  0x03 => {palette_offset: 1}, # wall in save room
   0x05 => {init_code: 0x0801C950}, # wooden door
   0x06 => {init_code: 0x0801D088, palette_offset: 1},
   0x25 => {init_code: -1}, # spikes
@@ -429,6 +430,7 @@ REUSED_SPECIAL_OBJECT_INFO = {
 }
 SPECIAL_OBJECT_FILES_TO_LOAD_LIST = nil
 BEST_SPRITE_FRAME_FOR_SPECIAL_OBJECT = {
+  0x03 => 0x01,
   0x05 => 0x01,
   0x06 => 0x52,
   0x19 => 0x03,

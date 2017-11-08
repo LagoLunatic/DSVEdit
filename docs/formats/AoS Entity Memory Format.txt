@@ -3,6 +3,8 @@ Memory used for entities in AoS is 020004E4 - 02007863. Each entity is 0x84 byte
 
 00,4: Pointer to update code.
 04,4: Pointer to draw code.
+0A,1: State.
+0B,1: Substate.
 22,2: Frame counter.
 24,4: 
 2C,4: X acceleration?
@@ -16,13 +18,18 @@ Memory used for entities in AoS is 020004E4 - 02007863. Each entity is 0x84 byte
 4C,4: Y velocity.
 50,4: X acceleration.
 54,4: Y acceleration (gravity).
+58,1: Bitfield related to sprite drawing.
+  20 Do not draw this entity.
+  40 Horizontal flip.
+  80 Vertical flip.
 62,1: Affects palette?
   If the lowest bit of this value is set, then it changes the palette of this entity's sprite, but only for the parts that have the lowest bit of the value at part+0B set as well.
 64,1: Sprite info index.
   This is an index in the currently loaded sprite info list, 0201017C.
 65,1: Current sprite frame.
-68,4: Pointer to the entity's current animation?
+68,4: Pointer to the entity's current animation.
 6C,1: Related to sprite? Bitfield?
+6D,1: Current animation index.
 6E,1: Current keyframe index in this animation.
 
 For weapons/skills:

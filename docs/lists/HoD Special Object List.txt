@@ -2,7 +2,8 @@
 01 Warp point.
   Allows you to warp between castles by pressing up, and between warp points in the same castle by pressing down.
 02 Teleporter.
-03 Wall in save room?
+03 Breakable wall.
+  Var A: Which breakable wall flag to check.
 04 
 05 Wooden door.
 06 Boss door.
@@ -74,7 +75,9 @@
     01 Meeting Death in the Marble Corridor.
   Var B: Event flag set when this event is completed.
 27 
-28 
+28 lydie?
+  Var A: Which event?
+  Var B: Event flag?
 29 
 2A Furniture in the furniture room.
   Also changes the music.
