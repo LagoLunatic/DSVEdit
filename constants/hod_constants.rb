@@ -150,14 +150,15 @@ ENEMY_DNA_BITFIELD_ATTRIBUTES = {
 }
 
 TEXT_LIST_START_OFFSET = 0x08495500
-TEXT_RANGE = (0..0x24E)
+TEXT_RANGE = (0..0x2AA)
 TEXT_REGIONS = {
   "Character Names" => (0..0x9),
   "Events" => (0xA..0x21),
   "Item Names" => (0x22..0xF6),
   "Item Descriptions" => (0xF7..0x1CB),
-  "Enemy Names" => (0x1CC..0x22F),
-  "Misc" => (0x230..0x24E),
+  "Enemy Names" => (0x1CC..0x248),
+  "Menus" => (0x249..0x28B),
+  "Music Names" => (0x28C..0x2AA),
 }
 TEXT_REGIONS_OVERLAYS = {
   "Character Names" => nil,
@@ -165,7 +166,8 @@ TEXT_REGIONS_OVERLAYS = {
   "Item Names" => nil,
   "Item Descriptions" => nil,
   "Enemy Names" => nil,
-  "Misc" => nil,
+  "Menus" => nil,
+  "Music Names" => nil,
 }
 STRING_DATABASE_START_OFFSET = nil # TODO
 STRING_DATABASE_ORIGINAL_END_OFFSET = nil # TODO
