@@ -23,7 +23,9 @@ class Renderer
               :secret_door_color,
               :wall_pixels,
               :door_pixels,
-              :secret_door_pixels
+              :secret_door_pixels,
+              :warp_castle_b_fill_color,
+              :warp_both_castles_fill_color
               
   def initialize(fs)
     @fs = fs
@@ -1005,6 +1007,10 @@ class Renderer
     @door_color            ||= ChunkyPNG::Color.rgba(*MAP_DOOR_COLOR)
     @door_center_color     ||= ChunkyPNG::Color.rgba(*MAP_DOOR_CENTER_PIXEL_COLOR)
     @secret_door_color     ||= ChunkyPNG::Color.rgba(*MAP_SECRET_DOOR_COLOR)
+    if GAME == "hod"
+      @warp_castle_b_fill_color     ||= ChunkyPNG::Color.rgba(*MAP_CASTLE_B_WARP_FILL_COLOR)
+      @warp_both_castles_fill_color ||= ChunkyPNG::Color.rgba(*MAP_BOTH_CASTLES_WARP_FILL_COLOR)
+    end
   
     @wall_pixels           ||= [line_color]*5
     @door_pixels           ||= [line_color, door_color, door_center_color, door_color, line_color]
@@ -1024,8 +1030,12 @@ class Renderer
       transition_fill_color
     elsif tile.is_entrance
       entrance_fill_color
+    elsif tile.is_warp && tile.is_castle_b_warp
+      warp_both_castles_fill_color
     elsif tile.is_warp
       warp_fill_color
+    elsif tile.is_castle_b_warp
+      warp_castle_b_fill_color
     elsif tile.is_secret
       secret_fill_color
     elsif tile.is_save

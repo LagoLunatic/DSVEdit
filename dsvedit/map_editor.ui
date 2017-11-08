@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1020</width>
+    <width>1024</width>
     <height>550</height>
    </rect>
   </property>
@@ -45,24 +45,10 @@
          </item>
          <item>
           <layout class="QGridLayout" name="gridLayout">
-           <item row="0" column="2">
-            <widget class="QCheckBox" name="is_secret">
-             <property name="text">
-              <string>Secret room</string>
-             </property>
-            </widget>
-           </item>
            <item row="0" column="1">
             <widget class="QCheckBox" name="is_warp">
              <property name="text">
               <string>Warp room</string>
-             </property>
-            </widget>
-           </item>
-           <item row="0" column="0">
-            <widget class="QCheckBox" name="is_save">
-             <property name="text">
-              <string>Save room</string>
              </property>
             </widget>
            </item>
@@ -73,6 +59,27 @@
              </property>
             </widget>
            </item>
+           <item row="0" column="2">
+            <widget class="QCheckBox" name="is_blank">
+             <property name="text">
+              <string>Blank tile</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="0">
+            <widget class="QCheckBox" name="is_save">
+             <property name="text">
+              <string>Save room</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="2">
+            <widget class="QCheckBox" name="is_secret">
+             <property name="text">
+              <string>Secret room</string>
+             </property>
+            </widget>
+           </item>
            <item row="1" column="1">
             <widget class="QCheckBox" name="is_entrance">
              <property name="text">
@@ -80,10 +87,10 @@
              </property>
             </widget>
            </item>
-           <item row="1" column="2">
-            <widget class="QCheckBox" name="is_blank">
+           <item row="0" column="3">
+            <widget class="QCheckBox" name="is_castle_b_warp">
              <property name="text">
-              <string>Blank tile</string>
+              <string>Warp (Castle B)</string>
              </property>
             </widget>
            </item>

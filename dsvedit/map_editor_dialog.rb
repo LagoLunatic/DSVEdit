@@ -76,6 +76,7 @@ class MapEditorDialog < Qt::Dialog
     
     connect(@ui.is_save, SIGNAL("stateChanged(int)"), self, SLOT("reload_available_tiles(int)"))
     connect(@ui.is_warp, SIGNAL("stateChanged(int)"), self, SLOT("reload_available_tiles(int)"))
+    connect(@ui.is_castle_b_warp, SIGNAL("stateChanged(int)"), self, SLOT("reload_available_tiles(int)"))
     connect(@ui.is_secret, SIGNAL("stateChanged(int)"), self, SLOT("reload_available_tiles(int)"))
     connect(@ui.is_transition, SIGNAL("stateChanged(int)"), self, SLOT("reload_available_tiles(int)"))
     connect(@ui.is_entrance, SIGNAL("stateChanged(int)"), self, SLOT("reload_available_tiles(int)"))
@@ -87,12 +88,19 @@ class MapEditorDialog < Qt::Dialog
     end
     
     case GAME
-    when "dos", "aos", "hod"
-      @ui.is_secret.disabled = true
-      @ui.is_transition.disabled = true
-      @ui.is_entrance.disabled = true
+    when "dos", "aos"
+      @ui.is_secret.hide()
+      @ui.is_transition.hide()
+      @ui.is_entrance.hide()
+      @ui.is_castle_b_warp.hide()
+    when "hod"
+      @ui.is_secret.hide()
+      @ui.is_transition.hide()
+      @ui.is_entrance.hide()
+      @ui.is_warp.text = "Warp (Castle A)"
     else
-      @ui.is_blank.disabled = true
+      @ui.is_blank.hide()
+      @ui.is_castle_b_warp.hide()
     end
     
     @edit_warps_mode = false
@@ -159,12 +167,13 @@ class MapEditorDialog < Qt::Dialog
     @available_tiles_graphics_scene.clear()
     
     @available_tiles.each do |tile|
-      tile.is_save       = @ui.is_save.checked
-      tile.is_warp       = @ui.is_warp.checked
-      tile.is_secret     = @ui.is_secret.checked
-      tile.is_transition = @ui.is_transition.checked
-      tile.is_entrance   = @ui.is_entrance.checked
-      tile.is_blank      = @ui.is_blank.checked
+      tile.is_save          = @ui.is_save.checked
+      tile.is_warp          = @ui.is_warp.checked
+      tile.is_castle_b_warp = @ui.is_castle_b_warp.checked
+      tile.is_secret        = @ui.is_secret.checked
+      tile.is_transition    = @ui.is_transition.checked
+      tile.is_entrance      = @ui.is_entrance.checked
+      tile.is_blank         = @ui.is_blank.checked
       
       tile_pixmap_item = create_tile_pixmap_item(tile)
       tile_pixmap_item.setOffset(tile.x_pos*8, tile.y_pos*8)
