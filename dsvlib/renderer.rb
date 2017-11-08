@@ -131,12 +131,17 @@ class Renderer
   end
   
   def render_tileset_nds(tileset_offset, tileset_type, palette_pages, gfx_pages, colors_per_palette, collision_tileset_offset, output_filename=nil)
+    rendered_tileset = ChunkyPNG::Image.new(TILESET_WIDTH_IN_TILES*16, TILESET_HEIGHT_IN_TILES*16, ChunkyPNG::Color::TRANSPARENT)
+    
     if gfx_pages.empty?
-      return render_collision_tileset(collision_tileset_offset, output_filename)
+      if output_filename
+        FileUtils::mkdir_p(File.dirname(output_filename))
+        rendered_tileset.save(output_filename, :fast_rgba)
+      end
+      return rendered_tileset
     end
     
     tileset = Tileset.new(tileset_offset, tileset_type, fs)
-    rendered_tileset = ChunkyPNG::Image.new(TILESET_WIDTH_IN_TILES*16, TILESET_HEIGHT_IN_TILES*16, ChunkyPNG::Color::TRANSPARENT)
     palette_list = generate_palettes(palette_pages.first.palette_list_pointer, 16)
     gfx_wrappers = gfx_pages.map{|gfx_page| gfx_page.gfx_wrapper}
     if gfx_wrappers.any?{|gfx| gfx.colors_per_palette == 256}
@@ -185,18 +190,22 @@ class Renderer
     if output_filename
       FileUtils::mkdir_p(File.dirname(output_filename))
       rendered_tileset.save(output_filename, :fast_rgba)
-      #puts "Wrote #{output_filename}"
     end
     return rendered_tileset
   end
   
   def render_tileset_gba(tileset_offset, tileset_type, palette_pages, gfx_pages, colors_per_palette, collision_tileset_offset, output_filename=nil)
+    rendered_tileset = ChunkyPNG::Image.new(TILESET_WIDTH_IN_TILES*TILE_WIDTH, TILESET_HEIGHT_IN_TILES*TILE_HEIGHT, ChunkyPNG::Color::TRANSPARENT)
+    
     if gfx_pages.empty?
-      return render_collision_tileset(collision_tileset_offset, output_filename)
+      if output_filename
+        FileUtils::mkdir_p(File.dirname(output_filename))
+        rendered_tileset.save(output_filename, :fast_rgba)
+      end
+      return rendered_tileset
     end
     
     tileset = Tileset.new(tileset_offset, tileset_type, fs)
-    rendered_tileset = ChunkyPNG::Image.new(TILESET_WIDTH_IN_TILES*TILE_WIDTH, TILESET_HEIGHT_IN_TILES*TILE_HEIGHT, ChunkyPNG::Color::TRANSPARENT)
     palettes = []
     palette_pages.each do |palette_page|
       next if palette_page.palette_type == 1 # Foreground palette
@@ -272,7 +281,6 @@ class Renderer
     if output_filename
       FileUtils::mkdir_p(File.dirname(output_filename))
       rendered_tileset.save(output_filename, :fast_rgba)
-      #puts "Wrote #{output_filename}"
     end
     return rendered_tileset
   end
