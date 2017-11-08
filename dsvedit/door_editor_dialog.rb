@@ -6,6 +6,7 @@ class DoorEditorDialog < Qt::Dialog
   
   slots "door_changed(int)"
   slots "copy_door_pointer_to_clipboard()"
+  slots "dest_x_y_fields_changed()"
   slots "button_box_clicked(QAbstractButton*)"
   slots "delete_door()"
   
@@ -41,6 +42,8 @@ class DoorEditorDialog < Qt::Dialog
     
     connect(@ui.door_index, SIGNAL("activated(int)"), self, SLOT("door_changed(int)"))
     connect(@ui.copy_door_pointer, SIGNAL("released()"), self, SLOT("copy_door_pointer_to_clipboard()"))
+    connect(@ui.dest_x, SIGNAL("editingFinished()"), self, SLOT("dest_x_y_fields_changed()"))
+    connect(@ui.dest_y, SIGNAL("editingFinished()"), self, SLOT("dest_x_y_fields_changed()"))
     connect(@ui.buttonBox, SIGNAL("clicked(QAbstractButton*)"), self, SLOT("button_box_clicked(QAbstractButton*)"))
     connect(@ui.delete_door_button, SIGNAL("released()"), self, SLOT("delete_door()"))
     
@@ -92,8 +95,8 @@ class DoorEditorDialog < Qt::Dialog
     
     @doors_view_item = Qt::GraphicsRectItem.new
     @dest_room_graphics_scene.addItem(@doors_view_item)
-    door_dest_marker_item = DoorDestinationMarkerItem.new(@door, self)
-    door_dest_marker_item.setParentItem(@doors_view_item)
+    @door_dest_marker_item = DoorDestinationMarkerItem.new(@door, self)
+    @door_dest_marker_item.setParentItem(@doors_view_item)
   rescue StandardError => e
     Qt::MessageBox.warning(self,
       "Failed to display room",
@@ -104,6 +107,12 @@ class DoorEditorDialog < Qt::Dialog
   def update_dest_x_and_y_fields(x, y)
     @ui.dest_x.text = "%04X" % [x].pack("s").unpack("v").first
     @ui.dest_y.text = "%04X" % [y].pack("s").unpack("v").first
+  end
+  
+  def dest_x_y_fields_changed
+    x = @ui.dest_x.text.to_i(16)
+    y = @ui.dest_y.text.to_i(16)
+    @door_dest_marker_item.setPos(x, y)
   end
   
   def save_door
