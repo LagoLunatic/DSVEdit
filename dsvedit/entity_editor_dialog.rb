@@ -84,7 +84,6 @@ class EntityEditorDialog < Qt::Dialog
       elsif type == PICKUP_ENTITY_TYPE || (type == 7 && ["por", "ooe"].include?(GAME)) || (type == 6 && GAME == "por")
         if GAME == "hod"
           if PICKUP_SUBTYPES_FOR_ITEMS.include?(subtype)
-            p subtype
             subtype_name = ITEM_TYPES[subtype-3][:name]
           else
             subtype_name = "Crash"
@@ -103,6 +102,17 @@ class EntityEditorDialog < Qt::Dialog
           subtype_name = "Skill"
         else
           subtype_name = "Crash"
+        end
+      elsif type == CANDLE_ENTITY_TYPE && GAME == "hod"
+        case subtype
+        when 0
+          subtype_name = "Drops heart"
+        when 1
+          subtype_name = "Drops money"
+        when 2
+          subtype_name = "Drops subweapon"
+        when 3
+          subtype_name = "Drops item"
         end
       end
       
