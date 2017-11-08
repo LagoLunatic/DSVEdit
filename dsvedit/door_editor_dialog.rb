@@ -6,6 +6,7 @@ class DoorEditorDialog < Qt::Dialog
   
   slots "door_changed(int)"
   slots "copy_door_pointer_to_clipboard()"
+  slots "dest_room_field_changed()"
   slots "dest_x_y_fields_changed()"
   slots "button_box_clicked(QAbstractButton*)"
   slots "delete_door()"
@@ -42,6 +43,7 @@ class DoorEditorDialog < Qt::Dialog
     
     connect(@ui.door_index, SIGNAL("activated(int)"), self, SLOT("door_changed(int)"))
     connect(@ui.copy_door_pointer, SIGNAL("released()"), self, SLOT("copy_door_pointer_to_clipboard()"))
+    connect(@ui.dest_room, SIGNAL("editingFinished()"), self, SLOT("dest_room_field_changed()"))
     connect(@ui.dest_x, SIGNAL("editingFinished()"), self, SLOT("dest_x_y_fields_changed()"))
     connect(@ui.dest_y, SIGNAL("editingFinished()"), self, SLOT("dest_x_y_fields_changed()"))
     connect(@ui.buttonBox, SIGNAL("clicked(QAbstractButton*)"), self, SLOT("button_box_clicked(QAbstractButton*)"))
@@ -68,8 +70,7 @@ class DoorEditorDialog < Qt::Dialog
     
     @ui.door_index.setCurrentIndex(door_index)
     
-    room = game.get_room_by_metadata_pointer(@door.destination_room_metadata_ram_pointer)
-    display_dest_room(room)
+    display_dest_room(@door.destination_room_metadata_ram_pointer)
   end
   
   def delete_door
@@ -79,7 +80,9 @@ class DoorEditorDialog < Qt::Dialog
     self.close()
   end
   
-  def display_dest_room(room)
+  def display_dest_room(room_ptr)
+    room = game.get_room_by_metadata_pointer(room_ptr)
+    
     @dest_room_graphics_scene.clear()
     @dest_room_graphics_scene = Qt::GraphicsScene.new
     @ui.dest_room_graphics_view.setScene(@dest_room_graphics_scene)
@@ -95,13 +98,20 @@ class DoorEditorDialog < Qt::Dialog
     
     @doors_view_item = Qt::GraphicsRectItem.new
     @dest_room_graphics_scene.addItem(@doors_view_item)
-    @door_dest_marker_item = DoorDestinationMarkerItem.new(@door, self)
+    dest_x = @ui.dest_x.text.to_i(16)
+    dest_y = @ui.dest_y.text.to_i(16)
+    @door_dest_marker_item = DoorDestinationMarkerItem.new(dest_x, dest_y, room, self)
     @door_dest_marker_item.setParentItem(@doors_view_item)
   rescue StandardError => e
     Qt::MessageBox.warning(self,
       "Failed to display room",
       "Failed to display room %08X.\n#{e.message}\n\n#{e.backtrace.join("\n")}" % room.room_metadata_ram_pointer
     )
+  end
+  
+  def dest_room_field_changed
+    room_ptr = @ui.dest_room.text.to_i(16)
+    display_dest_room(room_ptr)
   end
   
   def update_dest_x_and_y_fields(x, y)

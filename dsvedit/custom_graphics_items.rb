@@ -178,9 +178,7 @@ end
 class DoorDestinationMarkerItem < Qt::GraphicsRectItem
   BRUSH = Qt::Brush.new(Qt::Color.new(255, 127, 0, 120))
   
-  attr_reader :door
-  
-  def initialize(door, door_editor)
+  def initialize(dest_x, dest_y, dest_room, door_editor)
     @width = SCREEN_WIDTH_IN_PIXELS
     @height = SCREEN_HEIGHT_IN_PIXELS
     if GAME == "hod"
@@ -188,14 +186,13 @@ class DoorDestinationMarkerItem < Qt::GraphicsRectItem
     end
     super(0, 0, @width, @height)
     
-    x = door.dest_x
-    y = door.dest_y
+    x = dest_x
+    y = dest_y
     setPos(x, y)
     
     @door_editor = door_editor
-    @door = door
-    @dest_room_width = door.destination_room.width*SCREEN_WIDTH_IN_PIXELS
-    @dest_room_height = door.destination_room.height*SCREEN_HEIGHT_IN_PIXELS
+    @dest_room_width = dest_room.width*SCREEN_WIDTH_IN_PIXELS
+    @dest_room_height = dest_room.height*SCREEN_HEIGHT_IN_PIXELS
     
     self.setBrush(BRUSH)
     
@@ -203,6 +200,11 @@ class DoorDestinationMarkerItem < Qt::GraphicsRectItem
     setFlag(Qt::GraphicsItem::ItemSendsGeometryChanges)
     
     setCursor(Qt::Cursor.new(Qt::SizeAllCursor))
+  end
+  
+  def set_dest_room_size(width, height)
+    @dest_room_width = width*SCREEN_WIDTH_IN_PIXELS
+    @dest_room_height = height*SCREEN_HEIGHT_IN_PIXELS
   end
   
   def itemChange(change, value)
