@@ -59,6 +59,8 @@ class RoomEditorDialog < Qt::Dialog
     @ui.gfx_page_list.text = "%08X" % @room.gfx_list_pointer
     @ui.palette_page_list.text = "%08X" % @room.palette_wrapper_pointer
     @ui.palette_page_index.text = "%02X" % @room.palette_page_index
+    @ui.map_x_pos.text = "%04X" % @room.room_xpos_on_map
+    @ui.map_y_pos.text = "%04X" % @room.room_ypos_on_map
     
     @map_graphics_scene.clear()
     
@@ -73,7 +75,9 @@ class RoomEditorDialog < Qt::Dialog
   end
   
   def update_room_position_indicator
-    @position_indicator.setPos(@room.room_xpos_on_map*4 + 2.25, @room.room_ypos_on_map*4 + 2.25)
+    x = @ui.map_x_pos.text.to_i(16)
+    y = @ui.map_y_pos.text.to_i(16)
+    @position_indicator.setPos(x*4 + 2.25, y*4 + 2.25)
     if @room.layers.length > 0
       @position_indicator.setRect(-2, -2, 4*@room.main_layer_width, 4*@room.main_layer_height)
     else
@@ -87,8 +91,8 @@ class RoomEditorDialog < Qt::Dialog
     x = x / 4
     y = y / 4
     
-    @room.room_xpos_on_map = x
-    @room.room_ypos_on_map = y
+    @ui.map_x_pos.text = "%04X" % x
+    @ui.map_y_pos.text = "%04X" % y
     
     update_room_position_indicator()
   end
@@ -101,6 +105,8 @@ class RoomEditorDialog < Qt::Dialog
     @room.lcd_control = @ui.lcd_control.text.to_i(16) if SYSTEM == :gba
     @room.gfx_list_pointer = @ui.gfx_page_list.text.to_i(16)
     @room.palette_wrapper_pointer = @ui.palette_page_list.text.to_i(16)
+    @room.room_xpos_on_map = @ui.map_x_pos.text.to_i(16)
+    @room.room_ypos_on_map = @ui.map_y_pos.text.to_i(16)
     if ["por", "ooe"].include?(GAME)
       @room.palette_page_index = @ui.palette_page_index.text.to_i(16)
     end
