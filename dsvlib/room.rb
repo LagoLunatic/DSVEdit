@@ -21,6 +21,8 @@ class Room
               :fs,
               :game
   attr_accessor :lcd_control,
+                :state_swap_event_flag,
+                :alternate_state_room_pointer,
                 :layer_list_ram_pointer,
                 :gfx_list_pointer,
                 :palette_wrapper_pointer,
@@ -47,7 +49,20 @@ class Room
   end
   
   def read_from_rom
-    if GAME == "hod"
+    if GAME == "aos"
+      room_metadata = fs.read(room_metadata_ram_pointer, 36).unpack("vvVVVVVVVV")
+      @lcd_control = room_metadata[0]
+      @state_swap_event_flag = room_metadata[1]
+      @alternate_state_room_pointer = room_metadata[2]
+      @layer_list_ram_pointer = room_metadata[3]
+      @gfx_list_pointer = room_metadata[4]
+      @palette_wrapper_pointer = room_metadata[5]
+      @entity_list_ram_pointer = room_metadata[6]
+      @door_list_ram_pointer = room_metadata[7]
+      extra_data = room_metadata[8]
+      extra_data_2 = room_metadata[9]
+      read_extra_data_from_rom(extra_data, extra_data_2)
+    elsif GAME == "hod"
       room_metadata = fs.read(room_metadata_ram_pointer, 36).unpack("vvVVVVVVVV")
       @lcd_control = room_metadata[0]
       @state_swap_event_flag = room_metadata[1] # TODO
@@ -60,17 +75,6 @@ class Room
       @door_list_ram_pointer = room_metadata[8]
       extra_data = room_metadata[9]
       read_extra_data_from_rom(extra_data)
-    elsif GAME == "aos"
-      room_metadata = fs.read(room_metadata_ram_pointer, 36).unpack("vvVVVVVVVV")
-      @lcd_control = room_metadata[0]
-      @layer_list_ram_pointer = room_metadata[3]
-      @gfx_list_pointer = room_metadata[4]
-      @palette_wrapper_pointer = room_metadata[5]
-      @entity_list_ram_pointer = room_metadata[6]
-      @door_list_ram_pointer = room_metadata[7]
-      extra_data = room_metadata[8]
-      extra_data_2 = room_metadata[9]
-      read_extra_data_from_rom(extra_data, extra_data_2)
     else # nds
       room_metadata = fs.read(room_metadata_ram_pointer, 32).unpack("V*")
       @layer_list_ram_pointer = room_metadata[2]
@@ -255,8 +259,42 @@ class Room
   def write_to_rom
     sector.load_necessary_overlay()
     
-    room_data = [layer_list_ram_pointer, gfx_list_pointer, palette_wrapper_pointer, entity_list_ram_pointer, door_list_ram_pointer].pack("V*")
-    fs.write(room_metadata_ram_pointer + 8, room_data)
+    case GAME
+    when "aos"
+      room_data = [
+        lcd_control,
+        state_swap_event_flag,
+        alternate_state_room_pointer,
+        layer_list_ram_pointer,
+        gfx_list_pointer,
+        palette_wrapper_pointer,
+        entity_list_ram_pointer,
+        door_list_ram_pointer
+      ].pack("vvVVVVVV")
+      fs.write(room_metadata_ram_pointer, room_data)
+    when "hod"
+      room_data = [
+        lcd_control,
+        state_swap_event_flag,
+        alternate_state_room_pointer,
+        layer_list_ram_pointer,
+        gfx_list_pointer,
+        enemy_gfx_list_pointer,
+        palette_wrapper_pointer,
+        entity_list_ram_pointer,
+        door_list_ram_pointer
+      ].pack("vvVVVVVVV")
+      fs.write(room_metadata_ram_pointer, room_data)
+    else # nds
+      room_data = [
+        layer_list_ram_pointer,
+        gfx_list_pointer,
+        palette_wrapper_pointer,
+        entity_list_ram_pointer,
+        door_list_ram_pointer
+      ].pack("V*")
+      fs.write(room_metadata_ram_pointer + 8, room_data)
+    end
     
     write_extra_data_to_rom()
     
