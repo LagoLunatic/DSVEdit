@@ -492,6 +492,8 @@ class Game
     case GAME
     when "por"
       list_entry_length = 1
+    when "aos"
+      list_entry_length = 2
     else
       list_entry_length = 4
     end
