@@ -173,21 +173,32 @@ class TilesetEditorDialog < Qt::Dialog
     else
       @tiles = []
       @tileset.tiles.each_slice(16) do |row_of_tiles|
-        row_of_tiles.each do |tile|
-          @tiles += tile.minitiles[0,4]
+        row_of_tiles.map! do |tile|
+          tile.minitiles
         end
-        row_of_tiles.each do |tile|
-          @tiles += tile.minitiles[4,4]
+        if row_of_tiles.length < 16
+          # If the last row of tiles isn't a full row we must pad it with nil.
+          row_of_tiles.fill([nil]*16, row_of_tiles.length...16)
         end
-        row_of_tiles.each do |tile|
-          @tiles += tile.minitiles[8,4]
+        row_of_tiles.each do |minitiles|
+          @tiles += minitiles[0,4]
         end
-        row_of_tiles.each do |tile|
-          @tiles += tile.minitiles[12,4]
+        row_of_tiles.each do |minitiles|
+          @tiles += minitiles[4,4]
+        end
+        row_of_tiles.each do |minitiles|
+          @tiles += minitiles[8,4]
+        end
+        row_of_tiles.each do |minitiles|
+          @tiles += minitiles[12,4]
         end
       end
       @collision_tiles = []
       @collision_tileset.tiles.each_slice(256) do |row_of_big_tiles|
+        if row_of_big_tiles.length < 256
+          # If the last row of tiles isn't a full row we must pad it with nil.
+          row_of_big_tiles.fill([nil]*16, row_of_big_tiles.length...256)
+        end
         row_of_big_tiles.each_slice(16) do |big_tile|
           @collision_tiles += big_tile[0,4]
         end
@@ -294,6 +305,10 @@ class TilesetEditorDialog < Qt::Dialog
   def render_tile_on_tileset(tile_index)
     tile = @tiles[tile_index]
     
+    if tile.nil?
+      # Dummy blank tile from an incomplete row
+      return
+    end
     if tile.is_blank
       return
     end
@@ -562,6 +577,7 @@ class TilesetEditorDialog < Qt::Dialog
         i_on_tileset = x + y*@tileset_width
         if @collision_mode
           coll_tile = @collision_tiles[i_on_tileset]
+          next if coll_tile.nil? # Dummy blank tile from an incomplete row
           coll_tile.has_top = new_tile.has_top
           coll_tile.vertical_flip = new_tile.vertical_flip
           coll_tile.horizontal_flip = new_tile.horizontal_flip
@@ -571,6 +587,7 @@ class TilesetEditorDialog < Qt::Dialog
           coll_tile.block_shape = new_tile.block_shape
         else
           tile = @tiles[i_on_tileset]
+          next if tile.nil? # Dummy blank tile from an incomplete row
           tile.index_on_tile_page = new_tile.index_on_tile_page
           tile.tile_page = new_tile.tile_page
           tile.horizontal_flip = new_tile.horizontal_flip
@@ -708,6 +725,10 @@ class TilesetEditorDialog < Qt::Dialog
   end
   
   def select_tile(tile_index)
+    if @tiles[tile_index].nil?
+      return
+    end
+    
     old_selected_tile = @selected_tile
     
     @selected_tile_index = tile_index
@@ -761,7 +782,11 @@ class TilesetEditorDialog < Qt::Dialog
         if @collision_mode
           tile = @collision_tiles[i].dup
         else
-          tile = @tiles[i].dup
+          tile = @tiles[i]
+          if tile.nil?
+            # If the tile is a dummy blank from an incomplete row, copy the first tile since it's always blank.
+            tile = @tiles[0]
+          end
         end
         @selected_tiles << tile
       end
