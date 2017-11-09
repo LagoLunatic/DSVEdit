@@ -14,9 +14,13 @@ Weapon format:
     06: Slightly different overhead swing.
     07: Japanese sword.
     08: Punch.
-    09: Firing a pistol.
+    09: Firing a gun.
+      Guns ignore your stats and always do exactly the amount of damage specified in the item's "Attack" field.
     0A: Throwing weapon.
-    0B: Firing a rocket launcher.
+      Throwing weapons ignore your stats and always do exactly the amount of damage specified in the item's "Attack" field.
+      The only exception is if you have Skelerang equipped, in which case it does 1.5x the item's "Attack" field.
+    0B: Firing an RPG.
+      RPGs ignore your stats and always do exactly the amount of damage specified in the item's "Attack" field.
     0C: Whip.
     0D+: Not weapon animations, just animations like Soma walking or standing.
   09,1: 

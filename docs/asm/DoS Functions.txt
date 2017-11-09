@@ -352,7 +352,7 @@
   ; r0 - Enemy entity pointer
   ; r1 - 1?
 
-020143D4 SetDamageTypes
+020143D4 SetDamageAndTypes
   ; r0 - Entity pointer
   ; r1 - Damage value
   ; r2 - Damage types bitfield
