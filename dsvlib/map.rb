@@ -341,6 +341,11 @@ class DoSMap < Map
       WARP_ROOM_COUNT.times do |i|
         @warp_rooms << AoSWarpRoom.new(i, fs)
       end
+    elsif GAME == "hod"
+      @warp_rooms = []
+      WARP_ROOM_COUNT.times do |i|
+        @warp_rooms << HoDWarpRoom.new(i, fs)
+      end
     end
   end
   
@@ -406,8 +411,40 @@ class DoSMap < Map
         
         warp_room.write_to_rom()
       end
+    elsif GAME == "hod"
+      warp_rooms.each do |warp_room|
+        # In HoD the map tile doesn't have the sector/room indexes so we need to search through all rooms in the game to find a matching one.
+        x = warp_room.x_pos_in_tiles
+        y = warp_room.y_pos_in_tiles
+        matched_castle_a_room = nil
+        matched_castle_b_room = nil
+        game.each_room do |room|
+          if (room.room_xpos_on_map..room.room_xpos_on_map+room.width-1).include?(x) && (room.room_ypos_on_map..room.room_ypos_on_map+room.height-1).include?(y)
+            if room.sector_index.odd? # Castle B
+              matched_castle_b_room = room unless matched_castle_b_room
+            else # Castle A
+              matched_castle_a_room = room unless matched_castle_a_room
+            end
+          end
+        end
+        
+        if matched_castle_a_room
+          warp_room.castle_a_room_pointer = matched_castle_a_room.room_metadata_ram_pointer
+        else
+          warp_room.castle_a_room_pointer = 0
+        end
+        if matched_castle_b_room
+          warp_room.castle_b_room_pointer = matched_castle_b_room.room_metadata_ram_pointer
+        else
+          warp_room.castle_b_room_pointer = 0
+        end
+        
+        warp_room.write_to_rom()
+      end
     end
   end
+  
+  def inspect; to_s; end
 end
 
 class DoSMapTile
@@ -605,5 +642,34 @@ class AoSWarpRoom
       @y_pos_in_tiles,
       @room_pointer
     ].pack("vvV"))
+  end
+end
+
+class HoDWarpRoom
+  attr_reader :warp_room_index,
+              :fs,
+              :warp_room_data_pointer
+  attr_accessor :x_pos_in_tiles,
+                :y_pos_in_tiles,
+                :castle_a_room_pointer,
+                :castle_b_room_pointer
+  
+  def initialize(warp_room_index, fs)
+    @warp_room_index = warp_room_index
+    @fs = fs
+    
+    @warp_room_data_pointer = WARP_ROOM_LIST_START + warp_room_index*0xC
+    
+    @x_pos_in_tiles, @y_pos_in_tiles,
+      @castle_a_room_pointer, @castle_b_room_pointer = fs.read(warp_room_data_pointer, 0xC).unpack("vvVV")
+  end
+  
+  def write_to_rom
+    fs.write(warp_room_data_pointer, [
+      @x_pos_in_tiles,
+      @y_pos_in_tiles,
+      @castle_a_room_pointer,
+      @castle_b_room_pointer
+    ].pack("vvVV"))
   end
 end
