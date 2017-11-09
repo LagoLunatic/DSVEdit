@@ -30,15 +30,21 @@ class RoomEditorDialog < Qt::Dialog
     connect(@ui.select_tileset_button, SIGNAL("clicked()"), self, SLOT("open_tileset_chooser()"))
     connect(@ui.buttonBox, SIGNAL("clicked(QAbstractButton*)"), self, SLOT("button_box_clicked(QAbstractButton*)"))
     
-    if SYSTEM == :nds
+    if GAME != "aos"
       @ui.color_effects.hide()
       @ui.label_5.hide()
       label_item = @ui.formLayout.itemAt(3, Qt::FormLayout::LabelRole)
       @ui.formLayout.removeItem(label_item)
       field_item = @ui.formLayout.itemAt(3, Qt::FormLayout::FieldRole)
       @ui.formLayout.removeItem(field_item)
+    end
+    if SYSTEM == :nds
       @ui.lcd_control.hide()
       @ui.label_9.hide()
+      label_item = @ui.formLayout.itemAt(4, Qt::FormLayout::LabelRole)
+      @ui.formLayout.removeItem(label_item)
+      field_item = @ui.formLayout.itemAt(4, Qt::FormLayout::FieldRole)
+      @ui.formLayout.removeItem(field_item)
     end
     
     if !["por", "ooe"].include?(GAME)
@@ -54,7 +60,7 @@ class RoomEditorDialog < Qt::Dialog
     @ui.layer_list.text = "%08X" % @room.layer_list_ram_pointer
     @ui.entity_list.text = "%08X" % @room.entity_list_ram_pointer
     @ui.door_list.text = "%08X" % @room.door_list_ram_pointer
-    @ui.color_effects.text = "%04X" % @room.color_effects if SYSTEM == :gba
+    @ui.color_effects.text = "%04X" % @room.color_effects if GAME == "aos"
     @ui.lcd_control.text = "%04X" % @room.lcd_control if SYSTEM == :gba
     @ui.gfx_page_list.text = "%08X" % @room.gfx_list_pointer
     @ui.palette_page_list.text = "%08X" % @room.palette_wrapper_pointer
@@ -101,7 +107,7 @@ class RoomEditorDialog < Qt::Dialog
     @room.layer_list_ram_pointer = @ui.layer_list.text.to_i(16)
     @room.entity_list_ram_pointer = @ui.entity_list.text.to_i(16)
     @room.door_list_ram_pointer = @ui.door_list.text.to_i(16)
-    @room.color_effects = @ui.color_effects.text.to_i(16) if SYSTEM == :gba
+    @room.color_effects = @ui.color_effects.text.to_i(16) if GAME == "aos"
     @room.lcd_control = @ui.lcd_control.text.to_i(16) if SYSTEM == :gba
     @room.gfx_list_pointer = @ui.gfx_page_list.text.to_i(16)
     @room.palette_wrapper_pointer = @ui.palette_page_list.text.to_i(16)

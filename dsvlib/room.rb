@@ -245,8 +245,7 @@ class Room
       @room_xpos_on_map    = (extra_data & 0b00000000_01111111_00000000_00000000) >> 16
       @room_ypos_on_map    = (extra_data & 0b00111111_10000000_00000000_00000000) >> 23
       @is_castle_b         = (extra_data & 0b01000000_00000000_00000000_00000000) >> 30 # TODO allow editing
-      @has_save_right_wall = (extra_data & 0b10000000_00000000_00000000_00000000) >> 31 # TODO
-      @color_effects       = 0 # TODO
+      @has_save_right_wall = (extra_data & 0b10000000_00000000_00000000_00000000) >> 31 # TODO figure out
       @palette_page_index  = 0 # Always 0 in HoD
     else # PoR or OoE
       @number_of_doors    = (extra_data & 0b00000000_00000000_00000000_01111111)
