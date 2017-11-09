@@ -602,11 +602,16 @@ class Game
   def set_starting_room(area_index, sector_index, room_index)
     apply_armips_patch("por_allow_changing_starting_room")
     
-    if NEW_GAME_STARTING_AREA_INDEX_OFFSET
-      fs.write(NEW_GAME_STARTING_AREA_INDEX_OFFSET, [area_index].pack("C"))
+    if GAME == "hod"
+      room = areas[area_index].sectors[sector_index].rooms[room_index]
+      fs.write(NEW_GAME_STARTING_ROOM_POINTER_OFFSET, [room.room_metadata_ram_pointer].pack("V"))
+    else
+      if NEW_GAME_STARTING_AREA_INDEX_OFFSET
+        fs.write(NEW_GAME_STARTING_AREA_INDEX_OFFSET, [area_index].pack("C"))
+      end
+      fs.write(NEW_GAME_STARTING_SECTOR_INDEX_OFFSET, [sector_index].pack("C"))
+      fs.write(NEW_GAME_STARTING_ROOM_INDEX_OFFSET, [room_index].pack("C"))
     end
-    fs.write(NEW_GAME_STARTING_SECTOR_INDEX_OFFSET, [sector_index].pack("C"))
-    fs.write(NEW_GAME_STARTING_ROOM_INDEX_OFFSET, [room_index].pack("C"))
   end
   
   def set_starting_position(x_pos, y_pos)
