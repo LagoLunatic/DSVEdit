@@ -11,6 +11,11 @@
 
 02000068,4 - Current room pointer.
 0200006C,4 - ?? room pointer.
+02000070,1 - Bitfield.
+  Bit 0: Is currently in Castle B.
+  Bits 1-7: ?
+02000071,1 - Current sector index, not counting Castle A/B.
+  So 0 is Entrance, 1 is Marble Corridor, etc. 1 is not Entrance B.
 
 02000076,2 - currently playing song?
 

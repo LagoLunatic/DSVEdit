@@ -17,11 +17,17 @@ class MusicEditor < Qt::Dialog
     AREA_INDEX_TO_AREA_NAME.each do |area_index, area_name|
       @ui.area_index.addItem("%02X %s" % [area_index, area_name])
     end
-    SECTOR_INDEX_TO_SECTOR_NAME[0].each do |sector_index, sector_name|
-      sector = game.areas[0].sectors[sector_index]
-      break if sector.is_hardcoded # For the Boss Rush sector in AoS
-      
-      @ui.sector_index.addItem("%02X %s" % [sector_index, sector_name])
+    if GAME == "hod"
+      HOD_UNIQUE_SECTOR_NAMES_FOR_MUSIC.each_with_index do |sector_name, sector_index|
+        @ui.sector_index.addItem("%02X %s" % [sector_index, sector_name])
+      end
+    else
+      SECTOR_INDEX_TO_SECTOR_NAME[0].each do |sector_index, sector_name|
+        sector = game.areas[0].sectors[sector_index]
+        break if sector.is_hardcoded # For the Boss Rush sector in AoS
+        
+        @ui.sector_index.addItem("%02X %s" % [sector_index, sector_name])
+      end
     end
     
     SONG_INDEX_TO_TEXT_INDEX.each_with_index do |text_index, song_index|

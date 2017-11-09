@@ -26,7 +26,38 @@
     Note that these two pointers are used when warping when pressing down.
     When switching castles by pressing up, it simply uses the door in the room overlapping the room.
 
-084950DC - might be list of music for each sector?
+084950DC - List of songs that play in each sector.
+  Entry length 2.
+  A song index of 00 means to not change the song playing and just keep playing whatever the previous song was.
+  The regular sector index is not the index in this list. Instead a different sector index, from the map tile data, is used.
+  This different sector index differentiates between when two different area names are in the same sector, for example Marble Corridor and Room of Illusion.
+  The full list of the indexes for this list are:
+    00 Entrance A
+    01 Entrance B
+    02 Marble Corridor A
+    03 Marble Corridor B
+    04 Shrine of the Apostates A
+    05 Shrine of the Apostates B
+    06 Castle Top Floor A
+    07 Castle Top Floor B
+    08 Skeleton Cave A
+    09 Skeleton Cave B
+    0A Luminous Cavern A
+    0B Luminous Cavern B
+    0C Aqueduct of Dragons A
+    0D Aqueduct of Dragons B
+    0E Sky Walkway A
+    0F Sky Walkway B
+    10 Clock Tower A
+    11 Clock Tower B
+    12 Castle Treasury A
+    13 Castle Treasury B
+    14 Room of Illusion A
+    15 Room of Illusion B
+    16 The Wailing Way A
+    17 The Wailing Way B
+    18 Chapel of Dissonance A
+    19 Chapel of Dissonance B
 
 08494EA4 - List of special object create code pointers.
 08494F6C - List of special object update code pointers.

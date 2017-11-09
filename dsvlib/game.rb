@@ -473,7 +473,7 @@ class Game
     case GAME
     when "por"
       list_entry_length = 1
-    when "aos"
+    when "aos", "hod"
       list_entry_length = 2
     else
       list_entry_length = 4
@@ -492,7 +492,7 @@ class Game
     case GAME
     when "por"
       list_entry_length = 1
-    when "aos"
+    when "aos", "hod"
       list_entry_length = 2
     else
       list_entry_length = 4
@@ -508,14 +508,14 @@ class Game
   end
   
   def read_song_index_by_bgm_index(bgm_index)
-    raise "DoS and OoE don't have a list of available BGMs." unless GAME == "por"
+    raise "Only PoR has a list of available BGMs." unless GAME == "por"
     
     pointer = AVAILABLE_BGM_POOL_START_OFFSET + bgm_index*2
     return fs.read(pointer, 2).unpack("v").first
   end
   
   def write_song_index_by_bgm_index(song_index, bgm_index)
-    raise "DoS and OoE don't have a list of available BGMs." unless GAME == "por"
+    raise "Only PoR has a list of available BGMs." unless GAME == "por"
     
     pointer = AVAILABLE_BGM_POOL_START_OFFSET + bgm_index*2
     return fs.write(pointer, [song_index].pack("v"))
