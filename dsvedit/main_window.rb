@@ -324,6 +324,8 @@ class DSVEdit < Qt::MainWindow
     self.setWindowTitle("DSVania Editor #{DSVEDIT_VERSION} - #{folder_name}")
   rescue Game::InvalidFileError, NDSFileSystem::InvalidFileError
     Qt::MessageBox.warning(self, "Invalid file", "Selected folder is not a DSVania.")
+  rescue NDSFileSystem::InvalidRevisionError => e
+    Qt::MessageBox.warning(self, "Invalid revision", e.message)
   end
   
   def update_filesystem_watcher
