@@ -37,6 +37,8 @@ class RoomEditorDialog < Qt::Dialog
       @ui.formLayout.removeItem(label_item)
       field_item = @ui.formLayout.itemAt(3, Qt::FormLayout::FieldRole)
       @ui.formLayout.removeItem(field_item)
+      @ui.lcd_control.hide()
+      @ui.label_9.hide()
     end
     
     if !["por", "ooe"].include?(GAME)
@@ -53,6 +55,7 @@ class RoomEditorDialog < Qt::Dialog
     @ui.entity_list.text = "%08X" % @room.entity_list_ram_pointer
     @ui.door_list.text = "%08X" % @room.door_list_ram_pointer
     @ui.color_effects.text = "%04X" % @room.color_effects if SYSTEM == :gba
+    @ui.lcd_control.text = "%04X" % @room.lcd_control if SYSTEM == :gba
     @ui.gfx_page_list.text = "%08X" % @room.gfx_list_pointer
     @ui.palette_page_list.text = "%08X" % @room.palette_wrapper_pointer
     @ui.palette_page_index.text = "%02X" % @room.palette_page_index
@@ -95,6 +98,7 @@ class RoomEditorDialog < Qt::Dialog
     @room.entity_list_ram_pointer = @ui.entity_list.text.to_i(16)
     @room.door_list_ram_pointer = @ui.door_list.text.to_i(16)
     @room.color_effects = @ui.color_effects.text.to_i(16) if SYSTEM == :gba
+    @room.lcd_control = @ui.lcd_control.text.to_i(16) if SYSTEM == :gba
     @room.gfx_list_pointer = @ui.gfx_page_list.text.to_i(16)
     @room.palette_wrapper_pointer = @ui.palette_page_list.text.to_i(16)
     if ["por", "ooe"].include?(GAME)

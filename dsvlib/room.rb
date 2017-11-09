@@ -20,7 +20,8 @@ class Room
               :room_index,
               :fs,
               :game
-  attr_accessor :layer_list_ram_pointer,
+  attr_accessor :lcd_control,
+                :layer_list_ram_pointer,
                 :gfx_list_pointer,
                 :palette_wrapper_pointer,
                 :entity_list_ram_pointer,
@@ -48,7 +49,7 @@ class Room
   def read_from_rom
     if GAME == "hod"
       room_metadata = fs.read(room_metadata_ram_pointer, 36).unpack("vvVVVVVVVV")
-      @lcd_control = room_metadata[0] # TODO
+      @lcd_control = room_metadata[0]
       @state_swap_event_flag = room_metadata[1] # TODO
       @alternate_state_room_pointer = room_metadata[2] # TODO
       @layer_list_ram_pointer = room_metadata[3]
@@ -59,22 +60,26 @@ class Room
       @door_list_ram_pointer = room_metadata[8]
       extra_data = room_metadata[9]
       read_extra_data_from_rom(extra_data)
-    else
-      if SYSTEM == :nds
-        room_metadata = fs.read(room_metadata_ram_pointer, 32).unpack("V*")
-        extra_data = room_metadata[7]
-        read_extra_data_from_rom(extra_data)
-      else
-        room_metadata = fs.read(room_metadata_ram_pointer, 36).unpack("V*")
-        extra_data = room_metadata[7]
-        extra_data_2 = room_metadata[8]
-        read_extra_data_from_rom(extra_data, extra_data_2)
-      end
+    elsif GAME == "aos"
+      room_metadata = fs.read(room_metadata_ram_pointer, 36).unpack("vvVVVVVVVV")
+      @lcd_control = room_metadata[0]
+      @layer_list_ram_pointer = room_metadata[3]
+      @gfx_list_pointer = room_metadata[4]
+      @palette_wrapper_pointer = room_metadata[5]
+      @entity_list_ram_pointer = room_metadata[6]
+      @door_list_ram_pointer = room_metadata[7]
+      extra_data = room_metadata[8]
+      extra_data_2 = room_metadata[9]
+      read_extra_data_from_rom(extra_data, extra_data_2)
+    else # nds
+      room_metadata = fs.read(room_metadata_ram_pointer, 32).unpack("V*")
       @layer_list_ram_pointer = room_metadata[2]
       @gfx_list_pointer = room_metadata[3]
       @palette_wrapper_pointer = room_metadata[4]
       @entity_list_ram_pointer = room_metadata[5]
       @door_list_ram_pointer = room_metadata[6]
+      extra_data = room_metadata[7]
+      read_extra_data_from_rom(extra_data)
     end
     
     read_layer_list_from_rom(layer_list_ram_pointer)
@@ -231,13 +236,13 @@ class Room
       @room_ypos_on_map   = (extra_data_2 & 0b00111111_10000000_00000000_00000000) >> 23
       @palette_page_index = 0 # Always 0 in AoS
     elsif GAME == "hod"
-      @palette_shift_func  = (extra_data & 0b00000000_00000000_00000000_11111111)
-      @palette_shift_index = (extra_data & 0b00000000_00000000_11111111_00000000) >> 8
+      @palette_shift_func  = (extra_data & 0b00000000_00000000_00000000_11111111) # TODO allow editing
+      @palette_shift_index = (extra_data & 0b00000000_00000000_11111111_00000000) >> 8 # TODO allow editing
       @room_xpos_on_map    = (extra_data & 0b00000000_01111111_00000000_00000000) >> 16
       @room_ypos_on_map    = (extra_data & 0b00111111_10000000_00000000_00000000) >> 23
-      @is_castle_b         = (extra_data & 0b01000000_00000000_00000000_00000000) >> 30
+      @is_castle_b         = (extra_data & 0b01000000_00000000_00000000_00000000) >> 30 # TODO allow editing
       @has_save_right_wall = (extra_data & 0b10000000_00000000_00000000_00000000) >> 31 # TODO
-      @color_effects       = 0
+      @color_effects       = 0 # TODO
       @palette_page_index  = 0 # Always 0 in HoD
     else # PoR or OoE
       @number_of_doors    = (extra_data & 0b00000000_00000000_00000000_01111111)
