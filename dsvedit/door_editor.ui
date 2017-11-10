@@ -16,6 +16,15 @@
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
     <layout class="QGridLayout" name="gridLayout">
+     <item row="5" column="1">
+      <widget class="QLineEdit" name="dest_x_2"/>
+     </item>
+     <item row="6" column="3">
+      <widget class="QLineEdit" name="dest_y"/>
+     </item>
+     <item row="6" column="1">
+      <widget class="QLineEdit" name="dest_x"/>
+     </item>
      <item row="3" column="0">
       <widget class="QLabel" name="label_7">
        <property name="text">
@@ -23,27 +32,34 @@
        </property>
       </widget>
      </item>
-     <item row="8" column="0">
-      <widget class="QLabel" name="label_3">
+     <item row="0" column="3">
+      <widget class="QPushButton" name="copy_door_pointer">
        <property name="text">
-        <string>Dest X 2</string>
+        <string>Copy door pointer to clipboard</string>
        </property>
       </widget>
      </item>
-     <item row="2" column="0" colspan="2">
-      <widget class="Line" name="line">
-       <property name="orientation">
-        <enum>Qt::Horizontal</enum>
+     <item row="6" column="2">
+      <widget class="QLabel" name="label_2">
+       <property name="text">
+        <string>Dest Y Pos</string>
        </property>
       </widget>
      </item>
-     <item row="3" column="1">
-      <widget class="QLineEdit" name="x_pos"/>
+     <item row="0" column="1" colspan="2">
+      <widget class="QComboBox" name="door_index"/>
+     </item>
+     <item row="3" column="2">
+      <widget class="QLabel" name="label_8">
+       <property name="text">
+        <string>Y Pos</string>
+       </property>
+      </widget>
      </item>
      <item row="6" column="0">
       <widget class="QLabel" name="label">
        <property name="text">
-        <string>Dest X</string>
+        <string>Dest X Pos</string>
        </property>
       </widget>
      </item>
@@ -54,61 +70,45 @@
        </property>
       </widget>
      </item>
-     <item row="6" column="1">
-      <widget class="QLineEdit" name="dest_x"/>
+     <item row="3" column="1">
+      <widget class="QLineEdit" name="x_pos"/>
      </item>
-     <item row="5" column="0">
-      <widget class="QLabel" name="label_5">
-       <property name="text">
-        <string>Dest room</string>
-       </property>
-      </widget>
-     </item>
-     <item row="5" column="1">
-      <widget class="QLineEdit" name="dest_room"/>
-     </item>
-     <item row="8" column="1">
-      <widget class="QLineEdit" name="dest_x_2"/>
-     </item>
-     <item row="6" column="2">
-      <widget class="QLabel" name="label_2">
-       <property name="text">
-        <string>Dest Y</string>
-       </property>
-      </widget>
-     </item>
-     <item row="6" column="3">
-      <widget class="QLineEdit" name="dest_y"/>
-     </item>
-     <item row="8" column="2">
+     <item row="5" column="2">
       <widget class="QLabel" name="label_4">
        <property name="text">
-        <string>Dest Y 2</string>
-       </property>
-      </widget>
-     </item>
-     <item row="8" column="3">
-      <widget class="QLineEdit" name="dest_y_2"/>
-     </item>
-     <item row="3" column="2">
-      <widget class="QLabel" name="label_8">
-       <property name="text">
-        <string>Y Pos</string>
+        <string>Dest Y Offset</string>
        </property>
       </widget>
      </item>
      <item row="3" column="3">
       <widget class="QLineEdit" name="y_pos"/>
      </item>
-     <item row="0" column="3">
-      <widget class="QPushButton" name="copy_door_pointer">
+     <item row="4" column="1">
+      <widget class="QLineEdit" name="dest_room"/>
+     </item>
+     <item row="5" column="0">
+      <widget class="QLabel" name="label_3">
        <property name="text">
-        <string>Copy door pointer to clipboard</string>
+        <string>Dest X Offset</string>
        </property>
       </widget>
      </item>
-     <item row="0" column="1" colspan="2">
-      <widget class="QComboBox" name="door_index"/>
+     <item row="4" column="0">
+      <widget class="QLabel" name="label_5">
+       <property name="text">
+        <string>Dest room</string>
+       </property>
+      </widget>
+     </item>
+     <item row="5" column="3">
+      <widget class="QLineEdit" name="dest_y_2"/>
+     </item>
+     <item row="2" column="0" colspan="4">
+      <widget class="Line" name="line">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+      </widget>
      </item>
     </layout>
    </item>
