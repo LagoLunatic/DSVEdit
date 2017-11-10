@@ -70,6 +70,7 @@ class DSVEdit < Qt::MainWindow
   slots "area_index_changed(int)"
   slots "sector_index_changed(int)"
   slots "room_index_changed(int)"
+  slots "room_state_index_changed(int)"
   slots "sector_and_room_indexes_changed(int, int)"
   slots "change_room_by_metadata(int)"
   slots "room_clicked(int, int, const Qt::MouseButton&)"
@@ -142,6 +143,7 @@ class DSVEdit < Qt::MainWindow
     connect(@ui.area, SIGNAL("activated(int)"), self, SLOT("area_index_changed(int)"))
     connect(@ui.sector, SIGNAL("activated(int)"), self, SLOT("sector_index_changed(int)"))
     connect(@ui.room, SIGNAL("activated(int)"), self, SLOT("room_index_changed(int)"))
+    connect(@ui.room_state, SIGNAL("activated(int)"), self, SLOT("room_state_index_changed(int)"))
     connect(@ui.tiled_export, SIGNAL("released()"), self, SLOT("open_in_tiled()"))
     connect(@ui.tiled_import, SIGNAL("released()"), self, SLOT("import_from_tiled()"))
     connect(@ui.set_as_starting_room, SIGNAL("released()"), self, SLOT("set_current_room_as_starting_room()"))
@@ -361,6 +363,7 @@ class DSVEdit < Qt::MainWindow
     @ui.area.clear()
     @ui.sector.clear()
     @ui.room.clear()
+    @ui.room_state.clear()
     @ui.area.addItem("Select Area")
     @ui.area.model.item(0).setEnabled(false)
     AREA_INDEX_TO_OVERLAY_INDEX.keys.each do |area_index|
@@ -456,6 +459,30 @@ class DSVEdit < Qt::MainWindow
     @room = room
     @ui.room.setCurrentIndex(@room_index)
     
+    @ui.room_state.clear()
+    @room_states = [@room]
+    while true
+      next_room_state = @room_states.last.alternate_room_state
+      if next_room_state
+        @room_states << next_room_state
+      else
+        break
+      end
+    end
+    @room_states.each_with_index do |room_state, state_index|
+      if state_index == 0
+        condition = "Default"
+      else
+        condition = "Event flag: %04X" % @room_states[state_index-1].state_swap_event_flag
+      end
+      @ui.room_state.addItem("%02X %08X (#{condition})" % [state_index, room_state.room_metadata_ram_pointer])
+    end
+    
+    load_room()
+  end
+  
+  def room_state_index_changed(new_room_state_index)
+    @room = @room_states[new_room_state_index]
     load_room()
   end
   

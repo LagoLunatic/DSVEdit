@@ -22,7 +22,8 @@ class Room
               :game
   attr_accessor :lcd_control,
                 :state_swap_event_flag,
-                :alternate_state_room_pointer,
+                :alternate_room_state_pointer,
+                :alternate_room_state,
                 :layer_list_ram_pointer,
                 :gfx_list_pointer,
                 :palette_wrapper_pointer,
@@ -53,7 +54,7 @@ class Room
       room_metadata = fs.read(room_metadata_ram_pointer, 36).unpack("vvVVVVVVVV")
       @lcd_control = room_metadata[0]
       @state_swap_event_flag = room_metadata[1]
-      @alternate_state_room_pointer = room_metadata[2]
+      @alternate_room_state_pointer = room_metadata[2]
       @layer_list_ram_pointer = room_metadata[3]
       @gfx_list_pointer = room_metadata[4]
       @palette_wrapper_pointer = room_metadata[5]
@@ -66,7 +67,7 @@ class Room
       room_metadata = fs.read(room_metadata_ram_pointer, 36).unpack("vvVVVVVVVV")
       @lcd_control = room_metadata[0]
       @state_swap_event_flag = room_metadata[1] # TODO
-      @alternate_state_room_pointer = room_metadata[2] # TODO
+      @alternate_room_state_pointer = room_metadata[2] # TODO
       @layer_list_ram_pointer = room_metadata[3]
       @gfx_list_pointer = room_metadata[4]
       @enemy_gfx_list_pointer = room_metadata[5] # TODO
@@ -75,6 +76,7 @@ class Room
       @door_list_ram_pointer = room_metadata[8]
       extra_data = room_metadata[9]
       read_extra_data_from_rom(extra_data)
+      initialize_alternate_room_state(alternate_room_state_pointer)
     else # nds
       room_metadata = fs.read(room_metadata_ram_pointer, 32).unpack("V*")
       @layer_list_ram_pointer = room_metadata[2]
@@ -255,6 +257,12 @@ class Room
     end
   end
   
+  def initialize_alternate_room_state(alternate_room_state_pointer)
+    if alternate_room_state_pointer != 0
+      @alternate_room_state = Room.new(sector, alternate_room_state_pointer, area_index, sector_index, room_index, game)
+    end
+  end
+  
   def write_to_rom
     sector.load_necessary_overlay()
     
@@ -263,7 +271,7 @@ class Room
       room_data = [
         lcd_control,
         state_swap_event_flag,
-        alternate_state_room_pointer,
+        alternate_room_state_pointer,
         layer_list_ram_pointer,
         gfx_list_pointer,
         palette_wrapper_pointer,
@@ -275,7 +283,7 @@ class Room
       room_data = [
         lcd_control,
         state_swap_event_flag,
-        alternate_state_room_pointer,
+        alternate_room_state_pointer,
         layer_list_ram_pointer,
         gfx_list_pointer,
         enemy_gfx_list_pointer,
