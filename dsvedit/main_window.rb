@@ -1050,7 +1050,7 @@ class DSVEdit < Qt::MainWindow
       x_pos = 0x80
       y_pos = 0x60
     end
-    game.start_test_room(save_file_index, @area_index, @sector_index, @room_index, x_pos, y_pos)
+    game.start_test_room(save_file_index, @area_index, @sector_index, @room_index, @room.room_metadata_ram_pointer, x_pos, y_pos)
     
     write_to_rom(launch_emulator = true)
   end

@@ -631,7 +631,7 @@ class Game
     apply_armips_patch("#{GAME}_load_new_overlay")
   end
   
-  def start_test_room(save_file_index, area_index, sector_index, room_index, x_pos, y_pos)
+  def start_test_room(save_file_index, area_index, sector_index, room_index, room_pointer, x_pos, y_pos)
     @orig_fs = @fs
     
     @fs = @fs.dup
@@ -653,8 +653,7 @@ class Game
     fs.write(TEST_ROOM_SAVE_FILE_INDEX_LOCATION, [save_file_index].pack("C")) if TEST_ROOM_SAVE_FILE_INDEX_LOCATION
     
     if GAME == "hod"
-      room = areas[area_index].sectors[sector_index].rooms[room_index]
-      fs.write(TEST_ROOM_POINTER_LOCATION, [room.room_metadata_ram_pointer].pack("V"))
+      fs.write(TEST_ROOM_POINTER_LOCATION, [room_pointer].pack("V"))
       fs.write(TEST_ROOM_X_POS_LOCATION          , [x_pos].pack("v"))
       fs.write(TEST_ROOM_Y_POS_LOCATION          , [y_pos].pack("v"))
     else
