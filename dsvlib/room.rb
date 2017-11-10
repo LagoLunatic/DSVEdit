@@ -344,19 +344,15 @@ class Room
       @original_number_of_entities = entities.length
     end
     
-    new_entity_pointer = entity_list_ram_pointer
+    update_entity_list_order()
     entities.each do |entity|
-      entity.entity_ram_pointer = new_entity_pointer
-      
-      new_entity_pointer += 12
+      entity.write_to_rom(skip_updating_entity_list_order=true)
     end
-    entities.each do |entity|
-      entity.write_to_rom()
-    end
-    fs.write(new_entity_pointer, [0x7FFF7FFF, 0, 0].pack("V*")) # Marks the end of the entity list
+    end_marker_location = entity_list_ram_pointer + entities.length*12
+    fs.write(end_marker_location, [0x7FFF7FFF, 0, 0].pack("V*")) # Marks the end of the entity list
   end
   
-  def update_entity_byte_5s
+  def update_entity_list_order
     if SYSTEM == :gba
       # AoS only loads entities when you get close to them in the room.
       # It checks this by looking at the x or y pos of the entity.
@@ -372,6 +368,13 @@ class Room
         entities.sort_by! do |entity|
           entity.x_pos
         end
+      end
+      
+      new_entity_pointer = entity_list_ram_pointer
+      entities.each do |entity|
+        entity.entity_ram_pointer = new_entity_pointer
+        
+        new_entity_pointer += 12
       end
       
       entities.each_with_index do |entity, i|

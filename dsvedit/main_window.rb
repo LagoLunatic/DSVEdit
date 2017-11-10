@@ -842,7 +842,7 @@ class DSVEdit < Qt::MainWindow
       Qt::MessageBox.warning(self, "No entities to edit", "This room has no entities.\nYou can add one by going to Edit -> Add Entity or pressing A.")
       return
     end
-    @open_dialogs << EntityEditorDialog.new(self, @room.entities, entity)
+    @open_dialogs << EntityEditorDialog.new(self, @room, entity)
   end
   
   def open_door_editor(door = nil)

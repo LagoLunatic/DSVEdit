@@ -10,7 +10,7 @@ class EntityEditorDialog < Qt::Dialog
   slots "button_box_clicked(QAbstractButton*)"
   slots "delete_entity()"
   
-  def initialize(main_window, entities, entity)
+  def initialize(main_window, room, entity)
     super(main_window, Qt::WindowTitleHint | Qt::WindowSystemMenuHint)
     @ui = Ui_EntityEditor.new
     @ui.setup_ui(self)
@@ -27,21 +27,11 @@ class EntityEditorDialog < Qt::Dialog
       @ui.type.addItem("%02X %s" % [i, description])
     end
     
-    @entities = entities
+    @room = room
     @entity = entity
     if @entity.nil?
-      @entity = @entities.first
+      @entity = @room.entities.first
     end
-    
-    @entities.each_index do |i|
-      @ui.entity_index.addItem("%02X" % i)
-    end
-    
-    entity_index = @entities.index(@entity)
-    if entity_index.nil?
-      return
-    end
-    entity_changed(entity_index)
     
     connect(@ui.entity_index, SIGNAL("activated(int)"), self, SLOT("entity_changed(int)"))
     connect(@ui.type, SIGNAL("activated(int)"), self, SLOT("type_changed(int)"))
@@ -49,11 +39,23 @@ class EntityEditorDialog < Qt::Dialog
     connect(@ui.buttonBox, SIGNAL("clicked(QAbstractButton*)"), self, SLOT("button_box_clicked(QAbstractButton*)"))
     connect(@ui.delete_entity_button, SIGNAL("released()"), self, SLOT("delete_entity()"))
     
+    initialize_entity_list()
+    
     self.show()
   end
   
+  def initialize_entity_list
+    @ui.entity_index.clear()
+    @room.entities.each_index do |i|
+      @ui.entity_index.addItem("%02X" % i)
+    end
+    
+    entity_index = @room.entities.index(@entity)
+    entity_changed(entity_index)
+  end
+  
   def entity_changed(entity_index)
-    @entity = @entities[entity_index]
+    @entity = @room.entities[entity_index]
     
     @ui.pointer.text = "%08X" % @entity.entity_ram_pointer
     @ui.x_pos.text = "%04X" % [@entity.x_pos].pack("s").unpack("v").first
@@ -135,7 +137,7 @@ class EntityEditorDialog < Qt::Dialog
   end
   
   def delete_entity
-    @entities.delete(@entity)
+    @room.entities.delete(@entity)
     @entity.room.write_entities_to_rom()
     parent.load_room()
     self.close()
@@ -151,6 +153,8 @@ class EntityEditorDialog < Qt::Dialog
     @entity.var_a   = @ui.var_a.text.to_i(16)
     @entity.var_b   = @ui.var_b.text.to_i(16)
     @entity.write_to_rom()
+    
+    initialize_entity_list() # Need to reload the list in case it was reordered by the logic that sorts the list to make entities work on GBA.
   end
   
   def button_box_clicked(button)

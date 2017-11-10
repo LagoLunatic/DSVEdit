@@ -34,7 +34,7 @@ class Entity
     return self
   end
   
-  def write_to_rom
+  def write_to_rom(skip_updating_entity_list_order=false)
     room.sector.load_necessary_overlay()
     
     if entity_ram_pointer.nil?
@@ -43,8 +43,10 @@ class Entity
     
     fs.write(entity_ram_pointer, self.to_data)
     
-    # If the entities in this room changed position, we need to make sure their byte 5s are reordered properly (on GBA only).
-    room.update_entity_byte_5s()
+    unless skip_updating_entity_list_order
+      # If the entities in this room changed position, we need to make sure their byte 5s are reordered properly (on GBA only).
+      room.update_entity_list_order()
+    end
   end
   
   def to_data
