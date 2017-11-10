@@ -124,6 +124,17 @@
   ; r1 - Index of the item
   ; Returns r0 - global ID+1 of the item
 
+021D95D4 EnemyCheckDrops?
+
+02005A18 GetCollisionDataBySubpixelPos
+  ; r0 - X pos in subpixels
+  ; r1 - Y pos in subpixels
+  ; Returns the collision data of the tile at the designated point.
+02005A3C GetCollisionDataByPixelPos
+  ; r0 - X pos in pixels
+  ; r1 - Y pos in pixels
+  ; Returns the collision data of the tile at the designated point.
+
 02214F34 GiveSkill
   ; r0 - Skill index
   ; r1 - Number of the skill to give

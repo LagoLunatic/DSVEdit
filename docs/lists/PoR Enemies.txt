@@ -330,7 +330,10 @@ Enemies:
   Var A and B are 0 for boss rush Brauner.
 94 The Creature
   Requires enemy overlay 60.
-  Var A: 1 for boss rush. 0 for normal.
+  Var A:
+    0 for common enemy/boss rush Creature.
+    1 for full boss Creature.
+  Warning: There is a bug where even type 0 (common enemy) will set the Creature's boss death flag. So if a common enemy Creature is killed before the boss, the boss will never appear.
 95 Werewolf
   Requires enemy overlay 57.
 96 Medusa
