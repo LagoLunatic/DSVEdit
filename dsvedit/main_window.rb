@@ -697,7 +697,7 @@ class DSVEdit < Qt::MainWindow
       entity.x_pos = scene_pos.x
       entity.y_pos = scene_pos.y
     end
-    entity.type = 1
+    entity.type = ENEMY_ENTITY_TYPE
     @room.entities << entity
     @room.write_entities_to_rom()
     

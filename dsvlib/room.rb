@@ -311,6 +311,12 @@ class Room
   def write_entities_to_rom
     sector.load_necessary_overlay()
     
+    if GAME == "hod"
+      entity_list_pointer_location = room_metadata_ram_pointer+6*4
+    else
+      entity_list_pointer_location = room_metadata_ram_pointer+5*4
+    end
+    
     if entities.length > @original_number_of_entities
       # Repoint the entity list so there's room for more entities without overwriting anything.
       # Entities are originally stored in the arm9 file, but we can't expand that. Instead put them into an overlay file, which can be expanded.
@@ -328,7 +334,7 @@ class Room
       @original_number_of_entities = entities.length
       
       @entity_list_ram_pointer = new_entity_list_pointer
-      fs.write(room_metadata_ram_pointer+5*4, [entity_list_ram_pointer].pack("V"))
+      fs.write(entity_list_pointer_location, [entity_list_ram_pointer].pack("V"))
     elsif entities.length < @original_number_of_entities
       original_length = (@original_number_of_entities+1)*12
       length_needed = (entities.length+1)*12
