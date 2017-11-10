@@ -345,6 +345,13 @@ class Room
     end
     
     update_entity_list_order()
+    new_entity_pointer = entity_list_ram_pointer
+    entities.each do |entity|
+      entity.entity_ram_pointer = new_entity_pointer
+      
+      new_entity_pointer += 12
+    end
+    
     entities.each do |entity|
       entity.write_to_rom(skip_updating_entity_list_order=true)
     end
