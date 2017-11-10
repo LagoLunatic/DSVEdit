@@ -151,6 +151,9 @@ class DSVEdit < Qt::MainWindow
     connect(@ui.edit_map, SIGNAL("released()"), self, SLOT("open_map_editor()"))
     connect(@ui.toggle_hide_map, SIGNAL("released()"), self, SLOT("toggle_hide_map()"))
     
+    @ui.label_4.hide()
+    @ui.room_state.hide()
+    
     load_settings()
     
     if @settings[:hide_map]
@@ -371,6 +374,14 @@ class DSVEdit < Qt::MainWindow
       @ui.area.addItem("%02X %s" % [area_index, area_name])
     end
     area_index_changed(0, force=true)
+    
+    if GAME == "hod"
+      @ui.label_4.show()
+      @ui.room_state.show()
+    else
+      @ui.label_4.hide()
+      @ui.room_state.hide()
+    end
   end
   
   def area_index_changed(new_area_index, force=false)
