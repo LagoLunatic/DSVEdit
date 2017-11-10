@@ -87,6 +87,8 @@ class EntityEditorDialog < Qt::Dialog
         if GAME == "hod"
           if PICKUP_SUBTYPES_FOR_ITEMS.include?(subtype)
             subtype_name = ITEM_TYPES[subtype-3][:name]
+          elsif subtype == 9
+            subtype_name = "Max up"
           else
             subtype_name = "Crash"
           end
