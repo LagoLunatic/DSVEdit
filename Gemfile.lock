@@ -16,6 +16,7 @@ GEM
     qtbindings-qt (4.8.6.3-x64-mingw32)
     qtbindings-qt (4.8.6.3-x86-mingw32)
     rubyzip (1.2.1)
+    unicode_japanese (0.3)
 
 PLATFORMS
   x64-mingw32
@@ -26,6 +27,7 @@ DEPENDENCIES
   oily_png
   qtbindings
   rubyzip
+  unicode_japanese
 
 BUNDLED WITH
    1.15.0

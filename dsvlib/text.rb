@@ -1,4 +1,6 @@
 
+require 'unicode_japanese'
+
 class Text
   class TextDecodeError < StandardError ; end
   class TextEncodeError < StandardError ; end
@@ -433,6 +435,8 @@ class Text
       
       char
     end.join
+    
+    decoded_string = Unicode::Japanese.z2h(decoded_string) # Convert fullwidth to halfwidth text
     
     return decoded_string
   end
