@@ -38,6 +38,13 @@ class RoomEditorDialog < Qt::Dialog
       field_item = @ui.formLayout.itemAt(3, Qt::FormLayout::FieldRole)
       @ui.formLayout.removeItem(field_item)
     end
+    if GAME != "hod"
+      @ui.label_12.hide()
+      @ui.alternate_state_event_flag.hide()
+      @ui.label_13.hide()
+      @ui.alternate_state_room_pointer.hide()
+      @ui.horizontalLayout_3.removeItem(@ui.horizontalSpacer_2)
+    end
     if SYSTEM == :nds
       @ui.lcd_control.hide()
       @ui.label_9.hide()
@@ -62,9 +69,14 @@ class RoomEditorDialog < Qt::Dialog
     @ui.door_list.text = "%08X" % @room.door_list_ram_pointer
     @ui.color_effects.text = "%04X" % @room.color_effects if GAME == "aos"
     @ui.lcd_control.text = "%04X" % @room.lcd_control if SYSTEM == :gba
+    
+    @ui.alternate_state_event_flag.text = "%04X" % @room.state_swap_event_flag if GAME == "hod"
+    @ui.alternate_state_room_pointer.text = "%08X" % @room.alternate_room_state_pointer if GAME == "hod"
+    
     @ui.gfx_page_list.text = "%08X" % @room.gfx_list_pointer
     @ui.palette_page_list.text = "%08X" % @room.palette_wrapper_pointer
     @ui.palette_page_index.text = "%02X" % @room.palette_page_index
+    
     @ui.map_x_pos.text = "%04X" % @room.room_xpos_on_map
     @ui.map_y_pos.text = "%04X" % @room.room_ypos_on_map
     
@@ -109,20 +121,29 @@ class RoomEditorDialog < Qt::Dialog
     @room.door_list_ram_pointer = @ui.door_list.text.to_i(16)
     @room.color_effects = @ui.color_effects.text.to_i(16) if GAME == "aos"
     @room.lcd_control = @ui.lcd_control.text.to_i(16) if SYSTEM == :gba
+    
+    @room.state_swap_event_flag = @ui.alternate_state_event_flag.text.to_i(16) if GAME == "hod"
+    @room.alternate_room_state_pointer = @ui.alternate_state_room_pointer.text.to_i(16) if GAME == "hod"
+    
     @room.gfx_list_pointer = @ui.gfx_page_list.text.to_i(16)
     @room.palette_wrapper_pointer = @ui.palette_page_list.text.to_i(16)
-    @room.room_xpos_on_map = @ui.map_x_pos.text.to_i(16)
-    @room.room_ypos_on_map = @ui.map_y_pos.text.to_i(16)
     if ["por", "ooe"].include?(GAME)
       @room.palette_page_index = @ui.palette_page_index.text.to_i(16)
     end
     
+    @room.room_xpos_on_map = @ui.map_x_pos.text.to_i(16)
+    @room.room_ypos_on_map = @ui.map_y_pos.text.to_i(16)
+    
+    # TODO: does anything in the room need to be reloaded after this? like alternate_room_state, entities, doors, etc
+    # maybe just call read_from_rom on the door right after write_to_rom
+    
     @room.write_to_rom()
+    @room.read_from_rom()
     
     @game.fix_map_sector_and_room_indexes(@room.area_index, @room.sector_index)
     
     read_room()
-    parent.load_room()
+    parent.load_room_and_states()
   end
   
   def open_tileset_chooser

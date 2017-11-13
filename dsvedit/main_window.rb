@@ -470,26 +470,7 @@ class DSVEdit < Qt::MainWindow
     @room = room
     @ui.room.setCurrentIndex(@room_index)
     
-    @ui.room_state.clear()
-    @room_states = [@room]
-    while true
-      next_room_state = @room_states.last.alternate_room_state
-      if next_room_state
-        @room_states << next_room_state
-      else
-        break
-      end
-    end
-    @room_states.each_with_index do |room_state, state_index|
-      if state_index == 0
-        condition = "Default"
-      else
-        condition = "Event flag: %04X" % @room_states[state_index-1].state_swap_event_flag
-      end
-      @ui.room_state.addItem("%02X %08X (#{condition})" % [state_index, room_state.room_metadata_ram_pointer])
-    end
-    
-    load_room()
+    load_room_and_states()
   end
   
   def room_state_index_changed(new_room_state_index)
@@ -584,6 +565,31 @@ class DSVEdit < Qt::MainWindow
       
       sector_and_room_indexes_changed(tile.sector_index, tile.room_index)
     end
+  end
+  
+  def load_room_and_states
+    # First initializes the room states if in HoD. Then loads the room as normally.
+    
+    @ui.room_state.clear()
+    @room_states = [@room]
+    while true
+      next_room_state = @room_states.last.alternate_room_state
+      if next_room_state
+        @room_states << next_room_state
+      else
+        break
+      end
+    end
+    @room_states.each_with_index do |room_state, state_index|
+      if state_index == 0
+        condition = "Default"
+      else
+        condition = "Event flag: %04X" % @room_states[state_index-1].state_swap_event_flag
+      end
+      @ui.room_state.addItem("%02X %08X (#{condition})" % [state_index, room_state.room_metadata_ram_pointer])
+    end
+    
+    load_room()
   end
   
   def load_room
