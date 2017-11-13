@@ -68,16 +68,26 @@
 
 020003B8,4 - Current room's entity list pointer.
 
-02000DAF - current enemy index selected in the bestiary.
+02000408,1 - Current shop pool index (index in list 084B1714).
 
 === 02000418-02007C17: Entity memory. Each entity is 0x80 bytes long. Entities range from 00-EF.
 
 What each range of entity slots is for:
 00-00 - Player.
+D0-EF - Various other things including particles and enemy projectiles.
 
 02000418 - Player's entity memory.
 
+0200042D - Currently selected song index in sound mode.
+
+02000DAF,1 - Current entry index selected in the bestiary/shop.
+
 === 02007C17: End of entities currently loaded into memory.
+
+0200A454,1 - Layer 0 special effect.
+0200A46C,1 - Layer 1 special effect.
+  List of special effects:
+  FF - The screen will not scroll more than 1.5 screens to the right, making the room appear to be 1.5 screens wide. This only works correctly on layer 0, if another layer has this it causes bugs where the player will warp around the room.
 
 0201524D - 1 if in a save room with a right wall??
 
@@ -90,13 +100,26 @@ What each range of entity slots is for:
   08,4: 
   0C,4: Sprite pointer.
 
+02018528,4 - Bitfield of damage types the player currently deals?
+
 0201852E,2 - Bitfield of status effects on the player.
   0x1 - Poison
   0x2 - Curse
   0x4 - Petrify
 
+020184F8,4 - ?
+
+02018770 - Bitfield of ?
+
+0201877C,1 - Player's current level.
+
 02018784,1 - Currently equipped weapon.
 
-02018528,4 - Bitfield of damage types the player currently deals?
+List of which items you own and how many (owned item info):
+020187A0-020187BB - Consumables.
+020187BE- TODO
+  Each item takes up 1 byte.
+
+020187BC,2 - Bitfield of weapons you own.
 
 0200A46C,1 - visual effect?

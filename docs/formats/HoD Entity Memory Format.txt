@@ -9,8 +9,14 @@ Memory used for entities in HoD is 02000418 - 02007C17. Each entity is 0x80 byte
 3E,1: Subtype.
 3F,1: Low 6 bits of byte 5 (byte 5 & 0x3F).
 40,2: Remaining number of frames to be invincible for (for when the player uses a Medicine Jar).
+48,4: X pos on the screen in subpixels.
+  A pixel in HoD/AoS is 0x10000 subpixels.
+4C,4: Y pos on the screen in subpixels.
+  A pixel in HoD/AoS is 0x10000 subpixels.
 4A,2: X pos on the screen in pixels.
 4E,2: Y pos on the screen in pixels.
+50,4: X velocity in subpixels.
+54,4: X velocity in subpixels.
 60,1: Bitfield of ?
 66,1: Sprite info index.
   This is an index in the currently loaded sprite info list, 020154FC.

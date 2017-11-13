@@ -17,6 +17,11 @@
   Entry 01 is for starting a new game.
   Entry 02 is for loading a save.
 
+08494E1A - list of songs in sound mode?
+
+08494EA4 - List of special object create code pointers.
+08494F6C - List of special object update code pointers.
+
 0849507C - List of warp rooms.
   Entry length 0xC.
   00,2: X pos of the warp room on the map.
@@ -59,9 +64,6 @@
     18 Chapel of Dissonance A
     19 Chapel of Dissonance B
 
-08494EA4 - List of special object create code pointers.
-08494F6C - List of special object update code pointers.
-
 08495FAE - font data?
 
 08498C34 - List of save rooms.
@@ -78,3 +80,32 @@
 084B2C60-084B2C73 - Spellbook item data.
 084B2C74-084B2CA3 - Relic item data.
 084B2CA4-084B2D1F - Furniture item data.
+
+084B2D20 - list of text index names for items?
+
+084B15C0 - List of allowable items that can be in the shop.
+  Entry length 4.
+  00,1: Item type:
+    3 - Consumable.
+    5 - Armor.
+    Note that any other value not listed defaults to being a consumable.
+  01,1: Item index.
+  02,2: Price.
+
+084B1714 - List of specific shop item pools.
+  List of pointers to shop item pools.
+  The index in this list is the merchant's Var A*2. If in Castle B, add +1. (In other words, even numbered indexes are for Castle A, odd numbered indexes are for Castle B.)
+  Format of each item pool:
+  The first byte is the number of items in this item pool.
+  Then is a list of each item. Each entry is 1 byte. It's the index in the list of allowable shop items (084B15D4).
+Specific shop pools:
+  084B16DC-084B16EB - Castle Treasury A shop pool.
+  084B1680-084B1689 - Castle Treasury B shop pool.
+  084B16F0-084B16FF - Luminous Cavern A shop pool.
+  084B1690-084B169A - Luminous Cavern B shop pool.
+  084B16C8-084B16D7 - Castle Top Floor A shop pool.
+  084B16A0-084B16AF - Castle Top Floor B shop pool.
+  084B1704-084B1710 - Entrance A shop pool.
+  084B1704-084B1710 - Entrance B shop pool.
+  084B16B4-084B16C3 - Clock Tower A shop pool.
+  084B16B4-084B16C3 - Clock Tower B shop pool.

@@ -43,6 +43,24 @@
 08000DE8 DummyUpdate
   ; Does nothing, immediately returns.
 
+08027720 DrawNumberRightAlign
+  ; r0 - X pos in 8x8 tiles to draw the right of the text at
+  ; r1 - Y pos in 8x8 tiles to draw the text at
+  ; r2 - The number to draw
+  ; r3 - ?
+
+08008DBC LoadEntity
+  ; r0 - Pointer to the entity entry in the room's entity list
+
+080BD748 Divide
+  ; Returns r0 / r1
+080BD74C Modulo
+  ; Returns r0 % r1
+
+0801045C LoadGfx?
+  ; r0 - Gfx wrapper
+  ; r1 - 0?
+
 08008802 SetColorSpecialEffects
   ; r0 - 
   ; r1 - 
@@ -57,5 +75,17 @@
   ; r1 - VRAM pointer to load the GFX to
   ; r2 - 0?
 
-080BB560 PlaySong
-  ; r0 - Song index
+080BB560 PlaySound
+  ; r0 - Sound index
+  ; Can also be music, not just sound effects.
+
+0802C600 InitializeShopItemList
+  ; r0 - 
+  ; r1 - 
+  ; r2 - 
+  ; r3 - Pointer to shop item pool for this shop
+
+08020850 CheckShopUnlocked
+  ; r0 - Merchant's Var A
+
+08494580 RAMStartPointer

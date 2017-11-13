@@ -205,6 +205,7 @@
     1C Yoko in the first room of the game.
     1D Epilogue?
     1E Soma floating in white space after defeating Chaos.
+    1F Bad ending.
   Var B: Unused. Event 03 has this set to 3A, but it doesn't seem to have any effect for any event.
 21 Falling spike trap from Arena.
 22 D-pad puzzle from Arena.

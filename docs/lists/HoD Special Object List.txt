@@ -66,7 +66,7 @@
 21 
 22 
 23 
-24 
+24 Water?
 25 Spikes.
   These are invisible, the spike graphics should be part of the room's tiles.
   Var A: Affects the width of the spike hitbox somehow.
