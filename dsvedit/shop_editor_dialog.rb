@@ -30,6 +30,14 @@ class ShopEditor < Qt::Dialog
       if GAME == "ooe"
         quest_name = Text.new(TEXT_REGIONS["Quest Names"].begin + i, game.fs).decoded_string
         pool_name << " #{quest_name}"
+      elsif GAME == "hod"
+        # Display the merchant's Var A needed as well as Castle A/B.
+        pool_name << " (%02X" % (i/2)
+        if i.even?
+          pool_name << "-A)"
+        else
+          pool_name << "-B)"
+        end
       end
       
       @ui.pool_index.addItem(pool_name)
@@ -150,7 +158,7 @@ class ShopEditor < Qt::Dialog
   
   def save_changes
     if GAME == "aos"
-      @game.update_shop_allowable_items(@pools)
+      @game.autogenerate_shop_allowable_items_list(@pools)
     end
     
     @pools.each do |pool|

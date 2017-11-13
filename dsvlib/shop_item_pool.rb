@@ -24,7 +24,7 @@ class ShopItemPool
     return if @item_pool_pointer == 0
     
     case GAME
-    when "aos"
+    when "aos", "hod"
       num_items = fs.read(@item_pool_pointer, 1).unpack("C").first
       @allowable_item_indexes = fs.read(@item_pool_pointer+1, num_items).unpack("C*")
       @item_ids = @allowable_item_indexes.map do |index|
@@ -33,12 +33,14 @@ class ShopItemPool
         item_id + 1
       end
       
-      required_flag_location = SHOP_ITEM_POOL_REQUIRED_EVENT_FLAG_HARDCODED_LOCATIONS[pool_id]
-      if required_flag_location.nil?
-        @requirement = nil
-      else
-        bit = fs.read(required_flag_location, 1).unpack("C").first
-        @requirement = fs.convert_integer_to_bit_index(bit)
+      if GAME == "aos"
+        required_flag_location = SHOP_ITEM_POOL_REQUIRED_EVENT_FLAG_HARDCODED_LOCATIONS[pool_id]
+        if required_flag_location.nil?
+          @requirement = nil
+        else
+          bit = fs.read(required_flag_location, 1).unpack("C").first
+          @requirement = fs.convert_integer_to_bit_index(bit)
+        end
       end
     when "dos"
       num_items_location = SHOP_ITEM_POOL_LENGTH_HARDCODED_LOCATIONS[pool_id]
@@ -73,7 +75,7 @@ class ShopItemPool
   
   def write_to_rom
     case GAME
-    when "aos"
+    when "aos", "hod"
       @allowable_item_indexes = @item_ids.map do |item_id|
         item_type, item_index = game.get_item_type_and_index_by_global_id(item_id-1)
         allowable_item = game.shop_allowable_items.find do |allowable_item|
@@ -81,7 +83,7 @@ class ShopItemPool
         end
         
         if allowable_item.nil?
-          raise "!!!"
+          raise "Can't find shop allowable item with type %02X and index %02X" % [item_type, item_index]
         end
         
         allowable_item_index = game.shop_allowable_items.index(allowable_item)
@@ -90,10 +92,12 @@ class ShopItemPool
       
       fs.write(@item_pool_pointer+1, @allowable_item_indexes.pack("C*"))
       
-      required_flag_location = SHOP_ITEM_POOL_REQUIRED_EVENT_FLAG_HARDCODED_LOCATIONS[pool_id]
-      if !required_flag_location.nil?
-        new_bit = fs.convert_bit_index_to_integer(@requirement)
-        fs.write(required_flag_location, [new_bit].pack("C"))
+      if GAME == "aos"
+        required_flag_location = SHOP_ITEM_POOL_REQUIRED_EVENT_FLAG_HARDCODED_LOCATIONS[pool_id]
+        if !required_flag_location.nil?
+          new_bit = fs.convert_bit_index_to_integer(@requirement)
+          fs.write(required_flag_location, [new_bit].pack("C"))
+        end
       end
     when "dos"
       fs.write(@item_pool_pointer, @item_ids.pack("C*"))

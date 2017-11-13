@@ -352,8 +352,8 @@ class Game
   
   def shop_allowable_items
     @shop_allowable_items ||= begin
-      if GAME != "aos"
-        raise "Only AoS has a list of allowable shop items"
+      if SYSTEM != :gba
+        raise "Only AoS and HoD have a list of allowable shop items"
       end
       
       shop_allowable_items = []
@@ -366,9 +366,9 @@ class Game
     end
   end
   
-  def update_shop_allowable_items(shop_pools)
-    if GAME != "aos"
-      raise "Only AoS has a list of allowable shop items"
+  def autogenerate_shop_allowable_items_list(shop_pools)
+    if SYSTEM != :gba
+      raise "Only AoS and HoD have a list of allowable shop items"
     end
     
     all_item_ids = []
