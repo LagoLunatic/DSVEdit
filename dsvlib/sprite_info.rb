@@ -161,7 +161,7 @@ class SpriteInfo
     end
     possible_palette_pointers -= valid_gfx_pointers
     
-    if gfx_files_to_load.empty?
+    if gfx_file_pointers.nil? && gfx_files_to_load.empty?
       if gfx_wrapper.nil?
         if valid_gfx_pointers.empty?
           raise CreateCodeReadError.new("Failed to find any valid sprite gfx pointers.")

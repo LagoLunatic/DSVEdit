@@ -347,26 +347,26 @@ ITEM_BITFIELD_ATTRIBUTES = {
 OVERLAY_FILE_FOR_ENEMY_AI = {}
 REUSED_ENEMY_INFO = {
   0x03 => {palette_offset: 1}, # medusa head
-  # TODO 09 giant bat
-  # TODO 10 lizard man
-  # TODO 1D gate guarder
+  0x09 => {gfx_files: [0x080E895C, 0x080E8964]}, # giant bat
+  0x10 => {init_code: 0x08051DE0, palette_offset: 2}, # lizard man -> master lizard
+  0x1D => {init_code: 0x08096DD0, palette_offset: 6}, # gate guarder -> living armor
   # TODO 1E golem
   # TODO 25 witch
-  # TODO 27 bomber armor
+  0x27 => {init_code: 0x08092A04, palette_offset: 1}, # bomber armor -> rock armor
   # TODO 28 minotaur
   0x32 => {palette_offset: 4}, # ruler sword lv2 (todo look into if this is correct)
-  # TODO 34 guardian armor
-  # TODO 35 boomerang armor
+  0x34 => {init_code: 0x08096DD0, palette_offset: 6}, # guardian armor -> living armor
+  0x35 => {init_code: 0x08096DD0}, # boomerang armor -> living armor TODO: still wrong palette and gfx
   0x3D => {palette_offset: 1}, # O
-  # TODO 3F axe armor lv2
-  # TODO 41 bronze guarder
+  0x3F => {init_code: 0x080417AC, palette_offset: 1}, #  axe armor lv2 -> axe armor
+  0x41 => {init_code: 0x08096DD0, palette_offset: 8}, # bronze guarder -> living armor
   # TODO 43 legion (saint)
   # TODO 44 shadow
   0x46 => {palette_offset: 2}, # bone liquid
   # TODO 47 ruler sword lv3
-  # TODO 48 poison lizard
+  0x48 => {init_code: 0x08051DE0, palette_offset: 1}, # poison lizard -> master lizard
   0x49 => {palette_offset: 1}, # pazuzu
-  # TODO 4C blaze master
+  0x4C => {init_code: 0x08043EB0, palette: 0x08125250}, # blaze master -> skeleton blaze
   # TODO 4F skeleton glass
   # TODO 51 hammer-hammer
   # TODO 52 disc armor lv2
@@ -393,6 +393,7 @@ BEST_SPRITE_FRAME_FOR_ENEMY = {
   0x02 => 0x04, # slime
   0x06 => 0x08, # fleaman
   0x07 => 0x0B, # bone soldier
+  0x09 => 0x08, # giant bat
   0x0A => 0x04, # ghost
   0x0E => 0x05, # rock armor
   0x0F => 0x03, # white dragon lv2
@@ -401,16 +402,21 @@ BEST_SPRITE_FRAME_FOR_ENEMY = {
   0x17 => 0x10, # skeleton flail
   0x1A => 0x03, # skeleton rib
   0x1B => 0x05, # bone thrower
+  0x1D => 0x10, # gate guarder
   0x1F => 0x71, # skull knight
   0x21 => 0x01, # scarecrow
   0x22 => 0x1E, # skeleton spider
+  0x27 => 0x0C, # bomber armor
   0x29 => 0x17, # balloon
   0x2A => 0x18, # big balloon
   0x33 => 0x04, # feather demon
+  0x34 => 0x0A, # guardian armor
   0x3A => 0x10, # mimic
   0x3B => 0x06, # white dragon lv3
   0x3C => 0x0B, # skeleton mirror
   0x3D => 0x03, # O
+  0x3F => 0x06, # axe armor lv2
+  0x41 => 0x10, # bronze guarder
   0x40 => 0x0A, # specter
   0x49 => 0x0C, # pazuzu
   0x4D => 0x1F, # arthro skeleton
