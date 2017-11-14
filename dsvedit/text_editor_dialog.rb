@@ -35,6 +35,8 @@ class TextEditor < Qt::Dialog
     
     connect(@ui.buttonBox, SIGNAL("clicked(QAbstractButton*)"), self, SLOT("button_pressed(QAbstractButton*)"))
     
+    string_changed(0)
+    
     self.show()
   end
   
