@@ -41,6 +41,9 @@ Enemies:
 23 Man-eater
 24 Axe Armor
 25 Witch
+  Var A:
+    0 Normal Witch.
+    1 Looks and acts like a Pixie instead.
 26 Siren 
 27 Bomber Armor
 28 Minotaur
@@ -132,7 +135,7 @@ Enemies:
 7A Red Skeleton (drips down)
 7B 
 7C 
-7D 
+7D bat?
 7E 
 7F 
 80 

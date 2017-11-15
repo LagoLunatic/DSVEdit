@@ -69,6 +69,8 @@
 08044A52 LoadPalette?
   ; r0 - Palette list pointer
   ; r1 - 0?
+0803118C LoadPalette?2
+  ; r0 - Palette list pointer
 
 08008802 SetColorSpecialEffects
   ; r0 - 

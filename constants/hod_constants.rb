@@ -351,10 +351,8 @@ REUSED_ENEMY_INFO = {
   0x09 => {gfx_files: [0x080E895C, 0x080E8964]}, # giant bat
   0x10 => {init_code: 0x08051DE0, palette_offset: 2}, # lizard man -> master lizard
   0x1D => {init_code: 0x08096DD0, palette_offset: 6}, # gate guarder -> living armor
-  # TODO 1E golem
-  # TODO 25 witch
+  0x25 => {gfx_files: [0x0811BCD0], sprite: 0x08149C94}, # witch
   0x27 => {init_code: 0x08092A04, palette_offset: 1}, # bomber armor -> rock armor
-  # TODO 28 minotaur
   0x32 => {palette_offset: 4}, # ruler sword lv2 (todo look into if this is correct)
   0x34 => {init_code: 0x08096DD0, palette_offset: 6}, # guardian armor -> living armor
   0x35 => {init_code: 0x08096DD0}, # boomerang armor -> living armor TODO: still wrong palette and gfx
@@ -362,7 +360,6 @@ REUSED_ENEMY_INFO = {
   0x3F => {init_code: 0x080417AC, palette_offset: 1}, #  axe armor lv2 -> axe armor
   0x41 => {init_code: 0x08096DD0, palette_offset: 8}, # bronze guarder -> living armor
   # TODO 43 legion (saint)
-  # TODO 44 shadow
   0x46 => {palette_offset: 2}, # bone liquid
   # TODO 47 ruler sword lv3
   0x48 => {init_code: 0x08051DE0, palette_offset: 1}, # poison lizard -> master lizard
@@ -371,20 +368,15 @@ REUSED_ENEMY_INFO = {
   # TODO 4F skeleton glass
   # TODO 51 hammer-hammer
   # TODO 52 disc armor lv2
-  # TODO 53 minotaur lv2
+  0x53 => {init_code: 0x080A3A1C}, # minotaur lv2 -> minotaur
   # TODO 54 legion (corpse) glitchy
-  # TODO 55 talos
-  # TODO 56 death
-  # TODO 57 death
-  # TODO 58 pixie
-  # TODO 59 sylph
-  # TODO 5C clear bone
-  # TODO 5D jp bonepillar
-  # TODO 5F pike master
-  # TODO 60 cyclops
-  # TODO 61 maxim
-  # TODO 62 dracula wraith
-  # TODO 63 dracula wraith
+  0x58 => {init_code: 0x080467EC, gfx_files: [0x0811BCD8], sprite: 0x0814A0D8, palette_offset: 1}, # pixie -> witch
+  0x59 => {init_code: 0x0804FE60, palette_offset: 1}, # sylph -> siren
+  0x5C => {init_code: 0x0809B168}, # clear bone -> skeleton
+  0x5D => {gfx_files: [0x0811BCC0, 0x080E8944]},
+  0x5F => {init_code: 0x08096DD0, gfx_files: [0x080E89DC], palette: 0x08123BD4, sprite: 0x0812C39C}, # pike master -> living armor
+  # TODO: 08096E26 is a switch statement for which living armor ripoff an enemy is, go through this and get them all working
+  # TODO 63 dracula wraith 2 glitchy
   0x6D => {palette_offset: 2}, # pazuzu (breaks through wall)
   # TODO: 64+
 }
@@ -407,6 +399,7 @@ BEST_SPRITE_FRAME_FOR_ENEMY = {
   0x1F => 0x71, # skull knight
   0x21 => 0x01, # scarecrow
   0x22 => 0x1E, # skeleton spider
+  0x25 => 0x0A, # witch
   0x27 => 0x0C, # bomber armor
   0x29 => 0x17, # balloon
   0x2A => 0x18, # big balloon
@@ -422,7 +415,10 @@ BEST_SPRITE_FRAME_FOR_ENEMY = {
   0x49 => 0x0C, # pazuzu
   0x4D => 0x1F, # arthro skeleton
   0x4E => 0x13, # rare ghost
+  0x53 => 0x58, # minotaur lv2
+  0x58 => 0x0A, # pixie
   0x5E => 0x07, # simon wraith
+  0x5F => 0x10, # pike master
   # TODO: 64+
 }
 BEST_SPRITE_OFFSET_FOR_ENEMY = {}
