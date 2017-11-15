@@ -28,7 +28,7 @@ class TextDatabase
     
     # For PoR, the strings are split across two different overlay files, so we have to handle those separately.
     
-    if REGION == :jp
+    if REGION == :jp || GAME == "hod"
       header_footer_length = 4
     else
       header_footer_length = 3

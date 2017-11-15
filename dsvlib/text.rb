@@ -42,7 +42,9 @@ class Text
   
   def write_to_rom
     fs.write(text_ram_pointer, [string_ram_pointer].pack("V"))
-    if SYSTEM == :gba
+    if GAME == "hod"
+      data = [0].pack("v") + encoded_string + [0x0A, 0xF0].pack("CC")
+    elsif SYSTEM == :gba
       data = [1].pack("v") + encoded_string + [0x0A].pack("C")
     elsif REGION == :jp
       data = [0].pack("v") + encoded_string + [0x0A, 0xF0].pack("CC")
@@ -83,12 +85,6 @@ class Text
     return char_number
   end
   
-  def font_character_mapping_hod(index)
-    index -= 0x8540
-    shift_jis = fs.read(0x080C5508 + index*4, 2).unpack("v").first
-    return shift_jis
-  end
-  
   def reverse_font_character_mapping_jp(shift_jis)
     offset = 0
     file_path = "/font/LD937728.DAT"
@@ -121,6 +117,31 @@ class Text
     return halfword
   end
   
+  def font_character_mapping_hod(index)
+    index -= 0x8540
+    shift_jis = fs.read(SHIFT_JIS_MAPPING_LIST + index*4, 2).unpack("v").first
+    return shift_jis
+  end
+  
+  def reverse_font_character_mapping_hod(shift_jis)
+    found_index = nil
+    (0..0x25).each do |char_index|
+      possible_shift_jis = fs.read(SHIFT_JIS_MAPPING_LIST + char_index*4, 2).unpack("v").first
+      if shift_jis == possible_shift_jis
+        found_index = char_index
+        break
+      end
+    end
+    
+    if found_index.nil?
+      return nil
+    end
+    
+    halfword = 0x8540 + found_index
+    
+    return halfword
+  end
+  
   def decode_string(string)
     if GAME == "hod"
       decode_string_hod(string)
@@ -147,7 +168,7 @@ class Text
         end
         
         if GAME == "hod"
-          raise TextEncodeError.new("HoD text encoding TODO")
+          encode_command_hod(command, data)
         elsif SYSTEM == :gba
           encode_command_gba(command, data)
         elsif REGION == :jp
@@ -157,7 +178,7 @@ class Text
         end
       else
         if GAME == "hod"
-          raise TextEncodeError.new("HoD text encoding TODO")
+          encode_char_hod(str)
         elsif SYSTEM == :gba
           encode_char_gba(str)
         elsif REGION == :jp
@@ -413,13 +434,13 @@ class Text
       elsif halfword >= 0x8140 && halfword <= 0x853F
         curr_is_command = false
         
-        shift_jis = halfword#font_character_mapping_jp(halfword)
-        shift_jis.chr(Encoding::SHIFT_JIS).encode("UTF-8") rescue "#"
+        shift_jis = halfword
+        shift_jis.chr(Encoding::SHIFT_JIS).encode("UTF-8")
       elsif halfword >= 0x8540 # lowercase letter
         curr_is_command = false
         
         shift_jis = font_character_mapping_hod(halfword)
-        shift_jis.chr(Encoding::SHIFT_JIS).encode("UTF-8") rescue "#"
+        shift_jis.chr(Encoding::SHIFT_JIS).encode("UTF-8")
       else
         prev_was_command = false
         "{RAW #{data_format_string}}" % halfword
@@ -556,6 +577,71 @@ class Text
     else
       raise TextEncodeError.new("Failed to encode command: #{command} #{data}")
     end
+  end
+  
+  def encode_command_hod(command, data)
+    case command
+    when "RAW"
+      halfword = data.to_i(16)
+      [halfword].pack("v")
+    when "BUTTON"
+      button_index = %w(L R A B X Y LEFT RIGHT UP DOWN).index(data)
+      if button_index
+        [0xF00B + button_index].pack("v")
+      elsif (0x15..0x1A).include?(data.to_i(16))
+        [0xF000 + data.to_i(16)].pack("v")
+      else
+        raise TextEncodeError.new("Failed to encode command: #{command} #{data}")
+      end
+    when "PORTRAIT"
+      halfword = data.to_i(16)
+      [0xF003, halfword].pack("vv")
+    when "NEWCHAR"
+      [0xF004].pack("v")
+    when "SAMECHAR"
+      [0xF009].pack("v")
+    when "WAITINPUT"
+      [0xF005].pack("v")
+    when "NAME"
+      halfword = data.to_i(16)
+      [0xF007, halfword].pack("vv")
+    when "NEXTACTION"
+      [0xF002, 0x0001].pack("vv")
+    when "CHOICE"
+      [0xF002, 0x0003].pack("vv")
+    when "COMMAND2"
+      halfword = data.to_i(16)
+      [0xF002, halfword].pack("vv")
+    when "ENDCHOICE"
+      halfword = data.to_i(16)
+      [0xF001, halfword].pack("vv")
+    when "TEXTCOLOR"
+      color_name = data
+      halfword = TEXT_COLOR_NAMES.key(color_name)
+      if halfword
+        [0xF008, halfword].pack("vv")
+      else
+        [0xF008, data.to_i(16)].pack("vv")
+      end
+    when "\\n"
+      [0xF006].pack("v")
+    else
+      raise TextEncodeError.new("Failed to encode command: #{command} #{data}")
+    end
+  end
+  
+  def encode_char_hod(input_char)
+    if input_char == "\n"
+      return "" # Ignore newlines
+    end
+    
+    fullwidth_char = Unicode::Japanese.h2z(input_char) # Convert halfwidth text back to fullwidth before writing it
+    shift_jis = fullwidth_char.encode("SHIFT_JIS").ord
+    index = reverse_font_character_mapping_hod(shift_jis)
+    if index.nil?
+      index = shift_jis
+    end
+    return [index].pack("v")
   end
   
   def encode_char_gba(str)
