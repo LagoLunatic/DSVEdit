@@ -45,6 +45,8 @@ class LayersEditorDialog < Qt::Dialog
       @ui.label_10.hide()
       @ui.gridLayout.addWidget(@ui.visual_effect, 2, 1)
       @ui.gridLayout.addWidget(@ui.label_12, 2, 0)
+      @ui.label_6.hide()
+      @ui.main_gfx_page_index.hide()
     else
       @ui.visual_effect.hide()
       @ui.label_12.hide()
@@ -71,11 +73,13 @@ class LayersEditorDialog < Qt::Dialog
     @ui.tileset.text = "%08X" % layer.tileset_pointer
     @ui.collision_tileset.text = "%08X" % layer.collision_tileset_pointer
     
-    @ui.main_gfx_page_index.clear()
-    @room.gfx_pages.each_with_index do |gfx_page, index|
-      @ui.main_gfx_page_index.addItem("%02X (%d colors)" % [index, gfx_page.colors_per_palette])
+    unless GAME == "hod"
+      @ui.main_gfx_page_index.clear()
+      @room.gfx_pages.each_with_index do |gfx_page, index|
+        @ui.main_gfx_page_index.addItem("%02X (%d colors)" % [index, gfx_page.colors_per_palette])
+      end
+      @ui.main_gfx_page_index.setCurrentIndex(layer.main_gfx_page_index)
     end
-    @ui.main_gfx_page_index.setCurrentIndex(layer.main_gfx_page_index)
     
     display_layer(layer)
   end
@@ -112,7 +116,7 @@ class LayersEditorDialog < Qt::Dialog
     layer.tileset_type = @ui.tileset_type.text.to_i(16)
     layer.tileset_pointer = @ui.tileset.text.to_i(16)
     layer.collision_tileset_pointer = @ui.collision_tileset.text.to_i(16)
-    layer.main_gfx_page_index = @ui.main_gfx_page_index.currentIndex
+    layer.main_gfx_page_index = @ui.main_gfx_page_index.currentIndex unless GAME == "hod"
     
     layer.write_to_rom()
     
