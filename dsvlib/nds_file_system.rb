@@ -841,11 +841,11 @@ private
     
     all_files.each do |file|
       if file[:parent_id] == 0xF000
-        file[:file_path] = file[:name]
+        file[:file_path] = "/" + file[:name]
       elsif file[:parent_id].nil?
         file[:file_path] = File.join("/ftc", file[:name])
       else
-        file[:file_path] = "/" + File.join(@files[file[:parent_id]][:name], file[:name])
+        file[:file_path] = File.join(@files[file[:parent_id]][:file_path], file[:name])
       end
       
       @files_by_path[file[:file_path]] = file
