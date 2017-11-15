@@ -112,6 +112,7 @@ class LayersEditorDialog < Qt::Dialog
     layer.z_index = @ui.z_index.text.to_i(16)
     layer.scroll_mode = @ui.scroll_mode.text.to_i(16)
     layer.bg_control = @ui.bg_control.text.to_i(16) if SYSTEM == :gba
+    layer.visual_effect = @ui.visual_effect.text.to_i(16) if GAME == "hod"
     layer.opacity = @ui.opacity.value if SYSTEM == :nds
     layer.tileset_type = @ui.tileset_type.text.to_i(16)
     layer.tileset_pointer = @ui.tileset.text.to_i(16)
