@@ -99,6 +99,14 @@
 08020850 CheckShopUnlocked
   ; r0 - Merchant's Var A
 
+080296DC CheckArmorEquipped
+  ; r0 - Armor index.
+
+0802B478 DisplayMessage??
+  ; r0 - ID of the item to show the name of
+  ; r1 - 5?
+  ; Called when unlocking the glowing door with MK's bracelet
+
 08494580 RAMStartPointer
 
 ; Enemy-specific code

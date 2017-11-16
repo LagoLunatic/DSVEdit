@@ -64,6 +64,10 @@
 08013EEC PlaySong
   ; r0 - Sound index
 
+08013960 PlaySongForCurrentRoom
+  ; r0 - Pointer to 02000060??
+  ; Note that the ambient song that plays in the waterfall room and the Julius fight room are hardcoded into this function.
+
 08001980 GetRoomPointer
   ; r0 - Sector index
   ; r1 - Room index

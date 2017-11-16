@@ -24,6 +24,12 @@ Weapon format:
   02,2: Icon.
   04,4: Price.
   08,1: Attack type.
+    00 - Slash.
+    01 - Overhead swing.
+    02 - Spear (or Positron Rifle).
+    03 - Punch.
+    04 - Gun.
+    05 - Valmanway.
   09,1: ?
   0A,1: Attack stat.
   0B,1: Defense stat.

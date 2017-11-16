@@ -113,6 +113,10 @@ D0-EF - Various other things including particles and enemy projectiles.
 
 0201877C,1 - Player's current level.
 
+02018780,1 - Currently equipped body armor.
+02018781,1 - Currently equipped non-body armor 1.
+02018782,1 - Currently equipped non-body armor 2.
+02018783,1 - Currently equipped non-body armor 3.
 02018784,1 - Currently equipped weapon.
 
 List of which items you own and how many (owned item info):

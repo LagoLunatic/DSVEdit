@@ -651,6 +651,8 @@ TODO: What are the other 2 for? It's not for the "recent" tab.
 
 0213D65C,0213DCF8,0213DD04 - Currently playing song.
 
+=== 021CDF60 - 0221F41F: Overlay 0
+
 0221D7A0 - List of enemies that need a certain enemy overlay and which overlay they need.
   Each entry is 8 bytes long.
   0,4: Enemy ID.
@@ -809,7 +811,21 @@ TODO: What are the other 2 for? It's not for the "recent" tab.
   06 02215EC4 Illusion Fist.
   07 02215FD8 Tori (throw the weapon diagonally upwards, then it comes back to you).
 
+=== 0221F41F: End of Overlay 0
+
+=== 0221F680 - 0222C83F: Overlays 1-2 (Strings)
+
+=== 0222C840 - 022B2A5F: Overlays 3-4
+
 022B1294 - The color multipliers for Wight. Tints it blue.
+
+=== 022B2A5F: End of Overlays 3-4
+
+=== 022B2A80 - 022B2ADF: Overlay 5
+
+=== 022B2AE0 - 022B765F: Overlay 6
+
+=== 022B7660 - 022D0F3F: Overlay 7 (Palettes, GFX metadata, etc)
 
 022B7E44-022C7B1B - palette data.
 
@@ -818,6 +834,8 @@ TODO: What are the other 2 for? It's not for the "recent" tab.
   The images are named like /sc/f_rire00.dat, are 1-dimensional, and have 4 enemies in each image.
 
 022C5860 - This one 256 color palette is used for all face portraits.
+
+=== 022D0F3F: End of Overlay 7
 
 023C0000-023DFFFF - Free space.
 
