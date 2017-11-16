@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>640</width>
-    <height>666</height>
+    <height>722</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -72,12 +72,12 @@
      <item row="5" column="0">
       <widget class="QLabel" name="label_14">
        <property name="text">
-        <string>Enemy GFX Page List</string>
+        <string>Entity GFX Page List</string>
        </property>
       </widget>
      </item>
      <item row="5" column="1">
-      <widget class="QLineEdit" name="enemy_gfx_page_list"/>
+      <widget class="QLineEdit" name="entity_gfx_page_list"/>
      </item>
     </layout>
    </item>

@@ -47,6 +47,10 @@ class Entity
       # If the entities in this room changed position, we need to make sure their byte 5s are reordered properly (on GBA only).
       room.update_entity_list_order()
     end
+    
+    if GAME == "hod"
+      room.update_entity_gfx_list()
+    end
   end
   
   def to_data

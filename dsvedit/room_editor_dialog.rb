@@ -38,7 +38,7 @@ class RoomEditorDialog < Qt::Dialog
       @ui.horizontalLayout_3.removeItem(@ui.horizontalSpacer_2)
       
       @ui.label_14.hide()
-      @ui.enemy_gfx_page_list.hide()
+      @ui.entity_gfx_page_list.hide()
       label_item = @ui.formLayout.itemAt(5, Qt::FormLayout::LabelRole)
       @ui.formLayout.removeItem(label_item)
       field_item = @ui.formLayout.itemAt(5, Qt::FormLayout::FieldRole)
@@ -77,7 +77,7 @@ class RoomEditorDialog < Qt::Dialog
     @ui.color_effects.text = "%04X" % @room.color_effects if GAME == "aos"
     @ui.lcd_control.text = "%04X" % @room.lcd_control if SYSTEM == :gba
     
-    @ui.enemy_gfx_page_list.text = "%08X" % @room.enemy_gfx_list_pointer if GAME == "hod"
+    @ui.entity_gfx_page_list.text = "%08X" % @room.entity_gfx_list_pointer if GAME == "hod"
     @ui.alternate_state_event_flag.text = "%04X" % @room.state_swap_event_flag if GAME == "hod"
     @ui.alternate_state_room_pointer.text = "%08X" % @room.alternate_room_state_pointer if GAME == "hod"
     
@@ -130,7 +130,7 @@ class RoomEditorDialog < Qt::Dialog
     @room.color_effects = @ui.color_effects.text.to_i(16) if GAME == "aos"
     @room.lcd_control = @ui.lcd_control.text.to_i(16) if SYSTEM == :gba
     
-    @room.enemy_gfx_list_pointer = @ui.enemy_gfx_page_list.text.to_i(16) if GAME == "hod"
+    @room.entity_gfx_list_pointer = @ui.entity_gfx_page_list.text.to_i(16) if GAME == "hod"
     @room.state_swap_event_flag = @ui.alternate_state_event_flag.text.to_i(16) if GAME == "hod"
     @room.alternate_room_state_pointer = @ui.alternate_state_room_pointer.text.to_i(16) if GAME == "hod"
     

@@ -35,7 +35,8 @@ class Room
                 :color_effects,
                 :entities,
                 :doors,
-                :enemy_gfx_list_pointer
+                :entity_gfx_list_pointer,
+                :entity_gfx_list
 
   def initialize(sector, room_metadata_ram_pointer, area_index, sector_index, room_index, game)
     @room_metadata_ram_pointer = room_metadata_ram_pointer
@@ -66,17 +67,18 @@ class Room
     elsif GAME == "hod"
       room_metadata = fs.read(room_metadata_ram_pointer, 36).unpack("vvVVVVVVVV")
       @lcd_control = room_metadata[0]
-      @state_swap_event_flag = room_metadata[1] # TODO
-      @alternate_room_state_pointer = room_metadata[2] # TODO
+      @state_swap_event_flag = room_metadata[1]
+      @alternate_room_state_pointer = room_metadata[2]
       @layer_list_ram_pointer = room_metadata[3]
       @gfx_list_pointer = room_metadata[4]
-      @enemy_gfx_list_pointer = room_metadata[5] # TODO
+      @entity_gfx_list_pointer = room_metadata[5] # TODO
       @palette_wrapper_pointer = room_metadata[6]
       @entity_list_ram_pointer = room_metadata[7]
       @door_list_ram_pointer = room_metadata[8]
       extra_data = room_metadata[9]
       read_extra_data_from_rom(extra_data)
       initialize_alternate_room_state(alternate_room_state_pointer)
+      initialize_entity_gfx_list(entity_gfx_list_pointer)
     else # nds
       room_metadata = fs.read(room_metadata_ram_pointer, 32).unpack("V*")
       @layer_list_ram_pointer = room_metadata[2]
@@ -263,6 +265,24 @@ class Room
     end
   end
   
+  def initialize_entity_gfx_list(entity_gfx_list_pointer)
+    @entity_gfx_list = []
+    offset = entity_gfx_list_pointer
+    while true
+      gfx_pointer = fs.read(offset, 4).unpack("V").first
+      
+      if gfx_pointer == 0
+        break
+      end
+      
+      @entity_gfx_list << gfx_pointer
+      
+      offset += 4
+    end
+    
+    @original_number_of_enemy_gfx = entity_gfx_list.length
+  end
+  
   def write_to_rom
     sector.load_necessary_overlay()
     
@@ -286,7 +306,7 @@ class Room
         alternate_room_state_pointer,
         layer_list_ram_pointer,
         gfx_list_pointer,
-        enemy_gfx_list_pointer,
+        entity_gfx_list_pointer,
         palette_wrapper_pointer,
         entity_list_ram_pointer,
         door_list_ram_pointer
@@ -357,6 +377,10 @@ class Room
     end
     end_marker_location = entity_list_ram_pointer + entities.length*12
     fs.write(end_marker_location, [0x7FFF7FFF, 0, 0].pack("V*")) # Marks the end of the entity list
+    
+    if GAME == "hod"
+      update_entity_gfx_list()
+    end
   end
   
   def update_entity_list_order
@@ -444,6 +468,67 @@ class Room
     
     @number_of_doors = doors.length
     write_extra_data_to_rom()
+  end
+  
+  def update_entity_gfx_list
+    @entity_gfx_list = []
+    
+    enemies = entities.select{|e| e.is_enemy?}
+    enemies.each do |enemy|
+      begin
+        enemy_id = enemy.subtype
+        sprite_info = game.enemy_dnas[enemy_id].extract_gfx_and_palette_and_sprite_from_init_ai
+        
+        @entity_gfx_list += sprite_info.gfx_file_pointers
+      rescue SpriteInfo::CreateCodeReadError => e
+        puts e.message
+      end
+    end
+    
+    objects = entities.select{|e| e.is_special_object?}
+    objects.each do |object|
+      begin
+        object_id = object.subtype
+        sprite_info = game.special_objects[object_id].extract_gfx_and_palette_and_sprite_from_create_code
+        
+        @entity_gfx_list += sprite_info.gfx_file_pointers
+      rescue SpriteInfo::CreateCodeReadError => e
+        puts e.message
+      end
+    end
+    
+    @entity_gfx_list.uniq!
+    
+    write_entity_gfx_list_to_rom()
+  end
+  
+  def write_entity_gfx_list_to_rom
+    if entity_gfx_list.length > @original_number_of_enemy_gfx
+      # Repoint the enemy gfx list so there's room for more pointers without overwriting anything.
+      
+      old_length = @original_number_of_enemy_gfx*4
+      new_length = entity_gfx_list.length*4
+      
+      new_entity_gfx_list_pointer = fs.free_old_space_and_find_new_free_space(entity_gfx_list_pointer, old_length, new_length, nil)
+      
+      @original_number_of_enemy_gfx = entity_gfx_list.length
+      
+      @entity_gfx_list_pointer = new_entity_gfx_list_pointer
+      fs.write(room_metadata_ram_pointer+4*4, [entity_gfx_list_pointer].pack("V"))
+    elsif entity_gfx_list.length < @original_number_of_enemy_gfx
+      old_length = @original_number_of_enemy_gfx*4
+      new_length = entity_gfx_list.length*4
+      
+      fs.free_unused_space(entity_gfx_list_pointer + new_length, old_length - new_length)
+      
+      @original_number_of_enemy_gfx = entity_gfx_list.length
+    end
+    
+    offset = entity_gfx_list_pointer
+    entity_gfx_list.each do |enemy_gfx_pointer|
+      fs.write(offset, [enemy_gfx_pointer].pack("V"))
+      offset += 4
+    end
   end
   
   def write_extra_data_to_rom
