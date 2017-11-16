@@ -28,7 +28,8 @@ Player format:
     Bit 5: Is female.
       Affects Zacchino and Astarte's attacks.
       Also reduces the speed this player pushes blocks at.
-    Bit 6: Unknown, used only for Charlotte.
+    Bit 6: Don't interrupt double jump animation when the player releases B.
+      This is used for Charlotte so her broom animation always plays out fully.
     Bit 7: Unknown, used for everyone except Stella and Loretta.
   2C,4: Backdash force.
   30,4: Backdash friction.

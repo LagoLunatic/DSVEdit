@@ -1159,7 +1159,7 @@ PLAYER_BITFIELD_ATTRIBUTES = {
     "Unknown 3",
     "Unknown 4",
     "Is female",
-    "Unknown 6",
+    "No interrupt dbl jump",
     "Unknown 7",
     "Unknown 8",
     "Unknown 9",

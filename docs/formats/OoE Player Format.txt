@@ -24,7 +24,8 @@ Player format:
     Bit 2: Can smash head into ceiling if you hit it with enough force. (Normally with a superjump.)
     Bit 5: Is female.
       Has no known effect in this game.
-    Bit 6: Unknown, used only for Shanoa.
+    Bit 6: Don't interrupt double jump animation when the player releases B.
+      This is used for Shanoa so her spinning animation always plays out fully.
     Bit 7: Unknown, used for Shanoa and Arma Chiroptera.
   2C,4: Backdash force.
   30,4: Backdash friction.
