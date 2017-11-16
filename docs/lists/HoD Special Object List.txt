@@ -5,7 +5,16 @@
 03 Breakable wall.
   Var A: Which breakable wall flag to check.
 04 
-05 Wooden door.
+05 Door.
+  Var A:
+    0 Wooden door.
+    1 Magic door unlocked by MK's Bracelet.
+    2 Skull door.
+    3 Lure door.
+  Var B: Event flag index for whether the player has unlocked this door yet.
+    If this event flag is not already set, it gets set when the player goes through this door, and shows a message saying which key was used.
+    If Var A is 2 is says the Skull Key was used, if it's 3 or 1 it says the Lure Key was used.
+    If Var A is 1 Var B is irrelevant, no event flag is checked and no message is displayed.
 06 Boss door.
   Var A is is how the door acts:
     00 Door outside the boss room that opens when you touch it.

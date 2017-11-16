@@ -17,6 +17,15 @@ Enemies:
 0F White Dragon Lv2
 10 Lizard Man
 11 Living Armor
+  Var A:
+    0 Normal Living Armor.
+    1 Looks and acts like Bronze Guarder.
+    2 Looks and acts like Guardian Armor.
+    3 Looks and acts like Gate Guarder.
+    4 Looks and acts like Revenge Armor.
+    5 Looks and acts like Hammer-Hammer.
+    6 Looks and acts like Boomerang Armor.
+    7 Looks and acts like Pike Master.
 12 Ectoplasm
 13 Skeleton Blaze
 14 Big Skeleton
@@ -92,6 +101,10 @@ Enemies:
 53 Minotaur Lv2
 54 Legion (corpse)
 55 Talos
+  Var A:
+    0 Boss fight Talos.
+    1 Chase sequence Talos.
+  The Talos with ID 55 and the Talos with ID 77 behave exactly the same.
 56 Death
 57 Death
 58 Pixie
@@ -117,7 +130,7 @@ Enemies:
 6C 
 6D Pazuzu (breaks through wall)
 6E Skeleton Mirror (in mirror)
-6F Revenge Armor
+6F Revenge Armor (spawns Talos)
 70 Slime (comes from pipe)
 71 Skeleton Glass (in glass)
 72 
@@ -125,13 +138,16 @@ Enemies:
 74 
 75 
 76 
-77 Talos (chase)
-  Talos when he chases you in the first room of the game.
+77 Talos
+  Var A:
+    0 Boss fight Talos.
+    1 Chase sequence Talos.
+  The Talos with ID 55 and the Talos with ID 77 behave exactly the same.
 78 Peeping Eye (behind curtain)
   Var A:
     0 Behind curtain.
     1 Behind window.
-79 
+79 Revenge Armor
 7A Red Skeleton (drips down)
 7B 
 7C 

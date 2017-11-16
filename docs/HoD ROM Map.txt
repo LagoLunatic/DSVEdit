@@ -3,6 +3,8 @@
 
 080C42F4-080C4303 - List of GFX pages containing item icons.
 
+080C5508 - Font character mapping.
+
 080C7E38-080CA15F - Enemy DNA list.
 
 080DAD94 - Map tile metadata.

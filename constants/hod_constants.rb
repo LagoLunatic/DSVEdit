@@ -353,31 +353,32 @@ REUSED_ENEMY_INFO = {
   0x1D => {init_code: 0x08096DD0, palette_offset: 6}, # gate guarder -> living armor
   0x25 => {gfx_files: [0x0811BCD0], sprite: 0x08149C94}, # witch
   0x27 => {init_code: 0x08092A04, palette_offset: 1}, # bomber armor -> rock armor
-  0x32 => {palette_offset: 4}, # ruler sword lv2 (todo look into if this is correct)
-  0x34 => {init_code: 0x08096DD0, palette_offset: 6}, # guardian armor -> living armor
-  0x35 => {init_code: 0x08096DD0}, # boomerang armor -> living armor TODO: still wrong palette and gfx
+  0x32 => {init_code: 0x0805A8DC}, # ruler sword lv2
+  0x34 => {init_code: 0x08096DD0}, # guardian armor -> living armor
+  0x35 => {init_code: 0x08096EF0}, # boomerang armor -> living armor
   0x3D => {palette_offset: 1}, # O
   0x3F => {init_code: 0x080417AC, palette_offset: 1}, #  axe armor lv2 -> axe armor
   0x41 => {init_code: 0x08096DD0, palette_offset: 8}, # bronze guarder -> living armor
-  # TODO 43 legion (saint)
+  0x43 => {gfx_files: [0x08123680, 0x08123688]}, # legion (saint)
   0x46 => {palette_offset: 2}, # bone liquid
-  # TODO 47 ruler sword lv3
+  0x47 => {init_code: 0x0805A8DC}, # ruler sword lv3
   0x48 => {init_code: 0x08051DE0, palette_offset: 1}, # poison lizard -> master lizard
   0x49 => {palette_offset: 1}, # pazuzu
   0x4C => {init_code: 0x08043EB0, palette: 0x08125250}, # blaze master -> skeleton blaze
-  # TODO 4F skeleton glass
-  # TODO 51 hammer-hammer
-  # TODO 52 disc armor lv2
+  0x4F => {init_code: 0x0809B1AC}, # skeleton glass -> skeleton
+  0x51 => {init_code: 0x08096EB8}, # hammer-hammer -> living armor
+  0x52 => {init_code: 0x08038AFC, palette_offset: 1}, # disc armor lv2 -> disc armor
   0x53 => {init_code: 0x080A3A1C}, # minotaur lv2 -> minotaur
-  # TODO 54 legion (corpse) glitchy
+  0x54 => {gfx_files: [0x08123690, 0x08123698]}, # legion (corpse)
   0x58 => {init_code: 0x080467EC, gfx_files: [0x0811BCD8], sprite: 0x0814A0D8, palette_offset: 1}, # pixie -> witch
   0x59 => {init_code: 0x0804FE60, palette_offset: 1}, # sylph -> siren
   0x5C => {init_code: 0x0809B168}, # clear bone -> skeleton
   0x5D => {gfx_files: [0x0811BCC0, 0x080E8944]},
-  0x5F => {init_code: 0x08096DD0, gfx_files: [0x080E89DC], palette: 0x08123BD4, sprite: 0x0812C39C}, # pike master -> living armor
-  # TODO: 08096E26 is a switch statement for which living armor ripoff an enemy is, go through this and get them all working
+  0x5F => {init_code: 0x08096F28}, # pike master -> living armor
   # TODO 63 dracula wraith 2 glitchy
   0x6D => {palette_offset: 2}, # pazuzu (breaks through wall)
+  0x77 => {init_code: 0x080936A8}, # talos (chase) -> talos
+  0x79 => {init_code: 0x08096DD0}, # revenge armor -> living armor
   # TODO: 64+
 }
 ENEMY_FILES_TO_LOAD_LIST = nil
@@ -405,6 +406,7 @@ BEST_SPRITE_FRAME_FOR_ENEMY = {
   0x2A => 0x18, # big balloon
   0x33 => 0x04, # feather demon
   0x34 => 0x0A, # guardian armor
+  0x35 => 0x10, # boomerang armor
   0x3A => 0x10, # mimic
   0x3B => 0x06, # white dragon lv3
   0x3C => 0x0B, # skeleton mirror
@@ -412,13 +414,18 @@ BEST_SPRITE_FRAME_FOR_ENEMY = {
   0x3F => 0x06, # axe armor lv2
   0x41 => 0x10, # bronze guarder
   0x40 => 0x0A, # specter
+  0x43 => 0x29, # legion (saint)
   0x49 => 0x0C, # pazuzu
   0x4D => 0x1F, # arthro skeleton
   0x4E => 0x13, # rare ghost
+  0x51 => 0x10, # hammer-hammer
   0x53 => 0x58, # minotaur lv2
+  0x55 => 0x10, # talos
   0x58 => 0x0A, # pixie
   0x5E => 0x07, # simon wraith
   0x5F => 0x10, # pike master
+  0x77 => 0x10, # talos (chase)
+  0x79 => 0x10, # revenge armor
   # TODO: 64+
 }
 BEST_SPRITE_OFFSET_FOR_ENEMY = {}
