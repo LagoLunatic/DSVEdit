@@ -506,8 +506,8 @@ class Room
     if entity_gfx_list.length > @original_number_of_enemy_gfx
       # Repoint the enemy gfx list so there's room for more pointers without overwriting anything.
       
-      old_length = @original_number_of_enemy_gfx*4
-      new_length = entity_gfx_list.length*4
+      old_length = (@original_number_of_enemy_gfx+1)*4
+      new_length = (entity_gfx_list.length+1)*4
       
       new_entity_gfx_list_pointer = fs.free_old_space_and_find_new_free_space(entity_gfx_list_pointer, old_length, new_length, nil)
       
@@ -516,8 +516,8 @@ class Room
       @entity_gfx_list_pointer = new_entity_gfx_list_pointer
       fs.write(room_metadata_ram_pointer+4*4, [entity_gfx_list_pointer].pack("V"))
     elsif entity_gfx_list.length < @original_number_of_enemy_gfx
-      old_length = @original_number_of_enemy_gfx*4
-      new_length = entity_gfx_list.length*4
+      old_length = (@original_number_of_enemy_gfx+1)*4
+      new_length = (entity_gfx_list.length+1)*4
       
       fs.free_unused_space(entity_gfx_list_pointer + new_length, old_length - new_length)
       
@@ -529,6 +529,7 @@ class Room
       fs.write(offset, [enemy_gfx_pointer].pack("V"))
       offset += 4
     end
+    fs.write(offset, [0].pack("V"))
   end
   
   def write_extra_data_to_rom
