@@ -1,4 +1,11 @@
 
+01FFE294 DMA
+  ; r0 - Which DMA channel to use (0-3)
+  ; r1 - Address to copy from
+  ; r2 - Address to copy to
+  ; r3 - Word count and DMA control
+  ; If the DMA channel is 0, then after doing the requested DMA, this function also does a DMA from address 00000000 to address 00000000, which appears invalid. Not sure why it does this.
+
 02042FA4 LoadSave
 
 02007970 LoadOverlay

@@ -143,9 +143,6 @@ class RoomEditorDialog < Qt::Dialog
     @room.room_xpos_on_map = @ui.map_x_pos.text.to_i(16)
     @room.room_ypos_on_map = @ui.map_y_pos.text.to_i(16)
     
-    # TODO: does anything in the room need to be reloaded after this? like alternate_room_state, entities, doors, etc
-    # maybe just call read_from_rom on the door right after write_to_rom
-    
     @room.write_to_rom()
     @room.read_from_rom()
     

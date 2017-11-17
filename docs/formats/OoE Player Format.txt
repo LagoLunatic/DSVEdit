@@ -37,9 +37,13 @@ Player format:
       Most projectiles will be destroyed on contact with you, dealing no damage. Projectiles that can't be destroyed will simply pass through you. However, Dracula's projectiles will still do damage to you.
     Bit 19: If this bit is off, the player can't be hit at all. Can still hit enemies.
   3C,4: 
-  40,2: 
-  42,2:
-  44,2: Something related to the palette of the white outline around Shanoa that fades in/out when absorbing glyphs.
+  40,2: Sprite Y offset in pixels.
+  42,2: Enable outline glowing.
+    If 1, this makes the player's outline glow white when absorbing glyphs.
+    To be more specific, it swaps the second color in the player's palette (the first non-transparent color) out to various shades of grey to make the outline glow when absorbing glyphs.
+  44,2: Normal outline color.
+    If outline glowing is enabled, this is the what color to set the second color in the player's palette to when it's not glowing.
+    If outline glowing is disabled, this color is not used and whatever color is in the player's palette normally is used instead.
   46,
   48,
   4C,4: Pointer to list of hitbox pointers.

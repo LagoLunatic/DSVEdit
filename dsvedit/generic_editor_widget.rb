@@ -165,13 +165,23 @@ class GenericEditorWidget < Qt::Widget
     attribute_name = sender.objectName
     color_value = @attribute_text_fields[attribute_name].text.to_i(16)
     
-    a = ((color_value & 0xFF000000) >> 24) / 31.0 * 255
-    b = ((color_value & 0x00FF0000) >> 16) / 31.0 * 255
-    g = ((color_value & 0x0000FF00) >>  8) / 31.0 * 255
-    r = ((color_value & 0x000000FF) >>  0) / 31.0 * 255
+    options = 0
+    
+    if attribute_name == "Normal outline color"
+      a = 255
+      b = ((color_value & 0b0111_1100_0000_0000) >> 10) << 3
+      g = ((color_value & 0b0000_0011_1110_0000) >>  5) << 3
+      r = ((color_value & 0b0000_0000_0001_1111) >>  0) << 3
+    else
+      a = ((color_value & 0xFF000000) >> 24) / 31.0 * 255
+      b = ((color_value & 0x00FF0000) >> 16) / 31.0 * 255
+      g = ((color_value & 0x0000FF00) >>  8) / 31.0 * 255
+      r = ((color_value & 0x000000FF) >>  0) / 31.0 * 255
+      options |= Qt::ColorDialog::ShowAlphaChannel
+    end
     
     initial_color = Qt::Color.new(r, g, b, a)
-    color = Qt::ColorDialog.getColor(initial_color, self, "Select color", Qt::ColorDialog::ShowAlphaChannel)
+    color = Qt::ColorDialog.getColor(initial_color, self, "Select color", options)
     
     unless color.isValid
       # User clicked cancel.
@@ -179,11 +189,23 @@ class GenericEditorWidget < Qt::Widget
     end
     
     color_value = 0
-    color_value |= (color.alpha / 255.0 * 31).round << 24
-    color_value |= (color.blue  / 255.0 * 31).round << 16
-    color_value |= (color.green / 255.0 * 31).round << 8
-    color_value |= (color.red   / 255.0 * 31).round << 0
-    
-    @attribute_text_fields[attribute_name].text = "%08X" % color_value
+    if attribute_name == "Normal outline color"
+      puts "%04X" % color_value
+      color_value |= (color.blue  >> 3) << 10
+      puts "%04X" % color_value
+      color_value |= (color.green >> 3) << 5
+      puts "%04X" % color_value
+      color_value |= (color.red   >> 3) << 0
+      puts "%04X" % color_value
+      
+      @attribute_text_fields[attribute_name].text = "%04X" % color_value
+    else
+      color_value |= (color.alpha / 255.0 * 31).round << 24
+      color_value |= (color.blue  / 255.0 * 31).round << 16
+      color_value |= (color.green / 255.0 * 31).round << 8
+      color_value |= (color.red   / 255.0 * 31).round << 0
+      
+      @attribute_text_fields[attribute_name].text = "%08X" % color_value
+    end
   end
 end

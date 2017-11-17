@@ -41,10 +41,15 @@ Player format:
       Most projectiles will be destroyed on contact with you, dealing no damage. Projectiles that can't be destroyed will simply pass through you. However, Dracula's projectiles will still do damage to you.
       This bit is set when using Stonewall or Maria's turtle (Gnebu).
     Bit 19: If this bit is off, the player can't be hit at all. Can still hit enemies.
-  3C,4: Pointer to ?
-  40,2: Sprite y offset in pixels.
-  42,2:
-  44,2: 
+  3C,4: Pointer to list of which combo techs this player can do.
+    This list is 4 bytes long. Each byte is which technique for a given button combo, with 00 meaning no technique.
+  40,2: Sprite Y offset in pixels.
+  42,2: Enable outline flickering.
+    If 1, this makes the player's outline flicker white when calling your partner or switching characters.
+    To be more specific, it swaps the second color in the player's palette (the first non-transparent color) between the color specified in "Normal outline color" and a white color (#B8B8B8).
+  44,2: Normal outline color.
+    If outline flickering is enabled, this is the what color to set the second color in the player's palette to when it's not white.
+    If outline flickering is disabled, this color is not used and whatever color is in the player's palette normally is used instead.
   46,2:
   48,
   4C,4: Pointer to list of hitbox pointers.
