@@ -473,7 +473,7 @@ class Part
         @gfx_y_offset,
         @width,
         @height,
-        @unknown_1,
+        @object_size_and_shape,
         @gfx_page_index,
         flip_bits,
         @unused
@@ -593,7 +593,7 @@ class Frame
         @first_hitbox_offset,
         @first_part_offset
       ].pack("vCCVV")
-    else
+    elsif GAME == "aos"
       [
         @unknown,
         @number_of_hitboxes,
@@ -602,6 +602,15 @@ class Frame
         @first_hitbox_offset,
         @first_part_offset
       ].pack("VCCvVV")
+    else # hod
+      [
+        @unk1,
+        @unk2,
+        @unk3,
+        @number_of_parts,
+        @unk5,
+        @first_part_offset
+      ].pack("ccvvvV")
     end
   end
   
