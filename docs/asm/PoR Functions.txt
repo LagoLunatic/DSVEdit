@@ -50,6 +50,11 @@
   ; r3 - z pos
 02060CC0 PlaySfx???
   ; Has some internal role in playing sfx?
+0204D6B0 PlaySfx???2
+021FBA9C PlayCharSwitchVoice
+  ; r0 - Player index you're switching from
+  ; r1 - Player index you're switching to
+  ; Reads from list 0221E1DC to know which voice line to play for this combination of characters.
 
 02050544 ShowTextPopup
   ; r0 - Text index of the text to display.

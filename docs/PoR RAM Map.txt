@@ -531,41 +531,47 @@ F5-F5
 02112170 - Current MP.
 02112172 - Max MP.
 
-0211217C - Player 1's currently equipped weapon.
-0211217E - Player 1's currently equipped subweapon.
-02112180 - Player 1's currently equipped body armor.
-02112182 - Player 1's currently equipped head armor.
-02112184 - Player 1's currently equipped leg armor.
-02112186 - Player 1's currently equipped accessory 1.
-02112188 - Player 1's currently equipped accessory 2.
+0211217C,2  - Player 1's currently equipped weapon.
+0211217E,2  - Player 1's currently equipped subweapon.
+02112180,2  - Player 1's currently equipped body armor.
+02112182,2  - Player 1's currently equipped head armor.
+02112184,2  - Player 1's currently equipped leg armor.
+02112186,2  - Player 1's currently equipped accessory 1.
+02112188,2  - Player 1's currently equipped accessory 2.
 All of the player's current equips are duplicated three times. Only the first seems to matter.
 TODO: What are the other 2 for? It's not for the "recent" tab.
 
-021121C4 - Current gold.
+021121C4,4 - Current gold.
 
-021121E8 - Player 2's currently equipped weapon.
-021121EA - Player 2's currently equipped spell.
-021121EC - Player 2's currently equipped body armor.
-021121EE - Player 2's currently equipped head armor.
-021121F0 - Player 2's currently equipped leg armor.
-021121F2 - Player 2's currently equipped accessory 1.
-021121F4 - Player 2's currently equipped accessory 2.
+021121D1,1 - Index of Player 1's currently selected subweapon in their list of quickswap subweapons.
+  e.g. For Richter 0 is Knife, 1 is Axe, 2 is Bible, etc.
 
-021121C0 - Total experience.
-021121C4 - Experience to next level.
+021121E8,2 - Player 2's currently equipped weapon.
+021121EA,2 - Player 2's currently equipped spell.
+021121EC,2 - Player 2's currently equipped body armor.
+021121EE,2 - Player 2's currently equipped head armor.
+021121F0,2 - Player 2's currently equipped leg armor.
+021121F2,2 - Player 2's currently equipped accessory 1.
+021121F4,2 - Player 2's currently equipped accessory 2.
 
-021121C8-021121C9 - Bitfield of status effects on player 1.
+021121C0,4 - Total experience.
+021121C4,4 - Experience to next level.
+
+021121C8,2 - Bitfield of status effects on player 1.
   0x1 - Poison
   0x2 - Curse
   0x4 - Petrify
-021121CA-021121CB - Frames left until poison expires.
+021121CA,2 - Frames left until poison expires.
   It takes 0x708 - CON*8 total frames for it to expire.
-021121CC-021121CD - Frames left until curse expires.
+021121CC,2 - Frames left until curse expires.
   It takes 0x708 - MND*8 total frames for it to expire.
-021121CE-021121CF - Number of button presses left until you break free of petrify.
+021121CE,2 - Number of button presses left until you break free of petrify.
   It takes 0x2D total button presses to break free.
 
-021122C8-021122CB - Override walking speed of the player characters.
+0211223D,1 - Index of Player 2's currently selected subweapon in their list of quickswap subweapons.
+  e.g. For Maria 0 is Seiryu, 1 is Suzaku, 2 is Byakko, etc.
+
+021122C8,4 - Override walking speed of the player characters.
   If this is 0, player characters use their own unique walking speed.
   Otherwise, this is a speed value that overrides the player's walking speed.
   Speed Up uses this to set the player's speed. Half charge sets this to 0x3000, full charge sets it to 0x4000.
@@ -675,6 +681,12 @@ TODO: What are the other 2 for? It's not for the "recent" tab.
 0221E09C - Something related to cutin portraits for Jonathan and Charlotte?
   /sc/f_fjona00.dat uses palette 022C5B10
 
+0221E1DC-0221E23D - List of which voice line to play when switching from one character to another.
+  Halfwords. These are the SFX index of the voice line to use.
+  If an entry is 0, then it just plays no sound instead.
+  The index in this list is the character you're switching from times 7, plus the character you're switching to.
+  In other words, every combination of one character switching to another is accounted for (7*7 possibilities).
+
 0221E244 - List of which combo moves are for each player.
   This is pointed to by the player data.
   Each slot for a combo move is 1 byte long, each player has 4 slots. The byte is the index of the combo move in list 0221F070. 0 means no combo move.
@@ -687,7 +699,14 @@ TODO: What are the other 2 for? It's not for the "recent" tab.
   Byte 5: Mana cost.
   Byte 6: If 0, you must be on the ground to do this combo move. Otherwise you can be in the air.
 
-0221E7F4 - List of player data for each character.
+0221E3F4-0221E42B - List of quickswap subweapons lists for each player character.
+  Entry length 8.
+  This is for the press-select-to-cycle-through-subweapons mechanic that Richter, Maria, and Old Axe Armor have.
+  00,2: Number of subweapons this player has.
+  02,2: The frame index in the common sprite for the icon of the first subweapon this player can use.
+    The other subweapons after the first should have frames sequentially after this first frame.
+    For Old Axe Armor, all subweapon icons after the first are hardcoded to be the Puppet Master icon.
+  04,4: Pointer to a list of which subweapons this player has available for quickswap. Each entry in this list is a halfword, the index of the skill.
 
 0221E468 - List of which sprite animations are for which player states for each player character (state anims).
   The pointer at offset C in player data points to the appropiate entry in this list.
@@ -788,6 +807,8 @@ TODO: What are the other 2 for? It's not for the "recent" tab.
   12-1B Spells.
   25-28 Weapons.
   29-2D ?
+
+0221E7F4 - List of player data for each character.
 
 0221EAF0 - List of base stats for each player? Entry length 0x18.
 

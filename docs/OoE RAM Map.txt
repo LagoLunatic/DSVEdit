@@ -159,6 +159,10 @@ Requirement lists for kill quests:
 
 020FFC46 - Number of frames to keep the game logic paused.
 
+020FFC54,4 - Game's current uptime in frames.
+  This is set to 0 when resetting the game with select+start+L+R as well.
+  This value is used to randomize the RNG seed when loading a save.
+
 020FFC88 - normally 0. 12 when in paries state. 12 prevents pausing.
 
 020FFC8C-020FFC8F - Bitfield of global game flags.
@@ -481,6 +485,10 @@ F0-F0 ?
 02128BDC - List of hitboxes.
   Each entry is 0x14 bytes long, containing two hitboxes 0xA bytes long each.
   The index in this list is at offset+0xA7 in the entity memory.
+
+021389C0,4 - Current RNG seed.
+  The most recent random number generated is stored here.
+  It's is used to affect the next random number generated.
 
 0213A5C0-0213A77F - Data for the current room's 4 layers. Each is 0x70 bytes long.
   00,4: Pointer to the layer's metadata.
