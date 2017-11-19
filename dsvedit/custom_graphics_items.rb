@@ -159,8 +159,8 @@ class DoorItem < Qt::GraphicsRectItem
       new_pos.setX(x*SCREEN_WIDTH_IN_PIXELS)
       new_pos.setY(y*SCREEN_HEIGHT_IN_PIXELS)
       
-      @door.x_pos = x
-      @door.y_pos = y
+      @door.x_pos = [x].pack("C").unpack("C").first
+      @door.y_pos = [y].pack("C").unpack("C").first
       @door.write_to_rom()
       
       return super(change, Qt::Variant.new(new_pos))
