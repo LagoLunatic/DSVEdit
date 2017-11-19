@@ -27,6 +27,7 @@ AREA_INDEX_TO_OVERLAY_INDEX = {
      17 => nil,
      18 => nil,
      19 => nil,
+     20 => nil,
   }
 }
 
@@ -58,11 +59,16 @@ SECTOR_INDEX_TO_SECTOR_NAME = {
      17 => "Clock Tower B",
      18 => "Castle Treasury A",
      19 => "Castle Treasury B",
+     20 => "Boss Rush",
   }
 }
 
 HARDCODED_BOSSRUSH_ROOM_IDS = [
-  # TODO
+  0x084AFB74,
+  0x084B0230,
+  0x084B0304,
+  0x084AFE1C,
+  0x084AFF84,
 ]
 
 NOTHING_ENTITY_TYPE = nil
