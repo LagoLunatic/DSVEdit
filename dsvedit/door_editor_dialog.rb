@@ -105,7 +105,7 @@ class DoorEditorDialog < Qt::Dialog
   rescue StandardError => e
     Qt::MessageBox.warning(self,
       "Failed to display room",
-      "Failed to display room %08X.\n#{e.message}\n\n#{e.backtrace.join("\n")}" % room.room_metadata_ram_pointer
+      "Failed to display room %08X.\n#{e.message}\n\n#{e.backtrace.join("\n")}" % room_ptr
     )
   end
   
