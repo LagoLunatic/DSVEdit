@@ -197,7 +197,7 @@ class TilesetEditorDialog < Qt::Dialog
       @collision_tileset.tiles.each_slice(256) do |row_of_big_tiles|
         if row_of_big_tiles.length < 256
           # If the last row of tiles isn't a full row we must pad it with nil.
-          row_of_big_tiles.fill([nil]*16, row_of_big_tiles.length...256)
+          row_of_big_tiles.fill(nil, row_of_big_tiles.length...256)
         end
         row_of_big_tiles.each_slice(16) do |big_tile|
           @collision_tiles += big_tile[0,4]
