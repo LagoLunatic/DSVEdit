@@ -248,6 +248,7 @@
     <addaction name="actionEdit_Doors"/>
     <addaction name="actionAdd_New_Layer"/>
     <addaction name="actionAdd_Entity"/>
+    <addaction name="actionAdd_Door"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuEdit"/>
@@ -506,6 +507,14 @@
   <action name="actionEdit_Doors">
    <property name="text">
     <string>Edit Doors</string>
+   </property>
+  </action>
+  <action name="actionAdd_Door">
+   <property name="text">
+    <string>Add Door</string>
+   </property>
+   <property name="shortcut">
+    <string>D</string>
    </property>
   </action>
  </widget>

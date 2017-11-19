@@ -17,6 +17,8 @@ class Door
     @room = room
     @fs = game.fs
     @game = game
+    @x_pos = @y_pos = @dest_x_2 = @dest_y_2 = @dest_x = @dest_y = @unused = 0
+    @destination_room_metadata_ram_pointer = @room.room_metadata_ram_pointer
   end
   
   def read_from_rom(door_ram_pointer)

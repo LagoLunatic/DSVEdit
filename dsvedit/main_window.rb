@@ -43,6 +43,7 @@ class DSVEdit < Qt::MainWindow
   slots "open_door_editor()"
   slots "add_new_layer()"
   slots "add_new_entity()"
+  slots "add_new_door()"
   slots "update_visible_view_items()"
   slots "open_enemy_dna_dialog()"
   slots "open_text_editor()"
@@ -115,6 +116,7 @@ class DSVEdit < Qt::MainWindow
     connect(@ui.actionEdit_Doors, SIGNAL("activated()"), self, SLOT("open_door_editor()"))
     connect(@ui.actionAdd_New_Layer, SIGNAL("activated()"), self, SLOT("add_new_layer()"))
     connect(@ui.actionAdd_Entity, SIGNAL("activated()"), self, SLOT("add_new_entity()"))
+    connect(@ui.actionAdd_Door, SIGNAL("activated()"), self, SLOT("add_new_door()"))
     connect(@ui.actionEntities, SIGNAL("activated()"), self, SLOT("update_visible_view_items()"))
     connect(@ui.actionDoors, SIGNAL("activated()"), self, SLOT("update_visible_view_items()"))
     connect(@ui.actionCollision, SIGNAL("activated()"), self, SLOT("update_visible_view_items()"))
@@ -180,6 +182,7 @@ class DSVEdit < Qt::MainWindow
     @ui.actionEdit_Doors.setEnabled(false);
     @ui.actionAdd_New_Layer.setEnabled(false);
     @ui.actionAdd_Entity.setEnabled(false);
+    @ui.actionAdd_Door.setEnabled(false);
     @ui.actionEntities.setEnabled(false);
     @ui.actionDoors.setEnabled(false);
     @ui.actionCollision.setEnabled(false);
@@ -212,6 +215,7 @@ class DSVEdit < Qt::MainWindow
     @ui.actionEdit_Doors.setEnabled(true);
     @ui.actionAdd_New_Layer.setEnabled(true);
     @ui.actionAdd_Entity.setEnabled(true);
+    @ui.actionAdd_Door.setEnabled(true);
     @ui.actionEntities.setEnabled(true);
     @ui.actionDoors.setEnabled(true);
     @ui.actionCollision.setEnabled(true);
@@ -716,6 +720,25 @@ class DSVEdit < Qt::MainWindow
     Qt::MessageBox.warning(self, "Cannot add entity", e.message)
   end
   
+  def add_new_door
+    door = Door.new(@room, game)
+    scene_pos = @ui.room_graphics_view.mapToScene(@ui.room_graphics_view.mapFromGlobal(Qt::Cursor.pos))
+    if @room_graphics_scene.sceneRect.contains(scene_pos)
+      door.x_pos = scene_pos.x.to_i / SCREEN_WIDTH_IN_PIXELS
+      door.y_pos = scene_pos.y.to_i / SCREEN_HEIGHT_IN_PIXELS
+    end
+    @room.doors << door
+    @room.write_doors_to_rom()
+    
+    load_room()
+    
+    open_door_editor(door)
+  rescue FreeSpaceManager::FreeSpaceFindError, Room::WriteError => e
+    @room.read_from_rom() # Reload room to get rid of the failed changes.
+    load_room()
+    Qt::MessageBox.warning(self, "Cannot add door", e.message)
+  end
+  
   def update_visible_view_items
     @entities_view_item.setVisible(@ui.actionEntities.checked)
     @doors_view_item.setVisible(@ui.actionDoors.checked)
@@ -853,7 +876,7 @@ class DSVEdit < Qt::MainWindow
   
   def open_door_editor(door = nil)
     if @room.doors.empty?
-      Qt::MessageBox.warning(self, "No doors to edit", "This room has no doors.\nYou can add one by going to Edit -> Add Door or pressing A.")
+      Qt::MessageBox.warning(self, "No doors to edit", "This room has no doors.\nYou can add one by going to Edit -> Add Door or pressing D.")
       return
     end
     @open_dialogs << DoorEditorDialog.new(self, @renderer, @room.doors, door)
