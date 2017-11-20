@@ -296,7 +296,7 @@ A 200% attack boost (triple) takes 0xFFFF (0d65535) AP.
   31 - Kalidus Channel gets the "NEW" with the hand pointing to the bottom right entrance.
   32 - Player saw the hand pointing at the bottom right entrance of Kalidus Channel and then entered Kalidus through any of its entrances (not necessarily the one that was pointed to).
 
-02100388 - event flags.
+02100388 - Bitfield of event flags.
   0x100 - can trigger event in minera prison island where albus gives you the first part of dominus?
   0x200 - seen event in minera prison island where albus gives you the glyph.
 

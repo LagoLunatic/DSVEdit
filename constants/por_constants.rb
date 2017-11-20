@@ -689,7 +689,10 @@ TEXT_REGIONS = {
   "Skill Descriptions" => (0x452..0x4BD),
   "Music Names (Unused)" => (0x4BE..0x4E6),
   "System" => (0x4E7..0x51F),
-  "Menus" => (0x520..0x6BD),
+  "Menus 1" => (0x520..0x628),
+  "Quest Names" => (0x627..0x64B),
+  "Quest Descriptions" => (0x64C..0x670),
+  "Menus 2" => (0x671..0x6BD),
   "Events" => (0x6BE..0x747),
   "Debug" => (0x748..0x748)
 }
@@ -703,7 +706,10 @@ TEXT_REGIONS_OVERLAYS = {
   "Skill Descriptions" => 1,
   "Music Names (Unused)" => 1,
   "System" => 1,
-  "Menus" => 1,
+  "Menus 1" => 1,
+  "Quest Names" => 1,
+  "Quest Descriptions" => 1,
+  "Menus 2" => 1,
   "Events" => 2,
   "Debug" => 1
 }
