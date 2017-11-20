@@ -397,7 +397,6 @@ class NDSFileSystem
     end
     if bit_index == 0
       constant_shift = 0
-      constant = 0
     else
       constant_shift = (0x10 - bit_index/2)
     end
