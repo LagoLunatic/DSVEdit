@@ -76,6 +76,23 @@
 084B173C - List of create code pointers for events.
   Var A of the event entity is the index in this list.
 
+084B23F0-084B2413 - List of candle GFX pointers.
+  The candle's type is the index in this list.
+084B2414-084B2437 - List of candle palette list pointers.
+  The candle's type is the index in this list.
+084B2438-084B2443 - List of candle palette indexes.
+  The candle's type is the index in this list.
+  This is which index in the palette list to use for this candle, since some palette lists are shared by more than one candle.
+084B2444-084B2467 - List of candle sprite pointers.
+  The candle's type is the index in this list.
+084B2474-084B2497 - List of candle hitboxes.
+  Entry length 4.
+  The candle's type is the index in this list.
+  00,1: Hitbox left X (negative).
+  01,1: Hitbox top Y (negative).
+  02,1: Hitbox right X.
+  03,1: Hitbox bottom Y.
+
 084B24A4-084B25F3 - Consumable item data.
 084B25F4-084B265F - Weapon item data.
 084B2660-084B2C5F - Armor item data.

@@ -25,6 +25,9 @@ Entity types:
       4 - Fist
       5 - Dagger
     3 - An item. Var B is the ID of the item.
+  Var A:
+    Bits 0-3: The type of candle.
+    Bits 4-7: ?
 
 03 Pickup. Subtype:
   00-02 Crash?

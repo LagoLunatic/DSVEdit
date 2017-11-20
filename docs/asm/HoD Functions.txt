@@ -55,8 +55,11 @@
 0801058C EntityInitSprite
   ; r0 - Entity pointer
   ; r1 - Sprite pointer
-  ; r2 - ?
-  ; r3 - ?
+  ; r2 - Index in object palette VRAM to the palette to use
+  ; r3 - Index in object VRAM to the GFX to use
+
+080BA570 CandleDraw
+  ; Draw function for some types of candles
 
 080BD748 Divide
   ; Returns r0 / r1
@@ -66,11 +69,14 @@
 0801045C LoadGfx?
   ; r0 - Gfx wrapper
   ; r1 - 0?
+  ; Returns: The index in vram??
 08044A52 LoadPalette?
   ; r0 - Palette list pointer
   ; r1 - 0?
 0803118C LoadPalette?2
   ; r0 - Palette list pointer
+  ; r1 - Palette index?
+  ; Returns: The index in object palette VRAM this palette was loaded at.
 
 08008802 SetColorSpecialEffects
   ; r0 - 

@@ -3,7 +3,8 @@ Memory used for entities in HoD is 02000418 - 02007C17. Each entity is 0x80 byte
 
 00,4: Pointer to update code.
 04,4: Pointer to draw code.
-12,2: X pos in pixels on the screen.
+12,1: Index in object palette VRAM where this entity's palette is loaded.
+17,1: Index in object VRAM where this entity's GFX are loaded.
 38,2: Var A.
 3A,2: Var B.
 3E,1: Subtype.
