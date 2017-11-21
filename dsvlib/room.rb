@@ -364,17 +364,8 @@ class Room
       @original_number_of_entities = entities.length
     end
     
-    update_entity_list_order()
-    new_entity_pointer = entity_list_ram_pointer
-    entities.each do |entity|
-      entity.entity_ram_pointer = new_entity_pointer
-      
-      new_entity_pointer += 12
-    end
+    update_entity_list_order_and_save_entities()
     
-    entities.each do |entity|
-      entity.write_to_rom(skip_updating_entity_list_order=true)
-    end
     end_marker_location = entity_list_ram_pointer + entities.length*12
     fs.write(end_marker_location, [0x7FFF7FFF, 0, 0].pack("V*")) # Marks the end of the entity list
     
@@ -383,7 +374,7 @@ class Room
     end
   end
   
-  def update_entity_list_order
+  def update_entity_list_order_and_save_entities
     if SYSTEM == :gba
       # AoS only loads entities when you get close to them in the room.
       # It checks this by looking at the x or y pos of the entity.
@@ -402,24 +393,18 @@ class Room
       end
       
       new_entity_pointer = entity_list_ram_pointer
+      i = 0
       entities.each do |entity|
         entity.entity_ram_pointer = new_entity_pointer
         
-        new_entity_pointer += 12
-      end
-      
-      entities.each_with_index do |entity, i|
         # Byte 5 acts as a unique ID for this entity in the room.
         # If two entities in the same room share a byte 5, one of them won't appear.
         entity.byte_5 = i
         
-        if GAME == "hod"
-          byte_5_and_type  = (entity.type   &  0x3) << 6
-          byte_5_and_type |= (entity.byte_5 & 0x3F)
-          fs.write(entity.entity_ram_pointer+4, [byte_5_and_type].pack("C"))
-        else
-          fs.write(entity.entity_ram_pointer+4, [entity.byte_5].pack("C"))
-        end
+        fs.write(entity.entity_ram_pointer, entity.to_data)
+        
+        new_entity_pointer += 12
+        i += 1
       end
     end
   end

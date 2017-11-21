@@ -34,18 +34,18 @@ class Entity
     return self
   end
   
-  def write_to_rom(skip_updating_entity_list_order=false)
+  def write_to_rom
     room.sector.load_necessary_overlay()
     
     if entity_ram_pointer.nil?
       raise "Can't save an entity that doesn't have a pointer"
     end
     
-    fs.write(entity_ram_pointer, self.to_data)
-    
-    unless skip_updating_entity_list_order
+    if SYSTEM == :nds
+      fs.write(entity_ram_pointer, self.to_data)
+    else
       # If the entities in this room changed position, we need to make sure their byte 5s are reordered properly (on GBA only).
-      room.update_entity_list_order()
+      room.update_entity_list_order_and_save_entities()
     end
     
     if GAME == "hod"
