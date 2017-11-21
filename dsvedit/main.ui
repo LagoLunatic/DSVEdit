@@ -211,6 +211,7 @@
     <addaction name="actionSpecial_Object_Editor"/>
     <addaction name="actionShop_Editor"/>
     <addaction name="actionWeapon_Synth_Editor"/>
+    <addaction name="actionMagic_Seal_Editor"/>
     <addaction name="actionAdd_Overlay"/>
     <addaction name="actionEntity_Search"/>
     <addaction name="actionSettings"/>
@@ -515,6 +516,11 @@
    </property>
    <property name="shortcut">
     <string>D</string>
+   </property>
+  </action>
+  <action name="actionMagic_Seal_Editor">
+   <property name="text">
+    <string>Magic Seal Editor</string>
    </property>
   </action>
  </widget>

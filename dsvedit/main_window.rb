@@ -27,6 +27,7 @@ require_relative 'weapon_synth_editor_dialog'
 require_relative 'shop_editor_dialog'
 require_relative 'tileset_chooser_dialog'
 require_relative 'door_editor_dialog'
+require_relative 'magic_seal_editor_dialog'
 
 require_relative 'ui_main'
 
@@ -59,6 +60,7 @@ class DSVEdit < Qt::MainWindow
   slots "open_special_object_editor()"
   slots "open_weapon_synth_editor()"
   slots "open_shop_editor()"
+  slots "open_magic_seal_editor()"
   slots "add_new_overlay()"
   slots "open_settings()"
   slots "write_to_rom()"
@@ -134,6 +136,7 @@ class DSVEdit < Qt::MainWindow
     connect(@ui.actionSpecial_Object_Editor, SIGNAL("activated()"), self, SLOT("open_special_object_editor()"))
     connect(@ui.actionWeapon_Synth_Editor, SIGNAL("activated()"), self, SLOT("open_weapon_synth_editor()"))
     connect(@ui.actionShop_Editor, SIGNAL("activated()"), self, SLOT("open_shop_editor()"))
+    connect(@ui.actionMagic_Seal_Editor, SIGNAL("activated()"), self, SLOT("open_magic_seal_editor()"))
     connect(@ui.actionAdd_Overlay, SIGNAL("activated()"), self, SLOT("add_new_overlay()"))
     connect(@ui.actionEntity_Search, SIGNAL("activated()"), self, SLOT("open_entity_search()"))
     connect(@ui.actionSettings, SIGNAL("activated()"), self, SLOT("open_settings()"))
@@ -200,6 +203,7 @@ class DSVEdit < Qt::MainWindow
     @ui.actionSpecial_Object_Editor.setEnabled(false);
     @ui.actionWeapon_Synth_Editor.setEnabled(false);
     @ui.actionShop_Editor.setEnabled(false);
+    @ui.actionMagic_Seal_Editor.setEnabled(false);
     @ui.actionAdd_Overlay.setEnabled(false);
     @ui.actionEntity_Search.setEnabled(false);
     @ui.actionBuild.setEnabled(false);
@@ -233,6 +237,7 @@ class DSVEdit < Qt::MainWindow
     @ui.actionSpecial_Object_Editor.setEnabled(true);
     @ui.actionWeapon_Synth_Editor.setEnabled(true);
     @ui.actionShop_Editor.setEnabled(true);
+    @ui.actionMagic_Seal_Editor.setEnabled(true);
     @ui.actionAdd_Overlay.setEnabled(true);
     @ui.actionEntity_Search.setEnabled(true);
     @ui.actionBuild.setEnabled(true);
@@ -832,6 +837,10 @@ class DSVEdit < Qt::MainWindow
   
   def open_shop_editor
     @open_dialogs << ShopEditor.new(self, game)
+  end
+  
+  def open_magic_seal_editor
+    @open_dialogs << MagicSealEditorDialog.new(self, @renderer)
   end
   
   def add_new_overlay

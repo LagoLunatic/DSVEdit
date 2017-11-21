@@ -37,6 +37,7 @@ task :build_ui do
   system "rbuic4 dsvedit/shop_editor.ui            -o dsvedit/ui_shop_editor.rb"
   system "rbuic4 dsvedit/tileset_chooser.ui        -o dsvedit/ui_tileset_chooser.rb"
   system "rbuic4 dsvedit/door_editor.ui            -o dsvedit/ui_door_editor.rb"
+  system "rbuic4 dsvedit/magic_seal_editor.ui      -o dsvedit/ui_magic_seal_editor.rb"
   
   system "rbuic4 dsvrandom/randomizer.ui           -o dsvrandom/ui_randomizer.rb" if defined?(DSVRANDOM_VERSION)
 end
