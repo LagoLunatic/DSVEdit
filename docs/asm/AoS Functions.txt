@@ -171,6 +171,20 @@
   ; r2 - 
   ; r3 - 
 
+0800F92C PreloadRoomEnemies
+  ; r0 - Room's entity list pointer
+  ; Loads all enemies in the room, then deletes them all. This is so the enemy assets can all be loaded at once when entering the room.
+0800F4F8 LoadRoomEntities
+  ; Loads room entities immediately when you enter the room
+0800F750 CheckDelayedLoadRoomEntities
+0800F1FC LoadRoomEntity
+  ; r0 - Pointer to the entity in the room's entity list.
+
+0806D128 EntityCheckOffScreen
+  ; r0 - Entity pointer
+  ; r1 - Index in the list of entity sizes (08118D08)
+  ; This checks if an entity went offscreen. It returns 0 if on screen and 1 if off screen. This is so certain entities offscreen can stop updating until they're on screen again.
+
 080221CC WeaponOneHandedUse
 080224BC WeaponTwoHandedUse
 

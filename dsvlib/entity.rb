@@ -16,6 +16,7 @@ class Entity
     @room = room
     @fs = fs
     @x_pos = @y_pos = @byte_5 = @type = @subtype = @byte_8 = @var_a = @var_b = @candle_offset_up = 0
+    @byte_5 = @room.get_unused_unique_id()
   end
   
   def read_from_rom(entity_ram_pointer)

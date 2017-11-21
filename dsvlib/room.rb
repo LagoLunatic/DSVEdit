@@ -397,16 +397,18 @@ class Room
       entities.each do |entity|
         entity.entity_ram_pointer = new_entity_pointer
         
-        # Byte 5 acts as a unique ID for this entity in the room.
-        # If two entities in the same room share a byte 5, one of them won't appear.
-        entity.byte_5 = i
-        
         fs.write(entity.entity_ram_pointer, entity.to_data)
         
         new_entity_pointer += 12
         i += 1
       end
     end
+  end
+  
+  def get_unused_unique_id
+    used_unique_ids = entities.map{|e| e.byte_5}
+    unused_unique_ids = (0..0xFF).to_a - used_unique_ids
+    return unused_unique_ids.min
   end
   
   def write_doors_to_rom

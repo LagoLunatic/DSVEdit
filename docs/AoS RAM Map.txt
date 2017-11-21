@@ -58,9 +58,16 @@
   0E 4000 (Unused)
   0F 8000 Great Armor
 
+Variables related to delayed loading room entities:
+020003D0,1 - Direction to delayed load entities.
+  0 - Horizontal.
+  1 - Vertical.
+020003D1,1 - Entity index of the next entity to load in the direction the player is going.
+  For example, if the player is in a vertical room and falling down, it will be the entity closest below the entity loading region (which extends past the edges of the screen by a fair amount).
 020003D4 - Bitfield of entity used byte 5s in the current room.
   Byte 5 must be unique for all entities in the room.
   Unlike the DSVanias, a byte 5 of 0 must also be unique, and doesn't make an entity exempt.
+020003DC,4 - Pointer to the room's entity list.
 
 020003F4 - Currently selected warp room on the warp select screen.
 
@@ -94,8 +101,12 @@ What each range of entity slots is for:
 
 0200A094,4 - Pointer to ???
 
-0200A09A,2 - Screen scrolling X pos in pixels.
-0200A09E,2 - Screen scrolling Y pos in pixels.
+0200A098,4 - X pos of the left of the camera in subpixels.
+0200A09C,4 - Y pos of the top of the camera in subpixels.
+0200A0A0,4 - X velocity of the camera in subpixels.
+0200A0A4,4 - Y velocity of the camera in subpixels. 
+0200A09A,2 - X pos of the left of the camera in pixels.
+0200A09E,2 - Y pos of the top of the camera in pixels.
 
 0200A0A0,4 - X distance the screen moved this frame.
 0200A0A4,4 - Y distance the screen moved this frame.

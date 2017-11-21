@@ -29,12 +29,18 @@
 
 080E9644 - List of enemy DNA.
 
-082097D4 - Soma's palette.
-  0801462E - Has it hardcoded.
-
 080E11C4 - Soma's sprite pointer.
   This sprite has no animations and only a single static frame composed of two parts placed on top of each other.
   This is basically just a dummy to put Soma's top and bottom halves together from how they're arranged in VRAM.
+
+08118D08-08118D23 - List of entity sizes for checking if certain entities have gone off screen (so their logic can be paused until they're on screen again).
+  Entry length 4.
+  00,2: Width.
+  02,2: Height.
+  These aren't perfect representations of every entity's size, just generic sizes like 8x8, 16x16, 48x48, etc, used to estimate the size.
+
+082097D4 - Soma's palette.
+  0801462E - Has it hardcoded.
 
 084F0D8C,1 - New game starting sector index.
 084F0D8D,1 - New game starting room index.

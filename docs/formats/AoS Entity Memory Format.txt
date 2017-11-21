@@ -28,6 +28,8 @@ Memory used for entities in AoS is 020004E4 - 02007863. Each entity is 0x84 byte
   20 Do not draw this entity.
   40 Horizontal flip.
   80 Vertical flip.
+59,1: Bitfield?
+  04 ?
 62,1: Affects palette?
   If the lowest bit of this value is set, then it changes the palette of this entity's sprite, but only for the parts that have the lowest bit of the value at part+0B set as well.
 64,1: Sprite info index.
@@ -37,6 +39,9 @@ Memory used for entities in AoS is 020004E4 - 02007863. Each entity is 0x84 byte
 6C,1: Related to sprite? Bitfield?
 6D,1: Current animation index.
 6E,1: Current keyframe index in this animation.
+
+For enemies:
+34,2: Max HP.
 
 For weapons/skills:
 14,4: Pointer to the entity that used this weapon/skill (the player).
