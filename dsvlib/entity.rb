@@ -4,7 +4,7 @@ class Entity
   attr_accessor :entity_ram_pointer,
                 :x_pos,
                 :y_pos,
-                :byte_5,
+                :unique_id,
                 :type,
                 :subtype,
                 :byte_8,
@@ -15,8 +15,8 @@ class Entity
   def initialize(room, fs)
     @room = room
     @fs = fs
-    @x_pos = @y_pos = @byte_5 = @type = @subtype = @byte_8 = @var_a = @var_b = @candle_offset_up = 0
-    @byte_5 = @room.get_unused_unique_id()
+    @x_pos = @y_pos = @unique_id = @type = @subtype = @byte_8 = @var_a = @var_b = @candle_offset_up = 0
+    @unique_id = @room.get_unused_unique_id()
   end
   
   def read_from_rom(entity_ram_pointer)
@@ -24,11 +24,11 @@ class Entity
     
     @x_pos, @y_pos = fs.read(entity_ram_pointer,4).unpack("s*")
     if GAME == "hod"
-      byte_5_and_type, @subtype, @candle_offset_up, @byte_8 = fs.read(entity_ram_pointer+4,4).unpack("C*")
-      @type   = (byte_5_and_type & 0xC0) >> 6
-      @byte_5 =  byte_5_and_type & 0x3F
+      byte_5, @subtype, @candle_offset_up, @byte_8 = fs.read(entity_ram_pointer+4,4).unpack("C*")
+      @type      = (byte_5 & 0xC0) >> 6
+      @unique_id =  byte_5 & 0x3F
     else
-      @byte_5, @type, @subtype, @byte_8 = fs.read(entity_ram_pointer+4,4).unpack("C*")
+      @unique_id, @type, @subtype, @byte_8 = fs.read(entity_ram_pointer+4,4).unpack("C*")
     end
     @var_a, @var_b = fs.read(entity_ram_pointer+8,4).unpack("v*")
     
@@ -45,7 +45,7 @@ class Entity
     if SYSTEM == :nds
       fs.write(entity_ram_pointer, self.to_data)
     else
-      # If the entities in this room changed position, we need to make sure their byte 5s are reordered properly (on GBA only).
+      # If the entities in this room changed position, we need to make sure the entity list is ordered properly (on GBA only).
       room.update_entity_list_order_and_save_entities()
     end
     
@@ -56,12 +56,12 @@ class Entity
   
   def to_data
     if GAME == "hod"
-      byte_5_and_type  = (@type   &  0x3) << 6
-      byte_5_and_type |= (@byte_5 & 0x3F)
+      byte_5  = (@type      &  0x3) << 6
+      byte_5 |= (@unique_id & 0x3F)
       [
         x_pos,
         y_pos,
-        byte_5_and_type,
+        byte_5,
         subtype,
         candle_offset_up,
         byte_8,
@@ -72,7 +72,7 @@ class Entity
       [
         x_pos,
         y_pos,
-        byte_5,
+        unique_id,
         type,
         subtype,
         byte_8,

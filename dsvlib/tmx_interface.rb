@@ -46,14 +46,14 @@ class TMXInterface
     room.entities = []
     tiled_entities.each do |tmx_entity|
       props = extract_properties(tmx_entity)
-      validate_properties(props, "Entity", ["05", "06 (type)", "07 (subtype)", "08", "09 (var_a)", "11 (var_b)"])
+      validate_properties(props, "Entity", ["05 (unique_id)", "06 (type)", "07 (subtype)", "08", "09 (var_a)", "11 (var_b)"])
       validate_properties(props, "Entity", ["candle_offset_up"]) if GAME == "hod"
       
       entity = Entity.new(room, room.fs)
       
       entity.x_pos = tmx_entity["x"].to_i
       entity.y_pos = tmx_entity["y"].to_i
-      entity.byte_5 = props["05"]
+      entity.unique_id = props["05 (unique_id)"]
       entity.type = props["06 (type)"]
       entity.subtype = props["07 (subtype)"]
       entity.byte_8 = props["08"]
@@ -185,7 +185,7 @@ class TMXInterface
                        :y => entity.y_pos) {
               xml.properties {
                 xml.property(:name => "entity_ram_pointer", :value => "%08X" % entity.entity_ram_pointer)
-                xml.property(:name => "05", :value => "%02X" % entity.byte_5)
+                xml.property(:name => "05 (unique_id)", :value => "%02X" % entity.unique_id)
                 xml.property(:name => "06 (type)", :value => "%02X" % entity.type)
                 xml.property(:name => "07 (subtype)", :value => "%02X" % entity.subtype)
                 xml.property(:name => "08", :value => "%02X" % entity.byte_8)

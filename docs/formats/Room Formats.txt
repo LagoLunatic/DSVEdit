@@ -82,17 +82,18 @@ Entity format:
   0xC bytes long.
   00,2: Entity's x position in the room, in pixels. (Signed.)
   02,2: Entity's y position in the room, in pixels. (Signed.)
-  04,1: Byte 5.
+  04,1: Unique ID in the room.
     In the DSVanias, this appears useless and is best left at 0.
       If not 0, then any entities in the same room with duplicates of this value after the first will be removed.
     In AoS, this is a unique ID.
       If multiple entities in the same room share this ID then all the duplicate entities after the first will be removed.
       Unlike the DSVanias, duplicates are removed even if this is 0.
-      Entities are loaded in order of their ID as the player goes through the room so the GBA doesn't have to load every entity at once.
-      If the room's width is greater than or equal to its height, the byte 5s are in order from left to right.
-      If the room's width is less than its height, the byte 5s are in order from top to bottom.
     In HoD, bits:
       0-5 0x3F Unique ID, works like AoS.
+        This is useful in HoD, unlike every other game.
+        If you need to have multiple copies of the same entity spread throughout a room so that the entity loads regardless of what door the player enters from, set all of their unique IDs to the same value in order to prevent multiple copies from all being present at the same time.
+        In AoS, just make one copy of the entit and set byte 8 to 1.
+        In the DSVanias, all entities load instantly regardless of where the player is in the room.
       6-7 0xC0 Type.
   05,1: Entity type. See entity type list for details.
   06,1: Entity subtype.

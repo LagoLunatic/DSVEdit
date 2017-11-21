@@ -8,7 +8,7 @@ Memory used for entities in HoD is 02000418 - 02007C17. Each entity is 0x80 byte
 38,2: Var A.
 3A,2: Var B.
 3E,1: Subtype.
-3F,1: Low 6 bits of byte 5 (byte 5 & 0x3F).
+3F,1: Unique ID in room.
 40,2: Remaining number of frames to be invincible for (for when the player uses a Medicine Jar).
 48,4: X pos on the screen in subpixels.
   In the GBA games, each pixel is 0x10000 subpixels.

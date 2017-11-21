@@ -406,7 +406,7 @@ class Room
   end
   
   def get_unused_unique_id
-    used_unique_ids = entities.map{|e| e.byte_5}
+    used_unique_ids = entities.map{|e| e.unique_id}
     unused_unique_ids = (0..0xFF).to_a - used_unique_ids
     return unused_unique_ids.min
   end

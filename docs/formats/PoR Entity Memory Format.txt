@@ -81,7 +81,7 @@ Memory used for entities in PoR is 020FC500 - 0211173F. Each entity is 0x160 byt
   0x20 - ? something checked many times by enemies.
 12E,2: 
 132,1: Subtype.
-133,1: Byte 5.
+133,1: Unique ID in room.
 13C,2: Var A.
 13E,2: Var B.
 149,1: 

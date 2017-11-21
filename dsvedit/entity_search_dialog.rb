@@ -20,21 +20,21 @@ class EntitySearchDialog < Qt::Dialog
     @rooms = []
     @ui.room_list.clear()
     
-    byte_5 = @ui.byte_5.text =~ /^\h+$/ ? @ui.byte_5.text.to_i(16) : nil
+    unique_id = @ui.unique_id.text =~ /^\h+$/ ? @ui.unique_id.text.to_i(16) : nil
     type = @ui.type.text =~ /^\h+$/ ? @ui.type.text.to_i(16) : nil
     subtype = @ui.subtype.text =~ /^\h+$/ ? @ui.subtype.text.to_i(16) : nil
     byte_8 = @ui.byte_8.text =~ /^\h+$/ ? @ui.byte_8.text.to_i(16) : nil
     var_a = @ui.var_a.text =~ /^\h+$/ ? @ui.var_a.text.to_i(16) : nil
     var_b = @ui.var_b.text =~ /^\h+$/ ? @ui.var_b.text.to_i(16) : nil
     
-    if !byte_5 && !type && !subtype && !byte_8 && !var_a && !var_b
+    if !unique_id && !type && !subtype && !byte_8 && !var_a && !var_b
       return
     end
     
     rooms = []
     parent.game.each_room do |room|
       room.entities.each do |entity|
-        next if byte_5 && byte_5 != entity.byte_5
+        next if unique_id && unique_id != entity.unique_id
         next if type && type != entity.type
         next if subtype && subtype != entity.subtype
         next if byte_8 && byte_8 != entity.byte_8

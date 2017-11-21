@@ -128,10 +128,9 @@ Special objects:
   Requires sector overlay 86.
 3A Various objects from corridor where Behemoth chases you.
   Requires sector overlay 79.
-  Byte 5: If this is between 14-29 or FE-FF, the object will no longer appear after Behemoth chased you.
+  Unique ID: If this is between 14-29 or FE-FF, the object will no longer appear after Behemoth chased you.
   Var A: The sprite frame to use for this object. 0-9 are pillars, A-B are platforms, C-D are the steel door at the end of the corridor.
 3B Breakable wall.
-  Byte 5: ???
   Var A: Index of this wall in the breakable wall list for this area.
     The data in that list affects the sprite frame to use as well as the flag for the breakable wall being destroyed.
   Which sprite/gfx/palette this object uses is hardcoded depending on the area/sector it's in:

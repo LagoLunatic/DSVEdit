@@ -329,7 +329,7 @@ What each range of entity slots is for:
   02,1: Number of pixels to shake by horizontally.
   03,1: Number of pixels to shake by vertically.
 
-020F70C4 - Bitfield used by spinning spikes to track which byte 5s have already been used in this room.
+020F70C4 - Bitfield used by spinning spikes to track which unique IDs have already been used in this room.
 
 020F70CC - Pointer to list of entities for the current room.
 

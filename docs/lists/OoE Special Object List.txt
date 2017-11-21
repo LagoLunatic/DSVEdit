@@ -122,11 +122,11 @@ Special Objects:
 29 Moving platform.
   Moves by seeking out its waypoints (object 2A).
   It moves to each waypoint in the order they were placed in the room, then goes back to its starting position and repeats the process.
-  Byte 5: Must match the byte 5 of this platform's waypoints.
+  Unique ID: Must match the unique ID of this platform's waypoints.
   Var A: Sprite animation to use.
   Var B: Speed to move.
 2A Moving platform waypoint.
-  Byte 5: Must match the byte 5 of the platform this waypoint is for.
+  Unique ID: Must match the Unique ID of the platform this waypoint is for.
 2B Area exit.
   Touching it puts you back on the world map. Extends infinitely vertically. Also draws the arrow pointing out.
   Var A: The area index of the area to unlock when exiting via this exit.

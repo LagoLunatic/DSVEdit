@@ -400,7 +400,7 @@ F5-F5
 02111A34,2 - Destination x pos (in pixels) of TeleportPlayer
 02111A36,2 - Destination y pos (in pixels) of TeleportPlayer
 
-02111A5C - Bitfield of used byte 5s in the current room?
+02111A5C - Bitfield of used unique IDs in the current room?
 
 02111A6C - Bitfield of skills you own. (Owned skill info.)
 

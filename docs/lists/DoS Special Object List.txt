@@ -76,7 +76,6 @@ Special objects:
 10 Platform moving up and down.
 11 Fog effect (like in the lost village).
 12 Cog.
-  Byte 5: Unique ID?
   Var A:
     Low byte: Type of cog:
       00 Bright foreground cog you can walk on.
@@ -110,12 +109,10 @@ Special objects:
   Horizontally positions itself at the left of the room.
   Also locks the screen scrolling.
 19 Bloody spike that spins around.
-  Byte 5: Unique ID?
   Var A: Starting angle. 0000 being right, 4000 being down, etc.
   Var B: Spinning speed. Positive is clockwise, negative is counterclockwise.
 1A Like 19, but the actual spike is broken off so it can't hurt you.
 1B Swinging pendulum.
-  Byte 5: Unique ID?
   Var A: 
     Least significant byte is the type of weight on the pendulum:
       00 - Small weight.
