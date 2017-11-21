@@ -497,6 +497,7 @@ class TilesetEditorDialog < Qt::Dialog
     else
       chunky_image = ChunkyPNG::Image.new(128, 128, ChunkyPNG::Color::TRANSPARENT)
       gfx_pointers_used_on_this_page = []
+      @ui.gfx_file.text = ""
       4.times do |i|
         gfx_chunk_index = @selected_tile.tile_page*4 + i
         gfx_chunk_index += 0x10 if @tileset.colors_per_palette == 16
