@@ -168,12 +168,19 @@ class MagicSealEditorDialog < Qt::Dialog
     @magic_seal.time_limit = @ui.time_limit.text.to_i(16)
     
     @magic_seal.write_to_rom()
+    return true
+  rescue FreeSpaceManager::FreeSpaceFindError => e
+    Qt::MessageBox.warning(self,
+      "Failed to find free space",
+      "Failed to find free space to put the expanded list of lines."
+    )
+    return false
   end
   
   def button_box_clicked(button)
     if @ui.buttonBox.standardButton(button) == Qt::DialogButtonBox::Ok
-      save_magic_seal()
-      self.close()
+      success = save_magic_seal()
+      self.close() if success
     elsif @ui.buttonBox.standardButton(button) == Qt::DialogButtonBox::Cancel
       self.close()
     elsif @ui.buttonBox.standardButton(button) == Qt::DialogButtonBox::Apply

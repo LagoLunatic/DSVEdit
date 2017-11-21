@@ -47,7 +47,24 @@ class MagicSeal
   
   def write_to_rom
     if point_order_list.length > @original_pointer_order_list_length
-      raise "Cannot increase length of point order list."
+      # Repoint the point order list so there's room for more entries without overwriting anything.
+      
+      original_length = @original_pointer_order_list_length+1
+      length_needed = point_order_list.length+1
+      
+      new_point_order_list_pointer = fs.free_old_space_and_find_new_free_space(point_order_list_pointer, original_length, length_needed, nil)
+      
+      @original_pointer_order_list_length = entities.length
+      
+      @point_order_list_pointer = new_point_order_list_pointer
+      fs.write(magic_seal_pointer+0x14, [point_order_list_pointer].pack("V"))
+    elsif point_order_list.length < @original_pointer_order_list_length
+      original_length = @original_pointer_order_list_length+1
+      length_needed = point_order_list.length+1
+      
+      fs.free_unused_space(point_order_list_pointer + length_needed, original_length - length_needed)
+      
+      @original_pointer_order_list_length = point_order_list.length
     end
     
     data = [
@@ -61,5 +78,7 @@ class MagicSeal
     point_order_list.each_with_index do |point_index, i|
       fs.write(point_order_list_pointer+i, [point_index].pack("C"))
     end
+    end_marker_location = point_order_list_pointer + point_order_list.length
+    fs.write(end_marker_location, [0xFF].pack("C")) # Marks the end of the point order list
   end
 end
