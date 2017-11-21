@@ -300,7 +300,7 @@ WEAPON_FORMAT = [
   [1, "Sprite Index"],
   [1, "Unknown 2"],
   [1, "Palette"],
-  [1, "? anim??"],
+  [1, "Swing Anim"],
   [1, "IFrames"],
   [2, "Swing Sound"],
   [2, "Unknown 3"],

@@ -45,6 +45,10 @@
   ; r1 - Damage done
   ; r2 - 0 for damage, 1 for healing
 
+080233BC GetCurrentWeaponAttackAnimation
+  ; r0 - Player's state, 0 for standing, 1 for crouching, 2 for in the air. (Maybe more?)
+  ; Returns the currently equipped weapon's swing animation for the player to use, read from list 084F1238.
+
 08021654 DamagePlayer
   ; r0 - Pointer to ??? in the stack.
 

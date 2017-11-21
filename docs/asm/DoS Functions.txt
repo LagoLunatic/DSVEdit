@@ -336,6 +336,85 @@
 021D9440 ActorTurn
 021D95C0 ActorTeleport
 
+02022000 MapDraw
+  ; Draws the whole map.
+02023064 Map???
+  ; Called once at the end of drawing the map?
+02024724 MapTileDrawFillPixels
+  ; r0 - Map X
+  ; r1 - Map Y
+  ; more args
+  ; [r13] - Which map (0/1/2 for Castle/Abyss/???)
+02023CBC MapTileDrawWallPixels
+  ; r0 - Map X
+  ; r1 - Map Y
+  ; more args
+02023FBC MapTileDrawDoorPixels
+  ; r0 - Map X
+  ; r1 - Map Y
+  ; [r13] - Which map (0/1/2 for Castle/Abyss/???)
+  ; more args
+02023B44 MapTileDrawSecretDoorPixels
+  ; r0 - Map X
+  ; r1 - Map Y
+  ; more args
+  ; [r13,4] - Which map (0/1/2 for Castle/Abyss/???)
+02023978 MapTileRedrawFillPixels
+  ; r0 - Map X
+  ; r1 - Map Y
+  ; r2 - Which map (0/1/2 for Castle/Abyss/???)
+  ; Called when you explore a tile on the map.
+0202371C MapTileRedrawDoorPixels
+  ; r0 - Map X
+  ; r1 - Map Y
+  ; r2 - Which map (0/1/2 for Castle/Abyss/???)
+  ; Called when you explore a tile on the map.
+02023328 MapTileRedrawSecretDoorPixels
+  ; r0 - Map X
+  ; r1 - Map Y
+  ; r2 - Which map (0/1/2 for Castle/Abyss/???)
+  ; Called when you explore a tile on the map.
+020234C0 MapTileRedrawWallPixels
+  ; r0 - Map X
+  ; r1 - Map Y
+  ; r2 - Which map (0/1/2 for Castle/Abyss/???)
+  ; Called when you explore a tile on the map.
+02024FE4 MapTileGetMetadata
+  ; r0 - Map X
+  ; r1 - Map Y
+  ; r2 - Which map (0/1/2 for Castle/Abyss/???)
+  ; (It calculates the offset to the metadata as 2*(map_width*Y + X).)
+02024FA0 MapTileGetLineData
+  ; r0 - Map X
+  ; r1 - Map Y
+  ; r2 - Which map (0/1/2 for Castle/Abyss/???)
+  ; (It calculates the offset to the line data as (map_width/2)*Y + X/2.)
+  ; Note that this returns the full byte containing this tile's line data, which means the byte actually contains the line data for another tile as well.
+020251C0 MapGetMetadataPointer
+  ; r0 - Which map (0/1/2 for Castle/Abyss/???)
+  ; Returns pointer to this map's tile metadata
+0202517C MapGetLineDataPointer
+  ; r0 - Which map (0/1/2 for Castle/Abyss/???)
+  ; Returns pointer to this map's line data
+02025204 MapGetWidth
+  ; r0 - Which map (0/1/2 for Castle/Abyss/???)
+  ; Returns the width of the map in tiles.
+  ; But for the Abyss it returns 0x13, when the correct width seems to be 0x12? This is related to the metadata for the abyss having an extra block at the end of each row when the line data doesn't. The line data code divides the width by 2, discarding the extra 1. But since the metadata code doesn't divide, it keeps that extra 1.
+02025240 MapGetHeight
+  ; r0 - Which map (0/1/2 for Castle/Abyss/???)
+02024E88 MapTileCheckExplored
+  ; r0 - Map X
+  ; r1 - Map Y
+  ; r2 - Which map (0/1/2 for Castle/Abyss/???)
+02024D44 MapGetXOffset
+  ; r0 - Which map (0/1/2 for Castle/Abyss/???)
+  ; This is the offset from the left of the screen the map should be drawn.
+  ; Returns 4 for Castle, 0x18 for Abyss, 0xA for ???.
+02024D14 MapGetYOffset
+  ; r0 - Which map (0/1/2 for Castle/Abyss/???)
+  ; This is the offset from the top of the screen the map should be drawn.
+  ; Returns 2 for Castle, 0xC for Abyss, 0x10 for ???.
+
 021C31E8 FacePlayer
   ; Makes an enemy turn towards the player.
   ; r0 - Enemy entity pointer

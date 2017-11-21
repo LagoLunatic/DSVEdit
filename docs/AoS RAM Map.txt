@@ -189,13 +189,15 @@ What each range of entity slots is for:
   01000000 - Peeping Eye
   02000000 - Erinys
 
-02013266 - Current game mode.
+02013266,1 - Current game mode.
   0 - Soma mode.
   1 - Julius mode.
-02013269 - Currently equipped red soul.
-0201326A - Currently equipped blue soul.
-0201326B - Currently equipped yellow soul.
-0201326D - Currently equipped accessory.
+02013268,1 - Currently equipped weapon.
+02013269,1 - Currently equipped red soul.
+0201326A,1 - Currently equipped blue soul.
+0201326B,1 - Currently equipped yellow soul.
+0201326C,1 - Currently equipped body armor.
+0201326D,1 - Currently equipped accessory.
 
 0201327A,2 - Current HP.
 0201327C,2 - Current MP.

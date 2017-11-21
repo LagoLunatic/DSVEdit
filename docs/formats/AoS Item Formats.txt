@@ -42,7 +42,8 @@ Weapon format:
   13,1: Weapon sprite index.
   14,1: ?
   15,1: Palette index.
-  16,1: Anim?
+  16,1: Swing animation index.
+    Which specific animation to use, out of the list of swing animations for this attack type.
   17,1: IFrames. An enemy hit by this weapon will be invulnerable to weapons for this number of frames.
   18,2: Swing sound.
   1A,2: ?

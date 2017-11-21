@@ -339,7 +339,7 @@
   ; r0 - Entity pointer
   ; r1 - Damage value
   ; Stores r1 to entity+A8 if the entity's hitbox is active (entity+A6)
-020318D0 EntitySetDamageTypes
+02031844 EntitySetDamageTypes
   ; r0 - Entity pointer
   ; r1 - Damage types bitfield
   ; Stores r1 to entity+AC if the entity's hitbox is active (entity+A6)

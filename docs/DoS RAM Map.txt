@@ -552,6 +552,8 @@ Player's stats:
 
 0210ECE0 - list of pointers to dynamic files loaded into ram?
 
+0210FA00 - List of pixel data for the currently drawn map.
+
 Stuff related to currently loaded tilesets:
 02115064,4 - Which tile GFX asset index to load next.
 02115068,4 - 

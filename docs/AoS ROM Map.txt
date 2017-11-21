@@ -47,6 +47,10 @@
 084F10B4 - Has pointer to Soma's update function.
 084F10B8 - Has pointer to Julius's update function.
 
+084F1238 - List of pointers to weapon swing animation indexes.
+  Index is the player's state, 0 for standing, 1 for crouching, 2 for in the air. (Maybe more?)
+  Each pointer points to a list of player animation indexes. Each group of 3 bytes is for a weapon attack type. Each byte within the group is for a weapon swing animation.
+
 084F128C - differentiates evil butcher/ripper knives
   Entry length 0x10.
   00,4: GFX pointer
