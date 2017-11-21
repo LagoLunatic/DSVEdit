@@ -22,49 +22,84 @@
      <item>
       <layout class="QHBoxLayout" name="horizontalLayout">
        <item>
-        <layout class="QFormLayout" name="formLayout">
-         <property name="fieldGrowthPolicy">
-          <enum>QFormLayout::AllNonFixedFieldsGrow</enum>
-         </property>
-         <item row="0" column="0">
-          <widget class="QLabel" name="label">
+        <layout class="QVBoxLayout" name="verticalLayout_3">
+         <item>
+          <layout class="QFormLayout" name="formLayout">
+           <property name="fieldGrowthPolicy">
+            <enum>QFormLayout::AllNonFixedFieldsGrow</enum>
+           </property>
+           <item row="0" column="0">
+            <widget class="QLabel" name="label">
+             <property name="text">
+              <string>Num points</string>
+             </property>
+            </widget>
+           </item>
+           <item row="0" column="1">
+            <widget class="QLineEdit" name="num_points"/>
+           </item>
+           <item row="1" column="0">
+            <widget class="QLabel" name="label_2">
+             <property name="text">
+              <string>Radius</string>
+             </property>
+            </widget>
+           </item>
+           <item row="1" column="1">
+            <widget class="QLineEdit" name="radius"/>
+           </item>
+           <item row="2" column="0">
+            <widget class="QLabel" name="label_3">
+             <property name="text">
+              <string>Rotation</string>
+             </property>
+            </widget>
+           </item>
+           <item row="2" column="1">
+            <widget class="QLineEdit" name="rotation"/>
+           </item>
+           <item row="3" column="0">
+            <widget class="QLabel" name="label_4">
+             <property name="text">
+              <string>Time limit</string>
+             </property>
+            </widget>
+           </item>
+           <item row="3" column="1">
+            <widget class="QLineEdit" name="time_limit"/>
+           </item>
+          </layout>
+         </item>
+         <item>
+          <widget class="QLabel" name="label_5">
            <property name="text">
-            <string>Num points</string>
+            <string>Add more lines by clicking
+the points on the Magic Seal.</string>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignCenter</set>
            </property>
           </widget>
          </item>
-         <item row="0" column="1">
-          <widget class="QLineEdit" name="num_points"/>
-         </item>
-         <item row="1" column="0">
-          <widget class="QLabel" name="label_2">
+         <item>
+          <widget class="QPushButton" name="clear_all_lines">
            <property name="text">
-            <string>Radius</string>
+            <string>Clear all lines</string>
            </property>
           </widget>
          </item>
-         <item row="1" column="1">
-          <widget class="QLineEdit" name="radius"/>
-         </item>
-         <item row="2" column="0">
-          <widget class="QLabel" name="label_3">
-           <property name="text">
-            <string>Rotation</string>
+         <item>
+          <spacer name="verticalSpacer">
+           <property name="orientation">
+            <enum>Qt::Vertical</enum>
            </property>
-          </widget>
-         </item>
-         <item row="2" column="1">
-          <widget class="QLineEdit" name="rotation"/>
-         </item>
-         <item row="3" column="0">
-          <widget class="QLabel" name="label_4">
-           <property name="text">
-            <string>Time limit</string>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>20</width>
+             <height>40</height>
+            </size>
            </property>
-          </widget>
-         </item>
-         <item row="3" column="1">
-          <widget class="QLineEdit" name="time_limit"/>
+          </spacer>
          </item>
         </layout>
        </item>

@@ -6,6 +6,8 @@ class MagicSealEditorDialog < Qt::Dialog
   
   slots "magic_seal_changed(int)"
   slots "magic_seal_properties_changed()"
+  slots "magic_seal_clicked(int, int, const Qt::MouseButton&)"
+  slots "clear_all_lines()"
   slots "button_box_clicked(QAbstractButton*)"
   slots "delete_entity()"
   
@@ -17,14 +19,16 @@ class MagicSealEditorDialog < Qt::Dialog
     @game = main_window.game
     @renderer = renderer
     
-    @magic_seal_graphics_scene = Qt::GraphicsScene.new
+    @magic_seal_graphics_scene = ClickableGraphicsScene.new
     @magic_seal_graphics_scene.setSceneRect(0, 0, 192, 192)
     @ui.magic_seal_graphics_view.setScene(@magic_seal_graphics_scene)
+    connect(@magic_seal_graphics_scene, SIGNAL("clicked(int, int, const Qt::MouseButton&)"), self, SLOT("magic_seal_clicked(int, int, const Qt::MouseButton&)"))
     
     connect(@ui.magic_seal_index, SIGNAL("activated(int)"), self, SLOT("magic_seal_changed(int)"))
     connect(@ui.num_points, SIGNAL("editingFinished()"), self, SLOT("magic_seal_properties_changed()"))
     connect(@ui.radius, SIGNAL("editingFinished()"), self, SLOT("magic_seal_properties_changed()"))
     connect(@ui.rotation, SIGNAL("editingFinished()"), self, SLOT("magic_seal_properties_changed()"))
+    connect(@ui.clear_all_lines, SIGNAL("clicked()"), self, SLOT("clear_all_lines()"))
     connect(@ui.buttonBox, SIGNAL("clicked(QAbstractButton*)"), self, SLOT("button_box_clicked(QAbstractButton*)"))
     
     @magic_seals = []
@@ -65,6 +69,28 @@ class MagicSealEditorDialog < Qt::Dialog
     render_magic_seal()
   end
   
+  def clear_all_lines
+    @magic_seal.point_order_list = []
+    render_magic_seal()
+  end
+  
+  def magic_seal_clicked(x, y, button)
+    return unless button == Qt::LeftButton
+    
+    item = @magic_seal_graphics_scene.itemAt(x, y)
+    return if item.nil?
+    return unless @point_items.include?(item)
+    
+    point_index = @point_items.index(item)
+    if @magic_seal.point_order_list[-1] == point_index
+      # Point clicked was same as the last point in the list.
+      return
+    end
+    
+    @magic_seal.point_order_list << point_index
+    render_magic_seal()
+  end
+  
   def render_magic_seal
     @magic_seal_graphics_scene.clear()
     
@@ -101,10 +127,13 @@ class MagicSealEditorDialog < Qt::Dialog
     end
     
     # Add points.
+    @point_items = []
     positions.each do |pos|
       point_item = GraphicsChunkyItem.new(point_frame)
       point_item.setPos(pos[:x]-point_frame.width/2, pos[:y]-point_frame.height/2)
       @magic_seal_graphics_scene.addItem(point_item)
+      @point_items << point_item
+      point_item.setShapeMode(Qt::GraphicsPixmapItem::BoundingRectShape)
     end
     
     # Add lines.

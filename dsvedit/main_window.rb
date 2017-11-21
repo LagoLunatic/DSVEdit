@@ -840,7 +840,11 @@ class DSVEdit < Qt::MainWindow
   end
   
   def open_magic_seal_editor
-    @open_dialogs << MagicSealEditorDialog.new(self, @renderer)
+    if GAME == "dos"
+      @open_dialogs << MagicSealEditorDialog.new(self, @renderer)
+    else
+      Qt::MessageBox.warning(self, "Can't edit magic seals", "Only DoS has magic seals.")
+    end
   end
   
   def add_new_overlay
