@@ -414,6 +414,9 @@ class Text
         
         multipart = false
         command_number = previous_halfword & 0x00FF
+        if command_number == 1 # NAMEINSERT
+          curr_is_command = false
+        end
         decode_multipart_command(command_number, halfword, data_format_string)
       elsif halfword & 0xFF00 == 0xF000
         curr_is_command = true
@@ -427,6 +430,9 @@ class Text
         
         if command == :multipart
           multipart = true
+          if command_number == 1 # NAMEINSERT
+            curr_is_command = false
+          end
           ""
         else
           command
@@ -446,7 +452,7 @@ class Text
         "{RAW #{data_format_string}}" % halfword
       end
       
-      if curr_is_command != prev_was_command && !prev_was_command.nil? && previous_halfword != 0xF006 && halfword != 0xF006
+      if curr_is_command != prev_was_command && !prev_was_command.nil? && previous_halfword != 0xF006 && halfword != 0xF006 && halfword != 0xF001
         # Add a newline between a block of commands and some text for readability.
         char = "\n#{char}"
       end
@@ -489,7 +495,11 @@ class Text
   def decode_multipart_command(command_number, data, data_format_string)
     case command_number
     when 0x01
-      "{ENDCHOICE #{data_format_string}}" % data
+      if GAME == "hod"
+        "{NAMEINSERT #{data_format_string}}" % data
+      else
+        "{ENDCHOICE #{data_format_string}}" % data
+      end
     when 0x02
       case data
       when 0x01
@@ -612,7 +622,7 @@ class Text
     when "COMMAND2"
       halfword = data.to_i(16)
       [0xF002, halfword].pack("vv")
-    when "ENDCHOICE"
+    when "NAMEINSERT"
       halfword = data.to_i(16)
       [0xF001, halfword].pack("vv")
     when "TEXTCOLOR"
