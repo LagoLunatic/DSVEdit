@@ -54,7 +54,7 @@ class MagicSeal
       
       new_point_order_list_pointer = fs.free_old_space_and_find_new_free_space(point_order_list_pointer, original_length, length_needed, nil)
       
-      @original_pointer_order_list_length = entities.length
+      @original_pointer_order_list_length = point_order_list.length
       
       @point_order_list_pointer = new_point_order_list_pointer
       fs.write(magic_seal_pointer+0x14, [point_order_list_pointer].pack("V"))
