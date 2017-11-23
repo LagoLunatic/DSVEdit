@@ -795,16 +795,13 @@ class SpriteEditor < Qt::Dialog
     gfx_pages = @gfx_pages_with_blanks.compact
     
     gfx_and_palette_data = {}
-    if SYSTEM == :nds
-      gfx_and_palette_data[:gfx_file_names] = gfx_pages.map{|gfx| gfx.file[:file_path]}.join(", ")
-    else
-      gfx_and_palette_data[:gfx_file_names] = gfx_pages.map{|gfx| "%08X" % gfx.gfx_pointer}.join(", ")
-    end
+    gfx_and_palette_data[:gfx_file_names] = gfx_pages.map{|gfx| "%08X" % gfx.gfx_pointer}.join(", ")
     selected_gfx_page = @gfx_pages_with_blanks[@gfx_page_index]
     gfx_page_index_without_blanks = gfx_pages.index(selected_gfx_page)
     gfx_and_palette_data[:gfx_page_index] = gfx_page_index_without_blanks
     gfx_and_palette_data[:palette_pointer] = @sprite_info.palette_pointer
     gfx_and_palette_data[:palette_index] = @palette_index
+    gfx_and_palette_data[:one_dimensional_mode] = @one_dimensional_render_mode
     
     parent.open_gfx_editor(gfx_and_palette_data)
   end

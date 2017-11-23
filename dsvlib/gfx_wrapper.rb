@@ -17,11 +17,13 @@ class GfxWrapper
     @fs = fs
     
     if SYSTEM == :nds
-      @file = fs.assets_by_pointer[gfx_pointer]
-      if @file.nil?
-        raise "Failed to find GFX file with asset pointer: %08X" % gfx_pointer
+      @unknown_1, @render_mode, @canvas_width, @unknown_2, @gfx_data_pointer = fs.read(gfx_pointer, 12).unpack("CCvVV")
+      if @gfx_data_pointer == 0
+        @file = fs.assets_by_pointer[gfx_pointer]
+        if @file.nil?
+          raise "Failed to find GFX file with asset pointer: %08X" % gfx_pointer
+        end
       end
-      @unknown_1, @render_mode, @canvas_width = fs.read(gfx_pointer, 4).unpack("CCv")
     else
       @data_type, @bpp, @unknown_3, @size_in_512_chunks = fs.read(gfx_pointer, 4).unpack("CCCC")
       @render_mode = case bpp
@@ -53,7 +55,11 @@ class GfxWrapper
   
   def gfx_data
     if SYSTEM == :nds
-      fs.read_by_file(file[:file_path], 0, 0x2000*render_mode, allow_reading_into_next_file_in_ram: true)
+      if @gfx_data_pointer
+        fs.read(@gfx_data_pointer, 0x2000*render_mode)
+      else
+        fs.read_by_file(file[:file_path], 0, 0x2000*render_mode, allow_reading_into_next_file_in_ram: true)
+      end
     else
       @gfx_data ||= if compressed
         fs.decompress(gfx_data_pointer)
@@ -65,7 +71,11 @@ class GfxWrapper
   
   def write_gfx_data(new_gfx_data)
     if SYSTEM == :nds
-      fs.write_by_file(file[:file_path], 0, new_gfx_data)
+      if file
+        fs.write_by_file(file[:file_path], 0, new_gfx_data)
+      else
+        fs.write(@gfx_data_pointer, new_gfx_data)
+      end
     else
       if compressed
         fs.compress_write(gfx_data_pointer, new_gfx_data)

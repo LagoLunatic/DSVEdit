@@ -48,6 +48,7 @@ class GfxEditorDialog < Qt::Dialog
     if gfx_and_palette_data
       @ui.gfx_file_names.text = gfx_and_palette_data[:gfx_file_names]
       @ui.palette_pointer.text = "%08X" % gfx_and_palette_data[:palette_pointer]
+      @ui.one_dimensional_mode.checked = !!gfx_and_palette_data[:one_dimensional_mode]
       load_gfx_file_and_palette_list()
       gfx_page_index = gfx_and_palette_data[:gfx_page_index]
       if (0..@gfx_pages.size-1).include?(gfx_page_index)
@@ -72,8 +73,17 @@ class GfxEditorDialog < Qt::Dialog
           possible_asset_pointer = gfx_file_name.to_i(16)
           if @fs.is_pointer?(possible_asset_pointer)
             gfx_file = @fs.assets_by_pointer[possible_asset_pointer]
+            if gfx_file.nil?
+              possible_gfx_data_pointer = @fs.read(possible_asset_pointer+8, 4).unpack("V").first
+              if @fs.is_pointer?(possible_gfx_data_pointer)
+                gfx = GfxWrapper.new(possible_asset_pointer, @fs)
+                gfx_pages << gfx
+                next
+              end
+            end
           end
         end
+        
         if gfx_file.nil?
           Qt::MessageBox.warning(self, "Not a file", "Couldn't find file with path: #{gfx_file_name}")
           return
@@ -114,7 +124,13 @@ class GfxEditorDialog < Qt::Dialog
     end
     
     if SYSTEM == :nds
-      @ui.gfx_file_names.text = @gfx_pages.map{|gfx| gfx.file[:file_path]}.join(", ")
+      @ui.gfx_file_names.text = @gfx_pages.map do |gfx|
+        if gfx.gfx_data_pointer == 0
+          gfx.file[:file_path]
+        else
+          "%08X" % gfx.gfx_pointer
+        end
+      end.join(", ")
     else
       @ui.gfx_file_names.text = @gfx_pages.map{|gfx| "%08X" % gfx.gfx_pointer}.join(", ")
     end
@@ -239,7 +255,7 @@ class GfxEditorDialog < Qt::Dialog
     palette = @palettes[@palette_index]
     
     @gfx_pages.each do |gfx|
-      if SYSTEM == :nds
+      if gfx.file
         gfx_name = gfx.file[:name]
       else
         gfx_name = "%08X" % gfx.gfx_pointer
@@ -267,7 +283,7 @@ class GfxEditorDialog < Qt::Dialog
     input_images = []
     has_colors_outside_palette = false
     @gfx_pages.each do |gfx|
-      if SYSTEM == :nds
+      if gfx.file
         gfx_name = gfx.file[:name]
       else
         gfx_name = "%08X" % gfx.gfx_pointer
