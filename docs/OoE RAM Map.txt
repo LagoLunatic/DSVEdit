@@ -21,6 +21,10 @@
 020B619C-020B61BF - The palette list used for the map.
 
 020B61C0-020B61E7 - List of the number of map tiles in each area's map. Halfwords.
+020B61E8-020B620F - List of map dimensions.
+  Entry length 2.
+  00,1: Width.
+  01,1: Height.
 
 020B61E8-020B620F - List relating to each area somehow? TODO
   Each entry is 2 bytes long.
@@ -60,6 +64,11 @@
   This is a list of pointers, one for each area.
   Each of those pointers points to a list of pointers, one for each sector in that area.
   Each of those pointers points to a list of assets indexes to load for that sector.
+
+020ECCE0-020ECD07 - List of map draw offsets. These offset each map from the upper left corner of the top screen.
+  Entry length 2.
+  00,1: X offset in groups of 2 tiles.
+  01,1: Y offset in groups of 2 tiles.
 
 020ECD3C-020ECD87 - List of pointers to lists of secret doors for each area.
   If a pointer is 0 that means the area has no secret doors.
@@ -513,7 +522,7 @@ when you first enter a new area, the game determines which entrance room to put 
 
 02149028,4 - Currently loaded sector overlay index.
 
-0214E700 - pixel data for map.
+0214B1E0-021511DF - Pixel data for the map.
 
 021516D0 - Game state
   00 - Booting up and showing nintendo/konami logos

@@ -483,6 +483,20 @@
   ; r1 - Sector index
   ; r2 - Room index
 
+02043238 MapGetMetadataListPointer
+  ; r0 - Area index
+02043428 MapGetRowWidthsListPointer
+  ; r0 - Area index
+02043440 MapGetWidth
+  ; r0 - Area index
+0204345C MapGetHeight
+  ; r0 - Area index
+02042F7C MapGetDrawXOffset
+  ; r0 - Area index
+02042F94 MapGetDrawYOffset
+  ; r0 - Area index
+02043480 MapDraw?
+
 0222F848 PlayerTeleport
   ; r0 - Pointer to entity calling this function?
   ; r1 - ??? 0

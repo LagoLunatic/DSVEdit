@@ -3,6 +3,10 @@ class Map
   attr_reader :map_tile_metadata_ram_pointer,
               :map_tile_line_data_ram_pointer,
               :number_of_tiles,
+              :width,
+              :height,
+              :draw_x_offset,
+              :draw_y_offset,
               :secret_door_list_pointer,
               :row_widths_list_pointer,
               :game,
@@ -28,6 +32,8 @@ class Map
     @map_tile_metadata_ram_pointer = fs.read(MAP_TILE_METADATA_LIST_START_OFFSET + area_index*4, 4).unpack("V*").first
     @map_tile_line_data_ram_pointer = fs.read(MAP_TILE_LINE_DATA_LIST_START_OFFSET + area_index*4, 4).unpack("V*").first
     @number_of_tiles = fs.read(MAP_LENGTH_DATA_START_OFFSET + area_index*2, 2).unpack("v*").first
+    @width, @height = fs.read(MAP_SIZES_LIST_START_OFFSET + area_index*2, 2).unpack("CC")
+    @draw_x_offset, @draw_y_offset = fs.read(MAP_DRAW_OFFSETS_LIST_START_OFFSET + area_index*2, 2).unpack("CC")
     @secret_door_list_pointer = fs.read(MAP_SECRET_DOOR_LIST_START_OFFSET + area_index*4, 4).unpack("V*").first
     @row_widths_list_pointer = fs.read(MAP_ROW_WIDTHS_LIST_START_OFFSET + area_index*4, 4).unpack("V*").first
     
@@ -59,28 +65,59 @@ class Map
     end
     
     @row_widths = []
-    row = 0
     total_tiles_found = 0
-    while true
+    @height.times do |row|
       row_width = fs.read(@row_widths_list_pointer + row, 1).unpack("C").first
-      break if total_tiles_found == number_of_tiles
-      
-      if total_tiles_found > number_of_tiles
-        raise "Error reading map row widths: Too many tiles"
-      end
-      if row > 0xFF
-        raise "Error reading map row widths: Read too many rows"
-      end
       
       @row_widths << row_width
       total_tiles_found += row_width
-      
-      row += 1
     end
+    if total_tiles_found != number_of_tiles
+      raise "Error reading map row widths: Total number of tiles does not match"
+    end
+    @original_number_of_rows = row_widths.length
   end
   
   def write_to_rom
     @tiles = @tiles.sort_by{|tile| [tile.y_pos, tile.x_pos]}
+    
+    max_x_pos = @tiles.map{|tile| tile.x_pos}.max
+    max_y_pos = @tiles.map{|tile| tile.y_pos}.max
+    @width = max_x_pos + 2
+    @height = max_y_pos + 2
+    
+    tiles_by_row = @tiles.group_by{|tile| tile.y_pos}
+    @row_widths = []
+    @height.times do |row|
+      if tiles_by_row[row]
+        @row_widths[row] = tiles_by_row[row].length
+      else
+        @row_widths[row] = 0
+      end
+    end
+    
+    if row_widths.length > @original_number_of_rows
+      original_length = @original_number_of_rows
+      length_needed = row_widths.length
+      
+      new_row_widths_list_pointer = fs.free_old_space_and_find_new_free_space(row_widths_list_pointer, original_length, length_needed, nil)
+      
+      @original_number_of_rows = row_widths.length
+      
+      @row_widths_list_pointer = new_row_widths_list_pointer
+      fs.write(MAP_ROW_WIDTHS_LIST_START_OFFSET + area_index*4, [row_widths_list_pointer].pack("V"))
+    else
+      original_length = @original_number_of_rows
+      length_needed = row_widths.length
+      
+      fs.free_unused_space(row_widths_list_pointer + length_needed, original_length - length_needed)
+      
+      @original_number_of_rows = row_widths.length
+    end
+    
+    (0..max_y_pos).each do |row|
+      fs.write(row_widths_list_pointer + row, [row_widths[row]].pack("C"))
+    end
     
     (0..number_of_tiles-1).each do |i|
       tile_line_data, tile_metadata = @tiles[i].to_data
@@ -89,24 +126,10 @@ class Map
       fs.write(map_tile_metadata_ram_pointer + i*4, tile_metadata.pack("vCC"))
     end
     
-    tiles_by_row = @tiles.group_by{|tile| tile.y_pos}
-    max_y_pos = tiles_by_row.keys.max
-    if max_y_pos < @row_widths.size - 1
-      raise "Cannot decrease height of map in PoR/OoE."
-    end
-    (0..max_y_pos).each do |row|
-      if @row_widths[row].nil?
-        raise "Cannot increase height of map in PoR/OoE."
-      end
-      
-      if tiles_by_row[row]
-        @row_widths[row] = tiles_by_row[row].length
-      else
-        @row_widths[row] = 0
-      end
-      
-      fs.write(@row_widths_list_pointer + row, [@row_widths[row]].pack("C"))
-    end
+    fs.write(MAP_SIZES_LIST_START_OFFSET + area_index*2, [@width, @height].pack("CC"))
+    
+    # TODO add gui to allow manually setting draw x/y offset
+    fs.write(MAP_DRAW_OFFSETS_LIST_START_OFFSET + area_index*2, [@draw_x_offset, @draw_y_offset].pack("CC"))
   end
   
   def is_abyss

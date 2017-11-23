@@ -196,6 +196,22 @@
   ; r0 - Area index
   ; Returns r0 - Pointer to the start of this area's list of explored tiles.
   ; These pointers are hardcoded instead of being a simple list.
+02030214 MapGetMetadataListPointer
+  ; r0 - Area index
+020301FC MapGetLineDataListPointer
+  ; r0 - Area index
+0202FFF4 MapGetRowWidthsListPointer
+  ; r0 - Area index
+0202FFD8 MapGetWidth
+  ; r0 - Area index
+0202FFBC MapGetHeight
+  ; r0 - Area index
+0203099C MapGetDrawXOffset
+  ; r0 - Area index
+02030984 MapGetDrawYOffset
+  ; r0 - Area index
+02030710 MapGetNumTiles
+  ; r0 - Area index
 
 022028E0 PlayerUpdate
 021F6044 PartnerUpdate

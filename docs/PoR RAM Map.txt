@@ -1,6 +1,12 @@
 
 === 02000000 - 020F61BF: Most of ARM9
 
+020BF8F8-020BF913 - List of each map's dimensions.
+  Entry length 2.
+  00,1: Width.
+  01,1: Height.
+020BF914-020BF92F - List of the number of map tiles in each area's map. Halfwords.
+
 020BFA74 - List of layer scroll modes.
   Each is 0xC bytes long.
   00,4: Horizontal scrolling multiplier (0x1000 = 1.0).
@@ -36,11 +42,19 @@
 020E0204 - List of songs available for use as BGM.
 022E187C - List of songs->text indexes for sound test mode.
 
+020DF2D4-020DF2EF - List of map draw offsets. These offset each map from the upper left corner of the top screen.
+  Entry length 2.
+  00,1: X offset in groups of 2 tiles.
+  01,1: Y offset in groups of 2 tiles.
+020DF2F4-020DF31B - List of pointers to lists of secret doors for each area.
+  If a pointer is 0 that means the area has no secret doors.
+  Only areas 00-09 have entries here, the list ends after 09.
+
 020DF36C-020DF3A3 - List of areas. Each entry is a pointer to a list of sectors for the area somewhere in 020E3A34-020E3B13.
 
-020DF3E4 - List of pointers to map metadata for each area.
-020DF420 - List of pointers to map line data for each area.
-020BF914 - List of map lengths (number of map tiles each area map has). Halfwords.
+020DF3E4-020DF41B - List of pointers to map metadata for each area.
+020DF420-020DF457 - List of pointers to map line data for each area.
+020DF45C-020DF493 - List of map row widths.
 
 020DFD40 - List of quests.
   Entry length 0x10.
