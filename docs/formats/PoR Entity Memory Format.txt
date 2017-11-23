@@ -27,12 +27,16 @@ Memory used for entities in PoR is 020FC500 - 0211173F. Each entity is 0x160 byt
   This is an index in the currently loaded sprite info list, 020FA200.
 074,4: Bitfield related to sprite drawing.
   0020 
-  0080 Horizontal flip.
+  0080 Direction. Set if facing left, clear if facing right.
   8000 
 078,4: Pointer to sprite animation list.
 07C,2: Current animation index.
 07E,2: Current keyframe index in this animation.
-080,2: Bitfield?
+080,2: Bitfield of sprite animation properties.
+  01 - Animation finished. This is set automatically by SpriteAnimate when an animation finishes its first loop.
+  02 - Do not loop animation
+  04 - Play animation in reverse
+  08 - Do not animate, just freeze on whatever the current keyframe is
 084,2: Current sprite frame index.
 086,2: Palette index in the list of globally loaded palettes.
 088,2: Palette index in the list of globally loaded palettes. Unused?
@@ -81,7 +85,7 @@ Memory used for entities in PoR is 020FC500 - 0211173F. Each entity is 0x160 byt
   0x20 - ? something checked many times by enemies.
 12E,2: 
 132,1: Subtype.
-133,1: Unique ID in room.
+133,1: Unique ID in room from entity list.
 13C,2: Var A.
 13E,2: Var B.
 149,1: 

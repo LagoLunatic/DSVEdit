@@ -18,8 +18,8 @@ Entity types:
       5 - $400
       6 - $400
     2 - A subweapon. Var B affects the subweapon:
-      0 - Holy Book
-      1 - Boomerang
+      0 - Holy Book (Bible)
+      1 - Boomerang (Cross)
       2 - Axe
       3 - Holy Water
       4 - Fist

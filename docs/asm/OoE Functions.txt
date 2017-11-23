@@ -1,4 +1,10 @@
 
+02008A70 FillMemory
+  ; Fills a certain region of memory with a given value.
+  ; r0 - Value to fill with
+  ; r1 - Starting address to fill
+  ; r2 - Number of bytes to fill
+
 0202C610 LoadSave
 
 02032DD8 LoadOverlay
@@ -9,6 +15,9 @@
   ; r2 - Update function pointer for the new entity
 02028C1C DeleteEntity
   ; r0 - Entity pointer
+02028D00 DeleteEntity2?
+  ; r0 - Entity pointer
+  ; Calls the entity's detroy code, does some other things?, then calls DeleteEntity.
 
 020332E0 RandMax
   ; Max random number is r0-1. Min is 0.
@@ -16,8 +25,13 @@
   ; r0 - Random number
   ; r1 - Maximum is r1-1
   ; Returns r0 - ? r1 - random number
+02033320 RandRange
+  ; Min random number is r0. Max is r1.
 0203326C RandomizeRNGSeed
   ; Randomizes the current RNG seed. It does this by setting the seed to 0x1E86EF + the game's current uptime in frames*0x100.
+
+02023E68 Divide
+  ; Divides r0 by r1 and returns the result.
 
 0202D7A0 SetGameState
   ; r0 - State
@@ -290,11 +304,20 @@
   ; Returns the pointer at 020D8CEC+(r0*0x20)
 02033048 AssetLoad?
   ; r0 - Asset index
-02033074 AssetGetFreeSlot?
+02033074 AssetGetFreeSpace
   ; r0 - Asset index
+02032940 AssetGetSize
+  ; r0 - Asset index
+  ; Returns asset file size
 02039F78 Asset???
   ; r0 - Asset index
   ; r1 - ???
+0208DBEC RegisterAsset
+  ; r0 - Pointer to 022EB1C4?
+  ; r1 - Pointer to 022EBC1C, a dummy free space asset marking how much space there's left?
+  ; r2 - Location of free space
+  ; This function initializes the asset header, and also does some bookkeeping by subtracting the used size from the available free space and some other things.
+02027C9C FindFreeSpace?
 
 02049C58 PlayerUpdate
 0204E854 PlayerTakeInput
@@ -379,6 +402,11 @@
   ; r2 - On-hurt-player callback to store at +C8
   ; r3 - On-damaged callback to store at +CC
 
+0202B9FC EntitySpawnSkeletallyAnimatedJoint?
+  ; r0 - Entity
+  ; r1 - 84?
+  ; Initializes the values at entity+158
+
 0205C464 EnemyDie?
   ; Sets the enemy as being killed once
   ; Gives EXP
@@ -404,13 +432,17 @@
   ; [r13,0] - Maximum Y pos downwards in pixels (positive)
   ; Returns: 0 if the player is out of range, 1 if in range.
 0205CE48 GetPlayerXPos
-  ; r0 - Entity calling this function?
+  ; r0 - Entity calling this function
+0205CE30 GetPlayerPointer
 
 0205BF78 EnemyTakeDamage
   ; r0 - Enemy entity
   ; r1 - Player skill entity doing the damage
   ; r2 - Pointer to ?? in the stack
   ; Returns r0 - 0 if the enemy is still alive, 1 if it's dead.
+
+0205CED0 FacePlayer
+  ; r0 - Entity
 
 0203B5D0 LoadSpriteSingleGfx
   ; r0 - Entity ptr
@@ -428,6 +460,9 @@
 0202BD8C GetSpriteInfo
   ; r0 - Index in currently loaded sprite infos list
   ; Returns: Pointer to the entry in that list (or 0 if the index is invalid)
+0202BDB4 GetCurrentAnimation
+  ; r0 - Entity
+  ; Returns pointer to the current animation in the sprite data
 
 02064B48 LoadRoomEntities
   ; r0 - Room's entity list pointer
@@ -444,15 +479,80 @@
 
 02030684 InitializeSprite
   ; r0 - Entity
-020306A4 ???Sprite
-  ; r0 - Entity
 
 0202BE2C EntityGetSpritePointer
   ; r0 - Entity
 
 02030390 SetSpriteAnim
-  ; r0 - Entity+0x78
+  ; r0 - Entity+78
   ; r1 - Anim index to set
+020303F4 SetSpriteAnimAndProperties
+  ; r0 - Entity+78
+  ; r1 - Anim index to set
+  ; r2 - Anim properties bitfield
+  ; Stores the properties bitfield to entity+80, then calls SetSpriteAnim.
+02030404 SetSpriteAnimAndPropertiesNoForce
+  ; r0 - Entity+78
+  ; r1 - Anim index to set
+  ; r2 - Anim properties bitfield
+  ; If the anim index to set is the same as the entity's current animation, don't do anything. If it's different call SetSpriteAnimAndProperties.
+020306A4 SetSpriteAnimSafe
+  ; r0 - Entity
+  ; r1 - Anim index to set
+  ; Checks the entity's sprite to be sure r1 is a valid animation index for this sprite. If it's not valid, use anim 0 instead.
+  ; Then calls SetSpriteAnim to set the anim.
+020306D8 SetSpriteAnimAndPropertiesSafe
+  ; r0 - Entity
+  ; r1 - Anim index to set
+  ; r2 - Anim properties bitfield
+  ; Stores the properties bitfield to entity+80, then calls SetSpriteAnimSafe.
+020306E8 SetSpriteAnimAndPropertiesSafeNoForce
+  ; r0 - Entity
+  ; r1 - Anim index to set
+  ; r2 - Anim properties bitfield
+  ; If the anim index to set is the same as the entity's current animation, don't do anything. If it's different call SetSpriteAnimAndPropertiesSafe.
+02030738 SpriteAnimate
+  ; r0 - Entity
+  ; Calls SpriteAnimate2.
+02030470 SpriteAnimate2
+  ; r0 - Entity+78
+  ; Call this every frame so the entity's sprite animates.
+
+0205CE1C EntitySetXVelocityWithDirection
+  ; r0 - Entity
+  ; r1 - X velocity
+  ; Negates X vel if facing left, then sets it.
+0205D750 EntityMoveX?
+  ; r0 - Entity
+  ; r1 - X velocity
+  ; r2 - ? hitbox pointer for this specific enemy?
+  ; r3 - Bitfield. Bits:
+  ;   02 - Ignore direction. Just set the entity's X velocity to r1, without negating it if facing left.
+  ;   008 - 
+  ;   010 - 
+  ;   020 - 
+  ;   040 - 
+  ;   080 - 
+  ;   100 - 
+  ;   200 - 
+  ;   400 - 
+  ; After setting X velocity, it also updates X, but only if some conditions are met?
+0205D940 EntityMoveXExponential?
+  ; r0 - Entity
+  ; r1 - Current timer value
+  ; r2 - Maximum timer value
+  ; r3 - Base X velocity
+  ; [r13] - ? hitbox pointer for this specific enemy?
+  ; [r13,4] - ? C
+  ; Calculates a new X velocity as: base_x_velocity * cosine(90deg * r1/r2)
+  ; This means that as r1 counts up towards r2, the entity's x velocity falls exponentially. It will start at the base X velocity specified in r3, when the timer is half over the X velocity will be 70% of the base, and when the timer is over the X velocity will be at 0.
+  ; Practically, this has the effect of the entity slowing down to a gradual stop.
+  ; (If r1 is greater than r2 it just treats it as being equal to r2, maxed out.)
+  ; Then it calls EntityMoveX?.
+
+020049E0 SetMultiplyMatrix?
+  ; r0 - ? A sine value?
+  ; r1 - ? A cosine value?
 
 02065A94 LoadSkeleton
   ; r0 - Entity
@@ -468,6 +568,12 @@
 
 02065F34 UpdateSkeleton
   ; r0 - Entity
+
+02209940 CreateSkeletalJointEntity
+  ; r0 - 
+  ; r1 - 
+  ; r2 - 
+  ; Returns a pointer to the new entity
 
 0204E4B8 InitializeGame
   ; Called both when loading a save and when starting a new game.
@@ -496,6 +602,10 @@
 02042F94 MapGetDrawYOffset
   ; r0 - Area index
 02043480 MapDraw?
+
+02035F14 SetOAMData?
+  ; r0 - Pointer to the OAM data (in list 021427E0 or 02145B2C)
+  ; r1 - Pointer to ? (e.g. 021434CC)
 
 0222F848 PlayerTeleport
   ; r0 - Pointer to entity calling this function?

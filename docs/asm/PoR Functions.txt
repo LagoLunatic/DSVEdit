@@ -1,4 +1,10 @@
 
+0209E570 FillMemory
+  ; Fills a certain region of memory with a given value.
+  ; r0 - Value to fill with
+  ; r1 - Starting address to fill
+  ; r2 - Number of bytes to fill
+
 01FFE294 DMA
   ; r0 - Which DMA channel to use (0-3)
   ; r1 - Address to copy from
@@ -348,10 +354,25 @@
   ; r0 - Pointer to entity
   ; r1 - Pointer to part
 
-0200E894 SetSpriteAnim
+02010DD4 SetSpriteAnim
+  ; r0 - Entity+78
+  ; r1 - Anim index to set
+  ; Stores the anim index to entity+7C.
+02010DC4 SetSpriteAnimAndProperties
+  ; r0 - Entity+78
+  ; r1 - Anim index to set
+  ; r2 - Anim properties bitfield
+  ; Stores the properties bitfield to entity+80, then calls SetSpriteAnim.
+0200E8A4 SetSpriteAnimSafe
   ; r0 - Entity
   ; r1 - Anim index to set
-  ; r2 - ??? entity+80
+  ; Checks the entity's sprite to be sure r1 is a valid animation index for this sprite. If it's not valid, use anim 0 instead.
+  ; Then calls SetSpriteAnim to set the anim.
+0200E894 SetSpriteAnimAndPropertiesSafe
+  ; r0 - Entity
+  ; r1 - Anim index to set
+  ; r2 - Anim properties bitfield
+  ; Stores the properties bitfield to entity+80, then calls SetSpriteAnimSafe.
 
 021DB0A4 GenericDraw
   ; The draw function for enemies, enemy projectiles, player skills, skill pickups, special objects, dust, explosions, etc.

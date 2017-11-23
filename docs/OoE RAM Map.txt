@@ -1,9 +1,15 @@
 
 === 02000000 - 020F6B3F: Most of ARM9
 
-020B0854 - List of ???
-  Entry length 0x40.
-  Change 020B0856,2 to 4000 and axe armor, rapidus fio, and some other things are way larger than normal.
+02007354,4 - Hardcodes 022EB1A0, the start of asset memory.
+020072A8,4 - Hardcodes 023E0000, the end of asset memory.
+
+020B0854-020B4853 - List of sine and cosine values.
+  Entry length 4.
+  There are 0x1000 entries in this list, with the index corresponding to an input value of 0 to 359 degrees.
+  00,2: Sine of the input value.
+  02,2: Cosine of the input value.
+  The sine/cosine values range from 0-0x1000, corresponding to 0.0-1.0.
 
 020B5D50 - List of layer scroll modes.
   Each is 3 bytes long.
@@ -16,7 +22,7 @@
     2 - Vertical autoscrolling.
       Byte 01 is the speed of vertical scrolling.
 
-020B6148 - List of overlays for each area/sector.
+020B6148-020B6197 - List of overlays for each area/sector.
 
 020B619C-020B61BF - The palette list used for the map.
 
@@ -184,6 +190,9 @@ Requirement lists for kill quests:
 020FFCB0,2 - ?
 020FFCB4,2 - ?
 020FFCB9,1 - Current area index.
+
+020FFD20,4 - Pointer to the player.
+020FFD2C,4 - Can have a pointer to the player, or 0?
 
 Player's current stats:
 020FFD5C,2 - ATK
@@ -398,6 +407,23 @@ A 200% attack boost (triple) takes 0xFFFF (0d65535) AP.
 
 021007D5 - 0 when starting a new game, 1 when loading a save.
 
+02100B34,4 - Has a pointer to 022EB1A0, the start of asset memory.
+
+021011F4,2 - Next globally unique ID for an entity.
+  This is incremented every time an entity is created so that entities have a uniquely identifier number, even across different rooms.
+  This starts at 1 when resetting the game.
+  When FFFF is exceeded, it loops back around to 1. (0 is skipped.)
+
+02101200 - List of skeletally animated enemies in the current room?
+  Entry length 0x100.
+  Also used by procedurally animated enemies like Peeping Eye's eye and tail and White Dragon's body sections.
+  00,4: Number of entities (number of tail sections peeping eye has, 8)
+  30-6F: Pointers to each individual joint entity used by this enemy.
+  40,4: Pointer to entity of some kind?
+  70-8F: List of globally unique entity IDs for each individual joint entity used by this enemy.
+    Halfwords. This is copied from joint entity+12.
+  90,1: Number of joint entities used by this skeletally animated enemy? (number of body sections white dragon has, 0x10)
+
 02101308 - Pointer to glyph entity that should trigger an event when it's absorbed.
 0210130C - Pointer to ?? entity. Related to glyph that triggers an event when it's absorbed.
 
@@ -407,6 +433,8 @@ A 200% attack boost (triple) takes 0xFFFF (0d65535) AP.
 0210154C - y pos to distort towards
 02100124 - x pos to distort towards
 02100128 - y pos to distort towards
+
+02109280,4 - Number of skeletally animated enemies in the current room.
 
 === 021092A0 - 0211DF5F: Entities currently loaded into memory. Each is 0x160 bytes long. They range from 0-F1.
 
@@ -519,6 +547,10 @@ F0-F0 ?
     0100 - Turn off and layer will be invisible?
 
 when you first enter a new area, the game determines which entrance room to put you at by the sector/room indexes listed on the map metadata. so if you switch the indexes of the first and second entrance the game will put you at the second instead.
+
+021427E0 - List of sprites in the bottom screen OAM.
+02145B2C - List of sprites in the top screen OAM.
+  Entry length 0x10.
 
 02149028,4 - Currently loaded sector overlay index.
 
@@ -642,7 +674,17 @@ when you first enter a new area, the game determines which entrance room to put 
 
 022E4ABC-022E4B7B - In Kalidus Channel sector 0 (overlay 46), this space is past the end of overlay 46, but is used by the rock and sea mines puzzle.
 
-022EB1A0 - First asset loaded into RAM.
+022EB1A0 - Start of asset memory.
+022EB1C8,4 - Pointer to an asset. Maybe the last asset currently in memory? 022EBC1C
+022EB1D6,2 - ?? bitfield
+023DFB90 - an asset
+Asset format:
+  00,
+  02,2: 
+  04,4: Asset size.
+  08,4: Pointer to a different asset, or 0?
+  0C,4: Pointer to a different asset, or 0?
+  10+: The actual asset data.
 
 022FFA90 - shanoa's hitbox data
 
@@ -651,6 +693,9 @@ when you first enter a new area, the game determines which entrance room to put 
 0234C200-0237FFFF - Free space.
 
 023FFC20 - Number times the player has soft reset the game with select+start+L+R. If this is greater than 0, the game skips showing the Nintendo/Konami/Actimagine/ESRB logos as well as the intro movie on startup.
+
+027FFDA0,4 - Has a pointer to 022EB1A0, the start of asset memory
+027FFDC4,4 - Has a pointer to 023E0000, the end of asset memory.
 
 === 02900000 - 0290103F: Some of ARM9
 === 02A00000 - 02A0726F: Some of ARM9

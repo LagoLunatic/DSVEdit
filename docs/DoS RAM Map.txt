@@ -5,6 +5,9 @@
 020251B8 - Has pointers to 02076AAC and 02078810 (map line data for castle & abyss).
 020250C4 - Has pointers to 02076408 and 0207880C (secret doors for castle & abyss).
 
+02060234,4 - Hardcodes 02308920, the start of asset memory.
+02060280 - Hardcodes 023C0000, the end of asset memory, as an ARM shifted immediate.
+
 02076408-0207641D - List of secret door positions on the map for the castle.
 02076AAC - Map line data for the castle.
 0207708C - Map tile metadata for the castle.
@@ -552,6 +555,8 @@ Player's stats:
 
 0210ECE0 - list of pointers to dynamic files loaded into ram?
 
+0210ED04 - Has a pointer to the start of asset memory, 0230BD20.
+
 0210FA00 - List of pixel data for the currently drawn map.
 
 Stuff related to currently loaded tilesets:
@@ -769,6 +774,12 @@ Here's what each actor is (index, special object id, description):
   0222E5F6,2 - LCK
   0222E5F8,4 - Unused (would be resistances, but gets overwritten after being copied.)
 
+0222E734-0222E73D - List of soul scaling types.
+  Entry length 2.
+  5 total entries.
+  00,1: Total scaling levels this type has. (1, 2, 3, 5, 9)
+  01,1: Divisor to divide the player's number of this soul by to get the scaling level.
+
 0222EE24 - List of weapon gfx.
   Entry length 0xC.
   00,4: GFX pointer
@@ -826,9 +837,12 @@ Here's what each actor is (index, special object id, description):
   06,2: Unused. 0.
   08,4: Code pointer.
 
-02308920 - where the first dynamic file can be loaded.
+02308920 - Start of asset memory.
 
 02348C00 - when drawing your name, the pixel data is here. changing this doesn't change what's on screen, but does affect whether you can press the OK button or not. also, if you start a new game and then save, it will actually be the displayed signature.
+
+027FFDA0,4 - Has a pointer to 02308920, the start of asset memory
+027FFDC4,4 - Has a pointer to 023C0000, the end of asset memory.
 
 === 02A00000 - 02A063BF: Rest of ARM9 (except missing 0x98 bytes at the end)
 

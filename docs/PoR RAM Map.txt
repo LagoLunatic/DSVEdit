@@ -1,6 +1,9 @@
 
 === 02000000 - 020F61BF: Most of ARM9
 
+0209C9FC,4 - Hardcodes 02308EC0, the start of asset memory.
+0209CB28,4 - Hardcodes 023E0000, the end of asset memory.
+
 020BF8F8-020BF913 - List of each map's dimensions.
   Entry length 2.
   00,1: Width.
@@ -495,8 +498,8 @@ F5-F5
 02111F5E,2 - Bonus MP given by MP max ups.
   Each MP max up gives +0xA MP. The maximum is +0x140 MP, then any additional MP max ups do nothing. That's equivalent to 0x20 MP max ups in total.
 02111F60 - Current number of shop points you have.
-02111F98 - Pointer to controlled character's entity.
-02111F9C - Pointer to partner character's entity.
+02111F98 - Pointer to controlled player character entity.
+02111F9C - Pointer to partner player character entity.
 
 02111FAC - Player 1's current base stats??
 02111FC0 - Player 1's current stats. Halfwords.
@@ -872,9 +875,15 @@ TODO: What are the other 2 for? It's not for the "recent" tab.
 
 === 022D0F3F: End of Overlay 7
 
+02308EC0 - Start of asset memory.
+
 023C0000-023DFFFF - Free space.
 
 === 023E0000 - 023F7CBF: Some of /dwc/utility.bin (for wifi)
+
+027FFDA0,4 - Has a pointer to 02308EC0, the start of asset memory
+027FFDC4,4 - Has a pointer to 023E0000, the end of asset memory.
+
 === 02900000 - 02900650: Some of ARM9
 === 02A00000 - 02A063FF: Some of ARM9
 

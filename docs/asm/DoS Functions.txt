@@ -44,10 +44,17 @@
 
 02029A54 PlaySfxAtPos
   ; r0 - Sfx index
-  ; r1 - x pos
-  ; r2 - y pos
-  ; r3 - z pos
+  ; r1 - X pos
+  ; r2 - Y pos
+  ; r3 - Z pos
 02029B38 PlaySfxAtPos2
+020297C4 PlaySfxAtPos3?
+0202973C PlaySfxAtPosJp?
+  ; r0 - Sfx index
+  ; r1 - X pos
+  ; r2 - Y pos
+  ; r3 - Z pos
+  ; This does nothing in the US version, just returns immediately.
 02029BF0 PlaySfx
   ; r0 - Sfx index
 
@@ -328,6 +335,12 @@
   ; r0 - Base damage.
   ; r1 - Damage types bitfield.
 
+021C5250 SkillDraw?
+  ; used by killer fish soul, check if others use it
+
+020125A4 MagicSealUpdate?
+02215F5C MagicSealDraw?
+
 021D9668 ActorSpawn
 021D9288 ActorSetVelocity
 021D9114 ActorCheckXPos
@@ -446,6 +459,13 @@
   ; r0 - Entity pointer
   ; r1 - Iframes
   ; Stores r1 to entity+B8 if the entity's hitbox is active (entity+A6)
+
+02210138 GetSoulScalingType
+  ; r0 - Soul index
+  ; Returns the type of soul scaling from the skill data
+02210150 GetNumSoulLevels
+  ; r0 - Soul index
+  ; Returns how many levels this soul has
 
 02024D74 MapTileSetExplored
 

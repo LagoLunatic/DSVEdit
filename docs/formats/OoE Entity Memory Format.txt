@@ -5,6 +5,8 @@ Memory used for entities in OoE is 021092A0 - 0211DF5F. Each entity is 0x160 byt
 004,4: Pointer to draw code.
 008,4: Pointer to destroy code?
 00D,1: State of the entity. Each entity's update code handles this differently.
+010,2:
+012,2: Globally unique ID for this entity.
 01A,2: Frame counter.
 030,4: X pos.
 034,4: Y pos.
@@ -17,12 +19,18 @@ Memory used for entities in OoE is 021092A0 - 0211DF5F. Each entity is 0x160 byt
   Every 0x4000 is equivalent to 90 degrees.
 06C,2: Sprite info index.
   This is an index in the currently loaded sprite info list, 0211E0C0.
-074,4: Bitfield.
-  Bit 0x04: For skeletally animated enemies, this bit must be set or the parts won't be rotated at all.
-  Bit 0x80: For Giant Skeleton, this is which direction he's facing, 0 for left, 80 for right.
+074,4: Bitfield related to sprite drawing.
+  0004 Enable rotation.
+  0080 Direction. Set if facing left, clear if facing right.
+  8000 Invisible, do not draw.
 078,4: Pointer to sprite animation list.
 07C,2: Current animation index.
 07E,2: Current keyframe index in this animation.
+080,2: Bitfield of sprite animation properties.
+  01 - Animation finished. This is set automatically by SpriteAnimate when an animation finishes its first loop.
+  02 - Do not loop animation
+  04 - Play animation in reverse
+  08 - Do not animate, just freeze on whatever the current keyframe is
 082,2: Delay in frames remaining before advancing to the next animation keyframe.
 084,2: Current sprite frame index.
 086,2: Palette index in the list of globally loaded palettes.
@@ -64,7 +72,9 @@ For enemies:
 132,1: Enemy ID.
 138,2: The attack value from the enemy DNA.
 13A,2: The physical defense value from the enemy DNA.
-158,4: Pointer to something for skeletal animation?
+
+For skeletally animated enemies:
+158,4: Pointer to the skeletal animation entry for this enemy, in list 02101200.
 
 For glyphs:
 0D6,2: For glyphs, ?
