@@ -695,6 +695,8 @@ OTHER_SPRITES = [
   {pointer: 0x0221BBB0, desc: "Title screen 1", overlay: 20},
   {pointer: 0x0221BBC8, desc: "Title screen 2", overlay: 20},
   {pointer: 0x0221BBE0, desc: "Title screen 3", overlay: 20},
+  
+  {desc: "Map", sprite: 0x020C553C, gfx_files: [0x020BA78C], palette: 0x020D23B0, one_dimensional_mode: true},
 ]
 
 CANDLE_FRAME_IN_COMMON_SPRITE = 0xDB
