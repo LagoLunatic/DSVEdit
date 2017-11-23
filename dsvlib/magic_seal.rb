@@ -6,6 +6,8 @@ class MagicSeal
   attr_accessor :num_points,
                 :radius,
                 :rotation,
+                :midpoints_per_line,
+                :autocomplete_speed,
                 :point_order_list_pointer,
                 :point_order_list,
                 :sprite_pointer,
@@ -24,8 +26,8 @@ class MagicSeal
   def read_from_rom
     @magic_seal_pointer = fs.read(MAGIC_SEAL_LIST_START + magic_seal_index*4, 4).unpack("V").first
     
-    @num_points, @radius, @rotation, @unknown1, @unknown2,
-      @point_order_list_pointer,
+    @num_points, @radius, @rotation, @midpoints_per_line,
+      @autocomplete_speed, @point_order_list_pointer,
       @sprite_pointer, @gfx_pointer, @palette_pointer,
       @time_limit, @finished_image_index = fs.read(magic_seal_pointer, 0x20).unpack("vvvvVVVVVvv")
     
@@ -68,8 +70,8 @@ class MagicSeal
     end
     
     data = [
-      @num_points, @radius, @rotation, @unknown1, @unknown2,
-      @point_order_list_pointer,
+      @num_points, @radius, @rotation, @midpoints_per_line,
+      @autocomplete_speed, @point_order_list_pointer,
       @sprite_pointer, @gfx_pointer, @palette_pointer,
       @time_limit, @finished_image_index
     ].pack("vvvvVVVVVvv")

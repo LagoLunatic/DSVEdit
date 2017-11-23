@@ -783,7 +783,10 @@ Here's what each actor is (index, special object id, description):
     Signed. Negative values invert the circle vertically.
   04,2: Visual rotation of the points along the circle.
     Every 0x4000 is equivalent to 90 degrees.
-  06,?
+  06,2: Number of midpoints along each line the player needs to touch for the line to count as successfully drawn.
+    For example, if this is 20, the player needs to hit at least 20 midpoints along the line, so each line will take at least 20 frames to draw. If this is 1, the player can just jump straight from one point to the next, so each line only requires 1 frame to draw. The higher the number of midpoints the smoother and slower the player must draw the line for it to count.
+    This is 4 for all five seals in the vanilla game.
+  08,4: Speed the seal autocompletes itself at after the player manually completes it.
   0C,4: Pointer to a list of point indexes in the order the seal should be drawn.
     Each point index is a single byte. FF indicates the end of the list.
   10,4: Sprite pointer for the finished seal image.
