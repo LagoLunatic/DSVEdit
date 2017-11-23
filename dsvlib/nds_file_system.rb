@@ -530,6 +530,8 @@ class NDSFileSystem
     write_new_table_sizes_to_header()
     
     load_overlay(NEW_OVERLAY_ID)
+    
+    mark_space_unused(file_path, 0, NEW_OVERLAY_FREE_SPACE_MAX_SIZE)
   end
   
   def has_free_space_overlay?
