@@ -93,6 +93,29 @@ class GenericEditable
       when "dos"
         @name_text_id = TEXT_REGIONS["Soul Names"].begin + index
         @description_text_id = TEXT_REGIONS["Soul Descriptions"].begin + index
+      when "hod"
+        subweapon_index = index % 8
+        spellbook_index = index / 8
+        subweapon_name = [
+          "None",
+          "Knife",
+          "Axe",
+          "Cross",
+          "Holy Water",
+          "Holy Book",
+          "Sacred Fist",
+          "Shuriken",
+        ][subweapon_index]
+        spellbook_name = [
+          "Unused",
+          "Fire",
+          "Ice",
+          "Bolt",
+          "Wind",
+          "Summoning",
+        ][spellbook_index]
+        @name = "#{spellbook_name} #{subweapon_name}"
+        @description = ""
       when "aos"
         if @item_type_name == "Julius Skills"
           @name = ["Cross", "Holy Water", "Axe", "Grand Cross"][index]
@@ -123,6 +146,28 @@ class GenericEditable
       when "ooe"
         @name_text_id = TEXT_REGIONS["Item Names"].begin + self["Item ID"]
         @description_text_id = TEXT_REGIONS["Item Descriptions"].begin + self["Item ID"]
+      end
+    when :subweapon # for HoD subweapons
+      case GAME
+      when "hod"
+        subweapon_index = index % 8
+        is_strengthed = (index / 8) > 0
+        subweapon_name = [
+          "None",
+          "Knife",
+          "Axe",
+          "Cross",
+          "Holy Water",
+          "Holy Book",
+          "Sacred Fist",
+          "Shuriken",
+        ][subweapon_index]
+        if is_strengthed
+          @name = "Strengthened #{subweapon_name}"
+        else
+          @name = "#{subweapon_name}"
+        end
+        @description = ""
       end
     when :player
       @name = PLAYER_NAMES[index]

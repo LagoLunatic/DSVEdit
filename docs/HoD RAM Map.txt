@@ -68,12 +68,25 @@
 
 020003B8,4 - Current room's entity list pointer.
 
+02000404,4 - Bitfield of global game flags.
+  00000001 - Disables controls. Used while going through doors, warping, etc.
+  00000008 - Makes the screen flash white? Related to subweapon's "Unknown 4" field?
+  00000020 - Set during events?
+  00000200 - Set while warping and during events?
+  00000400 - Set during ending event?
+  00008000 - Set during ending event?
+  00010000 - Set during ending event?
+  00040000 - Set during events? Related to subweapon's "Unknown 4" field?
+  00080000 - Related to subweapon's "Unknown 4" field?
+  00200000 - Set during boss fights. Disables quick save.
+
 02000408,1 - Current shop pool index (index in list 084B1714).
 
 === 02000418-02007C17: Entity memory. Each entity is 0x80 bytes long. Entities range from 00-EF.
 
 What each range of entity slots is for:
 00-00 - Player.
+01-0F - Player skills (subweapons/spells)
 D0-EF - Various other things including particles and enemy projectiles.
 
 02000418 - Player's entity memory.
@@ -100,6 +113,11 @@ D0-EF - Various other things including particles and enemy projectiles.
   08,4: 
   0C,4: Sprite pointer.
 
+02018494 - List of pointers to all subweapon entities.
+  This is used to make sure you don't go over a subweapon's "Max at once".
+
+020184F8,4 - ?
+
 02018528,4 - Bitfield of damage types the player currently deals?
 
 0201852E,2 - Bitfield of status effects on the player.
@@ -107,17 +125,43 @@ D0-EF - Various other things including particles and enemy projectiles.
   0x2 - Curse
   0x4 - Petrify
 
-020184F8,4 - ?
+0201853C,2 - Number of subweapon entity slots currently available to use.
+  This is 8 when there are no subweapons in use.
+  When a subweapon is used, this is decreased by that subweapon's "Num entities created" value.
+
+0201854E,2 - Current HP.
+02018550,2 - Current MP.
 
 02018770 - Bitfield of ?
 
 0201877C,1 - Player's current level.
+
+0201877E,1 - Currently equipped subweapon:
+  00 - None
+  01 - Knife
+  02 - Axe
+  03 - Cross
+  04 - Holy Water
+  05 - Holy Book
+  06 - Sacred Fist
+  07 - Shuriken
+0201877F,1 - Currently selected spell.
+  Bits 0-6: Which spellbook is selected:
+    0 - Invalid
+    1 - Fire
+    2 - Ice
+    3 - Bolt
+    4 - Wind
+    5 - Summoning
+  Bit 7: On if a spellbook is enabled, off if disabled.
 
 02018780,1 - Currently equipped body armor.
 02018781,1 - Currently equipped non-body armor 1.
 02018782,1 - Currently equipped non-body armor 2.
 02018783,1 - Currently equipped non-body armor 3.
 02018784,1 - Currently equipped weapon.
+
+02018794,2 - Current hearts.
 
 List of which items you own and how many (owned item info):
 020187A0-020187BB - Consumables.

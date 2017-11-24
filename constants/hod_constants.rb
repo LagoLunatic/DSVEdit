@@ -274,6 +274,24 @@ FURNITURE_FORMAT = [
   [2, "Item ID"],
   [2, "Icon"],
 ]
+SUBWEAPON_FORMAT = [
+  # length: 0xC
+  [1, "Max at once"],
+  [1, "Heart cost"],
+  [1, "Num entities created"],
+  [1, "Unknown 4"],
+  [4, "Create Code"],
+  [4, "Update Code"],
+]
+SPELL_FORMAT = [
+  # length: 0xC
+  [4, "Code"],
+  [1, "Cast animation"],
+  [1, "Unknown"],
+  [2, "Mana cost"],
+  [2, "Heart cost"],
+  [2, "GFX Index"],
+]
 ITEM_TYPES = [
   {
     name: "Consumables",
@@ -310,6 +328,20 @@ ITEM_TYPES = [
     list_pointer: 0x084B2CA4,
     count: 0x1F,
     format: FURNITURE_FORMAT # length 4
+  },
+  {
+    name: "Subweapons",
+    list_pointer: 0x080E2308,
+    count: 0x10,
+    kind: :subweapon,
+    format: SUBWEAPON_FORMAT # length 0xC
+  },
+  {
+    name: "Spells",
+    list_pointer: 0x080E29D4,
+    count: 0x30,
+    kind: :skill,
+    format: SPELL_FORMAT # length 0xC
   },
 ]
 ITEM_BITFIELD_ATTRIBUTES = {

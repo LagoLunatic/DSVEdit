@@ -19,6 +19,30 @@
   Entry 01 is for starting a new game.
   Entry 02 is for loading a save.
 
+080E2308-080E23C7 - List of subweapons.
+080E23C8-080E23E7 - List of which piece of armor increases the strength of each subweapon.
+  Entry length 4.
+  These are the armor indexes of each piece of armor.
+  For example, entry 1 (for Knife) is 7C (armor index of Logoth's Ring).
+
+080E2944 - List of GFX pointers for spells.
+
+080E29D4-080E2C13 - List of spells.
+  Entry length 0xC.
+  00,4: Code pointer.
+  04,1: Spell cast animation.
+    00 - None.
+    01 - Point to the sky.
+    02 - Jump up and float for a while.
+    03 - Float for a while.
+    04 - Rapidly throw knives.
+    05 - 
+    06 - 
+  05,1: ?
+  06,2: Mana cost.
+  08,2: Heart cost.
+  0A,2: GFX index in list 080E2944.
+
 08494E1A - list of songs in sound mode?
 
 08494EA4 - List of special object create code pointers.

@@ -18,12 +18,12 @@ Entity types:
       5 - $400
       6 - $400
     2 - A subweapon. Var B affects the subweapon:
-      0 - Holy Book (Bible)
-      1 - Boomerang (Cross)
+      0 - Holy Book
+      1 - Cross
       2 - Axe
       3 - Holy Water
-      4 - Fist
-      5 - Dagger
+      4 - Sacred Fist
+      5 - Knife
     3 - An item. Var B is the ID of the item.
   Var A:
     Bits 0-3: The type of candle.
