@@ -67,6 +67,12 @@ You can add a new entity to a room by putting your mouse over the place you want
 
 You can move entities around by left clicking and dragging them.
 
+### Resizing rooms
+
+You can increase and decrease the size of rooms by going to Edit -> Edit Layers and changing the Width and Height fields for each layer you want to resize.
+
+Don't try to change the size of a room with Tiled, that will just mess the whole room up when you import it back into DSVEdit.
+
 ### Editing enemies, items, text, and maps
 
 You can access the Enemy Editor, Item Editor, Text Editor, and Map Editor in the Tools menu.
