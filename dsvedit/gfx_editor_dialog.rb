@@ -125,7 +125,7 @@ class GfxEditorDialog < Qt::Dialog
     
     if SYSTEM == :nds
       @ui.gfx_file_names.text = @gfx_pages.map do |gfx|
-        if gfx.gfx_data_pointer == 0
+        if gfx.file
           gfx.file[:file_path]
         else
           "%08X" % gfx.gfx_pointer
