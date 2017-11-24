@@ -548,8 +548,8 @@ F0-F0 ?
 
 when you first enter a new area, the game determines which entrance room to put you at by the sector/room indexes listed on the map metadata. so if you switch the indexes of the first and second entrance the game will put you at the second instead.
 
-021427E0 - List of sprites in the bottom screen OAM.
-02145B2C - List of sprites in the top screen OAM.
+021427E0-02142BDF - List of sprites in the bottom screen OAM.
+02145B2C-02145F2B - List of sprites in the top screen OAM.
   Entry length 0x10.
 
 02149028,4 - Currently loaded sector overlay index.

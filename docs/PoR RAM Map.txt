@@ -163,7 +163,8 @@
   00,2: 
   04,1:
 
-020FBC64 - List of sprites in the OAM.
+020FBC64-020FC063 - List of sprites in the bottom screen OAM.
+020FC064-020FC463 - List of sprites in the top screen OAM.
   Entry length 0x10.
 
 020FC48C - Bitfield of what buttons the player is pressing.
@@ -872,6 +873,10 @@ TODO: What are the other 2 for? It's not for the "recent" tab.
   The images are named like /sc/f_rire00.dat, are 1-dimensional, and have 4 enemies in each image.
 
 022C5860 - This one 256 color palette is used for all face portraits.
+
+022C1490 - Palette list for the map background.
+022CBA90 - GFX wrapper for the map background.
+  Note that there is no sprite file for the map background unlike in OoE. Instead it uses some unknown layout format to assemble the map background, which is located at 020DF630.
 
 === 022D0F3F: End of Overlay 7
 
