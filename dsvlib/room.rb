@@ -606,10 +606,10 @@ class Room
     new_layer.scroll_mode = 0x01
     new_layer.main_gfx_page_index = 0x00
     new_layer.opacity = 0x1F
-    new_layer.tileset_compression_type = 0
+    new_layer.tileset_type = 0
     if SYSTEM == :gba
       new_layer.bg_control = 0x1D48
-      new_layer.tileset_compression_type = 2
+      new_layer.tileset_type = 2
     end
     
     new_layer.layer_metadata_ram_pointer = fs.get_free_space(16, overlay_id)
