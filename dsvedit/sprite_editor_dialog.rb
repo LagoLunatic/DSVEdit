@@ -173,6 +173,7 @@ class SpriteEditor < Qt::Dialog
     end
     
     @skills = []
+    @skill_items_for_each_gfx_index = {}
     (0..SKILL_GFX_COUNT-1).each do |skill_gfx_index|
       skill = SkillGfx.new(skill_gfx_index, fs)
       @skills << skill
@@ -195,6 +196,8 @@ class SpriteEditor < Qt::Dialog
       else
         skill_name = "Unused"
       end
+      
+      @skill_items_for_each_gfx_index[skill_gfx_index] = items
       
       if GAME == "aos"
         @ui.skill_list.addItem("%02X %s" % [skill_gfx_index, skill_name])
@@ -254,6 +257,7 @@ class SpriteEditor < Qt::Dialog
     
     @override_part_palette_index = nil
     @one_dimensional_render_mode = false
+    @transparent_trails = false
     load_sprite()
     
     @ui.enemy_list.setCurrentRow(enemy_id)
@@ -277,6 +281,7 @@ class SpriteEditor < Qt::Dialog
     
     @override_part_palette_index = nil
     @one_dimensional_render_mode = false
+    @transparent_trails = false
     load_sprite()
     
     @ui.special_object_list.setCurrentRow(special_object_id)
@@ -303,6 +308,7 @@ class SpriteEditor < Qt::Dialog
     
     @override_part_palette_index = 0 # Weapons always use the first palette. Instead the part's palette index value is used to indicate that it should start out partially transparent.
     @one_dimensional_render_mode = false
+    @transparent_trails = true
     load_sprite()
     
     @ui.weapon_list.setCurrentRow(weapon_gfx_index)
@@ -345,6 +351,16 @@ class SpriteEditor < Qt::Dialog
     
     @override_part_palette_index = nil
     @one_dimensional_render_mode = false
+    if GAME == "ooe"
+      skill_item = @skill_items_for_each_gfx_index[skill_gfx_index].first
+      if skill_item["Code"] == MELEE_GLYPH_CODE && (skill_item["Unknown 4"] & 0x40) == 0 # TODO don't hardcode
+        @transparent_trails = true
+      else
+        @transparent_trails = false
+      end
+    else
+      @transparent_trails = false
+    end
     load_sprite()
     
     @ui.skill_list.setCurrentRow(skill_gfx_index)
@@ -364,6 +380,7 @@ class SpriteEditor < Qt::Dialog
     
     @override_part_palette_index = nil
     @one_dimensional_render_mode = other_sprite[:one_dimensional_mode]
+    @transparent_trails = false
     load_sprite()
     
     @ui.other_sprites_list.setCurrentRow(id)
@@ -435,6 +452,7 @@ class SpriteEditor < Qt::Dialog
           frame_to_render: nil,
           override_part_palette_index: @override_part_palette_index,
           one_dimensional_mode: @one_dimensional_render_mode,
+          transparent_trails: @transparent_trails
         )
     rescue StandardError => e
       Qt::MessageBox.warning(self,
@@ -644,6 +662,9 @@ class SpriteEditor < Qt::Dialog
   end
   
   def palette_changed(palette_index, force=false)
+    if @transparent_trails
+      palette_index = 0
+    end
     if palette_index == @palette_index && !force
       return
     end
@@ -873,7 +894,7 @@ class SpriteEditor < Qt::Dialog
     output_folder = "./darkfunction_sprites/#{sprite_name}"
     FileUtils.mkdir_p(output_folder)
     
-    DarkFunctionInterface.export(output_folder, sprite_name, @sprite_info, @fs, @renderer)
+    DarkFunctionInterface.export(output_folder, sprite_name, @sprite_info, @fs, @renderer, transparent_trails: @transparent_trails)
     
     Qt::MessageBox.warning(self,
       "Exported to darkFunction",
@@ -914,7 +935,7 @@ class SpriteEditor < Qt::Dialog
     output_folder = "./gfx/exported_sprites/#{sprite_name}"
     FileUtils.mkdir_p(output_folder)
     
-    chunky_frames, _ = @renderer.render_sprite(@sprite_info, override_part_palette_index: @override_part_palette_index, one_dimensional_mode: @one_dimensional_render_mode)
+    chunky_frames, _ = @renderer.render_sprite(@sprite_info, override_part_palette_index: @override_part_palette_index, one_dimensional_mode: @one_dimensional_render_mode, transparent_trails: @transparent_trails)
     chunky_frames.each_with_index do |chunky_frame, i|
       type_name = ""
       filename = "#{output_folder}/frame_#{i}.png"

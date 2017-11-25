@@ -266,6 +266,10 @@ class Game
     end
   end
   
+  def clear_items_cache
+    @items = nil
+  end
+  
   def get_item_global_id_by_type_and_index(item_type_index, item_index)
     if !PICKUP_SUBTYPES_FOR_ITEMS.include?(item_type_index) && !PICKUP_SUBTYPES_FOR_SKILLS.include?(item_type_index)
       raise "Bad item type: %02X" % item_type_index

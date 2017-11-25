@@ -8,6 +8,8 @@ Memory used for entities in OoE is 021092A0 - 0211DF5F. Each entity is 0x160 byt
 010,2:
 012,2: Globally unique ID for this entity.
 01A,2: Frame counter.
+021,1: Opacity.
+  Used by the transparent trails behind melee glyphs.
 030,4: X pos.
 034,4: Y pos.
 038,4: Z pos.
@@ -84,3 +86,7 @@ For glyphs:
   1 - Arm glyph.
   2 - Back glyph.
 12D,1: For glyphs, has the index of the glyph in that type's list.
+
+For used skills:
+124,4: Pointer to the entity who used this skill (e.g. 02109820 if the player used it).
+128,2: Globally unique ID of the entity who used this skill.

@@ -1096,7 +1096,7 @@ class Renderer
     return output_path
   end
   
-  def render_sprite(sprite_info, frame_to_render: :all, render_hitboxes: false, override_part_palette_index: nil, one_dimensional_mode: false)
+  def render_sprite(sprite_info, frame_to_render: :all, render_hitboxes: false, override_part_palette_index: nil, one_dimensional_mode: false, transparent_trails: false)
     gfx_pages = sprite_info.gfx_pages
     palette_pointer = sprite_info.palette_pointer
     palette_offset = sprite_info.palette_offset
@@ -1148,12 +1148,20 @@ class Renderer
     full_height = max_y - min_y
     
     sprite.parts.each_with_index do |part, part_index|
+      part_palette_index = part.palette_index
+      if transparent_trails && part_palette_index != 0
+        part_palette_index = 0
+        transparent_part = true
+      else
+        transparent_part = false
+      end
+      
       if part.gfx_page_index >= gfx_with_blanks.length
         puts "GFX page index too large (#{part.gfx_page_index+1} pages needed, have #{gfx_with_blanks.length})"
         
         # Invalid gfx page index, so just render a big red square.
         first_canvas_width = gfx_with_blanks.first.canvas_width
-        rendered_gfx_files_by_palette[part.palette_index+palette_offset][part.gfx_page_index] ||= render_gfx(nil, nil, 0, 0, first_canvas_width*8, first_canvas_width*8, canvas_width=first_canvas_width*8)
+        rendered_gfx_files_by_palette[part_palette_index+palette_offset][part.gfx_page_index] ||= render_gfx(nil, nil, 0, 0, first_canvas_width*8, first_canvas_width*8, canvas_width=first_canvas_width*8)
       else
         gfx_page = gfx_with_blanks[part.gfx_page_index]
         canvas_width = gfx_page.canvas_width
@@ -1161,10 +1169,10 @@ class Renderer
           # For weapons (which always use the first palette) and skeletally animated enemies (which have their palette specified in the skeleton file).
           palette = palettes[override_part_palette_index+palette_offset]
         else
-          palette = palettes[part.palette_index+palette_offset]
+          palette = palettes[part_palette_index+palette_offset]
         end
         
-        rendered_gfx_files_by_palette[part.palette_index+palette_offset][part.gfx_page_index] ||= begin
+        rendered_gfx_files_by_palette[part_palette_index+palette_offset][part.gfx_page_index] ||= begin
           if one_dimensional_mode
             rendered_gfx_file = render_gfx_1_dimensional_mode(gfx_page, palette || dummy_palette)
           else
@@ -1183,8 +1191,19 @@ class Renderer
         end
       end
       
-      rendered_gfx_file = rendered_gfx_files_by_palette[part.palette_index+palette_offset][part.gfx_page_index]
+      rendered_gfx_file = rendered_gfx_files_by_palette[part_palette_index+palette_offset][part.gfx_page_index]
       rendered_parts[part_index] ||= render_sprite_part(part, rendered_gfx_file)
+      if transparent_part
+        # Transparent trails require us to go through all pixels and change their opacity to 0xC/0x1F.
+        rendered_parts[part_index].width.times do |x|
+          rendered_parts[part_index].height.times do |y|
+            color = rendered_parts[part_index][x,y]
+            next if ChunkyPNG::Color.fully_transparent?(color)
+            transparent_color = ChunkyPNG::Color.rgba(ChunkyPNG::Color.r(color), ChunkyPNG::Color.g(color), ChunkyPNG::Color.b(color), 96)
+            rendered_parts[part_index][x,y] = transparent_color
+          end
+        end
+      end
     end
     
     hitbox_color = ChunkyPNG::Color.rgba(255, 0, 0, 128)

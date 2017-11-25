@@ -5,14 +5,28 @@ class DarkFunctionInterface
   class ExportError < StandardError ; end
   class ImportError < StandardError ; end
   
-  def self.export(output_path, name, sprite_info, fs, renderer)
+  def self.export(output_path, name, sprite_info, fs, renderer, transparent_trails: false)
+    # TODO export weapon transparent trails as a separate pseudo palette
+    
     sprite = sprite_info.sprite
     
     palettes = renderer.generate_palettes(sprite_info.palette_pointer, 16)
     
+    if transparent_trails
+      # Transparent trails treat palette 0 as normal, and palette 1 as being palette 0 with 0xC/0x1F opacity.
+      palettes = palettes[0..0]
+      palettes[1] = palettes[0].dup
+      palettes[1].map! do |color|
+        if ChunkyPNG::Color.fully_transparent?(color)
+          color
+        else
+          ChunkyPNG::Color.rgba(ChunkyPNG::Color.r(color), ChunkyPNG::Color.g(color), ChunkyPNG::Color.b(color), 96)
+        end
+      end
+    end
+    
     num_gfx_pages = sprite_info.gfx_pages.size
     num_palettes = palettes.size
-    num_gfx_palette_combos = num_gfx_pages*palettes.size
     gfx_page_canvas_width = sprite_info.gfx_pages.first.canvas_width*8
     gfx_page_width = gfx_page_canvas_width
     
@@ -35,7 +49,7 @@ class DarkFunctionInterface
       sprite_info.gfx_pages.each_with_index do |gfx_page, gfx_page_index|
         chunky_gfx_page = renderer.render_gfx_page(gfx_page.file, palette, gfx_page.canvas_width)
         
-        i = gfx_page_index + (palette_index*num_gfx_pages)
+        i = gfx_page_index + (palette_index*big_gfx_page_width)
         x_on_big_gfx_page = (i % big_gfx_page_width) * gfx_page_width
         y_on_big_gfx_page = (i / big_gfx_page_width) * gfx_page_width
         big_gfx_page.compose!(chunky_gfx_page, x_on_big_gfx_page, y_on_big_gfx_page)
@@ -66,7 +80,7 @@ class DarkFunctionInterface
                 # 256x256 pages take up 4 times the space of 128x128 pages.
                 gfx_page_index = gfx_page_index / 4
               end
-              i_on_big_gfx_page = gfx_page_index + (part.palette_index*num_gfx_pages)
+              i_on_big_gfx_page = gfx_page_index + (part.palette_index*big_gfx_page_width)
               big_gfx_x_offset = (i_on_big_gfx_page % big_gfx_page_width) * gfx_page_width
               big_gfx_y_offset = (i_on_big_gfx_page / big_gfx_page_width) * gfx_page_width
               xml.spr(:name => "part%02X" % part_index,
@@ -361,13 +375,13 @@ class DarkFunctionInterface
         part.width = df_unique_part["w"].to_i
         part.height = df_unique_part["h"].to_i
         gfx_page_index_on_big_gfx_page = (x_on_big_gfx_page / gfx_page_width) + (y_on_big_gfx_page / gfx_page_width * big_gfx_page_width)
-        gfx_page_index = gfx_page_index_on_big_gfx_page % num_gfx_pages
+        gfx_page_index = gfx_page_index_on_big_gfx_page % big_gfx_page_width
         if gfx_page_canvas_width == 256
           # 256x256 pages take up 4 times the space of 128x128 pages.
           gfx_page_index = gfx_page_index * 4
         end
         part.gfx_page_index = gfx_page_index
-        part.palette_index = gfx_page_index_on_big_gfx_page / num_gfx_pages
+        part.palette_index = gfx_page_index_on_big_gfx_page / big_gfx_page_width
         
         part.x_pos = df_spr["x"].to_i - part.width/2
         part.y_pos = df_spr["y"].to_i - part.height/2
