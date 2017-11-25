@@ -9,7 +9,7 @@
   There are 0x1000 entries in this list, with the index corresponding to an input value of 0 to 359 degrees.
   00,2: Sine of the input value.
   02,2: Cosine of the input value.
-  The sine/cosine values range from 0-0x1000, corresponding to 0.0-1.0.
+  The sine/cosine values range from -0x1000 to 0x1000, corresponding to -1.0 to 1.0.
 
 020B5D50 - List of layer scroll modes.
   Each is 3 bytes long.

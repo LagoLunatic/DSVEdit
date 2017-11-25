@@ -566,6 +566,10 @@
 
 02298498 DestructibleDraw
 
+0206F848 SkillDraw
+
+02028F88 SpriteDraw?
+
 02065F34 UpdateSkeleton
   ; r0 - Entity
 

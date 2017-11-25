@@ -70,14 +70,14 @@
 
 02000404,4 - Bitfield of global game flags.
   00000001 - Disables controls. Used while going through doors, warping, etc.
-  00000008 - Makes the screen flash white? Related to subweapon's "Unknown 4" field?
+  00000008 - Makes the screen flash white? Related to subweapon's "Unknown" field?
   00000020 - Set during events?
   00000200 - Set while warping and during events?
   00000400 - Set during ending event?
   00008000 - Set during ending event?
   00010000 - Set during ending event?
-  00040000 - Set during events? Related to subweapon's "Unknown 4" field?
-  00080000 - Related to subweapon's "Unknown 4" field?
+  00040000 - Set during events? Related to subweapon's "Unknown" field?
+  00080000 - Related to subweapon's "Unknown" field?
   00200000 - Set during boss fights. Disables quick save.
 
 02000408,1 - Current shop pool index (index in list 084B1714).

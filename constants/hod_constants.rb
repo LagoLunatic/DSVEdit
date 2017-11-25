@@ -279,7 +279,7 @@ SUBWEAPON_FORMAT = [
   [1, "Max at once"],
   [1, "Heart cost"],
   [1, "Num entities created"],
-  [1, "Unknown 4"],
+  [1, "Unknown"],
   [4, "Create Code"],
   [4, "Update Code"],
 ]
