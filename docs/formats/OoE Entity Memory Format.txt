@@ -9,7 +9,6 @@ Memory used for entities in OoE is 021092A0 - 0211DF5F. Each entity is 0x160 byt
 012,2: Globally unique ID for this entity.
 01A,2: Frame counter.
 021,1: Opacity.
-  Used by the transparent trails behind melee glyphs.
 030,4: X pos.
 034,4: Y pos.
 038,4: Z pos.
@@ -23,7 +22,12 @@ Memory used for entities in OoE is 021092A0 - 0211DF5F. Each entity is 0x160 byt
   This is an index in the currently loaded sprite info list, 0211E0C0.
 074,4: Bitfield related to sprite drawing.
   0004 Enable rotation.
+  0020 Ignore part palette indexes. Always used palette 0 for every part.
+    Note that things that affect the entire entity's palette are not affected by this, like the entity's palette offset. Only the palette specified by each sprite part is ignored.
+    (This is used by the slash trails of melee weapons.)
   0080 Direction. Set if facing left, clear if facing right.
+  0400 If set, the entity's opacity value will only be used when drawing parts that have a nonzero palette index.
+    (This is used by the slash trails of melee weapons.)
   8000 Invisible, do not draw.
 078,4: Pointer to sprite animation list.
 07C,2: Current animation index.
@@ -90,3 +94,7 @@ For glyphs:
 For used skills:
 124,4: Pointer to the entity who used this skill (e.g. 02109820 if the player used it).
 128,2: Globally unique ID of the entity who used this skill.
+
+For the player:
+0DC,4: Bitfield of ?
+  00080000 - Do not interrupt the player's current animation when landing.

@@ -407,6 +407,9 @@
   ; r1 - 84?
   ; Initializes the values at entity+158
 
+0203BE0C Spawn???
+  ; this gets called by melee glyphs if you unset swing modifier bit 0010
+
 0205C464 EnemyDie?
   ; Sets the enemy as being killed once
   ; Gives EXP

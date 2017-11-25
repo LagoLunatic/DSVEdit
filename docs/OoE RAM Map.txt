@@ -91,6 +91,8 @@
 
 020EEC94
 
+020EEFF4
+
 020EF48C-020EF4C3 - Weapons (unused).
 020EF4C4-020EF50B - Relics.
 020EF50C-020EF6AF - Leg armor.
@@ -191,7 +193,7 @@ Requirement lists for kill quests:
 020FFCB4,2 - ?
 020FFCB9,1 - Current area index.
 
-020FFD20,4 - Pointer to the player.
+020FFD20,4 - Pointer to the player (02109820).
 020FFD2C,4 - Can have a pointer to the player, or 0?
 
 Player's current stats:
@@ -514,10 +516,15 @@ F0-F0 ?
   Each entry is 0x10 bytes long.
   00,2: 
   02,2: 
-  08,4: Affects GFX.
+  08,4: Affects GFX. Index in list 02128664.
   0C,4: Sprite pointer.
 
 0211FC60 - Start of list of globally loaded palettes.
+
+02128664 - list of loaded gfx?
+  Entry length 0x10.
+  00,2: 
+  04,1: 
 
 02128BDC - List of hitboxes.
   Each entry is 0x14 bytes long, containing two hitboxes 0xA bytes long each.
