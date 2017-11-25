@@ -172,7 +172,7 @@ class MagicSealEditorDialog < Qt::Dialog
   rescue FreeSpaceManager::FreeSpaceFindError => e
     Qt::MessageBox.warning(self,
       "Failed to find free space",
-      "Failed to find free space to put the expanded list of lines."
+      "Failed to find free space to put the expanded list of lines.\n\nGo to Tools -> Add Overlay to create an empty overlay that DSVEdit can use as free space."
     )
     return false
   end

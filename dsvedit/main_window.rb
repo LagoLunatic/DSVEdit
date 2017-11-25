@@ -702,7 +702,10 @@ class DSVEdit < Qt::MainWindow
     
     Qt::MessageBox.warning(self, "Layer added", "Successfully added a new layer to room %08X." % @room.room_metadata_ram_pointer)
   rescue FreeSpaceManager::FreeSpaceFindError => e
-    Qt::MessageBox.warning(self, "Cannot add layer", e.message)
+    Qt::MessageBox.warning(self,
+      "Failed to find free space",
+      "Failed to find free space to put new layer.\n\nGo to Tools -> Add Overlay to create an empty overlay that DSVEdit can use as free space."
+    )
   end
   
   def add_new_entity
@@ -719,7 +722,14 @@ class DSVEdit < Qt::MainWindow
     load_room()
     
     open_entity_editor(entity)
-  rescue FreeSpaceManager::FreeSpaceFindError, Room::WriteError => e
+  rescue FreeSpaceManager::FreeSpaceFindError => e
+    @room.read_from_rom() # Reload room to get rid of the failed changes.
+    load_room()
+    Qt::MessageBox.warning(self,
+      "Failed to find free space",
+      "Failed to find free space to put the new entity.\n\nGo to Tools -> Add Overlay to create an empty overlay that DSVEdit can use as free space."
+    )
+  rescue Room::WriteError => e
     @room.read_from_rom() # Reload room to get rid of the failed changes.
     load_room()
     Qt::MessageBox.warning(self, "Cannot add entity", e.message)
@@ -738,7 +748,14 @@ class DSVEdit < Qt::MainWindow
     load_room()
     
     open_door_editor(door)
-  rescue FreeSpaceManager::FreeSpaceFindError, Room::WriteError => e
+  rescue FreeSpaceManager::FreeSpaceFindError => e
+    @room.read_from_rom() # Reload room to get rid of the failed changes.
+    load_room()
+    Qt::MessageBox.warning(self,
+      "Failed to find free space",
+      "Failed to find free space to put the new door.\n\nGo to Tools -> Add Overlay to create an empty overlay that DSVEdit can use as free space."
+    )
+  rescue Room::WriteError => e
     @room.read_from_rom() # Reload room to get rid of the failed changes.
     load_room()
     Qt::MessageBox.warning(self, "Cannot add door", e.message)
@@ -961,7 +978,14 @@ class DSVEdit < Qt::MainWindow
     game.fix_map_sector_and_room_indexes(@area_index, @sector_index)
     
     load_room()
-  rescue TMXInterface::ImportError, FreeSpaceManager::FreeSpaceFindError => e
+  rescue FreeSpaceManager::FreeSpaceFindError => e
+    @room.read_from_rom() # Reload room to get rid of the failed changes.
+    load_room()
+    Qt::MessageBox.warning(self,
+      "Failed to find free space",
+      "Failed to find free space to put the new layers/entities/doors.\n\nGo to Tools -> Add Overlay to create an empty overlay that DSVEdit can use as free space."
+    )
+  rescue TMXInterface::ImportError => e
     @room.read_from_rom() # Reload room to get rid of the failed changes.
     load_room()
     Qt::MessageBox.warning(self, "Error importing from Tiled", e.message)
