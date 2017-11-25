@@ -126,7 +126,10 @@ class LayersEditorDialog < Qt::Dialog
     layer_changed(@ui.layer_index.currentIndex)
   rescue FreeSpaceManager::FreeSpaceFindError => e
     @room.layers[@ui.layer_index.currentIndex].read_from_rom() # Reload layer
-    Qt::MessageBox.warning(self, "Cannot expand layer", e.message)
+    Qt::MessageBox.warning(self,
+      "Failed to find free space",
+      "Failed to find free space to put the expanded layer.\n\nGo to Tools -> Add Overlay to create an empty overlay that DSVEdit can use as free space."
+    )
   end
   
   def copy_layer_pointer_to_clipboard
