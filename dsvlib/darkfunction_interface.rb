@@ -6,8 +6,6 @@ class DarkFunctionInterface
   class ImportError < StandardError ; end
   
   def self.export(output_path, name, sprite_info, fs, renderer, transparent_trails: false)
-    # TODO export weapon transparent trails as a separate pseudo palette
-    
     sprite = sprite_info.sprite
     
     palettes = renderer.generate_palettes(sprite_info.palette_pointer, 16)
@@ -263,22 +261,21 @@ class DarkFunctionInterface
       end
     end
     
+    # Now import animations and animated frames.
     df_anims.each do |df_anim|
       animated = df_anim[:name] !~ /^unanimated frame (\h+)$/
-      if animated
-        animation = Animation.new
-        animation.first_frame_delay_offset = sprite.frame_delays.size*FrameDelay.data_size
-        sprite.animations << animation
-      end
+      next unless animated
+      
+      animation = Animation.new
+      animation.first_frame_delay_offset = sprite.frame_delays.size*FrameDelay.data_size
+      sprite.animations << animation
       
       df_cells = df_anim.css("cell")
       df_cells.each do |df_cell|
-        if animated
-          frame_delay = FrameDelay.new
-          frame_delay.delay = df_cell["delay"].to_i
-          sprite.frame_delays << frame_delay
-          animation.number_of_frames += 1
-        end
+        frame_delay = FrameDelay.new
+        frame_delay.delay = df_cell["delay"].to_i
+        sprite.frame_delays << frame_delay
+        animation.number_of_frames += 1
         
         frame, this_frames_parts, this_frames_hitboxes, this_frames_unique_part_and_hitbox_strs = import_frame(
           df_cell, df_unique_parts, gfx_page_width, big_gfx_page_width, num_gfx_pages, gfx_page_canvas_width
@@ -287,7 +284,7 @@ class DarkFunctionInterface
         duplicated_frame_and_part_names = each_frames_unique_part_and_hitbox_strs.find do |frame_index, other_frames_unique_part_and_hitbox_strs|
           this_frames_unique_part_and_hitbox_strs == other_frames_unique_part_and_hitbox_strs
         end
-        if duplicated_frame_and_part_names && animated
+        if duplicated_frame_and_part_names
           duplicated_frame_index = duplicated_frame_and_part_names[0]
           frame_delay.frame_index = duplicated_frame_index
         else
@@ -298,9 +295,7 @@ class DarkFunctionInterface
             frame_index = sprite.frames.size
           end
           
-          if animated
-            frame_delay.frame_index = frame_index
-          end
+          frame_delay.frame_index = frame_index
           
           sprite.frames[frame_index] = frame
           all_created_frames[frame_index] = {
