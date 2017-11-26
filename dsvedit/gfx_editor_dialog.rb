@@ -40,11 +40,6 @@ class GfxEditorDialog < Qt::Dialog
     connect(@ui.import_palette_button, SIGNAL("clicked()"), self, SLOT("import_palette()"))
     connect(@ui.generate_palette_from_files, SIGNAL("clicked()"), self, SLOT("generate_palette_from_multiple_files()"))
     
-    if SYSTEM == :gba
-      @ui.one_dimensional_mode.checked = true
-      @ui.label_2.text = "GFX pointer(s)"
-    end
-    
     if gfx_and_palette_data
       @ui.gfx_file_names.text = gfx_and_palette_data[:gfx_file_names]
       @ui.palette_pointer.text = "%08X" % gfx_and_palette_data[:palette_pointer]
@@ -55,6 +50,11 @@ class GfxEditorDialog < Qt::Dialog
         gfx_page_changed(gfx_page_index)
       end
       palette_changed(gfx_and_palette_data[:palette_index])
+    end
+    
+    if SYSTEM == :gba
+      @ui.one_dimensional_mode.checked = true
+      @ui.label_2.text = "GFX pointer(s)"
     end
     
     self.show()
