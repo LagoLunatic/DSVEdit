@@ -108,7 +108,7 @@ class TilesetEditorDialog < Qt::Dialog
     
     self.show()
     
-    @room = room
+    room.sector.load_necessary_overlay()
     
     if room.palette_pages.empty?
       Qt::MessageBox.warning(self, "No palette", "The current room has no palette pages.")
@@ -135,7 +135,8 @@ class TilesetEditorDialog < Qt::Dialog
       @ui.tileset_type.text = "%04X" % layer.tileset_type
     end
     @ui.gfx_list_pointer.text = "%08X" % room.gfx_list_pointer
-    @ui.palette_list_pointer.text = "%08X" % room.palette_pages.first.palette_list_pointer
+    @ui.palette_page_list_pointer.text = "%08X" % room.palette_wrapper_pointer
+    @ui.palette_page_index.text = "%02X" % room.palette_page_index
     load_tileset()
   end
   
@@ -145,10 +146,11 @@ class TilesetEditorDialog < Qt::Dialog
     @tileset_pointer = @ui.tileset_pointer.text.to_i(16)
     @tileset_type = @ui.tileset_type.text.to_i(16)
     @gfx_list_pointer = @ui.gfx_list_pointer.text.to_i(16)
-    @palette_list_pointer = @ui.palette_list_pointer.text.to_i(16)
+    @palette_page_list_pointer = @ui.palette_page_list_pointer.text.to_i(16)
+    @palette_page_index = @ui.palette_page_index.text.to_i(16)
     @collision_tileset_pointer = @ui.collision_tileset_pointer.text.to_i(16)
     
-    return if @tileset_pointer == 0 || @gfx_list_pointer == 0 || @palette_list_pointer == 0
+    return if @tileset_pointer == 0 || @gfx_list_pointer == 0 || @palette_page_list_pointer == 0
     
     begin
       @tileset = Tileset.new(@tileset_pointer, @tileset_type, @fs)
@@ -224,27 +226,45 @@ class TilesetEditorDialog < Qt::Dialog
       end
     end
     
+    @palette_pages = PaletteWrapper.from_palette_wrapper_pointer(@palette_page_list_pointer, @fs)
+    
+    if @palette_pages[@palette_page_index].nil?
+      @palette_page_index = 0
+      @ui.palette_page_index.text = "%02X" % @palette_page_index
+    end
+    
     if SYSTEM == :nds
-      @palettes = @renderer.generate_palettes(@palette_list_pointer, 16)
+      palette_page = @palette_pages[@palette_page_index]
+      @palettes = @renderer.generate_palettes(palette_page.palette_list_pointer, 16)
       if @gfx_pages.any?{|gfx| gfx.colors_per_palette == 256}
-        @palettes_256 = @renderer.generate_palettes(@palette_list_pointer, 256)
+        @palettes_256 = @renderer.generate_palettes(palette_page.palette_list_pointer, 256)
+      end
+      
+      @palette_indexes_to_palette_list_pointer = []
+      @palettes.each_index do |i|
+        @palette_indexes_to_palette_list_pointer[i] = palette_page.palette_list_pointer
       end
     else
       @palettes = []
       palette_names = []
-      @room.palette_pages.each do |palette_page|
+      @palette_indexes_to_palette_list_pointer = []
+      @palette_pages.each do |palette_page|
         next if palette_page.palette_type == 1 # Foreground palette
         
         pals_for_page = @renderer.generate_palettes(palette_page.palette_list_pointer, 16)
         
         @palettes[palette_page.palette_load_offset, palette_page.num_palettes] = pals_for_page[palette_page.palette_index, palette_page.num_palettes]
         pal_names = (palette_page.palette_index..palette_page.palette_index+palette_page.num_palettes-1).to_a
-        pal_names.map!{|index| "%02X (%08X)" % [index, palette_page.palette_list_pointer]}
+        pal_names.map!{|index| "%02X" % index}
         palette_names[palette_page.palette_load_offset, palette_page.num_palettes] = pal_names
+        
+        (palette_page.palette_load_offset..palette_page.palette_load_offset+palette_page.num_palettes-1).each do |palette_index|
+          @palette_indexes_to_palette_list_pointer[palette_index] = palette_page.palette_list_pointer
+        end
       end
       if @gfx_pages.any?{|gfx| gfx.colors_per_palette == 256}
         @palettes_256 = []
-        @room.palette_pages.each do |palette_page|
+        @palette_pages.each do |palette_page|
           next if palette_page.palette_type == 1 # Foreground palette
           
           pals_for_page = @renderer.generate_palettes(palette_page.palette_list_pointer, 256)
@@ -549,6 +569,13 @@ class TilesetEditorDialog < Qt::Dialog
     gfx_page_changed(@selected_tile.tile_page || 0)
     load_selected_tile()
     render_tile_on_tileset(@selected_tile_index)
+    
+    palette_list_pointer = @palette_indexes_to_palette_list_pointer[palette_index]
+    if palette_list_pointer
+      @ui.palette_list_pointer.text = "%08X" % palette_list_pointer
+    else
+      @ui.palette_list_pointer.text = ""
+    end
     
     unless @collision_mode
       @selected_tiles.each do |tile|

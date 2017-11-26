@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1100</width>
+    <width>1200</width>
     <height>760</height>
    </rect>
   </property>
@@ -56,12 +56,29 @@
      <item>
       <widget class="QLabel" name="label_7">
        <property name="text">
-        <string>Palette list pointer</string>
+        <string>Palette page list pointer</string>
        </property>
       </widget>
      </item>
      <item>
-      <widget class="QLineEdit" name="palette_list_pointer"/>
+      <widget class="QLineEdit" name="palette_page_list_pointer"/>
+     </item>
+     <item>
+      <widget class="QLabel" name="label_13">
+       <property name="text">
+        <string>Pal page index</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLineEdit" name="palette_page_index">
+       <property name="maximumSize">
+        <size>
+         <width>30</width>
+         <height>16777215</height>
+        </size>
+       </property>
+      </widget>
      </item>
      <item>
       <widget class="QLabel" name="label_10">
@@ -192,6 +209,16 @@
               </item>
               <item row="2" column="1">
                <widget class="QComboBox" name="palette_index"/>
+              </item>
+              <item row="3" column="0">
+               <widget class="QLabel" name="label_14">
+                <property name="text">
+                 <string>Palette list</string>
+                </property>
+               </widget>
+              </item>
+              <item row="3" column="1">
+               <widget class="QLineEdit" name="palette_list_pointer"/>
               </item>
              </layout>
             </item>
