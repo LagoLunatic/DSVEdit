@@ -723,7 +723,7 @@ class DSVEdit < Qt::MainWindow
   
   def add_new_layer
     if @room.layers.size >= Room.max_number_of_layers
-      Qt::MessageBox.warning(self, "Can't add layer", "Can't add any more layers to this room, it already has the maximum of 4 layers.")
+      Qt::MessageBox.warning(self, "Can't add layer", "Can't add any more layers to this room, it already has the maximum of #{Room.max_number_of_layers} layers.")
       return
     end
     
