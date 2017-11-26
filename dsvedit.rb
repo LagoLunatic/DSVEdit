@@ -31,7 +31,7 @@ begin
     
     window.save_settings()
     
-    if window.game && window.game.fs.has_uncommitted_changes?
+    if window.game && window.game.fs && window.game.fs.has_uncommitted_changes?
       backup_dir = File.join(window.game.folder, "_dsvedit_backup")
       window.game.fs.commit_changes(base_directory = backup_dir)
       puts "Wrote backup of unsaved files to #{backup_dir}"
