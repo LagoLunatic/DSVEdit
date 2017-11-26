@@ -58,6 +58,13 @@ class NDSFileSystem
   def write_to_rom(output_rom_path)
     print "Writing files to #{output_rom_path}... "
     
+    if overlays[NEW_OVERLAY_ID]
+      # Shift asset memory down to make room for the free space overlay.
+      new_asset_memory_start = NEW_OVERLAY_FREE_SPACE_START + overlays[NEW_OVERLAY_ID][:size]
+      new_asset_memory_start = (new_asset_memory_start + 3) / 4 * 4 # Round up to the nearest word.
+      write(ASSET_MEMORY_START_HARDCODED_LOCATION, [new_asset_memory_start].pack("V"))
+    end
+    
     new_rom = @rom.dup
     
     expanded_files = []

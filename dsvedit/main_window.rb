@@ -904,7 +904,7 @@ class DSVEdit < Qt::MainWindow
     if game.fs.overlays[NEW_OVERLAY_ID]
       msg = "You have already added an overlay to this project.\n"
       msg << "DSVEdit only supports adding one new overlay to each project.\n\n"
-      msg << "The new overlay is /ftc/overlay9_#{NEW_OVERLAY_ID}, it's loaded at %08X in RAM, and its maximum size is %08X bytes." % [NEW_OVERLAY_FREE_SPACE_START, NEW_OVERLAY_FREE_SPACE_SIZE]
+      msg << "The new overlay is /ftc/overlay9_#{NEW_OVERLAY_ID}, it's loaded at %08X in RAM, and its maximum size is %08X bytes." % [NEW_OVERLAY_FREE_SPACE_START, NEW_OVERLAY_FREE_SPACE_MAX_SIZE]
       Qt::MessageBox.warning(self, "Can't add more overlays", msg)
       return
     end
@@ -921,7 +921,7 @@ class DSVEdit < Qt::MainWindow
     game.add_new_overlay()
     
     msg = "Successfully added new overlay /ftc/overlay9_#{NEW_OVERLAY_ID}.\n\n"
-    msg << "This overlay will be loaded at %08X in RAM. The maximum size you can make this overlay is %08X bytes.\n\n" % [NEW_OVERLAY_FREE_SPACE_START, NEW_OVERLAY_FREE_SPACE_SIZE]
+    msg << "This overlay will be loaded at %08X in RAM. The maximum size you can make this overlay is %08X bytes.\n\n" % [NEW_OVERLAY_FREE_SPACE_START, NEW_OVERLAY_FREE_SPACE_MAX_SIZE]
     msg << "If you are going to manually modify this file in a hex editor, only do so while DSVEdit is closed. DSVEdit may not notice files changed while it's open."
     Qt::MessageBox.warning(self, "Added new overlay #{NEW_OVERLAY_ID}", msg)
   end
