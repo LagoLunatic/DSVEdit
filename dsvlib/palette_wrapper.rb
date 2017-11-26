@@ -18,7 +18,8 @@ class PaletteWrapper
       if @palette_type == 0 # Background palette
         @palette_load_offset = 0
         @palette_index = 0
-        @num_palettes = 0xD
+        num_palettes_in_list = fs.read(palette_list_pointer+2, 1).unpack("C").first
+        @num_palettes = [0xD, num_palettes_in_list].min
       else # Foreground palette
         @num_palettes = 2
         @palette_index = (@palette_wrapper_info & 0xFF00) >> 8
