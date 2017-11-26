@@ -292,21 +292,48 @@ class DSVEdit < Qt::MainWindow
     
     clear_cache()
     
+    empty_filesystem_watcher() # Turn off the filesystem watcher so it doesn't watch for all the files we extract.
+    
     game = Game.new
-    game.initialize_from_rom(rom_path, extract_to_hard_drive = true)
-    @game = game
-    @renderer = Renderer.new(game.fs)
     
-    update_filesystem_watcher()
+    max_val = 100
+    @progress_dialog = ProgressDialog.new("Extracting", "Extracting files from ROM", max_val)
+    @progress_dialog.setCancelButton(nil) # Don't give an option to cancel extracting
     
-    enable_menu_actions()
-    
-    initialize_dropdowns()
-    
-    @settings[:last_used_folder] = game.folder
-    
-    folder_name = File.basename(game.folder)
-    self.setWindowTitle("DSVania Editor #{DSVEDIT_VERSION} - #{folder_name}")
+    @progress_dialog.execute do
+      game.initialize_from_rom(rom_path, extract_to_hard_drive = true) do |percentage_written|
+        next unless percentage_written % 10 == 0 # Only update the UI every 100 files because updating too often is slow.
+        break if @progress_dialog.nil?
+        
+        Qt.execute_in_main_thread do
+          if @progress_dialog && !@progress_dialog.wasCanceled
+            @progress_dialog.setValue(percentage_written)
+          end
+        end
+      end
+      
+      Qt.execute_in_main_thread do
+        if @progress_dialog
+          @progress_dialog.setValue(@progress_dialog.maximum) unless @progress_dialog.wasCanceled
+          @progress_dialog.close()
+          @progress_dialog = nil
+        end
+        
+        @game = game
+        @renderer = Renderer.new(game.fs)
+        
+        update_filesystem_watcher()
+        
+        enable_menu_actions()
+        
+        initialize_dropdowns()
+        
+        @settings[:last_used_folder] = game.folder
+        
+        folder_name = File.basename(game.folder)
+        self.setWindowTitle("DSVania Editor #{DSVEDIT_VERSION} - #{folder_name}")
+      end
+    end
   rescue Game::InvalidFileError, NDSFileSystem::InvalidFileError
     Qt::MessageBox.warning(self, "Invalid file", "Selected ROM file is not a DSVania or is not a supported region.")
   rescue NDSFileSystem::InvalidRevisionError => e
@@ -342,12 +369,15 @@ class DSVEdit < Qt::MainWindow
     Qt::MessageBox.warning(self, "Invalid revision", e.message)
   end
   
-  def update_filesystem_watcher
-    # First clear all existing watched paths.
+  def empty_filesystem_watcher
     paths_to_remove = @filesystem_watcher.files + @filesystem_watcher.directories
     if paths_to_remove.any?
       @filesystem_watcher.removePaths(paths_to_remove)
     end
+  end
+  
+  def update_filesystem_watcher
+    empty_filesystem_watcher()
     
     # Then watch all paths for the current project.
     base_directory = game.folder
@@ -1043,7 +1073,7 @@ class DSVEdit < Qt::MainWindow
   end
   
   def write_to_rom(launch_emulator = false)
-    return if @progress_dialog
+    return if @progress_dialog && @progress_dialog.visible()
     
     # These two lines are for the room test.
     # We preserve a reference to the game's current test room fs, then revert the game's fs to the normal one.
@@ -1051,19 +1081,11 @@ class DSVEdit < Qt::MainWindow
     fs = game.fs
     game.end_test_room()
     
-    @progress_dialog = Qt::ProgressDialog.new
-    @progress_dialog.windowTitle = "Building"
-    @progress_dialog.labelText = "Writing files to ROM"
-    @progress_dialog.maximum = fs.files_without_dirs.length
-    @progress_dialog.windowModality = Qt::ApplicationModal
-    @progress_dialog.windowFlags = Qt::CustomizeWindowHint | Qt::WindowTitleHint
-    @progress_dialog.setFixedSize(@progress_dialog.size);
-    connect(@progress_dialog, SIGNAL("canceled()"), self, SLOT("cancel_write_to_rom_thread()"))
-    @progress_dialog.show
     
     output_rom_path = File.join(game.folder, "built_rom_#{GAME}.#{fs.rom_file_extension}")
-    
-    @write_to_rom_thread = Thread.new do
+    max_val = fs.files_without_dirs.length
+    @progress_dialog = ProgressDialog.new("Building", "Writing files to ROM", max_val)
+    @progress_dialog.execute do
       fs.write_to_rom(output_rom_path) do |files_written|
         next unless files_written % 100 == 0 # Only update the UI every 100 files because updating too often is slow.
         break if @progress_dialog.nil?
@@ -1106,12 +1128,6 @@ class DSVEdit < Qt::MainWindow
     end
   end
   
-  def cancel_write_to_rom_thread
-    puts "Cancelled."
-    @write_to_rom_thread.kill
-    @progress_dialog = nil
-  end
-  
   def build_and_run
     write_to_rom(launch_emulator = true)
   end
@@ -1150,5 +1166,33 @@ class DSVEdit < Qt::MainWindow
     # That includes calling inspect on all of the object's instance variables recursively. This takes a long time.
     # We define inspect as just to_s so it skips recursively examining every object in the whole program and errors don't take so long.
     to_s
+  end
+end
+
+class ProgressDialog < Qt::ProgressDialog
+  slots "cancel_thread()"
+  
+  def initialize(title, description, max_val)
+    super()
+    self.windowTitle = title
+    self.labelText = description
+    self.maximum = max_val
+    self.windowModality = Qt::ApplicationModal
+    self.windowFlags = Qt::CustomizeWindowHint | Qt::WindowTitleHint
+    self.setFixedSize(self.size);
+    connect(self, SIGNAL("canceled()"), self, SLOT("cancel_thread()"))
+    self.show
+  end
+  
+  def execute(&block)
+    @thread = Thread.new do
+      yield
+    end
+  end
+  
+  def cancel_thread
+    puts "Cancelled."
+    @thread.kill
+    self.close()
   end
 end

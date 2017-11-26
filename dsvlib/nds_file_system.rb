@@ -37,11 +37,11 @@ class NDSFileSystem
     read_free_space_from_text_file()
   end
   
-  def open_and_extract_rom(input_rom_path, filesystem_directory)
+  def open_and_extract_rom(input_rom_path, filesystem_directory, &block)
     @filesystem_directory = filesystem_directory
     @rom = File.open(input_rom_path, "rb") {|file| file.read}
     read_from_rom()
-    extract_to_hard_drive()
+    extract_to_hard_drive(&block)
     get_assets()
     read_free_space_from_text_file()
   end
@@ -660,6 +660,8 @@ private
   def extract_to_hard_drive
     print "Extracting files from ROM... "
     
+    files_written = 0
+    total_files = all_files.size
     all_files.each do |file|
       next unless file[:type] == :file
       
@@ -672,6 +674,12 @@ private
       FileUtils.mkdir_p(output_dir)
       File.open(output_path, "wb") do |f|
         f.write(file_data)
+      end
+      
+      files_written += 1
+      if block_given?
+        percentage = (files_written.to_f / total_files * 100).floor
+        yield(percentage)
       end
     end
     

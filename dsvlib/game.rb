@@ -36,7 +36,7 @@ class Game
     read_from_rom()
   end
   
-  def initialize_from_rom(input_rom_path, extract_to_hard_drive)
+  def initialize_from_rom(input_rom_path, extract_to_hard_drive, &block)
     unless File.file?(input_rom_path)
       raise InvalidFileError.new("ROM file not present.")
     end
@@ -54,7 +54,7 @@ class Game
       else
         @fs = GBADummyFilesystem.new
       end
-      fs.open_and_extract_rom(input_rom_path, folder)
+      fs.open_and_extract_rom(input_rom_path, folder, &block)
     else
       @folder = nil
       
