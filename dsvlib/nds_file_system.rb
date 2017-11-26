@@ -277,6 +277,11 @@ class NDSFileSystem
     end
     
     file = files_by_path[file_path]
+    if file.nil?
+      puts "Could not find file #{file_path} to reload"
+      return
+    end
+    
     old_file_size = file[:size]
     file[:size] = File.size(File.join(@filesystem_directory, file_path))
     
