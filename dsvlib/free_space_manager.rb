@@ -33,6 +33,8 @@ module FreeSpaceManager
     merge_overlapping_free_spaces()
     
     remove_fake_free_spaces()
+    
+    round_free_spaces()
   end
   
   def initialize_sector_overlay_free_spaces
@@ -48,12 +50,16 @@ module FreeSpaceManager
     end
     
     remove_fake_free_spaces()
+    
+    round_free_spaces()
   end
   
   def initialize_rom_free_space
     @free_spaces << {path: "rom.gba", offset: ROM_FREE_SPACE_START, length: ROM_FREE_SPACE_SIZE}
     
     remove_fake_free_spaces()
+    
+    round_free_spaces()
   end
   
   def remove_fake_free_spaces
@@ -95,6 +101,8 @@ module FreeSpaceManager
     @free_spaces << {path: path, offset: offset, length: length}
     write_by_file(path, offset, "\0"*length, freeing_space: true)
     merge_overlapping_free_spaces()
+    
+    round_free_spaces()
   end
   
   def mark_space_unused(file_path, offset_in_file, length)
@@ -103,6 +111,8 @@ module FreeSpaceManager
     
     @free_spaces << {path: file_path, offset: offset_in_file, length: length}
     merge_overlapping_free_spaces()
+    
+    round_free_spaces()
   end
   
   def remove_free_space(file_path, offset_in_file, length)
@@ -133,6 +143,8 @@ module FreeSpaceManager
     end
     
     @free_spaces += new_free_spaces
+    
+    round_free_spaces()
   end
   
   def merge_overlapping_free_spaces
@@ -166,6 +178,21 @@ module FreeSpaceManager
     end
     
     @free_spaces = merged_free_spaces
+    
+    round_free_spaces()
+  end
+  
+  def round_free_spaces
+    @free_spaces.each do |free_space|
+      offset = free_space[:offset]
+      end_offset = free_space[:offset] + free_space[:length]
+      
+      offset = (offset + 3) / 4 * 4 # Round up to the nearest word.
+      end_offset = end_offset / 4 * 4 # Round down to the nearest word.
+      
+      free_space[:offset] = offset
+      free_space[:length] = end_offset - free_space[:offset]
+    end
   end
   
   def get_free_space(length_needed, overlay_id = nil)
