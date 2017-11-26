@@ -231,12 +231,16 @@ class TilesetEditorDialog < Qt::Dialog
       end
     else
       @palettes = []
+      palette_names = []
       @room.palette_pages.each do |palette_page|
         next if palette_page.palette_type == 1 # Foreground palette
         
         pals_for_page = @renderer.generate_palettes(palette_page.palette_list_pointer, 16)
         
         @palettes[palette_page.palette_load_offset, palette_page.num_palettes] = pals_for_page[palette_page.palette_index, palette_page.num_palettes]
+        pal_names = (palette_page.palette_index..palette_page.palette_index+palette_page.num_palettes-1).to_a
+        pal_names.map!{|index| "%02X (%08X)" % [index, palette_page.palette_list_pointer]}
+        palette_names[palette_page.palette_load_offset, palette_page.num_palettes] = pal_names
       end
       if @gfx_pages.any?{|gfx| gfx.colors_per_palette == 256}
         @palettes_256 = []
@@ -262,7 +266,11 @@ class TilesetEditorDialog < Qt::Dialog
     
     @ui.palette_index.clear()
     @palettes.each_with_index do |palette, i|
-      @ui.palette_index.addItem("%02X" % i)
+      if SYSTEM == :nds
+        @ui.palette_index.addItem("%02X" % i)
+      else
+        @ui.palette_index.addItem(palette_names[i])
+      end
     end
     
     render_tileset()
