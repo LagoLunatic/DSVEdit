@@ -119,6 +119,8 @@
   ; r1 - 5?
   ; Called when unlocking the glowing door with MK's bracelet
 
+080BA5E8 CandleCreate
+
 08494580 RAMStartPointer
 
 ; Enemy-specific code

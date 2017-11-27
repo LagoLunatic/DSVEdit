@@ -127,7 +127,9 @@ Enemies:
 69 
 6A 
 6B Floating Corpse
-6C 
+6C Candle
+  Unused. Behaves just like a candle and shares the same code.
+  (Why is this an enemy?)
 6D Pazuzu (breaks through wall)
 6E Skeleton Mirror (in mirror)
 6F Revenge Armor (spawns Talos)

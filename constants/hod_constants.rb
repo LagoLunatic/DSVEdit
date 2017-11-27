@@ -498,6 +498,16 @@ BEST_SPRITE_OFFSET_FOR_SPECIAL_OBJECT = {}
 
 OTHER_SPRITES = [
   COMMON_SPRITE,
+  
+  {desc: "Candle 0", gfx_files: [0x0811BD98], palette: 0x08125BB0, palette_offset: 0, sprite: 0x081548B4},
+  {desc: "Candle 1", gfx_files: [0x0811BDA0], palette: 0x08125BB0, palette_offset: 1, sprite: 0x08154A88},
+  {desc: "Candle 2", gfx_files: [0x0811BDA8], palette: 0x08125BB0, palette_offset: 2, sprite: 0x08154C08},
+  {desc: "Candle 3", gfx_files: [0x0811BDB0], palette: 0x08125BB0, palette_offset: 3, sprite: 0x08154D7C},
+  {desc: "Candle 4", gfx_files: [0x0811BDB8], palette: 0x08125CD4, palette_offset: 0, sprite: 0x08154ECC},
+  {desc: "Candle 5", gfx_files: [0x0811BDC0], palette: 0x08125CF8, palette_offset: 0, sprite: 0x0815501C},
+  {desc: "Candle 6", gfx_files: [0x0811BDC8], palette: 0x08125D1C, palette_offset: 0, sprite: 0x08155250},
+  {desc: "Candle 7", gfx_files: [0x0811BDD0], palette: 0x08125BB0, palette_offset: 7, sprite: 0x08155484},
+  {desc: "Candle 8", gfx_files: [0x0811BDD8], palette: 0x08125D40, palette_offset: 0, sprite: 0x081556AC},
 ]
 
 CANDLE_FRAME_IN_COMMON_SPRITE = 0x47

@@ -84,8 +84,20 @@ class EntityLayerItem < Qt::GraphicsRectItem
         BEST_SPRITE_FRAME_FOR_SPECIAL_OBJECT[special_object_id],
         sprite_offset: BEST_SPRITE_OFFSET_FOR_SPECIAL_OBJECT[special_object_id])
     elsif entity.is_candle?
-      sprite_info = SpriteInfo.extract_gfx_and_palette_and_sprite_from_create_code(CANDLE_SPRITE[:pointer], @fs, CANDLE_SPRITE[:overlay], CANDLE_SPRITE)
-      add_sprite_item_for_entity(entity, sprite_info, CANDLE_FRAME_IN_COMMON_SPRITE)
+      if GAME == "hod"
+        candle_type = entity.var_a & 0xF
+        other_sprite = OTHER_SPRITES.find{|spr| spr[:desc] == "Candle #{candle_type}"}
+        if other_sprite
+          sprite_info = SpriteInfo.new(other_sprite[:gfx_files], other_sprite[:palette], other_sprite[:palette_offset], other_sprite[:sprite], nil, @fs)
+          add_sprite_item_for_entity(entity, sprite_info, 0)
+        else
+          graphics_item = EntityRectItem.new(entity, @main_window)
+          graphics_item.setParentItem(self)
+        end
+      else
+        sprite_info = SpriteInfo.extract_gfx_and_palette_and_sprite_from_create_code(CANDLE_SPRITE[:pointer], @fs, CANDLE_SPRITE[:overlay], CANDLE_SPRITE)
+        add_sprite_item_for_entity(entity, sprite_info, CANDLE_FRAME_IN_COMMON_SPRITE)
+      end
     elsif entity.is_magic_seal?
       sprite_info = SpriteInfo.extract_gfx_and_palette_and_sprite_from_create_code(COMMON_SPRITE[:pointer], @fs, COMMON_SPRITE[:overlay], COMMON_SPRITE)
       add_sprite_item_for_entity(entity, sprite_info, 0xCE)
@@ -217,4 +229,6 @@ class EntityLayerItem < Qt::GraphicsRectItem
     graphics_item.setPos(entity.x_pos, entity.y_pos)
     graphics_item.setParentItem(self)
   end
+  
+  def inspect; to_s; end
 end
