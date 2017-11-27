@@ -194,6 +194,10 @@ class EntityLayerItem < Qt::GraphicsRectItem
     
     frame_to_render ||= 0
     
+    if sprite_info.sprite.frames[frame_to_render].nil?
+      frame_to_render = 0
+    end
+    
     sprite_filename = @renderer.ensure_sprite_exists("cache/#{GAME}/sprites/", sprite_info, frame_to_render)
     chunky_frame = ChunkyPNG::Image.from_file(sprite_filename)
     
