@@ -61,6 +61,8 @@
 080BA570 CandleDraw
   ; Draw function for some types of candles
 
+0801CF8C ???Draw
+
 080BD748 Divide
   ; Returns r0 / r1
 080BD74C Modulo
@@ -70,6 +72,8 @@
   ; r0 - Gfx wrapper
   ; r1 - 0?
   ; Returns: The index in vram??
+08010644 LoadGfx?2
+  ; r0 - Gfx wrapper
 08044A52 LoadPalette?
   ; r0 - Palette list pointer
   ; r1 - 0?
@@ -641,6 +645,7 @@
 08078AE8 Object08Update
 0801D9B4 Object09Create
 0801DFD4 Object09Update
+0801D908 Object09UpdateMimicTrigger
 0801DA84 Object0ACreate
 0801DB38 Object0AUpdate
 0801E1F8 Object0BCreate

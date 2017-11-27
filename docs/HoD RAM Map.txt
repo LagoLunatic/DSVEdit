@@ -30,8 +30,9 @@
 
 02000310,4 - Bitfield of breakable walls destroyed.
 
-02000314-0200031F - Bitfield of event flags.
+02000314-0200031F - Bitfield of event flags and miscellaneous flags.
   Includes which ceilings the player has destroyed with the Crush Boots.
+  Bits 0, 1, 2, and 3 are for the walls you lower by pressing a button.
 
 02000330 - Bitfield of pickup flags.
 
@@ -85,9 +86,10 @@
 === 02000418-02007C17: Entity memory. Each entity is 0x80 bytes long. Entities range from 00-EF.
 
 What each range of entity slots is for:
-00-00 - Player.
-01-0F - Player skills (subweapons/spells)
-D0-EF - Various other things including particles and enemy projectiles.
+00-00 02000418-02000497 - Player.
+01-0F 02000498-02000C17 - Player skills (subweapons/spells)
+14-?? 02000E18-02?????? - Room entities.
+D0-EF 02006C18-02007C17 - Various other things including particles and enemy projectiles.
 
 02000418 - Player's entity memory.
 
@@ -112,6 +114,14 @@ D0-EF - Various other things including particles and enemy projectiles.
   04,4: 
   08,4: 
   0C,4: Sprite pointer.
+
+020181E4 - List of currently active palette shifters.
+  Entry length 0xC.
+  00,4: Palette list pointer.
+  04,4: Pointer to the data that specifies how to shift the palette?
+  08,2: Counter for number of frames on this palette index?
+  0A,1: 
+  0B,1: 
 
 02018494 - List of pointers to all subweapon entities.
   This is used to make sure you don't go over a subweapon's "Max at once".

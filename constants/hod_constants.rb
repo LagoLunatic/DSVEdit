@@ -476,6 +476,10 @@ REUSED_SPECIAL_OBJECT_INFO = {
   0x03 => {palette_offset: 1}, # wall in save room
   0x05 => {init_code: 0x0801C950}, # wooden door
   0x06 => {init_code: 0x0801D088, palette_offset: 1},
+  0x0B => {palette_offset: 8},
+  0x0C => {palette_offset: 8}, # note: 0x0C's crate is created at 0812F5D0
+  0x0D => {palette_offset: 4},
+  0x14 => {palette_offset: 2},
   0x25 => {init_code: -1}, # spikes
   0x26 => {init_code: -1}, # event
 }
@@ -484,6 +488,10 @@ BEST_SPRITE_FRAME_FOR_SPECIAL_OBJECT = {
   0x03 => 0x01,
   0x05 => 0x01,
   0x06 => 0x52,
+  0x09 => 0x01,
+  0x0B => 0x08,
+  0x0C => 0x05,
+  0x14 => 0x06,
   0x19 => 0x03,
 }
 BEST_SPRITE_OFFSET_FOR_SPECIAL_OBJECT = {}

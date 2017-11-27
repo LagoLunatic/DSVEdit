@@ -40,12 +40,22 @@
     11 Talos (chase)
     12 Pazuzu
 07 Lights up dark rooms?
-08 
-09 
-0A 
-0B 
-0C 
-0D stone blockade?
+08 required in certain rooms for the player to appear???
+09 Button.
+  Var A: Event flag to set when you press the button.
+    Note that this also affects the GFX and palette used, so only use 0-3 for this or it will crash.
+  Var B:
+    0 Normal, can be pressed by the player.
+    1 Can only by pressed by a Mimic.
+      The way it identifies whether an entity is a Mimic or not is it checks to see if the entity is the first entity with the update code pointer 08057139. Therefore if there are multiple Mimics only the first can press the switch.
+0A Tall gate.
+  Var A: Event flag that opens this gate.
+0B Floodgate.
+0C Button and crate.
+  You have to put the crate on the button to open a stone gate (object 0D).
+  Var A: Event flag to set when the button is pressed and unset when the button is unset.
+0D Stone gate.
+  Var A: Event flag that opens the gate.
 0E blood waterfall?
 0F 
 10 Cracked wall that can be broken with the Crushing Stone.
@@ -54,7 +64,8 @@
 11 
 12 
 13 
-14 
+14 Iron gate.
+  Var A: Event flag that opens this gate.
 15 
 16 
 17 Giant gears that crush Guardian Armor.
@@ -87,7 +98,7 @@
 28 lydie?
   Var A: Which event?
   Var B: Event flag?
-29 
+29 wide floor blockade?
 2A Furniture in the furniture room.
   Also changes the music.
 2B Guillotine blade trap.
