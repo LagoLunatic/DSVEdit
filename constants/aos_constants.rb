@@ -142,7 +142,7 @@ ENEMY_DNA_BITFIELD_ATTRIBUTES = {
     "Stone",
     "Weakness 10",
     "Weakness 11",
-    "Weakness 12",
+    "Killer Mantle",
     "Weakness 13",
     "Weakness 14",
     "Weakness 15",
@@ -295,7 +295,7 @@ WEAPON_FORMAT = [
   [1, "Constitution"],
   [1, "Intelligence"],
   [1, "Luck"],
-  [2, "Effects", :bitfield],
+  [2, "Effects & Modifiers", :bitfield],
   [1, "GFX Index"],
   [1, "Sprite Index"],
   [1, "Unknown 2"],
@@ -330,7 +330,7 @@ RED_SOUL_FORMAT = [
   [1, "Max at once"],
   [1, "Unknown 1"],
   [2, "DMG multiplier"],
-  [2, "Effects", :bitfield],
+  [2, "Effects & Modifiers", :bitfield],
   [2, "Var A"],
 ]
 BLUE_SOUL_FORMAT = [
@@ -398,7 +398,7 @@ ITEM_TYPES = [
   },
 ]
 ITEM_BITFIELD_ATTRIBUTES = {
-  "Effects" => [
+  "Effects & Modifiers" => [
     "Slash",
     "Flame",
     "Water",
@@ -410,9 +410,9 @@ ITEM_BITFIELD_ATTRIBUTES = {
     "Stone",
     "Unknown 10",
     "Unknown 11",
-    "Unknown 12",
-    "Unknown 13",
-    "Unknown 14",
+    "Killer Mantle",
+    "Half damage",
+    "No interrupt on land",
     "Unknown 15",
     "Unknown 16",
   ],

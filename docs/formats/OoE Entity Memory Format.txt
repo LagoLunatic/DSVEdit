@@ -26,6 +26,7 @@ Memory used for entities in OoE is 021092A0 - 0211DF5F. Each entity is 0x160 byt
     Note that things that affect the entire entity's palette are not affected by this, like the entity's palette offset. Only the palette specified by each sprite part is ignored.
     (This is used by the slash trails of melee weapons.)
   0080 Direction. Set if facing left, clear if facing right.
+  0200 Pulsating effect, used by Invisible Man.
   0400 If set, the entity's opacity value will only be used when drawing parts that have a nonzero palette index.
     (This is used by the slash trails of melee weapons.)
   8000 Invisible, do not draw.
@@ -42,6 +43,8 @@ Memory used for entities in OoE is 021092A0 - 0211DF5F. Each entity is 0x160 byt
 086,2: Palette index in the list of globally loaded palettes.
 088,2: Palette index in the list of globally loaded palettes. Unused?
 08A,2: Palette offset for this entity. Gets added to 86.
+08E,2: Polygon attributes to use when drawing this entity.
+  Refer to GBATEK for details.
 090,10: Affects color tint of this entity. 1F for everything means normal colored.
 0A0,2: Sprite x offset relative to the entity's position.
 0A2,2: Sprite y offset relative to the entity's position.

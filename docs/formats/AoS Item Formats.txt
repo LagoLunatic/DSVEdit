@@ -37,7 +37,11 @@ Weapon format:
   0D,1: Constitution stat.
   0E,1: Intelligence stat.
   0F,1: Luck stat.
-  10,2: Bitfield for the elemental damage types this weapon deals.
+  10,2: Bitfield of damage types this weapon deals, as well as some swing modifiers.
+    Bits 0-8: Damage types.
+    Bit 11: Killer Mantle effect. Swaps the HP and MP of enemies.
+    Bit 12: Halves the damage this weapon deals.
+    Bit 13: Do not interrupt this weapon's swing when the player lands.
   12,1: Weapon GFX index.
   13,1: Weapon sprite index.
   14,1: ?
@@ -79,7 +83,11 @@ Red soul format:
   08,1:
   09,1:
   0A,2: Damage multiplier.
-  0C,2: Bitfield of damage types this soul does.
+  0C,2: Bitfield of damage types this soul deals.
+    Bits 0-8: Damage types.
+    Bit 11: Killer Mantle effect. Swaps the HP and MP of enemies.
+    Bit 12: No effect for souls.
+    Bit 13: No effect for souls.
   0E,2: Varies by code pointer.
     08025785/08028EC1: Which projectile to throw.
       This is an index in list 084F12C8, entry length 0x18.

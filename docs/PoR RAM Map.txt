@@ -673,6 +673,13 @@ TODO: What are the other 2 for? It's not for the "recent" tab.
 0213291C - List of hitboxes. Each entry is 0x14 bytes long, containing two hitboxes 0xA bytes long each.
   The index in this list for a particular entity is at offset+0xA7 in the entity memory.
 
+0213226C - List of hardcoded free spaces??
+  List of pointers to entries in asset memory.
+  Index 0xA is for Richter.
+  Index 0xB is for Maria.
+  The space between each entry here seems to be hardcoded around 02011FC0. 0x8700 is the difference between Richter and Maria's sprite file space for example.
+  (The last one is found first via the normal means. Then the others are spaced out before it by subtracting hardcoded values from that.)
+
 0213D65C,0213DCF8,0213DD04 - Currently playing song.
 
 === 021CDF60 - 0221F41F: Overlay 0

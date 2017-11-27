@@ -42,7 +42,10 @@
   ; r0 - Entity subtype
   ; r1 - Entity type (1 or 2)
   ; r2 - Index of the asset in this entity's list of assets
-0201BA0C LoadOneEntityAsset?
+02012358 AssetGetFreeSpace??
+
+0201BA0C InitializeSpriteAssetFile
+  ; Initializes the standole sprite file format with pointers in place of file offsets so that it can be used by the game engine.
 
 02015AFC LoadPalette
   ; r0 - Palette list pointer
