@@ -85,14 +85,44 @@ class EntityLayerItem < Qt::GraphicsRectItem
         sprite_offset: BEST_SPRITE_OFFSET_FOR_SPECIAL_OBJECT[special_object_id])
     elsif entity.is_candle?
       if GAME == "hod"
-        candle_type = entity.var_a & 0xF
-        other_sprite = OTHER_SPRITES.find{|spr| spr[:desc] == "Candle #{candle_type}"}
-        if other_sprite
-          sprite_info = SpriteInfo.new(other_sprite[:gfx_files], other_sprite[:palette], other_sprite[:palette_offset], other_sprite[:sprite], nil, @fs)
-          add_sprite_item_for_entity(entity, sprite_info, 0)
+        if entity.var_a & 0xFFF == 0
+          # Candle in common sprite
+          candle_type = entity.var_a >> 0xC
+          if (0..3).include?(candle_type)
+            candle_frame = case candle_type
+            when 0
+              CANDLE_FRAME_IN_COMMON_SPRITE
+            when 1..3
+              0x4A
+            end
+            palette_offset = case candle_type
+            when 0
+              1
+            when 1
+              8
+            when 2
+              9
+            when 3
+              0xA
+            end
+            candle_sprite_info = CANDLE_SPRITE.merge(palette_offset: palette_offset)
+            sprite_info = SpriteInfo.extract_gfx_and_palette_and_sprite_from_create_code(CANDLE_SPRITE[:pointer], @fs, CANDLE_SPRITE[:overlay], candle_sprite_info)
+            add_sprite_item_for_entity(entity, sprite_info, candle_frame)
+          else
+            graphics_item = EntityRectItem.new(entity, @main_window)
+            graphics_item.setParentItem(self)
+          end
         else
-          graphics_item = EntityRectItem.new(entity, @main_window)
-          graphics_item.setParentItem(self)
+          # Candle not in common sprite.
+          candle_type = entity.var_a & 0xF
+          other_sprite = OTHER_SPRITES.find{|spr| spr[:desc] == "Candle #{candle_type}"}
+          if other_sprite
+            sprite_info = SpriteInfo.new(other_sprite[:gfx_files], other_sprite[:palette], other_sprite[:palette_offset], other_sprite[:sprite], nil, @fs)
+            add_sprite_item_for_entity(entity, sprite_info, 0)
+          else
+            graphics_item = EntityRectItem.new(entity, @main_window)
+            graphics_item.setParentItem(self)
+          end
         end
       else
         sprite_info = SpriteInfo.extract_gfx_and_palette_and_sprite_from_create_code(CANDLE_SPRITE[:pointer], @fs, CANDLE_SPRITE[:overlay], CANDLE_SPRITE)

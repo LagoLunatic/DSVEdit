@@ -482,6 +482,7 @@ REUSED_SPECIAL_OBJECT_INFO = {
   0x14 => {palette_offset: 2},
   0x25 => {init_code: -1}, # spikes
   0x26 => {init_code: -1}, # event
+  0x27 => {init_code: -1}, # drawbridge
 }
 SPECIAL_OBJECT_FILES_TO_LOAD_LIST = nil
 BEST_SPRITE_FRAME_FOR_SPECIAL_OBJECT = {

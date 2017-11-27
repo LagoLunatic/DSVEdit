@@ -94,7 +94,7 @@
   Var A: Which event.
     01 Meeting Death in the Marble Corridor.
   Var B: Event flag set when this event is completed.
-27 
+27 Drawbridge.
 28 lydie?
   Var A: Which event?
   Var B: Event flag?
