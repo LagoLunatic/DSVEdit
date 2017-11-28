@@ -121,6 +121,9 @@
 
 080BA5E8 CandleCreate
 
+080217A4 ???MenuCreate???
+  ; Create code for something menu related?
+
 08494580 RAMStartPointer
 
 ; Enemy-specific code

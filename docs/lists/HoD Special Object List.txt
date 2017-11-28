@@ -39,7 +39,7 @@
     10 Cyclops
     11 Talos (chase)
     12 Pazuzu
-07 Lights up dark rooms?
+07 Circle of light around player in dark rooms.
 08 required in certain rooms for the player to appear???
 09 Button.
   Var A: Event flag to set when you press the button.
@@ -57,13 +57,26 @@
 0D Stone gate.
   Var A: Event flag that opens the gate.
 0E blood waterfall?
+  Var A:
+  Var B:
 0F 
 10 Cracked wall that can be broken with the Crushing Stone.
   Var A: ??? Either 0 or FFFF
   Var B: Event flag index for whether this wall has been destroyed.
-11 
-12 
-13 
+11 Cogs.
+  Var A: Which room's arrangement of cogs to use. This is an index in list 084B09F8.
+  Var B: 0 for full cogs, 1 for cogs with a quarter of them broken off and not standable.
+12 Swinging pendulums.
+  Var A: ?
+  Var B: ?
+13 Giant hammer that hits Bronze Guarder back.
+  Var A:
+    0 for the giant hammer and button that activates the hammer.
+    1 for the wall that gets destroyed when hit by the Bronze Guarder.
+  Var B:
+    If var A is 0, var B has no effect.
+    If var A is 1, var B is the event flag to set when the wall is destroyed to indicate that it's gone.
+      Note that Bronze Guarder is hardcoded to check event flag 24, so he will not stay dead if this is changed to something else (but the wall itself will stay detroyed).
 14 Iron gate.
   Var A: Event flag that opens this gate.
 15 
@@ -73,9 +86,11 @@
 18 
 19 Animated pendulum in a background grandfather clock.
 1A Merchant.
-1B 
+1B Lightning that lights up windows.
 1C Boss rush?
-1D 
+1D Ball race.
+  Creates the giant metal ball, the gates, and the button to start the race.
+  Var A: ? 0 or 1
 1E Statue and ramp in the second room of the game.
 1F Elevator.
   Var A: Which elevator it is. Affects the number of floors and distance between the floors.
@@ -86,7 +101,7 @@
 21 
 22 
 23 
-24 Water?
+24 Water.
 25 Spikes.
   These are invisible, the spike graphics should be part of the room's tiles.
   Var A: Affects the width of the spike hitbox somehow.
