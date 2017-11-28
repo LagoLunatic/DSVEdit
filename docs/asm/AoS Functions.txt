@@ -167,6 +167,12 @@
   ; Call every frame to handle the animation.
   ; r0 - Entity pointer to animate
 
+0806AE54 EntityUpdateDamageFlashing
+  ; r0 - Entity
+  ; Decrements the counter at entity+2D.
+  ; Then, if bit 02 of the counter is set, it sets the draw-white sprite drawing flag.
+  ; Returns 0 if the counter reached 0, or 1 otherwise. Some enemies use this to freeze their AI to flinch when damaged.
+
 08001994 GetMinitileData
   ; r0 - 
   ; r1 - 
