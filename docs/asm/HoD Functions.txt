@@ -40,6 +40,8 @@
 08010638 GenericDraw
   ; Used by enemies, the player, and parts of the UI.
 
+08072888 PlayerUpdate
+
 08000DE8 DummyUpdate
   ; Does nothing, immediately returns.
 

@@ -4,7 +4,8 @@
 02 Teleporter.
 03 Breakable wall.
   Var A: Which breakable wall flag to check.
-04 
+04 sets a flag?
+  Var B: Which breakable wall flag to set.
 05 Door.
   Var A:
     0 Wooden door.
@@ -79,11 +80,16 @@
       Note that Bronze Guarder is hardcoded to check event flag 24, so he will not stay dead if this is changed to something else (but the wall itself will stay detroyed).
 14 Iron gate.
   Var A: Event flag that opens this gate.
-15 
-16 
+15 Machine with cogs you can hit.
+  Var A: Event flag to set once the player hits thie machine enough.
+16 Cog that you can hit to spin it.
+  Var A:
+    0 for the useless cog in Castle A.
+    1 for the cog in Castle B you have to hit to open the ceiling.
 17 Giant gears that crush Guardian Armor.
   Var A: 0 for bottom gear, 1 for top gear.
-18 
+18 Small spinning gear in the background.
+  Var A: Spinning speed. Positive is clockwise, negative is counterclockwise.
 19 Animated pendulum in a background grandfather clock.
 1A Merchant.
 1B Lightning that lights up windows.
@@ -97,10 +103,10 @@
     0 Has 4 floors, each 0x200 pixels apart.
     1 Has 4 floors, each 0x1A8 pixels apart.
     2 Has 2 floors, 0x210 pixels apart. This also doubles as the lift that raises you into the center of the castle.
-20 
-21 
-22 
-23 
+20 Giant swinging axe.
+21 Giant Crocomire skull and logs holding it up.
+22 Giant skull you roll.
+23 Giant rock and logs holding it up.
 24 Water.
 25 Spikes.
   These are invisible, the spike graphics should be part of the room's tiles.
@@ -128,9 +134,10 @@
     0 Left half of the gate.
     1 Right half of the gate.
   Var B: Event flag index for whether this gate has been unlocked.
-2E 
-2F 
+2E Boulder that gets destroyed by Gate Guarder rolling into it.
+  Var A: Event flag to set.
+2F The castle in the background in the epilogue.
 30 Destroyable hand statue holding something shiny.
   Var B: Event flag to set when destroyed.
   Destroying this normally unlocks the floor gate to the center of the castle, but you can change var B to set any other event flag.
-31 
+31 Ends Maxim's boss fight when you defeat him?

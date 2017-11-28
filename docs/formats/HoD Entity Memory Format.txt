@@ -23,6 +23,7 @@ Memory used for entities in HoD is 02000418 - 02007C17. Each entity is 0x80 byte
 50,4: X velocity in subpixels.
 54,4: X velocity in subpixels.
 60,1: Bitfield of ?
+61,1: Bitfield of ?
 66,1: Sprite info index.
   This is an index in the currently loaded sprite info list, 020154FC.
 67,1: Current sprite frame.

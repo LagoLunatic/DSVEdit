@@ -474,6 +474,7 @@ OVERLAY_FILE_FOR_SPECIAL_OBJECT = {}
 REUSED_SPECIAL_OBJECT_INFO = {
   0x01 => {palette_offset: 2}, # warp point
   0x03 => {palette_offset: 1}, # wall in save room
+  0x04 => {init_code: -1}, # sets a flag
   0x05 => {init_code: 0x0801C950}, # wooden door
   0x06 => {init_code: 0x0801D088, palette_offset: 1},
   0x07 => {init_code: -1}, # light in dark rooms
@@ -483,12 +484,21 @@ REUSED_SPECIAL_OBJECT_INFO = {
   0x11 => {init_code: -1}, # cogs
   0x13 => {palette_offset: 1},
   0x14 => {palette_offset: 2},
+  0x15 => {init_code: -1}, # machine
+  0x16 => {palette_offset: 2}, # hittable cog
+  0x18 => {palette_offset: 3}, # small spinning gear
   0x1B => {init_code: -1}, # lightning
   0x1D => {init_code: 0x080213E0, palette_offset: 5}, # ball race
+  0x20 => {init_code: -1}, # giant axe
+  0x21 => {palette_offset: 3}, # giant crocomire skull and logs
+  0x22 => {init_code: -1}, # giant skull
+  0x23 => {init_code: 0x08022FA1}, # giant rock and logs -> giant crocomire skull and logs
   0x24 => {init_code: -1}, # water
   0x25 => {init_code: -1}, # spikes
   0x26 => {init_code: -1}, # event
   0x27 => {init_code: -1}, # drawbridge
+  0x2F => {gfx_files: [0x081236B8]},
+  0x31 => {init_code: -1},
 }
 SPECIAL_OBJECT_FILES_TO_LOAD_LIST = nil
 BEST_SPRITE_FRAME_FOR_SPECIAL_OBJECT = {
@@ -507,6 +517,8 @@ BEST_SPRITE_OFFSET_FOR_SPECIAL_OBJECT = {}
 OTHER_SPRITES = [
   COMMON_SPRITE,
   
+  {desc: "Juste player", init_code: 0x080E1FFC},
+  
   {desc: "Candle 0", gfx_files: [0x0811BD98], palette: 0x08125BB0, palette_offset: 0, sprite: 0x081548B4},
   {desc: "Candle 1", gfx_files: [0x0811BDA0], palette: 0x08125BB0, palette_offset: 1, sprite: 0x08154A88},
   {desc: "Candle 2", gfx_files: [0x0811BDA8], palette: 0x08125BB0, palette_offset: 2, sprite: 0x08154C08},
@@ -516,6 +528,10 @@ OTHER_SPRITES = [
   {desc: "Candle 6", gfx_files: [0x0811BDC8], palette: 0x08125D1C, palette_offset: 0, sprite: 0x08155250},
   {desc: "Candle 7", gfx_files: [0x0811BDD0], palette: 0x08125BB0, palette_offset: 7, sprite: 0x08155484},
   {desc: "Candle 8", gfx_files: [0x0811BDD8], palette: 0x08125D40, palette_offset: 0, sprite: 0x081556AC},
+  
+  # maxim's gfx list: 080DC964
+  # maxim's duplicate gfx list?: 080E0570
+  # skill gfx...? list: 080E2940
 ]
 
 CANDLE_FRAME_IN_COMMON_SPRITE = 0x47

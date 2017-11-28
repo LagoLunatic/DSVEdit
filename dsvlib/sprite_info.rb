@@ -302,7 +302,7 @@ class SpriteInfo
         is_single_compressed_gfx_page = header_vals[0] == 1 && header_vals[1] == 4 && header_vals[2] == 0x10 && header_vals[3] <= 0x10
         return true if is_single_compressed_gfx_page
         
-        is_gfx_list = (2..3).include?(header_vals[0]) && (1..5).include?(header_vals[1]) && header_vals[2] == 4 && (1..2).include?(header_vals[3])
+        is_gfx_list = (2..3).include?(header_vals[0]) && (1..0xF).include?(header_vals[1]) && [2, 4].include?(header_vals[2]) && (1..2).include?(header_vals[3])
         return is_gfx_list
       else
         is_single_uncompressed_gfx_page = header_vals[0] == 0 && header_vals[1] == 4 && header_vals[2] == 0x10 && header_vals[3] <= 0x10
