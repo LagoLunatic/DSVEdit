@@ -515,6 +515,7 @@ class DSVEdit < Qt::MainWindow
   def room_state_index_changed(new_room_state_index)
     @room = @room_states[new_room_state_index]
     load_room()
+    @ui.room_state.setCurrentIndex(new_room_state_index)
   end
   
   def update_room_position_indicator
@@ -541,6 +542,17 @@ class DSVEdit < Qt::MainWindow
       "Could not find room",
       "Could not find any room with pointer %08X" % room_metadata_ram_pointer
     )
+  end
+  
+  def change_room_by_room_object(room)
+    change_area(room.area_index)
+    change_sector(room.sector_index, force=true)
+    change_room(room.room_index, force=true)
+    
+    if GAME == "hod"
+      room_state_index = @room_states.index(room)
+      room_state_index_changed(room_state_index)
+    end
   end
   
   def room_clicked(x, y, button)

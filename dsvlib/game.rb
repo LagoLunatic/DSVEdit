@@ -92,6 +92,14 @@ class Game
         sector.load_necessary_overlay()
         sector.rooms.each do |room|
           yield room
+          
+          if GAME == "hod"
+            while true
+              room = room.alternate_room_state
+              break if room.nil?
+              yield room
+            end
+          end
         end
       end
     end

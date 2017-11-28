@@ -41,7 +41,7 @@ class EntitySearchDialog < Qt::Dialog
         next if var_a && var_a != entity.var_a
         next if var_b && var_b != entity.var_b
         
-        @rooms << room.room_metadata_ram_pointer
+        @rooms << room
         @ui.room_list.addItem("%08X" % room.room_metadata_ram_pointer)
         break # Only need to add each room to the list once
       end
@@ -50,7 +50,7 @@ class EntitySearchDialog < Qt::Dialog
   
   def room_changed(index)
     return if index == -1
-    room_metadata = @rooms[index]
-    parent.change_room_by_metadata(room_metadata)
+    room = @rooms[index]
+    parent.change_room_by_room_object(room)
   end
 end
