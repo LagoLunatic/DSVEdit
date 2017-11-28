@@ -21,11 +21,14 @@ Memory used for entities in PoR is 020FC500 - 0211173F. Each entity is 0x160 byt
 040,4: Y velocity.
 048,4: X friction.
 04C,4: Y acceleration (gravity).
+064,2: Rotation.
+  Every 0x4000 is equivalent to 90 degrees.
 066,2: Min random dist? (For the portrait blocking flames)
 068,2: Max random dist? (For the portrait blocking flames)
 06C,2: Sprite info index.
   This is an index in the currently loaded sprite info list, 020FA200.
 074,4: Bitfield related to sprite drawing.
+  0004 Enable rotation.
   0020 
   0080 Direction. Set if facing left, clear if facing right.
   8000 
@@ -92,6 +95,9 @@ Memory used for entities in PoR is 020FC500 - 0211173F. Each entity is 0x160 byt
 
 For players:
 0D0,4: Bitfield of player state booleans.
+0D4,4: Bitfield of ???
+  If bits 10000 and 20000 are both set, or if bit 40000 is set, the player is on a jumpthrough platform?
+  00000020 - Standing on a tile floor (not a collidable entity). This is set regardless of whether the floor is solid or jumpthrough.
 0DC,4: Bitfield of ?
 0E0,4: Bitfield of partner states?
   00000002 - Can't move.
@@ -106,11 +112,15 @@ For players:
 0EC,1: 0 for player 1, 1 for player 2.
 0ED,1: Which player character index this player is. 2 is Stella, 3 is Loretta, etc.
 0F4,4: Pointer to their state->anims mapping.
+0FC,2: 
+0FE,2: Player's animation state. This is the index in their state->anim mapping list to get the new animation.
 100,4: Bitfield of player state booleans. Seems very similar to 0D0, but not exactly the same.
+104,4: Bitfield of ???. Similar to 0D4
 124,4: Duplicate of x pos?
 128,4: Duplicate of y pos?
 12C,4: Drawn x pos offset for the katar critical.
 130,4: Drawn y pos offset for the axe critical.
+144,1: Most recent weapon index swung.
 
 For room entities:
 132,1: Subtype.
@@ -135,3 +145,6 @@ For skills:
 
 For items:
 0D0,4: Pointer to the item data for this item.
+
+For player weapons:
+0D0,4: Weapon index of this weapon.

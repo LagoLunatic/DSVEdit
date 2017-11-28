@@ -184,6 +184,11 @@
   ; Will return true if either player 1 or player 2 have this item equipped, but only if your partner is called out. If your partner is hidden away, only the controlled character's equipment matters.
   ; This is used for Eye for Decay.
 
+021FED58 PlayerSetAnimByState
+  ; r0 - Entity
+  ; r1 - Animation state index. This is the index in their state->anims mapping list.
+  ; r2 - ? Stored to entity+FC
+  ; This sets the player's animation state.
 021FEE34 PlayerGetStateAnim
   ; r0 - Pointer to player entity
   ; r1 - State index
@@ -232,6 +237,12 @@
 
 021F5004 SwitchPlayers
 021F5AC0 CheckCanSwitchPlayers
+
+021DBF9C WhipDangleUpdate
+  ; This function hardcodes the hand position that is the center of the whip dangle.
+  ; 021DBFFC and 021DBFF8 hardcode Jonathan's hand's X and Y offsets relative to his position.
+  ; 021DBFF0 and 021DBFEC hardcode Richter's hand's X and Y offsets relative to his position.
+  ; 021DBFAC and 021DBFC0 hardcode any other character's hand's X and Y offsets relative to his position.
 
 02012E44 DeleteEntity
   ; r0 - Entity pointer
@@ -337,6 +348,25 @@
   ; r3 - Maximum X pos to the right in pixels (positive)
   ; [r13,0] - Maximum Y pos downwards in pixels (positive)
   ; Returns: 0 if the player is out of range, 1 if in range.
+
+02013518 GetEntityHitboxPtr
+  ; r0 - Entity pointer
+
+02013B10 SetHitbox
+  ; r0 - Entity
+  ; r1 - X pos
+  ; r2 - Y pos
+  ; r3 - Z pos
+  ; [r13] - Lower halfword is hitbox's left X offset. Upper halfword is hitbox's top Y offset.
+  ; [r13,4] - Lower halfword is hitbox's right X offset. Upper halfword is hitbox's bottom Y offset.
+  ; [r13,8] - Which hitbox (0 or 1)
+  ; [r13,C] - Hitbox type
+02014CB4 SetAbsoluteHitbox
+  ; r0 - Entity
+  ; r1 - Lower halfword is left X. Upper halfword is top Y.
+  ; r2 - Lower halfword is right X. Upper halfword is bottom Y.
+  ; r3 - Which hitbox (0 or 1)
+  ; [r13] - Hitbox type
 
 020108B0 GetSpriteInfoPointer
   ; r0 - Index in the currently loaded sprite info list, 020FA200. This is from entity+0x6C.
@@ -467,6 +497,11 @@
   ; r1 - Iframes index to store at entity+A4
   ; r2 - On-hurt-player callback to store at +C8
   ; r3 - On-damaged callback to store at +CC
+  ; Also initializes the entity's hitbox.
+
+020128E8 GetEntitySlotIndexByPointer
+  ; r0 - Entity
+  ; Calculates and returns the entity index in the list of all entities.
 
 021D386C CalculateDropChance
   ; r0 - The base item drop chance from the enemy DNA.

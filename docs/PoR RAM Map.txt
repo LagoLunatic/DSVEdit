@@ -167,7 +167,7 @@
 020FC064-020FC463 - List of sprites in the top screen OAM.
   Entry length 0x10.
 
-020FC48C - Bitfield of what buttons the player is pressing.
+020FC48C,2 - Bitfield of what buttons the player is pressing.
   0001 - A
   0002 - B
   0004 - Select
@@ -181,7 +181,9 @@
   0400 - X
   0800 - Y
   2000 - Debug
-020FC48E - Bitfield of what buttons the player pressed this frame.
+020FC48E,2 - Bitfield of what buttons the player pressed this frame.
+020FC49C,2 - Bitfield of what buttons the player is pressing. (Duplicate?)
+020FC49E,2 - Bitfield of what buttons the player pressed this frame. (Duplicate?)
 
 020FC4B4,1 - Whether touch screen has been touched for at least 2 frames.
 020FC4B5,1 - Whether touch screen has been touched for exactly 2 frames.
@@ -229,6 +231,7 @@ F5-F5
 020FCBE0-020FCD3F - Player 2 (slot 05)
 020FD000-020FDDBF - Player skills (slots 08-11)
 020FEB80-020FF0FF - Player weapons (slots 1C-1F)
+020FF100-020FF7DF - ??? (slots 20-24)
 02100440-0210059F - Face icons for players (slot 2E)
 02100860-0210765F - Room entities (slots 31-80)
 02107660-02110EFF - Particles (slots 81-EF)
@@ -310,7 +313,7 @@ F5-F5
   0x00000002 - Set during boss fights. Disables suspending, magical tickets, and keeps boss doors shut.
   0x00000040 - Player is dying. Manually setting this bit causes the player to die instantly regardless of their HP, complete with screaming.
   0x00000080 - Set during events?
-  0x00002000 - related to status effects on enemies?
+  0x00002000 - related to status effects on enemies? and collidable entities?
   0x00004000 - related to adrenaline gear?
   0x00040000 - Set during events and in Wind and Vincent's rooms?
   0x00100000 - Set when going through a door.
@@ -589,6 +592,16 @@ TODO: What are the other 2 for? It's not for the "recent" tab.
 0211223D,1 - Index of Player 2's currently selected subweapon in their list of quickswap subweapons.
   e.g. For Maria 0 is Seiryu, 1 is Suzaku, 2 is Byakko, etc.
 
+02112240 - List of collidable entities.
+  Each entry is 8 bytes long.
+  00,4: Type of collision.
+    0 - A jump-through platform you can slide on.
+    1 - A jump-through platform you can fall through.
+    2 - A completely solid block.
+  04,4: Pointer to the entity.
+021122C0,4 - Current number of collidable entities in the room (maximum of 0x10).
+021122C4,4 - Pointer to the collidable entity the player is currently colliding with (or 0 for none).
+
 021122C8,4 - Override walking speed of the player characters.
   If this is 0, player characters use their own unique walking speed.
   Otherwise, this is a speed value that overrides the player's walking speed.
@@ -667,9 +680,16 @@ TODO: What are the other 2 for? It's not for the "recent" tab.
 
 02122BF8,2 - Number of frames to keep the game logic paused.
 
+02122BE8,2 - Tile the player is currently standing on (from the first layer's tile list).
+02122BEA,1 - Collision data of the tile the player is currently standing on.
+
 0213174C - List of text currently displayed??
   Entry length 0x3C.
 
+0213282C - List of something related to hitboxes?
+  Entry length 1.
+  The index in this list for a particular entity is at offset+0xA7 in the entity memory.
+  These seem to be how many hitboxes the entity has active. 0 1 or 2.
 0213291C - List of hitboxes. Each entry is 0x14 bytes long, containing two hitboxes 0xA bytes long each.
   The index in this list for a particular entity is at offset+0xA7 in the entity memory.
 
@@ -683,6 +703,12 @@ TODO: What are the other 2 for? It's not for the "recent" tab.
 0213D65C,0213DCF8,0213DD04 - Currently playing song.
 
 === 021CDF60 - 0221F41F: Overlay 0
+
+0221B6B0-0221B6B7 - Player's hitbox.
+  00,2: Left X offset.
+  02,2: Top Y offset.
+  04,2: Right X offset.
+  06,2: Bottom Y offset.
 
 0221D7A0 - List of enemies that need a certain enemy overlay and which overlay they need.
   Each entry is 8 bytes long.
@@ -856,6 +882,16 @@ TODO: What are the other 2 for? It's not for the "recent" tab.
   05 02216200 Heaven's Sword (throw the weapon straight in front of you, then it comes back to you).
   06 02215EC4 Illusion Fist.
   07 02215FD8 Tori (throw the weapon diagonally upwards, then it comes back to you).
+0221F020-0221F06F - List of weapon swing animation types.
+  Entry length 8.
+  01,1: Offset in pixels downwards. (Signed.)
+  02,1: Force the weapon applies to enemies that it hits.
+    stored to weapon entity+BC,2
+    this has way more effect than the one at 04, what's the difference?
+  04,2: Force the weapon applies to enemies that it hits.
+    For example this affects how hard the pieces of a zombie fly when you kill it.
+    This can be negative to make things fly towards you.
+  06,2: signed. stored to weapon entity+BE,2 after some modification?
 
 === 0221F41F: End of Overlay 0
 

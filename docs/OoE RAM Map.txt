@@ -221,6 +221,14 @@ Player's current bonus elemental attribute points (AP):
 020FFE9C,2 - Bitfield of currently pressed buttons.
 020FFE9E,2 - Bitfield of buttons pressed this frame.
 
+020FFEC4 - List of collidable entities.
+  Each entry is 8 bytes long.
+  00,4: Type of collision.
+    0 - A jump-through platform you can slide on.
+    1 - A jump-through platform you can fall through.
+    2 - A completely solid block.
+  04,4: Pointer to the entity.
+
 020FFF68,4 - Pointer to an entity. For Anna's rescue event, this has a pointer to the cat.
 
 021000BC,4 - Screen scrolling x pos.
