@@ -36,7 +36,11 @@ class Room
                 :entities,
                 :doors,
                 :entity_gfx_list_pointer,
-                :entity_gfx_list
+                :entity_gfx_list,
+                :palette_shift_func,
+                :palette_shift_index,
+                :is_castle_b,
+                :has_save_right_wall
 
   def initialize(sector, room_metadata_ram_pointer, area_index, sector_index, room_index, game)
     @room_metadata_ram_pointer = room_metadata_ram_pointer
@@ -251,6 +255,12 @@ class Room
       @is_castle_b         = (extra_data & 0b01000000_00000000_00000000_00000000) >> 30 # TODO allow editing
       @has_save_right_wall = (extra_data & 0b10000000_00000000_00000000_00000000) >> 31 # TODO figure out
       @palette_page_index  = 0 # Always 0 in HoD
+      if palette_shift_func != 0
+        # palette_shift_func is not just for palette shifts, also the fake 3D tower on the stairway is from this.
+        # palette_shift_func-1 is an index in list 08495034. this is a function pointer to call.
+        # palette_shift_index is the argument to that function.
+        puts room_str
+      end
     else # PoR or OoE
       @number_of_doors    = (extra_data & 0b00000000_00000000_00000000_01111111)
       @room_xpos_on_map   = (extra_data & 0b00000000_00000000_00111111_10000000) >> 7
@@ -475,8 +485,18 @@ class Room
     
     enemies = entities.select{|e| e.is_enemy?}
     enemies.each do |enemy|
+      enemy_id = enemy.subtype
+      if enemy_id == 0x6A
+        # Spawner
+        enemy_id = enemy.var_b
+      elsif enemy_id == 0x66
+        # Spawner timer
+        next
+      end
+      
+      # TODO: add check that the id is within the list of valid id numbers, otherwise skip it so we don't get a crash in dsvedit.
+      
       begin
-        enemy_id = enemy.subtype
         sprite_info = game.enemy_dnas[enemy_id].extract_gfx_and_palette_and_sprite_from_init_ai
         
         @entity_gfx_list += sprite_info.gfx_file_pointers
@@ -487,9 +507,38 @@ class Room
     
     objects = entities.select{|e| e.is_special_object?}
     objects.each do |object|
+      object_id = object.subtype
       begin
-        object_id = object.subtype
-        sprite_info = game.special_objects[object_id].extract_gfx_and_palette_and_sprite_from_create_code
+        if object_id == 5 && object.var_a > 1
+          # Skull door or Lure door
+          other_sprite = OTHER_SPRITES.find{|spr| spr[:desc] == "Skull door"}
+          sprite_info = SpriteInfo.extract_gfx_and_palette_and_sprite_from_create_code(other_sprite[:init_code], fs, nil, other_sprite)
+        else
+          sprite_info = game.special_objects[object_id].extract_gfx_and_palette_and_sprite_from_create_code
+        end
+        
+        @entity_gfx_list += sprite_info.gfx_file_pointers
+      rescue SpriteInfo::CreateCodeReadError => e
+        puts e.message
+      end
+    end
+    
+    candles = entities.select{|e| e.is_candle?}
+    candles.each do |candle|
+      begin
+        sprite_info, _ = candle.get_hod_candle_sprite_info()
+        
+        @entity_gfx_list += sprite_info.gfx_file_pointers
+      rescue SpriteInfo::CreateCodeReadError => e
+        puts e.message
+      end
+    end
+    
+    if palette_shift_func == 5
+      begin
+        # Has the fake 3D clock tower
+        other_sprite = OTHER_SPRITES.find{|spr| spr[:desc] == "Clock tower in BG"}
+        sprite_info = SpriteInfo.extract_gfx_and_palette_and_sprite_from_create_code(other_sprite[:init_code], fs, nil, other_sprite)
         
         @entity_gfx_list += sprite_info.gfx_file_pointers
       rescue SpriteInfo::CreateCodeReadError => e

@@ -529,6 +529,9 @@ OTHER_SPRITES = [
   {desc: "Candle 7", gfx_files: [0x0811BDD0], palette: 0x08125BB0, palette_offset: 7, sprite: 0x08155484},
   {desc: "Candle 8", gfx_files: [0x0811BDD8], palette: 0x08125D40, palette_offset: 0, sprite: 0x081556AC},
   
+  {desc: "Skull door", init_code: 0x0801C980},
+  {desc: "Clock tower in BG", init_code: 0x08026B34},
+  
   # maxim's gfx list: 080DC964
   # maxim's duplicate gfx list?: 080E0570
   # skill gfx...? list: 080E2940

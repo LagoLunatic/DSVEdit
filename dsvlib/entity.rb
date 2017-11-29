@@ -184,4 +184,48 @@ class Entity
   def is_villager?
     GAME == "ooe" && is_special_object? && subtype == 0x89
   end
+  
+  def get_hod_candle_sprite_info
+    if GAME != "hod" || !is_candle?
+      raise "Not a HoD candle"
+    end
+    
+    if var_a & 0xFFF == 0
+      # Candle in common sprite
+      candle_type = var_a >> 0xC
+      if (0..3).include?(candle_type)
+        candle_frame = case candle_type
+        when 0
+          CANDLE_FRAME_IN_COMMON_SPRITE
+        when 1..3
+          0x4A
+        end
+        palette_offset = case candle_type
+        when 0
+          1
+        when 1
+          8
+        when 2
+          9
+        when 3
+          0xA
+        end
+        candle_sprite_info = CANDLE_SPRITE.merge(palette_offset: palette_offset)
+        sprite_info = SpriteInfo.extract_gfx_and_palette_and_sprite_from_create_code(CANDLE_SPRITE[:pointer], @fs, CANDLE_SPRITE[:overlay], candle_sprite_info)
+        return [sprite_info, candle_frame]
+      else
+        return nil
+      end
+    else
+      # Candle not in common sprite.
+      candle_type = var_a & 0xF
+      other_sprite = OTHER_SPRITES.find{|spr| spr[:desc] == "Candle #{candle_type}"}
+      if other_sprite
+        sprite_info = SpriteInfo.new(other_sprite[:gfx_files], other_sprite[:palette], other_sprite[:palette_offset], other_sprite[:sprite], nil, @fs)
+        return [sprite_info, 0]
+      else
+        return nil
+      end
+    end
+  end
 end
