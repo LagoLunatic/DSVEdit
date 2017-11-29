@@ -259,7 +259,7 @@ class Room
         # palette_shift_func is not just for palette shifts, also the fake 3D tower on the stairway is from this.
         # palette_shift_func-1 is an index in list 08495034. this is a function pointer to call.
         # palette_shift_index is the argument to that function.
-        puts room_str
+        #puts room_str
       end
     else # PoR or OoE
       @number_of_doors    = (extra_data & 0b00000000_00000000_00000000_01111111)
@@ -522,7 +522,7 @@ class Room
         end
         
         @entity_gfx_list += sprite_info.gfx_list_pointer_or_gfx_file_pointers
-      rescue SpriteInfo::CreateCodeReadError => e
+      rescue SpriteInfo::CreateCodeReadError, GBADummyFilesystem::ReadError => e
         puts e.message
       end
     end
@@ -533,7 +533,7 @@ class Room
         sprite_info, _ = candle.get_hod_candle_sprite_info()
         
         @entity_gfx_list += sprite_info.gfx_list_pointer_or_gfx_file_pointers
-      rescue SpriteInfo::CreateCodeReadError => e
+      rescue SpriteInfo::CreateCodeReadError, GBADummyFilesystem::ReadError => e
         puts e.message
       end
     end
@@ -545,7 +545,7 @@ class Room
         sprite_info = SpriteInfo.extract_gfx_and_palette_and_sprite_from_create_code(other_sprite[:init_code], fs, nil, other_sprite)
         
         @entity_gfx_list += sprite_info.gfx_list_pointer_or_gfx_file_pointers
-      rescue SpriteInfo::CreateCodeReadError => e
+      rescue SpriteInfo::CreateCodeReadError, GBADummyFilesystem::ReadError => e
         puts e.message
       end
     end

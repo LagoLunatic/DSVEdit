@@ -41,7 +41,8 @@
     11 Talos (chase)
     12 Pazuzu
 07 Circle of light around player in dark rooms.
-08 required in certain rooms for the player to appear???
+08 Pushable crates.
+  Var A: Which room's arrangement of crates to use. This is an index in list 080E2690.
 09 Button.
   Var A: Event flag to set when you press the button.
     Note that this also affects the GFX and palette used, so only use 0-3 for this or it will crash.
