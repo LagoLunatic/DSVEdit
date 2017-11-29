@@ -2,6 +2,7 @@ class SpriteInfo
   class CreateCodeReadError < StandardError ; end
   
   attr_reader :gfx_file_pointers,
+              :gfx_list_pointer,
               :palette_pointer,
               :palette_offset,
               :sprite_file_pointer,
@@ -10,8 +11,13 @@ class SpriteInfo
               :sprite,
               :gfx_pages
   
-  def initialize(gfx_file_pointers, palette_pointer, palette_offset, sprite_file_pointer, skeleton_file, fs)
-    @gfx_file_pointers = gfx_file_pointers
+  def initialize(gfx_file_pointers, palette_pointer, palette_offset, sprite_file_pointer, skeleton_file, fs, gfx_list_pointer: nil)
+    if gfx_list_pointer
+      @gfx_list_pointer = gfx_list_pointer
+      @gfx_file_pointers = SpriteInfo.unpack_gfx_pointer_list(gfx_list_pointer, fs)
+    else
+      @gfx_file_pointers = gfx_file_pointers
+    end
     @palette_pointer = palette_pointer
     @palette_offset = palette_offset
     @sprite_file_pointer = sprite_file_pointer
@@ -21,6 +27,14 @@ class SpriteInfo
     
     @gfx_pages = @gfx_file_pointers.map do |gfx_pointer|
       GfxWrapper.new(gfx_pointer, fs)
+    end
+  end
+  
+  def gfx_list_pointer_or_gfx_file_pointers
+    if gfx_list_pointer
+      [gfx_list_pointer]
+    else
+      gfx_file_pointers
     end
   end
   
@@ -51,13 +65,13 @@ class SpriteInfo
     ignore_files_to_load   = reused_info[:ignore_files_to_load] || false
     sprite_file_pointer    = reused_info[:sprite] || nil
     gfx_file_pointers      = reused_info[:gfx_files] || nil
-    gfx_wrapper            = reused_info[:gfx_wrapper] || nil
+    gfx_list_pointer       = reused_info[:gfx_wrapper] || nil
     palette_pointer        = reused_info[:palette] || nil
     
     if sprite_file_pointer && gfx_file_pointers && palette_pointer
       return SpriteInfo.new(gfx_file_pointers, palette_pointer, palette_offset, sprite_file_pointer, nil, fs)
-    elsif sprite_file_pointer && gfx_wrapper && palette_pointer
-      gfx_file_pointers = unpack_gfx_pointer_list(gfx_wrapper, fs)
+    elsif sprite_file_pointer && gfx_list_pointer && palette_pointer
+      gfx_file_pointers = unpack_gfx_pointer_list(gfx_list_pointer, fs)
       return SpriteInfo.new(gfx_file_pointers, palette_pointer, palette_offset, sprite_file_pointer, nil, fs)
     end
     
@@ -157,12 +171,12 @@ class SpriteInfo
     end
     
     valid_gfx_pointers = possible_gfx_pointers.select do |pointer|
-      check_if_valid_gfx_pointer(pointer, fs)
+      check_if_valid_gfx_wrapper_pointer(pointer, fs) || check_if_valid_gfx_list_pointer(pointer, fs)
     end
     possible_palette_pointers -= valid_gfx_pointers
     
     if gfx_file_pointers.nil? && gfx_files_to_load.empty?
-      if gfx_wrapper.nil?
+      if gfx_list_pointer.nil?
         if valid_gfx_pointers.empty?
           raise CreateCodeReadError.new("Failed to find any valid sprite gfx pointers.")
         end
@@ -170,10 +184,14 @@ class SpriteInfo
           raise CreateCodeReadError.new("Failed to find enough valid sprite gfx pointers to match the reused sprite gfx sheet index. (#{valid_gfx_pointers.length} found, #{gfx_sheet_ptr_index+1} needed.)")
         end
         
-        gfx_wrapper = valid_gfx_pointers[gfx_sheet_ptr_index]
+        gfx_list_or_file_pointer = valid_gfx_pointers[gfx_sheet_ptr_index]
       end
       
-      gfx_file_pointers = unpack_gfx_pointer_list(gfx_wrapper, fs)
+      if check_if_valid_gfx_list_pointer(gfx_list_or_file_pointer, fs)
+        gfx_list_pointer = gfx_list_or_file_pointer
+      else
+        gfx_file_pointers = [gfx_list_or_file_pointer]
+      end
     end
     possible_palette_pointers -= gfx_files_to_load.map{|gfx| gfx.gfx_pointer}
     
@@ -234,33 +252,33 @@ class SpriteInfo
       end
     end
     
-    return SpriteInfo.new(gfx_file_pointers, palette_pointer, palette_offset, sprite_file_pointer, skeleton_file, fs)
+    return SpriteInfo.new(gfx_file_pointers, palette_pointer, palette_offset, sprite_file_pointer, skeleton_file, fs, gfx_list_pointer: gfx_list_pointer)
   end
   
-  def self.unpack_gfx_pointer_list(gfx_wrapper, fs)
+  def self.unpack_gfx_pointer_list(gfx_list_pointer, fs)
     if SYSTEM == :nds
-      data = fs.read(gfx_wrapper+4, 4).unpack("V").first
+      data = fs.read(gfx_list_pointer+4, 4).unpack("V").first
       if fs.is_pointer?(data)
-        _, _, number_of_gfx_pages, _ = fs.read(gfx_wrapper, 4).unpack("C*")
+        _, _, number_of_gfx_pages, _ = fs.read(gfx_list_pointer, 4).unpack("C*")
         pointer_to_list_of_gfx_file_pointers = data
         
         gfx_file_pointers = fs.read(pointer_to_list_of_gfx_file_pointers, 4*number_of_gfx_pages).unpack("V*")
       else
-        gfx_file_pointers = [gfx_wrapper]
+        gfx_file_pointers = [gfx_list_pointer]
       end
       
       return gfx_file_pointers
     elsif SYSTEM == :gba
-      header_vals = fs.read(gfx_wrapper, 4).unpack("C*")
+      header_vals = fs.read(gfx_list_pointer, 4).unpack("C*")
       is_single_gfx_page = [0, 1].include?(header_vals[0]) && header_vals[1] == 4 && header_vals[2] == 0x10 && header_vals[3] <= 0x10
       
       if is_single_gfx_page
-        gfx_file_pointers = [gfx_wrapper]
+        gfx_file_pointers = [gfx_list_pointer]
       else
         gfx_file_pointers = []
         i = 0
         while true
-          pointer = fs.read(gfx_wrapper+4+i*4, 4).unpack("V").first
+          pointer = fs.read(gfx_list_pointer+4+i*4, 4).unpack("V").first
           break unless fs.is_pointer?(pointer)
           gfx_file_pointers << pointer
           i += 1
@@ -269,23 +287,17 @@ class SpriteInfo
       
       return gfx_file_pointers
     else
-      return [gfx_wrapper]
+      return [gfx_list_pointer]
     end
   end
   
-  def self.check_if_valid_gfx_pointer(pointer, fs)
+  def self.check_if_valid_gfx_wrapper_pointer(pointer, fs)
     if SYSTEM == :nds
       header_vals = fs.read(pointer, 4).unpack("C*") rescue return
       data = fs.read(pointer+4, 4).unpack("V").first
-      if fs.is_pointer?(data)#data >= 0x02000000 && data < 0x03000000
-        # There's a chance this might just be something that looks like a pointer (like palette data), so check to make sure it really is one.
-        possible_gfx_page_pointer = fs.read(data, 4).unpack("V").first rescue return
-        if fs.is_pointer?(possible_gfx_page_pointer)#possible_gfx_page_pointer >= 0x02000000 && possible_gfx_page_pointer < 0x03000000
-          # List of GFX pages
-          header_vals.all?{|val| val < 0x50} && (1..2).include?(header_vals[1])
-        else
-          false
-        end
+      if fs.is_pointer?(data)
+        # This is probably a list of GFX pages, not a single one.
+        false
       elsif data == 0x10
         # Just one GFX page, not a list
         header_vals[0] == 0 && (1..2).include?(header_vals[1]) && header_vals[2] == 0x10 && header_vals[3] == 0
@@ -300,14 +312,37 @@ class SpriteInfo
       data = fs.read(pointer+4, 4).unpack("V").first
       if fs.is_pointer?(data)
         is_single_compressed_gfx_page = header_vals[0] == 1 && header_vals[1] == 4 && header_vals[2] == 0x10 && header_vals[3] <= 0x10
-        return true if is_single_compressed_gfx_page
-        
+        return is_single_compressed_gfx_page
+      else
+        is_single_uncompressed_gfx_page = header_vals[0] == 0 && header_vals[1] == 4 && header_vals[2] == 0x10 && header_vals[3] <= 0x10
+        return is_single_uncompressed_gfx_page
+      end
+    end
+  end
+  
+  def self.check_if_valid_gfx_list_pointer(pointer, fs)
+    if SYSTEM == :nds
+      header_vals = fs.read(pointer, 4).unpack("C*") rescue return
+      data = fs.read(pointer+4, 4).unpack("V").first
+      if fs.is_pointer?(data)
+        # There's a chance this might just be something that looks like a pointer (like palette data), so check to make sure it really is one.
+        possible_gfx_page_pointer = fs.read(data, 4).unpack("V").first rescue return
+        if fs.is_pointer?(possible_gfx_page_pointer)
+          # List of GFX pages
+          header_vals.all?{|val| val < 0x50} && (1..2).include?(header_vals[1])
+        else
+          false
+        end
+      else
+        false
+      end
+    else
+      header_vals = fs.read(pointer, 4).unpack("C*") rescue return
+      data = fs.read(pointer+4, 4).unpack("V").first
+      if fs.is_pointer?(data)
         is_gfx_list = (2..3).include?(header_vals[0]) && (1..0xF).include?(header_vals[1]) && [2, 4].include?(header_vals[2]) && (1..2).include?(header_vals[3])
         return is_gfx_list
       else
-        is_single_uncompressed_gfx_page = header_vals[0] == 0 && header_vals[1] == 4 && header_vals[2] == 0x10 && header_vals[3] <= 0x10
-        return true if is_single_uncompressed_gfx_page
-        
         false
       end
     end

@@ -485,6 +485,7 @@ class Room
     
     enemies = entities.select{|e| e.is_enemy?}
     enemies.each do |enemy|
+    begin
       enemy_id = enemy.subtype
       if enemy_id == 0x6A
         # Spawner
@@ -492,17 +493,20 @@ class Room
       elsif enemy_id == 0x66
         # Spawner timer
         next
+      elsif enemy_id == 0x16 && enemy.var_a == 2
+        # Peeping Eye that spawns Peeping Big
+        sprite_info = game.enemy_dnas[0x42].extract_gfx_and_palette_and_sprite_from_init_ai
+        @entity_gfx_list += sprite_info.gfx_list_pointer_or_gfx_file_pointers
       end
       
       # TODO: add check that the id is within the list of valid id numbers, otherwise skip it so we don't get a crash in dsvedit.
       
-      begin
-        sprite_info = game.enemy_dnas[enemy_id].extract_gfx_and_palette_and_sprite_from_init_ai
-        
-        @entity_gfx_list += sprite_info.gfx_file_pointers
-      rescue SpriteInfo::CreateCodeReadError => e
-        puts e.message
-      end
+      sprite_info = game.enemy_dnas[enemy_id].extract_gfx_and_palette_and_sprite_from_init_ai
+      
+      @entity_gfx_list += sprite_info.gfx_list_pointer_or_gfx_file_pointers
+    rescue SpriteInfo::CreateCodeReadError => e
+      puts e.message
+    end
     end
     
     objects = entities.select{|e| e.is_special_object?}
@@ -517,7 +521,7 @@ class Room
           sprite_info = game.special_objects[object_id].extract_gfx_and_palette_and_sprite_from_create_code
         end
         
-        @entity_gfx_list += sprite_info.gfx_file_pointers
+        @entity_gfx_list += sprite_info.gfx_list_pointer_or_gfx_file_pointers
       rescue SpriteInfo::CreateCodeReadError => e
         puts e.message
       end
@@ -528,7 +532,7 @@ class Room
       begin
         sprite_info, _ = candle.get_hod_candle_sprite_info()
         
-        @entity_gfx_list += sprite_info.gfx_file_pointers
+        @entity_gfx_list += sprite_info.gfx_list_pointer_or_gfx_file_pointers
       rescue SpriteInfo::CreateCodeReadError => e
         puts e.message
       end
@@ -540,7 +544,7 @@ class Room
         other_sprite = OTHER_SPRITES.find{|spr| spr[:desc] == "Clock tower in BG"}
         sprite_info = SpriteInfo.extract_gfx_and_palette_and_sprite_from_create_code(other_sprite[:init_code], fs, nil, other_sprite)
         
-        @entity_gfx_list += sprite_info.gfx_file_pointers
+        @entity_gfx_list += sprite_info.gfx_list_pointer_or_gfx_file_pointers
       rescue SpriteInfo::CreateCodeReadError => e
         puts e.message
       end
