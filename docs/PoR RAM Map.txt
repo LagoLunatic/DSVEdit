@@ -759,19 +759,19 @@ TODO: What are the other 2 for? It's not for the "recent" tab.
     For Old Axe Armor, all subweapon icons after the first are hardcoded to be the Puppet Master icon.
   04,4: Pointer to a list of which subweapons this player has available for quickswap. Each entry in this list is a halfword, the index of the skill.
 
-0221E468 - List of which sprite animations are for which player states for each player character (state anims).
-  The pointer at offset C in player data points to the appropiate entry in this list.
+0221E468-0221E65F - Lists of which sprite animations are for which player states for each player character (state anims).
+  The "State anims ptr" in the player data points to the appropiate entry in this list.
   Specific pointers for each player:
-    0221E468: Loretta
-    0221E4B0: Richter
-    0221E4F8: Maria
-    0221E540: Old Axe Armor
-    0221E588: Jonathan
-    0221E5D0: Charlotte
-    0221E618: Stella
-  Each entry is 0x48 bytes long. 0x48 states in total.
-  Format:
-    Each state takes up 1 byte, with that byte being the sprite animation index for that state. The states are in this order:
+    0221E468-0221E4AF: Loretta
+    0221E4B0-0221E4F7: Richter
+    0221E4F8-0221E53F: Maria
+    0221E540-0221E587: Old Axe Armor
+    0221E588-0221E5CF: Jonathan
+    0221E5D0-0221E617: Charlotte
+    0221E618-0221E65F: Stella
+  Each list is 0x48 bytes long. Each state takes up 1 byte for 0x48 states in total.
+  Each entry is the sprite animation index for that state.
+  The states are in this order:
     00 Idle
     01 Holding up
     02 Backdashing
