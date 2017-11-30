@@ -401,7 +401,7 @@ REUSED_ENEMY_INFO = {
   0x47 => {init_code: 0x0805A8DC}, # ruler sword lv3
   0x48 => {init_code: 0x08051DE0, palette_offset: 1}, # poison lizard -> master lizard
   0x49 => {palette_offset: 1}, # pazuzu
-  0x4C => {init_code: 0x08043EB0, palette: 0x08125250}, # blaze master -> skeleton blaze
+  0x4C => {init_code: 0x08043EB0, palette: 0x08125250, gfx_sheet_ptr_index: 1, sprite_ptr_index: 1}, # blaze master -> skeleton blaze
   0x4F => {init_code: 0x0809B1AC}, # skeleton glass -> skeleton
   0x51 => {init_code: 0x08096EB8}, # hammer-hammer -> living armor
   0x52 => {init_code: 0x08038AFC, palette_offset: 1}, # disc armor lv2 -> disc armor
@@ -414,6 +414,7 @@ REUSED_ENEMY_INFO = {
   0x5F => {init_code: 0x08096F28}, # pike master -> living armor
   # TODO 63 dracula wraith 2 glitchy
   0x6D => {palette_offset: 2}, # pazuzu (breaks through wall)
+  0x70 => {init_code: 0x080535A0}, # slime (comes from pipe)
   0x77 => {init_code: 0x080936A8}, # talos (chase) -> talos
   0x79 => {init_code: 0x08096DD0}, # revenge armor -> living armor
   # TODO: 64+

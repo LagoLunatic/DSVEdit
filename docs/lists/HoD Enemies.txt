@@ -119,13 +119,19 @@ Enemies:
 61 Maxim
 62 Dracula Wraith
 63 Dracula Wraith
-64 
-65 
-66 Zombie spawner?
-67 
-68 
-69 
-6A 
+64 Fleamen (fall from ceiling)
+65 Tiny Devil (fly down from ceiling)
+66 Spawner timer.
+  Var A: ?
+  Var B: Delay in frames between spawning each enemy.
+67 Spawner timer.
+  Var A: ?
+  Var B: Delay in frames between spawning each enemy.
+68 Unused, nothing
+69 Unused, nothing
+6A Spawner.
+  Var A: ?
+  Var B: Enemy ID to spawn.
 6B Floating Corpse
 6C Candle
   Unused. Behaves just like a candle and shares the same code.
@@ -135,11 +141,11 @@ Enemies:
 6F Revenge Armor (spawns Talos)
 70 Slime (comes from pipe)
 71 Skeleton Glass (in glass)
-72 
-73 
-74 
-75 
-76 
+72 Unused, nothing
+73 Unused, nothing
+74 Unused, nothing
+75 Unused, nothing
+76 Unused, nothing
 77 Talos
   Var A:
     0 Boss fight Talos.
@@ -151,9 +157,9 @@ Enemies:
     1 Behind window.
 79 Revenge Armor
 7A Red Skeleton (drips down)
-7B 
-7C 
-7D bat?
+7B Unused slime man.
+7C bat?
+7D Bat? Everything from here on out is the same enemies just duplicated, but with higher stats
 7E 
 7F 
 80 
