@@ -28,6 +28,7 @@ require_relative 'shop_editor_dialog'
 require_relative 'tileset_chooser_dialog'
 require_relative 'door_editor_dialog'
 require_relative 'magic_seal_editor_dialog'
+require_relative 'player_state_anims_editor_dialog'
 
 require_relative 'ui_main'
 
@@ -57,6 +58,7 @@ class DSVEdit < Qt::MainWindow
   slots "open_entity_search()"
   slots "open_map_editor()"
   slots "open_player_editor()"
+  slots "open_player_state_anims_editor()"
   slots "open_special_object_editor()"
   slots "open_weapon_synth_editor()"
   slots "open_shop_editor()"
@@ -133,6 +135,7 @@ class DSVEdit < Qt::MainWindow
     connect(@ui.actionTileset_Editor, SIGNAL("activated()"), self, SLOT("open_tileset_editor()"))
     connect(@ui.actionMap_Editor, SIGNAL("activated()"), self, SLOT("open_map_editor()"))
     connect(@ui.actionPlayer_Editor, SIGNAL("activated()"), self, SLOT("open_player_editor()"))
+    connect(@ui.actionPlayer_State_Anims_Editor, SIGNAL("activated()"), self, SLOT("open_player_state_anims_editor()"))
     connect(@ui.actionSpecial_Object_Editor, SIGNAL("activated()"), self, SLOT("open_special_object_editor()"))
     connect(@ui.actionWeapon_Synth_Editor, SIGNAL("activated()"), self, SLOT("open_weapon_synth_editor()"))
     connect(@ui.actionShop_Editor, SIGNAL("activated()"), self, SLOT("open_shop_editor()"))
@@ -200,6 +203,7 @@ class DSVEdit < Qt::MainWindow
     @ui.actionTileset_Editor.setEnabled(false);
     @ui.actionMap_Editor.setEnabled(false);
     @ui.actionPlayer_Editor.setEnabled(false);
+    @ui.actionPlayer_State_Anims_Editor.setEnabled(false);
     @ui.actionSpecial_Object_Editor.setEnabled(false);
     @ui.actionWeapon_Synth_Editor.setEnabled(false);
     @ui.actionShop_Editor.setEnabled(false);
@@ -234,6 +238,7 @@ class DSVEdit < Qt::MainWindow
     @ui.actionTileset_Editor.setEnabled(true);
     @ui.actionMap_Editor.setEnabled(true);
     @ui.actionPlayer_Editor.setEnabled(true);
+    @ui.actionPlayer_State_Anims_Editor.setEnabled(true);
     @ui.actionSpecial_Object_Editor.setEnabled(true);
     @ui.actionWeapon_Synth_Editor.setEnabled(true);
     @ui.actionShop_Editor.setEnabled(true);
@@ -880,6 +885,15 @@ class DSVEdit < Qt::MainWindow
     end
     
     @open_dialogs << PlayerEditor.new(self, game)
+  end
+  
+  def open_player_state_anims_editor
+    if SYSTEM == :gba
+      Qt::MessageBox.warning(self, "Can't edit players", "Players are hardcoded in AoS and HoD and cannot be edited with this tool.")
+      return
+    end
+    
+    @open_dialogs << PlayerStateAnimsEditor.new(self, game, @renderer)
   end
   
   def open_special_object_editor

@@ -172,6 +172,36 @@ class Game
     end
   end
   
+  def state_anims_for_player(player_index)
+    player = players[player_index]
+    state_anims_list_ptr = player["State anims ptr"]
+    
+    case GAME
+    when "dos"
+      state_anims = fs.read(state_anims_list_ptr, NUM_PLAYER_ANIM_STATES*2).unpack("v*")
+    when "por", "ooe"
+      state_anims = fs.read(state_anims_list_ptr, NUM_PLAYER_ANIM_STATES).unpack("C*")
+    else
+      raise "AoS/HoD don't have player anim states"
+    end
+    
+    return state_anims
+  end
+  
+  def save_state_anims_for_player(player_index, state_anims)
+    player = players[player_index]
+    state_anims_list_ptr = player["State anims ptr"]
+    
+    case GAME
+    when "dos"
+      fs.write(state_anims_list_ptr, state_anims.pack("v*"))
+    when "por", "ooe"
+      fs.write(state_anims_list_ptr, state_anims.pack("C*"))
+    else
+      raise "AoS/HoD don't have player anim states"
+    end
+  end
+  
   def entity_type_docs
     @entity_type_docs ||= begin
       file_contents = File.read("./docs/lists/#{GAME} Entity Types.txt")

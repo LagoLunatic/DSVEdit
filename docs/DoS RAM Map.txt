@@ -663,82 +663,15 @@ Here's what each actor is (index, special object id, description):
   08 5B Alucard (missing gfx pages)
   09 52 Julius NPC (missing gfx page)
 
-0222DFEC - List of which sprite animations are for which player states for each player character (state anims).
+0222DFEC-0222E1FB - List of which sprite animations are for which player states for each player character (state anims).
   The pointer at offset C in player data points to the appropiate entry in this list.
   Specific pointers for each player:
-    0222DFEC: Soma
-    0222E070: Alucard
-    0222E0F4: Julius
-    0222E178: Yoko
-  Each entry is 0x84 bytes long. 0x42 states in total.
-  Format:
-    Each state takes up 2 bytes. This is the sprite animation index for that state. The states are in this order:
-    00 Idle
-    01 Holding up
-    02 Starting to walk
-    03 Turning around
-    04 Walking
-    05 Stopping
-    06 Landing while walking
-    07 Starting to crouch
-    08 Crouching
-    09 Standing up
-    0A Jumping straight up
-    0B Jumping diagonally
-    0C Double jumping
-    0D Superjumping
-    0E Smashing head
-    0F Falling
-    10 
-    11 Landing
-    12 Hard landing straight down
-    13 Hard landing diagonally
-    14 Swimming?
-    15 ? swimming?
-    16 Sitting
-    17 Using skill on ground
-    18 Using skill in air
-    19 Starting to use transformation skill
-    1A Using transformation skill
-    1B Using armor knight
-    1C Using malacoda
-    1D Using succubus
-    1E Using ghost
-    1F Using alura une
-    20 Using slaughterer
-    21 Using hell boar
-    22 
-    23 
-    24 
-    25 
-    26 Starting to use gergoth
-    27 Using gergoth
-    28 Stop using gergoth
-    29 Bat mode
-    2A Flying up in bat mode
-    2B Transforming into bat mode
-    2C Untransforming from bat mode
-    2D Using black panther
-    2E Using werewolf
-    2F Backdashing
-    30 Sliding on flat ground
-    31 Sliding on slope
-    32 Jumpkicking straight down
-    33 Jumpkicking diagonally down
-    34 Taking damage while standing/walking
-    35 Taking damage while backdashing
-    36 Taking damage while crouching
-    37 Taking damage in air from the front
-    38 Taking damage in air from behind
-    39 Petrified 1
-    3A Petrified 2
-    3B Dying?
-    3C Attacking with ?
-    3D Attacking with ? while crouching
-    3E Attacking with ? in air
-    3F ? standing
-    40 ? crouching
-    41 
+    0222DFEC-0222E06F: Soma
+    0222E070-0222E0F3: Alucard
+    0222E0F4-0222E177: Julius
+    0222E178-0222E1FB: Yoko
+  Each list is 0x84 bytes long. Each state takes up 2 bytes for 0x42 states in total.
+  Each entry is the sprite animation index for that state index.
 
 0222E9D4 - List of skill gfx.
   Entry length 0x10.

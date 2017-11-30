@@ -205,6 +205,7 @@
     <addaction name="actionSprite_Editor"/>
     <addaction name="actionGFX_Editor"/>
     <addaction name="actionPlayer_Editor"/>
+    <addaction name="actionPlayer_State_Anims_Editor"/>
     <addaction name="actionMusic_Editor"/>
     <addaction name="actionItem_Pool_Editor"/>
     <addaction name="actionTileset_Editor"/>
@@ -521,6 +522,11 @@
   <action name="actionMagic_Seal_Editor">
    <property name="text">
     <string>Magic Seal Editor</string>
+   </property>
+  </action>
+  <action name="actionPlayer_State_Anims_Editor">
+   <property name="text">
+    <string>Player State Anims Editor</string>
    </property>
   </action>
  </widget>
