@@ -51,7 +51,7 @@ class SpriterInterface
           end
         }
         
-        xml.entity(:id => 0, :name => "entity name here") {
+        xml.entity(:id => 0, :name => name) {
           #xml.character_map(:id => 0, :name => "charmap name here") {
           #  xml.map(
           #    :folder => 0,
@@ -74,66 +74,79 @@ class SpriterInterface
             )
           end
           
-          xml.animation(:id => 0,
-            :name => "animname",
-            :length => skeleton.number_of_poses*100, # TODO
-            :looping => true
-          ) {
-            xml.mainline {
-              object_joints = skeleton.joints.select{|joint| joint.frame_id != 0xFF}
-              
-              skeleton.poses.each_with_index do |pose, pose_index|
-                xml.key(
-                  id: pose_index,
-                  time: pose_index*100, # TODO
-                ) {
-                  skeleton.joints.each_with_index do |bone_joint, bone_index|
-                    parent_bone_index = bone_joint.parent_id == 0xFF ? -1 : bone_joint.parent_id
-                    joint_index = skeleton.joints.index(bone_joint)
-                    
-                    xml.bone_ref(
-                      id: bone_index,
-                      parent: parent_bone_index,
-                      timeline: joint_index,
-                      key: pose_index
-                    )
-                  end
+          skeleton.animations.each_with_index do |animation, animation_index|
+            total_anim_length_in_frames = animation.keyframes.inject(0){|sum, keyframe| sum + keyframe.length_in_frames}
+            total_anim_length_in_milliseconds = total_anim_length_in_frames / 60.0 * 1000
+            
+            xml.animation(:id => animation_index,
+              :name => "anim_%02X" % animation_index,
+              :length => total_anim_length_in_milliseconds.ceil,
+              :looping => true
+            ) {
+              xml.mainline {
+                object_joints = skeleton.joints.select{|joint| joint.frame_id != 0xFF}
+                
+                time = 0
+                
+                animation.keyframes.each_with_index do |keyframe, keyframe_index|
+                  #pose_index = keyframe.pose_id
+                  #pose = skeleton.poses[pose_index]
                   
-                  skeleton.joint_indexes_by_draw_order.each do |joint_index|
-                    object_joint = skeleton.joints[joint_index]
-                    object_index = object_joints.index(object_joint)
+                  xml.key(
+                    id: keyframe_index,
+                    time: time.floor,
+                  ) {
+                    skeleton.joints.each_with_index do |bone_joint, bone_index|
+                      parent_bone_index = bone_joint.parent_id == 0xFF ? -1 : bone_joint.parent_id
+                      joint_index = skeleton.joints.index(bone_joint)
+                      
+                      xml.bone_ref(
+                        id: bone_index,
+                        parent: parent_bone_index,
+                        timeline: joint_index,
+                        key: keyframe_index
+                      )
+                    end
                     
-                    parent_bone_index = object_joint.parent_id == 0xFF ? -1 : object_joint.parent_id
-                    joint_index = skeleton.joints.index(object_joint)
-                    
-                    xml.object_ref(
-                      id: object_index,
-                      parent: joint_index, # The non-bone should just be a direct child of its equivalent bone.
-                      timeline: skeleton.number_of_joints + object_index, # Non-bone timelines are after bone timelines.
-                      key: pose_index,
-                      z_index: 0
-                    )
-                  end
-                }
+                    skeleton.joint_indexes_by_draw_order.each do |joint_index|
+                      object_joint = skeleton.joints[joint_index]
+                      object_index = object_joints.index(object_joint)
+                      
+                      parent_bone_index = object_joint.parent_id == 0xFF ? -1 : object_joint.parent_id
+                      joint_index = skeleton.joints.index(object_joint)
+                      
+                      xml.object_ref(
+                        id: object_index,
+                        parent: joint_index, # The non-bone should just be a direct child of its equivalent bone.
+                        timeline: skeleton.number_of_joints + object_index, # Non-bone timelines are after bone timelines.
+                        key: keyframe_index,
+                        z_index: 0
+                      )
+                    end
+                  }
+                  
+                  length_in_milliseconds = keyframe.length_in_frames / 60.0 * 1000
+                  time += length_in_milliseconds
+                end
+              }
+              
+              timeline_id = 0
+              # Export bone timelines.
+              skeleton.joints.each_with_index do |joint, joint_index|
+                is_bone = true
+                export_timeline(xml, skeleton, animation, joint, joint_index, timeline_id, pivot_x, pivot_y, is_bone)
+                timeline_id += 1
+              end
+              # Export object timelines.
+              skeleton.joints.each_with_index do |joint, joint_index|
+                is_bone = joint.frame_id == 0xFF
+                next if is_bone
+                
+                export_timeline(xml, skeleton, animation, joint, joint_index, timeline_id, pivot_x, pivot_y, is_bone)
+                timeline_id += 1
               end
             }
-            
-            timeline_id = 0
-            # Export bone timelines.
-            skeleton.joints.each_with_index do |joint, joint_index|
-              is_bone = true
-              export_timeline(xml, skeleton, joint, joint_index, timeline_id, pivot_x, pivot_y, is_bone)
-              timeline_id += 1
-            end
-            # Export object timelines.
-            skeleton.joints.each_with_index do |joint, joint_index|
-              is_bone = joint.frame_id == 0xFF
-              next if is_bone
-              
-              export_timeline(xml, skeleton, joint, joint_index, timeline_id, pivot_x, pivot_y, is_bone)
-              timeline_id += 1
-            end
-          }
+          end
         }
       }
     end
@@ -145,13 +158,17 @@ class SpriterInterface
     end
   end
   
-  def self.export_timeline(xml, skeleton, joint, joint_index, timeline_id, pivot_x, pivot_y, is_bone)
+  def self.export_timeline(xml, skeleton, animation, joint, joint_index, timeline_id, pivot_x, pivot_y, is_bone)
     xml.timeline(
       id: timeline_id,
       name: is_bone ? "bone_%02X" % joint_index : "joint_%02X" % joint_index,
       object_type: is_bone ? "bone" : "sprite"
     ) {
-      skeleton.poses.each_with_index do |pose, pose_index|
+      time = 0
+      
+      animation.keyframes.each_with_index do |keyframe, keyframe_index|
+        pose = skeleton.poses[keyframe.pose_id]
+        
         joint_change = pose.joint_changes[joint_index]
         joint_states = initialize_joint_states(pose, skeleton)
         joint_state = joint_states[joint_index]
@@ -198,8 +215,8 @@ class SpriterInterface
         frame_id = joint_change.new_frame_id == 0xFF ? joint.frame_id : joint_change.new_frame_id
         
         xml.key(
-          id: pose_index,
-          time: pose_index*100, # TODO
+          id: keyframe_index,
+          time: time.floor,
         ) {
           if is_bone
             xml.bone(
@@ -219,6 +236,9 @@ class SpriterInterface
             )
           end
         }
+        
+        length_in_milliseconds = keyframe.length_in_frames / 60.0 * 1000
+        time += length_in_milliseconds
       end
     }
   end
