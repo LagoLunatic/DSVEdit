@@ -27,6 +27,8 @@
       Word 00 is the speed of horizontal scrolling.
       Word 04 is the speed of vertical scrolling.
 
+020832BC - Has something related to the tile layout of the background of menus?
+
 0208ACC0 - List of update code pointers for each game state (020C07E8).
 
 0208AD8C - List of room pointers for transition rooms.
@@ -149,8 +151,12 @@ There are 41 entries in the list total.
 020C75F4 - changes for each room. can be 10, 13, 14, FFFFFFFF
 020C7729
 
-020C7EA0 - List of sprites in the OAM.
+020C7EA4-020C82A3 - List of sprites in the bottom screen OAM.
+020C86A4-020C8AA3 - List of sprites in the top screen OAM.
   Entry length 0x10.
+
+020C3940 - Tile mapping for BG1 layer.
+  Used for the background of menus.
 
 020CA388,2 - Bitfield of what buttons the player is pressing.
   0001 - A
@@ -749,6 +755,11 @@ Here's what each actor is (index, special object id, description):
 022B9F48-022C675F - palette data.
 
 022C65D4 - palette for f_farik0.dat portrait.
+
+022CC950 and 022C3344 - GFX and palette for the background of the map screen.
+
+022D7E40 and 022DA30C - GFX and palette for the background of the info screen.
+  These include the elemental symbols, among other things.
 
 0222BD90-0222BDA7 - List of red soul wall blockade data.
   Entry length 6.

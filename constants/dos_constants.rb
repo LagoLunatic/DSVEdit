@@ -475,6 +475,7 @@ OTHER_SPRITES = [
   {pointer: 0x0203D564, desc: "Konami splash screen"},
   {pointer: 0x0203D8A8, desc: "Main menu"},
   {pointer: 0x0203DAB0, desc: "Castlevania logo"},
+  {pointer: 0x0203A4F8, desc: "Info screen", one_dimensional_mode: true},
   {pointer: 0x0203ED3C, desc: "Credits"},
   {pointer: 0x0203ED58, desc: "Characters used during credits"},
   {pointer: 0x0203ED70, desc: "BGs used during credits"},

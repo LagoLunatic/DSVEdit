@@ -269,6 +269,15 @@
   ; r0 - Index in the currently loaded sprite info list, 020C6260. This is from +68 in the entity.
   ; Returns r0 - Pointer to the entry in that list.
 
+0203BC00 RenderOneDimensionalSpriteFrame?
+  ; r0 - Sprite pointer (e.g. 022A9C60 for the info screen)
+  ; r1 - 
+  ; r2 - 
+  ; r3 - 
+  ; [r13] - 
+  ; [r13,4] - Which sprite frame to render
+  ; (many more args)
+
 02018780 AssetGetPointer
   ; r0 - Asset index
   ; Returns the pointer at 0208CC6C+(r0*0x28)
