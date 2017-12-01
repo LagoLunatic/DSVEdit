@@ -1001,7 +1001,7 @@ PLAYER_ANIM_STATE_NAMES = [
   "Turning around",
   "Walking",
   "Stopping",
-  "Landing while walking",
+  "Landing while moving",
   "Starting to crouch",
   "Crouching",
   "Standing up",
