@@ -641,11 +641,11 @@ class SpriteEditor < Qt::Dialog
       @ui.gfx_file_name.text = "Invalid (gfx page index %02X)" % gfx_page_index
     else
       @gfx_file_graphics_scene.addItem(gfx_page_pixmap_item)
-      gfx_file = @gfx_pages_with_blanks[gfx_page_index].file
-      if gfx_file
-        @ui.gfx_file_name.text = gfx_file[:file_path]
+      gfx = @gfx_pages_with_blanks[gfx_page_index]
+      if gfx.file
+        @ui.gfx_file_name.text = gfx.file[:file_path]
       else
-        @ui.gfx_file_name.text = ""
+        @ui.gfx_file_name.text = "%08X" % gfx.gfx_pointer
       end
     end
     
