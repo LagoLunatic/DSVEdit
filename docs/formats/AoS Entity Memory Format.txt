@@ -45,6 +45,9 @@ Memory used for entities in AoS is 020004E4 - 02007863. Each entity is 0x84 byte
 6C,1: Related to sprite? Bitfield?
 6D,1: Current animation index.
 6E,1: Current keyframe index in this animation.
+70,1: Iframes index.
+7C,4: On-hurt-player callback.
+  This function pointer is called when the entity collides with the player.
 80,4: On-damaged callback.
   This function pointer is called when the entity collides with a player weapon.
 

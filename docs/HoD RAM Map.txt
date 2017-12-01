@@ -1,4 +1,8 @@
 
+02000008,4 - Current RNG seed.
+  The most recent random number generated is stored here.
+  It's is used to affect the next random number generated.
+
 0200000C,1 - Game state.
   00 - Konami logo screen.
   01 - Title screen.

@@ -184,7 +184,7 @@
   ; Will return true if either player 1 or player 2 have this item equipped, but only if your partner is called out. If your partner is hidden away, only the controlled character's equipment matters.
   ; This is used for Eye for Decay.
 
-021FED58 PlayerSetAnimByState
+021FED58 PlayerSetStateAnim
   ; r0 - Entity
   ; r1 - Animation state index. This is the index in their state->anims mapping list.
   ; r2 - ? Stored to entity+FC

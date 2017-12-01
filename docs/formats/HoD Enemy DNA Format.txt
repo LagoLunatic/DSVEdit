@@ -1,0 +1,33 @@
+HoD Enemy DNA format:
+  0x24 bytes long.
+  00,4: Create code pointer.
+  04,4: Update code pointer.
+  08,1: Drop 1
+  09,1: Drop 1 type
+    0 - Heart
+    1 - Money
+    2 - Crash
+    3 - Consumable
+    4 - Weapon
+    5 - Armor
+    6 - Spellbook
+    7 - Relic
+    8 - Furniture
+    9 - Max up (crashes)
+  0A,1: Drop 2
+  0B,1: Drop 2
+  0C,2: Max HP.
+  0E,2: EXP.
+  10,1: Level.
+  11,1: Defense stat.
+  12,1: Item drop chance...? out of 0x3FF
+  13,1: 
+  14,2: Attack stat.
+  16,
+  1C,1: ? used when damaging player
+    Bits:
+    80 - Does way more damage to player? 1 -> 141
+  20,1: Bitfield of resistances.
+  21,1: Bitfield of weaknesses.
+  22,
+  23,

@@ -107,7 +107,7 @@ ENEMY_DNA_FORMAT = [
   [4, "Create Code"],
   [4, "Update Code"],
   [1, "Drop 1"],
-  [1, "Drop 1 Type"], # e.g. 1=money, 3=item, 5=rare item??
+  [1, "Drop 1 Type"],
   [1, "Drop 2"],
   [1, "Drop 2 Type"],
   [2, "HP"],
@@ -414,6 +414,7 @@ REUSED_ENEMY_INFO = {
   0x5F => {init_code: 0x08096F28}, # pike master -> living armor
   # TODO 63 dracula wraith 2 glitchy
   0x6D => {palette_offset: 2}, # pazuzu (breaks through wall)
+  0x6F => {init_code: 0x08096DD0}, # revenge armor (spawns talos) -> living armor
   0x70 => {init_code: 0x080535A0}, # slime (comes from pipe)
   0x77 => {init_code: 0x080936A8}, # talos (chase) -> talos
   0x79 => {init_code: 0x08096DD0}, # revenge armor -> living armor
@@ -462,6 +463,7 @@ BEST_SPRITE_FRAME_FOR_ENEMY = {
   0x58 => 0x0A, # pixie
   0x5E => 0x07, # simon wraith
   0x5F => 0x10, # pike master
+  0x6F => 0x10, # revenge armor (spawns talos)
   0x77 => 0x10, # talos (chase)
   0x79 => 0x10, # revenge armor
   # TODO: 64+

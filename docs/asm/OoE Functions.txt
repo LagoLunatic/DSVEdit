@@ -578,7 +578,9 @@
   ; r2 - B4?
   ; r3 - 3C?
 
-0205B244 EnemyDraw
+0205B244 GenericDraw
+  ; Used by enemies and skills
+
 02065EA0 EnemyDrawSkeleton
   ; If the enemy has both skeletal and non-skeletal parts, this only draws the skeletal parts.
 

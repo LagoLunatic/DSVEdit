@@ -70,6 +70,8 @@
 080BD74C Modulo
   ; Returns r0 % r1
 
+08000A78 Rand
+
 0801045C LoadGfx?
   ; r0 - Gfx wrapper
   ; r1 - 0?

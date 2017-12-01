@@ -14,11 +14,13 @@
   ; Calls the update code function for the current game state (02000010).
   ; If that function returns a new state value, it sets the game state to that value.
 
+080D8128 Divide
+  ; Returns r0 / r1
+080D812C Modulo
+  ; Returns r0 % r1
+
 08000A90 Rand
-080D812C RandClampToMax
-  ; r0 - Random number
-  ; r1 - Maximum is r1-1
-080DAA00 RandClampToMax2?
+080DAA00 RandClampToMax
   ; r0 - Random number
   ; r1 - Maximum is r1-1
 
@@ -162,6 +164,13 @@
   ; r1 - 
   ; r2 - 
   ; r3 - 
+
+080427B8 SetCallbacksAndIframesIndex
+  ; r0 - Entity
+  ; r1 - Iframes index to store at entity+70
+  ; r2 - On-hurt-player callback to store at +7C
+  ; r3 - On-damaged callback to store at +80
+  ; Also initializes the entity's hitbox.
 
 0803F17C SpriteAnimate
   ; Call every frame to handle the animation.
