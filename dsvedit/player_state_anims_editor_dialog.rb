@@ -5,6 +5,7 @@ class PlayerStateAnimsEditor < Qt::Dialog
   slots "player_changed(int)"
   slots "state_changed(int)"
   slots "anim_changed(int)"
+  slots "advance_keyframe()"
   slots "button_pressed(QAbstractButton*)"
   
   def initialize(main_window, game, renderer)
@@ -39,6 +40,10 @@ class PlayerStateAnimsEditor < Qt::Dialog
       @ui.anim_index.addItem("%02X" % i)
     end
     
+    @animation_timer = Qt::Timer.new()
+    @animation_timer.setSingleShot(true)
+    connect(@animation_timer, SIGNAL("timeout()"), self, SLOT("advance_keyframe()"))
+    
     player_changed(0)
     
     self.show()
@@ -69,18 +74,55 @@ class PlayerStateAnimsEditor < Qt::Dialog
   end
   
   def anim_changed(anim_index)
+    @animation_timer.stop()
     @anim_graphics_scene.clear()
+    @current_anim_keyframe_index = 0
     
     @ui.anim_index.setCurrentIndex(anim_index)
     
     @state_anims[@state_index] = anim_index
     
-    anim = @sprite.animations[anim_index]
-    if anim.nil?
+    @current_anim = @sprite.animations[anim_index]
+    if @current_anim.nil?
       return
     end
     
-    frame_index = anim.frame_delays.first.frame_index
+    if @current_anim.number_of_frames > 0
+      anim_keyframe_changed(0)
+      start_animation()
+    else
+      frame_changed(nil) # Blank out the frame display
+    end
+  end
+  
+  def anim_keyframe_changed(i)
+    @current_anim_keyframe_index = i
+    frame_delay = @current_anim.frame_delays[@current_anim_keyframe_index]
+    frame_changed(frame_delay.frame_index)
+  end
+  
+  def start_animation
+    frame_delay = @current_anim.frame_delays[@current_anim_keyframe_index]
+    millisecond_delay = (frame_delay.delay / 60.0 * 1000).round
+    @animation_timer.start(millisecond_delay)
+  end
+  
+  def advance_keyframe
+    return if @current_anim.nil?
+    
+    if @current_anim_keyframe_index >= @current_anim.frame_delays.length-1
+      anim_keyframe_changed(0)
+    else
+      anim_keyframe_changed(@current_anim_keyframe_index+1)
+    end
+    
+    frame_delay = @current_anim.frame_delays[@current_anim_keyframe_index]
+    millisecond_delay = (frame_delay.delay / 60.0 * 1000).round
+    @animation_timer.start(millisecond_delay)
+  end
+  
+  def frame_changed(frame_index)
+    @anim_graphics_scene.clear()
     frame = @sprite_frames[frame_index]
     item = GraphicsChunkyItem.new(frame)
     @anim_graphics_scene.addItem(item)
@@ -100,4 +142,6 @@ class PlayerStateAnimsEditor < Qt::Dialog
       save_states()
     end
   end
+  
+  def inspect; to_s; end
 end
