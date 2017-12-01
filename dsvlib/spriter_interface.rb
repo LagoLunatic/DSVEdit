@@ -80,14 +80,13 @@ class SpriterInterface
             :looping => true
           ) {
             xml.mainline {
+              object_joints = skeleton.joints.select{|joint| joint.frame_id != 0xFF}
+              
               skeleton.poses.each_with_index do |pose, pose_index|
                 xml.key(
                   id: pose_index,
                   time: pose_index*100, # TODO
                 ) {
-                  bone_joints = skeleton.joints.select{|joint| joint.frame_id == 0xFF}
-                  object_joints = skeleton.joints.select{|joint| joint.frame_id != 0xFF}
-                  
                   skeleton.joints.each_with_index do |bone_joint, bone_index|
                     parent_bone_index = bone_joint.parent_id == 0xFF ? -1 : bone_joint.parent_id
                     joint_index = skeleton.joints.index(bone_joint)
@@ -100,33 +99,12 @@ class SpriterInterface
                     )
                   end
                   
-                  #bone_joints.each_with_index do |bone_joint, bone_index|
-                  #  if bone_joint.parent_id == 0xFF
-                  #    parent_bone_index = -1
-                  #  else
-                  #    parent = skeleton.joints[bone_joint.parent_id]
-                  #    parent_bone_index = bone_joints.index(parent)
-                  #  end
-                  #  joint_index = skeleton.joints.index(bone_joint)
-                  #  
-                  #  xml.bone_ref(
-                  #    id: bone_index,
-                  #    parent: parent_bone_index,
-                  #    timeline: joint_index,
-                  #    key: pose_index
-                  #  )
-                  #end
-                  
-                  object_joints.each_with_index do |object_joint, object_index|
-                    #if object_joint.parent_id == 0xFF
-                    #  parent_bone_index = -1
-                    #else
-                    #  parent = skeleton.joints[object_joint.parent_id]
-                    #  parent_bone_index = bone_joints.index(parent)
-                    #end
+                  skeleton.joint_indexes_by_draw_order.each do |joint_index|
+                    object_joint = skeleton.joints[joint_index]
+                    object_index = object_joints.index(object_joint)
+                    
                     parent_bone_index = object_joint.parent_id == 0xFF ? -1 : object_joint.parent_id
                     joint_index = skeleton.joints.index(object_joint)
-                    #puts "joint index %02X, object: parent is %02X" % [joint_index, parent_bone_index]
                     
                     xml.object_ref(
                       id: object_index,
@@ -136,28 +114,6 @@ class SpriterInterface
                       z_index: 0
                     )
                   end
-                  
-                  #skeleton.joints.each_with_index do |joint, joint_index|
-                  #  is_bone = joint.frame_id == 0xFF
-                  #  parent_id = joint.parent_id == 0xFF ? -1 : joint.parent_id
-                  #  
-                  #  if is_bone
-                  #    xml.bone_ref(
-                  #      id: joint_index,
-                  #      parent: parent_id,
-                  #      timeline: joint_index,
-                  #      key: pose_index
-                  #    )
-                  #  else
-                  #    xml.object_ref(
-                  #      id: joint_index,
-                  #      parent: parent_id,
-                  #      timeline: joint_index,
-                  #      key: pose_index,
-                  #      z_index: 0
-                  #    )
-                  #  end
-                  #end
                 }
               end
             }
@@ -197,40 +153,59 @@ class SpriterInterface
     ) {
       skeleton.poses.each_with_index do |pose, pose_index|
         joint_change = pose.joint_changes[joint_index]
-        if joint.parent_id == 0xFF
-          angle = 0
-          parent_is_bone = false
-        else
-          parent_joint = skeleton.joints[joint.parent_id]
-          parent_joint_change = pose.joint_changes[joint.parent_id]
-          parent_is_bone = parent_joint.frame_id == 0xFF
-          
-          #angle = joint_change.rotation / 182.0
-          angle = parent_joint_change.rotation / 182.0
-          #if parent_joint.copy_parent_visual_rotation
-          #  angle += parent_joint_state.inherited_rotation
-          #end
-          #all_joint_angles[joint_index] = angle
-          angle += joint.positional_rotation * 90
+        joint_states = initialize_joint_states(pose, skeleton)
+        joint_state = joint_states[joint_index]
+        
+        rel_x = joint_state.x_pos
+        rel_y = joint_state.y_pos
+        rel_rotation = joint_change.rotation
+        if joint.parent_id != 0xFF && joint.copy_parent_visual_rotation
+          rel_rotation += joint_state.inherited_rotation
         end
         
+        if joint.parent_id != 0xFF
+          # The X and Y in the SCML file are relevant to the parent bone, so we need to subtract the parent's X and Y.
+          # (Note that the X and Y displayed in Spriter's UI are absolute.)
+          parent_joint = skeleton.joints[joint.parent_id]
+          parent_joint_state = joint_states[joint.parent_id]
+          parent_joint_change = pose.joint_changes[joint.parent_id]
+          rel_x -= parent_joint_state.x_pos
+          rel_y -= parent_joint_state.y_pos
+          
+          #parent_rotation = parent_joint_change.rotation
+          #if parent_joint.parent_id != 0xFF && parent_joint.copy_parent_visual_rotation
+          #  parent_rotation += parent_joint_state.inherited_rotation
+          #  #rel_rotation += parent_joint_state.inherited_rotation
+          #end
+          #rel_rotation -= parent_rotation
+        end
+        
+        rel_rotation_in_degrees = rel_rotation/182.0
+        
+        rel_rotation_in_degrees = -rel_rotation_in_degrees # Spriter angles are inverted compared to skeleton angles.
+        
+        #if joint_index == 0x18
+        #  p [joint_state.x_pos, joint_state.y_pos, rel_x, rel_y, parent_joint_state.x_pos, parent_joint_state.y_pos]
+        #end
+        #if joint_index == 0x1A
+        #  rot = joint_change.rotation
+        #  if joint.parent_id != 0xFF && joint.copy_parent_visual_rotation
+        #    rot += joint_state.inherited_rotation
+        #  end
+        #  p [rot/182.0, rel_rotation_in_degrees, parent_rotation/182.0]
+        #end
+        
         frame_id = joint_change.new_frame_id == 0xFF ? joint.frame_id : joint_change.new_frame_id
-        distance = joint_change.distance
         
         xml.key(
           id: pose_index,
           time: pose_index*100, # TODO
-          spin: 0,
-          #curve_type: 0,
-          #c1: "",
-          #c2: ""
         ) {
           if is_bone
             xml.bone(
-              x: distance*5, #parent_is_bone ? distance : 0, # If the parent is a dummy bone we added set the distance to 0?
-              y: 0,
-              angle: angle,
-              #scale_x: distance,
+              x: rel_x,
+              y: -rel_y, # Relevant Y in the SCML file is inverted. (But not the absolute Y displayed in Spriter's UI, that's normal.)
+              angle: 0,
             )
           else
             xml.object(
@@ -238,7 +213,7 @@ class SpriterInterface
               file: frame_id,
               x: 0,
               y: 0,
-              angle: 0,
+              angle: rel_rotation_in_degrees, # this angle in the SCML file is relative to the parent bone. but in spriter's UI it's an absolute angle.
               pivot_x: pivot_x,
               pivot_y: pivot_y
             )
@@ -249,5 +224,59 @@ class SpriterInterface
   end
   
   def self.import(input_path, name, sprite_info, fs, renderer)
+  end
+  
+  def self.initialize_joint_states(pose, skeleton)
+    joint_states_for_pose = []
+    joint_states_to_initialize = []
+    
+    skeleton.joints.each_with_index do |joint, joint_index|
+      joint_state = JointState.new
+      joint_states_for_pose << joint_state
+      
+      if joint.parent_id == 0xFF
+        joint_states_to_initialize << joint_state
+      end
+    end
+    
+    while joint_states_to_initialize.any?
+      joint_state = joint_states_to_initialize.shift()
+      joint_index = joint_states_for_pose.index(joint_state)
+      joint_change = pose.joint_changes[joint_index]
+      joint = skeleton.joints[joint_index]
+      
+      if joint.parent_id == 0xFF
+        joint_state.x_pos = 0
+        joint_state.y_pos = 0
+        joint_state.inherited_rotation = 0
+      else
+        parent_joint = skeleton.joints[joint.parent_id]
+        parent_joint_change = pose.joint_changes[joint.parent_id]
+        parent_joint_state = joint_states_for_pose[joint.parent_id]
+        
+        joint_state.x_pos = parent_joint_state.x_pos
+        joint_state.y_pos = parent_joint_state.y_pos
+        joint_state.inherited_rotation = parent_joint_change.rotation
+        
+        if parent_joint.copy_parent_visual_rotation && parent_joint.parent_id != 0xFF
+          joint_state.inherited_rotation += parent_joint_state.inherited_rotation
+        end
+        connected_rotation_in_degrees = joint_state.inherited_rotation / 182.0
+        
+        offset_angle = connected_rotation_in_degrees
+        offset_angle += 90 * joint.positional_rotation
+        
+        offset_angle_in_radians = offset_angle * Math::PI / 180
+        
+        joint_state.x_pos += joint_change.distance*Math.cos(offset_angle_in_radians)
+        joint_state.y_pos += joint_change.distance*Math.sin(offset_angle_in_radians)
+      end
+      
+      child_joints = skeleton.joints.select{|joint| joint.parent_id == joint_index}
+      child_joint_indexes = child_joints.map{|joint| skeleton.joints.index(joint)}
+      joint_states_to_initialize += child_joint_indexes.map{|joint_index| joint_states_for_pose[joint_index]}
+    end
+    
+    return joint_states_for_pose
   end
 end
