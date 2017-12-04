@@ -2,6 +2,8 @@
 class GBADummyFilesystem
   class ReadError < StandardError ; end
   class CompressedDataTooLarge < StandardError ; end
+  class FileExpandError < StandardError ; end
+  class OffsetPastEndOfFileError < StandardError ; end
   
   include FreeSpaceManager
   
@@ -82,9 +84,9 @@ class GBADummyFilesystem
       raise "Invalid file: #{file_path}"
     end
     
-    old_data = rom[offset_in_file, new_data.length]
-    if old_data.nil? || old_data.length != new_data.length
-      raise "Invalid offset/size: %08X, length %08X" % [offset_in_file, new_data.length]
+    file = files_by_path[file_path]
+    if offset_in_file + new_data.length > file[:size]
+      raise OffsetPastEndOfFileError.new("Offset %08X is past end of the rom (%08X bytes long)" % [offset_in_file, file[:size]])
     end
     
     rom[offset_in_file, new_data.length] = new_data
@@ -226,11 +228,27 @@ class GBADummyFilesystem
   
   def files_by_path
     # Dummy function for the FSM.
-    {"rom.gba" => {:name => "rom.gba", :type => :file, :start_offset => 0, :end_offset => 0 + @rom.size, :ram_start_offset => 0x08000000, :size => @rom.size, :file_path => "rom.gba"}}
+    @files_by_path ||= {"rom.gba" => {:name => "rom.gba", :type => :file, :start_offset => 0, :end_offset => 0 + @rom.size, :ram_start_offset => 0x08000000, :size => @rom.size, :file_path => "rom.gba"}}
   end
   
   def is_pointer?(value)
     value >= 0x08000000 && value < 0x09000000
+  end
+  
+  def expand_file(file, length_to_expand_by)
+    file_path = file[:file_path]
+    
+    if file[:size] + length_to_expand_by > MAX_ALLOWABLE_ROM_SIZE
+      raise FileExpandError.new("Failed to expand rom to #{file[:size] + length_to_expand_by} bytes because that is larger than the maximum rom size allowed (#{MAX_ALLOWABLE_ROM_SIZE} bytes).")
+    end
+    
+    old_size = file[:size]
+    file[:size] += length_to_expand_by
+    
+    @has_uncommitted_changes = true
+    
+    # Expand the actual file data string, and fill it with 0 bytes.
+    write_by_file(file_path, old_size, "\0"*length_to_expand_by, freeing_space: true)
   end
   
   def read_original_compressed_sizes_from_text_file
