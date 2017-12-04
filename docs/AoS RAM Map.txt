@@ -75,6 +75,12 @@ Variables related to delayed loading room entities:
 
 020003F4 - Currently selected warp room on the warp select screen.
 
+020003F8,4 - Destination room for TeleportPlayer
+020003FC,2 - Dest X for TeleportPlayer
+020003FE,2 - Dest Y for TeleportPlayer
+02000400,2 - Dest X offset for TeleportPlayer
+02000402,2 - Dest Y offset for TeleportPlayer
+
 02000430,1 - Which shop item pool to use. 0 1 or 2.
   This is set when you enter the Buy menu of Hammer's shop.
   Shop pool 1 is unlocked by boss death flag 04 (Headhunter) being set.

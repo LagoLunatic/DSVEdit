@@ -76,6 +76,7 @@ Special Objects:
 18 Moving clouds background from Barracks.
   Requires sector overlay 71.
 19 Part of the waterfall in Tristis pass. This object is responsible for making it impossible for Shanoa to jump up the waterfall, and making bubbles appear around Shanoa when she is inside it.
+  Requires sector overlay 57.
 1A Movement blocker.
   The area covered by this object will act impassable, both when Shanoa is in human form and in Paries form.
   Var A: Width of the area in blocks.
@@ -142,6 +143,7 @@ Special Objects:
     High byte: 0 to enter the house from the left, 1 to enter from the right.
   Var B: Y pos to enter the room at.
 2D Wooden door inside houses in Wygol.
+  Requires sector overlay 40.
   Var A and B: The X and Y coordinates of the door in town to come out of. Must be the exact coordinates of an object 2C, otherwise Shanoa will appear in the center of town.
 2E Wooden door that connects areas.
 2F Rotating lamp at the top of the Lighthouse.
@@ -244,7 +246,7 @@ Special Objects:
   Var A is is how the door acts. Values:
     00 Door outside the boss room that opens when you touch it.
     01 Door inside the boss room that opens when there are no enemies left in the room.
-    02 Never opens. Used in Large Cavern.
+    02 Never opens. (Still disappears if the boss death flag is set.)
   Var B controls which boss it's linked to - if that boss is dead the door won't appear. Values:
     00 Used in Large Cavern. TODO
     01 Arthroverta
@@ -302,6 +304,7 @@ Special Objects:
 57 Background from Mechanical Tower.
   Requires sector overlay 72.
 58 Wygol's sky background.
+  Requires sector overlay 41.
 59 Wall that blocks the way with a switch to the right of it that lowers the wall.
   Requires sector overlay 66.
 5A Rocks and sea mines that blow up the rocks.
@@ -351,47 +354,75 @@ Special Objects:
   Which entities it spawns depend on certain event flags. TODO
 === Below are events. Var A is the event flag set upon completing this event. Var B is the prerequisite event flag before this event will appear.
 61 Event - Talking to Albus in the first room of the game.
+  Requires sector overlay 42.
   Also loads graphics for the flash of light through the windows when Albus is talking to himself.
 62 Event - Talking to Barlowe in the second room of the game.
+  Requires sector overlay 42.
 63 Event - First tutorial.
+  Requires sector overlay 42.
 64 Event - Second tutorial, fight vs skeletons.
+  Requires sector overlay 42.
 65 Event - Third tutorial.
+  Requires sector overlay 42.
 66 Event - Meeting Albus in the Monastery.
   Requires sector overlay 78.
   Also loads graphics for the map that Albus marks the village on.
 67 Event - First time entering Wygol Village and finding Nikolai trapped in Torpor.
+  Requires sector overlay 41.
 68 Event - Nikolai trapped in Torpor (not the first time entering Wygol).
+  Requires sector overlay 41.
 69 Event - Albus in Minera Prison Island.
-6A Event - 
+  Requires sector overlay 51.
+6A Event - something with barlowe?
+  Requires sector overlay 42.
 6B Event - At end of Lighthouse.
+  Requires sector overlay 53.
 6C Event - Albus in Skeleton Cave.
+  Requires sector overlay 64.
 6D Event - Saving George from Torpor in Skeleton Cave.
+  Requires sector overlay 64.
 6E Event - Nikolai telling you Albus came and took their blood.
+  Requires sector overlay 41.
 6F Event - Albus in Giant's Dwelling.
-70 Event - 
+  Requires sector overlay 59.
+70 Event - something with barlowe?
+  Requires sector overlay 42.
 71 Event - Room before Albus in Oblivion Ridge when Shanoa senses Dominus.
+  Requires sector overlay 62.
 72 Event - Albus in Oblivion Ridge.
-73 Event - 
+  Requires sector overlay 62.
+73 Event - something with barlowe?
+  Requires sector overlay 42.
 74 Event - At the start of Mystery Manor when Shanoa senses Albus.
+  Requires sector overlay 60.
 75 Event - ? in Albus's boss room in Mystery Manor.
-76 Event - ? in Albus's boss room in Mystery Manor.
-77 Event - 
-78 Event - 
-79 Event - ? in Albus's boss room in Mystery Manor.
-7A Event - 
-7B Event - 
+  Requires sector overlay 60.
+76 Event - Shanoa about to absorb the final piece of Dominus in Mystery Manor.
+  Requires sector overlay 60.
+77 Event - Talking with Barlowe before the bad ending.
+  Requires sector overlay 42.
+78 Event - Barlowe telling you to use Dominus before the bad ending.
+  Requires sector overlay 42.
+79 Event - Shanoa getting her memories back after absorbing the final piece of Dominus in Mystery Manor.
+  Requires sector overlay 60.
+7A Event - Before fighting Barlowe.
+  Requires sector overlay 42.
+7B Event - After defeating Barlowe.
 7C Event - Bad ending.
-7D Event - 
-7E Event - ? at the Castle Entrance.
-  Requires sector overlay 67?
-7F Event - ? at the Castle Entrance.
+7D Event - Shanoa talking to herself in Ecclesia after Dracula revives.
+7E Event - View of Shanoa approaching the castle.
+  Requires sector overlay 67.
+7F Event - Shanoa talking to herself at the Castle Entrance.
+  Requires sector overlay 67.
 80 Event - Finding the Cerberus Gate for the first time.
 81 Event - Used in all three rooms that have Cerberus glyphs in them.
 82 Event - Used in all three rooms that have Cerberus glyphs in them.
 83 Event - Used in all three rooms that have Cerberus glyphs in them.
 84 Event - This must be present for the Cerberus Statue to respond to being hit by the Cerberus glyphs.
 85 Event - Shanoa meeting Dracula.
+  Requires sector overlay 75.
 86 Event - Shanoa defeated Dracula, but needs to use Dominus to kill him.
+  Requires sector overlay 75.
 87 Event - Dracula is dead, Shanoa talks with Albus.
   Also loads graphics for Shanoa's smile.
 88 Event - Good ending.
@@ -409,5 +440,5 @@ Special Objects:
     53 Irina
     57 Daniela
 8A Event - Magnes glyph and tutorial.
-8B Event - 
-8C Event - ending.
+8B Event - "Controlling Albus" tutorial.
+8C Event - Albus mode ending.

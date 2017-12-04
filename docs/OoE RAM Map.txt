@@ -247,10 +247,31 @@ Player's current bonus elemental attribute points (AP):
 021000C8,4 - Screen scrolling x pos for entity rendering purposes.
 021000CC,4 - Screen scrolling y pos for entity rendering purposes.
 
-0210013C - Pointer to current room's entity list.
+0210013C,4 - Pointer to current room's entity list.
 
-02100186 - data for what tiles on the map have been uncovered/explored. changing this doesn't change the map immediately - save and reload the game to do that. also controls whether an area on the map is marked "NEW" or not. this particular byte controls a map tile close to the entrance of dracula's castle.
-02100203 - change from 55 to 5D to unlock that one tile of kalidus channel that unlocks after beating brachyura (or more specifically, leaving the lighthouse through the bottom exit).
+Bitfields of which map tiles you have explored:
+02100144-021001C1: Dracula's Castle
+021001C2-021001C5: Wygol Village
+021001C6-021001C9: Ecclesia
+021001CA-021001D9: Training Chamber
+021001DA-021001E2: Ruvas Forest
+021001E2-021001E7: Argila Swamp
+021001E8-02100207: Kalidus Channel
+02100208-0210021B: Somnus Reef
+0210021C-02100231: Minera Prison Island
+02100232-02100239: Lighthouse
+0210023A-02100253: Tymeo Mountains
+02100254-02100269: Tristis Pass
+0210026A-02100273: Large Cavern
+02100274-0210027D: Giant's Dwelling
+0210027E-02100285: Mystery Manor
+02100286-0210028D: Misty Forest Road
+0210028E-02100295: Oblivion Ridge
+02100296-0210029D: Skeleton Cave
+0210029E-021002AD: Monastery
+021000AA-021000BB: Epilogue & Boss Rush Mode & Practice Mode
+Format: Each tile takes up two bits. If just the lower bit is set, the tile has been revealed by a map item. If both bits are set, the tile has been visited.
+This also controls whether an area is marked NEW on the map or not. At least one tile in the area must be explored for the NEW to go away.
 
 021002B0,2 - Current level
 021002B2,2 - ?
@@ -476,6 +497,7 @@ F0-F0 ?
 02109DA0-0210A9FF - Player skill entities (slots 08-10).
 0210D080-02113E7F - Room entities (slots 2D-7C)
 02113E80-0211D2FF - Particles (slots 7D-E8)
+0211D460-0211D720 - Menus (slots EA-EB)
 
 02109820 - Start of the player's entity memory.
 02109850 - Player's x pos.

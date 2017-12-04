@@ -50,8 +50,8 @@
 084F106C - List of songs that play in each sector.
   Halfwords.
 
-084F10B4 - Has pointer to Soma's update function.
-084F10B8 - Has pointer to Julius's update function.
+084F10AC-084F10B3 - List of create function pointers for each player character (Soma and Julius).
+084F10B4-084F10BB - List of update function pointers for each player character (Soma and Julius).
 
 084F1238 - List of pointers to weapon swing animation indexes.
   Index is the player's state, 0 for standing, 1 for crouching, 2 for in the air. (Maybe more?)

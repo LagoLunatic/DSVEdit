@@ -1,4 +1,6 @@
 
+01FFE32C DMA
+
 0209E570 FillMemory
   ; Fills a certain region of memory with a given value.
   ; r0 - Value to fill with
@@ -43,6 +45,9 @@
   ; r1 - Entity type (1 or 2)
   ; r2 - Index of the asset in this entity's list of assets
 02012358 AssetGetFreeSpace??
+
+02016014 LoadGfxAsset?
+  ; r0 - Gfx pointer
 
 0201BA0C InitializeSpriteAssetFile
   ; Initializes the standole sprite file format with pointers in place of file offsets so that it can be used by the game engine.
@@ -227,6 +232,8 @@
 02030710 MapGetNumTiles
   ; r0 - Area index
 
+020347D0 DummyUpdate
+
 022028E0 PlayerUpdate
 021F6044 PartnerUpdate
 021FA7E8 PartnerMoveToPos
@@ -282,6 +289,13 @@
   ; r3 - Palette list ptr
 0201FECC LoadCommonSprite
   ; r0 - Entity
+
+020165D4 GetOAMAttributesBySpritePartSize
+  ; r0 - Part width in pixels
+  ; r1 - Part height in pixels
+  ; Returns r0 - the OAM shape and size attributes that match the width and height provided.
+  ; It takes both width/0x10 and height/0x10 and clamps them within range 0-3.
+  ; Then it uses (width*0x10)+height*4 as the index in list 020BE4DC, which has the OAM attributes for each size.
 
 021DD000 LoadRoomEntities
   ; r0 - Room's entity list pointer

@@ -76,6 +76,16 @@
   ; r0 - Pointer to 02000060??
   ; Note that the ambient song that plays in the waterfall room and the Julius fight room are hardcoded into this function.
 
+08011B2C ChangeRoom??
+  ; r0 - Pointer to 02000060??
+
+08011F44 TeleportPlayer
+  ; r0 - Room pointer to teleport to
+  ; r1 - Dest X
+  ; r2 - Dest Y
+  ; r3 - Dest X offset
+  ; [r13] - Dest Y offset
+
 08001980 GetRoomPointer
   ; r0 - Sector index
   ; r1 - Room index
@@ -201,6 +211,17 @@
   ; r0 - Entity pointer
   ; r1 - Index in the list of entity sizes (08118D08)
   ; This checks if an entity went offscreen. It returns 0 if on screen and 1 if off screen. This is so certain entities offscreen can stop updating until they're on screen again.
+
+080D4C98 CheckDraculaSoulsEquipped?
+  ; Checks if the player has the 3 souls required for the good ending equipped.
+  ; 080D4CF0 hardcodes the red soul index required.
+  ; 080D4CF6 hardcodes the blue soul index required.
+  ; 080D4CFC hardcodes the yellow soul index required.
+
+08014628 PlayerSomaCreate
+08014720 PlayerJuliusCreate
+0801B0D8 PlayerSomaUpdate
+0801FEF8 PlayerJuliusUpdate
 
 080221CC WeaponOneHandedUse
 080224BC WeaponTwoHandedUse

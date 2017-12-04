@@ -9,6 +9,9 @@ Memory used for entities in OoE is 021092A0 - 0211DF5F. Each entity is 0x160 byt
 012,2: Globally unique ID for this entity.
 01A,2: Frame counter.
 021,1: Opacity.
+024,4: X pos on the screen.
+028,4: Y pos on the screen.
+02C,4: Z position.
 030,4: X pos.
 034,4: Y pos.
 038,4: Z pos.
@@ -25,6 +28,7 @@ Memory used for entities in OoE is 021092A0 - 0211DF5F. Each entity is 0x160 byt
   0020 Ignore part palette indexes. Always used palette 0 for every part.
     Note that things that affect the entire entity's palette are not affected by this, like the entity's palette offset. Only the palette specified by each sprite part is ignored.
     (This is used by the slash trails of melee weapons.)
+  0040 Ignore part GFX page indexes?
   0080 Direction. Set if facing left, clear if facing right.
   0200 Pulsating effect, used by Invisible Man.
   0400 If set, the entity's opacity value will only be used when drawing parts that have a nonzero palette index.

@@ -29,6 +29,13 @@
 
 020832BC - Has something related to the tile layout of the background of menus?
 
+02086394-0208A393 - List of sine and cosine values.
+  Entry length 4.
+  There are 0x1000 entries in this list, with the index corresponding to an input value of 0 to 359 degrees.
+  00,2: Sine of the input value.
+  02,2: Cosine of the input value.
+  The sine/cosine values range from -0x1000 to 0x1000, corresponding to -1.0 to 1.0.
+
 0208ACC0 - List of update code pointers for each game state (020C07E8).
 
 0208AD8C - List of room pointers for transition rooms.
