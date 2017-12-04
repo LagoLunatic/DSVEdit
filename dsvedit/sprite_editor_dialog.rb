@@ -443,33 +443,13 @@ class SpriteEditor < Qt::Dialog
     @ui.part_add.enabled = true
     @ui.part_remove.enabled = true
     
-    begin
-      @sprite = @sprite_info.sprite
-      
-      @chunky_frames, @min_x, @min_y, rendered_parts, @gfx_pages_with_blanks, @palettes, @full_width, @full_height = 
-        @renderer.render_sprite(
-          @sprite_info,
-          frame_to_render: nil,
-          override_part_palette_index: @override_part_palette_index,
-          one_dimensional_mode: @one_dimensional_render_mode,
-          transparent_trails: @transparent_trails
-        )
-    rescue StandardError => e
-      Qt::MessageBox.warning(self,
-        "Sprite rendering failed",
-        "Failed to render sprite.\n#{e.message}\n\n#{e.backtrace.join("\n")}"
-      )
-      return
-    end
+    @sprite = @sprite_info.sprite
     
     if @sprite_info.skeleton_file
       @ui.view_skeleton_button.enabled = true
     else
       @ui.view_skeleton_button.enabled = false
     end
-    
-    @frame_graphics_scene.setSceneRect(@min_x, @min_y, @full_width, @full_height)
-    @part_graphics_scene.setSceneRect(@min_x, @min_y, @full_width, @full_height)
     
     @current_frame_index = 0
     @current_part_index = 0
@@ -493,13 +473,33 @@ class SpriteEditor < Qt::Dialog
     
     @ui.gfx_pointer.text = @sprite_info.gfx_file_pointers.map{|ptr| "%08X" % ptr}.join(", ")
     
+    @ui.palette_pointer.text = "%08X" % @sprite_info.palette_pointer
+    
+    begin
+      @chunky_frames, @min_x, @min_y, rendered_parts, @gfx_pages_with_blanks, @palettes, @full_width, @full_height = 
+        @renderer.render_sprite(
+          @sprite_info,
+          frame_to_render: nil,
+          override_part_palette_index: @override_part_palette_index,
+          one_dimensional_mode: @one_dimensional_render_mode,
+          transparent_trails: @transparent_trails
+        )
+    rescue StandardError => e
+      Qt::MessageBox.warning(self,
+        "Sprite rendering failed",
+        "Failed to render sprite.\n#{e.message}\n\n#{e.backtrace.join("\n")}"
+      )
+      return
+    end
+    
+    @frame_graphics_scene.setSceneRect(@min_x, @min_y, @full_width, @full_height)
+    @part_graphics_scene.setSceneRect(@min_x, @min_y, @full_width, @full_height)
+    
     @ui.gfx_page_index.clear()
     @gfx_pages_with_blanks.each_with_index do |gfx_page, i|
       @ui.gfx_page_index.addItem("%02X" % i)
     end
     @ui.gfx_page_index.setCurrentIndex(0)
-    
-    @ui.palette_pointer.text = "%08X" % @sprite_info.palette_pointer
     
     @ui.palette_index.clear()
     @palettes.each_with_index do |palette, i|
