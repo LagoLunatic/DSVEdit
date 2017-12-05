@@ -501,6 +501,10 @@ class Room
         # O needs Rare Ghost's exclamation point bubble, so load Rare Ghost's GFX too.
         sprite_info = game.enemy_dnas[0x4E].extract_gfx_and_palette_and_sprite_from_init_ai
         @entity_gfx_list += sprite_info.gfx_list_pointer_or_gfx_file_pointers
+      elsif enemy_id == 0x6E # Skeleton Mirror (in mirror)
+        # Need to load Skeleton Mirror's GFX too.
+        sprite_info = game.enemy_dnas[0x3C].extract_gfx_and_palette_and_sprite_from_init_ai
+        @entity_gfx_list += sprite_info.gfx_list_pointer_or_gfx_file_pointers
       elsif enemy_id == 0x71 # Skeleton Glass (in glass)
         # Need to load Skeleton Glass's GFX too.
         sprite_info = game.enemy_dnas[0x4F].extract_gfx_and_palette_and_sprite_from_init_ai
@@ -530,21 +534,27 @@ class Room
     objects.each do |object|
       object_id = object.subtype
       begin
-        if object_id == 5 && object.var_a > 1
-          # Skull door or Lure door
+        if object_id == 5 && object.var_a > 1 # Skull door or Lure door
           other_sprite = OTHER_SPRITES.find{|spr| spr[:desc] == "Skull door"}
           sprite_info = SpriteInfo.extract_gfx_and_palette_and_sprite_from_create_code(other_sprite[:init_code], fs, nil, other_sprite)
-        elsif object_id == 9
+        elsif object_id == 9 # Button and wall
           gfx_pointer = fs.read(BUTTON_AND_WALL_GFX_LIST_START + 4*object.var_a, 4).unpack("V").first
           @entity_gfx_list << gfx_pointer
           next
-        elsif object_id == 0x26
+        elsif object_id == 0x26 # Event
           event_id = object.var_a
           event_create_code = fs.read(EVENT_CREATE_CODE_LIST_START + event_id*4, 4).unpack("V").first
           
           sprite_info = SpriteInfo.extract_gfx_and_palette_and_sprite_from_create_code(event_create_code, fs, nil, {})
         else
           sprite_info = game.special_objects[object_id].extract_gfx_and_palette_and_sprite_from_create_code
+        end
+        
+        if object_id == 0x1F && object.var_a == 2 # Elevator to center room of castle
+          # Need to load the lift's GFX too.
+          other_sprite = OTHER_SPRITES.find{|spr| spr[:desc] == "Lift to center of castle"}
+          lift_sprite_info = SpriteInfo.extract_gfx_and_palette_and_sprite_from_create_code(other_sprite[:init_code], fs, nil, other_sprite)
+          @entity_gfx_list += lift_sprite_info.gfx_list_pointer_or_gfx_file_pointers
         end
         
         @entity_gfx_list += sprite_info.gfx_list_pointer_or_gfx_file_pointers

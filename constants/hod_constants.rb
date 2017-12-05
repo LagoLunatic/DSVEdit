@@ -506,6 +506,7 @@ REUSED_SPECIAL_OBJECT_INFO = {
   0x26 => {init_code: -1}, # event
   0x27 => {init_code: -1}, # drawbridge
   0x28 => {init_code: 0x0802FC68}, # lydie
+  0x2A => {init_code: 0x080246D8, palette: 0x0812613C}, # furniture
   0x2F => {gfx_files: [0x081236B8]},
   0x31 => {init_code: -1},
 }
@@ -540,8 +541,8 @@ OTHER_SPRITES = [
   
   {desc: "Skull door", init_code: 0x0801C980},
   {desc: "Clock tower in BG", init_code: 0x08026B34},
-  
   {desc: "Giant Merman spin", init_code: 0x0804B220},
+  {desc: "Lift to center of castle", init_code: 0x08022134},
   
   # maxim's gfx list: 080DC964
   # maxim's duplicate gfx list?: 080E0570
