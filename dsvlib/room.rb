@@ -497,6 +497,23 @@ class Room
         # Peeping Eye that spawns Peeping Big
         sprite_info = game.enemy_dnas[0x42].extract_gfx_and_palette_and_sprite_from_init_ai
         @entity_gfx_list += sprite_info.gfx_list_pointer_or_gfx_file_pointers
+      elsif enemy_id == 0x3D # "O"
+        # O needs Rare Ghost's exclamation point bubble, so load Rare Ghost's GFX too.
+        sprite_info = game.enemy_dnas[0x4E].extract_gfx_and_palette_and_sprite_from_init_ai
+        @entity_gfx_list += sprite_info.gfx_list_pointer_or_gfx_file_pointers
+      elsif enemy_id == 0x71 # Skeleton Glass (in glass)
+        # Need to load Skeleton Glass's GFX too.
+        sprite_info = game.enemy_dnas[0x4F].extract_gfx_and_palette_and_sprite_from_init_ai
+        @entity_gfx_list += sprite_info.gfx_list_pointer_or_gfx_file_pointers
+      elsif enemy_id == 0x36 # Giant Merman
+        # His spin has a separate GFX (and sprite).
+        other_sprite = OTHER_SPRITES.find{|spr| spr[:desc] == "Giant Merman spin"}
+        sprite_info = SpriteInfo.extract_gfx_and_palette_and_sprite_from_create_code(other_sprite[:init_code], fs, nil, other_sprite)
+        @entity_gfx_list += sprite_info.gfx_list_pointer_or_gfx_file_pointers
+        
+        # Also need to load Merman's GFX too.
+        sprite_info = game.enemy_dnas[0x2F].extract_gfx_and_palette_and_sprite_from_init_ai
+        @entity_gfx_list += sprite_info.gfx_list_pointer_or_gfx_file_pointers
       end
       
       # TODO: add check that the id is within the list of valid id numbers, otherwise skip it so we don't get a crash in dsvedit.
@@ -517,6 +534,10 @@ class Room
           # Skull door or Lure door
           other_sprite = OTHER_SPRITES.find{|spr| spr[:desc] == "Skull door"}
           sprite_info = SpriteInfo.extract_gfx_and_palette_and_sprite_from_create_code(other_sprite[:init_code], fs, nil, other_sprite)
+        elsif object_id == 9
+          gfx_pointer = fs.read(BUTTON_AND_WALL_GFX_LIST_START + 4*object.var_a, 4).unpack("V").first
+          @entity_gfx_list << gfx_pointer
+          next
         elsif object_id == 0x26
           event_id = object.var_a
           event_create_code = fs.read(EVENT_CREATE_CODE_LIST_START + event_id*4, 4).unpack("V").first
@@ -554,6 +575,8 @@ class Room
         puts e.message
       end
     end
+    
+    @entity_gfx_list -= COMMON_SPRITE[:gfx_files]
     
     @entity_gfx_list.uniq!
     

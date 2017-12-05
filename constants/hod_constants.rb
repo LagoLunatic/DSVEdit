@@ -391,6 +391,7 @@ REUSED_ENEMY_INFO = {
   0x03 => {palette_offset: 1}, # medusa head
   0x10 => {init_code: 0x08051DE0, palette_offset: 2}, # lizard man -> master lizard
   0x1D => {init_code: 0x08096DD0, palette_offset: 6}, # gate guarder -> living armor
+  0x20 => {init_code: 0x080596FC}, # tiny devil, use solo GFX instead of pazuzu GFX
   0x25 => {gfx_files: [0x0811BCD0], sprite: 0x08149C94}, # witch
   0x27 => {init_code: 0x08092A04, palette_offset: 1}, # bomber armor -> rock armor
   0x32 => {init_code: 0x0805A8DC}, # ruler sword lv2
@@ -416,7 +417,7 @@ REUSED_ENEMY_INFO = {
   0x5D => {gfx_files: [0x0811BCC0, 0x080E8944]},
   0x5F => {init_code: 0x08096F28}, # pike master -> living armor
   # TODO 63 dracula wraith 2 glitchy
-  0x6D => {palette_offset: 2}, # pazuzu (breaks through wall)
+  0x6D => {gfx_files: [0x0811BE00, 0x0811BE08], palette_offset: 2}, # pazuzu (breaks through wall)
   0x6F => {init_code: 0x08096DD0}, # revenge armor (spawns talos) -> living armor
   0x70 => {init_code: 0x080535A0}, # slime (comes from pipe)
   0x77 => {init_code: 0x080936A8}, # talos (chase) -> talos
@@ -540,6 +541,8 @@ OTHER_SPRITES = [
   {desc: "Skull door", init_code: 0x0801C980},
   {desc: "Clock tower in BG", init_code: 0x08026B34},
   
+  {desc: "Giant Merman spin", init_code: 0x0804B220},
+  
   # maxim's gfx list: 080DC964
   # maxim's duplicate gfx list?: 080E0570
   # skill gfx...? list: 080E2940
@@ -556,6 +559,8 @@ WEAPON_SPRITES_LIST_START = nil
 WEAPON_PALETTE_LIST = nil
 SKILL_GFX_LIST_START = nil # TODO
 SKILL_GFX_COUNT = 0 # TODO
+
+BUTTON_AND_WALL_GFX_LIST_START = 0x084B096C
 
 MAP_TILE_METADATA_LIST_START_OFFSET = nil
 MAP_TILE_METADATA_START_OFFSET = 0x080DAD94
