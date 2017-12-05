@@ -202,6 +202,9 @@ SPECIAL_OBJECT_IDS = (0..0x31)
 SPECIAL_OBJECT_CREATE_CODE_LIST = 0x08494EA4
 SPECIAL_OBJECT_UPDATE_CODE_LIST = 0x08494F6C
 
+EVENT_CREATE_CODE_LIST_START = 0x084B173C
+EVENT_UPDATE_CODE_LIST_START = 0x084B178C
+
 ITEM_LOCAL_ID_RANGES = {
   0x03 => (0x00..0x1A), # consumable
   0x04 => (0x00..0x08), # weapon
@@ -501,6 +504,7 @@ REUSED_SPECIAL_OBJECT_INFO = {
   0x25 => {init_code: -1}, # spikes
   0x26 => {init_code: -1}, # event
   0x27 => {init_code: -1}, # drawbridge
+  0x28 => {init_code: 0x0802FC68}, # lydie
   0x2F => {gfx_files: [0x081236B8]},
   0x31 => {init_code: -1},
 }

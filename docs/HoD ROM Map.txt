@@ -94,11 +94,9 @@
 
 08498C34 - List of save rooms.
 
-084B173C - List of pointers to event create functions (for object 26).
-  The event object's var A is the index in this list.
-
-084B173C - List of create code pointers for events.
-  Var A of the event entity is the index in this list.
+084B173C-084B178B - List of create code pointers for events.
+084B178C-084B17DB - List of update code pointers for events.
+  Var A of the event entity is the index in these lists.
 
 084B23F0-084B2413 - List of candle GFX pointers.
   The candle's type is the index in this list.

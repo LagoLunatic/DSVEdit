@@ -114,12 +114,31 @@
   Var A: Affects the width of the spike hitbox somehow.
 26 Event.
   Var A: Which event.
+    00 Start of the game.
     01 Meeting Death in the Marble Corridor.
+    02 
+    03 
+    04 
+    05 
+    06 
+    07 
+    08 
+    09 
+    0A 
+    0B 
+    0C 
+    0D 
+    0E 
+    0F 
+    10 
+    11 
+    12 
+    13 
   Var B: Event flag set when this event is completed.
 27 Drawbridge.
-28 lydie?
-  Var A: Which event?
-  Var B: Event flag?
+28 Lydie.
+  Var A: Which event. Seems unused.
+  Var B: Event flag of the corresponding event. Lydie will not appear once this is set.
 29 wide floor blockade?
 2A Furniture in the furniture room.
   Also changes the music.

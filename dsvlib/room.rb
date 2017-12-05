@@ -517,6 +517,11 @@ class Room
           # Skull door or Lure door
           other_sprite = OTHER_SPRITES.find{|spr| spr[:desc] == "Skull door"}
           sprite_info = SpriteInfo.extract_gfx_and_palette_and_sprite_from_create_code(other_sprite[:init_code], fs, nil, other_sprite)
+        elsif object_id == 0x26
+          event_id = object.var_a
+          event_create_code = fs.read(EVENT_CREATE_CODE_LIST_START + event_id*4, 4).unpack("V").first
+          
+          sprite_info = SpriteInfo.extract_gfx_and_palette_and_sprite_from_create_code(event_create_code, fs, nil, {})
         else
           sprite_info = game.special_objects[object_id].extract_gfx_and_palette_and_sprite_from_create_code
         end
