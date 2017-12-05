@@ -640,6 +640,13 @@ when you first enter a new area, the game determines which entrance room to put 
 
 0221A114 - list of songs to play in sound test.
 
+Sprite info for the main menu:
+  0221AC50,4 - Sprite file asset index.
+  0221AC54,4 - Number of GFX assets.
+  0221AC58,4 - Has a pointer to the list of GFX asset indexes.
+  0221AC5C,4 - Has the palette pointer.
+  0221AC60-0221AC87 - Has the GFX asset indexes.
+
 022228D4 - List of which shop item pool gets unlocked by each quest.
   If a pointer is 0, that quest doesn't unlock any items in the shop.
 
@@ -652,6 +659,13 @@ when you first enter a new area, the game determines which entrance room to put 
 === 02223C3F: End of overlays 19-20
 
 === 02223E00 - 022B723F: Overlays 21-23 (?)
+
+Sprite info for the pause menu:
+  022B48CC,4 - Sprite file asset index.
+  022B48D0,4 - Number of GFX assets.
+  022B48D4,4 - Has a pointer to the list of GFX asset indexes.
+  022B48D8,4 - Has the palette pointer.
+  022B48DC-022B48F3 - Has the GFX asset indexes.
 
 022B590C - List of sprite files for each event actor (asset indexes).
 022B5950 - List of palette pointers for each event actor.

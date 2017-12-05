@@ -697,6 +697,8 @@ OTHER_SPRITES = [
   {pointer: 0x0221BBC8, desc: "Title screen 2 Japanese", overlay: 20},
   {pointer: 0x0221BBC8, desc: "Title screen 2 English", gfx_files: [0x020BED2C, 0x020BED38, 0x020BED44, 0x020BED50, 0x020BED5C, 0x020BED68, 0x020BED74, 0x020BED80, 0x020BEDD4, 0x020BEDE0], overlay: 20},
   {pointer: 0x0221BBE0, desc: "Title screen 3", overlay: 20},
+  {desc: "Main menu", gfx_files: [0x020BA498, 0x020BA4A4, 0x020BA4B0, 0x020BA4EC, 0x020BA540, 0x020BA594, 0x020BA5E8, 0x020BA63C, 0x020BA660, 0x020BA66C], sprite: 0x021DCCFC, palette: 0x020D1B84},
+  {desc: "Pause menu", gfx_files: [0x020BA408, 0x020BA414, 0x020BA420, 0x020BA42C, 0x020BA480, 0x020BA48C], sprite: 0x021DCD00, palette: 0x020D1980},
   
   {desc: "Map", sprite: 0x020C553C, gfx_files: [0x020BA78C], palette: 0x020D23B0, one_dimensional_mode: true},
 ]
