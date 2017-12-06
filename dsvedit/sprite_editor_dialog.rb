@@ -182,6 +182,8 @@ class SpriteEditor < Qt::Dialog
           red_soul_gfx_index == skill_gfx_index
         end
         items = skill_indexes.map{|red_soul_index, red_soul_gfx_index| game.items[SKILL_GLOBAL_ID_RANGE.begin + red_soul_index]}
+      elsif GAME == "hod"
+        items = skill_items.select{|item| item["GFX Index"] == skill_gfx_index}
       else
         items = skill_items.select{|item| item["Sprite"] == skill_gfx_index+1}
       end
@@ -199,7 +201,7 @@ class SpriteEditor < Qt::Dialog
       
       @skill_items_for_each_gfx_index[skill_gfx_index] = items
       
-      if GAME == "aos"
+      if SYSTEM == :gba
         @ui.skill_list.addItem("%02X %s" % [skill_gfx_index, skill_name])
       else
         @ui.skill_list.addItem("%02X %s" % [skill_gfx_index + 1, skill_name])

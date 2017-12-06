@@ -25,7 +25,8 @@
   These are the armor indexes of each piece of armor.
   For example, entry 1 (for Knife) is 7C (armor index of Logoth's Ring).
 
-080E2944 - List of GFX pointers for spells.
+080E2944-080E29AF - List of GFX pointers for spells.
+080E29B0 - List of GFX pointers for Juste?
 
 080E29D4-080E2C13 - List of spells.
   Entry length 0xC.

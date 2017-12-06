@@ -23,6 +23,10 @@ class SkillGfx
       @sprite_file_pointer = fs.assets[sprite_asset_index][:asset_pointer]
     when "aos"
       @gfx_file_pointer, @palette_pointer, @sprite_file_pointer = fs.read(SKILL_GFX_LIST_START + skill_gfx_index*12, 12).unpack("VVV")
+    when "hod"
+      @gfx_file_pointer = fs.read(SKILL_GFX_LIST_START + skill_gfx_index*4, 4).unpack("V").first
+      @sprite_file_pointer = SKILL_GFX_HARDCODED_SPRITE_POINTERS[skill_gfx_index]
+      @palette_pointer = SKILL_GFX_PALETTE_POINTER
     end
   end
   
