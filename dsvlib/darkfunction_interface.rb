@@ -369,6 +369,10 @@ class DarkFunctionInterface
         part.gfx_y_offset = y_on_big_gfx_page % gfx_page_width
         part.width = df_unique_part["w"].to_i
         part.height = df_unique_part["h"].to_i
+        # Clamp the part width/height so it doesn't go past the bounds of a GFX page.
+        part.width = [part.width, gfx_page_canvas_width-part.gfx_x_offset].min
+        part.height = [part.height, gfx_page_canvas_width-part.gfx_y_offset].min
+        
         gfx_page_index_on_big_gfx_page = (x_on_big_gfx_page / gfx_page_width) + (y_on_big_gfx_page / gfx_page_width * big_gfx_page_width)
         gfx_page_index = gfx_page_index_on_big_gfx_page % big_gfx_page_width
         if gfx_page_canvas_width == 256
