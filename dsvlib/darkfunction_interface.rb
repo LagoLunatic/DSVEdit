@@ -5,6 +5,8 @@ class DarkFunctionInterface
   class ExportError < StandardError ; end
   class ImportError < StandardError ; end
   
+  PADDING = 4
+  
   def self.export(output_path, name, sprite_info, fs, renderer, transparent_trails: false)
     sprite = sprite_info.sprite
     
@@ -42,21 +44,59 @@ class DarkFunctionInterface
       big_gfx_page_height += 1
     end
     
-    big_gfx_page = ChunkyPNG::Image.new(big_gfx_page_width*gfx_page_width, big_gfx_page_height*gfx_page_width)
+    # Put padding in between each GFX page.
+    gfx_page_width_with_padding = gfx_page_width + PADDING
+    big_gfx_page_width_px = big_gfx_page_width*gfx_page_width_with_padding
+    big_gfx_page_height_px = big_gfx_page_height*gfx_page_width_with_padding
+    
+    gfx_padding_color = ChunkyPNG::Color.rgba(255, 128, 36, 255)
+    
+    big_gfx_page = ChunkyPNG::Image.new(big_gfx_page_width_px, big_gfx_page_height_px)
     palettes.each_with_index do |palette, palette_index|
       sprite_info.gfx_pages.each_with_index do |gfx_page, gfx_page_index|
         chunky_gfx_page = renderer.render_gfx_page(gfx_page.file, palette, gfx_page.canvas_width)
         
         i = gfx_page_index + (palette_index*big_gfx_page_width)
-        x_on_big_gfx_page = (i % big_gfx_page_width) * gfx_page_width
-        y_on_big_gfx_page = (i / big_gfx_page_width) * gfx_page_width
-        big_gfx_page.compose!(chunky_gfx_page, x_on_big_gfx_page, y_on_big_gfx_page)
+        x_on_big_gfx_page = (i % big_gfx_page_width) * gfx_page_width_with_padding
+        y_on_big_gfx_page = (i / big_gfx_page_width) * gfx_page_width_with_padding
+        big_gfx_page.replace!(chunky_gfx_page, x_on_big_gfx_page, y_on_big_gfx_page)
+        
+        big_gfx_page.line(
+          x_on_big_gfx_page + gfx_page_width + 1,
+          0,
+          x_on_big_gfx_page + gfx_page_width + 1,
+          big_gfx_page_height_px,
+          gfx_padding_color
+        )
+        big_gfx_page.line(
+          x_on_big_gfx_page + gfx_page_width + 2,
+          0,
+          x_on_big_gfx_page + gfx_page_width + 2,
+          big_gfx_page_height_px,
+          gfx_padding_color
+        )
       end
+      
+      big_gfx_page.line(
+        0,
+        palette_index*gfx_page_width_with_padding + gfx_page_width + 1,
+        big_gfx_page_width_px,
+        palette_index*gfx_page_width_with_padding + gfx_page_width + 1,
+        gfx_padding_color
+      )
+      big_gfx_page.line(
+        0,
+        palette_index*gfx_page_width_with_padding + gfx_page_width + 2,
+        big_gfx_page_width_px,
+        palette_index*gfx_page_width_with_padding + gfx_page_width + 2,
+        gfx_padding_color
+      )
     end
-    hitbox_red_rect = ChunkyPNG::Image.new(big_gfx_page_width*gfx_page_width, 256, ChunkyPNG::Color.rgba(0xFF, 0, 0, 0x3f))
+    hitbox_red_rect_height = 256 + PADDING*2
+    hitbox_red_rect = ChunkyPNG::Image.new(big_gfx_page_width_px, hitbox_red_rect_height, ChunkyPNG::Color.rgba(0xFF, 0, 0, 0x3f))
     hitbox_red_x_off = 0
     hitbox_red_y_off = big_gfx_page.height-hitbox_red_rect.height
-    big_gfx_page.compose!(hitbox_red_rect, hitbox_red_x_off, hitbox_red_y_off)
+    big_gfx_page.replace!(hitbox_red_rect, hitbox_red_x_off, hitbox_red_y_off)
     big_gfx_page.save(output_path + "/#{name}.png")
     
     unique_parts_by_index = sprite.get_unique_parts_by_index()
@@ -67,8 +107,8 @@ class DarkFunctionInterface
     
     builder = Nokogiri::XML::Builder.new do |xml|
       xml.img(:name => "#{name}.png", 
-              :w => gfx_page_width, 
-              :h => gfx_page_width) {
+              :w => big_gfx_page_width_px, 
+              :h => big_gfx_page_height_px) {
         xml.definitions {
           xml.dir(:name => "/") {
             unique_parts.each_with_index do |part, i|
@@ -79,8 +119,8 @@ class DarkFunctionInterface
                 gfx_page_index = gfx_page_index / 4
               end
               i_on_big_gfx_page = gfx_page_index + (part.palette_index*big_gfx_page_width)
-              big_gfx_x_offset = (i_on_big_gfx_page % big_gfx_page_width) * gfx_page_width
-              big_gfx_y_offset = (i_on_big_gfx_page / big_gfx_page_width) * gfx_page_width
+              big_gfx_x_offset = (i_on_big_gfx_page % big_gfx_page_width) * gfx_page_width_with_padding
+              big_gfx_y_offset = (i_on_big_gfx_page / big_gfx_page_width) * gfx_page_width_with_padding
               xml.spr(:name => "part%02X" % part_index,
                       :x => part.gfx_x_offset + big_gfx_x_offset,
                       :y => part.gfx_y_offset + big_gfx_y_offset,
@@ -219,6 +259,8 @@ class DarkFunctionInterface
     num_gfx_pages = sprite_info.gfx_pages.size
     big_gfx_page_width = num_gfx_pages
     
+    gfx_page_width_with_padding = gfx_page_width + PADDING
+    
     sprites_file = File.read(input_path + "/#{name}.sprites")
     anim_file = File.read(input_path + "/#{name}.anim")
     
@@ -249,7 +291,7 @@ class DarkFunctionInterface
         
         df_cell = df_anim.css("cell").first
         frame, this_frames_parts, this_frames_hitboxes, this_frames_unique_part_and_hitbox_strs = import_frame(
-          df_cell, df_unique_parts, gfx_page_width, big_gfx_page_width, num_gfx_pages, gfx_page_canvas_width
+          df_cell, df_unique_parts, gfx_page_width_with_padding, big_gfx_page_width, num_gfx_pages, gfx_page_canvas_width
         )
         sprite.frames[unanimated_frame_index] = frame
         all_created_frames[unanimated_frame_index] = {
@@ -278,7 +320,7 @@ class DarkFunctionInterface
         animation.number_of_frames += 1
         
         frame, this_frames_parts, this_frames_hitboxes, this_frames_unique_part_and_hitbox_strs = import_frame(
-          df_cell, df_unique_parts, gfx_page_width, big_gfx_page_width, num_gfx_pages, gfx_page_canvas_width
+          df_cell, df_unique_parts, gfx_page_width_with_padding, big_gfx_page_width, num_gfx_pages, gfx_page_canvas_width
         )
         
         duplicated_frame_and_part_names = each_frames_unique_part_and_hitbox_strs.find do |frame_index, other_frames_unique_part_and_hitbox_strs|
@@ -329,7 +371,7 @@ class DarkFunctionInterface
     sprite.write_to_rom()
   end
   
-  def self.import_frame(df_cell, df_unique_parts, gfx_page_width, big_gfx_page_width, num_gfx_pages, gfx_page_canvas_width)
+  def self.import_frame(df_cell, df_unique_parts, gfx_page_width_with_padding, big_gfx_page_width, num_gfx_pages, gfx_page_canvas_width)
     frame = Frame.new
     
     this_frames_unique_part_and_hitbox_strs = []
@@ -365,15 +407,15 @@ class DarkFunctionInterface
         end
         x_on_big_gfx_page = df_unique_part["x"].to_i
         y_on_big_gfx_page = df_unique_part["y"].to_i
-        part.gfx_x_offset = x_on_big_gfx_page % gfx_page_width
-        part.gfx_y_offset = y_on_big_gfx_page % gfx_page_width
+        part.gfx_x_offset = x_on_big_gfx_page % gfx_page_width_with_padding
+        part.gfx_y_offset = y_on_big_gfx_page % gfx_page_width_with_padding
         part.width = df_unique_part["w"].to_i
         part.height = df_unique_part["h"].to_i
         # Clamp the part width/height so it doesn't go past the bounds of a GFX page.
         part.width = [part.width, gfx_page_canvas_width-part.gfx_x_offset].min
         part.height = [part.height, gfx_page_canvas_width-part.gfx_y_offset].min
         
-        gfx_page_index_on_big_gfx_page = (x_on_big_gfx_page / gfx_page_width) + (y_on_big_gfx_page / gfx_page_width * big_gfx_page_width)
+        gfx_page_index_on_big_gfx_page = (x_on_big_gfx_page / gfx_page_width_with_padding) + (y_on_big_gfx_page / gfx_page_width_with_padding * big_gfx_page_width)
         gfx_page_index = gfx_page_index_on_big_gfx_page % big_gfx_page_width
         if gfx_page_canvas_width == 256
           # 256x256 pages take up 4 times the space of 128x128 pages.
