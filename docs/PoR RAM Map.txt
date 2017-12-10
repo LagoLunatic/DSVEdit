@@ -128,6 +128,10 @@
 
 020F6270 - Start of game object?
 
+020F6278,4 - Current RNG seed.
+  The most recent random number generated is stored here.
+  It's is used to affect the next random number generated.
+
 020F6284 - Game state.
   This is used as the index in list 020CA5D0.
   00 Loading a save

@@ -99,8 +99,8 @@ Red soul format:
       5 Zombie Soldier
       6 Arachne
       7 Mudman
-    Axe Armor (08024275):
-      Affects graphics? Index in list 082306A0, entry length 0x10.
+    08024275: Sprite frame index to use.
+      6 Axe Armor
     08023A71: Type of knife to throw.
       0 Evil Butcher
       1 Ripper

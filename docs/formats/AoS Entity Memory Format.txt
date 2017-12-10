@@ -14,6 +14,7 @@ Memory used for entities in AoS is 020004E4 - 02007863. Each entity is 0x84 byte
   Certain enemies freeze as long as this is above 0.
 30,2: Var A.
 32,2: Var B.
+34,2: Current HP.
 40,4: X pos on the screen in subpixels.
   In the GBA games, each pixel is 0x10000 subpixels.
   Note that unlike the DSVanias, there is no X/Y pos in the room. Only on the screen.
@@ -35,6 +36,9 @@ Memory used for entities in AoS is 020004E4 - 02007863. Each entity is 0x84 byte
 59,1: Bitfield?
   04 ?
 5A,1: Bitfield related to sprite drawing?
+  01 Enables mosaic for this entity.
+    In order for this to have an effect, the system mosaic size must also be set (at 03002CA4).
+  02 Draw entity semi-transparent.
   20 Draw the entity completely white.
 62,1: Affects palette?
   If the lowest bit of this value is set, then it changes the palette of this entity's sprite, but only for the parts that have the lowest bit of the value at part+0B set as well.
