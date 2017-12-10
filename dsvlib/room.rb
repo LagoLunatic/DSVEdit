@@ -40,7 +40,7 @@ class Room
                 :palette_shift_func,
                 :palette_shift_index,
                 :is_castle_b,
-                :has_save_right_wall
+                :has_breakable_wall
 
   def initialize(sector, room_metadata_ram_pointer, area_index, sector_index, room_index, game)
     @room_metadata_ram_pointer = room_metadata_ram_pointer
@@ -248,12 +248,12 @@ class Room
       @room_ypos_on_map   = (extra_data_2 & 0b00111111_10000000_00000000_00000000) >> 23
       @palette_page_index = 0 # Always 0 in AoS
     elsif GAME == "hod"
-      @palette_shift_func  = (extra_data & 0b00000000_00000000_00000000_11111111) # TODO allow editing
-      @palette_shift_index = (extra_data & 0b00000000_00000000_11111111_00000000) >> 8 # TODO allow editing
+      @palette_shift_func  = (extra_data & 0b00000000_00000000_00000000_11111111)
+      @palette_shift_index = (extra_data & 0b00000000_00000000_11111111_00000000) >> 8
       @room_xpos_on_map    = (extra_data & 0b00000000_01111111_00000000_00000000) >> 16
       @room_ypos_on_map    = (extra_data & 0b00111111_10000000_00000000_00000000) >> 23
-      @is_castle_b         = (extra_data & 0b01000000_00000000_00000000_00000000) >> 30 # TODO allow editing
-      @has_save_right_wall = (extra_data & 0b10000000_00000000_00000000_00000000) >> 31 # TODO figure out
+      @is_castle_b         = (extra_data & 0b01000000_00000000_00000000_00000000) >> 30
+      @has_breakable_wall  = (extra_data & 0b10000000_00000000_00000000_00000000) >> 31
       @palette_page_index  = 0 # Always 0 in HoD
       if palette_shift_func != 0
         # palette_shift_func is not just for palette shifts, also the fake 3D tower on the stairway is from this.
@@ -646,7 +646,7 @@ class Room
       extra_data |= (@room_xpos_on_map    << 16) & 0b00000000_01111111_00000000_00000000
       extra_data |= (@room_ypos_on_map    << 23) & 0b00111111_10000000_00000000_00000000
       extra_data |= (@is_castle_b         << 30) & 0b01000000_00000000_00000000_00000000
-      extra_data |= (@has_save_right_wall << 31) & 0b10000000_00000000_00000000_00000000
+      extra_data |= (@has_breakable_wall  << 31) & 0b10000000_00000000_00000000_00000000
       
       fs.write(room_metadata_ram_pointer+8*4, [extra_data].pack("V"))
     else

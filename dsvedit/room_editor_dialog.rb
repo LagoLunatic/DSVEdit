@@ -37,6 +37,15 @@ class RoomEditorDialog < Qt::Dialog
       @ui.alternate_state_room_pointer.hide()
       @ui.horizontalLayout_3.removeItem(@ui.horizontalSpacer_2)
       
+      @ui.label_15.hide()
+      @ui.palette_shift_func.hide()
+      @ui.label_16.hide()
+      @ui.palette_shift_index.hide()
+      @ui.horizontalLayout_4.removeItem(@ui.horizontalSpacer_3)
+      
+      @ui.is_castle_b.hide()
+      @ui.has_breakable_wall.hide()
+      
       @ui.label_14.hide()
       @ui.entity_gfx_page_list.hide()
       label_item = @ui.formLayout.itemAt(5, Qt::FormLayout::LabelRole)
@@ -80,6 +89,12 @@ class RoomEditorDialog < Qt::Dialog
     @ui.entity_gfx_page_list.text = "%08X" % @room.entity_gfx_list_pointer if GAME == "hod"
     @ui.alternate_state_event_flag.text = "%04X" % @room.state_swap_event_flag if GAME == "hod"
     @ui.alternate_state_room_pointer.text = "%08X" % @room.alternate_room_state_pointer if GAME == "hod"
+    
+    @ui.palette_shift_func.text = "%02X" % @room.palette_shift_func if GAME == "hod"
+    @ui.palette_shift_index.text = "%02X" % @room.palette_shift_index if GAME == "hod"
+    
+    @ui.is_castle_b.checked = @room.is_castle_b == 0 ? false : true if GAME == "hod"
+    @ui.has_breakable_wall.checked = @room.has_breakable_wall == 0 ? false : true if GAME == "hod"
     
     @ui.gfx_page_list.text = "%08X" % @room.gfx_list_pointer
     @ui.palette_page_list.text = "%08X" % @room.palette_wrapper_pointer
@@ -133,6 +148,12 @@ class RoomEditorDialog < Qt::Dialog
     @room.entity_gfx_list_pointer = @ui.entity_gfx_page_list.text.to_i(16) if GAME == "hod"
     @room.state_swap_event_flag = @ui.alternate_state_event_flag.text.to_i(16) if GAME == "hod"
     @room.alternate_room_state_pointer = @ui.alternate_state_room_pointer.text.to_i(16) if GAME == "hod"
+    
+    @room.palette_shift_func = @ui.palette_shift_func.text.to_i(16) if GAME == "hod"
+    @room.palette_shift_index = @ui.palette_shift_index.text.to_i(16) if GAME == "hod"
+    
+    @room.is_castle_b = @ui.is_castle_b.checked ? 1 : 0 if GAME == "hod"
+    @room.has_breakable_wall = @ui.has_breakable_wall.checked ? 1 : 0 if GAME == "hod"
     
     @room.gfx_list_pointer = @ui.gfx_page_list.text.to_i(16)
     @room.palette_wrapper_pointer = @ui.palette_page_list.text.to_i(16)

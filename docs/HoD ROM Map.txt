@@ -49,6 +49,10 @@
 08494EA4 - List of special object create code pointers.
 08494F6C - List of special object update code pointers.
 
+08495034-08495047 - List of palette shift function pointers.
+  The room's "Palette shift func" minus 1 is the index in this list.
+  These functions get called with the room's "Palette shift index" as argument r0.
+
 0849507C - List of warp rooms.
   Entry length 0xC.
   00,2: X pos of the warp room on the map.

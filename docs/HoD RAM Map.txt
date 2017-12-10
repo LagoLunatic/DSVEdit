@@ -108,7 +108,9 @@ D0-EF 02006C18-02007C17 - Various other things including particles and enemy pro
   List of special effects:
   FF - The screen will not scroll more than 1.5 screens to the right, making the room appear to be 1.5 screens wide. This only works correctly on layer 0, if another layer has this it causes bugs where the player will warp around the room.
 
-0201524D - 1 if in a save room with a right wall??
+0201444C - Bitfield of which tiles in the current room are breakable wall tiles.
+
+0201524D,1 - "Has Breakable Wall" flag copied from the current room's room data. 0 or 1.
 
 020154FC - List of sprite info for currently loaded entities.
   The byte at +66 in an entity's memory is the index in this list.
