@@ -416,10 +416,26 @@ REUSED_ENEMY_INFO = {
   0x5C => {init_code: 0x0809B168}, # clear bone -> skeleton
   0x5D => {gfx_files: [0x0811BCC0, 0x080E8944]},
   0x5F => {init_code: 0x08096F28}, # pike master -> living armor
-  # TODO 63 dracula wraith 2 glitchy
+  0x63 => {gfx_files: [0x081236F0, 0x081236F8], palette_offset: 1}, # dracula wraith 2
+  0x64 => {init_code: 0x0803A694}, # fleaman from ceiling
+  0x65 => {init_code: 0x080596B4}, # tiny devil from ceiling
+  0x66 => {init_code: -1},
+  0x67 => {init_code: -1},
+  0x68 => {init_code: -1},
+  0x69 => {init_code: -1},
+  0x6A => {init_code: -1},
+  0x6B => {palette_offset: 2},
+  0x6C => {sprite: 0x0812CE34, gfx_files: [0x080E89FC], palette: 0x08124104, palette_offset: 1},
   0x6D => {gfx_files: [0x0811BE00, 0x0811BE08], palette_offset: 2}, # pazuzu (breaks through wall)
+  0x6E => {palette_offset: 9}, # skeleton mirror (in mirror)
   0x6F => {init_code: 0x08096DD0}, # revenge armor (spawns talos) -> living armor
   0x70 => {init_code: 0x080535A0}, # slime (comes from pipe)
+  0x71 => {palette_offset: 3},
+  0x72 => {init_code: -1},
+  0x73 => {init_code: -1},
+  0x74 => {init_code: -1},
+  0x75 => {init_code: -1},
+  0x76 => {init_code: -1},
   0x77 => {init_code: 0x080936A8}, # talos (chase) -> talos
   0x79 => {init_code: 0x08096DD0}, # revenge armor -> living armor
   # TODO: 64+
@@ -467,12 +483,15 @@ BEST_SPRITE_FRAME_FOR_ENEMY = {
   0x58 => 0x0A, # pixie
   0x5E => 0x07, # simon wraith
   0x5F => 0x10, # pike master
+  0x6C => 0x47, # candle
   0x6F => 0x10, # revenge armor (spawns talos)
   0x77 => 0x10, # talos (chase)
   0x79 => 0x10, # revenge armor
   # TODO: 64+
 }
-BEST_SPRITE_OFFSET_FOR_ENEMY = {}
+BEST_SPRITE_OFFSET_FOR_ENEMY = {
+  0x71 => {y: -0x20},
+}
 
 COMMON_SPRITE = {desc: "Common", sprite: 0x0812CE34, gfx_files: [0x080E89FC], palette: 0x08124104, palette_offset: 1}
 

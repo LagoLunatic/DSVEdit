@@ -99,9 +99,10 @@
   ; r1 - 
   ; r2 - Color special effects.
 
-08001628 CheckPlayerTouchingCeiling?
-  ; r0 - X pos
-  ; r1 - Y pos
+08001628 GetCollisionDataByPixelPos
+  ; r0 - X pos in pixels
+  ; r1 - Y pos in pixels
+  ; Returns the collision data of the tile at the designated point.
 
 08013EA4 LoadRoomGFXPage?
   ; r0 - GFX wrapper pointer

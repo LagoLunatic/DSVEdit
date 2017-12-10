@@ -247,6 +247,11 @@ class SpriteEditor < Qt::Dialog
   end
   
   def enemy_changed(enemy_id)
+    if (REUSED_ENEMY_INFO[enemy_id] || {})[:init_code] == -1
+      load_blank_sprite()
+      return
+    end
+    
     begin
       @sprite_info = @game.enemy_dnas[enemy_id].extract_gfx_and_palette_and_sprite_from_init_ai
     rescue StandardError => e
