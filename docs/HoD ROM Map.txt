@@ -7,8 +7,9 @@
 
 080C7E38-080CA15F - Enemy DNA list.
 
-080DAD94 - Map tile metadata.
-080DC194 - Map tile line data.
+080DAD94-080DC193 - Map tile metadata.
+080DC194-080DC693 - Map tile line data.
+080DC694-080DC69B - Map secret door data.
 
 080E2120 - List of x/y positions when for the player when starting a new game or loading a save.
   Entry length 6.
