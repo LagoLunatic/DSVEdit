@@ -40,7 +40,13 @@ begin
     raise e
   end
 rescue ScriptError, StandardError => e
+  unless DEBUG
+    msg = "DSVEdit has crashed.\nPlease report this bug with a screenshot of this error:\n\n"
+    msg << "Error: #{e.class.name}: #{e.message}\n\n"
+    msg << e.backtrace.join("\n")
+    Qt::MessageBox.critical(window, "Error", msg)
+  end
+  
   puts "Error: #{e.class.name}: #{e.message}"
   puts e.backtrace
-  gets unless DEBUG
 end
