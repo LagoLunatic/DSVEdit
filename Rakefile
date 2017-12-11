@@ -81,6 +81,11 @@ task :build_releases do
       FileUtils.cp_r ["./images", "version.rb", "README.txt", "LICENSE.txt"], "../build/#{program_name}"
       FileUtils.rm_f "../build/#{program_name}/images/dsvrandom_icon.ico"
       FileUtils.rm_f "../build/#{program_name}/settings.yml"
+      
+      # Automatically set the debug variable to false.
+      code = File.read("../build/#{program_name}/dsvedit.rb")
+      code.gsub!(/DEBUG = true/, "DEBUG = false")
+      File.write("../build/#{program_name}/dsvedit.rb", code)
     else
       FileUtils.rm_f ["../build/#{program_name}/dsvrandom", "../build/#{program_name}/dsvrandom.rb"]
       FileUtils.cp_r [
