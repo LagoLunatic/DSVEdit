@@ -60,12 +60,20 @@ If you want the changes you made to be saved to the filesystem, don't forget to 
 
 ### How to edit entities
 
-Right click on the entity you want to edit in the room and an entity editor window will pop up. Here you can edit the entity's type/subtype/variables/etc.
+You can move entities around by left clicking and dragging them. Adding new entities is done by placing your mouse over the spot you want the entity to be and pressing A.
+
+To edit an entity, right click on the entity and the entity editor window will pop up. Here you can edit the entity's type/subtype/variables/etc.
 The bottom half of the window will display documentation on the specific entity selected (if available). This explains exactly what this entity does, and how its variables affect this.
 
-You can add a new entity to a room by putting your mouse over the place you want the entity and pressing A.
+### How to edit doors
 
-You can move entities around by left clicking and dragging them.
+You can move doors around by left clicking and dragging them. Adding new doors is done by placing your mouse over the spot you want the door to be and pressing D.
+
+To edit a door, shift+right click on it and the door editor window will pop up.
+Here you can change what room this door leads to by editing the "Dest room" field to have the room pointer of the desired room. You can get this pointer by going to that room in DSVEdit's main window and clicking "Copy room pointer to clipboard" on the left side of the screen, and then paste that into the door editor.
+
+The bottom half of the door editor shows a preview of the room this doors leads to. The orange rectangle represents where the player will appear after taking this door. You can drag this orange rectangle around to change this.
+The "Dest X Offset" and "Dest Y Offset" fields also affect the exact position the player will appear at. You usually don't need to edit these fields since dragging the orange rectangle is enough. But if the door gaps don't line up on both sides of the door (e.g. one is at the bottom of the screen and one is at the middle) you may need to tweak these values so the player can smoothly walk from one side to the other.
 
 ### Resizing rooms
 
