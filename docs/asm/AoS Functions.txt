@@ -49,6 +49,18 @@
 
 080683BC EnemyCheckDrops
 
+0804459C SpawnSoul
+  ; r0 - X pos in pixels on the screen
+  ; r1 - Y pos in pixels on the screen
+  ; r2 - Soul type
+  ; r3 - Soul index-1 (e.g. Winged Skeleton would be 00 instead of 01)
+  ; [r13] - 0?
+080D7308 SpawnSoulForBoss
+  ; r0 - X pos in pixels on the screen
+  ; r1 - Y pos in pixels on the screen
+  ; r2 - Enemy ID
+  ; r3 - Boss death flag to set when the soul has been absorbed
+
 080233BC GetCurrentWeaponAttackAnimation
   ; r0 - Player's state, 0 for standing, 1 for crouching, 2 for in the air. (Maybe more?)
   ; Returns the currently equipped weapon's swing animation for the player to use, read from list 084F1238.

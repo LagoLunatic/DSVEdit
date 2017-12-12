@@ -420,6 +420,17 @@
   ; r1 - Iframes index to store at entity+A4
   ; r2 - On-hurt-player callback to store at +C8
   ; r3 - On-damaged callback to store at +CC
+02031A94 SetAbsoluteHitbox
+  ; r0 - Entity
+  ; r1 - Pointer to the new hitbox data on the stack to set. In halfwords, in order: left X, top Y, right X, bottom Y.
+  ; r2 - Which hitbox
+  ; r3 - Hitbox type
+
+02036D54 SetHitboxTypesToDamagePlayer?
+02036DC4 SetHitboxTypesToDamageEnemies?
+0205B5DC SetHitBoxTypesBitBitfield?
+  ; r0 - Entity
+  ; r1 - Bitfield. TODO
 
 0202B9FC EntitySpawnSkeletallyAnimatedJoint?
   ; r0 - Entity
@@ -550,7 +561,7 @@
 0205D750 EntityMoveX?
   ; r0 - Entity
   ; r1 - X velocity
-  ; r2 - ? hitbox pointer for this specific enemy?
+  ; r2 - Pointer to the physics hitbox size for this entity.
   ; r3 - Bitfield. Bits:
   ;   02 - Ignore direction. Just set the entity's X velocity to r1, without negating it if facing left.
   ;   008 - 

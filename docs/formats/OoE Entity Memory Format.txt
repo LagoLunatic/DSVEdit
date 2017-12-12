@@ -70,16 +70,13 @@ Memory used for entities in OoE is 021092A0 - 0211DF5F. Each entity is 0x160 byt
   This function pointer is called when the entity collides with the player.
 0CC,4: On-damaged callback.
   This function pointer is called when the entity collides with a player weapon.
-0D0,4: For players, this is a bitfield of their current state booleans.
-  For glyphs, ?
-0E0,4: For items, has the global ID+1 of the item.
-  For money, has the type of money (0-6 for different values of money).
 
 For enemies:
-124,2: Bitfield of ??? for peeping eye:
-  0080 - initial
-  20C2 - hit
-  20C6 petrified
+124,2: Bitfield of ???
+  0001 - Does not deal or take damage.
+  0080 - Initial
+  20C2 - hit?
+  20C6 - petrified?
 126,1: For enemies, has the petrified palette index from the enemy DNA.
 12A,2: The magical defense value from the enemy DNA.
 132,1: Enemy ID.
@@ -88,6 +85,12 @@ For enemies:
 
 For skeletally animated enemies:
 158,4: Pointer to the skeletal animation entry for this enemy, in list 02101200.
+
+For items:
+0E0,4: The global ID+1 of the item.
+
+For money:
+0E0,4: The type of money (0-6 for different values of money).
 
 For glyphs:
 0D6,2: For glyphs, ?
@@ -103,5 +106,7 @@ For used skills:
 128,2: Globally unique ID of the entity who used this skill.
 
 For the player:
+0D0,4: Bitfield of player state booleans.
+  For glyphs, ?
 0DC,4: Bitfield of ?
   00080000 - Do not interrupt the player's current animation when landing.

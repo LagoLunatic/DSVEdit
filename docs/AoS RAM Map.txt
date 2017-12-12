@@ -32,6 +32,8 @@
   Bits 1-7: Current room's X on the map.
   Bits 8-16: Current room's Y on the map.
 
+0200008E,1 - Bitfield, bit 40 messes the game up
+
 0200009E - Sector index for save file.
 0200009F - Room index for save file.
 
@@ -85,6 +87,8 @@ Variables related to delayed loading room entities:
   This is set when you enter the Buy menu of Hammer's shop.
   Shop pool 1 is unlocked by boss death flag 04 (Headhunter) being set.
   Shop pool 2 is unlocked by boss death flag 01 (Death) being set.
+
+020004BE,2 - If not 0, all enemies and special objects stop updating?
 
 === 020004E4-02007863: Entity memory. Each entity is 0x84 bytes long. Entities range from 00-DF.
 
