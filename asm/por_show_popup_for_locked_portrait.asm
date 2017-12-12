@@ -5,8 +5,8 @@
 ; This patch adds a text popup if the player tries to enter the Forest of Doom portrait before it's unlocked.
 ; This is necessary for portrait randomizer when the Forest of Doom portrait isn't in the normal location, since the normal event only works in that sector.
 
-@Overlay119Start equ 0x023C0000
-@FreeSpace equ 0x023C0000
+@Overlay119Start equ 0x02308EC0
+@FreeSpace equ 0x02308EC0
 
 .open "ftc/arm9.bin", 02000000h
 

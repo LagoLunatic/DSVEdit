@@ -7,8 +7,8 @@
 
 ; Incomplete - This patch still causes crashes and incorrectly loaded tilesets in many circumstances.
 
-@Overlay86Start equ 0x0234C200 ; Where the free space overlay is loaded in RAM.
-@FreeSpace equ 0x0234C200 ; This should be set to a location in the free space overlay that is unused. If you've already used the default location in your own hack, just change this value to somewhere free.
+@Overlay86Start equ 0x022EB1A0 ; Where the free space overlay is loaded in RAM.
+@FreeSpace equ 0x022EB1A0 ; This should be set to a location in the free space overlay that is unused. If you've already used the default location in your own hack, just change this value to somewhere free.
 
 .open "ftc/arm9.bin", 02000000h
 

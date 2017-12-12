@@ -2,8 +2,8 @@
 .relativeinclude on
 .erroronwarning on
 
-@Overlay41Start equ 0x023E0100
-@FreeSpace equ 0x023E0100
+@Overlay41Start equ 0x02308920
+@FreeSpace equ 0x02308920
 
 .open "ftc/overlay9_0", 0219E3E0h
 
