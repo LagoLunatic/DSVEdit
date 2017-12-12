@@ -15,18 +15,23 @@ Entity types:
   00 Heart.
     Var A: Flag for having picked up this heart.
     Var B: The type of heart. 0: Small, 1: Big.
+    Byte 8: 1 for a mirror world item.
   01 Money.
     Var A: Flag for having picked up this money.
     Var B: The amount of money. From 0 to 6: 1G 10G 50G 100G 500G 1000G 2000G.
+    Byte 8: 1 for a mirror world item.
   02 Item: consumable.
     Var A: Flag for having picked up this item.
     Var B: The local ID of the consumable.
+    Byte 8: 1 for a mirror world item.
   03 Item: weapon.
     Var A: Flag for having picked up this item.
     Var B: The local ID of the weapon.
+    Byte 8: 1 for a mirror world item.
   04 Item: body armor/accessory.
     Var A: Flag for having picked up this item.
     Var B: The local ID of the body armor/accessory.
+    Byte 8: 1 for a mirror world item.
   05+ Free soul.
     Var A: Flag for having picked up this item.
       Note that absorbing this soul won't set this flag, so you'd be able to absorb it over and over again by re-entering the room.

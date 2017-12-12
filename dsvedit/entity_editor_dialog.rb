@@ -45,6 +45,12 @@ class EntityEditorDialog < Qt::Dialog
       @ui.offset_up.hide()
     end
     
+    if GAME == "aos"
+      @ui.label_4.text = "Instaload"
+    else
+      @ui.label_4.text = "Byte 8"
+    end
+    
     initialize_entity_list()
     
     self.show()
