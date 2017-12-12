@@ -39,6 +39,12 @@ class EntityEditorDialog < Qt::Dialog
     connect(@ui.buttonBox, SIGNAL("clicked(QAbstractButton*)"), self, SLOT("button_box_clicked(QAbstractButton*)"))
     connect(@ui.delete_entity_button, SIGNAL("released()"), self, SLOT("delete_entity()"))
     
+    unless GAME == "hod"
+      # Hide offset up since it only exists in HoD.
+      @ui.label_11.hide()
+      @ui.offset_up.hide()
+    end
+    
     initialize_entity_list()
     
     self.show()
@@ -63,7 +69,7 @@ class EntityEditorDialog < Qt::Dialog
     @ui.unique_id.text = "%02X" % @entity.unique_id
     @ui.type.setCurrentIndex(@entity.type)
     type_changed(@entity.type)
-    @ui.offset_up.text = "%02X" % @entity.offset_up
+    @ui.offset_up.text = "%02X" % @entity.offset_up if GAME == "hod"
     @ui.byte_8.text = "%02X" % @entity.byte_8
     subtype_changed(@entity.subtype)
     @ui.var_a.text = "%04X" % @entity.var_a
@@ -152,7 +158,7 @@ class EntityEditorDialog < Qt::Dialog
     @entity.unique_id  = @ui.unique_id.text.to_i(16)
     @entity.type       = @ui.type.currentIndex
     @entity.subtype    = @ui.subtype.currentIndex
-    @entity.offset_up  = @ui.offset_up.text.to_i(16)
+    @entity.offset_up  = @ui.offset_up.text.to_i(16) if GAME == "hod"
     @entity.byte_8     = @ui.byte_8.text.to_i(16)
     @entity.var_a      = @ui.var_a.text.to_i(16)
     @entity.var_b      = @ui.var_b.text.to_i(16)
