@@ -65,6 +65,8 @@
 02060CC0 PlaySfx???
   ; Has some internal role in playing sfx?
 0204D6B0 PlaySfx???2
+0205C798 PlaySong
+  ; r0 - Song index
 021FBA9C PlayCharSwitchVoice
   ; r0 - Player index you're switching from
   ; r1 - Player index you're switching to

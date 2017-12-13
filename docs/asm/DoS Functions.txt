@@ -358,6 +358,9 @@
 021D9440 ActorTurn
 021D95C0 ActorTeleport
 
+021F6030 NewGameGiveStartingItems
+  ; Also unlocks the Lost Village warp
+
 02022000 MapDraw
   ; Draws the whole map.
 02023064 Map???

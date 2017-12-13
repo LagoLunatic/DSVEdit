@@ -49,9 +49,9 @@
 020CD88C - List of enemy files to load.
 020E19DC - List of special object files to load.
 
-020DF2A4 - List of BGM indexes by area. (These are indexes in list 020E0204.)
-020DF2B4 - List of BGM indexes by sector in dracula's castle. (These are indexes in list 020E0204.)
-020E0204 - List of songs available for use as BGM.
+020DF2A4 - List of BGM indexes by area. Bytes. (These are indexes in list 020E0204.)
+020DF2B4 - List of BGM indexes by sector in dracula's castle. Bytes. (These are indexes in list 020E0204.)
+020E0204 - List of songs available for use as BGM. Halfwords.
 022E187C - List of songs->text indexes for sound test mode.
 
 020DF2D4-020DF2EF - List of map draw offsets. These offset each map from the upper left corner of the top screen.
@@ -346,12 +346,12 @@ F5-F5
 02111768 - Pointer to the current room's metadata.
 0211176C - Pointer to next room to transition into.
 02111770 - Pointer to the door the player most recently walked through.
-02111778,2 - Current room's x pos on the map.
-0211177A,2 - Current room's x pos on the map.
-0211177C,2 - Player 1's x pos on the map.
-0211177E,2 - Player 2's x pos on the map.
-02111780,2 - Player 1's y pos on the map.
-02111782,2 - Player 2's y pos on the map.
+02111778,2 - Current room's X pos on the map.
+0211177A,2 - Current room's Y pos on the map.
+0211177C,2 - Player 1's X pos on the map.
+0211177E,2 - Player 2's X pos on the map.
+02111780,2 - Player 1's Y pos on the map.
+02111782,2 - Player 2's Y pos on the map.
 02111785,1 - Current area index.
 
 02111790 - Which type of door the player is currently walking through.
@@ -714,6 +714,7 @@ TODO: What are the other 2 for? It's not for the "recent" tab.
   The space between each entry here seems to be hardcoded around 02011FC0. 0x8700 is the difference between Richter and Maria's sprite file space for example.
   (The last one is found first via the normal means. Then the others are spaced out before it by subtracting hardcoded values from that.)
 
+0213D654,4 - Song index about to be played.
 0213D65C,0213DCF8,0213DD04 - Currently playing song.
 
 === 021CDF60 - 0221F41F: Overlay 0
