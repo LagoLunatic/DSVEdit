@@ -94,7 +94,6 @@ class DSVEdit < Qt::MainWindow
     @room_graphics_scene = ClickableGraphicsScene.new
     @ui.room_graphics_view.setScene(@room_graphics_scene)
     @ui.room_graphics_view.setFocus()
-    self.setStyleSheet("QGraphicsView { background-color: transparent; }");
     connect(@room_graphics_scene, SIGNAL("clicked(int, int, const Qt::MouseButton&)"), self, SLOT("room_clicked(int, int, const Qt::MouseButton&)"))
     
     @map_graphics_scene = ClickableGraphicsScene.new
@@ -650,9 +649,6 @@ class DSVEdit < Qt::MainWindow
   
   def load_room
     @room_graphics_scene.clear()
-    @room_graphics_scene = ClickableGraphicsScene.new
-    @ui.room_graphics_view.setScene(@room_graphics_scene)
-    connect(@room_graphics_scene, SIGNAL("clicked(int, int, const Qt::MouseButton&)"), self, SLOT("room_clicked(int, int, const Qt::MouseButton&)"))
     
     @layers_view_item = Qt::GraphicsRectItem.new
     @room_graphics_scene.addItem(@layers_view_item)

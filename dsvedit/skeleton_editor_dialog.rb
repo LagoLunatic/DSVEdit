@@ -33,6 +33,7 @@ class SkeletonEditorDialog < Qt::Dialog
     @ui.setup_ui(self)
     
     @skeleton_graphics_scene = Qt::GraphicsScene.new
+    @skeleton_graphics_scene.setBackgroundBrush(ClickableGraphicsScene::BACKGROUND_BRUSH)
     @ui.skeleton_graphics_view.setScene(@skeleton_graphics_scene)
     
     @animation_timer = Qt::Timer.new()

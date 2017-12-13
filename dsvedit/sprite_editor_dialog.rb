@@ -61,6 +61,7 @@ class SpriteEditor < Qt::Dialog
     @ui.horizontalLayout_5.setStretch(2, 1)
     
     @frame_graphics_scene = Qt::GraphicsScene.new
+    @frame_graphics_scene.setBackgroundBrush(ClickableGraphicsScene::BACKGROUND_BRUSH)
     @ui.frame_graphics_view.setScene(@frame_graphics_scene)
     
     @gfx_file_graphics_scene = ClickableGraphicsScene.new
@@ -70,6 +71,7 @@ class SpriteEditor < Qt::Dialog
     connect(@gfx_file_graphics_scene, SIGNAL("released(int, int, const Qt::MouseButton&)"), self, SLOT("stop_dragging_gfx_scene(int, int, const Qt::MouseButton&)"))
     
     @part_graphics_scene = Qt::GraphicsScene.new
+    @part_graphics_scene.setBackgroundBrush(ClickableGraphicsScene::BACKGROUND_BRUSH)
     @ui.part_graphics_view.setScene(@part_graphics_scene)
     
     @animation_timer = Qt::Timer.new()

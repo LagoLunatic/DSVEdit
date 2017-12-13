@@ -25,6 +25,7 @@ class GfxEditorDialog < Qt::Dialog
     @ui.setup_ui(self)
     
     @gfx_file_graphics_scene = Qt::GraphicsScene.new
+    @gfx_file_graphics_scene.setBackgroundBrush(ClickableGraphicsScene::BACKGROUND_BRUSH)
     @ui.gfx_file_graphics_view.setScene(@gfx_file_graphics_scene)
     
     @palette_graphics_scene = ClickableGraphicsScene.new

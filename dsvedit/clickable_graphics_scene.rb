@@ -1,8 +1,16 @@
 
 class ClickableGraphicsScene < Qt::GraphicsScene
+  BACKGROUND_BRUSH = Qt::Brush.new(Qt::Color.new(240, 240, 240, 255))
+  
   signals "clicked(int, int, const Qt::MouseButton&)"
   signals "moved(int, int, const Qt::MouseButton&)"
   signals "released(int, int, const Qt::MouseButton&)"
+  
+  def initialize
+    super
+    
+    self.setBackgroundBrush(BACKGROUND_BRUSH)
+  end
   
   def mousePressEvent(event)
     x = event.scenePos().x.to_i

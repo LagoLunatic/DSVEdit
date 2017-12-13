@@ -81,11 +81,10 @@ class DoorEditorDialog < Qt::Dialog
   end
   
   def display_dest_room(room_ptr)
+    @dest_room_graphics_scene.clear()
+    
     room = game.get_room_by_metadata_pointer(room_ptr)
     
-    @dest_room_graphics_scene.clear()
-    @dest_room_graphics_scene = Qt::GraphicsScene.new
-    @ui.dest_room_graphics_view.setScene(@dest_room_graphics_scene)
     @layers_view_item = Qt::GraphicsRectItem.new
     @dest_room_graphics_scene.addItem(@layers_view_item)
     room.sector.load_necessary_overlay()
