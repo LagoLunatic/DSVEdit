@@ -43,11 +43,13 @@ SECTOR_INDEX_TO_SECTOR_NAME = {
      9 => "Top Floor",
     10 => "Forbidden Area",
     11 => "Chaotic Realm",
-    12 => "Boss Rush",
+    12 => "Hardcoded rooms",
   }
 }
 
-HARDCODED_BOSSRUSH_ROOM_IDS = [
+HARDCODED_ROOM_IDS = [
+  0x085236A4, # bad end
+
   0x085247B4,
   0x0852484C,
   0x085248E4,

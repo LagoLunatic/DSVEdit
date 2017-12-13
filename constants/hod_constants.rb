@@ -59,11 +59,11 @@ SECTOR_INDEX_TO_SECTOR_NAME = {
      17 => "Clock Tower B",
      18 => "Castle Treasury A",
      19 => "Castle Treasury B",
-     20 => "Boss Rush",
+     20 => "Hardcoded rooms",
   }
 }
 
-HARDCODED_BOSSRUSH_ROOM_IDS = [
+HARDCODED_ROOM_IDS = [
   0x084AFB74,
   0x084B0230,
   0x084B0304,
