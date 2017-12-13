@@ -6,7 +6,8 @@ class MapEditorDialog < Qt::Dialog
   
   slots "edit_map_tile(int, int, const Qt::MouseButton&)"
   slots "select_tile(int, int, const Qt::MouseButton&)"
-  slots "reload_available_tiles(int)"
+  slots "reload_available_tiles()"
+  slots "reload_map_and_available_tiles()"
   slots "toggle_edit_warps()"
   slots "warp_name_changed(int)"
   slots "button_box_clicked(QAbstractButton*)"
@@ -74,17 +75,42 @@ class MapEditorDialog < Qt::Dialog
     @selected_map_tile = @available_tiles.first
     load_selected_map_tile()
     
-    connect(@ui.is_save, SIGNAL("stateChanged(int)"), self, SLOT("reload_available_tiles(int)"))
-    connect(@ui.is_warp, SIGNAL("stateChanged(int)"), self, SLOT("reload_available_tiles(int)"))
-    connect(@ui.is_castle_b_warp, SIGNAL("stateChanged(int)"), self, SLOT("reload_available_tiles(int)"))
-    connect(@ui.is_secret, SIGNAL("stateChanged(int)"), self, SLOT("reload_available_tiles(int)"))
-    connect(@ui.is_transition, SIGNAL("stateChanged(int)"), self, SLOT("reload_available_tiles(int)"))
-    connect(@ui.is_entrance, SIGNAL("stateChanged(int)"), self, SLOT("reload_available_tiles(int)"))
-    connect(@ui.is_blank, SIGNAL("stateChanged(int)"), self, SLOT("reload_available_tiles(int)"))
+    connect(@ui.is_save, SIGNAL("stateChanged(int)"), self, SLOT("reload_available_tiles()"))
+    connect(@ui.is_warp, SIGNAL("stateChanged(int)"), self, SLOT("reload_available_tiles()"))
+    connect(@ui.is_castle_b_warp, SIGNAL("stateChanged(int)"), self, SLOT("reload_available_tiles()"))
+    connect(@ui.is_secret, SIGNAL("stateChanged(int)"), self, SLOT("reload_available_tiles()"))
+    connect(@ui.is_transition, SIGNAL("stateChanged(int)"), self, SLOT("reload_available_tiles()"))
+    connect(@ui.is_entrance, SIGNAL("stateChanged(int)"), self, SLOT("reload_available_tiles()"))
+    connect(@ui.is_blank, SIGNAL("stateChanged(int)"), self, SLOT("reload_available_tiles()"))
+    connect(@ui.region_index, SIGNAL("activated(int)"), self, SLOT("reload_available_tiles()"))
     
     if !["por", "ooe"].include?(GAME)
       @ui.used_tiles_label.hide()
       @ui.used_tiles_number.hide()
+    end
+    
+    if GAME == "hod"
+      [
+        "Entrance",
+        "Marble Corridor",
+        "Shrine of the Apostates",
+        "Castle Top Floor",
+        "Skeleton Cave",
+        "Luminous Cavern",
+        "Aqueduct of Dragons",
+        "Sky Walkway",
+        "Clock Tower",
+        "Castle Treasury",
+        "Room of Illusion",
+        "The Wailing Way",
+        "Chapel of Dissonance",
+      ].each_with_index do |region_name, i|
+        @ui.region_index.addItem("%02X #{region_name}" % i)
+      end
+    else
+      @ui.label.hide()
+      @ui.region_index.hide()
+      @ui.color_code_regions.hide()
     end
     
     case GAME
@@ -128,13 +154,15 @@ class MapEditorDialog < Qt::Dialog
     connect(@ui.edit_warps_button, SIGNAL("released()"), self, SLOT("toggle_edit_warps()"))
     connect(@ui.warp_name, SIGNAL("activated(int)"), self, SLOT("warp_name_changed(int)"))
     
+    connect(@ui.color_code_regions, SIGNAL("stateChanged(int)"), self, SLOT("reload_map_and_available_tiles()"))
+    
     connect(@ui.buttonBox, SIGNAL("clicked(QAbstractButton*)"), self, SLOT("button_box_clicked(QAbstractButton*)"))
     
     self.show()
   end
   
   def create_tile_pixmap_item(tile)
-    fill_tile, lines_tile = @renderer.render_map_tile(tile)
+    fill_tile, lines_tile = @renderer.render_map_tile(tile, color_code_regions: @ui.color_code_regions.checked)
     fill_tile.compose!(lines_tile, 0, 0)
     
     pixmap = Qt::Pixmap.new()
@@ -146,7 +174,7 @@ class MapEditorDialog < Qt::Dialog
   def load_map
     @map_graphics_scene.clear()
     
-    chunky_png_img = @renderer.render_map(@map)
+    chunky_png_img = @renderer.render_map(@map, color_code_regions: @ui.color_code_regions.checked)
     pixmap = Qt::Pixmap.new
     blob = chunky_png_img.to_blob
     pixmap.loadFromData(blob, blob.length)
@@ -163,7 +191,7 @@ class MapEditorDialog < Qt::Dialog
     @selected_tile_graphics_scene.addItem(tile_pixmap_item)
   end
   
-  def reload_available_tiles(checked)
+  def reload_available_tiles
     @available_tiles_graphics_scene.clear()
     
     @available_tiles.each do |tile|
@@ -175,12 +203,21 @@ class MapEditorDialog < Qt::Dialog
       tile.is_entrance      = @ui.is_entrance.checked
       tile.is_blank         = @ui.is_blank.checked
       
+      if GAME == "hod"
+        tile.region_index = @ui.region_index.currentIndex
+      end
+      
       tile_pixmap_item = create_tile_pixmap_item(tile)
       tile_pixmap_item.setOffset(tile.x_pos*8, tile.y_pos*8)
       @available_tiles_graphics_scene.addItem(tile_pixmap_item)
     end
     
     load_selected_map_tile()
+  end
+  
+  def reload_map_and_available_tiles
+    reload_available_tiles()
+    load_map()
   end
   
   def edit_map_tile(x, y, button)

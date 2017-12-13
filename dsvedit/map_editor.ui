@@ -135,6 +135,23 @@
       </spacer>
      </item>
      <item>
+      <widget class="QLabel" name="label">
+       <property name="text">
+        <string>Region (affects music)</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QComboBox" name="region_index"/>
+     </item>
+     <item>
+      <widget class="QCheckBox" name="color_code_regions">
+       <property name="text">
+        <string>Color-code regions</string>
+       </property>
+      </widget>
+     </item>
+     <item>
       <widget class="QLabel" name="used_tiles_label">
        <property name="text">
         <string>Map tiles used:</string>

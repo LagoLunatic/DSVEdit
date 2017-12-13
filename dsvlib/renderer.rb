@@ -963,7 +963,7 @@ class Renderer
     return graphic_tile
   end
   
-  def render_map(map, scale = 1, hardcoded_transition_rooms=[])
+  def render_map(map, scale = 1, hardcoded_transition_rooms=[], color_code_regions: false)
     if map.tiles.any?
       map_width_in_blocks = map.tiles.map{|tile| tile.x_pos}.max + 1
       map_height_in_blocks = map.tiles.map{|tile| tile.y_pos}.max + 1
@@ -981,7 +981,7 @@ class Renderer
         next
       end
       
-      fill_tile, lines_tile = render_map_tile(tile, hardcoded_transition_rooms=hardcoded_transition_rooms)
+      fill_tile, lines_tile = render_map_tile(tile, hardcoded_transition_rooms=hardcoded_transition_rooms, color_code_regions: color_code_regions)
       
       fill_img.compose!(fill_tile, tile.x_pos*4, tile.y_pos*4)
       lines_img.compose!(lines_tile, tile.x_pos*4, tile.y_pos*4)
@@ -996,7 +996,7 @@ class Renderer
     return img
   end
   
-  def render_map_tile(tile, hardcoded_transition_rooms=[])
+  def render_map_tile(tile, hardcoded_transition_rooms=[], color_code_regions: false)
     @fill_color            ||= ChunkyPNG::Color.rgba(*MAP_FILL_COLOR)
     @save_fill_color       ||= ChunkyPNG::Color.rgba(*MAP_SAVE_FILL_COLOR)
     @warp_fill_color       ||= ChunkyPNG::Color.rgba(*MAP_WARP_FILL_COLOR)
@@ -1026,6 +1026,23 @@ class Renderer
     
     color = if tile.is_blank
       ChunkyPNG::Color::TRANSPARENT
+    elsif GAME == "hod" && color_code_regions
+      region_color_string = [
+        "ac3232",
+        "d77bba",
+        "df7126",
+        "f7f068",
+        "6abe30",
+        "37946e",
+        "3f3f74",
+        "5b6ee1",
+        "5fcde4",
+        "76428a",
+        "8f974a",
+        "d9a066",
+        "663931",
+      ][tile.region_index]
+      ChunkyPNG::Color.from_hex(region_color_string)
     elsif tile.is_transition || is_hardcoded_transition
       transition_fill_color
     elsif tile.is_entrance

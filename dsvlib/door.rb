@@ -1,8 +1,7 @@
 class Door
   attr_reader :room,
               :fs,
-              :game,
-              :destination_door
+              :game
   attr_accessor :door_ram_pointer,
                 :destination_room_metadata_ram_pointer,
                 :x_pos,

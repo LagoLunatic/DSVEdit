@@ -21,6 +21,7 @@ class MusicEditor < Qt::Dialog
       HOD_UNIQUE_SECTOR_NAMES_FOR_MUSIC.each_with_index do |sector_name, sector_index|
         @ui.sector_index.addItem("%02X %s" % [sector_index, sector_name])
       end
+      @ui.label.text = "Region"
     else
       SECTOR_INDEX_TO_SECTOR_NAME[0].each do |sector_index, sector_name|
         sector = game.areas[0].sectors[sector_index]
