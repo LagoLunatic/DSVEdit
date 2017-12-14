@@ -560,6 +560,27 @@ OTHER_SPRITES = [
   {desc: "Giant Merman spin", init_code: 0x0804B220},
   {desc: "Lift to center of castle", init_code: 0x08022134},
   
+  {desc: "Event 00", init_code: 0x0802D0E0},
+  {desc: "Event 01", init_code: 0x0802EFF0},
+  {desc: "Event 02", init_code: 0x0802D3A4},
+  {desc: "Event 03", init_code: 0x0802EEE0},
+  {desc: "Event 04", init_code: 0x0802D7E8},
+  {desc: "Event 05", init_code: 0x0802F1F8},
+  {desc: "Event 06", init_code: 0x0802DA38},
+  {desc: "Event 07", init_code: 0x0802DCB8},
+  {desc: "Event 08", init_code: 0x0802F428},
+  {desc: "Event 09", init_code: 0x0802F788},
+  {desc: "Event 0A", init_code: 0x0802DE8C},
+  {desc: "Event 0B", init_code: 0x0802E10C},
+  {desc: "Event 0C", init_code: 0x0802E34C},
+  {desc: "Event 0D", init_code: 0x0802E98C},
+  {desc: "Event 0E", init_code: 0x0802E558},
+  {desc: "Event 0F", init_code: 0x080301DC},
+  {desc: "Event 10", init_code: 0x0802FC68, gfx_wrapper: 0x080DC964},#0x080301DC},
+  {desc: "Event 11", init_code: 0x08030210},
+  {desc: "Event 12", init_code: 0x0802EBB4},
+  {desc: "Event 13", init_code: 0x080302C0},
+  
   # maxim's gfx list: 080DC964
   # maxim's duplicate gfx list?: 080E0570
   # skill gfx...? list: 080E2940
