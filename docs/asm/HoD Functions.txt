@@ -113,6 +113,19 @@
   ; r0 - Sound index
   ; Can also be music, not just sound effects.
 
+080313A0 EnemyCheckDrops
+  ; r0 - Entity
+080196D4 CreateDrop
+  ; r0 - X pos
+  ; r1 - Y pos
+  ; r2 - Drop type (e.g. 0=heart, 1=money, 3=consumable...)
+  ; r3 - Drop index
+080191D0 CreateHeart
+  ; r0 - X pos
+  ; r1 - Y pos
+  ; r2 - 0 or 1 for small heart/big heart
+  ; r3 - 0 to spawn at the exact pos given, 1 to spawn a little above that so it falls down?
+
 0802C600 InitializeShopItemList
   ; r0 - 
   ; r1 - 

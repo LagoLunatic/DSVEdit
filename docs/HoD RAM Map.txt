@@ -148,6 +148,12 @@ D0-EF 02006C18-02007C17 - Various other things including particles and enemy pro
 0201854E,2 - Current HP.
 02018550,2 - Current MP.
 
+Current stats:
+02018552,2 - STR
+02018554,2 - DEF
+02018556,2 - INT
+02018558,2 - LCK
+
 02018770 - Bitfield of ?
 
 0201877C,1 - Player's current level.

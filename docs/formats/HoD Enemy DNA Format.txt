@@ -14,14 +14,18 @@ HoD Enemy DNA format:
     7 - Relic
     8 - Furniture
     9 - Max up (crashes)
-  0A,1: Drop 2
-  0B,1: Drop 2
+  0A,1: Drop 2 (see above)
+  0B,1: Drop 2 type (see above)
   0C,2: Max HP.
   0E,2: EXP.
   10,1: Level.
   11,1: Defense stat.
-  12,1: Item drop chance...? out of 0x3FF
-  13,1: 
+  12,1: Drop 1 chance.
+    Out of 0x3FF. So 0x40 is a 6.25% chance for example.
+    Rare ring effectively increases this by +0x20 (3.12%).
+  13,1: Drop 2 chance.
+    Out of 0x3FF. So 0x08 is a 0.78% chance for example.
+    Rare ring effectively increases this by +0x10 (1.56%).
   14,2: Attack stat.
   16,
   1C,1: ? used when damaging player

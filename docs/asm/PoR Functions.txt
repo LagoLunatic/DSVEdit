@@ -1,18 +1,23 @@
 
 01FFE32C DMA
+  ; r0 - Which DMA channel to use (0-3)
+  ; r1 - Address to copy from
+  ; r2 - Address to copy to
+  ; r3 - Word count and DMA control
+  ; If the DMA channel is 0, then after doing the requested DMA, this function also does a DMA from address 00000000 to address 00000000, which appears invalid. Not sure why it does this.
+
+01FFE294 DMA2
+  ; r0 - Which DMA channel to use (0-3)
+  ; r1 - Address to copy from
+  ; r2 - Address to copy to
+  ; r3 - Word count and DMA control
+  ; If the DMA channel is 0, then after doing the requested DMA, this function also does a DMA from address 00000000 to address 00000000, which appears invalid. Not sure why it does this.
 
 0209E570 FillMemory
   ; Fills a certain region of memory with a given value.
   ; r0 - Value to fill with
   ; r1 - Starting address to fill
   ; r2 - Number of bytes to fill
-
-01FFE294 DMA
-  ; r0 - Which DMA channel to use (0-3)
-  ; r1 - Address to copy from
-  ; r2 - Address to copy to
-  ; r3 - Word count and DMA control
-  ; If the DMA channel is 0, then after doing the requested DMA, this function also does a DMA from address 00000000 to address 00000000, which appears invalid. Not sure why it does this.
 
 02042FA4 LoadSave
 
@@ -23,8 +28,10 @@
   ; r1 - Maximum entity index to check
   ; r2 - Update function pointer for the new entity
 
+02012920 UpdateAndDrawAllEntitiesAndTiles
 02012B60 UpdateAllEntities
-02012960 DrawAllEntities
+02012960 DrawAllEntitiesAndTiles
+02002F00 DrawTiles
 02012784 ProcessInput
 
 0201BB6C AssetGetPointer
@@ -339,7 +346,7 @@
   ; Faces the controlled player by either setting or unsetting the horizontal flip bit (bit 0x80 of bitfield entity+0x74).
   ; Not 100% sure on some of the exact details here, it does something depending on whether bit 0x20 of bitfield entity+0x120 is set or not.
 
-020140F4 ???InEnemyCreateCode
+020140F4 EntityUpdateHitbox???
   ; r0 - Entity
   ; gets sprite info pointer... and doesn't use it.
   ; gets hitbox pointer

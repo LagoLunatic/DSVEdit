@@ -88,7 +88,8 @@ Variables related to delayed loading room entities:
   Shop pool 1 is unlocked by boss death flag 04 (Headhunter) being set.
   Shop pool 2 is unlocked by boss death flag 01 (Death) being set.
 
-020004BE,2 - If not 0, all enemies and special objects stop updating?
+020004BE,2 - Number of frames left for time to be stopped with Chronomage's soul.
+  Enemies that are affected by time stop read this value every frame, and if it's not 0, skip some of their code so they appear to be frozen.
 
 === 020004E4-02007863: Entity memory. Each entity is 0x84 bytes long. Entities range from 00-DF.
 

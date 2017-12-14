@@ -68,6 +68,9 @@
 08021654 DamagePlayer
   ; r0 - Pointer to ??? in the stack.
 
+080421AC CheckCollisions
+  ; r0 - Entity
+
 08022028 AddMP
   ; r0 - MP to add
 

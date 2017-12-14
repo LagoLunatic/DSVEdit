@@ -163,6 +163,9 @@
   1A Sound test
   1B Ranking
 020F6285 & 020F6286 - Game substates.
+020F628B,1 - If this is not 0, the bottom screen will not be drawn at all, it will be black.
+  This value is unset back to 0 every frame, so it must be set to 1 every frame you want the screen to be black.
+  This is set for 1 frame when you go through a door.
 020F628C - 0 when the game is running, 1 when it's paused. Not just the pause screen, any time the actual game logic is paused.
   However, if you pause, visit the map screen, then back out, the game will be paused yet this value will be 0.
 
@@ -175,6 +178,10 @@
   Each entry is 0x14 bytes long.
   00,2: 
   04,1:
+
+020FB798-020FB89B - List of something related to entities?
+  There are 0x41 entries here. Each is a word.
+  Every frame everything in this list gets zeroed out. Later some entities will store a value like 6 or 0xC here.
 
 020FBC64-020FC063 - List of sprites in the bottom screen OAM.
 020FC064-020FC463 - List of sprites in the top screen OAM.
@@ -429,6 +436,8 @@ F5-F5
 
 021119FC,02111A08,02111F90 - Screen scrolling X pos.
 02111A00,02111A0C,02111F94 - Screen scrolling Y pos.
+
+02111A30,2 - 0 or 1 for whether time is currently stopped by the Time Stop spell.
 
 02111A32,1 - Destination sector index of TeleportPlayer
 02111A33,1 - Destination room index of TeleportPlayer
