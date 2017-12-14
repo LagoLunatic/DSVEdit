@@ -458,12 +458,17 @@ class DSVEdit < Qt::MainWindow
     @ui.area.setCurrentIndex(@area_index)
     @ui.sector.clear()
     AREA_INDEX_TO_OVERLAY_INDEX[@area_index].keys.each do |sector_index|
-      overlay_id = AREA_INDEX_TO_OVERLAY_INDEX[@area_index][sector_index]
-      sector_text = "%02X" % sector_index
-      if SECTOR_INDEX_TO_SECTOR_NAME[@area_index]
-        sector_name = SECTOR_INDEX_TO_SECTOR_NAME[@area_index][sector_index]
-        sector_text << " #{sector_name}"
+      if @area.sectors[sector_index].is_hardcoded
+        sector_text = "Hardcoded rooms"
+      else
+        sector_text = "%02X" % sector_index
+        if SECTOR_INDEX_TO_SECTOR_NAME[@area_index]
+          sector_name = SECTOR_INDEX_TO_SECTOR_NAME[@area_index][sector_index]
+          sector_text << " #{sector_name}"
+        end
       end
+      
+      overlay_id = AREA_INDEX_TO_OVERLAY_INDEX[@area_index][sector_index]
       if overlay_id
         sector_text << " (Overlay #{overlay_id})"
       end
