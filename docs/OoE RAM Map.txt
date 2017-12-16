@@ -253,7 +253,7 @@ Bitfields of which map tiles you have explored:
 02100144-021001C1: Dracula's Castle
 021001C2-021001C5: Wygol Village
 021001C6-021001C9: Ecclesia
-021001CA-021001D9: Training Chamber
+021001CA-021001D9: Training Hall
 021001DA-021001E2: Ruvas Forest
 021001E2-021001E7: Argila Swamp
 021001E8-02100207: Kalidus Channel

@@ -54,7 +54,7 @@ Special Objects:
     09 Metal left wall spikes
     0A Metal ceiling spikes (Mechanical Tower)
     0C Ice floor spikes (Tristis Pass)
-    10 Spiked balls (Training Chamber)
+    10 Spiked balls (Training Hall)
   Var B is the number of blocks wide the spikes span.
   Spikes can be broken by touching them while transformed into Arma Machina.
 15 Wooden/green chest.
@@ -152,7 +152,7 @@ Special Objects:
     0 Spawns a Luminatio glyph on top of the lamp that you can absorb to stop the light.
     1 Does not spawn Luminatio.
 30 Small block that crumbles after Shanoa stands on it for a second.
-31 Moving spike thing from Training Chamber.
+31 Moving spike thing from Training Hall.
   Var A:
     00 Moves horizontally
     01 Like 01 but bloody
