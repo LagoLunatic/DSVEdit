@@ -275,6 +275,22 @@ class Room
     end
   end
   
+  def room_states
+    base_room_state = game.areas[area_index].sectors[sector_index].rooms[room_index]
+    states = [base_room_state]
+    
+    while true
+      next_room_state = states.last.alternate_room_state
+      if next_room_state
+        states << next_room_state
+      else
+        break
+      end
+    end
+    
+    return states
+  end
+  
   def initialize_entity_gfx_list(entity_gfx_list_pointer)
     @entity_gfx_list = []
     offset = entity_gfx_list_pointer
@@ -600,7 +616,19 @@ class Room
   end
   
   def write_entity_gfx_list_to_rom
-    if entity_gfx_list.length > @original_number_of_enemy_gfx
+    list_ptr_duplicated = !!(room_states - [self]).find{|room_state| room_state.entity_gfx_list_pointer == @entity_gfx_list_pointer}
+    if list_ptr_duplicated
+      # Need to move this list to free space so it doesn't conflict with other room states that use the same list pointer.
+      
+      new_length = (entity_gfx_list.length+1)*4
+      
+      new_entity_gfx_list_pointer = fs.get_free_space(new_length, nil)
+      
+      @original_number_of_enemy_gfx = entity_gfx_list.length
+      
+      @entity_gfx_list_pointer = new_entity_gfx_list_pointer
+      fs.write(room_metadata_ram_pointer+4*4, [entity_gfx_list_pointer].pack("V"))
+    elsif entity_gfx_list.length > @original_number_of_enemy_gfx
       # Repoint the enemy gfx list so there's room for more pointers without overwriting anything.
       
       old_length = (@original_number_of_enemy_gfx+1)*4
