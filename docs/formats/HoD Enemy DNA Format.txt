@@ -21,10 +21,10 @@ HoD Enemy DNA format:
   10,1: Level.
   11,1: Defense stat.
   12,1: Drop 1 chance.
-    Out of 0x3FF. So 0x40 is a 6.25% chance for example.
+    Out of 0x400. So 0x40 is a 6.25% chance for example.
     Rare ring effectively increases this by +0x20 (3.12%).
   13,1: Drop 2 chance.
-    Out of 0x3FF. So 0x08 is a 0.78% chance for example.
+    Out of 0x400. So 0x08 is a 0.78% chance for example.
     Rare ring effectively increases this by +0x10 (1.56%).
   14,2: Attack stat.
   16,

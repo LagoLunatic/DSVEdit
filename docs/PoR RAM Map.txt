@@ -446,6 +446,8 @@ F5-F5
 
 02111A5C - Bitfield of used unique IDs in the current room?
 
+02111A68 - Bitfield of relics you have currently enabled.
+
 02111A6C - Bitfield of skills you own. (Owned skill info.)
 
 02111AAC-02111ACF - Bitfield of which enemies have been killed at least once so they show up in the bestiary.
