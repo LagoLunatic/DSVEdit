@@ -158,6 +158,22 @@
    </item>
   </layout>
  </widget>
+ <tabstops>
+  <tabstop>entity_index</tabstop>
+  <tabstop>pointer</tabstop>
+  <tabstop>x_pos</tabstop>
+  <tabstop>y_pos</tabstop>
+  <tabstop>unique_id</tabstop>
+  <tabstop>type</tabstop>
+  <tabstop>subtype</tabstop>
+  <tabstop>offset_up</tabstop>
+  <tabstop>byte_8</tabstop>
+  <tabstop>var_a</tabstop>
+  <tabstop>var_b</tabstop>
+  <tabstop>entity_doc</tabstop>
+  <tabstop>delete_entity_button</tabstop>
+  <tabstop>buttonBox</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>
