@@ -674,7 +674,7 @@ class Room
     # But if palettes are listed, but they're for old entities the user has removed, then these palettes being loaded can prevent the new entities from loading their palettes.
     
     old_length = (palette_pages.size+1)*PaletteWrapper.data_size
-    @palette_pages = palette_pages.reject!{|palette_page| palette_page.palette_type == 1}
+    @palette_pages = @palette_pages.reject{|palette_page| palette_page.palette_type == 1}
     new_length = (palette_pages.size+1)*PaletteWrapper.data_size
     
     pointer = palette_wrapper_pointer
