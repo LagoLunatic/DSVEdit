@@ -165,7 +165,6 @@ class RoomEditorDialog < Qt::Dialog
     @room.room_ypos_on_map = @ui.map_y_pos.text.to_i(16)
     
     @room.write_to_rom()
-    @room.read_from_rom()
     
     @game.fix_map_sector_and_room_indexes(@room.area_index, @room.sector_index)
     
