@@ -271,7 +271,11 @@ class Room
   
   def initialize_alternate_room_state(alternate_room_state_pointer)
     if alternate_room_state_pointer != 0
-      @alternate_room_state = Room.new(sector, alternate_room_state_pointer, area_index, sector_index, room_index, game)
+      begin
+        @alternate_room_state = game.get_room_by_metadata_pointer(alternate_room_state_pointer)
+      rescue Game::RoomFindError
+        @alternate_room_state = Room.new(sector, alternate_room_state_pointer, area_index, sector_index, room_index, game)
+      end
     end
   end
   
@@ -281,7 +285,7 @@ class Room
     
     while true
       next_room_state = states.last.alternate_room_state
-      if next_room_state
+      if next_room_state && !states.include?(next_room_state) # Don't include a recursive room state or we'll get into an infinite loop.
         states << next_room_state
       else
         break

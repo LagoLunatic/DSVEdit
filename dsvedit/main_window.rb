@@ -631,15 +631,7 @@ class DSVEdit < Qt::MainWindow
     # First initializes the room states if in HoD. Then loads the room as normally.
     
     @ui.room_state.clear()
-    @room_states = [@room]
-    while true
-      next_room_state = @room_states.last.alternate_room_state
-      if next_room_state
-        @room_states << next_room_state
-      else
-        break
-      end
-    end
+    @room_states = @room.room_states
     @room_states.each_with_index do |room_state, state_index|
       if state_index == 0
         condition = "Default"
