@@ -75,7 +75,7 @@ class Room
       @alternate_room_state_pointer = room_metadata[2]
       @layer_list_ram_pointer = room_metadata[3]
       @gfx_list_pointer = room_metadata[4]
-      @entity_gfx_list_pointer = room_metadata[5] # TODO
+      @entity_gfx_list_pointer = room_metadata[5]
       @palette_wrapper_pointer = room_metadata[6]
       @entity_list_ram_pointer = room_metadata[7]
       @door_list_ram_pointer = room_metadata[8]
@@ -356,6 +356,10 @@ class Room
     write_extra_data_to_rom()
     
     read_from_rom()
+    
+    if GAME == "hod"
+      remove_entities_from_palette_list()
+    end
   end
   
   def write_entities_to_rom
@@ -414,6 +418,7 @@ class Room
     
     if GAME == "hod"
       update_entity_gfx_list()
+      remove_entities_from_palette_list()
     end
   end
   
@@ -659,6 +664,29 @@ class Room
       offset += 4
     end
     fs.write(offset, [0].pack("V"))
+  end
+  
+  def remove_entities_from_palette_list
+    return unless GAME == "hod"
+    
+    # Whenever entities are changed, remove all entity palettes from the room's palette list.
+    # This is because if no entity palettes are in the list, the entities are capable of loading their own palettes (unlike GFX).
+    # But if palettes are listed, but they're for old entities the user has removed, then these palettes being loaded can prevent the new entities from loading their palettes.
+    
+    old_length = (palette_pages.size+1)*PaletteWrapper.data_size
+    @palette_pages = palette_pages.reject!{|palette_page| palette_page.palette_type == 1}
+    new_length = (palette_pages.size+1)*PaletteWrapper.data_size
+    
+    pointer = palette_wrapper_pointer
+    palette_pages.each do |palette_page|
+      fs.write(pointer, palette_page.to_data)
+      
+      pointer += PaletteWrapper.data_size
+    end
+    fs.write(pointer, [0, 0].pack("VV"))
+    pointer += PaletteWrapper.data_size
+    
+    fs.free_unused_space(pointer, old_length - new_length)
   end
   
   def write_extra_data_to_rom

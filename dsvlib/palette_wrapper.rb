@@ -30,6 +30,28 @@ class PaletteWrapper
     end
   end
   
+  def to_data
+    if GAME == "hod"
+      [
+        palette_type,
+        @palette_wrapper_info,
+        palette_list_pointer,
+      ].pack("vvV")
+    else
+      [
+        palette_list_pointer,
+        palette_load_offset,
+        palette_index,
+        num_palettes,
+        unknown_2,
+      ].pack("VCCCC")
+    end
+  end
+  
+  def self.data_size
+    8
+  end
+  
   def self.from_palette_wrapper_pointer(palette_wrapper_list_pointer, fs)
     offset = palette_wrapper_list_pointer
     palette_wrappers = []

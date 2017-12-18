@@ -51,6 +51,7 @@ class Entity
     
     if GAME == "hod"
       room.update_entity_gfx_list()
+      room.remove_entities_from_palette_list()
     end
   end
   
