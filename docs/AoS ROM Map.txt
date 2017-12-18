@@ -4,6 +4,15 @@
   00,2: Song index.
   02,2: Text index.
 
+080E1320 - List of damage multipliers for the player's jumpkick/weapon/slide attacks.
+  Each entry is a halfword.
+  Indexes:
+    2 (080E1324) - Jumpkick
+    3 (080E1326) - Weapon
+    4 (080E1328) - Slide (and Julius's uppercut)
+  The other types of attack don't use this list so those entries are just 0.
+  A 0x10 multiplier is equivalent to 1.0. For example, jumpkick has a multiplier of 8, meaning jumpkick damage is equivalent to STR*0.5.
+
 080E13BC-080E1553 - List of skill gfx.
   Entry length 0xC.
   00,4: GFX pointer

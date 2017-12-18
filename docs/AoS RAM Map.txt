@@ -37,6 +37,8 @@
 0200009E - Sector index for save file.
 0200009F - Room index for save file.
 
+020000A1,1 - Bitfield of ? Used when calculating player damage with jumpkick/slide.
+
 020000B4 - List of map tiles you've explored. Each takes up 1 bit.
 
 02000336,2 - ?

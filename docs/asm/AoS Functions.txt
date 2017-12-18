@@ -35,13 +35,23 @@
   ; r0 - Enemy entity receiving the damage
   ; r1 - Entity doing the damage
   ; r2 - ??? pointer
-08021530 GetPlayerAttack
-  ; r0 - ? 3
+  ; Also makes the enemy flash white for 8 frames.
+08021530 GetPlayerDamage
+  ; r0 - Type of attack.
+  ;   0 - ?
+  ;   1 - ?
+  ;   2 - Jumpkick
+  ;   3 - Weapon
+  ;   4 - Slide (and Julius's uppercut)
+  ;   5 - Bullet soul
+  ;   6 - Guardian soul
 0806B7D8 CalcDamageToEnemy
   ; r0 - Enemy entity receiving the damage
   ; r1 - Entity doing the damage
   ; r2 - ??? pointer
+  ; r3 - Base damage to do
   ; Returns r0 - The amount of damage to do
+  ; The formula is: damage = (base_damage-defense/2)*(0x100-defense)/0x100
 08042B8C ShowDamageToEnemyNumber
   ; r0 - Pointer to entity getting damaged
   ; r1 - Damage done
@@ -196,6 +206,10 @@
   ; r2 - On-hurt-player callback to store at +7C
   ; r3 - On-damaged callback to store at +80
   ; Also initializes the entity's hitbox.
+0806B04C InitializeEnemyFromDNA
+  ; r0 - Entity pointer
+  ; Copies values from the enemy DNA into the entity.
+  ; It detects which enemy it is by the ID at +36 in the entity.
 
 0803F17C SpriteAnimate
   ; Call every frame to handle the animation.
@@ -240,6 +254,8 @@
 
 080221CC WeaponOneHandedUse
 080224BC WeaponTwoHandedUse
+
+084F0B14 RAMStartPointer
 
 ; Enemy-specific code
 080AD2A8 EnemyBatCreate
@@ -308,6 +324,7 @@
 080C8848 EnemyKillerDollUpdate
 08092350 EnemyZombieOfficerCreate
 08092174 EnemyZombieOfficerUpdate
+0809252C EnemyZombieOfficerTakeDamage
 0809549C EnemyCreakingSkullCreate
 08095320 EnemyCreakingSkullUpdate
 08081AEC EnemyWoodenGolemCreate

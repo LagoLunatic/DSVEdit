@@ -12,9 +12,13 @@ Memory used for entities in AoS is 020004E4 - 02007863. Each entity is 0x84 byte
   This is set when the enemy is damaged and decremented every frame.
   If bit 02 is set the enemy will be drawn pure white or normal otherwise. (In other words, the enemy will be white for 2 frames, then normal for 2 frames, and then repeat until the counter is 0.)
   Certain enemies freeze as long as this is above 0.
+2E,2: Current MP.
 30,2: Var A.
 32,2: Var B.
 34,2: Current HP.
+36,1: Subtype.
+3C,1: Attack.
+3D,1: Defense.
 40,4: X pos on the screen in subpixels.
   In the GBA games, each pixel is 0x10000 subpixels.
   Note that unlike the DSVanias, there is no X/Y pos in the room. Only on the screen.
@@ -40,6 +44,7 @@ Memory used for entities in AoS is 020004E4 - 02007863. Each entity is 0x84 byte
     In order for this to have an effect, the system mosaic size must also be set (at 03002CA4).
   02 Draw entity semi-transparent.
   20 Draw the entity completely white.
+5C,1: InitializeEnemyFromDNA sets this to 0x12?
 62,1: Affects palette?
   If the lowest bit of this value is set, then it changes the palette of this entity's sprite, but only for the parts that have the lowest bit of the value at part+0B set as well.
 64,1: Sprite info index.
@@ -54,6 +59,7 @@ Memory used for entities in AoS is 020004E4 - 02007863. Each entity is 0x84 byte
   This function pointer is called when the entity collides with the player.
 80,4: On-damaged callback.
   This function pointer is called when the entity collides with a player weapon.
+  It calculates the damage that should be done and kills the enemy if its HP is 0 or below.
 
 For enemies:
 34,2: Max HP.

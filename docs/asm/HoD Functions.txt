@@ -113,8 +113,9 @@
   ; r0 - Sound index
   ; Can also be music, not just sound effects.
 
-080313A0 EnemyCheckDrops
+080313A0 EnemyDie
   ; r0 - Entity
+  ; Checks random drops and gives experience.
 080196D4 CreateDrop
   ; r0 - X pos
   ; r1 - Y pos
