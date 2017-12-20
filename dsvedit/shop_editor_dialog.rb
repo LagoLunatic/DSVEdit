@@ -149,8 +149,10 @@ class ShopEditor < Qt::Dialog
   
   def requirement_changed
     if @pool.is_a?(ShopPointItemPool)
-      item_index = @ui.item_index.currentRow
-      @pool.required_shop_points[item_index] = @ui.requirement.text.to_i(16)
+      if @ui.item_index.currentRow != -1
+        item_index = @ui.item_index.currentRow
+        @pool.required_shop_points[item_index] = @ui.requirement.text.to_i(16)
+      end
     else
       @pool.requirement = @ui.requirement.text.to_i(16)
     end
