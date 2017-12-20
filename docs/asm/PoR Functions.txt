@@ -556,6 +556,10 @@
 0207B520 InitializePortrait
   ; r0 - Entity pointer
   ; r1 - Which portrait sprite to use (index in list 020F4E84)
+  ; r2 - Which portrait frame to use? 0 for the frame used by early game portraits. 1 for the frame used by portraits in the Studio Portrait room. TODO
+  ; r3 - 4000?
+  ; [r13] - X pos for this portrait to place the player at after they take it
+  ; [r13,4] - ?
 
 02010788 EntityInitSpriteAndPalette
   ; r0 - Child entity

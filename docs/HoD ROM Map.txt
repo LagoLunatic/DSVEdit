@@ -132,6 +132,7 @@ Specific shop pools:
   084B1704-084B1710 - Entrance B shop pool.
   084B16B4-084B16C3 - Clock Tower A shop pool.
   084B16B4-084B16C3 - Clock Tower B shop pool.
+
 084B173C-084B178B - List of create code pointers for events.
 084B178C-084B17DB - List of update code pointers for events.
   Var A of the event entity is the index in these lists.

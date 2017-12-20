@@ -1,4 +1,7 @@
 
+01FF84C0 DMA
+01FF8554 DMA2
+
 02008A70 FillMemory
   ; Fills a certain region of memory with a given value.
   ; r0 - Value to fill with
