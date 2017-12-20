@@ -6,6 +6,9 @@ class ShopEditor < Qt::Dialog
   slots "item_index_changed(int)"
   slots "item_id_changed(int)"
   slots "requirement_changed()"
+  slots "available_item_slot_changed(int)"
+  slots "available_item_id_changed(int)"
+  slots "price_changed()"
   slots "button_box_clicked(QAbstractButton*)"
   
   def initialize(main_window, game)
@@ -53,15 +56,47 @@ class ShopEditor < Qt::Dialog
     else
       @available_shop_item_range = ITEM_GLOBAL_ID_RANGE
     end
-    @game.items[@available_shop_item_range].zip(@available_shop_item_range).each do |item, item_id|
-      item_name = "%03X %s" % [item_id+1, item.name]
-      @ui.item_id.addItem(item_name)
+    if GAME == "hod"
+      @allowable_items = []
+      SHOP_NUM_ALLOWABLE_ITEMS.times do |i|
+        @allowable_items << ShopAllowableItem.new(i, @game.fs)
+      end
+      
+      @allowable_items.each_with_index do |allowable_item, slot_index|
+        item_id = @game.get_item_global_id_by_type_and_index(allowable_item.item_type, allowable_item.item_index)
+        item = game.items[item_id]
+        item_name = "%03X %s" % [item_id+1, item.name]
+        @ui.item_id.addItem(item_name)
+      end
+    else
+      @game.items[@available_shop_item_range].zip(@available_shop_item_range).each do |item, item_id|
+        item_name = "%03X %s" % [item_id+1, item.name]
+        @ui.item_id.addItem(item_name)
+      end
+    end
+    
+    if GAME == "hod"
+      @game.items[@available_shop_item_range].zip(@available_shop_item_range).each do |item, item_id|
+        item_name = "%03X %s" % [item_id+1, item.name]
+        @ui.available_item_id.addItem(item_name)
+      end
+      used_items = []
+      @allowable_items.each_with_index do |allowable_item, slot_index|
+        item = game.get_item_by_type_and_index(allowable_item.item_type, allowable_item.item_index)
+        item_name = "%02X %s" % [slot_index, item.name]
+        @ui.available_item_slot.addItem(item_name)
+      end
+    else
+      @ui.tabWidget.removeTab(1)
     end
     
     connect(@ui.pool_index, SIGNAL("currentRowChanged(int)"), self, SLOT("pool_index_changed(int)"))
     connect(@ui.item_index, SIGNAL("currentRowChanged(int)"), self, SLOT("item_index_changed(int)"))
     connect(@ui.item_id, SIGNAL("currentRowChanged(int)"), self, SLOT("item_id_changed(int)"))
     connect(@ui.requirement, SIGNAL("editingFinished()"), self, SLOT("requirement_changed()"))
+    connect(@ui.available_item_slot, SIGNAL("currentRowChanged(int)"), self, SLOT("available_item_slot_changed(int)"))
+    connect(@ui.available_item_id, SIGNAL("currentRowChanged(int)"), self, SLOT("available_item_id_changed(int)"))
+    connect(@ui.price, SIGNAL("editingFinished()"), self, SLOT("price_changed()"))
     connect(@ui.buttonBox, SIGNAL("clicked(QAbstractButton*)"), self, SLOT("button_box_clicked(QAbstractButton*)"))
     
     if GAME == "por"
@@ -72,6 +107,34 @@ class ShopEditor < Qt::Dialog
     item_index_changed(0)
     
     self.show()
+  end
+  
+  def hod_reload_shop_pools_tab
+    @ui.pool_index.clear()
+    SHOP_ITEM_POOL_COUNT.times do |i|
+      pool_name = "%02X" % i
+      
+      # Display the merchant's Var A needed as well as Castle A/B.
+      pool_name << " (%02X" % (i/2)
+      if i.even?
+        pool_name << "-A)"
+      else
+        pool_name << "-B)"
+      end
+      
+      @ui.pool_index.addItem(pool_name)
+    end
+    
+    @ui.item_id.clear()
+    @allowable_items.each_with_index do |allowable_item, slot_index|
+      item_id = @game.get_item_global_id_by_type_and_index(allowable_item.item_type, allowable_item.item_index)
+      item = @game.items[item_id]
+      item_name = "%03X %s" % [item_id, item.name]
+      @ui.item_id.addItem(item_name)
+    end
+    
+    pool_index_changed(0)
+    item_index_changed(0)
   end
   
   def pool_index_changed(pool_index)
@@ -98,22 +161,40 @@ class ShopEditor < Qt::Dialog
     end
     
     @ui.item_index.clear()
-    @pool.item_ids.each_with_index do |global_id, item_index|
-      item = @game.items[global_id-1]
-      slot_name = "%03X %s" % [global_id, item.name]
-      if @pool.slot_is_arm_shifted_immediate?(item_index)
-        slot_name = "(!) #{slot_name}"
+    if GAME == "hod"
+      @pool.allowable_item_indexes.each do |available_item_index|
+        allowable_item = @allowable_items[available_item_index]
+        item_id = @game.get_item_global_id_by_type_and_index(allowable_item.item_type, allowable_item.item_index)
+        item = @game.items[item_id]
+        slot_name = "%03X %s" % [item_id+1, item.name]
+        @ui.item_index.addItem(slot_name)
       end
-      @ui.item_index.addItem(slot_name)
+    else
+      @pool.item_ids.each_with_index do |global_id, item_index|
+        item = @game.items[global_id-1]
+        slot_name = "%03X %s" % [global_id, item.name]
+        if @pool.slot_is_arm_shifted_immediate?(item_index)
+          slot_name = "(!) #{slot_name}"
+        end
+        @ui.item_index.addItem(slot_name)
+      end
     end
   end
   
   def item_index_changed(item_index)
-    item_id = @pool.item_ids[item_index]
-    return if item_id.nil?
-    
-    row_index = item_id - @available_shop_item_range.first - 1
-    @ui.item_id.setCurrentRow(row_index)
+    if GAME == "hod"
+      allowable_item_index = @pool.allowable_item_indexes[item_index]
+      return if allowable_item_index.nil?
+      
+      row_index = allowable_item_index
+      @ui.item_id.setCurrentRow(row_index)
+    else
+      item_id = @pool.item_ids[item_index]
+      return if item_id.nil?
+      
+      row_index = item_id - @available_shop_item_range.first - 1
+      @ui.item_id.setCurrentRow(row_index)
+    end
     
     if @pool.is_a?(ShopPointItemPool)
       required_shop_points = @pool.required_shop_points[item_index]
@@ -126,7 +207,13 @@ class ShopEditor < Qt::Dialog
     item_index = @ui.item_index.currentRow
     return if item_index == -1
     
-    item_id = row_index + @available_shop_item_range.first
+    if GAME == "hod"
+      available_item_index = row_index
+      allowable_item = @allowable_items[available_item_index]
+      item_id = @game.get_item_global_id_by_type_and_index(allowable_item.item_type, allowable_item.item_index)
+    else
+      item_id = row_index + @available_shop_item_range.first
+    end
     
     if @pool.is_a?(OoEHardcodedShopItemPool) && !@pool.slot_can_have_item_id?(item_index, item_id+1)
       message = "This particular hardcoded item slot is coded as an ARM shifted immediate.\n"
@@ -137,7 +224,11 @@ class ShopEditor < Qt::Dialog
       return
     end
     
-    @pool.item_ids[item_index] = item_id+1
+    if GAME == "hod"
+      @pool.allowable_item_indexes[item_index] = available_item_index
+    else
+      @pool.item_ids[item_index] = item_id+1
+    end
     
     item = @game.items[item_id]
     slot_name = "%03X %s" % [item_id+1, item.name]
@@ -158,13 +249,62 @@ class ShopEditor < Qt::Dialog
     end
   end
   
-  def save_changes
-    if GAME == "aos"
-      @game.autogenerate_shop_allowable_items_list(@pools)
-    end
+  def available_item_slot_changed(available_item_slot_index)
+    available_item = @allowable_items[available_item_slot_index]
+    item_id = @game.get_item_global_id_by_type_and_index(available_item.item_type, available_item.item_index)
     
-    @pools.each do |pool|
-      pool.write_to_rom()
+    @ui.price.text = "%04X" % available_item.price
+    
+    row_index = item_id - @available_shop_item_range.first
+    @ui.available_item_id.setCurrentRow(row_index)
+  end
+  
+  def available_item_id_changed(row_index)
+    slot_index = @ui.available_item_slot.currentRow
+    return if slot_index == -1
+    
+    item_id = row_index + @available_shop_item_range.first
+    item = @game.items[item_id]
+    
+    available_item = @allowable_items[slot_index]
+    item_type, item_index = @game.get_item_type_and_index_by_global_id(item_id)
+    available_item.item_type = item_type
+    available_item.item_index = item_index
+    
+    slot_name = "%02X %s" % [slot_index, item.name]
+    @ui.available_item_slot.currentItem.text = slot_name
+  end
+  
+  def price_changed
+    slot_index = @ui.available_item_slot.currentRow
+    
+    if slot_index == -1
+      @ui.price.text = ""
+    else
+      available_item = @allowable_items[slot_index]
+      
+      price = @ui.price.text.to_i(16)
+      available_item.price = price
+      
+      @ui.price.text = "%04X" % price
+    end
+  end
+  
+  def save_changes
+    if @ui.tabWidget.currentIndex == 0 # Main tab
+      if GAME == "aos"
+        @game.autogenerate_shop_allowable_items_list(@pools)
+      end
+      
+      @pools.each do |pool|
+        pool.write_to_rom()
+      end
+    else # Available items tab
+      @allowable_items.each do |allowable_item|
+        allowable_item.write_to_rom()
+      end
+      @game.clear_shop_allowable_items_cache()
+      hod_reload_shop_pools_tab()
     end
   rescue NDSFileSystem::ArmShiftedImmediateError => e
     Qt::MessageBox.warning(self, "Error changing requirement", e.message)
@@ -182,4 +322,6 @@ class ShopEditor < Qt::Dialog
       save_changes()
     end
   end
+  
+  def inspect; to_s; end
 end

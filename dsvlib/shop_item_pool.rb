@@ -4,7 +4,8 @@ class ShopItemPool
               :fs,
               :game
   attr_accessor :item_ids,
-                :requirement
+                :requirement,
+                :allowable_item_indexes
   
   def initialize(pool_id, game)
     @pool_id = pool_id
@@ -75,7 +76,9 @@ class ShopItemPool
   
   def write_to_rom
     case GAME
-    when "aos", "hod"
+    when "hod"
+      fs.write(@item_pool_pointer+1, @allowable_item_indexes.pack("C*"))
+    when "aos"
       @allowable_item_indexes = @item_ids.map do |item_id|
         item_type, item_index = game.get_item_type_and_index_by_global_id(item_id-1)
         allowable_item = game.shop_allowable_items.find do |allowable_item|
@@ -92,12 +95,10 @@ class ShopItemPool
       
       fs.write(@item_pool_pointer+1, @allowable_item_indexes.pack("C*"))
       
-      if GAME == "aos"
-        required_flag_location = SHOP_ITEM_POOL_REQUIRED_EVENT_FLAG_HARDCODED_LOCATIONS[pool_id]
-        if !required_flag_location.nil?
-          new_bit = fs.convert_bit_index_to_integer(@requirement)
-          fs.write(required_flag_location, [new_bit].pack("C"))
-        end
+      required_flag_location = SHOP_ITEM_POOL_REQUIRED_EVENT_FLAG_HARDCODED_LOCATIONS[pool_id]
+      if !required_flag_location.nil?
+        new_bit = fs.convert_bit_index_to_integer(@requirement)
+        fs.write(required_flag_location, [new_bit].pack("C"))
       end
     when "dos"
       fs.write(@item_pool_pointer, @item_ids.pack("C*"))
@@ -241,18 +242,18 @@ end
 
 class ShopAllowableItem
   attr_reader :allowable_item_index,
-              :fs,
-              :unknown
+              :fs
   attr_accessor :item_type,
-                :item_index
+                :item_index,
+                :price
   
   def initialize(allowable_item_index, fs)
     @fs = fs
     @allowable_item_index = allowable_item_index
-    @item_type, @item_index, @unknown = fs.read(SHOP_ALLOWABLE_ITEMS_LIST + allowable_item_index*4, 4).unpack("CCv")
+    @item_type, @item_index, @price = fs.read(SHOP_ALLOWABLE_ITEMS_LIST + allowable_item_index*4, 4).unpack("CCv")
   end
   
   def write_to_rom
-    fs.write(SHOP_ALLOWABLE_ITEMS_LIST + allowable_item_index*4, [@item_type, @item_index, @unknown].pack("CCv"))
+    fs.write(SHOP_ALLOWABLE_ITEMS_LIST + allowable_item_index*4, [@item_type, @item_index, @price].pack("CCv"))
   end
 end

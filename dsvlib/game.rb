@@ -406,6 +406,10 @@ class Game
     end
   end
   
+  def clear_shop_allowable_items_cache
+    @shop_allowable_items = nil
+  end
+  
   def autogenerate_shop_allowable_items_list(shop_pools)
     if SYSTEM != :gba
       raise "Only AoS and HoD have a list of allowable shop items"
