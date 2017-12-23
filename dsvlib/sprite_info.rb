@@ -379,7 +379,8 @@ class SpriteInfo
       return false if num_anims >= 0x100 # TODO
       return false if frames_ptr % 4 != 0
       return false if anims_ptr % 4 != 0
-      return false if pointer < 0x08200000 && GAME == "aos" # HACK TODO
+      return false if pointer < 0x08100000 && GAME == "aos" && REGION == :cn # HACK TODO
+      return false if pointer < 0x08200000 && GAME == "aos" && REGION == :usa # HACK TODO
       return true
     end
   end

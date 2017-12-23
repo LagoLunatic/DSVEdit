@@ -1,0 +1,163 @@
+Enemies:
+00 Bat
+01 Zombie
+02 Skeleton
+03 半鱼人
+  参数A和B都等于0，在地上走
+  参数A和B都等于1，在水里生成
+  其他组合会产生bug
+04 Axe Armor
+05 Skull Archer
+06 偷窥眼
+  参数A:
+    0 正常的.
+    1 在背景里，不能攻击和被攻击.
+07 Killer Fish
+08 骨柱
+  参数A: 产生的骨柱的数量.
+09 Blue Crow
+0A Buer
+0B White Dragon
+0C Zombie Soldier
+0D Skeleton Knight
+0E 鬼魂
+  Spawner.
+  参数A: 一个房间最多的鬼魂数量.
+  参数B: 产生鬼魂的间隔.
+  如果参数A和B都等于0，则只有一个鬼魂
+0F Siren
+10 Tiny Devil
+11 Durga
+12 Rock Armor
+13 Giant Ghost
+14 Winged Skeleton
+15 Minotaur
+16 Student Witch
+17 Arachne
+18 Fleaman
+19 Evil Butcher
+1A Quezlcoatl
+1B Ectoplasm
+1C Catoblepas
+1D 鬼魂舞者
+  参数A: 色盘偏移.
+    0 蓝和绿.
+    1 紫和黄.
+    2 棕和粉.
+1E Waiter Skeleton
+1F Killer Doll
+20 Zombie Officer
+21 Creaking Skull
+22 Wooden Golem
+23 Tsuchinoko 
+24 Persephone
+25 Lilith
+26 Nemesis
+27 镜魔
+  参数A:
+    0 正常的镜魔.
+    1 苍真的样子，不攻击.
+28 Chronomage
+29 Valkyrie
+2A Witch
+2B Curly
+2C Altair
+2D Red Crow
+2E Cockatrice
+2F Dead Warrior
+30 Devil
+31 Imp
+32 Werewolf
+33 Gorgon
+34 碟装甲
+  参数A:
+    0 看见你就攻击.
+    1 看见你后会走向你，走近了才攻击.
+35 Golem
+36 曼提利亚
+  参数A:
+    0 小怪.
+    1 Boss (杀死一次就不出现了).
+37 Gremlin
+38 Harpy
+39 美杜莎头
+  参数A: 一个房间最多的数量的美杜莎头.
+  参数B:
+    0 一个蓝色的.
+    1 一个黄色的.
+    2 无限刷的蓝色的.
+    3 无限刷的黄色的.
+3A Bomber Armor
+3B Lightning Doll
+3C Great Armor
+3D Une
+3E Giant Worm
+3F 针刺球
+  参数A:
+    0 呆着那不动.
+    1 一上一下的往复运动.
+40 Man-Eater
+41 鱼头
+  参数A: 叠加起来的数量.
+42 Nightmare
+43 Triton
+44 Slime
+45 Big Golem
+46 Dryad
+47 Poison Worm
+48 Arc Demon
+49 Cagnazzo
+4A Ripper
+4B Werejaguar
+4C Ukoback
+4D Alura Une
+4E Biphron
+4F Mandragora
+50 Flesh Golem
+51 Sky Fish
+52 Dead Crusader
+53 Kicker Skeleton
+54 Weretiger
+55 Killer Mantle
+56 Mudman
+57 Gargoyle
+58 Red Minotaur
+59 Beam Skeleton
+5A Alastor
+5B Skull Millione
+5C Giant Skeleton
+5D Gladiator
+5E Bael
+5F 梦魔
+  参数A:
+    0 妳娜的样子.
+    1 正常的样子.
+60 拟态魔
+  参数A:
+    0 在蜡烛里.
+    1 在钱袋子里.
+  参数B: 钱袋子颜色.
+    0 蓝 ($500)
+    1 橙色 ($1000)
+    2 金色 ($2000)
+    Note that none of these bag colors look exactly like the real deal, the highlights aren't bright enough.
+61 斯特拉斯
+  参数A: 产生的第一中怪物.
+    如果设置为0，默认0D (骷髅骑士).
+  参数B: 产生的第二种怪物.
+    如果设置为0，默认52 (红色米诺陶斯).
+62 Erinys
+63 Lubicant
+64 Basilisk
+65 Iron Golem
+66 Demon Lord
+67 Final Guard
+68 Flame Demon
+69 Shadow Knight
+6A Headhunter
+6B Death
+6C Legion
+6D Balore
+6E Belmont
+6F Graham
+70 Chaos

@@ -117,27 +117,53 @@ class GenericEditable
         @name = "#{spellbook_name} #{subweapon_name}"
         @description = ""
       when "aos"
-        if @item_type_name == "Julius Skills"
-          @name = ["Cross", "Holy Water", "Axe", "Grand Cross"][index]
-          @description = ""
-        elsif index == 0
-          @name = "---"
-          @description = ""
-        else
-          zero_index = index - 1
-          case @item_type_name
-          when "Red Souls"
-            @name_text_id = TEXT_REGIONS["Red Soul Names"].begin + zero_index
-            @description_text_id = TEXT_REGIONS["Red Soul Descriptions"].begin + zero_index
-          when "Blue Souls"
-            @name_text_id = TEXT_REGIONS["Blue Soul Names"].begin + zero_index
-            @description_text_id = TEXT_REGIONS["Blue Soul Descriptions"].begin + zero_index
-          when "Yellow Souls"
-            @name_text_id = TEXT_REGIONS["Yellow Soul Names"].begin + zero_index
-            @description_text_id = TEXT_REGIONS["Yellow Soul Descriptions"].begin + zero_index
-          when "Ability Souls"
-            @name_text_id = TEXT_REGIONS["Ability Soul Names"].begin + zero_index
-            @description_text_id = TEXT_REGIONS["Ability Soul Descriptions"].begin + zero_index
+        if REGION == :cn
+          if @item_type_name == "尤里乌斯技能"
+            @name = ["十字架", "泼水", "斧子", "大十字架"][index]
+            @description = ""
+          elsif index == 0
+            @name = "---"
+            @description = ""
+          else
+            zero_index = index - 1
+            case @item_type_name
+            when "红魂"
+              @name_text_id = TEXT_REGIONS["Red Soul Names"].begin + zero_index
+              @description_text_id = TEXT_REGIONS["Red Soul Descriptions"].begin + zero_index
+            when "蓝魂"
+              @name_text_id = TEXT_REGIONS["Blue Soul Names"].begin + zero_index
+              @description_text_id = TEXT_REGIONS["Blue Soul Descriptions"].begin + zero_index
+            when "黄魂"
+              @name_text_id = TEXT_REGIONS["Yellow Soul Names"].begin + zero_index
+              @description_text_id = TEXT_REGIONS["Yellow Soul Descriptions"].begin + zero_index
+            when "青魂"
+              @name_text_id = TEXT_REGIONS["Ability Soul Names"].begin + zero_index
+              @description_text_id = TEXT_REGIONS["Ability Soul Descriptions"].begin + zero_index
+            end
+          end
+	    else
+          if @item_type_name == "Julius Skills"
+            @name = ["Cross", "Holy Water", "Axe", "Grand Cross"][index]
+            @description = ""
+          elsif index == 0
+            @name = "---"
+            @description = ""
+          else
+            zero_index = index - 1
+            case @item_type_name
+            when "Red Souls"
+              @name_text_id = TEXT_REGIONS["Red Soul Names"].begin + zero_index
+              @description_text_id = TEXT_REGIONS["Red Soul Descriptions"].begin + zero_index
+            when "Blue Souls"
+              @name_text_id = TEXT_REGIONS["Blue Soul Names"].begin + zero_index
+              @description_text_id = TEXT_REGIONS["Blue Soul Descriptions"].begin + zero_index
+            when "Yellow Souls"
+              @name_text_id = TEXT_REGIONS["Yellow Soul Names"].begin + zero_index
+              @description_text_id = TEXT_REGIONS["Yellow Soul Descriptions"].begin + zero_index
+            when "Ability Souls"
+              @name_text_id = TEXT_REGIONS["Ability Soul Names"].begin + zero_index
+              @description_text_id = TEXT_REGIONS["Ability Soul Descriptions"].begin + zero_index
+            end
           end
         end
       when "por"
@@ -173,8 +199,13 @@ class GenericEditable
       @name = PLAYER_NAMES[index]
       @description = ""
     else # item
-      @name_text_id = TEXT_REGIONS["Item Names"].begin + self["Item ID"]
-      @description_text_id = TEXT_REGIONS["Item Descriptions"].begin + self["Item ID"]
+      if REGION == :cn
+        @name_text_id = TEXT_REGIONS["Item Names"].begin + self["道具ID"]
+        @description_text_id = TEXT_REGIONS["Item Descriptions"].begin + self["道具ID"]
+      else
+        @name_text_id = TEXT_REGIONS["Item Names"].begin + self["Item ID"]
+        @description_text_id = TEXT_REGIONS["Item Descriptions"].begin + self["Item ID"]
+      end
     end
   end
   

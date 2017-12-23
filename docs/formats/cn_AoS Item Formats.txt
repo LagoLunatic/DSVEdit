@@ -1,0 +1,166 @@
+Consumable format:
+  0x10 bytes long.
+  00,2: Item ID.
+  02,2: Icon.
+  04,4: Price.
+  08,1: Type of the consumable.
+    0 Restores HP.
+      Var A: Amount of HP to restore.
+    1 Restores MP.
+      Var A: Amount of MP to restore.
+    2 Cures a status effect.
+      Var A: Bitfield of status effects to cure. Bit 1 for poison, 2 for curse, 4 for petrify.
+    3 Subtracts HP.
+      Amount of HP to subtract.
+    4 Cannot be used.
+  09,1: ?
+  0A,2: Var A.
+    See above for what this does depending on the consumable type.
+  0C,4: ?
+
+Weapon format:
+  0x1C bytes long.
+  00,2: Item ID.
+  02,2: Icon.
+  04,4: Price.
+  08,1: Attack type.
+    00 - Slash.
+    01 - Overhead swing.
+    02 - Spear (or Positron Rifle).
+    03 - Punch.
+    04 - Gun.
+    05 - Valmanway.
+  09,1: ?
+  0A,1: Attack stat.
+  0B,1: Defense stat.
+  0C,1: Strength stat.
+  0D,1: Constitution stat.
+  0E,1: Intelligence stat.
+  0F,1: Luck stat.
+  10,2: Bitfield of damage types this weapon deals, as well as some swing modifiers.
+    Bits 0-8: Damage types.
+    Bit 11: Killer Mantle effect. Swaps the HP and MP of enemies.
+    Bit 12: Halves the damage this weapon deals.
+    Bit 13: Do not interrupt this weapon's swing when the player lands.
+  12,1: Weapon GFX index.
+  13,1: Weapon sprite index.
+  14,1: ?
+  15,1: Palette index.
+  16,1: Swing animation index.
+    Which specific animation to use, out of the list of swing animations for this attack type.
+  17,1: IFrames. An enemy hit by this weapon will be invulnerable to weapons for this number of frames.
+  18,2: Swing sound.
+  1A,2: ?
+
+Body armor and Accessory format:
+  0x14 bytes long.
+  00,2: Item ID.
+  02,2: Icon.
+  04,4: Price.
+  08,1: Type:
+    0 - Body armor.
+    1 - Accessory.
+  09,1: ?
+  0A,1: Attack stat.
+  0B,1: Defense stat.
+  0C,1: Strength stat.
+  0D,1: Constitution stat.
+  0E,1: Intelligence stat.
+  0F,1: Luck stat.
+  10,2: Bitfield for what elemental resistances this armor gives you.
+  12,2: ?
+
+Red soul format:
+  0x10 bytes long.
+  00,4: Code pointer.
+  04,2: Animation for Soma to play when using this soul.
+    00 Normal soul use animation.
+    01 Uppercut.
+    02 Straight punch.
+    03 Powerful punch.
+    This is an index in list 080E1918. Each entry in that list is composed of two separate bytes: the first is the animation for Soma to use when on the ground, the second is the one to use when in the air.
+  06,2: Mana cost.
+  08,1:
+  09,1:
+  0A,2: Damage multiplier.
+  0C,2: Bitfield of damage types this soul deals.
+    Bits 0-8: Damage types.
+    Bit 11: Killer Mantle effect. Swaps the HP and MP of enemies.
+    Bit 12: No effect for souls.
+    Bit 13: No effect for souls.
+  0E,2: Varies by code pointer.
+    08025785/08028EC1: Which projectile to throw.
+      This is an index in list 084F12C8, entry length 0x18.
+      0 Rock Armor
+      1 Waiter Skeleton
+      2 Bomber Armor
+      3 Skeleton
+      4 Giant Skeleton
+      5 Zombie Soldier
+      6 Arachne
+      7 Mudman
+    08024275: Sprite frame index to use.
+      6 Axe Armor
+    08023A71: Type of knife to throw.
+      0 Evil Butcher
+      1 Ripper
+    Harpy (0802CC85): No effect?
+    08027609: Which type of punch to throw.
+      0 Uppercut (Weretiger)
+      1 Straight punch (Werejaguar)
+    Chronomage (080E1658): Duration of timestop in frames.
+
+Blue soul format:
+  0xC bytes long.
+  00,4: Code pointer.
+  04,1: Mana cost.
+  05,1: Activation type.
+    If 1, the player needs to hold down R to keep the soul activated.
+    if 2, the player can press R to toggle between the soul being on and off.
+  06,2: ??? Always 0.
+    Not entirely unused since it does get read and stored in the soul's entity memory at offset 1A. But then it doesn't seem like the value ever gets read from the entity memory.
+  08,4: Varies.
+    For Flying Armor and Black Panther, this is a bitfield of what special player effect bits to set at 02013260.
+    For Witch/Giant Ghost: Should be 0 to use the Witch shield, or 1 to use the Giant Ghost barrier.
+    For Devil/Manticore/Curly: Which transformed visual to use. 0 for Devil, 1 for Manticore, or 2 for Curly.
+
+Yellow soul format:
+  0xC bytes long.
+  00,4: Code pointer.
+    08032205 - Sets a special player effect bit on in 02013260 in RAM.
+    0803226D - Increases a stat.
+    080322A1 - Grants immunity to a status effect.
+    Otherwise it's soul-specific code.
+    Specific soul notes:
+      Lubicant (code 08032361) - Increases STR and INT by the percentage of HP you're missing. Increases CON by that percentage divided by 8.
+  04,2: ???
+  06,2: For stat increasers, which stat to raise.
+    0 - STR
+    1 - CON
+    2 - INT
+    3 - LCK
+  08,4: Varies.
+    For stat increasers, it's the amount to increase the stat by.
+    For special player effect granters, it's which bit(s) to set. See the RAM doc entry on value 02013260 for details, but this is a brief list:
+      00000100 - Flying Armor
+      00000200 - Giant Bat
+      00000400 - Black Panther
+      00000800 - ???
+      00001000 - Devil/Manticore/Curly
+      00002000 - Final Guard
+      00004000 - Undine
+      00008000 - Skula
+      00010000 - Succubus
+      00020000 - Iron Golem
+      00040000 - Mimic
+      00080000 - Arc Demon
+      00100000 - Flesh Golem
+      00200000 - Tsuchinoko
+      00400000 - Zombie Officer
+      00800000 - Dead Warrior
+      01000000 - Peeping Eye
+      02000000 - Erinys
+    For status effect immunity granters, it's the bit corresponding to the damage type of the status effect:
+      040 - Poison
+      080 - Curse
+      100 - Stone

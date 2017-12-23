@@ -1280,7 +1280,11 @@ class Renderer
   end
   
   def render_icon_by_item(item, mode=:item)
-    icon_index, palette_index = GenericEditable.extract_icon_index_and_palette_index(item["Icon"])
+    if REGION == :cn 
+      icon_index, palette_index = GenericEditable.extract_icon_index_and_palette_index(item["图标"])
+    else
+      icon_index, palette_index = GenericEditable.extract_icon_index_and_palette_index(item["Icon"])
+    end
     
     render_icon(icon_index, palette_index, mode)
   end

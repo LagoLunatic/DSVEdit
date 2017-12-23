@@ -1,0 +1,69 @@
+
+房间使用的地址为 020004E4 - 02007863 每个场景占用 0x84 字节 共有0-DF 即225个房间
+
+00,4: Pointer to update code.
+04,4: Pointer to draw code.
+0A,1: 游戏状态.
+0B,1: 子状态.
+22,2: Frame 计数器.
+24,4: 
+2C,4: X acceleration?
+2D,1: Counter for how many frames to keep flashing white after being damaged.
+  This is set when the enemy is damaged and decremented every frame.
+  If bit 02 is set the enemy will be drawn pure white or normal otherwise. (In other words, the enemy will be white for 2 frames, then normal for 2 frames, and then repeat until the counter is 0.)
+  Certain enemies freeze as long as this is above 0.
+30,2: 参数A.
+32,2: 参数B.
+34,2: 当前 HP.
+40,4: X pos on the screen in subpixels.
+  In the GBA games, each pixel is 0x10000 subpixels.
+  Note that unlike the DSVanias, there is no X/Y pos in the room. Only on the screen.
+44,4: Y pos on the screen in subpixels.
+  In the GBA games, each pixel is 0x10000 subpixels.
+  Note that unlike the DSVanias, there is no X/Y pos in the room. Only on the screen.
+42,2: X pos on the screen in pixels.
+  Sometimes only the upper halfword of the X/Y pos is read.
+46,2: Y pos on the screen in pixels.
+  Sometimes only the upper halfword of the X/Y pos is read.
+48,4: X velocity.
+4C,4: Y velocity.
+50,4: X acceleration.
+54,4: Y acceleration (gravity).
+58,1: Bitfield related to sprite drawing.
+  20 Do not draw this entity.
+  40 Horizontal flip.
+  80 Vertical flip.
+59,1: Bitfield?
+  04 ?
+5A,1: Bitfield related to sprite drawing?
+  01 Enables mosaic for this entity.
+    In order for this to have an effect, the system mosaic size must also be set (at 03002CA4).
+  02 Draw entity semi-transparent.
+  20 Draw the entity completely white.
+62,1: Affects palette?
+  If the lowest bit of this value is set, then it changes the palette of this entity's sprite, but only for the parts that have the lowest bit of the value at part+0B set as well.
+64,1: Sprite info index.
+  This is an index in the currently loaded sprite info list, 0201017C.
+65,1: Current sprite frame.
+68,4: Pointer to the entity's current animation.
+6C,1: Related to sprite? Bitfield?
+6D,1: Current animation index.
+6E,1: Current keyframe index in this animation.
+70,1: Iframes index.
+7C,4: On-hurt-player callback.
+  This function pointer is called when the entity collides with the player.
+80,4: On-damaged callback.
+  This function pointer is called when the entity collides with a player weapon.
+
+For enemies:
+34,2: Max HP.
+
+For weapons/skills:
+14,4: Pointer to the entity that used this weapon/skill (the player).
+
+For red souls:
+1E,2: Var A.
+
+For blue souls:
+1A,2: Unknown 1 from the blue soul data.
+1C,4: "Player effect/Varies" from the blue soul data.

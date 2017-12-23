@@ -63,7 +63,6 @@ class Layer
       @tileset_pointer,
       @collision_tileset_pointer,
       @layer_tiledata_ram_start_offset = fs.read(layer_metadata_ram_pointer, 16).unpack("CCvVVV")
-    
     if width > 15 || height > 15
       raise LayerReadError.new("Invalid layer size: #{width}x#{height}")
     end
@@ -167,7 +166,7 @@ class Layer
     elsif GAME == "aos"
       fs.write(layer_list_entry_ram_pointer+1, [scroll_mode].pack("C"))
       fs.write(layer_list_entry_ram_pointer+2, [bg_control].pack("v"))
-      fs.write(layer_list_entry_ram_pointer+6, [height*0x100].pack("v")) # Unlike in DoS this doesn't seem necessary for jumpthrough platforms to work, but do it anyway.
+      #fs.write(layer_list_entry_ram_pointer+6, [height*0x100].pack("v")) # Unlike in DoS this doesn't seem necessary for jumpthrough platforms to work, but do it anyway.
       fs.write(layer_list_entry_ram_pointer+4, [main_gfx_page_index].pack("C"))
       fs.write(layer_list_entry_ram_pointer+8, [layer_metadata_ram_pointer].pack("V"))
     else # HoD

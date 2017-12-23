@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Layers Editor</string>
+   <string>地图层编辑器</string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
@@ -19,28 +19,28 @@
      <item row="3" column="2">
       <widget class="QLabel" name="label_7">
        <property name="text">
-        <string>Tileset</string>
+        <string>图片集</string>
        </property>
       </widget>
      </item>
      <item row="0" column="0">
       <widget class="QLabel" name="label">
        <property name="text">
-        <string>Layer</string>
+        <string>地图层</string>
        </property>
       </widget>
      </item>
      <item row="1" column="0">
       <widget class="QLabel" name="label_2">
        <property name="text">
-        <string>Width</string>
+        <string>宽度</string>
        </property>
       </widget>
      </item>
      <item row="1" column="2">
       <widget class="QLabel" name="label_3">
        <property name="text">
-        <string>Height</string>
+        <string>高度</string>
        </property>
       </widget>
      </item>
@@ -60,7 +60,7 @@
      <item row="1" column="4">
       <widget class="QLabel" name="label_4">
        <property name="text">
-        <string>Z-Index</string>
+        <string>Z轴顺序</string>
        </property>
       </widget>
      </item>
@@ -73,7 +73,7 @@
      <item row="2" column="2">
       <widget class="QLabel" name="label_5">
        <property name="text">
-        <string>Opacity</string>
+        <string>不透明度</string>
        </property>
       </widget>
      </item>
@@ -100,7 +100,7 @@
      <item row="3" column="0">
       <widget class="QLabel" name="label_9">
        <property name="text">
-        <string>Tileset Type</string>
+        <string>图片集类型</string>
        </property>
       </widget>
      </item>
@@ -123,7 +123,7 @@
      <item row="4" column="0">
       <widget class="QLabel" name="label_11">
        <property name="text">
-        <string>BG Control</string>
+        <string>背景控制</string>
        </property>
       </widget>
      </item>
@@ -136,7 +136,7 @@
      <item row="0" column="5">
       <widget class="QPushButton" name="copy_layer_pointer">
        <property name="text">
-        <string>Copy layer pointer to clipboard</string>
+        <string>复制布局指针</string>
        </property>
       </widget>
      </item>

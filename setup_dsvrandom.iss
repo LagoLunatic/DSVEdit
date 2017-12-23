@@ -12,7 +12,7 @@
 AppId={{FA3C4D50-6666-4FD9-8427-8C1833B8E0E0}
 AppName={#MyAppName}
 AppVersion={#MyAppVersion}
-DefaultDirName={src}\{#MyAppName}
+DefaultDirName={#MyAppName}
 DefaultGroupName={#MyAppName}
 OutputDir=../build
 OutputBaseFilename=dsvrandom-installer

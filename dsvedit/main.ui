@@ -26,21 +26,21 @@
         <item row="0" column="0">
          <widget class="QLabel" name="label">
           <property name="text">
-           <string>Area</string>
+           <string>区域</string>
           </property>
          </widget>
         </item>
         <item row="1" column="0">
          <widget class="QLabel" name="label_2">
           <property name="text">
-           <string>Sector</string>
+           <string>关卡</string>
           </property>
          </widget>
         </item>
         <item row="2" column="0">
          <widget class="QLabel" name="label_3">
           <property name="text">
-           <string>Room</string>
+           <string>房间指针</string>
           </property>
          </widget>
         </item>
@@ -77,7 +77,7 @@
         <item row="3" column="0">
          <widget class="QLabel" name="label_4">
           <property name="text">
-           <string>State</string>
+           <string>关卡</string>
           </property>
          </widget>
         </item>
@@ -89,42 +89,57 @@
       <item>
        <widget class="QPushButton" name="tiled_export">
         <property name="text">
-         <string>Open in Tiled</string>
+         <string>在 Tiled 中打开</string>
+        </property>
+        <property name="checkable">
+         <bool>false</bool>
         </property>
        </widget>
       </item>
       <item>
        <widget class="QPushButton" name="tiled_import">
         <property name="text">
-         <string>Import from Tiled</string>
+         <string>从 Tiled 中导入</string>
+        </property>
+        <property name="checkable">
+         <bool>false</bool>
         </property>
        </widget>
       </item>
       <item>
        <widget class="QPushButton" name="set_as_starting_room">
         <property name="text">
-         <string>Set as starting room</string>
+         <string>设置当前房间为游戏起始房间</string>
+        </property>
+        <property name="checkable">
+         <bool>false</bool>
         </property>
        </widget>
       </item>
       <item>
        <widget class="QPushButton" name="copy_room_pointer">
         <property name="text">
-         <string>Copy room pointer to clipboard</string>
+         <string>点击复制房间指针</string>
+        </property>
+        <property name="checkable">
+         <bool>false</bool>
         </property>
        </widget>
       </item>
       <item>
        <widget class="QPushButton" name="edit_map">
         <property name="text">
-         <string>Edit map</string>
+         <string>打开地图编辑器</string>
+        </property>
+        <property name="checkable">
+         <bool>false</bool>
         </property>
        </widget>
       </item>
       <item>
        <widget class="QPushButton" name="toggle_hide_map">
         <property name="text">
-         <string>Hide map</string>
+         <string>隐藏下面的地图</string>
         </property>
        </widget>
       </item>
@@ -162,8 +177,8 @@
         <rect>
          <x>0</x>
          <y>0</y>
-         <width>991</width>
-         <height>693</height>
+         <width>996</width>
+         <height>703</height>
         </rect>
        </property>
        <layout class="QVBoxLayout" name="verticalLayout_2">
@@ -182,12 +197,12 @@
      <x>0</x>
      <y>0</y>
      <width>1280</width>
-     <height>26</height>
+     <height>23</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
     <property name="title">
-     <string>File</string>
+     <string>文件</string>
     </property>
     <addaction name="actionOpen_Folder"/>
     <addaction name="actionExtract_ROM"/>
@@ -196,30 +211,32 @@
    </widget>
    <widget class="QMenu" name="menuTools">
     <property name="title">
-     <string>Tools</string>
+     <string>工具</string>
     </property>
     <addaction name="actionEnemy_Editor"/>
+    <addaction name="actionSpecial_Object_Editor"/>
     <addaction name="actionItem_Editor"/>
     <addaction name="actionMap_Editor"/>
-    <addaction name="actionText_Editor"/>
+    <addaction name="actionShop_Editor"/>
+    <addaction name="separator"/>
     <addaction name="actionSprite_Editor"/>
     <addaction name="actionGFX_Editor"/>
+    <addaction name="actionMusic_Editor"/>
+    <addaction name="actionTileset_Editor"/>
+    <addaction name="actionText_Editor"/>
+    <addaction name="separator"/>
+    <addaction name="actionEntity_Search"/>
+    <addaction name="actionSettings"/>
     <addaction name="actionPlayer_Editor"/>
     <addaction name="actionPlayer_State_Anims_Editor"/>
-    <addaction name="actionMusic_Editor"/>
     <addaction name="actionItem_Pool_Editor"/>
-    <addaction name="actionTileset_Editor"/>
-    <addaction name="actionSpecial_Object_Editor"/>
-    <addaction name="actionShop_Editor"/>
     <addaction name="actionWeapon_Synth_Editor"/>
     <addaction name="actionMagic_Seal_Editor"/>
     <addaction name="actionAdd_Overlay"/>
-    <addaction name="actionEntity_Search"/>
-    <addaction name="actionSettings"/>
    </widget>
    <widget class="QMenu" name="menuBuild">
     <property name="title">
-     <string>Build</string>
+     <string>打包ROM</string>
     </property>
     <addaction name="actionBuild"/>
     <addaction name="actionBuild_and_Run"/>
@@ -227,7 +244,7 @@
    </widget>
    <widget class="QMenu" name="menuView">
     <property name="title">
-     <string>View</string>
+     <string>视图</string>
     </property>
     <addaction name="actionEntities"/>
     <addaction name="actionDoors"/>
@@ -236,21 +253,24 @@
    </widget>
    <widget class="QMenu" name="menuHelp">
     <property name="title">
-     <string>Help</string>
+     <string>帮助</string>
     </property>
     <addaction name="actionAbout"/>
    </widget>
    <widget class="QMenu" name="menuEdit">
     <property name="title">
-     <string>Edit</string>
+     <string>编辑</string>
     </property>
     <addaction name="actionEdit_Room_Props"/>
-    <addaction name="actionEdit_Layers"/>
-    <addaction name="actionEdit_Entities"/>
-    <addaction name="actionEdit_Doors"/>
-    <addaction name="actionAdd_New_Layer"/>
+    <addaction name="separator"/>
     <addaction name="actionAdd_Entity"/>
+    <addaction name="actionEdit_Entities"/>
+    <addaction name="separator"/>
     <addaction name="actionAdd_Door"/>
+    <addaction name="actionEdit_Doors"/>
+    <addaction name="separator"/>
+    <addaction name="actionAdd_New_Layer"/>
+    <addaction name="actionEdit_Layers"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuEdit"/>
@@ -262,17 +282,17 @@
   <widget class="QStatusBar" name="statusbar"/>
   <action name="actionExtract_ROM">
    <property name="text">
-    <string>Extract ROM</string>
+    <string>解包ROM</string>
    </property>
   </action>
   <action name="actionExit">
    <property name="text">
-    <string>Exit</string>
+    <string>退出</string>
    </property>
   </action>
   <action name="actionEnemy_Editor">
    <property name="text">
-    <string>Enemy Editor</string>
+    <string>怪物属性编辑器</string>
    </property>
    <property name="shortcut">
     <string>E</string>
@@ -280,12 +300,12 @@
   </action>
   <action name="actionSettings">
    <property name="text">
-    <string>Settings</string>
+    <string>设置</string>
    </property>
   </action>
   <action name="actionBuild">
    <property name="text">
-    <string>Build</string>
+    <string>打包ROM</string>
    </property>
    <property name="shortcut">
     <string>F5</string>
@@ -293,7 +313,7 @@
   </action>
   <action name="actionBuild_and_Run">
    <property name="text">
-    <string>Build and Run</string>
+    <string>打包ROM并运行</string>
    </property>
    <property name="shortcut">
     <string>F6</string>
@@ -301,7 +321,7 @@
   </action>
   <action name="actionSave">
    <property name="text">
-    <string>Save</string>
+    <string>保存</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+S</string>
@@ -309,7 +329,7 @@
   </action>
   <action name="actionOpen_Folder">
    <property name="text">
-    <string>Open Folder</string>
+    <string>打开文件夹</string>
    </property>
    <property name="shortcut">
     <string>O</string>
@@ -317,7 +337,7 @@
   </action>
   <action name="actionText_Editor">
    <property name="text">
-    <string>Text Editor</string>
+    <string>文本编辑器</string>
    </property>
    <property name="shortcut">
     <string>T</string>
@@ -325,7 +345,7 @@
   </action>
   <action name="actionSprite_Editor">
    <property name="text">
-    <string>Sprite Editor</string>
+    <string>雪碧图编辑器</string>
    </property>
    <property name="toolTip">
     <string>Sprite Editor</string>
@@ -336,7 +356,7 @@
   </action>
   <action name="actionItem_Editor">
    <property name="text">
-    <string>Item Editor</string>
+    <string>道具编辑器</string>
    </property>
    <property name="shortcut">
     <string>I</string>
@@ -344,7 +364,7 @@
   </action>
   <action name="actionEntity_Search">
    <property name="text">
-    <string>Entity Search</string>
+    <string>场景物品搜索</string>
    </property>
    <property name="toolTip">
     <string>Entity Search</string>
@@ -361,7 +381,7 @@
     <bool>true</bool>
    </property>
    <property name="text">
-    <string>Entities</string>
+    <string>场景/道具</string>
    </property>
    <property name="shortcut">
     <string>F1</string>
@@ -375,7 +395,7 @@
     <bool>true</bool>
    </property>
    <property name="text">
-    <string>Doors</string>
+    <string>联结点（门）</string>
    </property>
    <property name="shortcut">
     <string>F2</string>
@@ -386,7 +406,7 @@
     <bool>true</bool>
    </property>
    <property name="text">
-    <string>Collision</string>
+    <string>碰撞体积</string>
    </property>
    <property name="shortcut">
     <string>F3</string>
@@ -400,7 +420,7 @@
     <bool>true</bool>
    </property>
    <property name="text">
-    <string>Layers</string>
+    <string>地图层</string>
    </property>
    <property name="shortcut">
     <string>F4</string>
@@ -408,22 +428,22 @@
   </action>
   <action name="actionAbout">
    <property name="text">
-    <string>About</string>
+    <string>关于软件</string>
    </property>
   </action>
   <action name="actionEdit_Layers">
    <property name="text">
-    <string>Edit Layers</string>
+    <string>编辑地图层</string>
    </property>
   </action>
   <action name="actionAdd_New_Layer">
    <property name="text">
-    <string>Add New Layer</string>
+    <string>添加地图层</string>
    </property>
   </action>
   <action name="actionMap_Editor">
    <property name="text">
-    <string>Map Editor</string>
+    <string>地图编辑器</string>
    </property>
    <property name="shortcut">
     <string>M</string>
@@ -431,7 +451,7 @@
   </action>
   <action name="actionAdd_Entity">
    <property name="text">
-    <string>Add Entity</string>
+    <string>添加场景/道具</string>
    </property>
    <property name="shortcut">
     <string>A</string>
@@ -441,10 +461,13 @@
    <property name="text">
     <string>Item Pool Editor</string>
    </property>
+   <property name="visible">
+    <bool>false</bool>
+   </property>
   </action>
   <action name="actionGFX_Editor">
    <property name="text">
-    <string>GFX Editor</string>
+    <string>GFX 编辑器</string>
    </property>
    <property name="shortcut">
     <string>G</string>
@@ -452,12 +475,12 @@
   </action>
   <action name="actionMusic_Editor">
    <property name="text">
-    <string>Music Editor</string>
+    <string>音乐编辑器</string>
    </property>
   </action>
   <action name="actionTileset_Editor">
    <property name="text">
-    <string>Tileset Editor</string>
+    <string>图块编辑器</string>
    </property>
   </action>
   <action name="actionPlayer_Editor">
@@ -467,20 +490,23 @@
    <property name="shortcut">
     <string>L</string>
    </property>
+   <property name="visible">
+    <bool>false</bool>
+   </property>
   </action>
   <action name="actionEdit_Entities">
    <property name="text">
-    <string>Edit Entities</string>
+    <string>编辑场景/道具</string>
    </property>
   </action>
   <action name="actionSpecial_Object_Editor">
    <property name="text">
-    <string>Special Object Editor</string>
+    <string>场景物品编辑器</string>
    </property>
   </action>
   <action name="actionBuild_and_Test">
    <property name="text">
-    <string>Build and Test</string>
+    <string>打包ROM并调试</string>
    </property>
    <property name="shortcut">
     <string>F7</string>
@@ -490,30 +516,36 @@
    <property name="text">
     <string>Add Overlay</string>
    </property>
+   <property name="visible">
+    <bool>false</bool>
+   </property>
   </action>
   <action name="actionWeapon_Synth_Editor">
    <property name="text">
     <string>Weapon Synth Editor</string>
    </property>
+   <property name="visible">
+    <bool>false</bool>
+   </property>
   </action>
   <action name="actionEdit_Room_Props">
    <property name="text">
-    <string>Edit Room Props</string>
+    <string>编辑地图属性</string>
    </property>
   </action>
   <action name="actionShop_Editor">
    <property name="text">
-    <string>Shop Editor</string>
+    <string>商店编辑器</string>
    </property>
   </action>
   <action name="actionEdit_Doors">
    <property name="text">
-    <string>Edit Doors</string>
+    <string>编辑房间联结点（门）</string>
    </property>
   </action>
   <action name="actionAdd_Door">
    <property name="text">
-    <string>Add Door</string>
+    <string>添加房间联结点（门）</string>
    </property>
    <property name="shortcut">
     <string>D</string>
@@ -523,10 +555,16 @@
    <property name="text">
     <string>Magic Seal Editor</string>
    </property>
+   <property name="visible">
+    <bool>false</bool>
+   </property>
   </action>
   <action name="actionPlayer_State_Anims_Editor">
    <property name="text">
     <string>Player State Anims Editor</string>
+   </property>
+   <property name="visible">
+    <bool>false</bool>
    </property>
   </action>
  </widget>

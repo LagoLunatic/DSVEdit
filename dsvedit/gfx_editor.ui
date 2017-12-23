@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>GFX Editor</string>
+   <string>GFX 编辑器</string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
@@ -88,35 +88,35 @@
    <item>
     <widget class="QPushButton" name="view_button">
      <property name="text">
-      <string>View</string>
+      <string>查看</string>
      </property>
     </widget>
    </item>
    <item>
     <widget class="QPushButton" name="export_button">
      <property name="text">
-      <string>Export</string>
+      <string>导出</string>
      </property>
     </widget>
    </item>
    <item>
     <widget class="QPushButton" name="import_gfx_button">
      <property name="text">
-      <string>Import GFX</string>
+      <string>导入 GFX</string>
      </property>
     </widget>
    </item>
    <item>
     <widget class="QPushButton" name="import_palette_button">
      <property name="text">
-      <string>Import Palette</string>
+      <string>导入色盘</string>
      </property>
     </widget>
    </item>
    <item>
     <widget class="QPushButton" name="generate_palette_from_files">
      <property name="text">
-      <string>Generate palette from file(s)</string>
+      <string>从文件加载色盘</string>
      </property>
     </widget>
    </item>

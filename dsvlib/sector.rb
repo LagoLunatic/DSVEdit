@@ -61,7 +61,8 @@ private
       room_metadata_ram_pointer = fs.read(sector_ram_pointer + room_index*4, 4).unpack("V*").first
       
       break if room_metadata_ram_pointer == 0
-      break if room_metadata_ram_pointer < 0x0850EF9C && GAME == "aos" # TODO: less hacky way to do this
+      break if room_metadata_ram_pointer < 0x084E589C && GAME == "aos" && REGION == :cn # TODO: less hacky way to do this
+      break if room_metadata_ram_pointer < 0x0850EF9C && GAME == "aos" && REGION == :usa # TODO: less hacky way to do this
       
       room_pointers << room_metadata_ram_pointer
       

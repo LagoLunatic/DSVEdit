@@ -212,6 +212,13 @@ class DSVEdit < Qt::MainWindow
     @ui.actionBuild.setEnabled(false);
     @ui.actionBuild_and_Run.setEnabled(false);
     @ui.actionBuild_and_Test.setEnabled(false);
+    
+    @ui.tiled_export.setEnabled(false);
+    @ui.tiled_import.setEnabled(false);
+    @ui.set_as_starting_room.setEnabled(false);
+    @ui.copy_room_pointer.setEnabled(false);
+    @ui.edit_map.setEnabled(false);
+    
   end
   
   def enable_menu_actions
@@ -247,6 +254,13 @@ class DSVEdit < Qt::MainWindow
     @ui.actionBuild.setEnabled(true);
     @ui.actionBuild_and_Run.setEnabled(true);
     @ui.actionBuild_and_Test.setEnabled(true);
+    
+    @ui.tiled_export.setEnabled(true);
+    @ui.tiled_import.setEnabled(true);
+    @ui.set_as_starting_room.setEnabled(true);
+    @ui.copy_room_pointer.setEnabled(true);
+    @ui.edit_map.setEnabled(true);
+    
   end
   
   def close_open_dialogs
@@ -832,7 +846,12 @@ class DSVEdit < Qt::MainWindow
   end
   
   def open_text_editor
-    @open_dialogs << TextEditor.new(self, game.fs)
+    if REGION == :cn #debug
+      @ui.actionText_Editor.setEnabled(false);
+      Qt::MessageBox.warning(self, "不支持", "中文版不支持修改文本。")
+    else
+      @open_dialogs << TextEditor.new(self, game.fs)
+    end	
   end
   
   def open_sprite_editor
@@ -996,10 +1015,10 @@ class DSVEdit < Qt::MainWindow
       Qt::MessageBox.warning(self, "Room has no layers", "Cannot edit a room that has no layers.")
       return
     elsif @settings[:tiled_path].nil? || @settings[:tiled_path].empty?
-      Qt::MessageBox.warning(self, "Failed to run Tiled", "You must specify where Tiled is installed.")
+      Qt::MessageBox.warning(self, "启动Tiled失败", "请确认Tiled已经安装")
       return
     elsif !File.file?(@settings[:tiled_path])
-      Qt::MessageBox.warning(self, "Failed to run Tiled", "Tiled install path is invalid.")
+      Qt::MessageBox.warning(self, "启动Tiled失败", "路径不存在或错误")
       return
     end
     folder = "cache/#{GAME}/rooms"
@@ -1010,8 +1029,8 @@ class DSVEdit < Qt::MainWindow
     system("start \"#{@settings[:tiled_path]}\" \"#{tmx_path}\"")
   rescue StandardError => e
     Qt::MessageBox.warning(self,
-      "Failed to export to Tiled",
-      "Failed to export to Tiled:\n#{e.message}\n\n#{e.backtrace.join("\n")}"
+      "导入到Tiled失败",
+      "导入到Tiled失败:\n#{e.message}\n\n#{e.backtrace.join("\n")}"
     )
   end
   
@@ -1019,7 +1038,7 @@ class DSVEdit < Qt::MainWindow
     folder = "cache/#{GAME}/rooms"
     tmx_path = "#{folder}/#{@room.area_name}/#{@room.filename}.tmx"
     if !File.exist?(tmx_path) || !File.file?(tmx_path)
-      Qt::MessageBox.warning(self, "TMX file doesn't exist", "Can't find the TMX file. You must export to tiled first.")
+      Qt::MessageBox.warning(self, "TMX文件不存在", "找不到TMX文件. 必须先导入到Tiled.")
       return
     end
     
@@ -1031,13 +1050,13 @@ class DSVEdit < Qt::MainWindow
     @room.read_from_rom() # Reload room to get rid of the failed changes.
     load_room()
     Qt::MessageBox.warning(self,
-      "Failed to find free space",
-      "Failed to find free space to put the new layers/entities/doors.\n\nGo to Tools -> Add Overlay to create an empty overlay that DSVEdit can use as free space."
+      "没有找到ROM空白区域",
+      "没有找到ROM空白区域来放置layers/entities/doors"
     )
   rescue TMXInterface::ImportError => e
     @room.read_from_rom() # Reload room to get rid of the failed changes.
     load_room()
-    Qt::MessageBox.warning(self, "Error importing from Tiled", e.message)
+    Qt::MessageBox.warning(self, "从Tiled导入失败", e.message)
   end
   
   def set_current_room_as_starting_room
@@ -1051,11 +1070,11 @@ class DSVEdit < Qt::MainWindow
   def toggle_hide_map
     if !@ui.map_graphics_view.isHidden
       @ui.map_graphics_view.hide()
-      @ui.toggle_hide_map.text = "Show map"
+      @ui.toggle_hide_map.text = "显示下方地图"
       @settings[:hide_map] = true
     else
       @ui.map_graphics_view.show()
-      @ui.toggle_hide_map.text = "Hide map"
+      @ui.toggle_hide_map.text = "隐藏下方地图"
       @settings[:hide_map] = false
     end
   end
@@ -1066,7 +1085,7 @@ class DSVEdit < Qt::MainWindow
   
   def confirm_discard_changes
     if game && game.fs.has_uncommitted_changes?
-      response = Qt::MessageBox.question(self, "Save changes", "There are files with unsaved changes. Save them now?",
+      response = Qt::MessageBox.question(self, "保存", "有修改没有保存，确认保存?",
         Qt::MessageBox::Cancel | Qt::MessageBox::No | Qt::MessageBox::Yes, Qt::MessageBox::Cancel)
       if response == Qt::MessageBox::Cancel
         return true
@@ -1080,9 +1099,9 @@ class DSVEdit < Qt::MainWindow
   def confirm_overwrite_folder(rom_path)
     folder = File.dirname(rom_path)
     rom_name = File.basename(rom_path, ".*")
-    folder = File.join(folder, "Extracted files #{rom_name}")
+    folder = File.join(folder, "Extracted files #{rom_name}").force_encoding("UTF-8")
     if File.directory?(folder)
-      response = Qt::MessageBox.question(self, "Confirm overwrite", "Folder \"#{File.basename(folder)}\" already exists.\nAre you sure you want to overwrite the files in this folder?",
+      response = Qt::MessageBox.question(self, "确定覆盖", "文件夹\"#{File.basename(folder)}\" 已经存在。\n确定要覆盖?",
         Qt::MessageBox::No | Qt::MessageBox::Yes, Qt::MessageBox::No)
       if response == Qt::MessageBox::No
         return true
@@ -1103,7 +1122,7 @@ class DSVEdit < Qt::MainWindow
     
     output_rom_path = File.join(game.folder, "built_rom_#{GAME}.#{fs.rom_file_extension}")
     max_val = fs.files_without_dirs.length
-    @progress_dialog = ProgressDialog.new("Building", "Writing files to ROM", max_val)
+    @progress_dialog = ProgressDialog.new("打包中", "写入ROM到文件中...", max_val)
     @progress_dialog.execute do
       fs.write_to_rom(output_rom_path) do |files_written|
         next unless files_written % 100 == 0 # Only update the UI every 100 files because updating too often is slow.
@@ -1134,9 +1153,9 @@ class DSVEdit < Qt::MainWindow
           end
           
           if emulator_path.nil? || emulator_path.empty?
-            Qt::MessageBox.warning(self, "Failed to run emulator", "You must specify the emulator path.")
+            Qt::MessageBox.warning(self, "启动模拟器失败", "模拟器路径未设置")
           elsif !File.file?(emulator_path)
-            Qt::MessageBox.warning(self, "Failed to run emulator", "Emulator path is invalid.")
+            Qt::MessageBox.warning(self, "启动模拟器失败", "模拟器路径不存在")
           else
             system("start \"\" \"#{emulator_path}\" \"#{output_rom_path}\"")
           end
@@ -1173,6 +1192,7 @@ class DSVEdit < Qt::MainWindow
     @about_dialog.setWindowTitle("DSVania Editor")
     text = "DSVania Editor Version #{DSVEDIT_VERSION}<br><br>" + 
       "Created by LagoLunatic<br><br>" + 
+      "汉化及中文ROM支持 by 突袭8楼狗头 2017.12<br><br>" + 
       "Report issues here:<br><a href=\"https://github.com/LagoLunatic/DSVEdit/issues\">https://github.com/LagoLunatic/DSVEdit/issues</a><br><br>" +
       "Source code:<br><a href=\"https://github.com/LagoLunatic/DSVEdit\">https://github.com/LagoLunatic/DSVEdit</a>"
     @about_dialog.setText(text)

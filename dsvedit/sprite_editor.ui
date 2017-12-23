@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Sprite Editor</string>
+   <string>雪碧图编辑器</string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
@@ -31,11 +31,11 @@
         </size>
        </property>
        <property name="currentIndex">
-        <number>0</number>
+        <number>4</number>
        </property>
        <widget class="QWidget" name="tab">
         <attribute name="title">
-         <string>Enemies</string>
+         <string>怪物</string>
         </attribute>
         <layout class="QHBoxLayout" name="horizontalLayout_6">
          <item>
@@ -45,7 +45,7 @@
        </widget>
        <widget class="QWidget" name="tab_2">
         <attribute name="title">
-         <string>Special Objects</string>
+         <string>场景物品</string>
         </attribute>
         <layout class="QHBoxLayout" name="horizontalLayout_7">
          <item>
@@ -55,7 +55,7 @@
        </widget>
        <widget class="QWidget" name="tab_3">
         <attribute name="title">
-         <string>Weapons</string>
+         <string>武器</string>
         </attribute>
         <layout class="QHBoxLayout" name="horizontalLayout_8">
          <item>
@@ -65,7 +65,7 @@
        </widget>
        <widget class="QWidget" name="tab_4">
         <attribute name="title">
-         <string>Skills</string>
+         <string>技能</string>
         </attribute>
         <layout class="QHBoxLayout" name="horizontalLayout_9">
          <item>
@@ -75,7 +75,7 @@
        </widget>
        <widget class="QWidget" name="tab_5">
         <attribute name="title">
-         <string>Other</string>
+         <string>其他</string>
         </attribute>
         <layout class="QHBoxLayout" name="horizontalLayout_10">
          <item>
@@ -92,7 +92,7 @@
          <item>
           <widget class="QLabel" name="label_12">
            <property name="text">
-            <string>Sprite file</string>
+            <string>雪碧图文件指针</string>
            </property>
           </widget>
          </item>
@@ -109,7 +109,7 @@
          <item>
           <widget class="QLabel" name="label_13">
            <property name="text">
-            <string>GFX pointer</string>
+            <string>GFX 指针</string>
            </property>
           </widget>
          </item>
@@ -126,7 +126,7 @@
          <item>
           <widget class="QLabel" name="label_11">
            <property name="text">
-            <string>Palette pointer</string>
+            <string>色盘指针</string>
            </property>
           </widget>
          </item>
@@ -149,7 +149,7 @@
             </size>
            </property>
            <property name="text">
-            <string>Reload</string>
+            <string>刷新</string>
            </property>
           </widget>
          </item>
@@ -160,14 +160,14 @@
          <item>
           <widget class="QPushButton" name="darkfunction_export">
            <property name="text">
-            <string>Export to darkFunction</string>
+            <string>导出到darkFunction</string>
            </property>
           </widget>
          </item>
          <item>
           <widget class="QPushButton" name="darkfunction_import">
            <property name="text">
-            <string>Import from darkFunction</string>
+            <string>从darkFunction导入</string>
            </property>
           </widget>
          </item>
@@ -187,7 +187,7 @@
          <item>
           <widget class="QPushButton" name="export_as_png_button">
            <property name="text">
-            <string>Export frames as PNG</string>
+            <string>导出png</string>
            </property>
           </widget>
          </item>
@@ -208,7 +208,7 @@
          <item>
           <widget class="QLabel" name="label_3">
            <property name="text">
-            <string>Animation</string>
+            <string>动画</string>
            </property>
           </widget>
          </item>
@@ -244,7 +244,7 @@
          <item>
           <widget class="QLabel" name="label_14">
            <property name="text">
-            <string>Frame delay</string>
+            <string>帧延迟</string>
            </property>
           </widget>
          </item>
@@ -261,7 +261,7 @@
          <item>
           <widget class="QLabel" name="label_8">
            <property name="text">
-            <string>Loop</string>
+            <string>循环</string>
            </property>
           </widget>
          </item>
@@ -278,7 +278,7 @@
          <item>
           <widget class="QPushButton" name="toggle_paused_button">
            <property name="text">
-            <string>Play</string>
+            <string>播放</string>
            </property>
           </widget>
          </item>
@@ -311,7 +311,7 @@
            <item row="0" column="0">
             <widget class="QLabel" name="label_6">
              <property name="text">
-              <string>Frame</string>
+              <string>帧序号</string>
              </property>
             </widget>
            </item>
@@ -469,7 +469,7 @@
              <item row="0" column="0">
               <widget class="QLabel" name="label">
                <property name="text">
-                <string>Page</string>
+                <string>页数</string>
                </property>
               </widget>
              </item>
@@ -479,7 +479,7 @@
              <item row="1" column="0">
               <widget class="QLabel" name="label_2">
                <property name="text">
-                <string>File</string>
+                <string>文件指针</string>
                </property>
               </widget>
              </item>
@@ -489,7 +489,7 @@
              <item row="2" column="0">
               <widget class="QLabel" name="label_7">
                <property name="text">
-                <string>Palette</string>
+                <string>色盘指针</string>
                </property>
               </widget>
              </item>
@@ -501,7 +501,7 @@
            <item>
             <widget class="QPushButton" name="open_in_gfx_editor">
              <property name="text">
-              <string>Open in GFX Editor</string>
+              <string>在GFX Editor中打开</string>
              </property>
             </widget>
            </item>

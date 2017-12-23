@@ -14,6 +14,7 @@ class Game
   attr_accessor :room_loaded_gfx
   
   def initialize_from_folder(input_folder_path)
+    input_folder_path = input_folder_path.force_encoding("UTF-8")
     header_path = File.join(input_folder_path, "ftc", "ndsheader.bin")
     gba_rom_path = File.join(input_folder_path, "rom.gba")
     if File.file?(header_path)
@@ -37,6 +38,7 @@ class Game
   end
   
   def initialize_from_rom(input_rom_path, extract_to_hard_drive, &block)
+    input_rom_path = input_rom_path.force_encoding("UTF-8")
     unless File.file?(input_rom_path)
       raise InvalidFileError.new("ROM file not present.")
     end
@@ -80,8 +82,15 @@ class Game
         end
       end
     end
-    
-    @text_database = TextDatabase.new(fs)
+    if REGION == :cn
+      @content = File.open("./dat/cn_aos_word.dat", "rb") {|file| file.read}
+      @content = @content.force_encoding("UTF-8")
+      #@content = File.read("./dat/cn_aos_word.dat").force_encoding("UTF-8")
+	else
+	  @content = nil
+    end
+	
+    @text_database = TextDatabase.new(fs, @content)
     
     @room_loaded_gfx = {}
   end
@@ -202,7 +211,11 @@ class Game
   
   def entity_type_docs
     @entity_type_docs ||= begin
+    if REGION == :cn
+      file_contents = File.read("./docs/lists/cn_#{GAME} Entity Types.txt").force_encoding("UTF-8")
+    else 
       file_contents = File.read("./docs/lists/#{GAME} Entity Types.txt")
+    end
       entity_type_docs_arr = file_contents.scan(/^(\h\h [^\n]+\n(?:  [^\n]+\n)*)/)
       
       entity_type_docs = {}
@@ -219,7 +232,11 @@ class Game
   
   def enemy_docs
     @enemy_docs ||= begin
+    if REGION == :cn
+      file_contents = File.read("./docs/lists/cn_#{GAME} Enemies.txt").force_encoding("UTF-8")
+    else 
       file_contents = File.read("./docs/lists/#{GAME} Enemies.txt")
+    end
       enemy_docs_arr = file_contents.scan(/^(\h\h [^\n]+\n(?:  [^\n]+\n)*)/)
       
       enemy_docs = {}
@@ -236,7 +253,11 @@ class Game
   
   def special_object_docs
     @special_object_docs ||= begin
+    if REGION == :cn
+      file_contents = File.read("./docs/lists/cn_#{GAME} Special Object List.txt").force_encoding("UTF-8")
+    else 
       file_contents = File.read("./docs/lists/#{GAME} Special Object List.txt")
+    end
       special_object_docs_arr = file_contents.scan(/^(\h\h [^\n]+\n(?:  [^\n]+\n)*)/)
       
       special_object_docs = {}
@@ -253,8 +274,11 @@ class Game
   
   def enemy_format_doc
     @enemy_format_docs ||= begin
+    if REGION == :cn
+      file_contents = File.read("./docs/formats/cn_#{GAME} Enemy DNA Format.txt").force_encoding("UTF-8")
+    else 
       file_contents = File.read("./docs/formats/#{GAME} Enemy DNA Format.txt")
-      
+    end
       file_contents
     end
   rescue Errno::ENOENT => e
@@ -263,7 +287,11 @@ class Game
   
   def item_format_docs
     @item_format_docs ||= begin
+    if REGION == :cn
+      file_contents = File.read("./docs/formats/cn_#{GAME} Item Formats.txt").force_encoding("UTF-8")
+    else 
       file_contents = File.read("./docs/formats/#{GAME} Item Formats.txt")
+    end
       item_format_docs_arr = file_contents.scan(/^(\S[^\n]+\n(?:  [^\n]+\n)*)/)
       
       item_format_docs = {}
@@ -280,8 +308,11 @@ class Game
   
   def player_format_doc
     @player_format_docs ||= begin
+    if REGION == :cn
+      file_contents = File.read("./docs/formats/cn_#{GAME} Player Format.txt").force_encoding("UTF-8")
+      else 
       file_contents = File.read("./docs/formats/#{GAME} Player Format.txt")
-      
+    end
       file_contents
     end
   rescue Errno::ENOENT => e
@@ -775,6 +806,9 @@ private
       when "CASTLEVANIA2A2CE"
         suppress_warnings { load './constants/gba_constants.rb' }
         suppress_warnings { load './constants/aos_constants.rb' }
+      when "CASTLEVANIA2A2CJ"    #add cn
+        suppress_warnings { load './constants/gba_constants.rb' }
+        suppress_warnings { load './constants/aos_constants_cn.rb' }
       when "CASTLEVANIA1ACHE"
         suppress_warnings { load './constants/gba_constants.rb' }
         suppress_warnings { load './constants/hod_constants.rb' }

@@ -42,16 +42,28 @@ class GenericEditorWidget < Qt::Widget
       label = Qt::Label.new(self)
       label.text = attribute_name
       form_layout.setWidget(i/2, Qt::FormLayout::LabelRole, label)
-      
-      if attribute_name == "Icon"
-        field = Qt::PushButton.new(self)
-        connect(field, SIGNAL("clicked()"), self, SLOT("open_icon_chooser()"))
-      elsif attribute_name =~ /color/
-        field = Qt::PushButton.new(self)
-        field.objectName = attribute_name
-        connect(field, SIGNAL("clicked()"), self, SLOT("open_color_chooser()"))
+      if REGION == :cn
+        if attribute_name == "图标"
+          field = Qt::PushButton.new(self)
+          connect(field, SIGNAL("clicked()"), self, SLOT("open_icon_chooser()"))
+        elsif attribute_name =~ /color/
+          field = Qt::PushButton.new(self)
+          field.objectName = attribute_name
+          connect(field, SIGNAL("clicked()"), self, SLOT("open_color_chooser()"))
+        else
+          field = Qt::LineEdit.new(self)
+        end	  
       else
-        field = Qt::LineEdit.new(self)
+        if attribute_name == "Icon"
+          field = Qt::PushButton.new(self)
+          connect(field, SIGNAL("clicked()"), self, SLOT("open_icon_chooser()"))
+        elsif attribute_name =~ /color/
+          field = Qt::PushButton.new(self)
+          field.objectName = attribute_name
+          connect(field, SIGNAL("clicked()"), self, SLOT("open_color_chooser()"))
+        else
+          field = Qt::LineEdit.new(self)
+        end
       end
       field.setMaximumSize(80, 16777215)
       form_layout.setWidget(i/2, Qt::FormLayout::FieldRole, field)
@@ -148,11 +160,20 @@ class GenericEditorWidget < Qt::Widget
   end
   
   def set_icon(new_icon_data)
-    @attribute_text_fields["Icon"].text = "%04X" % new_icon_data
+    if REGION == :cn 
+      @attribute_text_fields["图标"].text = "%04X" % new_icon_data
+    else
+      @attribute_text_fields["Icon"].text = "%04X" % new_icon_data
+    end
+    
   end
   
   def open_icon_chooser
-    icon_data = @attribute_text_fields["Icon"].text.to_i(16)
+    if REGION == :cn 
+      icon_data = @attribute_text_fields["图标"].text.to_i(16)
+    else
+      icon_data = @attribute_text_fields["Icon"].text.to_i(16)
+    end
     if @item_type_name =~ /Glyph/
       mode = :glyph
     else

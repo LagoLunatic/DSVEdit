@@ -12,7 +12,7 @@
 AppId={{DDC0FEB4-3FC4-45CD-993A-1E78A5D2C28B}
 AppName={#MyAppName}
 AppVersion={#MyAppVersion}
-DefaultDirName={src}\{#MyAppName}
+DefaultDirName={#MyAppName}
 DefaultGroupName={#MyAppName}
 OutputDir=../build
 OutputBaseFilename=dsvedit-installer-x64
