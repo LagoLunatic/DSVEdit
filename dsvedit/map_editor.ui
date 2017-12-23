@@ -7,174 +7,210 @@
     <x>0</x>
     <y>0</y>
     <width>1024</width>
-    <height>550</height>
+    <height>768</height>
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Map Editor</string>
+   <string>地图编辑器</string>
   </property>
-  <layout class="QVBoxLayout" name="verticalLayout_2">
-   <item>
-    <layout class="QHBoxLayout" name="horizontalLayout_3">
-     <item>
-      <widget class="QGraphicsView" name="map_graphics_view">
-       <property name="minimumSize">
-        <size>
-         <width>257</width>
-         <height>193</height>
-        </size>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <layout class="QVBoxLayout" name="verticalLayout">
-       <item>
-        <widget class="QGraphicsView" name="available_tiles_graphics_view"/>
-       </item>
-       <item>
-        <layout class="QHBoxLayout" name="horizontalLayout">
-         <item>
-          <widget class="QGraphicsView" name="selected_tile_graphics_view">
-           <property name="maximumSize">
-            <size>
-             <width>45</width>
-             <height>45</height>
-            </size>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <layout class="QGridLayout" name="gridLayout">
-           <item row="0" column="1">
-            <widget class="QCheckBox" name="is_warp">
-             <property name="text">
-              <string>Warp room</string>
-             </property>
-            </widget>
-           </item>
-           <item row="1" column="0">
-            <widget class="QCheckBox" name="is_transition">
-             <property name="text">
-              <string>Transition room</string>
-             </property>
-            </widget>
-           </item>
-           <item row="0" column="2">
-            <widget class="QCheckBox" name="is_blank">
-             <property name="text">
-              <string>Blank tile</string>
-             </property>
-            </widget>
-           </item>
-           <item row="0" column="0">
-            <widget class="QCheckBox" name="is_save">
-             <property name="text">
-              <string>Save room</string>
-             </property>
-            </widget>
-           </item>
-           <item row="1" column="2">
-            <widget class="QCheckBox" name="is_secret">
-             <property name="text">
-              <string>Secret room</string>
-             </property>
-            </widget>
-           </item>
-           <item row="1" column="1">
-            <widget class="QCheckBox" name="is_entrance">
-             <property name="text">
-              <string>Entrance room</string>
-             </property>
-            </widget>
-           </item>
-           <item row="0" column="3">
-            <widget class="QCheckBox" name="is_castle_b_warp">
-             <property name="text">
-              <string>Warp (Castle B)</string>
-             </property>
-            </widget>
-           </item>
-          </layout>
-         </item>
-        </layout>
-       </item>
-      </layout>
-     </item>
-    </layout>
-   </item>
-   <item>
-    <layout class="QHBoxLayout" name="horizontalLayout_2">
-     <item>
-      <widget class="QPushButton" name="edit_warps_button">
-       <property name="text">
-        <string>Edit Warps</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QLabel" name="warp_name_label">
-       <property name="text">
-        <string>Warp name:</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QComboBox" name="warp_name"/>
-     </item>
-     <item>
-      <spacer name="horizontalSpacer">
-       <property name="orientation">
-        <enum>Qt::Horizontal</enum>
-       </property>
-       <property name="sizeHint" stdset="0">
-        <size>
-         <width>40</width>
-         <height>20</height>
-        </size>
-       </property>
-      </spacer>
-     </item>
-     <item>
-      <widget class="QLabel" name="label">
-       <property name="text">
-        <string>Region (affects music)</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QComboBox" name="region_index"/>
-     </item>
-     <item>
-      <widget class="QCheckBox" name="color_code_regions">
-       <property name="text">
-        <string>Color-code regions</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QLabel" name="used_tiles_label">
-       <property name="text">
-        <string>Map tiles used:</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QLabel" name="used_tiles_number">
-       <property name="text">
-        <string>999/999</string>
-       </property>
-      </widget>
-     </item>
-    </layout>
-   </item>
-   <item>
-    <widget class="QDialogButtonBox" name="buttonBox">
-     <property name="standardButtons">
-      <set>QDialogButtonBox::Apply|QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
-     </property>
-    </widget>
-   </item>
-  </layout>
+  <widget class="QDialogButtonBox" name="buttonBox">
+   <property name="geometry">
+    <rect>
+     <x>760</x>
+     <y>730</y>
+     <width>237</width>
+     <height>23</height>
+    </rect>
+   </property>
+   <property name="standardButtons">
+    <set>QDialogButtonBox::Apply|QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
+   </property>
+  </widget>
+  <widget class="QWidget" name="layoutWidget">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>680</y>
+     <width>981</width>
+     <height>31</height>
+    </rect>
+   </property>
+   <layout class="QHBoxLayout" name="horizontalLayout_2">
+    <item>
+     <widget class="QPushButton" name="edit_warps_button">
+      <property name="text">
+       <string>编辑传送房间</string>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QLabel" name="warp_name_label">
+      <property name="text">
+       <string>传送房间名字</string>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QComboBox" name="warp_name"/>
+    </item>
+    <item>
+     <spacer name="horizontalSpacer">
+      <property name="orientation">
+       <enum>Qt::Horizontal</enum>
+      </property>
+      <property name="sizeHint" stdset="0">
+       <size>
+        <width>40</width>
+        <height>20</height>
+       </size>
+      </property>
+     </spacer>
+    </item>
+    <item>
+     <widget class="QLabel" name="label">
+      <property name="text">
+       <string>Region (affects music)</string>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QComboBox" name="region_index"/>
+    </item>
+    <item>
+     <widget class="QCheckBox" name="color_code_regions">
+      <property name="text">
+       <string>Color-code regions</string>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QLabel" name="used_tiles_label">
+      <property name="text">
+       <string>Map tiles used:</string>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QLabel" name="used_tiles_number">
+      <property name="text">
+       <string>999/999</string>
+      </property>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QGraphicsView" name="map_graphics_view">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>10</y>
+     <width>991</width>
+     <height>501</height>
+    </rect>
+   </property>
+   <property name="minimumSize">
+    <size>
+     <width>257</width>
+     <height>193</height>
+    </size>
+   </property>
+  </widget>
+  <widget class="QGraphicsView" name="available_tiles_graphics_view">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>530</y>
+     <width>501</width>
+     <height>131</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QGraphicsView" name="selected_tile_graphics_view">
+   <property name="geometry">
+    <rect>
+     <x>480</x>
+     <y>630</y>
+     <width>20</width>
+     <height>21</height>
+    </rect>
+   </property>
+   <property name="maximumSize">
+    <size>
+     <width>45</width>
+     <height>45</height>
+    </size>
+   </property>
+  </widget>
+  <widget class="QWidget" name="layoutWidget2">
+   <property name="geometry">
+    <rect>
+     <x>520</x>
+     <y>530</y>
+     <width>481</width>
+     <height>131</height>
+    </rect>
+   </property>
+   <layout class="QGridLayout" name="gridLayout">
+    <property name="verticalSpacing">
+     <number>6</number>
+    </property>
+    <item row="0" column="1">
+     <widget class="QCheckBox" name="is_warp">
+      <property name="text">
+       <string>传送房间</string>
+      </property>
+     </widget>
+    </item>
+    <item row="0" column="2">
+     <widget class="QCheckBox" name="is_blank">
+      <property name="text">
+       <string>边框</string>
+      </property>
+     </widget>
+    </item>
+    <item row="0" column="3">
+     <widget class="QCheckBox" name="is_castle_b_warp">
+      <property name="text">
+       <string>Warp (Castle B)</string>
+      </property>
+     </widget>
+    </item>
+    <item row="1" column="0">
+     <widget class="QCheckBox" name="is_transition">
+      <property name="text">
+       <string>Transition room</string>
+      </property>
+     </widget>
+    </item>
+    <item row="1" column="1">
+     <widget class="QCheckBox" name="is_entrance">
+      <property name="text">
+       <string>Entrance room</string>
+      </property>
+     </widget>
+    </item>
+    <item row="1" column="2">
+     <widget class="QCheckBox" name="is_secret">
+      <property name="text">
+       <string>Secret room</string>
+      </property>
+     </widget>
+    </item>
+    <item row="0" column="0">
+     <widget class="QCheckBox" name="is_save">
+      <property name="text">
+       <string>存档点</string>
+      </property>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+  <zorder>selected_tile_graphics_view</zorder>
+  <zorder>buttonBox</zorder>
+  <zorder>layoutWidget2</zorder>
+  <zorder>map_graphics_view</zorder>
+  <zorder>layoutWidget</zorder>
+  <zorder>available_tiles_graphics_view</zorder>
  </widget>
  <resources/>
  <connections/>

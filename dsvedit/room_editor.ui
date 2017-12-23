@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Room Properties Editor</string>
+   <string>地图属性编辑</string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
@@ -239,7 +239,7 @@
      <item>
       <widget class="QPushButton" name="select_tileset_button">
        <property name="text">
-        <string>Select tileset</string>
+        <string>选择图片集</string>
        </property>
       </widget>
      </item>
@@ -250,14 +250,14 @@
      <item>
       <widget class="QLabel" name="label">
        <property name="text">
-        <string>Position on map:</string>
+        <string>在地图的位置</string>
        </property>
       </widget>
      </item>
      <item>
       <widget class="QLabel" name="label_10">
        <property name="text">
-        <string>X Pos:</string>
+        <string>X:</string>
        </property>
       </widget>
      </item>
@@ -267,7 +267,7 @@
      <item>
       <widget class="QLabel" name="label_11">
        <property name="text">
-        <string>Y Pos:</string>
+        <string>Y:</string>
        </property>
       </widget>
      </item>

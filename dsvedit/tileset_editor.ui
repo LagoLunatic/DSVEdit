@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Tileset Editor</string>
+   <string>图片集编辑器</string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout_2">
    <item>
@@ -19,7 +19,7 @@
      <item>
       <widget class="QLabel" name="label_5">
        <property name="text">
-        <string>Tileset</string>
+        <string>图片集指针</string>
        </property>
       </widget>
      </item>
@@ -29,7 +29,7 @@
      <item>
       <widget class="QLabel" name="label_6">
        <property name="text">
-        <string>Tileset Type</string>
+        <string>图片集类型</string>
        </property>
       </widget>
      </item>
@@ -56,7 +56,7 @@
      <item>
       <widget class="QLabel" name="label_7">
        <property name="text">
-        <string>Palette page list pointer</string>
+        <string>色盘页码指针</string>
        </property>
       </widget>
      </item>
@@ -66,7 +66,7 @@
      <item>
       <widget class="QLabel" name="label_13">
        <property name="text">
-        <string>Pal page index</string>
+        <string>色盘页码序号</string>
        </property>
       </widget>
      </item>
@@ -83,7 +83,7 @@
      <item>
       <widget class="QLabel" name="label_10">
        <property name="text">
-        <string>Collision Tileset</string>
+        <string>重叠的图片集</string>
        </property>
       </widget>
      </item>
@@ -93,7 +93,7 @@
      <item>
       <widget class="QPushButton" name="reload_button">
        <property name="text">
-        <string>Reload</string>
+        <string>刷新</string>
        </property>
       </widget>
      </item>
@@ -110,7 +110,7 @@
         <enum>Qt::RightToLeft</enum>
        </property>
        <property name="text">
-        <string>Edit collision?</string>
+        <string>编辑？</string>
        </property>
       </widget>
      </item>
@@ -119,7 +119,7 @@
    <item>
     <widget class="QLabel" name="label_12">
      <property name="text">
-      <string>Right click and drag to select tiles. Left click to edit tiles. X key to flip selection horizontally. Y key to flip selection vertically.</string>
+      <string>按住鼠标右键拖动来选择，点击鼠标左键修改，用键盘X键来开关水平翻转，Y键开关垂直翻转。</string>
      </property>
     </widget>
    </item>
@@ -230,7 +230,7 @@
               <item row="1" column="0">
                <widget class="QLabel" name="label_2">
                 <property name="text">
-                 <string>Horizontal flip</string>
+                 <string>水平翻转</string>
                 </property>
                </widget>
               </item>
@@ -244,7 +244,7 @@
               <item row="2" column="0">
                <widget class="QLabel" name="label_4">
                 <property name="text">
-                 <string>Vertical flip</string>
+                 <string>垂直翻转</string>
                 </property>
                </widget>
               </item>

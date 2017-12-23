@@ -12,10 +12,10 @@ class Text
                 :decoded_string,
                 :encoded_string
   
-  def initialize(text_id, fs)
+  def initialize(text_id, fs, content)
     @text_id = text_id
     @fs = fs
-    
+    @content = content
     read_from_rom()
   end
   
@@ -23,21 +23,25 @@ class Text
     if overlay_id
       fs.load_overlay(overlay_id)
     end
-    
-    @text_ram_pointer = TEXT_LIST_START_OFFSET + 4*text_id
-    @string_ram_pointer = fs.read(@text_ram_pointer, 4).unpack("V").first
-    
-    if GAME == "hod"
-      @encoded_string = fs.read_until_end_marker(string_ram_pointer+2, [0x0A, 0xF0]) # Skip the first 2 bytes which are always 00 00.
-    elsif SYSTEM == :gba
-      @encoded_string = fs.read_until_end_marker(string_ram_pointer+2, [0x0A]) # Skip the first 2 bytes which are always 01 00.
-    elsif REGION == :jp
-      @encoded_string = fs.read_until_end_marker(string_ram_pointer+2, [0x0A, 0xF0]) # Skip the first 2 bytes which are always 00 00.
+    if REGION == :cn
+      text_list_tmp = @content.split("\t")
+      @decoded_string = text_list_tmp[@text_id]
     else
-      @encoded_string = fs.read_until_end_marker(string_ram_pointer+2, [0xEA]) # Skip the first 2 bytes which are always 01 00.
+      @text_ram_pointer = TEXT_LIST_START_OFFSET + 4*text_id
+      @string_ram_pointer = fs.read(@text_ram_pointer, 4).unpack("V").first
+      
+      if GAME == "hod"
+        @encoded_string = fs.read_until_end_marker(string_ram_pointer+2, [0x0A, 0xF0]) # Skip the first 2 bytes which are always 00 00.
+      elsif SYSTEM == :gba
+        @encoded_string = fs.read_until_end_marker(string_ram_pointer+2, [0x0A]) # Skip the first 2 bytes which are always 01 00.
+      elsif REGION == :jp
+        @encoded_string = fs.read_until_end_marker(string_ram_pointer+2, [0x0A, 0xF0]) # Skip the first 2 bytes which are always 00 00.
+      else
+        @encoded_string = fs.read_until_end_marker(string_ram_pointer+2, [0xEA]) # Skip the first 2 bytes which are always 01 00.
+      end
+      
+      @decoded_string = decode_string(@encoded_string)
     end
-    
-    @decoded_string = decode_string(@encoded_string)
   end
   
   def write_to_rom

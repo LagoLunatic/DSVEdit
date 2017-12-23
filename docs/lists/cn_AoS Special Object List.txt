@@ -1,0 +1,241 @@
+00 木门.
+  参数 A: 门的类型.
+    0 普通的.
+    1 Alterate. 没有用到.
+01 箱子.
+02 boss门.
+  参数 A 设置门的动作:
+    00 boss房间外面的门，走近就打开.
+       提示：当玩家走进这个门之后，这个门就锁上了，如果不杀死boss，就不能通过.
+    01 boss房间里面的门，杀死boss后打开.
+  参数 B 对应的boss，只有杀死id对应的boss才能开门:
+    00 格拉罕
+    01 死神
+    02 尤里乌斯
+    03 (Unused)
+    04 收集者
+    05 Legion
+    06 巴洛尔
+    07 混沌
+    08 (Unused)
+    09 (Unused)
+    0A 曼提利亚
+    0B 大骷髅
+    0C 巨人
+    0D (Unused)
+    0E (Unused)
+    0F 大装甲
+03 Boss rush中的boss门.
+04 Boss门 (强制玩家进入).
+  提示：这扇门放在屏幕的边缘，当玩家走进房间后会自动进入这个门
+  参数 A 设置门的动作:
+    00 boss房间外面的门，走近就打开.
+       提示：当玩家走进这个门之后，这个门就锁上了，如果不杀死boss，就不能通过.
+    01 boss房间里面的门，杀死boss后打开.
+  参数 B 对应的boss，只有杀死id对应的boss才能开门:
+    00 格拉罕
+    01 死神
+    02 尤里乌斯
+    03 (Unused)
+    04 收集者
+    05 Legion
+    06 巴洛尔
+    07 混沌
+    08 (Unused)
+    09 (Unused)
+    0A 曼提利亚
+    0B 大骷髅
+    0C 巨人
+    0D (Unused)
+    0E (Unused)
+    0F 大装甲
+05 竞技场门.
+06 混沌之门.
+07 房间背景.
+  参数 A: 背景的类型:
+    0 - 有蝙蝠在后面飞和漂浮的云 (荒城回廊).
+      参数 B: 影响蝙蝠和云的位置.
+    1 - 将色盘覆盖在其他色盘上.
+      参数 B:
+        00 - 背景中月亮闪烁 (荒城回廊) (unused)
+        01 - 背景中月亮闪烁 (荒城回廊)
+        02 - ??? (荒城回廊)
+        03 - Animates surface of the water so it looks like it's moving (荒城回廊)
+        04 - ??? (荒城回廊)
+        05 - ??? (荒城回廊)
+        06 - 背景中月亮闪烁 (荒城回廊)
+        07 - ??? (地下水域)
+        08 - ??? (地下水域)
+        09 - ??? (地下水域)
+        0A - ??? (地下水域)
+        0B - ??? (地下水域)
+        0C - ??? (地下水域)
+        0D - ??? (炼狱斗技场)
+        0E - ??? (地下水域)
+        0F - ??? (地下水域)
+        10 - ??? (地下水域)
+        11 - ??? (地下水域)
+        12 - ??? (地下水域)
+        13 - ??? (地下水域)
+        14 - ??? (地下水域)
+        15 - ??? (地下水域)
+        16 - ??? (地下水域)
+        17 - ??? (地下水域)
+        18 - ??? (舞踏馆)
+        19 - ??? (恶魔城藏书库)
+        1A - ??? (时计塔)
+        1B - 背景中月亮闪烁 (时计塔)
+        1C - ??? (时计塔)
+        1D - ??? (不可侵洞穴)
+        1E - ??? (不可侵洞穴)
+        1F - ??? (不可侵洞穴)
+        20 - ??? (不可侵洞穴)
+        21 - ??? (忘却庭院)
+        22 - Makes the gear platforms turn? (时计塔)
+        23 - Makes the gear platforms turn? (时计塔)
+        24 - ??? (时计塔)
+        25 - ??? (混沌2阶段的房间)
+        26 - ??? (时计塔)
+        27 - ??? (时计塔)
+        28 - ??? (时计塔)
+        29 - ??? (幻梦宫)
+        2A - ??? (幻梦宫)
+        2B - ??? (幻梦宫)
+        2C - ??? (幻梦宫)
+        2D - ??? (幻梦宫)
+        2E - ??? (幻梦宫)
+        2F - ??? (幻梦宫)
+        30 - ??? (幻梦宫)
+        31 - ??? (幻梦宫)
+        32 - ??? (幻梦宫)
+        33 - ??? (恶魔城最上阶)
+        34 - ??? (恶魔城最上阶)
+        35 - ??? (恶魔城最上阶)
+        36 - Makes the cloud background flash when lightning strikes (幻梦宫)
+        37 - ??? (Epilogue room)
+        38 - ??? (Epilogue room)
+        39 - ??? (Epilogue room)
+        3A - ??? (Epilogue room)
+        3B - ??? (Epilogue room)
+        3C - Makes the buildings in the background flicker when lightning strikes (Inner Quarters)
+        3D - Makes the clouds in the background flicker when lightning strikes (Inner Quarters)
+        3E - Makes the edges of windows in the background flicker when lightning strikes (Inner Quarters)
+        3F - ??? (幻梦宫)
+        40 - ??? (幻梦宫)
+        41 - ??? (幻梦宫)
+        42 - Makes the background glow and animates moving red lines (Chaos phase 1 room)
+        43 - 
+    2 - Adds bats flying in the background (Top Floor).
+      参数 B: Affects the placement of the bats.
+    3 - Gives the whole room a greyscale effect (Chaotic Realm)
+      参数 B: 0
+    4 - Changes the music.
+      参数 B: Song index.
+      Note: This doesn't work if you load into the room directly, such as with test room or if its the first room of the game. You must walk into it via a door.
+08 可破坏的墙.
+09 石墙机关.
+  参数 A: ???
+  参数 B: Misc flag?
+0A boss死亡后房间的怪物.
+  当boss死亡标记设置后，房间可刷怪物.
+  参数 A: 怪物的id.
+  参数 B: boss死亡标记id (in bitfield 0200037E).
+0B 触发事件后房间的怪物.
+  当一个事件触发之后，房间可刷怪物.
+  参数 A: 怪物的id.
+  参数 B: 事件触发标记id (in bitfield 0200033C).
+0C 瀑布.
+  可以把人向下冲的瀑布.
+  参数 A:
+    0 大瀑布，来自于房间00-07-21.
+    1 小瀑布，来自于房间00-07-11.
+0D 钟.
+  当踩上的时候会发出声音.
+0E 装饰.
+  参数 A: 装饰id. 0-D.
+0F 火焰装饰.
+10 Boss rush通关奖励.
+11 开始Boss rush.
+12 装饰？？ 
+  参数ious background visuals.
+  参数 A:
+    0 Body-length window that gets blown open.
+    1 Water rushing out of a grate.
+    2 Moon.
+    3 Moon. Positioned lower than 2.
+13 大铁球，攻击的时候会动.
+14 船.
+  参数 A:
+    0 从背景中刷出来，受水的物理影响.
+    1 单个船，可以在地面推动的船.
+    2 单个船，在水面飘来飘去
+15 混沌入口
+16 混沌boss入口.
+17 电梯.
+18 宝箱.
+  参数 A:
+    0 装满钱.
+    1 装满杀人魔.
+19 无敌的骷髅，自己会转.
+1A Nothing, unused.
+1B 机关，反转传送带.
+1C 存档点.
+   这个东西必须在传送房间里使用? 不是的，哪都可以用
+1D 石墙，放在传送和存档点里的，用来挡住另一侧
+1E Nothing, unused.
+1F 传送阵.
+20 事件触发.
+  参数 A: 剧情id.
+    03 游戏开始剧情.
+    04 第一次遇见格拉罕.
+    05 第一次遇见洋子.
+    06 第一次遇见尤里乌斯.
+    07 第二次遇见格拉罕，格拉罕发现苍真的力量很强.
+    08 第二次遇见洋子.
+    09 格拉罕干掉了洋子.
+    0A 打败巴洛尔后遇见尤里乌斯
+    15 和尤里乌斯交战
+       尤里乌斯必须在这个房间里，才能触发这个事件
+    16 混沌大战之前，朋友们的对话
+    17 Epilogue?
+    18 Epilogue?
+    19 第一次遇见哈马.
+    1A 在城门口遇见哈马.
+    1B 妳娜在城门口的对话.
+       可以更换荒城回廊的BGM
+    1C 洋子在城门口的对话
+    1D Epilogue?
+    1E 打败混沌后，飘在空中自言自语.
+    1F Bad ending.
+  参数 B: Unused. Event 03 has this set to 3A, but it doesn't seem to have any effect for any event.
+21 天上掉下来的带刺的机关，斗技场那里.
+22 浮台机关，斗技场那里.
+23 从天上往下流水.
+24 流水和地面撞击的水花.
+25 死人军团的木乃伊在地上走.
+26 斗技场中会打你的手.
+27 斗技场中会打你的手.
+   这个不能被直接放置，需要由26产生
+28 斗技场中会打你的手.
+   这个不能被直接放置，需要由26产生
+29 垂直运动浮台.
+2A 水平运动的浮台.
+2B 忘却庭院的喷泉.
+2C 背景中运动的云.
+2D 一个人拿着剑，走进就举起来.
+2E 骷髅，眼睛会亮.
+   当你走近了，眼睛就亮，吓你一跳
+2F Something from the Julius fight?
+30 Something from the Julius fight?
+31 Something from the Julius fight?
+32 踩了就会掉下去的平台.
+33 瀑布水花?
+34 钟摆.
+  参数 A: ???
+  参数 B: ???
+35 机关和机关控制的门.
+  参数 A:
+    0 机关.
+    1 机关控制的门.
+36 齿轮.
+37 张着嘴的门，用后背进.

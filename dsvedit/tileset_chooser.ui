@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Tileset Chooser</string>
+   <string>图片集选择器</string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>

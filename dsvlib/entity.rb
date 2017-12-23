@@ -39,7 +39,7 @@ class Entity
     room.sector.load_necessary_overlay()
     
     if entity_ram_pointer.nil?
-      raise "Can't save an entity that doesn't have a pointer"
+      raise "没有指针的物品无法保存"
     end
     
     if SYSTEM == :nds

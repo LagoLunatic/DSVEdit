@@ -28,7 +28,7 @@ class MapEditorDialog < Qt::Dialog
     end
     
     @map_graphics_scene = ClickableGraphicsScene.new
-    @map_graphics_scene.setSceneRect(0, 0, 64*4+1, 48*4+1)
+    @map_graphics_scene.setSceneRect(0, 0, 250, 200)
     @ui.map_graphics_view.scale(2, 2)
     @ui.map_graphics_view.setScene(@map_graphics_scene)
     @map_graphics_scene.setBackgroundBrush(BACKGROUND_BRUSH)
@@ -330,7 +330,7 @@ class MapEditorDialog < Qt::Dialog
       
       selected_warp_room_changed(@selected_warp_room, @position_indicators.first)
       
-      @ui.edit_warps_button.text = "Edit Map"
+      @ui.edit_warps_button.text = "编辑地图"
       
       if GAME == "dos"
         @ui.warp_name_label.show()
@@ -344,7 +344,7 @@ class MapEditorDialog < Qt::Dialog
       end
       @position_indicators = nil
       
-      @ui.edit_warps_button.text = "Edit Warps"
+      @ui.edit_warps_button.text = "编辑传送房间"
       
       @ui.warp_name_label.hide()
       @ui.warp_name.hide()

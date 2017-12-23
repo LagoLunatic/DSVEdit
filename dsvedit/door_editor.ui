@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Door Editor</string>
+   <string>房间联结</string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
@@ -28,21 +28,21 @@
      <item row="3" column="0">
       <widget class="QLabel" name="label_7">
        <property name="text">
-        <string>X Pos</string>
+        <string>X 坐标</string>
        </property>
       </widget>
      </item>
      <item row="0" column="3">
       <widget class="QPushButton" name="copy_door_pointer">
        <property name="text">
-        <string>Copy door pointer to clipboard</string>
+        <string>复制门的指针</string>
        </property>
       </widget>
      </item>
      <item row="6" column="2">
       <widget class="QLabel" name="label_2">
        <property name="text">
-        <string>Dest Y Pos</string>
+        <string>房间里Y坐标</string>
        </property>
       </widget>
      </item>
@@ -52,21 +52,21 @@
      <item row="3" column="2">
       <widget class="QLabel" name="label_8">
        <property name="text">
-        <string>Y Pos</string>
+        <string>Y 坐标</string>
        </property>
       </widget>
      </item>
      <item row="6" column="0">
       <widget class="QLabel" name="label">
        <property name="text">
-        <string>Dest X Pos</string>
+        <string>房间里X坐标</string>
        </property>
       </widget>
      </item>
      <item row="0" column="0">
       <widget class="QLabel" name="label_10">
        <property name="text">
-        <string>Door #</string>
+        <string>当前房间门指针 #</string>
        </property>
       </widget>
      </item>
@@ -76,7 +76,7 @@
      <item row="5" column="2">
       <widget class="QLabel" name="label_4">
        <property name="text">
-        <string>Dest Y Offset</string>
+        <string>Dest Y偏移</string>
        </property>
       </widget>
      </item>
@@ -89,14 +89,14 @@
      <item row="5" column="0">
       <widget class="QLabel" name="label_3">
        <property name="text">
-        <string>Dest X Offset</string>
+        <string>Dest X偏移</string>
        </property>
       </widget>
      </item>
      <item row="4" column="0">
       <widget class="QLabel" name="label_5">
        <property name="text">
-        <string>Dest room</string>
+        <string>这个门连接的房间(当前房间)</string>
        </property>
       </widget>
      </item>
@@ -120,7 +120,7 @@
      <item>
       <widget class="QPushButton" name="delete_door_button">
        <property name="text">
-        <string>Delete door</string>
+        <string>删除当前门</string>
        </property>
       </widget>
      </item>

@@ -17,7 +17,7 @@
    </sizepolicy>
   </property>
   <property name="windowTitle">
-   <string>Enemy DNA Editor</string>
+   <string>怪物属性编辑器</string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>

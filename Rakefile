@@ -51,12 +51,11 @@ task :build_installers do
   # The easiest way to do this is to install the latest gem version of OCRA, then go to the folder where OCRA was installed in your Ruby installation and replace the file /bin/ocra with the /bin/ocra from the source.
   
   # OCRA normally places all the source files in the /src directory. In order to make it place them in the base directory open up /bin/ocra and change line 204 from SRCDIR = Pathname.new('src') to SRCDIR = Pathname.new('.').
-
-  system "C:/Ruby23/bin/ruby ocra-1.3.6/bin/ocra dsvedit.rb --output DSVEdit.exe --no-lzma --chdir-first --innosetup setup_dsvedit.iss --icon ./images/dsvedit_icon.ico"
-  system "C:/Ruby23-x64/bin/ruby ocra-1.3.6/bin/ocra dsvedit.rb --output DSVEdit_x64.exe --no-lzma --chdir-first --innosetup setup_dsvedit_x64.iss --icon ./images/dsvedit_icon.ico"
+  system "C:/Ruby23/bin/ruby ocra-1.3.10/bin/ocra dsvedit.rb --output DSVEdit.exe --no-lzma --chdir-first --innosetup setup_dsvedit.iss --icon ./images/dsvedit_icon.ico"
+  system "C:/Ruby23-x64/bin/ruby ocra-1.3.10/bin/ocra dsvedit.rb --output DSVEdit_x64.exe --no-lzma --chdir-first --innosetup setup_dsvedit_x64.iss --icon ./images/dsvedit_icon.ico"
   if defined?(DSVRANDOM_VERSION)
-    system "C:/Ruby23/bin/ruby ocra-1.3.6/bin/ocra dsvrandom/dsvrandom.rb --output DSVRandom.exe --no-lzma --chdir-first --innosetup setup_dsvrandom.iss --windows --icon ./dsvrandom/images/dsvrandom_icon.ico"
-    system "C:/Ruby23-x64/bin/ruby ocra-1.3.6/bin/ocra dsvrandom/dsvrandom.rb --output DSVRandom_x64.exe --no-lzma --chdir-first --innosetup setup_dsvrandom_x64.iss --windows --icon ./dsvrandom/images/dsvrandom_icon.ico"
+    system "C:/Ruby23/bin/ruby ocra-1.3.10/bin/ocra dsvrandom/dsvrandom.rb --output DSVRandom.exe --no-lzma --chdir-first --innosetup setup_dsvrandom.iss --windows --icon ./dsvrandom/images/dsvrandom_icon.ico"
+    system "C:/Ruby23-x64/bin/ruby ocra-1.3.10/bin/ocra dsvrandom/dsvrandom.rb --output DSVRandom_x64.exe --no-lzma --chdir-first --innosetup setup_dsvrandom_x64.iss --windows --icon ./dsvrandom/images/dsvrandom_icon.ico"
   end
 end
 
@@ -68,13 +67,18 @@ task :build_releases do
     
     FileUtils.rm_f ["../build/#{program_name}/armips", "../build/#{program_name}/asm", "../build/#{program_name}/constants", "../build/#{program_name}/dsvlib", "../build/#{program_name}/images", "../build/#{program_name}/dsvlib.rb", "../build/#{program_name}/version.rb"]
     FileUtils.cp_r ["./armips", "./asm", "./constants", "./dsvlib", "dsvlib.rb"], "../build/#{program_name}"
-    
     FileUtils.rm_rf "../build/#{program_name}/docs"
+    FileUtils.rm_rf "../build/#{program_name}/dat"
+
     
     if program_name.include?("DSVania Editor")
       FileUtils.mkdir "../build/#{program_name}/docs"
       FileUtils.cp_r ["./docs/formats", "./docs/lists", "./docs/asm"], "../build/#{program_name}/docs"
       FileUtils.cp_r ["./docs/DoS RAM Map.txt", "./docs/PoR RAM Map.txt", "./docs/OoE RAM Map.txt", "./docs/AoS RAM Map.txt"], "../build/#{program_name}/docs"
+
+      FileUtils.mkdir "../build/#{program_name}/dat"
+      FileUtils.cp_r ["./dat/cn_aos_word.dat"], "../build/#{program_name}/dat"
+
       
       FileUtils.rm_f ["../build/#{program_name}/dsvedit", "../build/#{program_name}/dsvedit.rb"]
       FileUtils.cp_r ["./dsvedit", "dsvedit.rb"], "../build/#{program_name}"
@@ -123,7 +127,8 @@ task :build_releases do
     if program_name.include?("x64")
       zip_path << "_x64"
     end
-    zip_path << ".zip"
+    zip_path << "_cn.zip"
+
     zip_path = zip_path.tr(" ", "_")
     
     FileUtils.rm_f zip_path

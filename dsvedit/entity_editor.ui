@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Entity Editor</string>
+   <string>地图中的场景物品编辑</string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
@@ -25,14 +25,14 @@
      <item row="0" column="0">
       <widget class="QLabel" name="label_10">
        <property name="text">
-        <string>Entity #</string>
+        <string>序号 #</string>
        </property>
       </widget>
      </item>
      <item row="1" column="0">
       <widget class="QLabel" name="label_9">
        <property name="text">
-        <string>Pointer</string>
+        <string>指针</string>
        </property>
       </widget>
      </item>
@@ -46,28 +46,28 @@
      <item row="5" column="0">
       <widget class="QLabel" name="label">
        <property name="text">
-        <string>Unique ID</string>
+        <string>索引ID</string>
        </property>
       </widget>
      </item>
      <item row="6" column="0">
       <widget class="QLabel" name="label_2">
        <property name="text">
-        <string>Type</string>
+        <string>类型</string>
        </property>
       </widget>
      </item>
      <item row="4" column="0">
       <widget class="QLabel" name="label_8">
        <property name="text">
-        <string>Y Pos</string>
+        <string>Y坐标</string>
        </property>
       </widget>
      </item>
      <item row="3" column="0">
       <widget class="QLabel" name="label_7">
        <property name="text">
-        <string>X Pos</string>
+        <string>X坐标</string>
        </property>
       </widget>
      </item>
@@ -81,21 +81,21 @@
      <item row="10" column="0">
       <widget class="QLabel" name="label_5">
        <property name="text">
-        <string>Var A</string>
+        <string>参数A</string>
        </property>
       </widget>
      </item>
      <item row="11" column="0">
       <widget class="QLabel" name="label_6">
        <property name="text">
-        <string>Var B</string>
+        <string>参数B</string>
        </property>
       </widget>
      </item>
      <item row="7" column="0">
       <widget class="QLabel" name="label_3">
        <property name="text">
-        <string>Subtype</string>
+        <string>子类型</string>
        </property>
       </widget>
      </item>
@@ -143,7 +143,7 @@
      <item>
       <widget class="QPushButton" name="delete_entity_button">
        <property name="text">
-        <string>Delete entity</string>
+        <string>删除当前的物品</string>
        </property>
       </widget>
      </item>

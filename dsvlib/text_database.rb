@@ -5,15 +5,16 @@ class TextDatabase
   attr_reader :fs,
               :text_list
   
-  def initialize(fs)
+  def initialize(fs, content)
     @fs = fs
+    @content = content
     read_from_rom()
   end
   
   def read_from_rom
     @text_list = []
     TEXT_RANGE.each do |text_id|
-      text = Text.new(text_id, fs)
+      text = Text.new(text_id, fs, @content)
       @text_list << text
     end
   end

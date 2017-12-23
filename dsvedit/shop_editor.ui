@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Shop Editor</string>
+   <string>游戏内商店编辑器</string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>

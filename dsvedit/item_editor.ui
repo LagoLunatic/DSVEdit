@@ -17,7 +17,7 @@
    </sizepolicy>
   </property>
   <property name="windowTitle">
-   <string>Item Editor</string>
+   <string>道具编辑器</string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
