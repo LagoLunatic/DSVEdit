@@ -767,6 +767,8 @@ class Room
     if SYSTEM == :gba
       new_layer.bg_control = 0x1D48
       new_layer.tileset_type = 2
+    if GAME == "hod"
+      new_layer.visual_effect = 0
     end
     
     new_layer.layer_metadata_ram_pointer = fs.get_free_space(16, overlay_id)

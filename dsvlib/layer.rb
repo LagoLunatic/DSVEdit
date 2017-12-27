@@ -182,8 +182,10 @@ class Layer
   def self.layer_list_entry_size
     if SYSTEM == :nds
       16
-    else
+    elsif GAME == "aos"
       12
+    else # HoD
+      8
     end
   end
   
