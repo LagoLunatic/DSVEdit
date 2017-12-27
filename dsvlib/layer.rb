@@ -220,6 +220,33 @@ class Layer
     end
   end
   
+  def opacity
+    if GAME == "aos"
+      layer_index = room.layers.index(self)
+      if room.color_effects & 0xC0 == 0x40 && room.color_effects & 1<<(layer_index+1) > 0
+        0x0F
+      else
+        0x1F
+      end
+    elsif GAME == "hod"
+      layer_index = room.layers.index(self)
+      layer_controlling_visual_effect = room.layers.select{|layer| [0x0D, 0x0F].include?(layer.visual_effect)}.last
+      if layer_controlling_visual_effect
+        if layer_controlling_visual_effect.visual_effect == 0x0D && layer_index == 1
+          0x0F
+        elsif layer_controlling_visual_effect.visual_effect == 0x0F && layer_index == 0
+          0x0F
+        else
+          0x1F
+        end
+      else
+        0x1F
+      end
+    else # NDS
+      @opacity
+    end
+  end
+  
   def colors_per_palette
     if SYSTEM == :nds
       main_gfx_page = room.gfx_pages[main_gfx_page_index]

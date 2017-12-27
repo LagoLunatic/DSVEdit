@@ -94,11 +94,7 @@
   ; r1 - Palette index?
   ; Returns: The index in object palette VRAM this palette was loaded at.
 
-08007F38 SetColorSpecialEffects
-  ; r0 - 
-  ; r1 - 
-  ; r2 - Color special effects.
-08013F28 SetColorSpecialEffects2
+08013F28 SetColorSpecialEffects
   ; r0 - 
   ; r1 - 
   ; r2 - Color special effects.

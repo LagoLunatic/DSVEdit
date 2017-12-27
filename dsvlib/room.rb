@@ -127,9 +127,6 @@ class Room
         layer = Layer.new(self, layer_list_ram_pointer + i*12, fs)
         layer.read_from_rom()
         @layers << layer
-        if color_effects & 0xC0 == 0x40 && color_effects & 1<<(i+1) > 0
-          layer.opacity = 0x0F # HACK
-        end
       elsif GAME == "hod"
         break if i == 3 # Maximum of 3 layers per room.
         
@@ -141,9 +138,6 @@ class Room
         layer = Layer.new(self, layer_list_ram_pointer + i*8, fs)
         layer.read_from_rom()
         @layers << layer
-        if color_effects & 0xC0 == 0x40 && color_effects & 1<<(i+1) > 0
-          layer.opacity = 0x0F # HACK
-        end
       end
       
       i += 1
