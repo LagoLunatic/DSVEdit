@@ -46,6 +46,12 @@ class ItemEditor < Qt::Dialog
         "Blue soul format"
       when "Yellow Souls"
         "Yellow soul format"
+      when "Furniture"
+        "Furniture format"
+      when "Subweapons"
+        "Subweapon format"
+      when "Spells"
+        "Spell format"
       else
         ""
       end
