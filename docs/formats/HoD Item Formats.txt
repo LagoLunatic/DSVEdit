@@ -21,11 +21,18 @@ Weapon format:
   0xC bytes long.
   00,2: Item ID.
   02,2: Icon.
-  04,2: special effects?
-  06,1: Strength stat.
-  07,1: Defense stat.
-  08,1: Intelligence stat.
-  09,1: Luck stat.
+  04,2: Bitfield of special whip properties this whip has.
+    Each bit:
+      0010 Crushing Stone (Charge attack)
+      0200 Steel Tip
+      0400 Platinum Tip
+      0800 Energy Circle (Whip spins automatically)
+      1000 Bullet Tip (Fire projectile from tip if at full health)
+    Multiple bits can be used together to give the whip multiple properties. Note that Steel Tip overrides Platinum Tip and Crushing Stone overrides Energy Circle.
+  06,1: Strength stat (signed).
+  07,1: Defense stat (signed).
+  08,1: Intelligence stat (signed).
+  09,1: Luck stat (signed).
   0A,2: Bitfield for the elemental damage types this weapon deals.
 
 Body armor and Accessory format:
@@ -39,11 +46,28 @@ Body armor and Accessory format:
       2 - Body armor.
       3 - Head armor.
       4 - Leg armor.
-    Bit 3: ??? Set only for Crush Boots.
+    Bit 3: No effect? Set only for Crush Boots.
     Bits 4-7: Unused?
-  05,1: ?
-  06,1: Strength stat.
-  07,1: Defense stat.
-  08,1: Intelligence stat.
-  09,1: Luck stat.
+  05,1: Unused?
+  06,1: Strength stat (signed).
+  07,1: Defense stat (signed).
+  08,1: Intelligence stat (signed).
+  09,1: Luck stat (signed).
   0A,2: Bitfield for what elemental resistances this armor gives you.
+
+Furniture format:
+  4 bytes long.
+  00,2: Item ID.
+  02,2: Icon.
+
+Subweapon format:
+  0xC bytes long.
+  00,1: 
+  01,1: 
+  02,1: 
+  03,1: 
+  04,4: Create code.
+  08,4: Update code.
+
+Spell format:
+  0xC bytes long.

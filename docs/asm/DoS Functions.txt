@@ -43,6 +43,9 @@
 02026A2C TriggerRoomTransition
   ; Call this after SetDestinationRoomSectorAndRoomIndexes so the room actually changes.
 
+0202E520 ShowTextPopup
+  ; r0 - Text index of the text to display.
+
 02029A54 PlaySfxAtPos
   ; r0 - Sfx index
   ; r1 - X pos

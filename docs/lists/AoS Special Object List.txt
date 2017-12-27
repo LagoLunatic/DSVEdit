@@ -165,7 +165,7 @@
 13 Ball on a chain you can swing by attacking.
 14 Boat.
   Var A:
-    0 Boats spawn from the background that are affected by physics in the water.
+    0 Boats spawn from the background that are affected by physics in the water. Always moves right.
     1 Single boat can be pushed on the ground.
     2 Single boat that moves back and forth regularly.
 15 Moon portal to/from Chaotic Realm.

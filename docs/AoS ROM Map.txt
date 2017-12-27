@@ -51,6 +51,10 @@
 082097D4 - Soma's palette.
   0801462E - Has it hardcoded.
 
+08264398 - GFX tiles for the pause screen.
+0826664C - Palette list for the pause screen.
+  These include Soma's face, the static text, menu borders, etc.
+
 084F0D8C,1 - New game starting sector index.
 084F0D8D,1 - New game starting room index.
 084F0D92,2 - New game starting X pos.

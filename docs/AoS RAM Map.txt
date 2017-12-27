@@ -173,6 +173,10 @@ What each range of entity slots is for:
 020131C0,1 - Index of the weapon you last used.
   This is only updated when you swing a weapon, not just when you equip it.
 
+020131C2,2 - Current guardian soul's damage multiplier.
+  Each guardian soul hardcodes its multiplier and stores it here when the soul is used.
+  The damage done by a blue soul is equal to (INT/2) * (this_multiplier/8) + this_multiplier.
+
 020131D6,2 - Related to how much damage the player just took.
   0 - Player didn't just take damage.
   1 - Player just took damage.

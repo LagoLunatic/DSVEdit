@@ -296,16 +296,16 @@ What each range of entity slots is for:
   in other words, every screen soma zips up when corrupting memory subtracts 2 bytes from where memory is being corrupted.
   020F6FB0 - the byte for the last room of the abyss (the teleporter room).
 
-020F7008 - Sector index to save to the save file.
-020F7009 - Room index to save to the save file.
+020F7008,1 - Sector index to save to the save file.
+020F7009,1 - Room index to save to the save file.
 020F7018,4 - Player's x pos that should be stored in the save file.
 020F701C,4 - Player's y pos that should be stored in the save file.
 020F7020,4 - Player's z pos that should be stored in the save file.
   These are set to the player's position when he enters a room so suspend will work.
   When you save the game they're set to the center of the upperleftmost screen.
-020F7024 - Bitfield of destroyable walls that have been destroyed on the map.
-020F702C-020F702D - Bitfield of which map items you have. so the lowest bit makes the lost village be fully revealed with black map tiles, the second lowest bit makes demon guest house revealed with black map tiles, etc.
-020F7038-39 - Bitfield of boss death flags.
+020F7024,4 - Bitfield of destroyable walls that have been destroyed on the map.
+020F702C,4 - Bitfield of which map items you have. so the lowest bit makes the lost village be fully revealed with black map tiles, the second lowest bit makes demon guest house revealed with black map tiles, etc.
+020F7038,2 - Bitfield of boss death flags.
   01 0x0002 Flying Armor
   02 0x0004 Balore
   03 0x0008 Dmitrii
@@ -753,9 +753,9 @@ Here's what each actor is (index, special object id, description):
   1E,2: Finished seal image index.
     TODO: why is this necessary when the gfx asset ptr is there already?
 
-0222F290-0222F2D7 - List of which magic seal is needed for each boss.
+0222F290-0222F2D7 - List of which magic seal is needed for each boss (and its corresponding boss doors).
   The boss index is the index in this list (same order as boss death flags).
-  Each entry is 4 bytes long. It's simple the magic seal index for this boss.
+  Each entry is 4 bytes long. It's simply the magic seal index for this boss.
 
 02298D9C
 
