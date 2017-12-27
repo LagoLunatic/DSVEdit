@@ -75,12 +75,12 @@ class GBADummyFilesystem
     
     @has_uncommitted_changes = true
     
-    remove_free_space("rom.gba", offset, new_data.length)
+    remove_free_space("/rom.gba", offset, new_data.length)
   end
   
   def write_by_file(file_path, offset_in_file, new_data, freeing_space: false)
     # Dummy function for the FSM.
-    if file_path != "rom.gba"
+    if file_path != "/rom.gba"
       raise "Invalid file: #{file_path}"
     end
     
@@ -181,11 +181,11 @@ class GBADummyFilesystem
   
   def files_without_dirs
     # This is for the progress dialog when writing to the rom. Give it a dummy max value of 1.
-    {nil => {:name => "rom.gba", :type => :file, :start_offset => 0, :end_offset => 0 + @rom.size, :ram_start_offset => 0x08000000, :size => @rom.size, :file_path => "rom.gba"}}
+    {nil => {:name => "rom.gba", :type => :file, :start_offset => 0, :end_offset => 0 + @rom.size, :ram_start_offset => 0x08000000, :size => @rom.size, :file_path => "/rom.gba"}}
   end
   
   def all_files
-    [{:name => "rom.gba", :type => :file, :start_offset => 0, :end_offset => 0 + @rom.size, :ram_start_offset => 0x08000000, :size => @rom.size, :file_path => "rom.gba"}]
+    [{:name => "rom.gba", :type => :file, :start_offset => 0, :end_offset => 0 + @rom.size, :ram_start_offset => 0x08000000, :size => @rom.size, :file_path => "/rom.gba"}]
   end
   
   def read_until_end_marker(address, end_markers)
@@ -223,12 +223,12 @@ class GBADummyFilesystem
   
   def convert_ram_address_to_path_and_offset(address)
     # Dummy function for the FSM.
-    return ["rom.gba", convert_address(address)]
+    return ["/rom.gba", convert_address(address)]
   end
   
   def files_by_path
     # Dummy function for the FSM.
-    @files_by_path ||= {"rom.gba" => {:name => "rom.gba", :type => :file, :start_offset => 0, :end_offset => 0 + @rom.size, :ram_start_offset => 0x08000000, :size => @rom.size, :file_path => "rom.gba"}}
+    @files_by_path ||= {"rom.gba" => {:name => "rom.gba", :type => :file, :start_offset => 0, :end_offset => 0 + @rom.size, :ram_start_offset => 0x08000000, :size => @rom.size, :file_path => "/rom.gba"}}
   end
   
   def is_pointer?(value)

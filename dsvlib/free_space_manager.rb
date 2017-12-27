@@ -55,7 +55,7 @@ module FreeSpaceManager
   end
   
   def initialize_rom_free_space
-    @free_spaces << {path: "rom.gba", offset: ROM_FREE_SPACE_START, length: ROM_FREE_SPACE_SIZE}
+    @free_spaces << {path: "/rom.gba", offset: ROM_FREE_SPACE_START, length: ROM_FREE_SPACE_SIZE}
     
     remove_fake_free_spaces()
     
@@ -210,7 +210,7 @@ module FreeSpaceManager
         files_to_check << File.join("/ftc", "overlay9_#{NEW_OVERLAY_ID}")
       end
     else
-      files_to_check << "rom.gba"
+      files_to_check << "/rom.gba"
     end
     
     files_to_check.each do |file_path|
