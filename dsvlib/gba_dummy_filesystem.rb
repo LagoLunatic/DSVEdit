@@ -228,7 +228,7 @@ class GBADummyFilesystem
   
   def files_by_path
     # Dummy function for the FSM.
-    @files_by_path ||= {"rom.gba" => {:name => "rom.gba", :type => :file, :start_offset => 0, :end_offset => 0 + @rom.size, :ram_start_offset => 0x08000000, :size => @rom.size, :file_path => "/rom.gba"}}
+    @files_by_path ||= {"/rom.gba" => {:name => "rom.gba", :type => :file, :start_offset => 0, :end_offset => 0 + @rom.size, :ram_start_offset => 0x08000000, :size => @rom.size, :file_path => "/rom.gba"}}
   end
   
   def is_pointer?(value)
