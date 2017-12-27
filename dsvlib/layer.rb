@@ -57,7 +57,8 @@ class Layer
   def read_from_layer_metadata
     if layer_metadata_ram_pointer == 0
       # Empty GBA layer.
-      @width = @height = @tileset_type =
+      @width = @height = 1
+      @tileset_type =
         @tileset_pointer =
         @collision_tileset_pointer =
         @layer_tiledata_ram_start_offset = 0
@@ -78,6 +79,9 @@ class Layer
     if layer_tiledata_ram_start_offset == 0
       # Empty GBA layer.
       @tiles = []
+      (@height*SCREEN_HEIGHT_IN_TILES*@width*SCREEN_WIDTH_IN_TILES).times do
+        @tiles << LayerTile.new.from_game_data(0)
+      end
       return
     end
     
