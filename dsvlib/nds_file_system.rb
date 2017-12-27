@@ -289,8 +289,14 @@ class NDSFileSystem
       return
     end
     
+    full_path = File.join(@filesystem_directory, file_path)
+    if !File.file?(full_path)
+      puts "File was deleted: #{file_path}"
+      return
+    end
+    
     old_file_size = file[:size]
-    file[:size] = File.size(File.join(@filesystem_directory, file_path))
+    file[:size] = File.size(full_path)
     
     if file[:overlay_id] && old_file_size != file[:size]
       update_overlay_length(file)
