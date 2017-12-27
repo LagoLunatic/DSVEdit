@@ -56,7 +56,12 @@ class Layer
   
   def read_from_layer_metadata
     if layer_metadata_ram_pointer == 0
-      return # TODO
+      # Empty GBA layer.
+      @width = @height = @tileset_type =
+        @tileset_pointer =
+        @collision_tileset_pointer =
+        @layer_tiledata_ram_start_offset = 0
+      return
     end
     
     @width, @height, @tileset_type,
@@ -70,8 +75,10 @@ class Layer
   end
   
   def read_from_layer_tiledata
-    if layer_tiledata_ram_start_offset.nil?
-      return # TODO
+    if layer_tiledata_ram_start_offset == 0
+      # Empty GBA layer.
+      @tiles = []
+      return
     end
     
     tile_data_string = fs.read(layer_tiledata_ram_start_offset, SIZE_OF_A_SCREEN_IN_BYTES*width*height)
