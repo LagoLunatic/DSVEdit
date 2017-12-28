@@ -453,7 +453,7 @@ REUSED_ENEMY_INFO = {
   0x19 => {palette_offset: 1}, # evil butcher
   0x1C => {init_code: 0x08089A50, palette_offset: 1}, # catoblepas
   0x21 => {init_code: 0x08098E00}, # creaking skull
-  0x22 => {init_code: 0x08081128, palette_offset: 2, gfx_sheet_ptr_index: , ignore_part_gfx_page: true}, # wooden golem
+  0x22 => {init_code: 0x08081128, palette_offset: 2, gfx_sheet_ptr_index: 1, ignore_part_gfx_page: true}, # wooden golem
   0x25 => {palette_offset: 1}, # lilith -> succubus
   0x2B => {palette_offset: 1}, # curly
   0x2D => {palette_offset: 1}, # red crow -> blue crow
@@ -583,6 +583,11 @@ BEST_SPRITE_OFFSET_FOR_SPECIAL_OBJECT = {
 
 OTHER_SPRITES = [
   COMMON_SPRITE,
+  
+  # soma sprite 080E11C4
+  # soma gfx 081717CC or maybe 081674B8 or maybe 081664B4
+  # soma's gfx list is around 080E11E0?
+  # palette is either 082097D4 (his palette is also the first in 0820B164 but that's not used?)
   
   {desc: "Breakable walls 1", pointer: 0x08526004},
   {desc: "Breakable walls 2", pointer: 0x08526010},
