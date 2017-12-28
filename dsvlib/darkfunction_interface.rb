@@ -114,6 +114,9 @@ class DarkFunctionInterface
             unique_parts.each_with_index do |part, i|
               part_index = sprite.parts.index(part)
               gfx_page_index = part.gfx_page_index
+              if sprite_info.ignore_part_gfx_page
+                gfx_page_index = 0
+              end
               if gfx_page_canvas_width == 256
                 # 256x256 pages take up 4 times the space of 128x128 pages.
                 gfx_page_index = gfx_page_index / 4

@@ -215,6 +215,10 @@
   ; Call every frame to handle the animation.
   ; r0 - Entity pointer to animate
 
+03004970 EnemyDrawSkeleton?
+  ; r0 - Entity
+  ; Called by 0803ACC0
+
 0806AE54 EntityUpdateDamageFlashing
   ; r0 - Entity
   ; Decrements the counter at entity+2D.

@@ -9,9 +9,10 @@ class SpriteInfo
               :skeleton_file,
               :sprite_file,
               :sprite,
-              :gfx_pages
+              :gfx_pages,
+              :ignore_part_gfx_page
   
-  def initialize(gfx_file_pointers, palette_pointer, palette_offset, sprite_file_pointer, skeleton_file, fs, gfx_list_pointer: nil)
+  def initialize(gfx_file_pointers, palette_pointer, palette_offset, sprite_file_pointer, skeleton_file, fs, gfx_list_pointer: nil, ignore_part_gfx_page: false)
     if gfx_list_pointer
       @gfx_list_pointer = gfx_list_pointer
       @gfx_file_pointers = SpriteInfo.unpack_gfx_pointer_list(gfx_list_pointer, fs)
@@ -28,6 +29,8 @@ class SpriteInfo
     @gfx_pages = @gfx_file_pointers.map do |gfx_pointer|
       GfxWrapper.new(gfx_pointer, fs)
     end
+    
+    @ignore_part_gfx_page = ignore_part_gfx_page
   end
   
   def gfx_list_pointer_or_gfx_file_pointers
@@ -67,12 +70,13 @@ class SpriteInfo
     gfx_file_pointers      = reused_info[:gfx_files] || nil
     gfx_list_pointer       = reused_info[:gfx_wrapper] || nil
     palette_pointer        = reused_info[:palette] || nil
+    ignore_part_gfx_page   = reused_info[:ignore_part_gfx_page] || false
     
     if sprite_file_pointer && gfx_file_pointers && palette_pointer
-      return SpriteInfo.new(gfx_file_pointers, palette_pointer, palette_offset, sprite_file_pointer, nil, fs)
+      return SpriteInfo.new(gfx_file_pointers, palette_pointer, palette_offset, sprite_file_pointer, nil, fs, ignore_part_gfx_page: ignore_part_gfx_page)
     elsif sprite_file_pointer && gfx_list_pointer && palette_pointer
       gfx_file_pointers = unpack_gfx_pointer_list(gfx_list_pointer, fs)
-      return SpriteInfo.new(gfx_file_pointers, palette_pointer, palette_offset, sprite_file_pointer, nil, fs)
+      return SpriteInfo.new(gfx_file_pointers, palette_pointer, palette_offset, sprite_file_pointer, nil, fs, ignore_part_gfx_page: ignore_part_gfx_page)
     end
     
     if init_code_pointer == -1
@@ -142,7 +146,7 @@ class SpriteInfo
         gfx_file_pointers = gfx_files_to_load.map{|gfx| gfx.file[:asset_pointer]}
         sprite_file_pointer = sprite_files_to_load.first[:asset_pointer]
         
-        return SpriteInfo.new(gfx_file_pointers, palette_pointer_to_load, palette_offset, sprite_file_pointer, skeleton_files_to_load.first, fs)
+        return SpriteInfo.new(gfx_file_pointers, palette_pointer_to_load, palette_offset, sprite_file_pointer, skeleton_files_to_load.first, fs, ignore_part_gfx_page: ignore_part_gfx_page)
       end
     end
     
@@ -252,7 +256,7 @@ class SpriteInfo
       end
     end
     
-    return SpriteInfo.new(gfx_file_pointers, palette_pointer, palette_offset, sprite_file_pointer, skeleton_file, fs, gfx_list_pointer: gfx_list_pointer)
+    return SpriteInfo.new(gfx_file_pointers, palette_pointer, palette_offset, sprite_file_pointer, skeleton_file, fs, gfx_list_pointer: gfx_list_pointer, ignore_part_gfx_page: ignore_part_gfx_page)
   end
   
   def self.unpack_gfx_pointer_list(gfx_list_pointer, fs)

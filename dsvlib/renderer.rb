@@ -1173,14 +1173,19 @@ class Renderer
         transparent_part = false
       end
       
-      if part.gfx_page_index >= gfx_with_blanks.length
-        puts "GFX page index too large (#{part.gfx_page_index+1} pages needed, have #{gfx_with_blanks.length})"
+      part_gfx_page_index = part.gfx_page_index
+      if sprite_info.ignore_part_gfx_page
+        part_gfx_page_index = 0
+      end
+      
+      if part_gfx_page_index >= gfx_with_blanks.length
+        puts "GFX page index too large (#{part_gfx_page_index+1} pages needed, have #{gfx_with_blanks.length})"
         
         # Invalid gfx page index, so just render a big red square.
         first_canvas_width = gfx_with_blanks.first.canvas_width
-        rendered_gfx_files_by_palette[part_palette_index+palette_offset][part.gfx_page_index] ||= render_gfx(nil, nil, 0, 0, first_canvas_width*8, first_canvas_width*8, canvas_width=first_canvas_width*8)
+        rendered_gfx_files_by_palette[part_palette_index+palette_offset][part_gfx_page_index] ||= render_gfx(nil, nil, 0, 0, first_canvas_width*8, first_canvas_width*8, canvas_width=first_canvas_width*8)
       else
-        gfx_page = gfx_with_blanks[part.gfx_page_index]
+        gfx_page = gfx_with_blanks[part_gfx_page_index]
         canvas_width = gfx_page.canvas_width
         if override_part_palette_index
           # For weapons (which always use the first palette) and skeletally animated enemies (which have their palette specified in the skeleton file).
@@ -1189,7 +1194,7 @@ class Renderer
           palette = palettes[part_palette_index+palette_offset]
         end
         
-        rendered_gfx_files_by_palette[part_palette_index+palette_offset][part.gfx_page_index] ||= begin
+        rendered_gfx_files_by_palette[part_palette_index+palette_offset][part_gfx_page_index] ||= begin
           if one_dimensional_mode
             rendered_gfx_file = render_gfx_1_dimensional_mode(gfx_page, palette || dummy_palette)
           else
@@ -1208,7 +1213,7 @@ class Renderer
         end
       end
       
-      rendered_gfx_file = rendered_gfx_files_by_palette[part_palette_index+palette_offset][part.gfx_page_index]
+      rendered_gfx_file = rendered_gfx_files_by_palette[part_palette_index+palette_offset][part_gfx_page_index]
       rendered_parts[part_index] ||= render_sprite_part(part, rendered_gfx_file)
       if transparent_part
         # Transparent trails require us to go through all pixels and change their opacity to 0xC/0x1F.
