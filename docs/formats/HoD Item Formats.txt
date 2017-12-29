@@ -55,6 +55,16 @@ Body armor and Accessory format:
   09,1: Luck stat (signed).
   0A,2: Bitfield for what elemental resistances this armor gives you.
 
+Spellbook format:
+  4 bytes long.
+  00,2: Item ID.
+  02,2: Icon.
+
+Relic format:
+  4 bytes long.
+  00,2: Item ID.
+  02,2: Icon.
+
 Furniture format:
   4 bytes long.
   00,2: Item ID.
@@ -62,12 +72,21 @@ Furniture format:
 
 Subweapon format:
   0xC bytes long.
-  00,1: 
-  01,1: 
-  02,1: 
-  03,1: 
+  00,1: Maximum number of this subweapon you can have in the room at once.
+    Once this limit is reached the player won't be able to use the subweapon again until one of them disappears.
+  01,1: Heart cost of using this subweapon.
+  02,1: Number of entities created each time this subweapon is used.
+    This value is used so the game engine knows to not let you create too many subweapon entities at once.
+    There are 8 entities slots available for subweapons to use.
+  03,1: ???
   04,4: Create code.
   08,4: Update code.
 
 Spell format:
   0xC bytes long.
+  00,4: Create code.
+  04,1: Which cast animation for the player when using this spell.
+  05,1: ???
+  06,2: Mana cost of using this spell.
+  08,2: Heart cost of using this spell.
+  0A,2: 

@@ -105,7 +105,7 @@ Glyph union format:
     Bit 2: If set, the player doesn't play a swinging animation when using this glyph.
     Bits 3-8: Unused.
   0A,1: Maximum number of this projectile you can have in the room at once.
-  0B,1: Mana cost of using this glyph.
+  0B,1: Heart cost of using this glyph.
   0C,4: Bitfield for what elemental damage types this glyph does.
     If it does either Strike or Slash damage, it will use the player's strength for damage calculation.
     If it does neither Strike nor Slash then it uses the player's intelligence.

@@ -115,6 +115,12 @@ class GenericEditable
           "Summoning",
         ][spellbook_index]
         @name = "#{spellbook_name} #{subweapon_name}"
+        if @name == "Unused Knife"
+          @name = "Maxim Mirage"
+        end
+        if @name == "Unused Shuriken"
+          @name = "Healing Spell"
+        end
         @description = ""
       when "aos"
         if @item_type_name == "Julius Skills"
