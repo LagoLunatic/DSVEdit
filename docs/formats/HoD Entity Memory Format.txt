@@ -3,6 +3,10 @@ Memory used for entities in HoD is 02000418 - 02007C17. Each entity is 0x80 byte
 
 00,4: Pointer to update code.
 04,4: Pointer to draw code.
+08,1: Entity index of the previous entity created before this one.
+  This is used when drawing all entities. The game draws entities in the reverse order they were created in.
+09,1: Entity index of the next entity created after this one.
+  This is used when this entity is deleted to update the previous entity index value so that's still accurate.
 12,1: Index in object palette VRAM where this entity's palette is loaded.
 17,1: Index in object VRAM where this entity's GFX are loaded.
 38,2: Var A.

@@ -57,14 +57,21 @@
 0801058C EntityInitSprite
   ; r0 - Entity pointer
   ; r1 - Sprite pointer
-  ; r2 - Index in object palette VRAM to the palette to use
-  ; r3 - Index in object VRAM to the GFX to use
+  ; r2 - Index in object VRAM to the GFX to use
+  ; r3 - Index in object palette VRAM to the palette to use
+
+0800E3C4 InitSpriteInfoEntry
+  ; r0 - Sprite pointer
+  ; r1 - Index in object VRAM of the GFX to use
 
 080134F4 EntityInitAnimations??
   ; r0 - Entity
   ; r1 - Pointer to animation list??
   ; r2 - 0?
   ; r3 - 1?
+
+0800EB48 InitializeSpriteInfoList
+  ; Called when the game boots up.
 
 0801359C SpriteAnimate
 

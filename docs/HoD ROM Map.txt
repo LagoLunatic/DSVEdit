@@ -3,6 +3,21 @@
 
 080C42F4-080C4303 - List of GFX pages containing item icons.
 
+080C5428-080C5447 - List of how VRAM indexes map to tile offsets in VRAM.
+  Each entry is a halfword.
+  The index is a VRAM index in terms of 128x32px chunks.
+  Each value is an offset in VRAM in terms of 8x8px tiles. So multiply this by 0x20 to get the offset in bytes.
+  The way these indexes would map out visually to VRAM is like this:
+    [    0    ] [    4    ]
+    [    1    ] [    5    ]
+    [    2    ] [    6    ]
+    [    3    ] [    7    ]
+    [    8    ] [    C    ]
+    [    9    ] [    D    ]
+    [    A    ] [    E    ]
+    [    B    ] [    F    ]
+  So e.g. E means the player's spot in VRAM, 0 means the common sprite's spot, C means the player's spell's spot, etc.
+
 080C5508 - Font character mapping.
 
 080C7E38-080CA15F - Enemy DNA list.

@@ -129,6 +129,10 @@
   08,1: 
   09,1: 
 
+08526390-085263A7 - List of boss rush rewards.
+  00,2: Maximum number of frames you can take to complete boss rush and still get this reward.
+  04,4: Item global ID+1 of the reward.
+
 08526650 - List of pointers to event create functions (for object 20).
   The event object's var A is the index in this list.
 085266D8 - List of pointers to event update functions (for object 20).
