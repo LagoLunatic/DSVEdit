@@ -37,7 +37,10 @@
 0200009E - Sector index for save file.
 0200009F - Room index for save file.
 
-020000A1,1 - Bitfield of ? Used when calculating player damage with jumpkick/slide.
+020000A1,1 - Current game mode.
+  Low nibble: 0 for Julius mode, 1 for Soma mode.
+  High nibble: 0 for normal mode, 1 for hard mode.
+    Hard mode slightly increases the chance of getting souls you don't already own, reduces player damage, increases enemy damage, allows Hard mode pickups to appear, and possibly other changes too.
 
 020000B4 - List of map tiles you've explored. Each takes up 1 bit.
 

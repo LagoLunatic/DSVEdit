@@ -59,6 +59,10 @@
 
 080683BC EnemyCheckDrops
 
+080326B8 GetNumOwnedSoul
+  ; r0 - Soul type
+  ; r1 - Soul index-1
+
 0804459C SpawnSoul
   ; r0 - X pos in pixels on the screen
   ; r1 - Y pos in pixels on the screen
@@ -74,6 +78,12 @@
 080233BC GetCurrentWeaponAttackAnimation
   ; r0 - Player's state, 0 for standing, 1 for crouching, 2 for in the air. (Maybe more?)
   ; Returns the currently equipped weapon's swing animation for the player to use, read from list 084F1238.
+
+0804B314 GetEquippedItem
+  ; r0 - Equip slot
+  ;   0 - Body armor
+  ;   1 - Accessory
+  ;   2 - Weapon
 
 08021654 DamagePlayer
   ; r0 - Pointer to ??? in the stack.
