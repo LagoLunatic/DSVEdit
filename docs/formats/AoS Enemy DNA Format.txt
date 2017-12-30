@@ -7,7 +7,7 @@ AoS Enemy DNA format:
   0C,2: Max HP.
   0E,2: Max MP.
   10,2: EXP.
-  12,1: Soul rarity??
+  12,1: Soul rarity.
     00 means the soul has no chance to drop at all, but after that it scales from common to rare.
     The formula for calculating the soul's drop chance is as follows:
       The numerator of the chance is 6 if you don't own any of the soul already, or 3 if you do.
@@ -21,7 +21,8 @@ AoS Enemy DNA format:
     The formula for calculating item 1's drop chance is as follows:
       The numerator of the chance is 4 normally, or 8 if you have the Rare Ring equipped.
       The denominator is: max(0x10, (this_number*4 + 0x10 - floor(LCK/0x10)))
-  16,1: ???
+  16,1: Item 2 rarity.
+    Works the same as item 1 rarity.
   17,1: Soul type.
     0 - Red soul.
     1 - Blue soul.
