@@ -27,6 +27,9 @@ module FreeSpaceManager
     free_space_strs.each do |offset, length, path|
       offset = offset.to_i(16)
       length = length.to_i(16)
+      if path == "rom.gba"
+        path = "/rom.gba"
+      end
       @free_spaces << {path: path, offset: offset, length: length}
     end
     
