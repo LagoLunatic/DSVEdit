@@ -336,6 +336,8 @@ class DSVEdit < Qt::MainWindow
         
         folder_name = File.basename(game.folder)
         self.setWindowTitle("DSVania Editor #{DSVEDIT_VERSION} - #{folder_name}")
+        
+        check_for_incompatible_overlay()
       end
     end
   rescue Game::InvalidFileError, NDSFileSystem::InvalidFileError
@@ -367,6 +369,8 @@ class DSVEdit < Qt::MainWindow
     
     folder_name = File.basename(game.folder)
     self.setWindowTitle("DSVania Editor #{DSVEDIT_VERSION} - #{folder_name}")
+    
+    check_for_incompatible_overlay()
   rescue Game::InvalidFileError, NDSFileSystem::InvalidFileError
     Qt::MessageBox.warning(self, "Invalid file", "Selected folder is not a DSVania.")
   rescue NDSFileSystem::InvalidRevisionError => e
@@ -940,6 +944,33 @@ class DSVEdit < Qt::MainWindow
     msg << "This overlay will be loaded at %08X in RAM. The maximum size you can make this overlay is %08X bytes.\n\n" % [NEW_OVERLAY_FREE_SPACE_START, NEW_OVERLAY_FREE_SPACE_MAX_SIZE]
     msg << "If you are going to manually modify this file in a hex editor, only do so while DSVEdit is closed. DSVEdit may not notice files changed while it's open."
     Qt::MessageBox.warning(self, "Added new overlay #{NEW_OVERLAY_ID}", msg)
+  end
+  
+  def check_for_incompatible_overlay
+    return if SYSTEM == :gba
+    
+    overlay = game.fs.overlays[NEW_OVERLAY_ID]
+    
+    return if overlay.nil?
+    
+    return if overlay[:ram_start_offset] == NEW_OVERLAY_FREE_SPACE_START
+    
+    old_overlay_start = overlay[:ram_start_offset]
+    
+    msg = "This project has an overlay added by a previous version of DSVEdit. Due to a bug in previous versions, this overlay needs to be moved to a different location in RAM.\n\n"
+    msg << "However, note that any custom code located in the overlay will no longer work correctly after the move.\n"
+    msg << "In order to fix this, you will need to update your ASM patches to use the new overlay address, and then re-apply those ASM patches.\n"
+    msg << "Old address: %08X\n" % old_overlay_start
+    msg << "New address: %08X\n\n" % NEW_OVERLAY_FREE_SPACE_START
+    msg << "Once you have done that, click OK."
+    Qt::MessageBox.warning(self, "Incompatible overlay detected", msg)
+    
+    game.fs.fix_free_space_overlay_start_address()
+    
+    msg = "The overlay was successfully relocated.\n\n"
+    msg << "If you re-applied the ASM patches as explained earlier, everything should work correctly now.\n\n"
+    msg << "If you haven't updated them yet, please do so now. Change the old overlay address (%08X) to the new one (%08X) and reapply your patches." % [old_overlay_start, NEW_OVERLAY_FREE_SPACE_START]
+    Qt::MessageBox.warning(self, "Overlay relocated", msg)
   end
   
   def open_entity_editor(entity = nil)
