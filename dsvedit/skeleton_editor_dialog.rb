@@ -52,6 +52,8 @@ class SkeletonEditorDialog < Qt::Dialog
     connect(@ui.spriter_export, SIGNAL("clicked()"), self, SLOT("export_to_spriter()"))
     connect(@ui.buttonBox, SIGNAL("clicked(QAbstractButton*)"), self, SLOT("button_box_clicked(QAbstractButton*)"))
     
+    @ui.spriter_export.hide()
+    
     self.show()
     
     self.load_skeleton()
