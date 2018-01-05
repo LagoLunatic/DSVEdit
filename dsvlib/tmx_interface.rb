@@ -14,7 +14,7 @@ class TMXInterface
     room.room_ypos_on_map = room_props["map_y"]
     room.write_extra_data_to_rom()
     
-    all_tilesets_for_room = room.layers.map{|layer| layer.tileset_filename}.uniq
+    all_tilesets_for_room = room.layers.map{|layer| layer.tileset_filename}.uniq.compact
     
     tiled_layers = xml.css("layer")
     tiled_layers.each do |tmx_layer|
@@ -95,7 +95,7 @@ class TMXInterface
   end
   
   def create(filename, room)
-    all_tilesets_for_room = room.layers.map{|layer| layer.tileset_filename}.uniq
+    all_tilesets_for_room = room.layers.map{|layer| layer.tileset_filename}.uniq.compact
     room_width_in_blocks = room.max_layer_width * SCREEN_WIDTH_IN_TILES
     room_height_in_blocks = room.max_layer_height * SCREEN_HEIGHT_IN_TILES
     
@@ -138,7 +138,17 @@ class TMXInterface
               xml.property(:name => "collision_tileset",   :value => "%08X" % layer.collision_tileset_pointer)
             }
             
-            xml.data(to_tmx_level_data(layer.tiles, layer.width, get_block_offset_for_tileset(layer.tileset_filename, all_tilesets_for_room)), :encoding => "csv")
+            tileset_filename = layer.tileset_filename
+            
+            if tileset_filename.nil?
+              # Empty GBA layer with no tileset specified.
+              # Default to using the first tileset in the room since it doesn't actually matter which tileset it uses when all the tiles are blank anyway.
+              block_offset = 1
+            else
+              block_offset = get_block_offset_for_tileset(tileset_filename, all_tilesets_for_room)
+            end
+            
+            xml.data(to_tmx_level_data(layer.tiles, layer.width, block_offset), :encoding => "csv")
           }
         end
         

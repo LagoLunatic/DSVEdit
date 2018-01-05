@@ -266,6 +266,11 @@ class Layer
   end
   
   def tileset_filename
+    if tileset_pointer == 0
+      # Empty GBA layer.
+      return nil
+    end
+    
     "%08X-%08X_%08X-%02X_%08X" % [tileset_pointer, collision_tileset_pointer, room.palette_wrapper_pointer || 0, room.palette_page_index, @room.gfx_list_pointer]
   end
 end
