@@ -104,21 +104,31 @@ class Layer
       # Empty GBA layer.
       old_width = old_height = 1
       
+      all_tiles_blank = @tiles.all?{|tile| tile.to_tile_data == 0}
+      
       # First detect if the user has changed this layer in a way that it actually needs to have free space assigned for the tile list.
-      if @width == old_width && @height == old_height && @tileset_type == 0 && @tileset_pointer == 0 && @collision_tileset_pointer == 0 && @layer_tiledata_ram_start_offset == nil
+      if @width == old_width && @height == old_height && @tileset_type == 0 && @tileset_pointer == 0 && @collision_tileset_pointer == 0 && @layer_tiledata_ram_start_offset == nil && all_tiles_blank
         # No changes made that require free space. Just write changes to the layer list entry and return.
         write_layer_list_entry_to_rom()
         return
       else
         # Assign layer metadata in free space.
         @layer_metadata_ram_pointer = fs.get_free_space(16, nil)
+        
+        if tileset_pointer == 0 && !all_tiles_blank
+          # The user added tiles to this layer in Tiled but did not set the tileset pointer manually.
+          # So we automatically set the tileset pointer to the first non-blank tileset in this room.
+          first_layer_with_valid_tileset = room.layers.find{|layer| layer.tileset_pointer != 0}
+          @tileset_pointer = first_layer_with_valid_tileset.tileset_pointer
+          @tileset_type = first_layer_with_valid_tileset.tileset_type
+        end
       end
     else
       old_width, old_height = fs.read(layer_metadata_ram_pointer, 2).unpack("C*")
     end
     
     if layer_tiledata_ram_start_offset.nil?
-      # This is a newly added layer.
+      # This is a newly added layer (or a previously empty GBA layer).
       new_tiledata_length = width * height * SIZE_OF_A_SCREEN_IN_BYTES
       
       new_tiledata_ram_pointer = fs.get_free_space(new_tiledata_length, room.overlay_id)
