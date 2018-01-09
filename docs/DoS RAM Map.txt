@@ -27,7 +27,8 @@
       Word 00 is the speed of horizontal scrolling.
       Word 04 is the speed of vertical scrolling.
 
-020832BC - Has something related to the tile layout of the background of menus?
+0207ABEC - Layer metadata for the background of the bestiary.
+  Yes, menu backgrounds are handled very similarly to room layers.
 
 02086394-0208A393 - List of sine and cosine values.
   Entry length 4.
@@ -444,15 +445,23 @@ What each range of entity slots is for:
   If you set more than one button bit for a single control, then either of the buttons you set will trigger that control.
 
 020F7252,1 - ID of the enemy on the top screen enemy info panel.
-020F7254 - Bitfield of what Magic Seals the player owns.
-020F7256 - Current game mode:
+020F7254,1 - Bitfield of what Magic Seals the player owns.
+020F7255,1 - ???
+020F7256,1 - Current game mode:
   0 - Soma mode.
   1 - Julius mode.
   2 - Boss rush.
   3 - Some kind of debug mode. No room entities get loaded in this mode.
   This variable affects various things, like whether you can press select to switch the top screen, how boss doors act, whether killing a boss triggers a magic seal, etc.
-020F7257 - When this is 1 the Julius mode HUD is displayed on the bottom screen and pausing doesn't bring up a menu. (For Julius mode.) When higher than 1 the Julius HUD is not displayed, but pausing still doesn't bring up the menu.
-020F7259 - Difficulty.
+  4 - ?
+  5 - ?
+020F7257,1 - When this is 1 the Julius mode HUD is displayed on the bottom screen and pausing doesn't bring up a menu. (For Julius mode.) When higher than 1 the Julius HUD is not displayed, but pausing still doesn't bring up the menu.
+020F7258,1 - Bitfield of which player characters you have unlocked in Julius mode.
+  01 Soma (no effect)
+  02 Julius
+  04 Yoko
+  08 Alucard
+020F7259,1 - Difficulty.
   0 - Normal mode.
   1 - Hard mode
 
@@ -462,34 +471,57 @@ What each range of entity slots is for:
 020F7350 - Pointer to the player entity.
 020F7354 - Another pointer to the player entity?
 
-Player's stats:
+Player's current stats:
 020F735C-6B - Player's natural stats (base stats + level up stats).
-  020F735C,2 - ATK
-  020F735E,2 - DEF
-  020F7360,2 - STR
-  020F7362,2 - CON
-  020F7364,2 - INT
-  020F7366,2 - LCK
-  020F7368,4 - Bitfield of resistances.
+  020F735C,2 - Natural ATK
+  020F735E,2 - Natural DEF
+  020F7360,2 - Natural STR
+  020F7362,2 - Natural CON
+  020F7364,2 - Natural INT
+  020F7366,2 - Natural LCK
+  020F7368,4 - Unused. (Would be bitfield of natural resistances, but after being copied to 020F7388 it's overwritten by 0.)
 020F736C-7B - Natural stats + item stats.
-020F737C-8B - Natural stats + item stats + soul stats.
+  020F736C,2 - Natural+item ATK
+  020F736E,2 - Natural+item DEF
+  020F7370,2 - Natural+item STR
+  020F7382,2 - Natural+item CON
+  020F7384,2 - Natural+item INT
+  020F7386,2 - Natural+item LCK
+  020F7388,4 - Bitfield of resistances from items.
+020F737C-8B - Final stats.
+  020F737C,2 - Final ATK
+    Final ATK is calculated by taking the ATK from the current weapon and the final STR from 020F7380 and using this formula:
+    (((ATK/4 + 1) * STR) / 0x18) + (STR+1)/4 + (ATK/4 + 2)
+  020F737E,2 - Final DEF
+    Final DEF is calculated by taking the natural+item DEF from 020F736E and the final CON from 020F7382 and using this formula:
+    DEF + CON/2
+  020F7380,2 - Final STR
+  020F7382,2 - Final CON
+  020F7384,2 - Final INT
+  020F7386,2 - Final LCK
+  020F7388,4 - Bitfield of resistances from items and souls.
 
 020F73A4 - Bitfield of passive effects currently on the player.
-  0001 - Mothman.
-  0002 - Ghoul.
-  0004 - Skelerang.
-  0008 - Skeleton Ape.
-  0010 - Dead Warrior.
-  0020 - Dead Pirate.
-  0040 - Heart Eater.
-  0080 - Mimic.
-  0100 - Peeping Eye.
-  0200 - Skeleton Farmer.
-  0400 - Draghignazzo.
-  0800 - The Creature.
-  1000 - Treant.
-  2000 - Ouija Table.
-  4000 - Dead Crusader.
+  00000001 - Mothman.
+  00000002 - Ghoul.
+  00000004 - Skelerang.
+  00000008 - Skeleton Ape.
+  00000010 - Dead Warrior.
+  00000020 - Dead Pirate.
+  00000040 - Heart Eater.
+  00000080 - Mimic.
+  00000100 - Peeping Eye.
+  00000200 - Skeleton Farmer.
+  00000400 - Draghignazzo.
+  00000800 - The Creature.
+  00001000 - Treant.
+  00002000 - Ouija Table.
+  00004000 - Dead Crusader.
+  00010000 - ?
+  00020000 - Werewolf dashing.
+  00040000 - Medusa Head floating.
+  00080000 - ?
+  00200000 - ?
   00400000 - Water acts as quicksand. This bit gets set every frame by object 05.
 
 === 020F740C - 020F746B: Third region that gets saved to the save file. 60 bytes long. Corresponds to 0464-04C3 in the save file data.

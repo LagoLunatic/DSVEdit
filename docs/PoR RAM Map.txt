@@ -462,6 +462,7 @@ F5-F5
   22 - Sand Worm killed.
   2B - Behemoth has chased you.
   3A - Breakable wall 04 from 13th Street physically destroyed.
+  43 - Nest of Evil unlocked.
   TODO
   Includes what breakable walls have been destroyed.
 02111BB0 - Event flags.

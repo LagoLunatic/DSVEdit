@@ -178,6 +178,21 @@
 021E88AC TouchItemPickup
   ; r0 - Pickup entity pointer
 
+02009F74 RenderTextToOAM
+  ; r0 - Pointer to the text string.
+  ; r1 - ? 0
+  ; r2 - Pointer to where in the stack to store a halfword of the width of the text in pixels.
+  ; r3 - ? 0
+  ; [r13] - ? 0
+  ; This function creates a text sprite in the OAM at the upper left corner of the screen.
+  ; You should call SetOAMData after this so it's in the right location.
+0202ED4C SetOAMData
+  ; r0 - X pos
+  ; r1 - Y pos
+  ; r2 - Palette (-1?)
+  ; r3 - first OAM slot to use (offset, so that 0 here means OAM slot 0x1E). (0xE for soul names, 0x19 for item names)
+  ; [r13] - last OAM slot to use (offset, so that 0 here means OAM slot 0x1E). (0x10 for soul names, 0x1B for item names)
+
 0202DE80 ShowItemName
   ; r0 - Item global ID+1
   ; r1 - Number of frames to show the item name in the corner of the screen.
@@ -193,38 +208,52 @@
   ; r0 - Soul index
   ; r1 - X pos (of right edge of text box)
   ; r2 - Y pos (of top edge of text box)
-02008F68 ShowItemOrSoulName3?
-  ; r0 - 1
-  ; r1 - 0
-02008FBC ShowItemOrSoulName4?
+
+020425C8 RenderTextToBG
   ; r0 - 0
-  ; r1 - affects the OAM slot to use? 48 for souls, 50 for items
-  ; r2 - 60
-  ; r3 - 8
+  ; r1 - 38
+  ; r2 - Maximum width of the string? Or X offset?
+  ; r3 - 18
+  ; [r13,10] - Text ID
+02008FBC RenderStringToBG
+  ; r0 - X pos to render the number at on the Tiles 2 layer, in terms of 8px tiles
+  ; r1 - Y pos to render the number at on the Tiles 2 layer, in terms of 8px tiles
+  ; r2 - X offset in tiles, gets added to r0. Or max width?
+  ; r3 - Y offset in tiles, gets added to r1.
   ; [r13] - FF
   ; [r13,4] - 0
-02009DF4 ShowItemOrSoulName5
+02009378 RenderCharacterToBG
+  ; r0 - The character to render, a single byte.
+  ; r1 - Pointer on the stack?
+  ; r2 - 0?
+  ; r3 - 0?
+  ; Renders a single character to the Tiles 2 layer.
+02009D8C RenderNumberToBG
+  ; r0 - X pos to render the number at on the Tiles 2 layer, in terms of 8px tiles
+  ; r1 - Y pos to render the number at on the Tiles 2 layer, in terms of 8px tiles
+  ; r2 - X offset in tiles, gets added to r0.
+  ; r3 - Y offset in tiles, gets added to r1.
+  ; [r13] - ?
+  ; [r13,4] - Y pos to render the number at on the BG layer, in terms of 8px tiles
+  ; [r13,8] - The number to render
+  ; [r13,C] - Bitfield of how to render the number.
+  ;   Bits:
+  ;   01 - Colored blue
+  ;   02 - With a + symbol in front of the number
+  ;   04 - With 0s padding the beginning of the number
+  ; [r13,10] - 0
+0200ABC0 RenderNumberToBG?2
+0200AE90 RenderCharacterToBG?2
+02008F68 RenderString1?
+  ; r0 - 0 or 1
+  ; r1 - 0
+02009DF4 RenderString3?
   ; r0 - 0
-02009040 ShowItemOrSoulName6
+02009040 RenderString4?
   ; r0 - 0
-  ; r1 - affects the OAM slot to use? 48 for souls, 50 for items
+  ; r1 - Y position to render the string at in the Tiles 2 layer.
   ; r2 - FF
   ; r3 - 0
-
-02009F74 RenderText
-  ; r0 - Pointer to string.
-  ; r1 - ? 0
-  ; r2 - Pointer to where in the stack to store a halfword of the width of the text in pixels.
-  ; r3 - ? 0
-  ; [r13] - ? 0
-  ; This function creates a text sprite in the OAM at the upper left corner of the screen.
-  ; You should call SetOAMData after this so it's in the right location.
-0202ED4C SetOAMData
-  ; r0 - X pos
-  ; r1 - Y pos
-  ; r2 - Palette (-1?)
-  ; r3 - first OAM slot to use (offset, so that 0 here means OAM slot 0x1E). (0xE for soul names, 0x19 for item names)
-  ; [r13] - last OAM slot to use (offset, so that 0 here means OAM slot 0x1E). (0x10 for soul names, 0x1B for item names)
 
 0203B308 SetEnemyOnTopScreen
   ; r0 - Enemy ID
@@ -338,10 +367,24 @@
   ; Returns the value located at 020C0740 in RAM.
 
 021FC590 PlayerUpdate
+021FC1FC PlayerJuliusModeUpdate
 021FCC9C PlayerDraw
 021FEE28 PlayerUpdateYAccel
 
 021F64BC PlayerEnableControl
+
+021FFF5C PlayerCalculateFinalAttackStat
+  ; r0 - Pointer to the player's final stats (020F737C).
+  ; Returns what the player's final attack stat should be.
+
+0203FE20 CalcStatsWithSpecificItemEquip
+  ; r0 - Which equip slot to assume the item specified by r1 is.
+  ;   0 is weapon, 1 is body armor, 2 is accessory.
+  ;   If it isn't actually the correct type, then it will effectively use the item with the same local index as what the item actually is.
+  ;   For example, if r0 is 0 (weapon) and r1 is 98 (Ninja Suit) it will calculate the index of Ninja Suit in the armor list, 6, and then use the weapon of index 6, Rapier.
+  ;   -1 for this argument means do not assume, instead correctly calculate the equip slot.
+  ; r1 - Item ID+1
+  ; r2 - Pointer to where to store the calculated stats (list of 6 halfwords)
 
 0220106C CalcDamageToPlayer
   ; Calculates the damage an enemy should do to the player.
@@ -475,6 +518,12 @@
   ; r0 - Entity pointer
   ; r1 - Iframes
   ; Stores r1 to entity+B8 if the entity's hitbox is active (entity+A6)
+020143EC SetCallbacksAndIframesIndex
+  ; r0 - Entity
+  ; r1 - Iframes index to store at entity+A4
+  ; r2 - On-hurt-player callback to store at +C8
+  ; r3 - On-damaged callback to store at +CC
+  ; Also initializes the entity's hitbox.
 
 02210138 GetSoulScalingType
   ; r0 - Soul index

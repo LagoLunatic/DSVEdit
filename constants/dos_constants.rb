@@ -486,6 +486,9 @@ OTHER_SPRITES = [
   {pointer: 0x02049078, desc: "Enemy set mode menu"},
   {pointer: 0x0204908C, desc: "Enemy set retry/complete"},
   {pointer: 0x020490A0, desc: "Wi-fi menu"},
+  
+  #{gfx_files: [0x022D0B00], palette: 0x022C490C} # weapon synth menu, /sc/f_mix_e.dat
+  #{gfx_files: [0x022D9EC4, 0x022D9ED0], palette: ?} # bestiary, /bc/f_ene1.dat
 ]
 
 CANDLE_FRAME_IN_COMMON_SPRITE = 0xDB
