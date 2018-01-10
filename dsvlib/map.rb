@@ -498,7 +498,9 @@ class DoSMapTile
                 :x_pos,
                 :is_blank,
                 :is_castle_b_warp,
-                :region_index
+                :region_index,
+                :which_map_item,
+                :room_index_plus_1
   
   def initialize(tile_metadata, tile_line_data, tile_index, map_width)
     @tile_metadata = tile_metadata
@@ -521,11 +523,12 @@ class DoSMapTile
     
     unless is_blank
       if GAME == "hod"
-        @is_save          =  tile_metadata & 0b10000000_00000000 > 0
-        @is_warp          =  tile_metadata & 0b01000000_00000000 > 0
-        @is_castle_b_warp =  tile_metadata & 0b00100000_00000000 > 0
-        @region_index     = (tile_metadata & 0b00001111_00000000) >> 8 # music?
-        @unk              = (tile_metadata & 0b00000000_11111111) # ??? TODO
+        @is_save           =  tile_metadata & 0b10000000_00000000 > 0
+        @is_warp           =  tile_metadata & 0b01000000_00000000 > 0
+        @is_castle_b_warp  =  tile_metadata & 0b00100000_00000000 > 0
+        @region_index      = (tile_metadata & 0b00001111_00000000) >> 8
+        @which_map_item    = (tile_metadata & 0b00000000_11000000) >> 6 # which map item this tile corresponds to. 0 is none, 1-3 are maps 1-3. TODO allow editing this manually.
+        @room_index_plus_1 = (tile_metadata & 0b00000000_00111111) # TODO does this affect anything? TODO regenerate this aftering editing the map.
       else
         @is_save        =  tile_metadata & 0b10000000_00000000 > 0
         @is_warp        =  tile_metadata & 0b01000000_00000000 > 0
