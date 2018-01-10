@@ -373,7 +373,12 @@ class Room
       original_length = (@original_number_of_entities+1)*12
       length_needed = (entities.length+1)*12
       
-      new_entity_list_pointer = fs.free_old_space_and_find_new_free_space(entity_list_ram_pointer, original_length, length_needed, overlay_id)
+      if @entity_list_ram_pointer == 0
+        # In HoD, rooms that originally had no entities have 0 for their entity pointer.
+        new_entity_list_pointer = fs.get_free_space(length_needed, nil)
+      else
+        new_entity_list_pointer = fs.free_old_space_and_find_new_free_space(entity_list_ram_pointer, original_length, length_needed, overlay_id)
+      end
       
       @original_number_of_entities = entities.length
       
