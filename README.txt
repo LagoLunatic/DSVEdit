@@ -131,6 +131,32 @@ After editing the exported files in darkFunction, first make sure to save your c
 Note: Currently DSVEdit's darkFunction exporter/importer only supports sprites in standalone files - ones that have both a pointer and a filename in the "Sprite file" field, like this: 021155E0 (/so/p_zombi.dat)
 Compiled sprites, the ones with only a pointer in the "Sprite file" field and no filename, are not yet supported, but a future version of DSVEdit may support these as well.
 
+### Adding a free space overlay
+
+Sometimes, you may need free space to put something, such as new entities, layers, or custom ASM code.
+For the DS games, this requires adding a new overlay file and loading that file into RAM.
+DSVEdit provides a feature to do this automatically: simply go to Tools -> Add Overlay and DSVEdit will create an empty overlay and modify the game's initialization code so the overlay is loaded properly.
+What you should do next depends on what you want to use the overlay for - you can either use it for custom ASM code, or for adding new entities/layers/etc.
+
+If you want to use the free space overlay for custom ASM code:
+When writing the ASM patch, put the custom code in the new overlay file. In order to find out which file that is and what location it should be loaded at in RAM, go to Tools -> Add Overlay again and it will tell you. For example, the overlay file is /ftc/overlay9_41 and is loaded at 02308920 for the US version of DoS.
+
+If you want to use the free space overlay for adding new entities/layers/etc:
+You need to tell DSVEdit to consider the overlay as free space for it to use it.
+You can do this by modifying the file called _dsvedit_freespace.txt in the project directory. First close DSVEdit if it's open, then open _dsvedit_freespace.txt in a text editor and add a new line to the end of it.
+The line you add should be the offset in the file in hexadecimal, followed by a space, then the length of the free space in in hexadecimal, then a space, then the file name. (To find out the lend of the free space, go to Tools -> Add Overlay again and it will tell you what the maximum size the overlay is allowed to be is.)
+For example, in the US version of DoS, if you want to mark the entire overlay as free space this would be the line you add to it:
+00000000 00016000 /ftc/overlay9_41
+The 00000000 means the free space starts at the very start of the file. 00016000 means the free space can be a maximum of 0x16000 bytes long. /ftc/overlay9_41 is the new overlay file in DoS.
+
+If you want to use the free space overlay for both custom ASM code AND for adding new entities/layers/etc:
+This is more complicated. If you use the overlay for custom ASM code, and you also mark the entire thing as free space by modifying _dsvedit_freespace.txt, then adding entities/layers/etc can overwrite your ASM code and crash the game. If you use the overlay for entities/layers/etc and then apply an ASM patch afterwards, you need to pick where you apply the patch carefully to avoid overwriting the entities/layers with your ASM code.
+If you're going to do this, you will need to modify the _dsvedit_freespace.txt file after every time you apply an ASM patch to unmark just the parts of the file that were used by the ASM patch, but leave most of the file as still marked as free space.
+For example, if you apply an ASM patch that takes up 0x80 bytes, you would have to change this:
+00000054 00015FAC /ftc/overlay9_41
+To this:
+000000D4 00015F2C /ftc/overlay9_41
+
 ### Running from source
 
 If you want to run the latest development version of DSVEdit from source, follow these instructions:

@@ -381,7 +381,7 @@ class MapEditorDialog < Qt::Dialog
   rescue FreeSpaceManager::FreeSpaceFindError => e
     Qt::MessageBox.warning(self,
       "Failed to find free space",
-      "Failed to find free space to put the expanded map height.\n\nGo to Tools -> Add Overlay to create an empty overlay that DSVEdit can use as free space."
+      "Failed to find free space to put the expanded map height.\n\n#{NO_FREE_SPACE_MESSAGE}"
     )
     return false
   end

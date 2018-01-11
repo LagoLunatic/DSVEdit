@@ -128,7 +128,7 @@ class LayersEditorDialog < Qt::Dialog
     @room.layers[@ui.layer_index.currentIndex].read_from_rom() # Reload layer
     Qt::MessageBox.warning(self,
       "Failed to find free space",
-      "Failed to find free space to put the expanded layer.\n\nGo to Tools -> Add Overlay to create an empty overlay that DSVEdit can use as free space."
+      "Failed to find free space to put the expanded layer.\n\n#{NO_FREE_SPACE_MESSAGE}"
     )
   end
   

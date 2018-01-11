@@ -32,6 +32,8 @@ require_relative 'player_state_anims_editor_dialog'
 
 require_relative 'ui_main'
 
+NO_FREE_SPACE_MESSAGE = "Refer to the \"Adding a free space overlay\" section of the README for an explanation of how to create free space that can be used by DSVEdit."
+
 class DSVEdit < Qt::MainWindow
   attr_reader :game
   
@@ -745,7 +747,7 @@ class DSVEdit < Qt::MainWindow
   rescue FreeSpaceManager::FreeSpaceFindError => e
     Qt::MessageBox.warning(self,
       "Failed to find free space",
-      "Failed to find free space to put new layer.\n\nGo to Tools -> Add Overlay to create an empty overlay that DSVEdit can use as free space."
+      "Failed to find free space to put the new layer.\n\n#{NO_FREE_SPACE_MESSAGE}"
     )
   end
   
@@ -768,7 +770,7 @@ class DSVEdit < Qt::MainWindow
     load_room()
     Qt::MessageBox.warning(self,
       "Failed to find free space",
-      "Failed to find free space to put the new entity.\n\nGo to Tools -> Add Overlay to create an empty overlay that DSVEdit can use as free space."
+      "Failed to find free space to put the new entity.\n\n#{NO_FREE_SPACE_MESSAGE}"
     )
   rescue Room::WriteError => e
     @room.read_from_rom() # Reload room to get rid of the failed changes.
@@ -794,7 +796,7 @@ class DSVEdit < Qt::MainWindow
     load_room()
     Qt::MessageBox.warning(self,
       "Failed to find free space",
-      "Failed to find free space to put the new door.\n\nGo to Tools -> Add Overlay to create an empty overlay that DSVEdit can use as free space."
+      "Failed to find free space to put the new door.\n\n#{NO_FREE_SPACE_MESSAGE}"
     )
   rescue Room::WriteError => e
     @room.read_from_rom() # Reload room to get rid of the failed changes.
@@ -1060,7 +1062,7 @@ class DSVEdit < Qt::MainWindow
     load_room()
     Qt::MessageBox.warning(self,
       "Failed to find free space",
-      "Failed to find free space to put the new layers/entities/doors.\n\nGo to Tools -> Add Overlay to create an empty overlay that DSVEdit can use as free space."
+      "Failed to find free space to put the new layers/entities/doors.\n\n#{NO_FREE_SPACE_MESSAGE}"
     )
   rescue TMXInterface::ImportError => e
     @room.read_from_rom() # Reload room to get rid of the failed changes.
