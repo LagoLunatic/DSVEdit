@@ -1,5 +1,5 @@
 
-DSVEdit (DSVania Editor) is an editor for the three Castlevania games for the Nintendo DS: Dawn of Sorrow, Portrait of Ruin, and Order of Ecclesia, as well as Aria of Sorrow for the GBA. It supports both the US and Japanese versions of the DS games, while only the US version of Aria of Sorrow is supported.
+DSVEdit (DSVania Editor) is an editor for the three Castlevania games for the Nintendo DS: Dawn of Sorrow, Portrait of Ruin, and Order of Ecclesia, as well as Aria of Sorrow and Harmony of Dissonance for the GBA. It supports both the US and Japanese versions of the DS games, while only the US versions of the GBA games are supported.
 
 Download the latest release: https://github.com/LagoLunatic/DSVEdit/releases
 
@@ -22,6 +22,7 @@ Report issues here: https://github.com/LagoLunatic/DSVEdit/issues
 * Editing which items are in the shop
 * Editing random chest item pools
 * Editing weapon synthesis
+* Editing magic seals
 * Adding a new overlay file that can be used as free space
 * Testing rooms by launching the game with you in that room
 
