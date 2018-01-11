@@ -512,6 +512,11 @@
   ; r0 - Room's entity list pointer
 020642B0 LoadRoomEntity
   ; r0 - Pointer to the entity in the room's entity list.
+020650E8 LoadEnemyOverlay
+  ; r0 - Entity subtype
+  ; r1 - Entity type (1 or 2 for enemy or special object)
+  ; If the entity is a special object this function does nothing.
+  ; Otherwise it loads the appropriate enemy overlay for this enemy.
 
 02030684 InitializeSprite
   ; r0 - Entity

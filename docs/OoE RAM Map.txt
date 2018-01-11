@@ -115,6 +115,11 @@
 020F04C8-020F0A07 - Consumables.
 020F0A08-020F10E7 - Shoulder glyphs.
 
+020F1164-020F1203 - List of enemies that need a certain enemy overlay and which overlay they need.
+  Each entry is 8 bytes long.
+  0,4: Enemy ID.
+  4,4: Overlay ID.
+
 020F2814 - List of enemy files to load.
 020F343C - List of special object files to load.
 020F3688 - List of special object ??

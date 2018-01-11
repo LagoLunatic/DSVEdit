@@ -16,6 +16,8 @@
 
 080D8128 Divide
   ; Returns r0 / r1
+080DA988 Divide2
+  ; returns r0 / r1
 080D812C Modulo
   ; Returns r0 % r1
 

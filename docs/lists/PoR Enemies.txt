@@ -341,7 +341,7 @@ Enemies:
 97 Mummy Man
   Requires enemy overlay 66.
 98 Whip's Memory
-  Requires enemy overlay 25.
+  Requires overlay 25.
 99 Dracula
   Requires enemy overlay 64.
 9A True Dracula
