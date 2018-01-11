@@ -196,6 +196,11 @@ module FreeSpaceManager
       free_space[:offset] = offset
       free_space[:length] = end_offset - free_space[:offset]
     end
+    
+    @free_spaces.delete_if do |free_space|
+      # Free space was 1-3 bytes long, so after rounding it doesn't exist anymore. Remove it.
+      free_space[:length] == 0
+    end
   end
   
   def get_free_space(length_needed, overlay_id = nil)
