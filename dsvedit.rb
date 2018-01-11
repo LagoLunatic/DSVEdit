@@ -42,7 +42,6 @@ begin
 rescue ScriptError, StandardError => e
   unless DEBUG
     $qApp = Qt::Application.new(ARGV)
-    window = Qt::MainWindow.new
     msg = "DSVEdit has crashed.\nPlease report this bug with a screenshot of this error:\n\n"
     msg << "Error: #{e.class.name}: #{e.message}\n\n"
     msg << e.backtrace.join("\n")
