@@ -295,6 +295,18 @@ class CollisionTile
     @is_water    = (collision_data & 0b00001000) > 0
     @block_shape = (collision_data & 0b11110000) >> 4
     
+    # TODO fix certain collision tiles in HoD:
+    # full block that has effect should be slope
+    # has top, block shape 08, v and h flip: also a regular slope
+    # 0201288F is where the collision data for one of the slopes in the second room of the game is.
+    # 080016B0 checks bits 00001100
+    # 080016D0 checks bits 01111111
+    # 08001760 checks if the data == 10000011
+    # 08001796 checks bits 00001100
+    # 0800179C checks bit  10000000
+    # 11110000 (F0) means it's a door trigger block
+    # 10000011 (83) means it's solid but you can bounce of it and it clinks
+    
     if block_shape >= 4
       @vertical_flip   = bit_2
       @horizontal_flip = bit_3
