@@ -531,7 +531,12 @@ class DSVEdit < Qt::MainWindow
   end
   
   def update_room_position_indicator
-    @position_indicator.setPos(@room.room_xpos_on_map*4 + 2.25, @room.room_ypos_on_map*4 + 2.25)
+    if GAME == "por" || GAME == "ooe"
+      x_offset, y_offset = @map.draw_x_offset*8, @map.draw_y_offset*8
+    else
+      x_offset, y_offset = 0, 0
+    end
+    @position_indicator.setPos(@room.room_xpos_on_map*4 + 2.25 + x_offset, @room.room_ypos_on_map*4 + 2.25 + y_offset)
     if @room.layers.length > 0
       @position_indicator.setRect(-2, -2, 4*@room.main_layer_width, 4*@room.main_layer_height)
     else
@@ -822,6 +827,9 @@ class DSVEdit < Qt::MainWindow
       chunky_png_img = @renderer.render_map(@map)
     end
     map_pixmap_item = GraphicsChunkyItem.new(chunky_png_img)
+    if GAME == "por" || GAME == "ooe"
+      map_pixmap_item.setOffset(@map.draw_x_offset*8, @map.draw_y_offset*8)
+    end
     @map_graphics_scene.addItem(map_pixmap_item)
     
     @position_indicator = @map_graphics_scene.addRect(-2, -2, 4, 4, Qt::Pen.new(Qt::NoPen), Qt::Brush.new(Qt::Color.new(255, 255, 128, 128)))
