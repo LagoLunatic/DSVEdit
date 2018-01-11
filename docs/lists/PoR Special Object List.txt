@@ -104,6 +104,7 @@ Special objects:
 2F Pushable grave from Forest of Doom.
   Requires sector overlay 101.
 30 Breakable ceiling from Dark Academy that lets rain through after it's broken.
+  Requires sector overlay 111.
 31 The drill cart that breaks a wall in City of Haze.
   Requires sector overlay 94.
 32 Pushable block from Sandy Grave.
@@ -165,7 +166,9 @@ Special objects:
     01 One long wooden plank.
 3F Platform that floats up and down.
 40 Large pushable switch.
+  Requires sector overlay 81.
 41 Wall of fire and button to the left that lowers it.
+  Requires sector overlay 85.
 42 Unused
 43 Crumbling block from Tower of Death.
 44 Sand falling from the ceiling.
@@ -184,6 +187,7 @@ Special objects:
   Requires sector overlay 86.
 49 Rapidly moving clouds background effect used in the Master's Keep and Throne Room.
 4A Hands on the clock from Death's boss room.
+  Requires sector overlay 85.
   These rotate to match the DS's system time.
 4B Unused
 4C Blockade, similar to the ones in Dawn of Sorrow. Unused.
@@ -304,6 +308,7 @@ Special objects:
   Requires sector overlay 93.
 80 Transition room hider for Dracula's Castle (connects Great Stairway to other Great Stairway sector).
 81 Barrier blocking the way to the Throne Room.
+  Requires sector overlay 88.
   The blocking effect extends all the way down the left edge of the room, but the visuals only appear on the top-left screen.
 82 Wooden door separating areas.
 83 Button and wall it lowers from Great Stairway.
@@ -341,6 +346,7 @@ Special objects:
 8C ??? from room with mechanical elevator in Tower of Death. TODO
   Requires sector overlay 85.
 8D Cycles through palettes for conveyor belt tiles to make gears look like they're turning.
+  Requires sector overlay 85.
 8E Legion's horizontal boss door and walls that trap you.
   Requires sector overlay 98.
 8F in the sister's boss room
@@ -353,39 +359,68 @@ Special objects:
   Requires sector overlay 109.
 === Below are events. Var A is the event flag set upon completing this event. Var B is the prerequisite event flag before this event will appear.
 95 Event - In first room of the game.
-96 Event - 
-97 Event - 
+  Requires sector overlay 78.
+96 Event - Meeting Wind for the first time.
+  Requires sector overlay 79.
+97 Event - something with Wind?
+  Requires sector overlay 79.
 98 Event - In front of the portrait to City of Haze.
+  Requires sector overlay 79.
 99 Event - In first room of City of Haze.
+  Requires sector overlay 93.
 9A Event - After killing Dullahan.
+  Requires sector overlay 95.
 9B Event - Meeting Death for the first time.
-9C Event - 
+  Requires sector overlay 81.
+9C Event - Meeting Brauner and the sisters in Sandy Grave.
+  Requires sector overlay 91.
 9D Event - Stella in her boss room.
+  Requires sector overlay 86.
 9E Event - In front of the portrait to Forest of Doom, Charlotte refuses to enter unless you've talked to Wind about Stella's Locket.
   Requires sector overlay 86.
-9F Event - 
+9F Event - Talking to Wind about Stella's Locket.
+  Requires sector overlay 79.
 A0 Event - Death in his boss room.
+  Requires sector overlay 85.
 A1 Event - At the barrier that blocks the way to the Throne Room.
+  Requires sector overlay 88.
 A2 Event - in the sister's boss room.
+  Requires sector overlay 89.
 A3 Event - in the sister's boss room.
+  Requires sector overlay 89.
 A4 Event - in the sister's boss room.
+  Requires sector overlay 89.
 A5 Event - in lost gallery
+  Requires sector overlay 115.
 A6 Event - in lost gallery
+  Requires sector overlay 115.
 A7 Event - in the stairway leading up to the throne room
+  Requires sector overlay 87.
 A8 Event - in dracula's throne room?
-A9 Event - 
+  Requires sector overlay 87.
+A9 Event - Dracula defeated and evaporating in the sunlight.
+  Requires sector overlay 90.
 AA Event - in epilogue
+  Requires sector overlay 117.
 AB Event - in epilogue
-AC Event - 
-AD Event - 
+  Requires sector overlay 117.
+AC Event - ?
+AD Event - ?
 AE Event - in the sister's boss room.
+  Requires sector overlay 89.
 AF Event - in first room of game?
+  Requires sector overlay 78.
 B0 Event - in lost gallery
-B1 Event - 
-B2 Event - 
-B3 Event - 
+  Requires sector overlay 115.
+B1 Event - ?
+B2 Event - in room that requires the cog
+  Requires sector overlay 86.
+B3 Event - in room that requires the cog
+  Requires sector overlay 86.
 B4 Event - in vincent's room?
+  Requires sector overlay 79.
 B5 Event - in wind's room?
+  Requires sector overlay 79.
 === Event actors
 B6 Wind event actor.
 B7 Vincent event actor.
