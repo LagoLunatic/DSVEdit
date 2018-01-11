@@ -531,12 +531,7 @@ class DSVEdit < Qt::MainWindow
   end
   
   def update_room_position_indicator
-    if GAME == "por" || GAME == "ooe"
-      x_offset, y_offset = @map.draw_x_offset*8, @map.draw_y_offset*8
-    else
-      x_offset, y_offset = 0, 0
-    end
-    @position_indicator.setPos(@room.room_xpos_on_map*4 + 2.25 + x_offset, @room.room_ypos_on_map*4 + 2.25 + y_offset)
+    @position_indicator.setPos(@room.room_xpos_on_map*4 + 2.25 + @map_offset_x, @room.room_ypos_on_map*4 + 2.25 + @map_offset_y)
     if @room.layers.length > 0
       @position_indicator.setRect(-2, -2, 4*@room.main_layer_width, 4*@room.main_layer_height)
     else
@@ -592,6 +587,8 @@ class DSVEdit < Qt::MainWindow
   end
   
   def change_room_by_map_x_and_y(x, y, button)
+    x -= @map_offset_x
+    y -= @map_offset_y
     x = x / 4
     y = y / 4
     
@@ -836,8 +833,11 @@ class DSVEdit < Qt::MainWindow
     end
     map_pixmap_item = GraphicsChunkyItem.new(chunky_png_img)
     if GAME == "por" || GAME == "ooe"
-      map_pixmap_item.setOffset(@map.draw_x_offset*8, @map.draw_y_offset*8)
+      @map_offset_x, @map_offset_y = @map.draw_x_offset*8, @map.draw_y_offset*8
+    else
+      @map_offset_x, @map_offset_y = 0, 0
     end
+    map_pixmap_item.setOffset(@map_offset_x, @map_offset_y)
     @map_graphics_scene.addItem(map_pixmap_item)
     
     @position_indicator = @map_graphics_scene.addRect(-2, -2, 4, 4, Qt::Pen.new(Qt::NoPen), Qt::Brush.new(Qt::Color.new(255, 255, 128, 128)))
