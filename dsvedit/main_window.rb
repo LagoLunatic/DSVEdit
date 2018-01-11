@@ -819,6 +819,16 @@ class DSVEdit < Qt::MainWindow
   def load_map()
     @map_graphics_scene.clear()
     
+    if GAME == "ooe"
+      # Display the map background.
+      other_sprite = OTHER_SPRITES.find{|spr| spr[:desc] == "Map"}
+      sprite_info = SpriteInfo.new(other_sprite[:gfx_files], other_sprite[:palette], 0, other_sprite[:sprite], nil, game.fs)
+      frames, min_x, min_y = @renderer.render_sprite(sprite_info, frame_to_render: 0, one_dimensional_mode: other_sprite[:one_dimensional_mode])
+      map_background_frame = frames[0].trim!
+      background_item = GraphicsChunkyItem.new(map_background_frame)
+      @map_graphics_scene.addItem(background_item)
+    end
+    
     @map = game.get_map(@area_index, @sector_index)
     
     if GAME == "dos" || GAME == "aos"
