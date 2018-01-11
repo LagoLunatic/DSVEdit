@@ -687,8 +687,6 @@ class DSVEdit < Qt::MainWindow
   def load_layers
     @renderer.ensure_tilesets_exist("cache/#{GAME}/rooms/", @room)
     @room.layers.each do |layer|
-      next if layer.layer_metadata_ram_pointer == 0 # TODO
-      
       load_layer(layer)
     end
   rescue StandardError => e
