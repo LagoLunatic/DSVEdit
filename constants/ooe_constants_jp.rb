@@ -206,6 +206,10 @@ OTHER_SPRITES = [
   {pointer: 0x022196D0, desc: "Title screen 1", overlay: 20-1},
   {pointer: 0x022196E8, desc: "Title screen 2", overlay: 20-1},
   {pointer: 0x02219700, desc: "Title screen 3", overlay: 20-1},
+  {desc: "Main menu", gfx_files: [0x020BA508, 0x020BA514, 0x020BA520, 0x020BA55C, 0x020BA5B0, 0x020BA604, 0x020BA658, 0x020BA6AC, 0x020BA6D0, 0x020BA6DC], sprite: 0x021DC91C, palette: 0x020D1BF4},
+  {desc: "Pause menu", gfx_files: [0x020BA478, 0x020BA484, 0x020BA490, 0x020BA49C, 0x020BA4F0, 0x020BA4FC], sprite: 0x021DC920, palette: 0x020D19F0},
+  
+  {desc: "Map", sprite: 0x020C55AC, gfx_files: [0x020BA7FC], palette: 0x020D2420, one_dimensional_mode: true},
 ]
 
 CANDLE_SPRITE = COMMON_SPRITE

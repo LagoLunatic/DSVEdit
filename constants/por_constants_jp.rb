@@ -153,6 +153,8 @@ OTHER_SPRITES = [
   {pointer: 0x022CEF90, desc: "Name entry menu", overlay: 25},
   {pointer: 0x022CF380, desc: "Co-op mode start menu", overlay: 25},
   {pointer: 0x022D1584, desc: "Co-op mode end menu", overlay: 25},
+  {pointer: 0x02050D9C, desc: "Info screen", one_dimensional_mode: true},
+  {pointer: 0x020322C0, desc: "Pause menu", one_dimensional_mode: true},
   {pointer: 0x02033AE8, desc: "Equip menu", one_dimensional_mode: true},
   
   {pointer: 0x022D045C, desc: "Brauner inside mirror portrait", overlay: 55},

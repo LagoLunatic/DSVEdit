@@ -75,10 +75,13 @@ OTHER_SPRITES = [
   {pointer: 0x0222ADBC, desc: "Chair 3"},
   {pointer: 0x0222ADC8, desc: "Chair 4"},
   
+  {pointer: 0x02215CEC, desc: "Magic seal"},
+  
 #  {pointer: 0x0203D4A0, desc: "Nintendo splash screen"}, # Does not exist in the Japanese version
   {pointer: 0x0203D584, desc: "Konami splash screen"},
   {pointer: 0x0203D8C8, desc: "Main menu"},
   {pointer: 0x0203DAD0, desc: "Castlevania logo"},
+  {pointer: 0x0203A5D8, desc: "Info screen", one_dimensional_mode: true},
   {pointer: 0x0203ED54, desc: "Credits"},
   {pointer: 0x0203ED78, desc: "Characters used during credits"},
   {pointer: 0x0203ED80, desc: "BGs used during credits"},
