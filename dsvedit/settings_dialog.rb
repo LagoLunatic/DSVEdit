@@ -32,9 +32,12 @@ class SettingsDialog < Qt::Dialog
   end
   
   def browse_for_tiled_path
-    possible_install_path_x86 = File.join(ENV["ProgramFiles"], "Tiled", "tiled.exe")
+    possible_install_path = File.join(ENV["ProgramFiles"], "Tiled", "tiled.exe")
+    possible_install_path_x86 = File.join(ENV["ProgramFiles(x86)"], "Tiled", "tiled.exe")
     possible_install_path_x64 = File.join(ENV["ProgramW6432"], "Tiled", "tiled.exe")
-    if File.file?(possible_install_path_x86)
+    if File.file?(possible_install_path)
+      default_dir = possible_install_path
+    elsif File.file?(possible_install_path_x86)
       default_dir = possible_install_path_x86
     elsif File.file?(possible_install_path_x64)
       default_dir = possible_install_path_x64
