@@ -307,15 +307,29 @@ class DSVEdit < Qt::MainWindow
     @progress_dialog.setCancelButton(nil) # Don't give an option to cancel extracting
     
     @progress_dialog.execute do
-      game.initialize_from_rom(rom_path, extract_to_hard_drive = true) do |percentage_written|
-        next unless percentage_written % 10 == 0 # Only update the UI every 100 files because updating too often is slow.
-        break if @progress_dialog.nil?
-        
-        Qt.execute_in_main_thread do
-          if @progress_dialog && !@progress_dialog.wasCanceled
-            @progress_dialog.setValue(percentage_written)
+      begin
+        game.initialize_from_rom(rom_path, extract_to_hard_drive = true) do |percentage_written|
+          next unless percentage_written % 10 == 0 # Only update the UI every 100 files because updating too often is slow.
+          break if @progress_dialog.nil?
+          
+          Qt.execute_in_main_thread do
+            if @progress_dialog && !@progress_dialog.wasCanceled
+              @progress_dialog.setValue(percentage_written)
+            end
           end
         end
+      rescue StandardError => e
+        Qt.execute_in_main_thread do
+          if @progress_dialog
+            @progress_dialog.setValue(max_val) unless @progress_dialog.wasCanceled
+            @progress_dialog.close()
+            @progress_dialog = nil
+          end
+          
+          Qt::MessageBox.critical(self, "ROM Extraction failed", "Failed to extract ROM with error:\n#{e.message}\n\n#{e.backtrace.join("\n")}")
+        end
+        update_filesystem_watcher()
+        return
       end
       
       Qt.execute_in_main_thread do
@@ -1151,15 +1165,28 @@ class DSVEdit < Qt::MainWindow
     max_val = fs.files_without_dirs.length
     @progress_dialog = ProgressDialog.new("Building", "Writing files to ROM", max_val)
     @progress_dialog.execute do
-      fs.write_to_rom(output_rom_path) do |files_written|
-        next unless files_written % 100 == 0 # Only update the UI every 100 files because updating too often is slow.
-        break if @progress_dialog.nil?
-        
-        Qt.execute_in_main_thread do
-          if @progress_dialog && !@progress_dialog.wasCanceled
-            @progress_dialog.setValue(files_written)
+      begin
+        fs.write_to_rom(output_rom_path) do |files_written|
+          next unless files_written % 100 == 0 # Only update the UI every 100 files because updating too often is slow.
+          break if @progress_dialog.nil?
+          
+          Qt.execute_in_main_thread do
+            if @progress_dialog && !@progress_dialog.wasCanceled
+              @progress_dialog.setValue(files_written)
+            end
           end
         end
+      rescue StandardError => e
+        Qt.execute_in_main_thread do
+          if @progress_dialog
+            @progress_dialog.setValue(max_val) unless @progress_dialog.wasCanceled
+            @progress_dialog.close()
+            @progress_dialog = nil
+          end
+          
+          Qt::MessageBox.critical(self, "Building ROM failed", "Failed to build ROM with error:\n#{e.message}\n\n#{e.backtrace.join("\n")}")
+        end
+        return
       end
       
       Qt.execute_in_main_thread do
