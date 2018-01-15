@@ -774,6 +774,14 @@ class Room
     @layers << new_layer
   end
   
+  def add_new_entity
+    entity = Entity.new(self, fs)
+    entities << entity
+    write_entities_to_rom()
+    
+    return entity
+  end
+  
   def overlay_id
     AREA_INDEX_TO_OVERLAY_INDEX[sector.area.area_index][sector.sector_index]
   end
