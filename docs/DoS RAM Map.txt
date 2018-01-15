@@ -132,6 +132,12 @@ There are 41 entries in the list total.
 
 020C0740,4 - This is 1 if AoS is currently in the GBA slot.
 
+020C07E0 - Start of game object.
+
+020C07E4,4 - Current RNG seed.
+  The most recent random number generated is stored here.
+  It is used to affect the next random number generated.
+
 020C07E8 - Game state.
   This is an index in list 0208ACC0.
   00 Loading a save

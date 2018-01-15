@@ -126,11 +126,11 @@
 
 020F61D0 - Number times the player has soft reset the game with select+start+L+R.
 
-020F6270 - Start of game object?
+020F6270 - Start of game object.
 
 020F6278,4 - Current RNG seed.
   The most recent random number generated is stored here.
-  It's is used to affect the next random number generated.
+  It is used to affect the next random number generated.
 
 020F6284 - Game state.
   This is used as the index in list 020CA5D0.
@@ -168,6 +168,8 @@
   This is set for 1 frame when you go through a door.
 020F628C - 0 when the game is running, 1 when it's paused. Not just the pause screen, any time the actual game logic is paused.
   However, if you pause, visit the map screen, then back out, the game will be paused yet this value will be 0.
+
+020F6294 - Large bitfield of fake block collisions set by SetFakeBlockCollision. Each bit corresponds to one block.
 
 020FA200 - List of sprite info for currently loaded entities.
   The halfword at +6C in an entity's memory is the index in this list.

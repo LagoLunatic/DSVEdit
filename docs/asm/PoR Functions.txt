@@ -451,6 +451,16 @@
   ;   1 - A jump-through platform you can fall through.
   ;   3 - A completely solid block.
 
+02004A8C SetFakeBlockCollision
+  ; r0 - X pos of the block in pixels
+  ; r1 - Y pos of the block in pixels
+020049B0 SetFakeBlockCollisionMulti
+  ; r0 - X pos in pixels
+  ; r1 - Y pos in pixels
+  ; r2 - Width in blocks
+  ; r3 - Height in blocks
+  ; Used by the temporary walls added during the Legion fight.
+
 020BD268 FloatConvertFromInt
   ; r0 - Integer
   ; Returns r0 - The integer converted to a float
@@ -1177,6 +1187,7 @@
 022EAD74 Object8DUpdate
 022E8820 Object8ECreate
 022E8960 Object8EUpdate
+022E8C00 Object8EDraw
 022E8820 Object8FCreate
 022E88E4 Object8FUpdate
 02073898 Object90Create

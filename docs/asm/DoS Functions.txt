@@ -43,6 +43,8 @@
 02026A2C TriggerRoomTransition
   ; Call this after SetDestinationRoomSectorAndRoomIndexes so the room actually changes.
 
+02012D78 Rand
+
 0202E520 ShowTextPopup
   ; r0 - Text index of the text to display.
 
@@ -110,7 +112,7 @@
   ; r2 - Entity B
   ; If there is a collision it calls entity A's on-hit-other callback and entity B's on-get-hit callback.
 
-02005C54 SetBlockCollision
+02005C54 SetFakeBlockCollision
   ; r0 - X pos of the block in pixels
   ; r1 - Y pos of the block in pixels
   ; Used by the floors in Gergoth's tower that change depending on the state.

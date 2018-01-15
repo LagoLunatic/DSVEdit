@@ -578,7 +578,7 @@ F0-F0 ?
 
 021389C0,4 - Current RNG seed.
   The most recent random number generated is stored here.
-  It's is used to affect the next random number generated.
+  It is used to affect the next random number generated.
 
 0213A5C0-0213A77F - Data for the current room's 4 layers. Each is 0x70 bytes long.
   00,4: Pointer to the layer's metadata.
