@@ -1279,7 +1279,7 @@ SHOP_HARDCODED_ITEM_POOLS = [
 ]
 
 FAKE_FREE_SPACES = [
-  {path: "/ftc/overlay9_46", offset: 0x022E4ABC-0x022C1FE0, length: 0xC0}
+  {path: "/ftc/overlay9_46", offset: 0x022E4ABC-0x022C1FE0, length: 0xC0}, # Used by object 5A
 ]
 
 MAGIC_SEAL_COUNT = 0

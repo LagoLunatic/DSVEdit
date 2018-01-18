@@ -1250,7 +1250,17 @@ SHOP_ITEM_POOL_COUNT = 5
 SHOP_POINT_ITEM_POOL = 0x020E009C
 
 FAKE_FREE_SPACES = [
-  {path: "/ftc/overlay9_99", offset: 0x022FB1E0-0x022E8820, length: 0x98}
+  {path: "/ftc/overlay9_86", offset: 0x022FC580-0x022E8820, length: 4}, # Used by object 78
+  {path: "/ftc/overlay9_91", offset: 0x023076A0-0x022E8820, length: 4}, # Used by object 54
+  {path: "/ftc/overlay9_92", offset: 0x023066A0-0x022E8820, length: 4}, # Used by object 55
+  {path: "/ftc/overlay9_99", offset: 0x022FB1E0-0x022E8820, length: 0x98}, # Used by object 63
+  {path: "/ftc/overlay9_100", offset: 0x02302D60-0x022E8820, length: 4}, # Used by object 64
+  {path: "/ftc/overlay9_102", offset: 0x02308EA0-0x022E8820, length: 4}, # Used by object 56
+  {path: "/ftc/overlay9_103", offset: 0x02304DC0-0x022E8820, length: 4}, # Used by object 57
+  {path: "/ftc/overlay9_109", offset: 0x022F6400-0x022E8820, length: 0x14}, # Used by objects 50 and 94
+  {path: "/ftc/overlay9_110", offset: 0x022F2680-0x022E8820, length: 8}, # Used by object 51
+  {path: "/ftc/overlay9_111", offset: 0x022F8700-0x022E8820, length: 4}, # Used by object 52
+  {path: "/ftc/overlay9_112", offset: 0x022F2B60-0x022E8820, length: 0x14}, # Used by objects 53 and 66
 ]
 
 MAGIC_SEAL_COUNT = 0
