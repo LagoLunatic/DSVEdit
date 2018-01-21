@@ -158,7 +158,7 @@
 080217A4 ???MenuCreate???
   ; Create code for something menu related?
 
-08494580 RAMStartPointer
+08494580 PointerToGameObject
 
 ; Enemy-specific code
 08032394 EnemyBatCreate

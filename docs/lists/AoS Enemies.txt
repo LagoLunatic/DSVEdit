@@ -48,6 +48,9 @@ Enemies:
 1F Killer Doll
 20 Zombie Officer
 21 Creaking Skull
+  Var A:
+    0 Common enemy.
+    1 Boss (disappears after being killed once).
 22 Wooden Golem
 23 Tsuchinoko 
 24 Persephone

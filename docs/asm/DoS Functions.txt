@@ -480,6 +480,10 @@
   ; r0 - Map X
   ; r1 - Map Y
   ; r2 - Which map (0/1/2 for Castle/Abyss/???)
+02024D74 MapTileSetExplored
+  ; r0 - Map X
+  ; r1 - Map Y
+  ; r2 - Which map (0/1/2 for Castle/Abyss/???)
 02024D44 MapGetXOffset
   ; r0 - Which map (0/1/2 for Castle/Abyss/???)
   ; This is the offset from the left of the screen the map should be drawn.
@@ -534,8 +538,6 @@
   ; r0 - Soul index
   ; Returns how many levels this soul has
 
-02024D74 MapTileSetExplored
-
 02024C7C GetWarpIndexFromPos
   ; r0 - Room's x on the map
   ; r1 - Room's y on the map
@@ -546,6 +548,9 @@
   ; Returns a pointer to the start of the sector's asset list.
 
 0203F410 GameOverScreenCreate?
+
+020C07E0 GameObject
+0208AC20 PointerToGameObject
 
 ; Enemy-specific code
 0223266C EnemyZombieCreate

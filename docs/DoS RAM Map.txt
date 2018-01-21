@@ -291,7 +291,9 @@ What each range of entity slots is for:
 020F6E14 - this contains a ram pointer to the metadata for the room you're currently in.
 020F6E18 - also contains a pointer to the current room metadata. but when you hit a door, this pointer updates a couple frames earlier than the above pointer. after 2 frames, the value here gets copied to the above location.
 020F6E1C - pointer to the destination door you're heading to.
-020F6E20,020F6E22 - current room's x pos and y pos on map. this is used when suspending to know what room the player is in.
+020F6E20,2 - Current room's X pos on the map.
+020F6E22,2 - Current room's Y pos on the map.
+  These are used when suspending to know what room the player is in.
 020F6E25 - 0 if in dracula's castle. 1 if in abyss.
 020F6E27 - ??? if this is 1, events end instantly, setting their event flag to true
 
@@ -576,6 +578,8 @@ Player's current stats:
 020F75A6,2 - Timer for how many more frames to display the name of the last item you got in the lower right corner of the screen.
 
 020F75A8 - Has a pointer to the first (collision) layer for the current room.
+
+020F75A8-020F7767 - Data for the current room's 4 layers. Each is 0x70 bytes long.
 
 020F8018 - Current area name shown on the top screen (in warp rooms).
 

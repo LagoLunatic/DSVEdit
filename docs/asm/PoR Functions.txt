@@ -28,11 +28,22 @@
   ; r1 - Maximum entity index to check
   ; r2 - Update function pointer for the new entity
 
+02015078 UpdateGame
+
 02012920 UpdateAndDrawAllEntitiesAndTiles
 02012B60 UpdateAllEntities
 02012960 DrawAllEntitiesAndTiles
 02002F00 DrawTiles
 02012784 ProcessInput
+
+02034D3C UpdatePauseMenuState?
+  ; Returns: Game substate to switch to, or -1 to stay in this substate.
+
+02033464 EnterOverlappingDoor
+  ; r0 - Player entity
+  ; Check if the player is on top of a door, and try to enter that door.
+  ; This function has a bug where if the player is 1 pixel inside a right or down door it won't count it as overlapping the door, which allows the suspend glitch to exist.
+  ; The bugged lines of code are at 02033524 and 0203353C, they check if the player's X/Y is greater than the room's width/height, when they should check greater than or equal.
 
 0201BB6C AssetGetPointer
   ; r0 - Asset index
@@ -220,7 +231,7 @@
   ; r0 - Index of the consumable
   ; Calls func 021E3AA8 with r1=0 and r2=1.
 
-0205582C MapDrawBackground
+0205582C MapUpdateAndDrawBackground
 02030570 MapGetExploredTileListForArea
   ; r0 - Area index
   ; Returns r0 - Pointer to the start of this area's list of explored tiles.
@@ -241,6 +252,15 @@
   ; r0 - Area index
 02030710 MapGetNumTiles
   ; r0 - Area index
+
+0202E5F8 UpdatePlayerPositionOnMap
+  ; Updates the four variables holding both players' positions on the map (0211177C, 0211177E, 02111780, 02111782).
+  ; Then it reads the controlled player's position on the map and calls MapSetTileExplored.
+02030104 MapGetTileIndexByTileXAndY
+  ; r0 - Area index
+  ; r1 - X pos on the map in tiles
+  ; r2 - Y pos on the map in tiles
+  ; Returns the index of the tile in this map's list of tiles, or FFFF if there's no tile at this position.
 
 020347D0 DummyUpdate
 
@@ -541,7 +561,7 @@
   ; r0 - The base item drop chance from the enemy DNA.
   ; Returns: The drop chance, out of decimal 10000. For example, 528 means a 5.28% drop chance. Note that drop chances cap at 50% (5000).
 
-02055210 DrawTextToTopScreen?
+02055210 RenderTextToTopScreen?
   ; r0 - 
   ; r1 - 
   ; r2 - 
@@ -550,7 +570,7 @@
   ; [r13,4] - Y pos (in terms of 8x8 tiles)
   ; [r13,8] - Text index to draw
   ; [r13,C] - 
-0200A2A0 DrawNumberText?
+0200A2A0 RenderNumberText?
   ; r0 - 
   ; r1 - 
   ; r2 - 
@@ -560,6 +580,25 @@
   ; [r13,8] - Integer to draw
   ; [r13,C] - 
   ; [r13,10] - 
+0200870C RenderTextToTiles2
+  ; r0 - X pos (in terms of 8x8 tiles)
+  ; r1 - Y pos (in terms of 8x8 tiles)
+  ; r2 - 
+  ; r3 - 
+  ; [r13] - 
+  ; [r13,4] - 
+  ; [r13,8] - 
+  ; [r13,C] - Text index of the text to render (e.g. 516 is a single colon)
+  ; [r13,10] - 
+  ; [r13,14] - 
+
+0203D3AC InitializeMenuBG1
+  ; r0 - Menu entity (02110F00)
+0205B5C0 DrawMenuBG1
+  ; r0 - Menu entity (02110F00)
+  ; r1 - GFX list
+  ; r2 - Palette list
+  ; r3 - Layer metadata
 
 02014EA0 DamagePlayer?
 02014EC4 TakeDamage?
@@ -581,6 +620,9 @@
   ; r0 - Parent entity
   ; r1 - Child entity
   ; Initializes the child with the sprite and palette of the parent.
+
+020F6270 GameObject
+020CA580 PointerToGameObject
 
 ; Enemy-specific code
 0222D5DC EnemyZombieCreate

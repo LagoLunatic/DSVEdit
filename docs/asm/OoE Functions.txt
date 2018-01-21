@@ -22,6 +22,7 @@
   ; r0 - Entity pointer
   ; Calls the entity's detroy code, does some other things?, then calls DeleteEntity.
 
+02033298 Rand
 020332E0 RandMax
   ; Max random number is r0-1. Min is 0.
 02024074 RandClampToMax
@@ -162,10 +163,24 @@
   ; r1 - Pointer to the player entity
   ; r2 - Pointer to ??? in the stack
 
+02063CA4 CreatePickup
+  ; r0 - Pickup entity created when loading in room entities
+02063858 CreateItemPickup
+  ; r0 - X pos in subpixels
+  ; r1 - Y pos in subpixels
+  ; r2 - Z pos
+  ; r3 - Global ID+1 of the item
+
 02063268 GetItemIDByTypeIndex
   ; r0 - Item type (2 is arm glyphs, etc)
   ; r1 - Index of the item
   ; Returns the global ID+1 of the item
+02063240 GetItemIndexByGlobalID+1
+  ; r0 - Item global ID+1
+  ; Returns the index of the item in that type's list
+02063130 GetItemTypeByGlobalID+1
+  ; r0 - Item global ID+1
+  ; Returns the item type (2 is arm glyphs, etc)
 020622B8 GetItemTypeFirstID
   ; r0 - Item type
   ; Returns the global ID+1 of the first item of this type.
@@ -355,6 +370,10 @@
   ;   0 - A jump-through platform you can slide on.
   ;   1 - A jump-through platform you can fall through.
   ;   3 - A completely solid block.
+
+02034658 GetLayerPointer
+  ; r0 - Layer index
+  ; Returns a pointer to the layer of the given index in the list of currently loaded layers (0213A5C0).
 
 020335AC GetCollisionDataBySubpixelPos
   ; r0 - X pos in subpixels
@@ -634,11 +653,9 @@
   ; r0 - Starting X pos
   ; r1 - Starting Y pos
 
-02046144 MapSetRoomExplored
+0204319C MapGetExploredTileListForArea
   ; r0 - Area index
-  ; r1 - Sector index
-  ; r2 - Room index
-
+  ; Returns r0 - Pointer to the start of this area's list of explored tiles.
 02043238 MapGetMetadataListPointer
   ; r0 - Area index
 02043428 MapGetRowWidthsListPointer
@@ -652,6 +669,25 @@
 02042F94 MapGetDrawYOffset
   ; r0 - Area index
 02043480 MapDraw?
+
+020444E0 UpdatePlayerPositionOnMap
+  ; Updates the two variables holding the player's position on the map (020FFCB0, 020FFCB4).
+  ; Then it reads the player's position on the map and sets the bits for the proper tile as explored.
+  ; But unlike the previous games, in OoE this function clamps the player's X/Y on the map to be sure it's within the bounds of the room.
+  ; This means it won't accidentally set a map tile when the player walks through a door and they are temporarily a couple pixels out of bounds.
+02043348 Map???
+  ; r0 - Area index
+  ; r1 - X pos on the map in tiles
+  ; r2 - Y pos on the map in tiles
+02043268 MapGetTileIndexByTileXAndY
+  ; r0 - Area index
+  ; r1 - X pos on the map in tiles
+  ; r2 - Y pos on the map in tiles
+  ; Returns the index of the tile in this map's list of tiles, or FFFF if there's no tile at this position.
+02046144 MapSetRoomExplored
+  ; r0 - Area index
+  ; r1 - Sector index
+  ; r2 - Room index
 
 02035F14 SetOAMData?
   ; r0 - Pointer to the OAM data (in list 021427E0 or 02145B2C)
@@ -677,6 +713,8 @@
   ; r0 - Entity to distort towards
 0206E9B4 SetGlyphShouldDistort
   ; r0 - Whether the glyph should distort or not. 1 to distort, 0 to not.
+
+020FFC58 GameObject
 
 ; Enemy-specific code
 022114AC EnemyBatCreate

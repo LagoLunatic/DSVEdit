@@ -128,6 +128,8 @@
 
 020F6270 - Start of game object.
 
+020F6270 - Number of frames since the game was booted up.
+
 020F6278,4 - Current RNG seed.
   The most recent random number generated is stored here.
   It is used to affect the next random number generated.
@@ -170,6 +172,9 @@
   However, if you pause, visit the map screen, then back out, the game will be paused yet this value will be 0.
 
 020F6294 - Large bitfield of fake block collisions set by SetFakeBlockCollision. Each bit corresponds to one block.
+
+020F88E4 - Tile mapping for BG2s layer.
+  Used for the dynamic parts of menus like numbers and descriptions.
 
 020FA200 - List of sprite info for currently loaded entities.
   The halfword at +6C in an entity's memory is the index in this list.
@@ -727,6 +732,8 @@ TODO: What are the other 2 for? It's not for the "recent" tab.
   Index 0xB is for Maria.
   The space between each entry here seems to be hardcoded around 02011FC0. 0x8700 is the difference between Richter and Maria's sprite file space for example.
   (The last one is found first via the normal means. Then the others are spaced out before it by subtracting hardcoded values from that.)
+
+0213C948 - something asset-related?
 
 0213D654,4 - Song index about to be played.
 0213D65C,0213DCF8,0213DD04 - Currently playing song.

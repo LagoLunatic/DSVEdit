@@ -196,17 +196,22 @@ Requirement lists for kill quests:
   This is set to 0 when resetting the game with select+start+L+R as well.
   This value is used to randomize the RNG seed when loading a save.
 
+020FFC58 - Start of game object.
+
 020FFC88 - normally 0. 12 when in paries state. 12 prevents pausing.
 
 020FFC8C-020FFC8F - Bitfield of global game flags.
   0x00000001 - ? can't use magic tickets
   0x00000002 - Set during boss fights. Disables suspending, magical tickets, and keeps boss doors shut.
+  0x00400000 - Don't update the player's position on the map or set any map tiles as explored.
   0x80000000 - ? can't use magic tickets
 
 020FFC9C - Pointer to current room.
 020FFCA0 - Pointer to next room to transition into.
-020FFCB0,2 - ?
-020FFCB4,2 - ?
+020FFCAC,2 - Current room's X pos on the map.
+020FFCAE,2 - Current room's Y pos on the map.
+020FFCB0,2 - Player's X pos on the map.
+020FFCB4,2 - Player's Y pos on the map.
 020FFCB9,1 - Current area index.
 
 020FFD20,4 - Pointer to the player (02109820).
@@ -600,6 +605,8 @@ F0-F0 ?
     0100 - Turn off and layer will be invisible?
 
 when you first enter a new area, the game determines which entrance room to put you at by the sector/room indexes listed on the map metadata. so if you switch the indexes of the first and second entrance the game will put you at the second instead.
+
+0213C7C0-213CFBF - Tile mapping for BG2 layer.
 
 021427E0-02142BDF - List of sprites in the bottom screen OAM.
 02145B2C-02145F2B - List of sprites in the top screen OAM.

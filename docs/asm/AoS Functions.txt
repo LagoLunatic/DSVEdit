@@ -271,7 +271,7 @@
 080221CC WeaponOneHandedUse
 080224BC WeaponTwoHandedUse
 
-084F0B14 RAMStartPointer
+084F0B14 PointerToGameObject
 
 ; Enemy-specific code
 080AD2A8 EnemyBatCreate
