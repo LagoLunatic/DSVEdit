@@ -573,15 +573,28 @@ class Game
     fs.load_overlay(AREAS_OVERLAY) # Load back OoE's main overlay for area and sector data
   end
   
-  def apply_armips_patch(patch_name)
-    game_name = patch_name[0,3]
-    return unless GAME == game_name.downcase
-    
+  def armips_patch_filename_prefix
+    prefix = GAME.dup
     if REGION != :usa
-      patch_name = "#{REGION.to_s}_#{patch_name}"
+      prefix = "#{REGION.to_s}_#{prefix}"
+    end
+    return prefix
+  end
+  
+  def apply_armips_patch(patch_name, full_path: false)
+    if full_path
+      patch_file = patch_name
+    else
+      game_name = patch_name[0,3]
+      return unless GAME == game_name.downcase
+      
+      if REGION != :usa
+        patch_name = "#{REGION.to_s}_#{patch_name}"
+      end
+      
+      patch_file = "asm/#{patch_name}.asm"
     end
     
-    patch_file = "asm/#{patch_name}.asm"
     if !File.file?(patch_file)
       raise "Could not find patch file: #{patch_file}"
     end

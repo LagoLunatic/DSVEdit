@@ -213,6 +213,7 @@
     <addaction name="actionShop_Editor"/>
     <addaction name="actionWeapon_Synth_Editor"/>
     <addaction name="actionMagic_Seal_Editor"/>
+    <addaction name="actionApply_ARMIPS_Patch"/>
     <addaction name="actionAdd_Overlay"/>
     <addaction name="actionEntity_Search"/>
     <addaction name="actionSettings"/>
@@ -527,6 +528,11 @@
   <action name="actionPlayer_State_Anims_Editor">
    <property name="text">
     <string>Player State Anims Editor</string>
+   </property>
+  </action>
+  <action name="actionApply_ARMIPS_Patch">
+   <property name="text">
+    <string>Apply ARMIPS Patch</string>
    </property>
   </action>
  </widget>

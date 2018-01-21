@@ -29,6 +29,7 @@ require_relative 'tileset_chooser_dialog'
 require_relative 'door_editor_dialog'
 require_relative 'magic_seal_editor_dialog'
 require_relative 'player_state_anims_editor_dialog'
+require_relative 'armips_patcher_dialog'
 
 require_relative 'ui_main'
 
@@ -65,6 +66,7 @@ class DSVEdit < Qt::MainWindow
   slots "open_weapon_synth_editor()"
   slots "open_shop_editor()"
   slots "open_magic_seal_editor()"
+  slots "open_armips_patcher()"
   slots "add_new_overlay()"
   slots "open_settings()"
   slots "write_to_rom()"
@@ -141,6 +143,7 @@ class DSVEdit < Qt::MainWindow
     connect(@ui.actionWeapon_Synth_Editor, SIGNAL("activated()"), self, SLOT("open_weapon_synth_editor()"))
     connect(@ui.actionShop_Editor, SIGNAL("activated()"), self, SLOT("open_shop_editor()"))
     connect(@ui.actionMagic_Seal_Editor, SIGNAL("activated()"), self, SLOT("open_magic_seal_editor()"))
+    connect(@ui.actionApply_ARMIPS_Patch, SIGNAL("activated()"), self, SLOT("open_armips_patcher()"))
     connect(@ui.actionAdd_Overlay, SIGNAL("activated()"), self, SLOT("add_new_overlay()"))
     connect(@ui.actionEntity_Search, SIGNAL("activated()"), self, SLOT("open_entity_search()"))
     connect(@ui.actionSettings, SIGNAL("activated()"), self, SLOT("open_settings()"))
@@ -209,6 +212,7 @@ class DSVEdit < Qt::MainWindow
     @ui.actionWeapon_Synth_Editor.setEnabled(false);
     @ui.actionShop_Editor.setEnabled(false);
     @ui.actionMagic_Seal_Editor.setEnabled(false);
+    @ui.actionApply_ARMIPS_Patch.setEnabled(false);
     @ui.actionAdd_Overlay.setEnabled(false);
     @ui.actionEntity_Search.setEnabled(false);
     @ui.actionBuild.setEnabled(false);
@@ -244,6 +248,7 @@ class DSVEdit < Qt::MainWindow
     @ui.actionWeapon_Synth_Editor.setEnabled(true);
     @ui.actionShop_Editor.setEnabled(true);
     @ui.actionMagic_Seal_Editor.setEnabled(true);
+    @ui.actionApply_ARMIPS_Patch.setEnabled(true);
     @ui.actionAdd_Overlay.setEnabled(true);
     @ui.actionEntity_Search.setEnabled(true);
     @ui.actionBuild.setEnabled(true);
@@ -944,6 +949,10 @@ class DSVEdit < Qt::MainWindow
     else
       Qt::MessageBox.warning(self, "Can't edit magic seals", "Only DoS has magic seals.")
     end
+  end
+  
+  def open_armips_patcher
+    @open_dialogs << ArmipsPatcherDialog.new(self, game)
   end
   
   def add_new_overlay
