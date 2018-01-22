@@ -931,6 +931,15 @@ class SpriteEditor < Qt::Dialog
     end
     
     folder = "./darkfunction_sprites/#{sprite_name}"
+    
+    if !File.directory?(folder) || !File.file?(folder + "/#{sprite_name}.sprites") || !File.file?(folder + "/#{sprite_name}.anim")
+      Qt::MessageBox.warning(self,
+        "Nothing to import",
+        "There is no darkFunction sprite to import.\nYou must first export this sprite before you can import it."
+      )
+      return
+    end
+    
     DarkFunctionInterface.import(folder, sprite_name, @sprite_info, @fs, @renderer)
     
     reload_sprite()
