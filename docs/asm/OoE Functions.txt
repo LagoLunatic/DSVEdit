@@ -59,8 +59,9 @@
 
 020657F8 SetTopScreen
   ; r0 - Top screen value
-  ; r1 - ??? 10
-  ; r2 - ??? 1
+  ; r1 - Time for the fade out/in to take, in number of frames.
+  ;   This counter is used twice, once for the fade out and once for the fade in. So the total time is twice this.
+  ; r2 - Type of fade out to use. 1 is a fade to black, 0 is a fade to white.
 
 020AA508 PlaySfxAtPos
   ; r0 - Sfx index?

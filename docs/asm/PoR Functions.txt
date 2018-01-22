@@ -600,6 +600,9 @@
   ; r2 - Palette list
   ; r3 - Layer metadata
 
+020557C8 SetTopScreen
+  ; r0 - Top screen type to change to
+
 02014EA0 DamagePlayer?
 02014EC4 TakeDamage?
 

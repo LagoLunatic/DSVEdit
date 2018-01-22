@@ -23,6 +23,7 @@
   ; r1 - How to complete the magic seal (see above).
   ; This function reads from list 0222F290, a list of which magic seal is for each boss.
 0203BE9C SetTopScreen
+  ; r0 - Top screen type to change to
 02012DB0 GetEntityHitboxPtr
   ; r0 - Entity pointer
 021D5210 DestroyIceBlocks

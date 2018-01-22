@@ -2,6 +2,8 @@
 module FreeSpaceManager
   class FreeSpaceFindError < StandardError ; end
   
+  attr_reader :free_spaces
+  
   def read_free_space_from_text_file
     @free_spaces = []
     

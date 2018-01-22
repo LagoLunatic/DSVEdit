@@ -367,6 +367,7 @@ F5-F5
 02111780,2 - Player 1's Y pos on the map.
 02111782,2 - Player 2's Y pos on the map.
 02111785,1 - Current area index.
+02111789,1 - If this is 1 a save was loaded, or 0 if starting a new game (or new game+).
 
 02111790 - Which type of door the player is currently walking through.
   0 - Not walking through a door right now.
@@ -708,6 +709,21 @@ TODO: What are the other 2 for? It's not for the "recent" tab.
 
 02112CB8 - List of pointers to joint entities.
   The pointers are to each joint's entity, so to get the joint data itself (in list 02112A98) go to this entity, and the pointer at entity+158 will be a pointer to the joint data.
+
+0211AB30,1 - What type of top screen is currently displayed.
+  00 Map
+  01 Info screen
+  02 Name of area selected, for warp rooms and map menu
+  03 Graveyard, for the main menu
+  04 Cross with inverted bat wings
+  05 White screen
+  06 Black screen
+  07 Wireless mode
+  08 Nintendo WFC mode
+  09 Nintendo WFC mode (like 08, but has numbers on it. unused?)
+  0A Black screen
+0211AB31,1 - What the next type of top screen should be.
+  This is what 020F367C will change into when the game finishes playing a fading out animation.
 
 0211ABE0 - Start of list of globally loaded palettes.
 

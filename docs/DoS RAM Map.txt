@@ -452,6 +452,7 @@ What each range of entity slots is for:
     0800 - Y
   If you set more than one button bit for a single control, then either of the buttons you set will trigger that control.
 
+020F7251,1 - 0 or 1 for whether the map screen or info screen are on the top screen.
 020F7252,1 - ID of the enemy on the top screen enemy info panel.
 020F7254,1 - Bitfield of what Magic Seals the player owns.
 020F7255,1 - ???
@@ -583,17 +584,21 @@ Player's current stats:
 
 020F8018 - Current area name shown on the top screen (in warp rooms).
 
-020F82B0-020F82B2 - Current top screen. What do each of the bytes do?
-  Different top screen values for 020F82B1:
-    0 - Map.
-    1 - Info and stats.
-    2 - Area name for a warp room.
-    3 - Castle and moon used on the title screen.
-    4 - Cross with inverted bat wings.
-    5 - Enemy set mode map.
-    8 - Enemy set mode map.
-    9 - White (for intro logos).
-    A - Black (for intro logos).
+020F82B0,1 - What type of top screen is currently displayed.
+  00 Normal map
+  01 Info screen
+  02 Name of area selected, for warp rooms
+  03 Castle and moon used on the title screen
+  04 Cross with inverted bat wings
+  05 Enemy set mode map
+  06 Boss rush map
+  07 Credits top scren with all enemies appearing one by one
+  08 Enemy set mode map
+  09 White screen
+  0A Black screen
+020F82B1,1 - What the next type of top screen should be.
+  This is what 020F82B0 will change into when the game finishes playing a fading out animation.
+020F82B2 - ? top screen related
 
 020F8340 - start of list of all globally loaded palettes
 020FC340 - copy of above...?
