@@ -654,7 +654,7 @@ ARMOR_FORMAT = [
   [4, "Price"],
   [1, "Type"],
   [1, "Unknown 1"],
-  [1, "Attack"],
+  [1, "Attack (unused)"],
   [1, "Defense"],
   [1, "Strength"],
   [1, "Constitution"],

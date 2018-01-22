@@ -74,7 +74,8 @@ Body armor and Accessory format:
   04,4: Store price of the item.
   08,1: 01 for body armor, 02 for rings...?
   09,1: 
-  0A,1: Attack stat? Unused for rings/body armor
+  0A,1: Attack stat (unused).
+    This has no effect since only the weapon's attack matters in DoS.
   0B,1: Defense stat.
   0C,1: Strength stat (signed).
   0D,1: Constitution stat (signed).

@@ -1281,6 +1281,7 @@ class ProgressDialog < Qt::ProgressDialog
     self.windowModality = Qt::ApplicationModal
     self.windowFlags = Qt::CustomizeWindowHint | Qt::WindowTitleHint
     self.setFixedSize(self.size);
+    self.autoReset = false
     connect(self, SIGNAL("canceled()"), self, SLOT("cancel_thread()"))
     self.show
   end

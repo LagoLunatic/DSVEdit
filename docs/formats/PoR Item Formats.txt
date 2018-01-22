@@ -40,7 +40,7 @@ Armor format:
     Least significant bit first.
     Bit 1: Jonathan can equip the item.
     Bit 2: Charlotte can equip the item.
-  0B,1: Attack stat? Unused for rings/body armor
+  0B,1: Attack stat.
   0C,1: Defense stat.
   0D,1: Strength stat (signed).
   0E,1: Constitution stat (signed).
