@@ -59,7 +59,8 @@ class PlayerStateAnimsEditor < Qt::Dialog
     player = @game.players[player_index]
     sprite_info = SpriteInfo.new(nil, player["Palette pointer"], 0, player["Sprite pointer"], nil, @fs, gfx_list_pointer: player["GFX list pointer"])
     @sprite = sprite_info.sprite
-    @sprite_frames, _, _ = @renderer.render_sprite(sprite_info)
+    sprite_frames, _, _ = @renderer.render_sprite(sprite_info)
+    @frame_graphics_items = sprite_frames.map{|frame| GraphicsChunkyItem.new(frame)}
     
     state_changed(0)
   end
@@ -75,7 +76,9 @@ class PlayerStateAnimsEditor < Qt::Dialog
   
   def anim_changed(anim_index)
     @animation_timer.stop()
-    @anim_graphics_scene.clear()
+    @anim_graphics_scene.items.each do |item|
+      @anim_graphics_scene.removeItem(item)
+    end
     @current_anim_keyframe_index = 0
     
     @ui.anim_index.setCurrentIndex(anim_index)
@@ -122,15 +125,16 @@ class PlayerStateAnimsEditor < Qt::Dialog
   end
   
   def frame_changed(frame_index)
-    @anim_graphics_scene.clear()
+    @anim_graphics_scene.items.each do |item|
+      @anim_graphics_scene.removeItem(item)
+    end
     
-    if frame_index == nil || @sprite_frames[frame_index] == nil
+    if frame_index == nil || @frame_graphics_items[frame_index] == nil
       return
     end
     
-    frame = @sprite_frames[frame_index]
-    item = GraphicsChunkyItem.new(frame)
-    @anim_graphics_scene.addItem(item)
+    frame_graphics_item = @frame_graphics_items[frame_index]
+    @anim_graphics_scene.addItem(frame_graphics_item)
   end
   
   def save_states
