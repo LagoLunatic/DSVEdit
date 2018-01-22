@@ -64,7 +64,7 @@ Memory used for entities in OoE is 021092A0 - 0211DF5F. Each entity is 0x160 byt
 0AC,4: Bitfield of damage types.
 0B0,4: Bitfield of resistances.
 0B4,4: Bitfield of weaknesses.
-0B8,2: ? something related to glyph union?
+0B8,2: Number of iframes this entity gives.
 0C0,2: Magical defense.
 0C8,4: On-hurt-player callback.
   This function pointer is called when the entity collides with the player.

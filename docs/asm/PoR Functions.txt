@@ -210,16 +210,6 @@
   ; Will return true if either player 1 or player 2 have this item equipped, but only if your partner is called out. If your partner is hidden away, only the controlled character's equipment matters.
   ; This is used for Eye for Decay.
 
-021FED58 PlayerSetStateAnim
-  ; r0 - Entity
-  ; r1 - Animation state index. This is the index in their state->anims mapping list.
-  ; r2 - ? Stored to entity+FC
-  ; This sets the player's animation state.
-021FEE34 PlayerGetStateAnim
-  ; r0 - Pointer to player entity
-  ; r1 - State index
-  ; r2 - 2?
-
 02214330 SubweaponInitialize
 
 021FC77C PlayerFullRecover
@@ -280,6 +270,7 @@
   ; 021DBFFC and 021DBFF8 hardcode Jonathan's hand's X and Y offsets relative to his position.
   ; 021DBFF0 and 021DBFEC hardcode Richter's hand's X and Y offsets relative to his position.
   ; 021DBFAC and 021DBFC0 hardcode any other character's hand's X and Y offsets relative to his position.
+  ; 021DC00C hardcodes the Y offset to add when the player is crouching.
 
 02012E44 DeleteEntity
   ; r0 - Entity pointer
@@ -450,6 +441,17 @@
   ; r1 - Anim index to set
   ; r2 - Anim properties bitfield
   ; Stores the properties bitfield to entity+80, then calls SetSpriteAnimSafe.
+
+021FED58 PlayerSetStateAnim
+  ; r0 - Entity
+  ; r1 - Animation state index. This is the index in their state->anims mapping list.
+  ; r2 - ? Stored to entity+FC
+  ; This sets the player's animation state.
+021FEE34 PlayerSetStateAnimAndProperties
+  ; r0 - Pointer to player entity
+  ; r1 - State index
+  ; r2 - Anim properties bitfield
+  ; Sets the player's animation state and the animation properties at entity+80.
 
 021DB0A4 GenericDraw
   ; The draw function for enemies, enemy projectiles, player skills, skill pickups, special objects, dust, explosions, etc.

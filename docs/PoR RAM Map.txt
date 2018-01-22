@@ -863,7 +863,10 @@ TODO: What are the other 2 for? It's not for the "recent" tab.
   07 02215FD8 Tori (throw the weapon diagonally upwards, then it comes back to you).
 0221F020-0221F06F - List of weapon swing animation types.
   Entry length 8.
-  01,1: Offset in pixels downwards. (Signed.)
+  00,1: Y offset to place the weapon at compared to player when the player is crouching. (Signed.)
+    Note that when crouching, this offset and the below offset are added together and both used.
+    When not crouching, only the below offset is used.
+  01,1: Y offset to place the weapon at compared to player. (Signed.)
   02,1: Force the weapon applies to enemies that it hits.
     stored to weapon entity+BC,2
     this has way more effect than the one at 04, what's the difference?
