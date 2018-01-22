@@ -123,6 +123,11 @@ class PlayerStateAnimsEditor < Qt::Dialog
   
   def frame_changed(frame_index)
     @anim_graphics_scene.clear()
+    
+    if frame_index == nil || @sprite_frames[frame_index] == nil
+      return
+    end
+    
     frame = @sprite_frames[frame_index]
     item = GraphicsChunkyItem.new(frame)
     @anim_graphics_scene.addItem(item)
