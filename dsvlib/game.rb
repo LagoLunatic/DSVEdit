@@ -565,14 +565,6 @@ class Game
     return fs.write(pointer, [song_index].pack("v"))
   end
   
-  def fix_top_screen_on_new_game
-    return unless GAME == "ooe" && REGION == :usa
-    
-    fs.load_overlay(20) # Specifically for OoE
-    fs.write(NEW_GAME_STARTING_TOP_SCREEN_TYPE_OFFSET, [0x05].pack("C"))
-    fs.load_overlay(AREAS_OVERLAY) # Load back OoE's main overlay for area and sector data
-  end
-  
   def armips_patch_filename_prefix
     prefix = GAME.dup
     if REGION != :usa
