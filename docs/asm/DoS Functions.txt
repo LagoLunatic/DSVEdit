@@ -361,6 +361,33 @@
 02058D1C Sound???2
   ; this reads from the list of songs in the INFO section of sound_data.sdat, at 02195780. it may be what actually plays the songs directly.
 
+0200D030 SetSpriteAnimSafe
+  ; r0 - Entity
+  ; r1 - Anim index to set
+  ; Checks the entity's sprite to be sure r1 is a valid animation index for this sprite. If it's not valid, use anim 0 instead.
+0200D020 SetSpriteAnimAndPropertiesSafe
+  ; r0 - Entity
+  ; r1 - Anim index to set
+  ; r2 - Anim properties bitfield
+  ; Stores the properties bitfield to entity+A0, then calls SetSpriteAnimSafe.
+0200CFF4 SetSpriteAnimAndPropertiesIfDifferentSafe
+  ; r0 - Entity
+  ; r1 - Anim index to set
+  ; r2 - Anim properties bitfield
+  ; If the new anim index is different from the current one, it calls SetSpriteAnimAndPropertiesSafe, or otherwise does nothing.
+
+021F83C0 PlayerSetStateAnimAndProperties
+  ; r0 - Entity
+  ; r1 - Animation state index. This is the index in their state->anims mapping list.
+  ; r2 - Anim properties bitfield
+  ; This sets the player's animation state and calls SetSpriteAnimAndPropertiesSafe.
+021F831C PlayerSetStateAnimAndPropertiesIfDifferent
+  ; r0 - Entity
+  ; r1 - Animation state index. This is the index in their state->anims mapping list.
+  ; r2 - Anim properties bitfield
+  ; This sets the player's animation state and calls SetSpriteAnimAndPropertiesIfDifferentSafe.
+  ; Note that if the player has a next animation state set at player+0F0, this function will prevent that specific animation state from being set before the current animation is finishes playing. This is useful for e.g. playing the landing animation instead of the idle animation when the player touches the ground.
+
 0200705C GetCurrentSector
 02007104 GetCurrentSectorRoomIndexesFromMap
   ; r0 - 0 if in the castle, 1 if in the abyss, 2 if not on any map.

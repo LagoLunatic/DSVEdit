@@ -30,8 +30,13 @@ Memory used for entities in DoS is 020CA3F0 - 020F6DEF. Each entity is 0x2A0 byt
 07A,1: which palette index for this enemy to use (gets added to 76)
 081,1: Opacity. 1F is fully opaque.
 082,10: Affects color tint of this entity. 1F for everything means normal colored.
-098,4: 
-09C,2: 
+098,4: Pointer to sprite animation list.
+09C,2: Current animation index.
+09E,2: Current keyframe index in this animation.
+0A0,2: Bitfield of sprite animation properties.
+  01 - Animation finished. This is set automatically by SpriteAnimate when an animation finishes its first loop.
+  02 - Do not loop animation
+  04 - Play animation in reverse
 0A2,2: 
 0A4,1: Controls the iframes this entity should give.
   This is an index in list 020763DC - a list of different iframes values. Each entry is 1 byte long.
@@ -61,6 +66,10 @@ Memory used for entities in DoS is 020CA3F0 - 020F6DEF. Each entity is 0x2A0 byt
 
 For players:
 0D0,4: Bitfield of player state booleans.
+0F0,2: Player's next animation state to go to automatically when the current animation finishes playing.
+  If this is FFFF it means there's no next animation state to go to automatically.
+0F2,2: Player's current animation state. This is the index in their state->anim mapping list to get the new animation.
+138,4: Pointer to their state->anims mapping.
 
 For enemies:
 154,2: Max HP.
