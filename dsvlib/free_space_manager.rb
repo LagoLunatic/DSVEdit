@@ -199,9 +199,26 @@ module FreeSpaceManager
     end
   end
   
+  def automatically_remove_nonzero_free_spaces(files_to_check)
+    # This is an extra safeguard to make absolutely sure no nonzero data is treated as free space.
+    # This can be necessary if the _dsvedit_freespace.txt file got deleted.
+    free_spaces_to_check = @free_spaces.select{|free_space| files_to_check.include?(free_space[:path])}
+    free_spaces_to_check.each do |free_space|
+      (free_space[:offset]..free_space[:offset]+free_space[:length]-1).step(4) do |offset|
+        file_size = files_by_path[free_space[:path]][:size]
+        if offset >= file_size
+          break
+        end
+        
+        word = read_by_file(free_space[:path], offset, 4).unpack("V")
+        if word != 0
+          remove_free_space(free_space[:path], offset, 4)
+        end
+      end
+    end
+  end
+  
   def get_free_space(length_needed, overlay_id = nil)
-    free_spaces_sorted = @free_spaces.sort_by{|free_space| free_space[:length]}
-    
     files_to_check = []
     
     if SYSTEM == :nds
@@ -216,6 +233,10 @@ module FreeSpaceManager
     else
       files_to_check << "/rom.gba"
     end
+    
+    automatically_remove_nonzero_free_spaces(files_to_check)
+    
+    free_spaces_sorted = @free_spaces.sort_by{|free_space| free_space[:length]}
     
     files_to_check.each do |file_path|
       file = files_by_path[file_path]
