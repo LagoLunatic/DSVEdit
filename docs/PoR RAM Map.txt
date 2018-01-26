@@ -49,6 +49,11 @@
 020CD88C - List of enemy files to load.
 020E19DC - List of special object files to load.
 
+020DF294-020DF2A1 - List of number of sectors that show up on the map there are in each area.
+  Each entry is a byte.
+  This list is used by map rendering code to read the bitfield of map items you own (021119D0).
+  Note that even though Dracula's Castle has 0xD sectors, it has 0xC here because the final sector doesn't appear on the map.
+
 020DF2A4 - List of BGM indexes by area. Bytes. (These are indexes in list 020E0204.)
 020DF2B4 - List of BGM indexes by sector in dracula's castle. Bytes. (These are indexes in list 020E0204.)
 020E0204 - List of songs available for use as BGM. Halfwords.
@@ -391,10 +396,6 @@ F5-F5
   07 0211186C
   08 02111890
   09 0211194E
-  0A 021119E4
-  0B 021119F2
-  0C 021119F4
-  0D 021119F6
   The game doesn't have a list of pointers to each of these lists for each area. Instead function 02030570 is used to hardcode these pointers.
 
 0211196E-021119A9 List of player-positioned map reminder markers.
@@ -410,7 +411,7 @@ F5-F5
 021119C0,4 - Y pos to save to the save file.
 021119C4,4 - Z pos to save to the save file.
 
-021119D0,4 - Bitfield of which map items you've bought.
+021119D0,4 - Bitfield of which map items you own.
 
 021119DC - Boss death flags.
   01 00000002 Dullahan
