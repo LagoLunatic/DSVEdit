@@ -59,7 +59,7 @@ class Renderer
       filename = "#{folder}/#{room.area_name}/Rendered Rooms/#{room.filename}.png"
     end
     FileUtils::mkdir_p(File.dirname(filename))
-    rendered_level.save(filename)
+    rendered_level.save(filename, :fast_rgba)
     #puts "Wrote #{filename}"
   end
   
@@ -503,7 +503,7 @@ class Renderer
   
   def export_palette_to_palette_swatches_file(palette, file_path)
     image = convert_palette_to_palette_swatches_image(palette)
-    image.save(file_path)
+    image.save(file_path, :fast_rgba)
   end
   
   def convert_palette_to_palette_swatches_image(palette)

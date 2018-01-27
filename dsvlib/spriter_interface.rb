@@ -10,7 +10,7 @@ class SpriterInterface
     
     chunky_frames, min_x, min_y = renderer.render_sprite(sprite_info)
     chunky_frames.each_with_index do |chunky_frame, i|
-      chunky_frame.save(output_path + "/frame%02X.png" % i)
+      chunky_frame.save(output_path + "/frame%02X.png" % i, :fast_rgba)
     end
     
     image_width = chunky_frames.first.width
@@ -27,7 +27,7 @@ class SpriterInterface
     #
     #gfx_page = sprite_info.gfx_pages[0]
     #chunky_gfx_page = renderer.render_gfx_page(gfx_page.file, palette, gfx_page.canvas_width)
-    #chunky_gfx_page.save(output_path + "/#{name}.png")
+    #chunky_gfx_page.save(output_path + "/#{name}.png", :fast_rgba)
     
     builder = Nokogiri::XML::Builder.new do |xml|
       xml.spriter_data(

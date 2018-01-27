@@ -270,7 +270,7 @@ class GfxEditorDialog < Qt::Dialog
       end
       file_basename = File.basename(gfx_name, ".*")
       gfx_file_path = "#{@output_folder}/#{file_basename}_#{palette_name}.png"
-      chunky_image.save(gfx_file_path)
+      chunky_image.save(gfx_file_path, :fast_rgba)
     end
     
     palette_file_path = "#{@output_folder}/#{palette_name}.png"

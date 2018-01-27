@@ -97,7 +97,7 @@ class DarkFunctionInterface
     hitbox_red_x_off = 0
     hitbox_red_y_off = big_gfx_page.height-hitbox_red_rect.height
     big_gfx_page.replace!(hitbox_red_rect, hitbox_red_x_off, hitbox_red_y_off)
-    big_gfx_page.save(output_path + "/#{name}.png")
+    big_gfx_page.save(output_path + "/#{name}.png", :fast_rgba)
     
     unique_parts_by_index = sprite.get_unique_parts_by_index()
     unique_parts = unique_parts_by_index.values.map{|dup_data| dup_data[:unique_part]}.uniq
