@@ -254,6 +254,7 @@ class GfxEditorDialog < Qt::Dialog
     return if @palettes.nil? || @palette_index.nil?
     
     palette = @palettes[@palette_index]
+    palette_name = "palette_%08X-%02X" % [@palette_pointer, @palette_index]
     
     @gfx_pages.each do |gfx|
       if gfx.file
@@ -268,12 +269,12 @@ class GfxEditorDialog < Qt::Dialog
         chunky_image = @renderer.render_gfx_page(gfx.file, palette, gfx.canvas_width)
       end
       file_basename = File.basename(gfx_name, ".*")
-      palette_name = "palette_%08X-%02X" % [@palette_pointer, @palette_index]
       gfx_file_path = "#{@output_folder}/#{file_basename}_#{palette_name}.png"
       chunky_image.save(gfx_file_path)
-      palette_file_path = "#{@output_folder}/#{palette_name}.png"
-      @renderer.export_palette_to_palette_swatches_file(palette, palette_file_path)
     end
+    
+    palette_file_path = "#{@output_folder}/#{palette_name}.png"
+    @renderer.export_palette_to_palette_swatches_file(palette, palette_file_path)
     
     @ui.info_label.text = "Exported gfx and palette to folder ./#{@output_folder}"
   end
