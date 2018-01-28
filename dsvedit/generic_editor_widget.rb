@@ -167,7 +167,7 @@ class GenericEditorWidget < Qt::Widget
     
     options = 0
     
-    if attribute_name == "Normal outline color"
+    if attribute_name == "Outline color"
       a = 255
       b = ((color_value & 0b0111_1100_0000_0000) >> 10) << 3
       g = ((color_value & 0b0000_0011_1110_0000) >>  5) << 3
@@ -189,7 +189,7 @@ class GenericEditorWidget < Qt::Widget
     end
     
     color_value = 0
-    if attribute_name == "Normal outline color"
+    if attribute_name == "Outline color"
       puts "%04X" % color_value
       color_value |= (color.blue  >> 3) << 10
       puts "%04X" % color_value
