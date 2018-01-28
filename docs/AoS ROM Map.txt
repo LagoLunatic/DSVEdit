@@ -1,4 +1,10 @@
 
+Starting stats (hardcoded):
+08033DC2,1 - Starting STR
+08033DC6,1 - Starting CON
+08033DCA,1 - Starting INT
+08033DCE,1 - Starting LCK
+
 080E0DF8 - List of songs->text indexes for sound test mode.
   Entry length 4.
   00,2: Song index.
