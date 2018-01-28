@@ -182,6 +182,10 @@ class Entity
     is_special_object? && subtype == SAVE_POINT_SUBTYPE
   end
   
+  def is_warp_point?
+    is_special_object? && subtype == WARP_POINT_SUBTYPE
+  end
+  
   def is_villager?
     GAME == "ooe" && is_special_object? && subtype == 0x89
   end

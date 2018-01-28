@@ -78,7 +78,7 @@ class Map
     @original_number_of_rows = row_widths.length
   end
   
-  def write_to_rom
+  def write_to_rom(allow_changing_num_tiles: false)
     @tiles = @tiles.sort_by{|tile| [tile.y_pos, tile.x_pos]}
     
     max_x_pos = @tiles.map{|tile| tile.x_pos}.max
@@ -117,6 +117,12 @@ class Map
     
     (0..max_y_pos).each do |row|
       fs.write(row_widths_list_pointer + row, [row_widths[row]].pack("C"))
+    end
+    
+    if allow_changing_num_tiles
+      @number_of_tiles = @tiles.length
+    elsif @number_of_tiles != @tiles.length
+      raise "Number of tiles on the map was changed."
     end
     
     (0..number_of_tiles-1).each do |i|
