@@ -1,12 +1,12 @@
 
 class Map
+  attr_accessor :draw_x_offset,
+                :draw_y_offset
   attr_reader :map_tile_metadata_ram_pointer,
               :map_tile_line_data_ram_pointer,
               :number_of_tiles,
               :width,
               :height,
-              :draw_x_offset,
-              :draw_y_offset,
               :secret_door_list_pointer,
               :row_widths_list_pointer,
               :game,
