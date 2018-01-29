@@ -73,7 +73,7 @@ class Map
       total_tiles_found += row_width
     end
     if total_tiles_found != number_of_tiles
-      raise "Error reading map row widths: Total number of tiles does not match"
+      raise "Error reading map row widths: Total number of tiles does not match (#{total_tiles_found} tiles found, should be #{number_of_tiles})"
     end
     @original_number_of_rows = row_widths.length
   end
@@ -83,8 +83,8 @@ class Map
     
     max_x_pos = @tiles.map{|tile| tile.x_pos}.max
     max_y_pos = @tiles.map{|tile| tile.y_pos}.max
-    @width = max_x_pos + 2
-    @height = max_y_pos + 2
+    @width = max_x_pos + 1
+    @height = max_y_pos + 1
     
     tiles_by_row = @tiles.group_by{|tile| tile.y_pos}
     @row_widths = []
@@ -117,6 +117,11 @@ class Map
     
     (0..max_y_pos).each do |row|
       fs.write(row_widths_list_pointer + row, [row_widths[row]].pack("C"))
+    end
+    
+    sum_of_row_widths = row_widths.inject(:+)
+    if sum_of_row_widths != @tiles.length
+      raise "Error writing map row widths: Total number of tiles does not match (#{sum_of_row_widths} tiles found, should be #{@tiles.length})"
     end
     
     if allow_changing_num_tiles
