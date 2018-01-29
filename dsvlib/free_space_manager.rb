@@ -197,6 +197,9 @@ module FreeSpaceManager
       free_space[:offset] = offset
       free_space[:length] = end_offset - free_space[:offset]
     end
+    @free_spaces.delete_if do |free_space|
+      free_space[:length] <= 0
+    end
   end
   
   def automatically_remove_nonzero_free_spaces(files_to_check)
