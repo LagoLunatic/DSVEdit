@@ -119,7 +119,7 @@ class Map
       fs.write(row_widths_list_pointer + row, [row_widths[row]].pack("C"))
     end
     
-    sum_of_row_widths = row_widths.inject(:+)
+    sum_of_row_widths = row_widths.inject(0, :+)
     if sum_of_row_widths != @tiles.length
       raise "Error writing map row widths: Total number of tiles does not match (#{sum_of_row_widths} tiles found, should be #{@tiles.length})"
     end
