@@ -845,6 +845,10 @@ class Room
     @room_str ||= "%02X-%02X-%02X" % [area_index, sector_index, room_index]
   end
   
+  def to_s
+    "<Room:#{room_str}>"
+  end
+  
   def inspect; to_s; end
 end
 
