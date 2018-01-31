@@ -21,14 +21,34 @@ class TMXInterface
       props = extract_properties(tmx_layer)
       validate_properties(props, "Layer", %w(layer_width layer_height tileset collision_tileset z_index scroll_mode main_gfx_page_index))
       
-      layer_list_entry_ram_pointer = tmx_layer.attr("name").match(/^layer (\h+)$/)[1].to_i(16)
-      possible_layers = room.layers.select{|layer| layer.layer_list_entry_ram_pointer == layer_list_entry_ram_pointer}
-      if possible_layers.length == 0
-        raise ImportError.new("Could not find layer: %08X" % layer_list_entry_ram_pointer)
-      elsif possible_layers.length > 1
-        raise ImportError.new("%08X could be too many possible layers" % layer_list_entry_ram_pointer)
+      if tmx_layer.attr("name") =~ /^layer (\h{8})$/
+        layer_list_entry_ram_pointer = $1.to_i(16)
+        possible_layers = room.layers.select{|layer| layer.layer_list_entry_ram_pointer == layer_list_entry_ram_pointer}
+        if possible_layers.length == 0
+          raise ImportError.new("Could not find layer: %08X" % layer_list_entry_ram_pointer)
+        elsif possible_layers.length > 1
+          raise ImportError.new("%08X could be too many possible layers" % layer_list_entry_ram_pointer)
+        end
+        game_layer = possible_layers.first
+      elsif tmx_layer.attr("name") =~ /^layer (\h{1,2})$/
+        layer_index = $1.to_i(16)
+        game_layer = room.layers[layer_index]
+        if game_layer.nil?
+          if SYSTEM == :nds && layer_index < Room.max_number_of_layers
+            # Add new layers automatically.
+            num_layers_to_add = layer_index - room.layers.length + 1
+            num_layers_to_add.times do
+              room.add_new_layer()
+            end
+            game_layer = room.layers[layer_index]
+          else
+            raise ImportError.new("Layer name \"#{tmx_layer.attr("name")}\" has an invalid layer index")
+          end
+        end
+      else
+        raise ImportError.new("Don't know how to parse layer name: \"#{tmx_layer.attr("name")}\"")
       end
-      game_layer = possible_layers.first
+      
       game_layer.width  = props["layer_width"]
       game_layer.height = props["layer_height"]
       game_layer.tileset_pointer = props["tileset"]
