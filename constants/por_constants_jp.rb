@@ -281,4 +281,14 @@ FAKE_FREE_SPACES = [
   {path: "/ftc/overlay9_110", offset: 0x022E45A0-0x022DA780, length: 8}, # Used by object 51
   {path: "/ftc/overlay9_111", offset: 0x022EA560-0x022DA780, length: 4}, # Used by object 52
   {path: "/ftc/overlay9_112", offset: 0x022E4A80-0x022DA780, length: 0x14}, # Used by objects 53 and 66
+  
+  {path: "/ftc/overlay9_80", offset: 0x022F0EE0-0x022DA780, length: 0x40}, # Used by an unused room's layer list
+  {path: "/ftc/overlay9_80", offset: 0x022F0EA0-0x022DA780, length: 0x40}, # Used by an unused room's layer list
+  {path: "/ftc/overlay9_82", offset: 0x022ECFA0-0x022DA780, length: 0x40}, # Used by an unused room's layer list
+  {path: "/ftc/overlay9_82", offset: 0x022ECF60-0x022DA780, length: 0x40}, # Used by an unused room's layer list
+  {path: "/ftc/overlay9_82", offset: 0x022ECF20-0x022DA780, length: 0x40}, # Used by an unused room's layer list
+  {path: "/ftc/overlay9_82", offset: 0x022ECEE0-0x022DA780, length: 0x40}, # Used by an unused room's layer list
+  {path: "/ftc/overlay9_85", offset: 0x022F86C0-0x022DA780, length: 0x40}, # Used by an unused room's layer list
+  {path: "/ftc/overlay9_86", offset: 0x022EE224-0x022DA780, length: 0x40}, # Used by an unused room's layer list
+  {path: "/ftc/overlay9_86", offset: 0x022EE1E4-0x022DA780, length: 0x40}, # Used by an unused room's layer list
 ]
