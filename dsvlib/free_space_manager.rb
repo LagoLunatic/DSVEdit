@@ -216,17 +216,17 @@ module FreeSpaceManager
         space_left_in_file = files_by_path[free_space[:path]][:size] - offset
         case space_left_in_file
         when 1
-          byte = read_by_file(free_space[:path], offset, 1).unpack("C")
+          byte = read_by_file(free_space[:path], offset, 1).unpack("C").first
           if byte != 0
             remove_free_space(free_space[:path], offset, 1)
           end
         when 2
-          halfword = read_by_file(free_space[:path], offset, 2).unpack("v")
+          halfword = read_by_file(free_space[:path], offset, 2).unpack("v").first
           if halfword != 0
             remove_free_space(free_space[:path], offset, 2)
           end
         else
-          word = read_by_file(free_space[:path], offset, 4).unpack("V")
+          word = read_by_file(free_space[:path], offset, 4).unpack("V").first
           if word != 0
             remove_free_space(free_space[:path], offset, 4)
           end

@@ -96,6 +96,20 @@ class GBADummyFilesystem
     remove_free_space(file_path, offset_in_file, new_data.length) unless freeing_space
   end
   
+  def read_by_file(file_path, offset_in_file, length)
+    # Dummy function for the FSM.
+    if file_path != "/rom.gba"
+      raise "Invalid file: #{file_path}"
+    end
+    
+    file = files_by_path[file_path]
+    if offset_in_file + length > file[:size]
+      raise OffsetPastEndOfFileError.new("Offset %08X is past end of the rom (%08X bytes long)" % [offset_in_file, file[:size]])
+    end
+    
+    return rom[offset_in_file, length]
+  end
+  
   def overwrite_rom(new_data)
     @rom = new_data
   end
