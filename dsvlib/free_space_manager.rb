@@ -225,6 +225,11 @@ module FreeSpaceManager
           if halfword != 0
             remove_free_space(free_space[:path], offset, 2)
           end
+        when 3
+          bytes = read_by_file(free_space[:path], offset, 3).unpack("CCC")
+          unless bytes.all?{|byte| byte == 0}
+            remove_free_space(free_space[:path], offset, 2)
+          end
         else
           word = read_by_file(free_space[:path], offset, 4).unpack("V").first
           if word != 0
