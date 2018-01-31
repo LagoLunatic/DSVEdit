@@ -7,7 +7,6 @@ class Room
               :area,
               :sector,
               :layers,
-              :number_of_doors,
               :layer_list_ram_pointer,
               :gfx_list_pointer,
               :palette_wrapper_pointer,
@@ -40,7 +39,10 @@ class Room
                 :palette_shift_func,
                 :palette_shift_index,
                 :is_castle_b,
-                :has_breakable_wall
+                :has_breakable_wall,
+                :number_of_doors,
+                :original_number_of_entities,
+                :original_number_of_doors
 
   def initialize(sector, room_metadata_ram_pointer, area_index, sector_index, room_index, game)
     @room_metadata_ram_pointer = room_metadata_ram_pointer
@@ -51,7 +53,6 @@ class Room
     @room_index = room_index
     @fs = game.fs
     @game = game
-    read_from_rom()
   end
   
   def read_from_rom
@@ -265,6 +266,7 @@ class Room
         @alternate_room_state = game.get_room_by_metadata_pointer(alternate_room_state_pointer)
       rescue Game::RoomFindError
         @alternate_room_state = Room.new(sector, alternate_room_state_pointer, area_index, sector_index, room_index, game)
+        @alternate_room_state.read_from_rom()
       end
     end
   end
@@ -757,7 +759,6 @@ class Room
     new_layer.scroll_mode = 0x01
     new_layer.main_gfx_page_index = 0x00
     new_layer.opacity = 0x1F
-    new_layer.tileset_type = 0
     
     new_layer.layer_metadata_ram_pointer = fs.get_free_space(16, overlay_id)
     
@@ -767,12 +768,22 @@ class Room
       new_layer.height = main_layer.height
       new_layer.tileset_pointer = main_layer.tileset_pointer
       new_layer.collision_tileset_pointer = main_layer.collision_tileset_pointer
+      new_layer.tileset_type = main_layer.tileset_type
     else
       # Room that has no layers.
       new_layer.width = 1
       new_layer.height = 1
-      new_layer.tileset_pointer = 0
-      new_layer.collision_tileset_pointer = 0
+      
+      other_room_in_sector = sector.rooms.select{|room| room.layers.length > 0}.first
+      if other_room_in_sector
+        new_layer.tileset_pointer = other_room_in_sector.layers.first.tileset_pointer
+        new_layer.collision_tileset_pointer = other_room_in_sector.layers.first.collision_tileset_pointer
+        new_layer.tileset_type = other_room_in_sector.layers.first.tileset_type
+      else
+        new_layer.tileset_pointer = 0
+        new_layer.collision_tileset_pointer = 0
+        new_layer.tileset_type = 0
+      end
     end
     new_layer.layer_tiledata_ram_start_offset = nil # Layer#write_to_rom will get free space and put this there.
     new_layer.tiles = []
@@ -843,6 +854,14 @@ class Room
   
   def connected_rooms
     doors.map{|door| door.destination_door.room}.uniq
+  end
+  
+  def self.data_size
+    if SYSTEM == :gba
+      36
+    else
+      32
+    end
   end
   
   def room_str

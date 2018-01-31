@@ -72,6 +72,14 @@ class Game
       @areas << area
     end
     
+    generate_list_of_sectors_by_room_pointer()
+    
+    @text_database = TextDatabase.new(fs)
+    
+    @room_loaded_gfx = {}
+  end
+  
+  def generate_list_of_sectors_by_room_pointer
     @sectors_by_room_metadata_pointer = {}
     areas.each do |area|
       area.sectors.each do |sector|
@@ -80,10 +88,6 @@ class Game
         end
       end
     end
-    
-    @text_database = TextDatabase.new(fs)
-    
-    @room_loaded_gfx = {}
   end
   
   def each_room
