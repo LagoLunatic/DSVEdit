@@ -82,7 +82,8 @@ class EntityLayerItem < Qt::GraphicsRectItem
         other_sprite = OTHER_SPRITES.find{|spr| spr[:desc] == "Portrait painting 2"}
         frame_to_render = 0
         palette_offest = 0
-        should_offset_portrait_art = false
+        art_offset_x = 0
+        art_offset_y = 0
       else
         other_sprite = case entity.var_a
         when 1, 3, 5, 7
@@ -99,7 +100,8 @@ class EntityLayerItem < Qt::GraphicsRectItem
         else
           0
         end
-        should_offset_portrait_art = true
+        art_offset_x = 24
+        art_offset_y = 24
       end
       
       reused_info = other_sprite.merge({palette_offset: palette_offset})
@@ -112,7 +114,24 @@ class EntityLayerItem < Qt::GraphicsRectItem
       add_sprite_item_for_entity(entity, sprite_info,
         BEST_SPRITE_FRAME_FOR_SPECIAL_OBJECT[special_object_id],
         sprite_offset: BEST_SPRITE_OFFSET_FOR_SPECIAL_OBJECT[special_object_id],
-        portrait_art: [portrait_art_image, should_offset_portrait_art])
+        portrait_art: [portrait_art_image, art_offset_x, art_offset_y])
+    elsif GAME == "por" && entity.is_special_object? && [0x77, 0x8A].include?(entity.subtype)
+      studio_portrait_frame_sprite_info = SpecialObjectType.new(0x5F, @fs).extract_gfx_and_palette_and_sprite_from_create_code
+      studio_portrait_art_sprite_info = SpecialObjectType.new(entity.subtype, @fs).extract_gfx_and_palette_and_sprite_from_create_code
+      
+      frame_to_render = 0
+      sprite_filename = @renderer.ensure_sprite_exists("cache/#{GAME}/sprites/", studio_portrait_art_sprite_info, frame_to_render)
+      studio_portrait_art_image = ChunkyPNG::Image.from_file(sprite_filename)
+      art_offset_x = 208
+      art_offset_y = 40
+      
+      frame_num_for_studio_portrait_frame = 0x18
+      special_object_id = entity.subtype
+      sprite_info = SpecialObjectType.new(special_object_id, @fs).extract_gfx_and_palette_and_sprite_from_create_code
+      add_sprite_item_for_entity(entity, studio_portrait_frame_sprite_info,
+        frame_num_for_studio_portrait_frame,
+        sprite_offset: BEST_SPRITE_OFFSET_FOR_SPECIAL_OBJECT[special_object_id],
+        portrait_art: [studio_portrait_art_image, art_offset_x, art_offset_y])
     elsif entity.is_special_object?
       special_object_id = entity.subtype
       sprite_info = SpecialObjectType.new(special_object_id, @fs).extract_gfx_and_palette_and_sprite_from_create_code
@@ -252,12 +271,8 @@ class EntityLayerItem < Qt::GraphicsRectItem
     end
     
     if portrait_art
-      portrait_art_image, offset_art = portrait_art
-      if offset_art
-        chunky_frame.compose!(portrait_art_image, 24, 24)
-      else
-        chunky_frame.compose!(portrait_art_image, 0, 0)
-      end
+      portrait_art_image, x_offset, y_offset = portrait_art
+      chunky_frame.compose!(portrait_art_image, x_offset, y_offset)
     end
     
     graphics_item = EntityChunkyItem.new(chunky_frame, entity, @main_window)
