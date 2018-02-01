@@ -190,6 +190,10 @@ class Entity
     GAME == "ooe" && is_special_object? && subtype == 0x89
   end
   
+  def is_portrait?
+    GAME == "por" && is_special_object? && [0x1A, 0x75, 0x76, 0x86, 0x87].include?(subtype)
+  end
+  
   def get_hod_candle_sprite_info
     if GAME != "hod" || !is_candle?
       raise "Not a HoD candle"

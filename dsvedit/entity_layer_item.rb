@@ -77,6 +77,42 @@ class EntityLayerItem < Qt::GraphicsRectItem
         BEST_SPRITE_FRAME_FOR_SPECIAL_OBJECT[special_object_id],
         sprite_offset: BEST_SPRITE_OFFSET_FOR_SPECIAL_OBJECT[special_object_id],
         item_icon_image: item_icon_chunky_image)
+    elsif entity.is_portrait? && (0..9).include?(entity.var_a)
+      if entity.subtype == 0x75 # Portrait to the Throne Room
+        other_sprite = OTHER_SPRITES.find{|spr| spr[:desc] == "Portrait painting 2"}
+        frame_to_render = 0
+        palette_offest = 0
+        should_offset_portrait_art = false
+      else
+        other_sprite = case entity.var_a
+        when 1, 3, 5, 7
+          OTHER_SPRITES.find{|spr| spr[:desc] == "Portrait painting 0"}
+        when 2, 4, 6, 8
+          OTHER_SPRITES.find{|spr| spr[:desc] == "Portrait painting 1"}
+        when 0, 9
+          OTHER_SPRITES.find{|spr| spr[:desc] == "Portrait painting 3"}
+        end
+        frame_to_render = [0, 0, 0, 1, 1, 3, 2, 2, 3, 1][entity.var_a]
+        palette_offset = case entity.var_a
+        when 5 # Nation of Fools hardcodes the palette offset instead of having the sprite set a palette index normally.
+          1
+        else
+          0
+        end
+        should_offset_portrait_art = true
+      end
+      
+      reused_info = other_sprite.merge({palette_offset: palette_offset})
+      painting_sprite_info = SpriteInfo.extract_gfx_and_palette_and_sprite_from_create_code(other_sprite[:pointer], @fs, nil, reused_info)
+      sprite_filename = @renderer.ensure_sprite_exists("cache/#{GAME}/sprites/", painting_sprite_info, frame_to_render)
+      portrait_art_image = ChunkyPNG::Image.from_file(sprite_filename)
+      
+      special_object_id = entity.subtype
+      sprite_info = SpecialObjectType.new(special_object_id, @fs).extract_gfx_and_palette_and_sprite_from_create_code
+      add_sprite_item_for_entity(entity, sprite_info,
+        BEST_SPRITE_FRAME_FOR_SPECIAL_OBJECT[special_object_id],
+        sprite_offset: BEST_SPRITE_OFFSET_FOR_SPECIAL_OBJECT[special_object_id],
+        portrait_art: [portrait_art_image, should_offset_portrait_art])
     elsif entity.is_special_object?
       special_object_id = entity.subtype
       sprite_info = SpecialObjectType.new(special_object_id, @fs).extract_gfx_and_palette_and_sprite_from_create_code
@@ -194,7 +230,7 @@ class EntityLayerItem < Qt::GraphicsRectItem
     graphics_item.setParentItem(self)
   end
   
-  def add_sprite_item_for_entity(entity, sprite_info, frame_to_render, sprite_offset: nil, item_icon_image: nil)
+  def add_sprite_item_for_entity(entity, sprite_info, frame_to_render, sprite_offset: nil, item_icon_image: nil, portrait_art: nil)
     if frame_to_render == -1
       # Don't show this entity's sprite in the editor.
       graphics_item = EntityRectItem.new(entity, @main_window)
@@ -213,6 +249,15 @@ class EntityLayerItem < Qt::GraphicsRectItem
     
     if item_icon_image
       chunky_frame.compose!(item_icon_image, 6, 0)
+    end
+    
+    if portrait_art
+      portrait_art_image, offset_art = portrait_art
+      if offset_art
+        chunky_frame.compose!(portrait_art_image, 24, 24)
+      else
+        chunky_frame.compose!(portrait_art_image, 0, 0)
+      end
     end
     
     graphics_item = EntityChunkyItem.new(chunky_frame, entity, @main_window)

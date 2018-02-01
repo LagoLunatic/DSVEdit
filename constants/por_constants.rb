@@ -648,7 +648,7 @@ OTHER_SPRITES = [
   {pointer: 0x020F4E90, desc: "Portrait frame 1"},
   {pointer: 0x020F4E9C, desc: "Portrait painting 0"},
   {pointer: 0x020F4EA8, desc: "Portrait painting 1"},
-  {pointer: 0x020F4EB4, desc: "Portrait painting ???"}, # broken
+  {pointer: 0x020F4EB4, desc: "Portrait painting 2", palette: 0x022EA034, overlay: 115},
   {pointer: 0x020F4EC0, desc: "Portrait painting 3"},
   
   {pointer: 0x0206E4C8, desc: "Breakable walls 1", gfx_sheet_ptr_index: 1, palette_list_ptr_index: 1, sprite_ptr_index: 1},
