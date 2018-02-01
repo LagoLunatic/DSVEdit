@@ -116,10 +116,19 @@
   4,2: Used for something, but doesn't seem to affect anything?
   6,2: Unused.
 
-020F4E7C,1 - The boss death flag index needed to unlock the 13th Street portrait.
-  This is 0A, for Mummy Man.
-020F4E80,1 - The boss death flag index needed to unlock the Burnt Paradise portrait.
-  This is 09, for The Creature.
+020F4E78-020F4E83 - List of which boss is for each portrait.
+  Each entry is a byte - the boss index of the boss. e.g. 0A is Mummy Man.
+  The index in this list is the area index.
+  If the boss index is 0, that means no boss is considered the boss for this area.
+  This list is used to display the monster overlay on top of the portrait if the boss is still alive.
+  It is also used to check if certain portraits are unlocked yet. Specifically, in Jonathan mode:
+    13th Street is unlocked when Forgotten City's boss is defeated.
+    Burnt Paradise is unlocked when Dark Academy's boss is defeated.
+  In all other modes:
+    13th Street is unlocked when City of Haze's boss is defeated.
+    Forgotten City is unlocked when Sandy Grave's boss is defeated.
+    Burnt Paradise is unlocked when Nation of Fools's boss is defeated.
+    Dark Academy is unlocked when Forest of Doom's boss is defeated.
 
 020F4E84 - List of sprite info for portraits.
   Each entry is 0xC bytes long.
