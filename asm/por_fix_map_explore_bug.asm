@@ -6,7 +6,7 @@
 ; This bug causes the suspend glitch, and the glitch in room randomizer where walking through a door will reveal the map tile of the room you would have normally entered in the vanilla game without room randomizer.
 
 @Overlay119Start equ 0x02308EC0
-@FreeSpace equ @Overlay119Start + 0x24
+@FreeSpace equ @Overlay119Start + 0x60
 
 .open "ftc/arm9.bin", 02000000h
 

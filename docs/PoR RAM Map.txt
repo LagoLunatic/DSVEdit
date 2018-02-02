@@ -362,7 +362,7 @@ F5-F5
   0x01000000 - Set for a frame when entering the sisters' room.
   0x08000000 - Set when not in game, such as on the title screen.
   0x40000000 - Set when you haven't saved the game once yet. Disables suspending.
-  0x80000000 - Set during events?
+  0x80000000 - Disables going in portraits. Set during events?
 
 02111750 - Bitfield of ?.
   Bits:
