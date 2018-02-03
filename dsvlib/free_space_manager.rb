@@ -268,7 +268,7 @@ module FreeSpaceManager
       end
       
       if free_space
-        puts "Found free space at %08X,%04X (%08X in %s)" % [file[:ram_start_offset] + free_space[:offset], length_needed, free_space[:offset], file[:file_path]]
+        #puts "Found free space at %08X,%04X (%08X in %s)" % [file[:ram_start_offset] + free_space[:offset], length_needed, free_space[:offset], file[:file_path]]
         
         expand_length_needed = free_space[:offset] + length_needed - file[:size]
         if expand_length_needed > 0

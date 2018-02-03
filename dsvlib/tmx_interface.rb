@@ -111,7 +111,7 @@ class TMXInterface
     end
     room.write_doors_to_rom()
     
-    puts "Read tmx file #{filename} and saved to rom"
+    #puts "Read tmx file #{filename} and saved to rom"
   end
   
   def create(filename, room)
