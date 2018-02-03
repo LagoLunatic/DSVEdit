@@ -127,20 +127,18 @@ class Sector
     if room_pointers.length > @original_number_of_rooms
       # Repoint the room list so there's space for more doors without overwriting anything.
       
-      old_length = @original_number_of_rooms*4
-      new_length = room_pointers.length*4
+      old_length = (@original_number_of_rooms+1)*4
+      new_length = (room_pointers.length+1)*4
       
       new_room_list_pointer = fs.free_old_space_and_find_new_free_space(sector_ram_pointer, old_length, new_length, nil)
       
       @original_number_of_rooms = room_pointers.length
       
       @sector_ram_pointer = new_room_list_pointer
-      puts "%08X" % (area.area_ram_pointer + sector_index*4)
-      puts "%08X" % sector_ram_pointer
       fs.write(area.area_ram_pointer + sector_index*4, [sector_ram_pointer].pack("V"))
     elsif room_pointers.length < @original_number_of_rooms
-      old_length = @original_number_of_rooms*4
-      new_length = room_pointers.length*4
+      old_length = (@original_number_of_rooms+1)*4
+      new_length = (room_pointers.length+1)*4
       
       fs.free_unused_space(sector_ram_pointer + new_length, old_length - new_length)
       
@@ -152,6 +150,7 @@ class Sector
       fs.write(offset, [room_pointer].pack("V"))
       offset += 4
     end
+    fs.write(offset, [0].pack("V")) # End marker
   end
   
   def inspect; to_s; end
