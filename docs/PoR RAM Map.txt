@@ -549,6 +549,9 @@ F5-F5
 02111F98 - Pointer to controlled player character entity.
 02111F9C - Pointer to partner player character entity.
 
+02111FA8,4 - When in the room with the white barrier that blocks your way to the throne, this is a pointer to the white barrier entity.
+  This is read by the player, it calls some special function of the white barrier to calculate the X velocity to add to the player.
+
 02111FAC - Player 1's current base stats??
 02111FC0 - Player 1's current stats. Halfwords.
   02111FC0,2 - ATK

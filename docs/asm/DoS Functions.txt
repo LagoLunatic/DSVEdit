@@ -440,8 +440,16 @@
 
 02022000 MapDraw
   ; Draws the whole map.
-02023064 Map???
-  ; Called once at the end of drawing the map?
+020225DC MapUpdateExplored
+  ; Checks what map tile the player is in and sets it as explored.
+  ; If the player is in Menace's room (sector 0xA), this function returns early without doing anything to avoid setting the center of the Abyss as explored (so that it doesn't count towards your map completion percentage, presumably).
+02023064 MapAddFinalTouches?
+  ; r0 - Which map (0/1/2 for Castle/Abyss/???)
+  ; Called once at the end of drawing the map.
+  ; For the Castle, it checks if you've unlocked the Abyss warp yet and displays it in the lower right corner of the Castle if so.
+  ; Also for the Castle, it checks if you have the Condemned Tower map and??? TODO
+  ; Also does several other things for the Castle
+  ; For the Abyss, this clears out any map tiles in the center that have been explored so Menace's room doesn't count towards map completion. (Specifically it clears X 7-A and Y A-D.)
 02024724 MapTileDrawFillPixels
   ; r0 - Map X
   ; r1 - Map Y
@@ -450,12 +458,15 @@
 02023CBC MapTileDrawWallPixels
   ; r0 - Map X
   ; r1 - Map Y
-  ; more args
+  ; r2 - 
+  ; r3 - 
+  ; [r13] - Which map (0/1/2 for Castle/Abyss/???)
 02023FBC MapTileDrawDoorPixels
   ; r0 - Map X
   ; r1 - Map Y
+  ; r2 - 
+  ; r3 - 
   ; [r13] - Which map (0/1/2 for Castle/Abyss/???)
-  ; more args
 02023B44 MapTileDrawSecretDoorPixels
   ; r0 - Map X
   ; r1 - Map Y
@@ -509,6 +520,10 @@
   ; r1 - Map Y
   ; r2 - Which map (0/1/2 for Castle/Abyss/???)
 02024D74 MapTileSetExplored
+  ; r0 - Map X
+  ; r1 - Map Y
+  ; r2 - Which map (0/1/2 for Castle/Abyss/???)
+02023A14 MapTileSetUnexplored
   ; r0 - Map X
   ; r1 - Map Y
   ; r2 - Which map (0/1/2 for Castle/Abyss/???)
@@ -569,7 +584,10 @@
 02024C7C GetWarpIndexFromPos
   ; r0 - Room's x on the map
   ; r1 - Room's y on the map
-  ; Returns the warp room's index in the warp room lists (0209A188 and 020F71A8)
+  ; Returns the warp room's index in the warp room lists (0209A188 and 020F71A8) or FFFFFFFF if this position does not correspond to any warp room.
+  ; Note that this function also hardcodes the position of the Abyss's warp on the Abyss map (because the Abyss warp room's listed pos is its position on the Castle map).
+  ; 02024C9C - hardcodes X pos F for the Abyss warp.
+  ; 02024CA4 - hardcodes Y pos 7 for the Abyss warp.
 
 02025484 GetSectorAssetList
   ; r0 - Sector index

@@ -617,6 +617,9 @@ Player's current stats:
 
 0210ED04 - Has a pointer to the start of asset memory, 0230BD20.
 
+0210F014 - Player's current Y pos on the map?
+0210F018 - Player's current X pos on the map?
+
 0210FA00 - List of pixel data for the currently drawn map.
 
 Stuff related to currently loaded tilesets:

@@ -245,7 +245,7 @@
 
 0202E5F8 UpdatePlayerPositionOnMap
   ; Updates the four variables holding both players' positions on the map (0211177C, 0211177E, 02111780, 02111782).
-  ; Then it reads the controlled player's position on the map and calls MapSetTileExplored.
+  ; Then it reads the controlled player's position on the map, calls MapGetTileIndexByTileXAndY, and sets the bits for that tile index as explored.
 02030104 MapGetTileIndexByTileXAndY
   ; r0 - Area index
   ; r1 - X pos on the map in tiles
