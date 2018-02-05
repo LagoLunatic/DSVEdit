@@ -331,16 +331,6 @@ class TilesetEditorDialog < Qt::Dialog
   end
   
   def render_tile_on_tileset(tile_index)
-    tile = @tiles[tile_index]
-    
-    if tile.nil?
-      # Dummy blank tile from an incomplete row
-      return
-    end
-    if tile.is_blank
-      return
-    end
-    
     tile_pixmap_item = @tileset_pixmap_items[tile_index]
     if tile_pixmap_item.nil?
       return
@@ -348,6 +338,12 @@ class TilesetEditorDialog < Qt::Dialog
     
     if @collision_mode
       coll_tile = @collision_tiles[tile_index]
+      
+      if coll_tile.nil?
+        # Dummy blank tile from an incomplete row
+        return
+      end
+      
       chunky_coll_tile = @renderer.render_collision_tile(coll_tile)
       
       pixmap = Qt::Pixmap.new
@@ -355,6 +351,16 @@ class TilesetEditorDialog < Qt::Dialog
       pixmap.loadFromData(blob, blob.length)
       tile_pixmap_item.pixmap = pixmap
     else
+      tile = @tiles[tile_index]
+      
+      if tile.nil?
+        # Dummy blank tile from an incomplete row
+        return
+      end
+      if tile.is_blank
+        return
+      end
+      
       render_tile_to_pixmap_item(tile, tile_pixmap_item)
     end
   end
