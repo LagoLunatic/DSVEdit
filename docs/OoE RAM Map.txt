@@ -104,6 +104,19 @@
   Each list is 0x50 bytes long. Each state takes up 1 byte for 0x50 states in total.
   Each entry is the sprite animation index for that state index.
 
+020EF1F8-020EF26F - List of starting/base stats for each player.
+  Entry length 0x18.
+  00,2: ATK
+  02,2: DEF
+  04,2: STR
+  06,2: CON
+  08,2: INT
+  0A,2: MND
+  0C,2: LCK
+  0E,2: Unused?
+  10,4: Bitfield of resistances.
+  14,4: ??? 0x8002 0x0002
+
 020EF48C-020EF4C3 - Weapons (unused).
 020EF4C4-020EF50B - Relics.
 020EF50C-020EF6AF - Leg armor.
@@ -217,16 +230,27 @@ Requirement lists for kill quests:
 020FFD20,4 - Pointer to the player (02109820).
 020FFD2C,4 - Can have a pointer to the player, or 0?
 
-Player's current stats:
-020FFD5C,2 - ATK
-020FFD5E,2 - DEF
-020FFD60,2 - STR
-020FFD62,2 - CON
-020FFD64,2 - INT
-020FFD66,2 - MND
-020FFD68,2 - LCK
-020FFD6A,2 - ?
-020FFD6C,4 - Bitfield of resistances.
+020FFD34 - Player's current base stats.
+  020FFD34,2 - ATK
+  020FFD36,2 - DEF
+  020FFD38,2 - STR
+  020FFD3A,2 - CON
+  020FFD3C,2 - INT
+  020FFD3E,2 - MND
+  020FFD40,2 - LCK
+  020FFD42,2 - Unused?
+  020FFD44,4 - Bitfield of resistances.
+020FFD48 - Player's current stats.
+020FFD5C - Player's current stats, with bonus stats added.
+  020FFD5C,2 - ATK
+  020FFD5E,2 - DEF
+  020FFD60,2 - STR
+  020FFD62,2 - CON
+  020FFD64,2 - INT
+  020FFD66,2 - MND
+  020FFD68,2 - LCK
+  020FFD6A,2 - Unused?
+  020FFD6C,4 - Bitfield of resistances.
 
 020FFDDC,4 - Bitfield of damage types that most recently hit the player.
 

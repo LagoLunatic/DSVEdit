@@ -552,8 +552,17 @@ F5-F5
 02111FA8,4 - When in the room with the white barrier that blocks your way to the throne, this is a pointer to the white barrier entity.
   This is read by the player, it calls some special function of the white barrier to calculate the X velocity to add to the player.
 
-02111FAC - Player 1's current base stats??
-02111FC0 - Player 1's current stats. Halfwords.
+02111FAC - Player 1's current base stats.
+  02111FAC,2 - ATK
+  02111FAE,2 - DEF
+  02111FB0,2 - STR
+  02111FB2,2 - CON
+  02111FB4,2 - INT
+  02111FB6,2 - MND
+  02111FB8,2 - LCK
+  02111FBA,2 - Unused?
+  02111FBC,4 - Bitfield of resistances.
+02111FC0 - Player 1's current stats.
   02111FC0,2 - ATK
   02111FC2,2 - DEF
   02111FC4,2 - STR
@@ -575,7 +584,7 @@ F5-F5
   02111FE4,4 - Bitfield of resistances.
 02111FE8 - Player 1's bonus stats.
   02111FF8,4 - Not bonus resistances, instead this is 0 or 1 to indicate whether any bonuses are active.
-02111FFC - Player 2's current base stats??
+02111FFC - Player 2's current base stats.
 02112010 - Player 2's current stats.
 02112024 - Player 2's current stats, with bonus stats added.
 02112038 - Player 2's bonus stats.
@@ -853,7 +862,18 @@ TODO: What are the other 2 for? It's not for the "recent" tab.
 
 0221E7F4 - List of player data for each character.
 
-0221EAF0 - List of base stats for each player? Entry length 0x18.
+0221EAF0-0221EB97 - List of starting/base stats for each player.
+  Entry length 0x18.
+  00,2: ATK
+  02,2: DEF
+  04,2: STR
+  06,2: CON
+  08,2: INT
+  0A,2: MND
+  0C,2: LCK
+  0E,2: Unused?
+  10,4: Bitfield of resistances.
+  14,4: ??? 0x8004 0x8044 0x0005
 
 0221ED04 - List of ? for each type of skill.
   Each entry is 0xA bytes long.

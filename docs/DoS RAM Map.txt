@@ -761,7 +761,8 @@ Here's what each actor is (index, special object id, description):
   03,1: ?
   04,1: ?
 
-0222E5EC - List of player base stats. Halfwords.
+0222E5EC-0222E5FB - List of starting/base stats for the player.
+  These are shared by all player characters.
   0222E5EC,2 - Unused (would be ATK, but gets overwritten after being copied.)
   0222E5EE,2 - DEF
   0222E5F0,2 - STR
