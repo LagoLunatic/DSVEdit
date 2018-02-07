@@ -52,8 +52,8 @@ class Map
       tiles_with_secret_doors.each_with_index do |tile, i|
         tile_index = tiles.index(tile)
         
-        map_tile_index, secret_door_index = fs.read(secret_door_list_pointer + i*4, 4).unpack("v*")
-        secret_door = SecretDoor.new(map_tile_index, secret_door_index, tiles)
+        secret_door_pointer = secret_door_list_pointer + i*4
+        secret_door = SecretDoor.new(secret_door_pointer, fs)
         
         if secret_door.map_tile_index >= tile_index
           @secret_doors << secret_door
@@ -277,15 +277,18 @@ class MapTile
 end
 
 class SecretDoor
-  attr_reader :map_tile_index,
-              :secret_door_index,
-              :map_tile
+  attr_reader :secret_door_pointer,
+              :fs
+  attr_accessor :map_tile_index,
+                :secret_door_index
   
-  def initialize(map_tile_index, secret_door_index, all_map_tiles)
-    @map_tile_index  = map_tile_index
-    @secret_door_index = secret_door_index
-    
-    @map_tile = all_map_tiles[@map_tile_index]
+  def initialize(secret_door_pointer, fs)
+    @fs = fs
+    @map_tile_index, @secret_door_index = fs.read(secret_door_pointer, 4).unpack("vv")
+  end
+  
+  def write_to_rom
+    fs.write(secret_door_pointer, [@map_tile_index, @secret_door_index].pack("vv"))
   end
 end
 
@@ -354,13 +357,14 @@ class DoSMap < Map
       @secret_doors = []
       i = 0
       while true
-        x_pos, y_pos = fs.read(secret_door_list_pointer + i*2, 2).unpack("C*")
+        secret_door_pointer = secret_door_list_pointer + i*2
+        x_pos, y_pos = fs.read(secret_door_pointer, 2).unpack("C*")
         
         if x_pos == 0xFF && y_pos == 0xFF
           break
         end
         
-        @secret_doors << DoSSecretDoor.new(x_pos, y_pos)
+        @secret_doors << DoSSecretDoor.new(secret_door_pointer, fs)
         
         i += 1
       end
@@ -598,13 +602,14 @@ class DoSMapTile
 end
 
 class DoSSecretDoor < SecretDoor
-  attr_reader :x_pos,
-              :y_pos,
-              :door_side
+  attr_accessor :x_pos,
+                :y_pos,
+                :door_side
   
-  def initialize(x_pos, y_pos)
-    @x_pos = x_pos
-    @y_pos = y_pos
+  def initialize(secret_door_pointer, fs)
+    @fs = fs
+    @secret_door_pointer = secret_door_pointer
+    @x_pos, @y_pos = fs.read(secret_door_pointer, 2).unpack("CC")
     
     if @y_pos >= 0x80
       # If y is negative the door is on the left of the tile.
@@ -614,6 +619,18 @@ class DoSSecretDoor < SecretDoor
       # If y is positive the door is on the top of the tile.
       @door_side = :top
     end
+  end
+  
+  def write_to_rom
+    if @x_pos == 0xFF && @y_pos == 0xFF
+      # End marker.
+      y_and_door_side = @y_pos
+    elsif @door_side == :left
+      y_and_door_side = (-@y_pos & 0xFF) # Negate y.
+    else
+      y_and_door_side = @y_pos
+    end
+    fs.write(secret_door_pointer, [@x_pos, y_and_door_side].pack("CC"))
   end
 end
 
