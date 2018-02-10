@@ -433,11 +433,13 @@ class DoSMap < Map
       end
     end
     
-    # Round these down to the nearest multiple of 2, since odd numbered draw offsets cause the entire map to render glitched.
-    @draw_x_offset = @draw_x_offset/2*2
-    @draw_y_offset = @draw_y_offset/2*2
-    game.fs.write(@draw_x_offset_pointer, [@draw_x_offset].pack("C"))
-    game.fs.write(@draw_y_offset_pointer, [@draw_y_offset].pack("C"))
+    if @draw_x_offset_pointer
+      # Round these down to the nearest multiple of 2, since odd numbered draw offsets cause the entire map to render glitched.
+      @draw_x_offset = @draw_x_offset/2*2
+      @draw_y_offset = @draw_y_offset/2*2
+      game.fs.write(@draw_x_offset_pointer, [@draw_x_offset].pack("C"))
+      game.fs.write(@draw_y_offset_pointer, [@draw_y_offset].pack("C"))
+    end
     
     if is_abyss
       # Do nothing.
