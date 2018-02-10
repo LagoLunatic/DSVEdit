@@ -71,7 +71,7 @@ Memory used for entities in PoR is 020FC500 - 0211173F. Each entity is 0x160 byt
 0B4,4: Bitfield of weaknesses.
 0B8,2: Number of iframes this entity gives.
 0BA,2: 
-0BC,2: Set by function 02014F54. Related to player's kick damage?
+0BC,2: Physical force of the attack. This affects how strongly enemy body parts get thrown back.
 0BE,2: 
 0C0,2: Magical defense.
 0C2,2: 

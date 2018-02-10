@@ -191,7 +191,9 @@ There are 41 entries in the list total.
 
 020CA398 - normally 0, if 1 then soma can't move. but the game puts it back to 0 if you try to make it 1, so you need a cheat to stop soma from moving (or vice versa).
 
-020CA39C - Bitfield of what buttons the player is pressing. Unlike 020CA388, this is sometimes 0 even when the player is pressing buttons. TODO
+020CA39C,2 - Bitfield of what buttons the player is pressing.
+020CA3A0,2 - Bitfield of what buttons the player just pressed this frame.
+    Unlike 020CA388 and 020CA38C, these are sometimes 0 even when the player is pressing buttons. TODO
 
 === 020CA3F0 - 020F6DEF: Entities currently loaded into memory. Each is 2A0 bytes long. They range from 0-10F.
 

@@ -172,6 +172,10 @@
   8,4: ??? 0
   C,4: Palette pointer.
 
+020F4158-020F415E - List of which summon index corresponds to each summon's glyph ID+1.
+  Entry length 1.
+  The index in this list is the glyph ID+1 - 0x48.
+
 020F44A0 - List of GFX asset indexes for images of enemies in the bestiary.
   Each entry is 4 bytes long.
   The filenames are like /sc/f_elist00.dat. They're 1-dimensional.
@@ -370,9 +374,17 @@ A 1% attack boost takes 0x147 (0d327) AP.
 A 100% attack boost (double) takes 0x8000 (0d32768) AP.
 A 200% attack boost (triple) takes 0xFFFF (0d65535) AP.
 
-0210032E,2 - Current EXP Fidelis Aranea has.
-  7FFF - EXP needed for level 2.
-  FFFE - EXP needed for level 3.
+0210032C-02100339 - List of current EXP for each of the summon glyphs. Halfwords.
+  0210032C,2 - Fidelis Caries
+  0210032E,2 - Fidelis Aranea
+  02100330,2 - Fidelis Polkir
+  02100332,2 - Fidelis Alate
+  02100334,2 - Fidelis Medusa
+  02100336,2 - Fidelis Noctua
+  02100338,2 - Fidelis Mortus
+  They need 0x7FFF EXP to reach level 2, and 0xFFFE EXP to reach level 3.
+  The summon hitting an enemy gives it only 3 EXP per hit.
+  But absorbing a duplicate of the summon glyph gives it 0x7D0 EXP (decimal 2000).
 
 02100342,1 - Current glyph sleeve (0 1 or 2 for A B or C).
 
@@ -384,6 +396,7 @@ A 200% attack boost (triple) takes 0xFFFF (0d65535) AP.
 
 02100378-0210037F - Miscellaneous flags.
   Bit indexes:
+  00 - Lighthouse ceilings have been destroyed and elevator is functional.
   06 - Cerberus gate down.
   includes flags for which area titles have been seen by the player (e.g. "Monastery")
   also includes flags which breakable walls/secret doors have been uncovered on the map. 27 means the one at the bottom right of dracula's castle.

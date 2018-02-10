@@ -715,6 +715,21 @@
 0206E9B4 SetGlyphShouldDistort
   ; r0 - Whether the glyph should distort or not. 1 to distort, 0 to not.
 
+0206EFAC GiveSummonEXP
+  ; r0 - Which summon index (1 is Fidelis Aranea, etc)
+  ; r1 - Amount of EXP to give
+  ; Returns: 1 if this levelled up the summon, 0 otherwise.
+0206F028 GiveSummonEXPByGlyphID
+  ; r0 - Glyph ID+1 of the summon
+  ; r1 - Amount of EXP to give
+  ; Reads from list 020F4158 to know what summon index corresponds to the glyph ID, then calls GiveSummonEXP.
+  ; This also does something with the byte at 020F3B75 and the summon index.
+0207D45C InitializeSummon?
+  ; r0 - 
+  ; r1 - 
+  ; r2 - Which summon index
+  ; r3 - Summon level
+
 020FFC58 GameObject
 
 ; Enemy-specific code

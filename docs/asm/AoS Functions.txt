@@ -257,6 +257,8 @@
   ; r1 - Index in the list of entity sizes (08118D08)
   ; This checks if an entity went offscreen. It returns 0 if on screen and 1 if off screen. This is so certain entities offscreen can stop updating until they're on screen again.
 
+080109F4 MapDrawTile
+
 080D4C98 CheckDraculaSoulsEquipped?
   ; Checks if the player has the 3 souls required for the good ending equipped.
   ; 080D4CF0 hardcodes the red soul index required.

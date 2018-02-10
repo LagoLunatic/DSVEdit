@@ -66,10 +66,13 @@ Memory used for entities in DoS is 020CA3F0 - 020F6DEF. Each entity is 0x2A0 byt
 
 For players:
 0D0,4: Bitfield of player state booleans.
+0E0,4: Bitfield of what actions the player can do.
+  Copied from the player data.
 0F0,2: Player's next animation state to go to automatically when the current animation finishes playing.
   If this is FFFF it means there's no next animation state to go to automatically.
 0F2,2: Player's current animation state. This is the index in their state->anim mapping list to get the new animation.
 138,4: Pointer to their state->anims mapping.
+144,4: Which player character index this player is. 1 is Julius, 3 is Alucard, etc.
 
 For enemies:
 154,2: Max HP.

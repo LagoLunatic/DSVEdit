@@ -105,6 +105,11 @@ For used skills:
 124,4: Pointer to the entity who used this skill (e.g. 02109820 if the player used it).
 128,2: Globally unique ID of the entity who used this skill.
 
+For summons:
+12E,2: The summon's level. 1-3.
+  This acts as a multiplier to certain things like damage dealt and movement speed.
+140,4: Which summon index (e.g. 1 for Fidelis Aranea)
+
 For the player:
 0D0,4: Bitfield of player state booleans.
   For glyphs, ?

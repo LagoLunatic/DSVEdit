@@ -291,10 +291,21 @@
   ; Returns r0 - the new attack value
 
 0220A038 CalcDamageToPlayer
-  ; Calculates the damage an enemy should do to the player.
+  ; Calculates the damage an enemy should do to a player.
   ; r0 - Player number to damage. 0 or 1.
   ; r1 - Base damage.
   ; r2 - Damage types bitfield.
+021DA18C CalcDamageToEnemy
+  ; Calculates the damage a player/player weapon/player skill should do to an enemy.
+  ; r0 - ?
+  ; r1 - ?
+  ; r2 - ?
+
+021FC148 PlayerSetDamageAndTypes
+  ; r0 - Player entity pointer
+  ; r1 - Damage value
+  ; r2 - Damage types bitfield
+  ; r3 - Physical force of the attack
 
 02012F68 Rand
 02012F30 RandMax
