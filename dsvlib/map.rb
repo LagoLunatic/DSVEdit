@@ -37,6 +37,10 @@ class Map
     @secret_door_list_pointer = fs.read(MAP_SECRET_DOOR_LIST_START_OFFSET + area_index*4, 4).unpack("V*").first
     @row_widths_list_pointer = fs.read(MAP_ROW_WIDTHS_LIST_START_OFFSET + area_index*4, 4).unpack("V*").first
     
+    # These attributes are in pairs of two tiles, so double them so they're in tiles.
+    @draw_x_offset *= 2
+    @draw_y_offset *= 2
+    
     @tiles = []
     (0..number_of_tiles-1).each do |i|
       tile_line_data = fs.read(map_tile_line_data_ram_pointer + i).unpack("C").first
@@ -141,7 +145,7 @@ class Map
     fs.write(MAP_SIZES_LIST_START_OFFSET + area_index*2, [@width, @height].pack("CC"))
     
     # TODO add gui to allow manually setting draw x/y offset
-    fs.write(MAP_DRAW_OFFSETS_LIST_START_OFFSET + area_index*2, [@draw_x_offset, @draw_y_offset].pack("CC"))
+    fs.write(MAP_DRAW_OFFSETS_LIST_START_OFFSET + area_index*2, [@draw_x_offset/2, @draw_y_offset/2].pack("CC"))
   end
   
   def is_abyss
@@ -319,6 +323,8 @@ class DoSMap < Map
       @map_tile_line_data_ram_pointer = ABYSS_MAP_TILE_LINE_DATA_START_OFFSET
       @number_of_tiles = ABYSS_MAP_NUMBER_OF_TILES
       @secret_door_list_pointer = ABYSS_MAP_SECRET_DOOR_DATA_START_OFFSET
+      @draw_x_offset_pointer = ABYSS_MAP_DRAW_X_OFFSET_LOCATION
+      @draw_y_offset_pointer = ABYSS_MAP_DRAW_Y_OFFSET_LOCATION
     else
       @width = 64
       
@@ -326,6 +332,8 @@ class DoSMap < Map
       @map_tile_line_data_ram_pointer = MAP_TILE_LINE_DATA_START_OFFSET
       @number_of_tiles = MAP_NUMBER_OF_TILES
       @secret_door_list_pointer = MAP_SECRET_DOOR_DATA_START_OFFSET
+      @draw_x_offset_pointer = MAP_DRAW_X_OFFSET_LOCATION
+      @draw_y_offset_pointer = MAP_DRAW_Y_OFFSET_LOCATION
     end
     
     @tiles = []
@@ -368,6 +376,14 @@ class DoSMap < Map
         
         i += 1
       end
+    end
+    
+    if @draw_x_offset_pointer
+      @draw_x_offset = game.fs.read(@draw_x_offset_pointer, 1).unpack("C").first
+      @draw_y_offset = game.fs.read(@draw_y_offset_pointer, 1).unpack("C").first
+    else
+      @draw_x_offset = 0
+      @draw_y_offset = 0
     end
     
     if GAME == "dos"
@@ -416,6 +432,12 @@ class DoSMap < Map
         i += 1
       end
     end
+    
+    # Round these down to the nearest multiple of 2, since odd numbered draw offsets cause the entire map to render glitched.
+    @draw_x_offset = @draw_x_offset/2*2
+    @draw_y_offset = @draw_y_offset/2*2
+    game.fs.write(@draw_x_offset_pointer, [@draw_x_offset].pack("C"))
+    game.fs.write(@draw_y_offset_pointer, [@draw_y_offset].pack("C"))
     
     if is_abyss
       # Do nothing.

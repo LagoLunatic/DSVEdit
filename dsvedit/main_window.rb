@@ -851,11 +851,7 @@ class DSVEdit < Qt::MainWindow
       chunky_png_img = @renderer.render_map(@map)
     end
     map_pixmap_item = GraphicsChunkyItem.new(chunky_png_img)
-    if GAME == "por" || GAME == "ooe"
-      @map_offset_x, @map_offset_y = @map.draw_x_offset*8, @map.draw_y_offset*8
-    else
-      @map_offset_x, @map_offset_y = 0, 0
-    end
+    @map_offset_x, @map_offset_y = @map.draw_x_offset*4, @map.draw_y_offset*4
     map_pixmap_item.setOffset(@map_offset_x, @map_offset_y)
     @map_graphics_scene.addItem(map_pixmap_item)
     
