@@ -106,46 +106,12 @@ class Room
     @layers = []
     i = 0
     while true
-      if SYSTEM == :nds
-        break if i == 4 # Maximum of 4 layers per room.
-        
-        is_a_pointer_check = fs.read(layer_list_ram_pointer + i*16 + 15).unpack("C*").first
-        if is_a_pointer_check != 0x02
-          break
-        end
-        
-        layer = Layer.new(self, layer_list_ram_pointer + i*16, fs)
-        layer.read_from_rom()
-        @layers << layer
-      elsif GAME == "aos"
-        break if i == 3 # Maximum of 3 layers per room.
-        
-        layer_data = fs.read(layer_list_ram_pointer + i*12).unpack("VVV")
-        if layer_data.all?{|x| x == 0}
-          break
-        end
-        
-        layer = Layer.new(self, layer_list_ram_pointer + i*12, fs)
-        layer.read_from_rom()
-        @layers << layer
-      elsif GAME == "hod"
-        break if i == 3 # Maximum of 3 layers per room.
-        
-        layer_data = fs.read(layer_list_ram_pointer + i*8).unpack("VV")
-        if layer_data.all?{|x| x == 0}
-          break
-        end
-        
-        layer = Layer.new(self, layer_list_ram_pointer + i*8, fs)
-        layer.read_from_rom()
-        @layers << layer
-      end
+      layer = Layer.new(self, layer_list_ram_pointer + i*Layer.layer_list_entry_size, fs)
+      layer.read_from_rom()
+      @layers << layer
       
       i += 1
-    end
-
-    if @layers.length == 0 # TODO
-      #raise RoomReadError.new("Couldn't find any layers")
+      break if i == Room.max_number_of_layers
     end
   rescue NDSFileSystem::ConversionError => e
     # When layer_list_ram_pointer points to something outside the overlay, that means the room has no layers.
@@ -730,67 +696,70 @@ class Room
     end
   end
   
-  def add_new_layer
+  def create_layer_list
+    # There are some invalid unused rooms in PoR where the layer list pointer points outside the overlay file.
+    # This function initializes a layer list for these rooms.
+    
     if SYSTEM == :gba
       # All rooms in AoS and HoD already have the maximum of 3 layers. There's no way to add more.
       return
     end
+    if layers.length != 0
+      raise "Can't create layer list, room already has a layer list."
+    end
     
     sector.load_necessary_overlay()
-    
-    if layers.length >= Room.max_number_of_layers
-      raise "Can't add new layer; room already has #{Room.max_number_of_layers} layers."
-    end
     
     overlay = fs.overlays[overlay_id]
     overlay_ram_end = overlay[:ram_start_offset]+overlay[:size]
     
-    if layers.length == 0 && layer_list_ram_pointer >= overlay_ram_end
-      # Invalid room where layer list pointer points outside the overlay file. So we create a blank layer list in free space first.
-      @layer_list_ram_pointer = fs.get_free_space(Layer.layer_list_entry_size*4, overlay_id)
-      fs.write(room_metadata_ram_pointer+2*4, [@layer_list_ram_pointer].pack("V"))
-      self.write_to_rom()
-    end
+    # Create the layer list.
+    @layer_list_ram_pointer = fs.get_free_space(Layer.layer_list_entry_size*Room.max_number_of_layers, overlay_id)
+    fs.write(room_metadata_ram_pointer+2*4, [@layer_list_ram_pointer].pack("V"))
     
-    new_layer_i = layers.length
-    new_layer = Layer.new(self, layer_list_ram_pointer + new_layer_i*Layer.layer_list_entry_size, fs)
-    
-    new_layer.z_index = 0x16
-    new_layer.scroll_mode = 0x01
-    new_layer.main_gfx_page_index = 0x00
-    new_layer.opacity = 0x1F
-    
-    new_layer.layer_metadata_ram_pointer = fs.get_free_space(16, overlay_id)
-    
-    main_layer = layers.first
-    if main_layer
-      new_layer.width = main_layer.width
-      new_layer.height = main_layer.height
-      new_layer.tileset_pointer = main_layer.tileset_pointer
-      new_layer.collision_tileset_pointer = main_layer.collision_tileset_pointer
-      new_layer.tileset_type = main_layer.tileset_type
-    else
-      # Room that has no layers.
-      new_layer.width = 1
-      new_layer.height = 1
+    # Create the layers.
+    Room.max_number_of_layers.times do |new_layer_i|
+      new_layer = Layer.new(self, layer_list_ram_pointer + new_layer_i*Layer.layer_list_entry_size, fs)
       
-      other_room_in_sector = sector.rooms.select{|room| room.layers.length > 0}.first
-      if other_room_in_sector
-        new_layer.tileset_pointer = other_room_in_sector.layers.first.tileset_pointer
-        new_layer.collision_tileset_pointer = other_room_in_sector.layers.first.collision_tileset_pointer
-        new_layer.tileset_type = other_room_in_sector.layers.first.tileset_type
+      new_layer.z_index = 0x16
+      new_layer.scroll_mode = 0x01
+      new_layer.main_gfx_page_index = 0x00
+      new_layer.opacity = 0x1F
+      
+      new_layer.layer_metadata_ram_pointer = fs.get_free_space(16, overlay_id)
+      
+      main_layer = layers.first
+      if main_layer
+        new_layer.width = main_layer.width
+        new_layer.height = main_layer.height
+        new_layer.tileset_pointer = main_layer.tileset_pointer
+        new_layer.collision_tileset_pointer = main_layer.collision_tileset_pointer
+        new_layer.tileset_type = main_layer.tileset_type
       else
-        new_layer.tileset_pointer = 0
-        new_layer.collision_tileset_pointer = 0
-        new_layer.tileset_type = 0
+        # Room that has no layers.
+        new_layer.width = 1
+        new_layer.height = 1
+        
+        other_room_in_sector = sector.rooms.select{|room| room.layers.length > 0}.first
+        if other_room_in_sector
+          new_layer.tileset_pointer = other_room_in_sector.layers.first.tileset_pointer
+          new_layer.collision_tileset_pointer = other_room_in_sector.layers.first.collision_tileset_pointer
+          new_layer.tileset_type = other_room_in_sector.layers.first.tileset_type
+        else
+          new_layer.tileset_pointer = 0
+          new_layer.collision_tileset_pointer = 0
+          new_layer.tileset_type = 0
+        end
       end
+      new_layer.layer_tiledata_ram_start_offset = nil # Layer#write_to_rom will get free space and put this there.
+      new_layer.tiles = []
+      
+      new_layer.write_to_rom()
+      
+      @layers << new_layer
     end
-    new_layer.layer_tiledata_ram_start_offset = nil # Layer#write_to_rom will get free space and put this there.
-    new_layer.tiles = []
     
-    new_layer.write_to_rom()
-    
-    @layers << new_layer
+    self.write_to_rom()
   end
   
   def add_new_entity

@@ -56,7 +56,7 @@ class Layer
   
   def read_from_layer_metadata
     if layer_metadata_ram_pointer == 0
-      # Empty GBA layer.
+      # Empty layer.
       @width = @height = 1
       @tileset_type =
         @tileset_pointer =
@@ -77,7 +77,7 @@ class Layer
   
   def read_from_layer_tiledata
     if layer_tiledata_ram_start_offset.nil?
-      # Empty GBA layer.
+      # Empty layer.
       @tiles = []
       (@height*SCREEN_HEIGHT_IN_TILES*@width*SCREEN_WIDTH_IN_TILES).times do
         @tiles << LayerTile.new.from_game_data(0)
@@ -101,7 +101,7 @@ class Layer
     @height = [@height, 1].max
     
     if layer_metadata_ram_pointer == 0
-      # Empty GBA layer.
+      # Empty layer.
       old_width = old_height = 1
       
       all_tiles_blank = @tiles.all?{|tile| tile.to_tile_data == 0}
@@ -113,7 +113,7 @@ class Layer
         return
       else
         # Assign layer metadata in free space.
-        @layer_metadata_ram_pointer = fs.get_free_space(16, nil)
+        @layer_metadata_ram_pointer = fs.get_free_space(16, room.overlay_id)
         
         if tileset_pointer == 0 && !all_tiles_blank
           # The user added tiles to this layer in Tiled but did not set the tileset pointer manually.
@@ -128,7 +128,7 @@ class Layer
     end
     
     if layer_tiledata_ram_start_offset.nil?
-      # This is a newly added layer (or a previously empty GBA layer).
+      # This is a newly added layer (or a previously empty layer).
       new_tiledata_length = width * height * SIZE_OF_A_SCREEN_IN_BYTES
       
       new_tiledata_ram_pointer = fs.get_free_space(new_tiledata_length, room.overlay_id)
@@ -277,7 +277,7 @@ class Layer
   
   def tileset_filename
     if tileset_pointer == 0
-      # Empty GBA layer.
+      # Empty layer.
       return nil
     end
     

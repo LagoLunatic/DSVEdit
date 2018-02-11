@@ -34,16 +34,7 @@ class TMXInterface
         layer_index = $1.to_i(16)
         game_layer = room.layers[layer_index]
         if game_layer.nil?
-          if SYSTEM == :nds && layer_index < Room.max_number_of_layers
-            # Add new layers automatically.
-            num_layers_to_add = layer_index - room.layers.length + 1
-            num_layers_to_add.times do
-              room.add_new_layer()
-            end
-            game_layer = room.layers[layer_index]
-          else
-            raise ImportError.new("Layer name \"#{tmx_layer.attr("name")}\" has an invalid layer index")
-          end
+          raise ImportError.new("Layer name \"#{tmx_layer.attr("name")}\" has an invalid layer index")
         end
       else
         raise ImportError.new("Don't know how to parse layer name: \"#{tmx_layer.attr("name")}\"")
@@ -142,10 +133,17 @@ class TMXInterface
         end
         
         room.z_ordered_layers.each do |layer|
-          layer_name = "layer %08X" % layer.layer_list_entry_ram_pointer
+          layer_name = "layer %d" % room.layers.index(layer)
+          if layer.layer_metadata_ram_pointer == 0
+            # Empty layer.
+            opacity = 1.0
+          else
+            opacity = layer.opacity / 31.0
+          end
+          
           xml.layer(:name => layer_name,
                     :width => layer.width*SCREEN_WIDTH_IN_TILES, :height => layer.height*SCREEN_HEIGHT_IN_TILES,
-                    :opacity => layer.opacity/31.0) {
+                    :opacity => opacity) {
             
             xml.properties {
               xml.property(:name => "layer_width",         :value => "%02X" % layer.width)
@@ -161,7 +159,7 @@ class TMXInterface
             tileset_filename = layer.tileset_filename
             
             if tileset_filename.nil?
-              # Empty GBA layer with no tileset specified.
+              # Empty layer with no tileset specified.
               # Default to using the first tileset in the room since it doesn't actually matter which tileset it uses when all the tiles are blank anyway.
               block_offset = 1
             else

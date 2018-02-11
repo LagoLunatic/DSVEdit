@@ -46,7 +46,6 @@ class DSVEdit < Qt::MainWindow
   slots "edit_layers()"
   slots "open_entity_editor()"
   slots "open_door_editor()"
-  slots "add_new_layer()"
   slots "add_new_entity()"
   slots "add_new_door()"
   slots "update_visible_view_items()"
@@ -121,7 +120,6 @@ class DSVEdit < Qt::MainWindow
     connect(@ui.actionEdit_Layers, SIGNAL("activated()"), self, SLOT("edit_layers()"))
     connect(@ui.actionEdit_Entities, SIGNAL("activated()"), self, SLOT("open_entity_editor()"))
     connect(@ui.actionEdit_Doors, SIGNAL("activated()"), self, SLOT("open_door_editor()"))
-    connect(@ui.actionAdd_New_Layer, SIGNAL("activated()"), self, SLOT("add_new_layer()"))
     connect(@ui.actionAdd_Entity, SIGNAL("activated()"), self, SLOT("add_new_entity()"))
     connect(@ui.actionAdd_Door, SIGNAL("activated()"), self, SLOT("add_new_door()"))
     connect(@ui.actionEntities, SIGNAL("activated()"), self, SLOT("update_visible_view_items()"))
@@ -190,7 +188,6 @@ class DSVEdit < Qt::MainWindow
     @ui.actionEdit_Layers.setEnabled(false);
     @ui.actionEdit_Entities.setEnabled(false);
     @ui.actionEdit_Doors.setEnabled(false);
-    @ui.actionAdd_New_Layer.setEnabled(false);
     @ui.actionAdd_Entity.setEnabled(false);
     @ui.actionAdd_Door.setEnabled(false);
     @ui.actionEntities.setEnabled(false);
@@ -226,7 +223,6 @@ class DSVEdit < Qt::MainWindow
     @ui.actionEdit_Layers.setEnabled(true);
     @ui.actionEdit_Entities.setEnabled(true);
     @ui.actionEdit_Doors.setEnabled(true);
-    @ui.actionAdd_New_Layer.setEnabled(true);
     @ui.actionAdd_Entity.setEnabled(true);
     @ui.actionAdd_Door.setEnabled(true);
     @ui.actionEntities.setEnabled(true);
@@ -753,23 +749,6 @@ class DSVEdit < Qt::MainWindow
     @open_dialogs << LayersEditorDialog.new(self, @room, @renderer)
   end
   
-  def add_new_layer
-    if @room.layers.size >= Room.max_number_of_layers
-      Qt::MessageBox.warning(self, "Can't add layer", "Can't add any more layers to this room, it already has the maximum of #{Room.max_number_of_layers} layers.")
-      return
-    end
-    
-    @room.add_new_layer()
-    load_room()
-    
-    Qt::MessageBox.warning(self, "Layer added", "Successfully added a new layer to room %08X." % @room.room_metadata_ram_pointer)
-  rescue FreeSpaceManager::FreeSpaceFindError => e
-    Qt::MessageBox.warning(self,
-      "Failed to find free space",
-      "Failed to find free space to put the new layer.\n\n#{NO_FREE_SPACE_MESSAGE}"
-    )
-  end
-  
   def add_new_entity
     entity = Entity.new(@room, game.fs)
     scene_pos = @ui.room_graphics_view.mapToScene(@ui.room_graphics_view.mapFromGlobal(Qt::Cursor.pos))
@@ -1058,7 +1037,7 @@ class DSVEdit < Qt::MainWindow
   
   def open_in_tiled
     if @room.layers.length == 0
-      Qt::MessageBox.warning(self, "Room has no layers", "Cannot edit a room that has no layers.")
+      Qt::MessageBox.warning(self, "Room has no layers", "Cannot edit a room that has no layers. Open the layers editor in order to create a layer list for this room.")
       return
     elsif @settings[:tiled_path].nil? || @settings[:tiled_path].empty?
       Qt::MessageBox.warning(self, "Failed to run Tiled", "You must specify where Tiled is installed.")
@@ -1081,6 +1060,11 @@ class DSVEdit < Qt::MainWindow
   end
   
   def import_from_tiled
+    if @room.layers.length == 0
+      Qt::MessageBox.warning(self, "Room has no layers", "Cannot edit a room that has no layers. Open the layers editor in order to create a layer list for this room.")
+      return
+    end
+    
     folder = "cache/#{GAME}/rooms"
     tmx_path = "#{folder}/#{@room.area_name}/#{@room.filename}.tmx"
     if !File.exist?(tmx_path) || !File.file?(tmx_path)

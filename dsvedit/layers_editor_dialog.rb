@@ -22,6 +22,20 @@ class LayersEditorDialog < Qt::Dialog
     @ui.layer_graphics_view.setDragMode(Qt::GraphicsView::ScrollHandDrag)
     self.setStyleSheet("QGraphicsView { background-color: transparent; }");
     
+    if @room.layers.empty?
+      response = Qt::MessageBox.question(self, "Room has no layers",
+        "This is an unused room with no layers. Would you like DSVEdit to create a layer list for this room so it can be edited?",
+        Qt::MessageBox::No | Qt::MessageBox::Yes,
+        Qt::MessageBox::No,
+      )
+      if response == Qt::MessageBox::Yes
+        @room.create_layer_list()
+      else
+        self.close()
+        return
+      end
+    end
+    
     @room.layers.each_with_index do |layer, i|
       @ui.layer_index.addItem("%02X %08X" % [i, layer.layer_list_entry_ram_pointer])
     end
