@@ -63,7 +63,7 @@ class Sector
     new_room_pointer = fs.get_free_space(Room.data_size, nil)
     new_room = Room.new(self, new_room_pointer, area.area_index, sector_index, new_room_index, game)
     
-    new_room.layer_list_ram_pointer = fs.get_free_space(Room.max_number_of_layers*Layer.layer_list_entry_size, overlay_id)
+    new_room.layer_list_ram_pointer = fs.get_free_space(Room.max_number_of_layers*RoomLayer.layer_list_entry_size, overlay_id)
     
     other_room_in_sector = rooms.first
     if other_room_in_sector

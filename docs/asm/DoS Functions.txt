@@ -429,6 +429,20 @@
 021C5250 SkillDraw?
   ; used by killer fish soul, check if others use it
 
+0200467C DrawBGLayer
+  ; r0 - Layer metadata pointer
+  ; r1 - 
+  ; r2 - 
+  ; r3 - 
+  ; [r13] - 
+02041F68 DrawBGLayer2?
+  ; r0 - Menu entity
+  ; r1 - Layer metadata pointer
+02041798 LoadMenuGFXAsset
+  ; r0 - Menu entity to load the GFX for
+  ; r1 - 0?
+  ; r2 - Asset index
+
 020125A4 MagicSealUpdate?
 02215F5C MagicSealDraw?
 

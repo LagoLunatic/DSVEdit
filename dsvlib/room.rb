@@ -106,7 +106,7 @@ class Room
     @layers = []
     i = 0
     while true
-      layer = Layer.new(self, layer_list_ram_pointer + i*Layer.layer_list_entry_size, fs)
+      layer = RoomLayer.new(self, layer_list_ram_pointer + i*RoomLayer.layer_list_entry_size, fs)
       layer.read_from_rom()
       @layers << layer
       
@@ -714,19 +714,20 @@ class Room
     overlay_ram_end = overlay[:ram_start_offset]+overlay[:size]
     
     # Create the layer list.
-    @layer_list_ram_pointer = fs.get_free_space(Layer.layer_list_entry_size*Room.max_number_of_layers, overlay_id)
+    @layer_list_ram_pointer = fs.get_free_space(RoomLayer.layer_list_entry_size*Room.max_number_of_layers, overlay_id)
     fs.write(room_metadata_ram_pointer+2*4, [@layer_list_ram_pointer].pack("V"))
     
     # Create the layers.
     Room.max_number_of_layers.times do |new_layer_i|
-      new_layer = Layer.new(self, layer_list_ram_pointer + new_layer_i*Layer.layer_list_entry_size, fs)
+      new_layer = RoomLayer.new(self, layer_list_ram_pointer + new_layer_i*RoomLayer.layer_list_entry_size, fs)
       
       new_layer.z_index = 0x16
       new_layer.scroll_mode = 0x01
       new_layer.main_gfx_page_index = 0x00
       new_layer.opacity = 0x1F
       
-      new_layer.layer_metadata_ram_pointer = fs.get_free_space(16, overlay_id)
+      layer_metadata_ram_pointer = fs.get_free_space(16, overlay_id)
+      new_layer.bg_layer = BGLayer.new(layer_metadata_ram_pointer, fs, overlay_id: overlay_id)
       
       main_layer = layers.first
       if main_layer
