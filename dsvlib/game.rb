@@ -1,5 +1,6 @@
 
 require 'open3'
+require 'tmpdir'
 
 class Game
   class InvalidFileError < StandardError ; end
@@ -595,60 +596,63 @@ class Game
       raise "Could not find patch file: #{patch_file}"
     end
     
-    # Temporarily copy code files to asm directory so armips can be run without permanently modifying the files.
-    if SYSTEM == :nds
-      fs.all_files.each do |file|
-        next unless (file[:overlay_id] || file[:name] == "arm9.bin")
-        
-        file_data = fs.read_by_file(file[:file_path], 0, file[:size])
-        
-        output_path = File.join("asm", file[:file_path])
+    Dir.mktmpdir do |tmpdir|
+      # Temporarily copy code files to a temporary directory so armips can be run without permanently modifying the files.
+      if SYSTEM == :nds
+        fs.all_files.each do |file|
+          next unless (file[:overlay_id] || file[:name] == "arm9.bin")
+          
+          file_data = fs.read_by_file(file[:file_path], 0, file[:size])
+          
+          output_path = File.join(tmpdir, file[:file_path])
+          output_dir = File.dirname(output_path)
+          FileUtils.mkdir_p(output_dir)
+          File.open(output_path, "wb") do |f|
+            f.write(file_data)
+          end
+        end
+      else
+        output_path = File.join(tmpdir, "ftc", "rom.gba")
         output_dir = File.dirname(output_path)
         FileUtils.mkdir_p(output_dir)
         File.open(output_path, "wb") do |f|
-          f.write(file_data)
+          f.write(fs.rom)
         end
       end
-    else
-      output_path = File.join("asm", "ftc", "rom.gba")
-      output_dir = File.dirname(output_path)
-      FileUtils.mkdir_p(output_dir)
-      File.open(output_path, "wb") do |f|
-        f.write(fs.rom)
+      
+      # Also copy the patch file to the temporary directory.
+      FileUtils.cp(patch_file, tmpdir)
+      patch_file_name = File.basename(patch_file)
+      temp_patch_file = File.join(tmpdir, patch_file_name)
+      
+      stdout, stderr, status = Open3.capture3("./armips/armips.exe \"#{temp_patch_file}\"")
+      unless status.success?
+        stdout64, stderr64, status64 = Open3.capture3("./armips/armips64.exe \"#{temp_patch_file}\"")
+        unless status64.success?
+          raise "Armips call failed (try installing the Visual C++ Redistributable for Visual Studio 2015).\nError message from armips was:\n#{stdout}#{stdout64}"
+        end
       end
-    end
-    
-    stdout, stderr, status = Open3.capture3("./armips/armips.exe \"#{patch_file}\"")
-    unless status.success?
-      stdout64, stderr64, status64 = Open3.capture3("./armips/armips64.exe \"#{patch_file}\"")
-      unless status64.success?
-        raise "Armips call failed (try installing the Visual C++ Redistributable for Visual Studio 2015).\nError message from armips was:\n#{stdout}#{stdout64}"
-      end
-    end
-    
-    # Now reload the file contents from the temporary directory, and then delete the directory.
-    if SYSTEM == :nds
-      fs.all_files.each do |file|
-        next unless (file[:overlay_id] || file[:name] == "arm9.bin")
-        
-        input_path = File.join("asm", file[:file_path])
+      
+      # Now reload the file contents from the temporary directory, and then delete the directory.
+      if SYSTEM == :nds
+        fs.all_files.each do |file|
+          next unless (file[:overlay_id] || file[:name] == "arm9.bin")
+          
+          input_path = File.join(tmpdir, file[:file_path])
+          file_data = File.open(input_path, "rb") do |f|
+            f.read()
+          end
+          
+          fs.overwrite_file(file[:file_path], file_data)
+        end
+      else
+        input_path = File.join(tmpdir, "ftc", "rom.gba")
         file_data = File.open(input_path, "rb") do |f|
           f.read()
         end
         
-        fs.overwrite_file(file[:file_path], file_data)
+        fs.overwrite_rom(file_data)
       end
-    else
-      input_path = File.join("asm", "ftc", "rom.gba")
-      file_data = File.open(input_path, "rb") do |f|
-        f.read()
-      end
-      
-      fs.overwrite_rom(file_data)
-    end
-  ensure
-    if File.exist?(File.join("asm", "ftc"))
-      FileUtils.rm_r(File.join("asm", "ftc"))
     end
   end
   
