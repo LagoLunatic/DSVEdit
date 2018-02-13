@@ -446,19 +446,19 @@ class DoSMap < Map
     elsif GAME == "dos"
       warp_rooms_x_sorted = warp_rooms.sort_by{|tile| [tile.x_pos_in_tiles, tile.y_pos_in_tiles] }
       warp_rooms_y_sorted = warp_rooms.sort_by{|tile| [tile.y_pos_in_tiles, tile.x_pos_in_tiles] }
-      warp_rooms.each do |warp_room|
+      warp_rooms.each_with_index do |warp_room, warp_index|
         warp_room.x_pos_in_pixels = warp_room.x_pos_in_tiles*4
         warp_room.y_pos_in_pixels = warp_room.y_pos_in_tiles*4
         warp_room.x_index         = warp_rooms_x_sorted.index(warp_room)
         warp_room.y_index         = warp_rooms_y_sorted.index(warp_room)
         
         warp_tile = @tiles.find{|tile| tile.x_pos == warp_room.x_pos_in_tiles && tile.y_pos == warp_room.y_pos_in_tiles}
-        if warp_tile && !warp_tile.is_blank
-          warp_room.sector_index = warp_tile.sector_index
-          warp_room.room_index = warp_tile.room_index
-        elsif warp_room.x_pos_in_tiles == 54 && warp_room.y_pos_in_tiles == 42
+        if warp_index == 0xB
           warp_room.sector_index = 0xB
           warp_room.room_index = 0x23
+        elsif warp_tile && !warp_tile.is_blank
+          warp_room.sector_index = warp_tile.sector_index
+          warp_room.room_index = warp_tile.room_index
         else
           warp_room.sector_index = 0
           warp_room.room_index = 0
