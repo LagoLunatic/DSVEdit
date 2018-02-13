@@ -17,7 +17,16 @@
 
 02078CAC-02079D43 - Enemy DNA list.
 
-02079D7C - List of layer scroll modes.
+02079D44-02079D5B - List of secret rooms (rooms that shouldn't show up on the map even if you have a map item for that sector).
+  Entry length 2.
+  00,1: Sector index of this secret room.
+  01,1: Room inex of this secret room.
+  The end of the list is marked by FF FF.
+
+02079D5C-02079D7B - The palette for the map.
+  This is not a palette list, just a single palette without the usual palette header.
+
+02079D7C-02079E53 - List of layer scroll modes.
   Each is 0xC bytes long.
   00,4: Horizontal scrolling multiplier (0x1000 = 1.0).
   04,4: Vertical scrolling multiplier (0x1000 = 1.0).
@@ -27,8 +36,9 @@
       Word 00 is the speed of horizontal scrolling.
       Word 04 is the speed of vertical scrolling.
 
-0207ABEC - Layer metadata for the background of the bestiary.
-  Yes, menu backgrounds are handled very similarly to room layers.
+0207ABEC-0207ABFB - Layer metadata for the background of the bestiary.
+0207ABFC-0207AD7B - Layer tile list for the background of the bestiary.
+  Menu backgrounds are handled very similarly to room layers.
 
 02086394-0208A393 - List of sine and cosine values.
   Entry length 4.
@@ -284,6 +294,7 @@ What each range of entity slots is for:
   0x00040000 - Used whenever an event is active, even if the player has control, such as during the prologue fight. Also set when the player is in a transition room.
   0x00100000 - Freezes Soma. He won't animate, take damage, be affected by gravity or momentum, or respond to player input. Used when loading the next room.
   0x02000000 - Set in rooms with mirrors. Can affect zombie somehow, sometimes making him invisible?
+  0x04000000 - Set when playing the character swap animation in Julius mode.
   0x08000000 - Set when the game is paused.
   0x10000000 - Makes all enemy souls drops have a 100% chance. Used during the prologue.
   0x40000000 - Set when you haven't saved the game once yet. Disables suspending.
@@ -622,7 +633,11 @@ Player's current stats:
 0210F014 - Player's current Y pos on the map?
 0210F018 - Player's current X pos on the map?
 
-0210FA00 - List of pixel data for the currently drawn map.
+0210F040 - List of pixel data for the currently drawn map.
+  In one-dimensional graphics mode. So each pixel takes up a nibble, each 8x8 block takes up 0x20 bytes.
+  You can calculate the offset of a tile here like this: 
+    y_in_tiles/2*0x400 + x_in_tiles/2*0x20
+  Note that y_in_tiles and x_in_tiles need to have the map draw offsets added to them already.
 
 Stuff related to currently loaded tilesets:
 02115064,4 - Which tile GFX asset index to load next.
@@ -727,6 +742,14 @@ Here's what each actor is (index, special object id, description):
   07 55 Dmitrii
   08 5B Alucard (missing gfx pages)
   09 52 Julius NPC (missing gfx page)
+
+0222DF68-0222DFA7 - List of character swap voices.
+  Entry length 0x10.
+  The index in this list is the character you're swapping from.
+  00,4: Voice for this character to play when swapping to Soma (unused).
+  04,4: Voice for this character to play when swapping to Julius.
+  08,4: Voice for this character to play when swapping to Yoko.
+  0C,4: Voice for this character to play when swapping to Alucard.
 
 0222DFEC-0222E1FB - List of which sprite animations are for which player states for each player character (state anims).
   The pointer at offset C in player data points to the appropiate entry in this list.

@@ -472,7 +472,11 @@
 02024724 MapTileDrawFillPixels
   ; r0 - Map X
   ; r1 - Map Y
-  ; more args
+  ; r2 - What type of tile it is
+  ;   0 - Normal tile
+  ;   1 - Save room
+  ;   2 - Warp room
+  ; r3 - 1 if revealed only by a map item?
   ; [r13] - Which map (0/1/2 for Castle/Abyss/???)
 02023CBC MapTileDrawWallPixels
   ; r0 - Map X
@@ -558,6 +562,21 @@
   ; r0 - Which map (0/1/2 for Castle/Abyss/???)
   ; This is the offset from the top of the screen the map should be drawn.
   ; Returns 2 for Castle, 0xC for Abyss, 0x10 for ???.
+02024BE8 MapTileGetSecretRoomIndex
+  ; r0 - Map X
+  ; r1 - Map Y
+  ; r2 - Which map (0/1/2 for Castle/Abyss/???)
+  ; Returns the secret room index for this map tile (the index in list 02079D44), or -1 if no secret room.
+02025124 MapSecretRoomGetSectorIndex
+  ; r0 - Secret room index
+  ; r1 - Which map (0/1/2 for Castle/Abyss/???)
+  ; Returns the sector index of this secret room.
+  ; Note that the which map argument doesn't matter, all three maps use list 02079D44 of secret rooms, even though that's only for the castle.
+020250CC MapSecretRoomGetRoomIndex
+  ; r0 - Secret room index
+  ; r1 - Which map (0/1/2 for Castle/Abyss/???)
+  ; Returns the room index of this secret room.
+  ; Note that the which map argument doesn't matter, all three maps use list 02079D44 of secret rooms, even though that's only for the castle.
 
 021C31E8 FacePlayer
   ; Makes an enemy turn towards the player.

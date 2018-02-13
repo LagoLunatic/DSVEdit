@@ -115,3 +115,4 @@ For the player:
   For glyphs, ?
 0DC,4: Bitfield of ?
   00080000 - Do not interrupt the player's current animation when landing.
+0ED,1: Which player character index this player is. 0 is Shanoa, 1 is Arma Felix, etc.

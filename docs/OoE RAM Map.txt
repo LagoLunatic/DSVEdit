@@ -66,6 +66,21 @@
 
 020ECAA0,4 - When in a transition room, this is the current sector index that is loaded.
 
+020EF27C-020EF36B - List of voice SFX indexes for each player.
+  Entry length 0x30.
+  00,4: SFX index for attacking (random 1).
+  04,4: SFX index for attacking (random 2).
+  08,4: SFX index for attacking (random 3).
+  0C,4: SFX index for attacking (random 4).
+  10,4: SFX index for using glyph union.
+  14,4: 
+  18,4: 
+  1C,4: 
+  20,4: 
+  24,4: 
+  28,4: 
+  2C,4: 
+
 020ECBB8 - List of which assets to load for each sector.
   This is a list of pointers, one for each area.
   Each of those pointers points to a list of pointers, one for each sector in that area.
