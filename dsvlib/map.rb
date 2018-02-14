@@ -298,7 +298,9 @@ end
 
 class DoSMap < Map
   attr_reader :is_abyss,
-              :warp_rooms
+              :warp_rooms,
+              :secret_rooms,
+              :secret_room_list_pointer
   
   def initialize(area_index, sector_index, game)
     @area_index = area_index
@@ -323,6 +325,7 @@ class DoSMap < Map
       @map_tile_line_data_ram_pointer = ABYSS_MAP_TILE_LINE_DATA_START_OFFSET
       @number_of_tiles = ABYSS_MAP_NUMBER_OF_TILES
       @secret_door_list_pointer = ABYSS_MAP_SECRET_DOOR_DATA_START_OFFSET
+      @secret_room_list_pointer = nil
       @draw_x_offset_pointer = ABYSS_MAP_DRAW_X_OFFSET_LOCATION
       @draw_y_offset_pointer = ABYSS_MAP_DRAW_Y_OFFSET_LOCATION
     else
@@ -332,6 +335,7 @@ class DoSMap < Map
       @map_tile_line_data_ram_pointer = MAP_TILE_LINE_DATA_START_OFFSET
       @number_of_tiles = MAP_NUMBER_OF_TILES
       @secret_door_list_pointer = MAP_SECRET_DOOR_DATA_START_OFFSET
+      @secret_room_list_pointer = MAP_SECRET_ROOM_DATA_START_OFFSET
       @draw_x_offset_pointer = MAP_DRAW_X_OFFSET_LOCATION
       @draw_y_offset_pointer = MAP_DRAW_Y_OFFSET_LOCATION
     end
@@ -373,6 +377,23 @@ class DoSMap < Map
         end
         
         @secret_doors << DoSSecretDoor.new(secret_door_pointer, fs)
+        
+        i += 1
+      end
+    end
+    
+    if @secret_room_list_pointer
+      @secret_rooms = []
+      i = 0
+      while true
+        secret_room_pointer = secret_room_list_pointer + i*2
+        sector_index, room_index = fs.read(secret_room_pointer, 2).unpack("C*")
+        
+        if sector_index == 0xFF && room_index == 0xFF
+          break
+        end
+        
+        @secret_rooms << DoSSecretRoom.new(secret_room_pointer, fs)
         
         i += 1
       end
@@ -655,6 +676,23 @@ class DoSSecretDoor < SecretDoor
       y_and_door_side = @y_pos
     end
     fs.write(secret_door_pointer, [@x_pos, y_and_door_side].pack("CC"))
+  end
+end
+
+class DoSSecretRoom
+  attr_reader :secret_room_pointer,
+              :fs
+  attr_accessor :sector_index,
+                :room_index
+  
+  def initialize(secret_room_pointer, fs)
+    @fs = fs
+    @secret_room_pointer = secret_room_pointer
+    @sector_index, @room_index = fs.read(secret_room_pointer, 2).unpack("CC")
+  end
+  
+  def write_to_rom
+    fs.write(secret_room_pointer, [@sector_index, @room_index].pack("CC"))
   end
 end
 
