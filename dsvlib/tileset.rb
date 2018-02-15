@@ -348,7 +348,7 @@ class CollisionTile
   end
   
   def is_jumpthrough_platform?
-    [2, 3].include?(block_shape) && has_top && !has_sides_and_bottom && !has_effect
+    [0, 1, 2, 3].include?(block_shape) && has_top && !has_sides_and_bottom && !has_effect
   end
   
   def is_bottom_half?
