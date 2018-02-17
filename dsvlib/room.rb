@@ -106,7 +106,7 @@ class Room
     @layers = []
     i = 0
     while true
-      layer = RoomLayer.new(self, layer_list_ram_pointer + i*RoomLayer.layer_list_entry_size, fs)
+      layer = RoomLayer.new(self, layer_list_ram_pointer + i*RoomLayer.layer_list_entry_size, game)
       layer.read_from_rom()
       @layers << layer
       
@@ -719,7 +719,7 @@ class Room
     
     # Create the layers.
     Room.max_number_of_layers.times do |new_layer_i|
-      new_layer = RoomLayer.new(self, layer_list_ram_pointer + new_layer_i*RoomLayer.layer_list_entry_size, fs)
+      new_layer = RoomLayer.new(self, layer_list_ram_pointer + new_layer_i*RoomLayer.layer_list_entry_size, game)
       
       new_layer.z_index = 0x16
       new_layer.scroll_mode = 0x01

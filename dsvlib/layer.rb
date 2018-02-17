@@ -186,7 +186,8 @@ end
 
 class RoomLayer
   attr_reader :room,
-              :fs
+              :fs,
+              :game
   attr_accessor :bg_layer,
                 :layer_list_entry_ram_pointer,
                 :z_index,
@@ -196,10 +197,11 @@ class RoomLayer
                 :bg_control,
                 :visual_effect
   
-  def initialize(room, layer_list_entry_ram_pointer, fs)
+  def initialize(room, layer_list_entry_ram_pointer, game)
     @room = room
     @layer_list_entry_ram_pointer = layer_list_entry_ram_pointer
-    @fs = fs
+    @fs = game.fs
+    @game = game
   end
     
   def read_from_rom
@@ -232,22 +234,29 @@ class RoomLayer
   end
   
   def write_to_rom
-    room.sector.load_necessary_overlay()
-    
     # Detect if the tile metadata is used by any other layers in the same sector.
     # If so the BGLayer will need to assign itself new metadata in free space.
     layer_metadata_duplicated = false
-    room.sector.rooms.each do |other_room|
-      other_room.layers.each do |layer|
-        next if layer == self
-        
-        if layer.layer_metadata_ram_pointer == self.layer_metadata_ram_pointer
-          layer_metadata_duplicated = true
-          break
+    if layer_metadata_ram_pointer != 0
+      room.sector.load_necessary_overlay()
+      layer_metadata_path_and_offset = fs.convert_ram_address_to_path_and_offset(self.layer_metadata_ram_pointer)
+      game.each_room do |other_room|
+        other_room.sector.load_necessary_overlay()
+        other_room.layers.each do |layer|
+          next if layer.layer_metadata_ram_pointer == 0
+          next if layer == self
+          
+          other_layer_metadata_path_and_offset = fs.convert_ram_address_to_path_and_offset(layer.layer_metadata_ram_pointer)
+          if other_layer_metadata_path_and_offset == layer_metadata_path_and_offset
+            layer_metadata_duplicated = true
+            break
+          end
         end
+        break if layer_metadata_duplicated
       end
-      break if layer_metadata_duplicated
     end
+    
+    room.sector.load_necessary_overlay()
     
     first_layer_with_valid_tileset = room.layers.find{|layer| layer.tileset_pointer != 0}
     if first_layer_with_valid_tileset
