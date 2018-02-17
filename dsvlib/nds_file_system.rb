@@ -845,7 +845,10 @@ private
     offset = 0x00
     while offset < @file_allocation_table_size
       @files[id][:start_offset], @files[id][:end_offset] = file_allocation_table_data[offset,8].unpack("VV")
-      @files[id][:size] = @files[id][:end_offset] - @files[id][:start_offset]
+      if @files[id][:size].nil?
+        # Don't overwrite the correct size that was already read for overlays with the possibly outdated guess size here.
+        @files[id][:size] = @files[id][:end_offset] - @files[id][:start_offset]
+      end
       
       id += 1
       offset += 0x08
