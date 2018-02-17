@@ -114,4 +114,10 @@ class Door
   def door_str
     @door_str ||= "#{room.room_str}_%03X" % room.doors.index(self)
   end
+  
+  def to_s
+    "<Door:#{door_str}>"
+  end
+  
+  def inspect; to_s; end
 end
