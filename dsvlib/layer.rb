@@ -61,7 +61,7 @@ class BGLayer
     end
   end
   
-  def write_to_rom(default_tileset_pointer: 0, default_tileset_type: 0)
+  def write_to_rom(default_tileset_pointer: 0, default_tileset_type: 0, layer_metadata_duplicated: false)
     # Clamp width/height to valid values.
     @width = [@width, 15].min
     @width = [@width, 1].max
@@ -89,12 +89,31 @@ class BGLayer
           @tileset_type = default_tileset_type
         end
       end
+    elsif layer_metadata_duplicated
+      # Layer that was used in two different rooms in the base game.
+      
+      # First detect if the user has changed this layer compared to how it originally was.
+      orig_layer = BGLayer.new(layer_metadata_ram_pointer, fs, overlay_id: overlay_id)
+      orig_layer.read_from_rom()
+      tile_data_unchanged = (@tiles.map{|tile| tile.to_tile_data} == orig_layer.tiles.map{|tile| tile.to_tile_data})
+      @tiles.all?{|tile| tile.to_tile_data == 0}
+      if @width == orig_layer.width && @height == orig_layer.height && @tileset_type == orig_layer.tileset_type && @tileset_pointer == orig_layer.tileset_pointer && @collision_tileset_pointer == orig_layer.collision_tileset_pointer && tile_data_unchanged
+        # No changes made.
+        return
+      else
+        # Assign new layer metadata in free space.
+        @layer_metadata_ram_pointer = fs.get_free_space(16, overlay_id)
+        
+        @layer_tiledata_ram_start_offset = nil # (This will be handled by the below code.)
+      end
+      
+      old_width, old_height = orig_layer.width, orig_layer.height
     else
       old_width, old_height = fs.read(layer_metadata_ram_pointer, 2).unpack("C*")
     end
     
     if layer_tiledata_ram_start_offset.nil?
-      # This is a newly added layer (or a previously empty layer).
+      # This is a previously empty layer, or a duplicated layer that needs new space for tile data.
       new_tiledata_length = width * height * SIZE_OF_A_SCREEN_IN_BYTES
       
       new_tiledata_ram_pointer = fs.get_free_space(new_tiledata_length, overlay_id)
@@ -215,6 +234,21 @@ class RoomLayer
   def write_to_rom
     room.sector.load_necessary_overlay()
     
+    # Detect if the tile metadata is used by any other layers in the same sector.
+    # If so the BGLayer will need to assign itself new metadata in free space.
+    layer_metadata_duplicated = false
+    room.sector.rooms.each do |other_room|
+      other_room.layers.each do |layer|
+        next if layer == self
+        
+        if layer.layer_metadata_ram_pointer == self.layer_metadata_ram_pointer
+          layer_metadata_duplicated = true
+          break
+        end
+      end
+      break if layer_metadata_duplicated
+    end
+    
     first_layer_with_valid_tileset = room.layers.find{|layer| layer.tileset_pointer != 0}
     if first_layer_with_valid_tileset
       default_tileset_pointer = first_layer_with_valid_tileset.tileset_pointer
@@ -224,7 +258,11 @@ class RoomLayer
       default_tileset_type = 0
     end
     
-    bg_layer.write_to_rom(default_tileset_pointer: default_tileset_pointer, default_tileset_type: default_tileset_type)
+    bg_layer.write_to_rom(
+      default_tileset_pointer: default_tileset_pointer,
+      default_tileset_type: default_tileset_type,
+      layer_metadata_duplicated: layer_metadata_duplicated
+    )
     
     write_layer_list_entry_to_rom()
   end
