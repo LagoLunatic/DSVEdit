@@ -658,6 +658,7 @@ class Game
   
   def set_starting_room(area_index, sector_index, room_index)
     apply_armips_patch("por_allow_changing_starting_room")
+    apply_armips_patch("ooe_allow_changing_starting_room")
     
     if GAME == "hod"
       room = areas[area_index].sectors[sector_index].rooms[room_index]
