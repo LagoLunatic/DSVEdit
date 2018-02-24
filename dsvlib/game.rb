@@ -125,7 +125,7 @@ class Game
   end
   
   def entity_by_str(entity_str)
-    entity_str =~ /^(\h\h)-(\h\h)-(\h\h)_(\h+)$/
+    entity_str =~ /^(\h\h)-(\h\h)-(\h\h)_e?(\h+)$/
     area_index, sector_index, room_index, entity_index = $1.to_i(16), $2.to_i(16), $3.to_i(16), $4.to_i(16)
     return areas[area_index].sectors[sector_index].rooms[room_index].entities[entity_index]
   end
