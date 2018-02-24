@@ -251,7 +251,7 @@ class NDSFileSystem
   def write_by_file(file_path, offset_in_file, new_data, freeing_space: false)
     file = files_by_path[file_path]
     if offset_in_file + new_data.length > file[:size]
-      raise OffsetPastEndOfFileError.new("Offset %08X is past end of file #{file_path} (%08X bytes long)" % [offset_in_file, file[:size]])
+      raise OffsetPastEndOfFileError.new("Offset %08X (length %08X) is past end of file #{file_path} (%08X bytes long)" % [offset_in_file, new_data.length, file[:size]])
     end
     
     file_data = get_file_data_from_opened_files_cache(file_path)
