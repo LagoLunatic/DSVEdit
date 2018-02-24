@@ -3,7 +3,7 @@
 .erroronwarning on
 
 @Overlay41Start equ 0x02308920
-@FreeSpace equ 0x02308920
+@FreeSpace equ @Overlay41Start
 
 .open "ftc/overlay9_0", 0219E3E0h
 
@@ -21,6 +21,12 @@
   mov r1, 0C0000007h ; Check the flags to make sure we're not in the middle of a boss fight, an event, and that the player has saved the game at least once.
   ands r0, r0, r1
   bne 0x021EF0F8 ; Return to the consumable code if any of those bits are set.
+  
+  ; Don't let the player use magical tickets while inside a mirror.
+  ldr r0, =020F6DF9h
+  ldrb r0, [r0] ; Load the current mirror world state.
+  cmp r0, 0h
+  bne 0x021EF0F8 ; Return to the consumable code if in any mirror world state.
   
   mov r0, 0h ; Sector index
   mov r1, 0Ah ; Room index

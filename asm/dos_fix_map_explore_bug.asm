@@ -6,7 +6,7 @@
 ; This bug causes the glitch in the room randomizer (or sliding puzzle in the vanilla game) where walking through a door will reveal the map tile of the room you would have normally entered without room randomizer/sliding puzzle.
 
 @Overlay41Start equ 0x02308920
-@FreeSpace equ @Overlay41Start + 0x80
+@FreeSpace equ @Overlay41Start + filesize("ftc/overlay9_41")
 
 .open "ftc/arm9.bin", 02000000h
 

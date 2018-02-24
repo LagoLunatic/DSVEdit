@@ -281,7 +281,15 @@ What each range of entity slots is for:
   04 - Selecting what warp to go.
   06 - Arriving at a warp room after warping.
 020F6DF5 - 00 or 01. Affects the above variable.
-020F6DF9 - 0 is normal, 3 is inside a mirror.
+
+020F6DF8,1 - Timer for how long to remain in the current mirror world state (see below).
+020F6DF9,1 - Mirror world state.
+  0 - Normal, not in the mirror world.
+  1 - Starting to enter a mirror.
+  2 - Finishing entering a mirror.
+  3 - In the mirror world fully.
+  4 - Starting to exit a mirror.
+  5 - Finishing exiting a mirror.
 
 020F6DFC-020F6DFF - Bitfield of global game flags.
   0x00000001 - Disables controls. Used during events and while warping.
