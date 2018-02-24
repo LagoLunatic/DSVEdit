@@ -99,12 +99,12 @@ Variables related to delayed loading room entities:
 === 020004E4-02007863: Entity memory. Each entity is 0x84 bytes long. Entities range from 00-DF.
 
 What each range of entity slots is for:
-00-00 - Player.
-02-10 - Player weapons/red souls/blue souls/Julius skills
-11-11 - Yellow soul in Soma mode. Subweapon icon in Julius mode.
-16-19 - 
-1B-48 - Room entities, including enemies and special objects.
-49-CF - Various other things including particles and enemy projectiles.
+00-00  020004E4-02000567  Player.
+02-10  020005EC-02000DA7  Player weapons/red souls/blue souls/Julius skills
+11-11  02000DA8-02000E2B  Yellow soul in Soma mode. Subweapon icon in Julius mode.
+16-19  0200103C-0200124B  ?
+1B-48  020012D0-02002A87  Room entities, including enemies and special objects.
+49-CF  02002A88-02007023  Various things including particles and enemy projectiles.
 
 020004E4 - Player's entity memory.
 02000526,2 - Player's current x pos in pixels.

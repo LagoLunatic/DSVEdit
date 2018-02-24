@@ -17,6 +17,9 @@ Memory used for entities in OoE is 021092A0 - 0211DF5F. Each entity is 0x160 byt
 038,4: Z pos.
 03C,4: X velocity.
 040,4: Y velocity.
+044,4: Movement speed.
+  This is the absolute speed value this entity should move at, without taking direction into account.
+  Currently only Skull Spider is known to use this.
 048,4: X friction.
 04C,4: Y acceleration (gravity).
 064,2: Rotation.
@@ -46,7 +49,7 @@ Memory used for entities in OoE is 021092A0 - 0211DF5F. Each entity is 0x160 byt
 084,2: Current sprite frame index.
 086,2: Palette index in the list of globally loaded palettes.
 088,2: Palette index in the list of globally loaded palettes. Unused?
-08A,2: Palette offset for this entity. Gets added to 86.
+08A,2: Palette offset for this entity. Gets added to the value at 086,2.
 08E,2: Polygon attributes to use when drawing this entity.
   Refer to GBATEK for details.
 090,10: Affects color tint of this entity. 1F for everything means normal colored.

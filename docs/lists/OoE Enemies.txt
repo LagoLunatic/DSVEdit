@@ -65,6 +65,9 @@ Enemies:
     1+ Will spawn on the closest floor below where you place it.
   Var B: The developers set this to 0 1 or 2, but it's not actually used by anything.
 18 Skull Spider
+  Var A: Movement speed (subpixels per frame).
+    If 0, defaults to 0xC00.
+    Note that Skull Spiders move at 3x this speed on hard mode.
 19 Scarecrow
 1A Sea Demon
 1B Winged Guard

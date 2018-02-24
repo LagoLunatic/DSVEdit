@@ -26,8 +26,8 @@ Memory used for entities in DoS is 020CA3F0 - 020F6DEF. Each entity is 0x2A0 byt
 070,4: Bitfield of ?
   00000080 - Horizontally flipped.
 074,2: Current sprite frame index.
-076,1: which palette in the global list of loaded palettes to use
-07A,1: which palette index for this enemy to use (gets added to 76)
+076,1: Palette index in the list of globally loaded palettes.
+07A,1: Palette offset for this entity. Gets added to the value at 076,2.
 081,1: Opacity. 1F is fully opaque.
 082,10: Affects color tint of this entity. 1F for everything means normal colored.
 098,4: Pointer to sprite animation list.

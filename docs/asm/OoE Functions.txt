@@ -543,6 +543,8 @@
 
 02028E90 InitializeVisibleEntity
   ; r0 - Entity
+  ; r1 - 
+  ; r2 - ?
 
 0202BE2C EntityGetSpritePointer
   ; r0 - Entity

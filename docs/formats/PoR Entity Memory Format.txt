@@ -1,5 +1,5 @@
 
-Memory used for entities in PoR is 020FC500 - 0211173F. Each entity is 0x160 bytes long. They range from 0-F4.
+Memory used for entities in PoR is 020FC500 - 0211173F. Each entity is 0x160 bytes long. They range from 0-F5.
 
 000,4: Pointer to update code.
 004,4: Pointer to draw code.
@@ -43,7 +43,7 @@ Memory used for entities in PoR is 020FC500 - 0211173F. Each entity is 0x160 byt
 084,2: Current sprite frame index.
 086,2: Palette index in the list of globally loaded palettes.
 088,2: Palette index in the list of globally loaded palettes. Unused?
-08A,2: Palette offset for this entity. Gets added to 86.
+08A,2: Palette offset for this entity. Gets added to the value at 086,2.
 08C,2: Affects how this entity is rendered.
   0 - Normal.
   1 - Transparency is rendered as white.

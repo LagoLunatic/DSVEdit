@@ -92,12 +92,12 @@
 === 02000418-02007C17: Entity memory. Each entity is 0x80 bytes long. Entities range from 00-EF.
 
 What each range of entity slots is for:
-00-00 02000418-02000497 - Player.
-01-0F 02000498-02000C17 - Player subweapons/spells and the current subweapon icon.
-10-12 02000C18-02000D97 - ?
-14-3F 02000E18-02002417 - Room entities.
-40-CF 02002418-02006C17 - Various other things including particles and enemy projectiles.
-D0-EF 02006C18-02007C17 - ?
+00-00  02000418-02000497  Player.
+01-0F  02000498-02000C17  Player subweapons/spells and the current subweapon icon.
+10-12  02000C18-02000D97  ?
+14-3F  02000E18-02002417  Room entities.
+40-CF  02002418-02006C17  Various other things including particles and enemy projectiles.
+D0-EF  02006C18-02007C17  ?
 
 02000418 - Player's entity memory.
 

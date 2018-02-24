@@ -245,38 +245,28 @@
 020FC4CC,2 - X pos difference on the touch screen touched compared to last frame.
 020FC4CE,2 - Y pos difference on the touch screen touched compared to last frame.
 
-=== 020FC500 - 0211173F: Entities currently loaded into memory. Each is 0x160 bytes long. They range from 0-F4.
+=== 020FC500 - 0211173F: Entities currently loaded into memory. Each is 0x160 bytes long. They range from 0-F5.
 
 What each range of entity slots is for:
 00-01 Boss rush timer?
-04-04 Player 1.
-05-05 Player 2.
-06-06 
-08-11 Player skills.
-1C-1F Player weapons.
-20-24 
-21-24 
-25-28 
-29-2D 
-2A-2D 
-2E-2E Face icons for players.
-31-80 Room entities, including enemies and special objects.
-81-EF Various small things including particles and enemy projectiles.
-F0-F0 Menus
-F1-F1 
-F2-F2 
-F4-F4 
-F5-F5 
-
-020FCA80-020FCBDF - Player 1 (slot 04)
-020FCBE0-020FCD3F - Player 2 (slot 05)
-020FD000-020FDDBF - Player skills (slots 08-11)
-020FEB80-020FF0FF - Player weapons (slots 1C-1F)
-020FF100-020FF7DF - ??? (slots 20-24)
-02100440-0210059F - Face icons for players (slot 2E)
-02100860-0210765F - Room entities (slots 31-80)
-02107660-02110EFF - Particles (slots 81-EF)
-02110F00-0211105F - Menus (slot F0)
+04-04  020FCA80-020FCBDF  Player 1.
+05-05  020FCBE0-020FCD3F  Player 2.
+06-06  020FCD40-020FCE9F  ?
+08-11  020FD000-020FDDBF  Player skills.
+1C-1F  020FEB80-020FF0FF  Player weapons.
+20-24  020FF100-020FF7DF  ?
+21-24  020FF260-020FF7DF  ?
+25-28  020FF7E0-020FFD5F  ?
+29-2D  020FFD60-0210043F  ?
+2A-2D  020FFEC0-0210043F  ?
+2E-2E  02100440-0210059F  Face icons for players.
+31-80  02100860-0210765F  Room entities, including enemies and special objects.
+81-EF  02107660-02110EFF  Various things including particles and enemy projectiles.
+F0-F0  02110F00-0211105F  Menus
+F1-F1  02111060-021111BF  ?
+F2-F2  021111C0-0211131F  ?
+F4-F4  02111480-021115DF  ?
+F5-F5  021115E0-0211173F  ?
 
 020FCA80 - Start of player 1's entity memory.
 020FCAB0 - Player 1's x pos.

@@ -208,16 +208,16 @@ There are 41 entries in the list total.
 === 020CA3F0 - 020F6DEF: Entities currently loaded into memory. Each is 2A0 bytes long. They range from 0-10F.
 
 What each range of entity slots is for:
-002-002 Player.
-004-004 
-01C-028 Player skills.
-029-02C Player weapons.
-02D-02D 
-030-080 Room entities, including enemies and special objects.
-081-0EF Various small things including particles and enemy projectiles.
-0F2-0F2 
-10E-10E 
-10F-10F 
+002-002  020CA930-020CABCF  Player.
+004-004  020CAE70-020CB10F  ?
+01C-028  020CED70-020D0F8F  Player skills.
+029-02C  020D0F90-020D1A0F  Player weapons.
+02D-02D  020D1A10-020D1CAF  ?
+030-080  020D21F0-020DF68F  Room entities, including enemies and special objects.
+081-0EF  020DF690-020F19EF  Various things including particles and enemy projectiles.
+0F2-0F2  020F1F30-020F21CF  ?
+10E-10E  020F68B0-020F6B4F  ?
+10F-10F  020F6B50-020F6DEF  ?
 
 020CA930 - Start of the player's entity memory.
 020CA95C,020CA960 - The player's x pos and y pos.
