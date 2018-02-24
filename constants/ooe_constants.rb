@@ -702,6 +702,8 @@ OTHER_SPRITES = [
   {desc: "Pause menu", gfx_files: [0x020BA408, 0x020BA414, 0x020BA420, 0x020BA42C, 0x020BA480, 0x020BA48C], sprite: 0x021DCD00, palette: 0x020D1980},
   
   {desc: "Map", sprite: 0x020C553C, gfx_files: [0x020BA78C], palette: 0x020D23B0, one_dimensional_mode: true},
+  
+  {desc: "World Map", sprite: 0x021DCCF8, gfx_files: [0x020BA678, 0x020BA684, 0x020BA690, 0x020BA69C, 0x020BA6A8, 0x020BA6B4, 0x020BA6C0], palette: 0x020D1E88},
 ]
 
 CANDLE_FRAME_IN_COMMON_SPRITE = 0xDB
