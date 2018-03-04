@@ -33,10 +33,10 @@ Weapon format:
   09,1: ?
   0A,1: Attack stat.
   0B,1: Defense stat.
-  0C,1: Strength stat.
-  0D,1: Constitution stat.
-  0E,1: Intelligence stat.
-  0F,1: Luck stat.
+  0C,1: Strength stat (signed).
+  0D,1: Constitution stat (signed).
+  0E,1: Intelligence stat (signed).
+  0F,1: Luck stat (signed).
   10,2: Bitfield of damage types this weapon deals, as well as some swing modifiers.
     Bits 0-8: Damage types.
     Bit 11: Killer Mantle effect. Swaps the HP and MP of enemies.
@@ -63,10 +63,10 @@ Body armor and Accessory format:
   09,1: ?
   0A,1: Attack stat.
   0B,1: Defense stat.
-  0C,1: Strength stat.
-  0D,1: Constitution stat.
-  0E,1: Intelligence stat.
-  0F,1: Luck stat.
+  0C,1: Strength stat (signed).
+  0D,1: Constitution stat (signed).
+  0E,1: Intelligence stat (signed).
+  0F,1: Luck stat (signed).
   10,2: Bitfield for what elemental resistances this armor gives you.
   12,2: ?
 
