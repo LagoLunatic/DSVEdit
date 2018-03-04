@@ -340,6 +340,10 @@
   ; This function initializes the asset header, and also does some bookkeeping by subtracting the used size from the available free space and some other things.
 02027C9C FindFreeSpace?
 
+02064F70 GetEntityAssetsListPointer
+  ; r0 - Entity subtype
+  ; r1 - Entity type (1 or 2)
+
 02028DF4 DummyUpdate
 
 02049C58 PlayerUpdate
@@ -354,6 +358,12 @@
   ; r1 - Player entity
   ; r2 - Pointer to ?? in the stack
 02051538 PlayerUpdateStatusEffects?
+
+0205BDBC CalcDamageToEnemy
+  ; Calculates the damage a player/player skill should do to an enemy.
+  ; r0 - Enemy entity taking damage (entity+0xA4 pointer)
+  ; r1 - Player/player weapon/player skill entity dealing damage (entity+0xA4 pointer)
+  ; r2 - Pointer to ?? on the stack
 
 0205DDB4 EntityMoveToFloor
   ; Teleports entity downwards to the nearest floor.
@@ -537,6 +547,13 @@
   ; r1 - Entity type (1 or 2 for enemy or special object)
   ; If the entity is a special object this function does nothing.
   ; Otherwise it loads the appropriate enemy overlay for this enemy.
+
+02064C08 InitializeRoomEnemyOrSpecialObject
+  ; r0 - Entity subtype
+  ; r1 - Entity type (1 or 2)
+  ; Loads this entity's assets from its asset list.
+  ; For enemies with resistance bit 0x80000000 set, it does not load their GFX assets.
+  ; Also calls LoadEnemyOverlay.
 
 02030684 InitializeSprite
   ; r0 - Entity

@@ -32,7 +32,11 @@ OoE Enemy DNA:
   1A,1: Chance to drop item 1
   1B,1: Chance to drop item 2
   1C,4: Weaknesses
+    In OoE, weaknesses increase damage the enemy takes by 1.5x if the enemy is weak to any of the elements of the attack.
     Bit 26: Enemy takes extra damage? (117 -> 176)
   20,4: Resistances
-    Resisting Poison/Curse/Stone does nothing.
-    Bit 32: Can cause the enemy to have corrupted graphics and palette?
+    In OoE, resistances multiply the damage the enemy takes by 0.25x only if the enemy resists ALL elements of the attack.
+    Resisting Poison/Curse/Stone/Torpor does nothing.
+    Bit 32: This bit is special, it tells the function InitializeRoomEnemyOrSpecialObject to skip loading this enemy's GFX assets.
+      This bit is not used by any enemies in OoE, but is in PoR.
+      This bit should only be used for enemies that are specially coded to manually load their own GFX instead of leaving it up to the engine. If you set this bit for an enemy that does not load its own GFX the enemy will be invisible or have corrupted graphics because the GFX were never loaded.

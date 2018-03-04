@@ -80,6 +80,7 @@ For enemies:
 25A,2: Current MP.
 260,1: Enemy ID.
 26A,2: The attack value from the enemy DNA.
+26C,2: The defense value from the enemy DNA.
 
 For free souls:
 1E8,4: Affects homing?

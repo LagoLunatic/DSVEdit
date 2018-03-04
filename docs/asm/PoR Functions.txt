@@ -51,6 +51,11 @@
 0201BB58 AssetGetName
   ; r0 - Asset index
   ; Returns 020CDAFC+(r0*0x20)+6, where the asset's filename starts
+0201BB44 AssetGetType
+  ; r0 - Asset index
+  ; Returns 020CDAFC+(r0*0x20)+4, where the asset's index is
+02012358 AssetGetFreeSpace??
+
 021DCA34 LoadEntityAssets
   ; r0 - Entity subtype
   ; r1 - Entity type (1 for enemies to use list 020CD88C, 2 for special objects to use list 020E19DC)
@@ -62,7 +67,14 @@
   ; r0 - Entity subtype
   ; r1 - Entity type (1 or 2)
   ; r2 - Index of the asset in this entity's list of assets
-02012358 AssetGetFreeSpace??
+021DCC14 GetEntityAssetsListPointer
+  ; r0 - Entity subtype
+  ; r1 - Entity type (1 or 2)
+
+021DC994 LoadEnemyOverlay
+  ; r0 - Entity subtype
+  ; r1 - Entity type
+  ; If this entity is an enemy (type 1), it checks to see if it needs an enemy overlay, and loads it if it does.
 
 02016014 LoadGfxAsset?
   ; r0 - Gfx pointer
@@ -297,9 +309,9 @@
   ; r2 - Damage types bitfield.
 021DA18C CalcDamageToEnemy
   ; Calculates the damage a player/player weapon/player skill should do to an enemy.
-  ; r0 - ?
-  ; r1 - ?
-  ; r2 - ?
+  ; r0 - Enemy entity taking damage (entity+0xA4 pointer)
+  ; r1 - Player/player weapon/player skill entity dealing damage (entity+0xA4 pointer)
+  ; r2 - Pointer to ?? on the stack
 
 021FC148 PlayerSetDamageAndTypes
   ; r0 - Player entity pointer
@@ -348,6 +360,13 @@
   ; r0 - Room's entity list pointer
 021DD75C LoadRoomEntity
   ; r0 - Pointer to the entity in the room's entity list.
+
+021DCC40 InitializeRoomEnemyOrSpecialObject
+  ; r0 - Entity subtype
+  ; r1 - Entity type (1 or 2)
+  ; Loads this entity's assets from its asset list.
+  ; For enemies with resistance bit 0x80000000 set, it does not load their GFX assets.
+  ; Also calls LoadEnemyOverlay.
 
 0200E954 LoadPalette
   ; r0 - Palette list pointer
@@ -528,7 +547,7 @@
 02215394 CheckRelicEnabled
   ; r0 - Index of the relic to check. 0-F.
 
-021D9148 SetEnemyDefenses
+021D9148 SetDefensesFromEnemyDNA
   ; r0 - Entity pointer
   ; r1 - Enemy ID
   ; Copies defense values from the enemy DNA into the entity.

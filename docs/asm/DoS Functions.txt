@@ -425,6 +425,10 @@
   ; Calculates the damage an enemy should do to the player.
   ; r0 - Base damage.
   ; r1 - Damage types bitfield.
+021C4298 CalcDamageToEnemy
+  ; Calculates the damage a player/player weapon/player skill should do to an enemy.
+  ; r0 - Enemy entity taking damage (entity+0xA4 pointer)
+  ; r1 - Player/player weapon/player skill entity dealing damage (entity+0xA4 pointer)
 
 021C5250 SkillDraw?
   ; used by killer fish soul, check if others use it
@@ -605,6 +609,10 @@
   ; r2 - Resistances
   ; r3 - Weaknesses
   ; Only stores these if the entity's hitbox is active (entity+A6)
+021C347C SetDefensesFromEnemyDNA
+  ; r0 - Entity pointer
+  ; r1 - Enemy ID
+  ; Reads physical defense from entity+26C and weaknesses and resistances from the enemy's DNA, then calls SetDefenses.
 02014374 SetIframes
   ; r0 - Entity pointer
   ; r1 - Iframes

@@ -498,6 +498,7 @@ A 200% attack boost (triple) takes 0xFFFF (0d65535) AP.
 02100794,1 - Current difficulty.
   0 - Normal mode.
   1 - Hard mode.
+  Hard mode reduces the damage the player does to enemies to 0.9x.
 02100797,1 - Music volume.
 02100798,1 - SFX volume.
 02100799,1 - Voice volume.

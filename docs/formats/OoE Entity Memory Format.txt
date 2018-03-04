@@ -102,6 +102,11 @@ For glyphs:
 12C,1: For glyphs, has the type of the glyph.
   1 - Arm glyph.
   2 - Back glyph.
+12C,1: Slot this glyph is in.
+  0 - Y-button arm glyph
+  1 - X-button arm glyph
+  2 - Back glyph
+  3 - Glyph union
 12D,1: For glyphs, has the index of the glyph in that type's list.
 
 For used skills:

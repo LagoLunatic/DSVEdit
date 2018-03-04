@@ -494,6 +494,7 @@ What each range of entity slots is for:
 020F7259,1 - Difficulty.
   0 - Normal mode.
   1 - Hard mode
+  Hard mode reduces the damage the player does to enemies to 0.6x.
 
 === 020F732B: End of second region that gets saved to the save file. Corresponds to 0463 in the save file data.
 

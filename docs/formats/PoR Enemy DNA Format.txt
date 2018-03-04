@@ -18,6 +18,11 @@ PoR Enemy DNA:
   17,1: Base chance to drop item 2.
     Same as above.
   18,4: Weaknesses
+    In PoR, weaknesses increase damage the enemy takes if the enemy is weak to any of the elements of the attack.
+    If at least one of those elements is magical (Fire/Ice/Lightning/Dark/Holy), the muliplier is 2x damage.
+    Otherwise, if it's just physical or status effect weaknesses (Strike/Stab/Slash/Poison/Curse/Stone), the multiplier is 1.25x.
   1C,4: Resistances
-    Resisting Poison/Curse/Stone/Torpor does nothing.
-    Bit 32: Can cause the enemy to have corrupted graphics and palette?
+    In PoR, resistances halve damage the enemy takes if the enemy resists any of the elements of the attack. (Only counting the base 8 elements, resisting Poison/Curse/Stone doesn't doing anything.)
+    Bit 32: This bit is special, it tells the function InitializeRoomEnemyOrSpecialObject to skip loading this enemy's GFX assets.
+      This is used only for a few enemies that have tons of GFX pages and stay dead permanently (mostly bosses) so that the game doesn't need to waste time loading all those GFX assets when the enemy is already dead.
+      This bit should only be used for enemies that are specially coded to manually load their own GFX instead of leaving it up to the engine. If you set this bit for an enemy that does not load its own GFX the enemy will be invisible or have corrupted graphics because the GFX were never loaded.
