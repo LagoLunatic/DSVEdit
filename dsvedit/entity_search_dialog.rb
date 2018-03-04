@@ -31,7 +31,6 @@ class EntitySearchDialog < Qt::Dialog
       return
     end
     
-    rooms = []
     parent.game.each_room do |room|
       room.entities.each do |entity|
         next if unique_id && unique_id != entity.unique_id
