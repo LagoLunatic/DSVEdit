@@ -286,6 +286,10 @@ Enemies:
 80 Amducias
 81 Balore
   Requires enemy overlay 43.
+  Var A:
+    0 Left-facing Balore.
+    1 Right-facing Balore with the wall that locks you in.
+    2 Cutscene where Balore lasers a bunch of ice blocks from off screen.
 82 Gergoth
   Requires enemy overlay 50.
 83 Zephyr
@@ -303,6 +307,11 @@ Enemies:
   Requires enemy overlay 70.
 8A Dullahan
   Requires enemy overlay 58.
+  Var A:
+    0 Fight starts instantly with no intro (for boss rush).
+      This also causes no music to play during the boss fight.
+    1 Fight doesn't start until after an intro plays.
+  Var B: No apparent effect, but normal Dullahan has 1 for this, while boss rush Dullahan has 0 for this.
 8B Behemoth
   Requires enemy overlay 53.
   Var B: When 2, the scripted Behemoth that chases you. When 0, normal Behemoth.
@@ -314,8 +323,19 @@ Enemies:
   Requires enemy overlay 52.
 8F Dagon
   Requires enemy overlay 59.
+  Var A:
+    0 Fight starts instantly with no intro (for boss rush).
+    1 Fight doesn't start until after an intro plays.
 90 Death
   Requires enemy overlay 64.
+  Var A:
+    0 Death in his own boss room.
+    1 Death when he's with Dracula? Never attacks, and behaves strange with Death's usual boss room event.
+  Var B:
+    0 Death starts fighting instantly without waiting for the event to finish first.
+      Note that if there is no event, this version of Death mostly works, but the boss music never plays (because the event handled that), and Death just stays on screen after he dies (but he is considered dead, so the boss doors open).
+    1 Death waits for the event to finish before fighting.
+      If there is no event active in the room, Death doesn't appear, and in his place is one of his portals floating in the center of the room.
 91 Stella
   Requires enemy overlay 63.
   Var A: 0 for just Stella. 1 for the double fight with both Stella and Loretta.
@@ -336,10 +356,19 @@ Enemies:
   Warning: There is a bug where even type 0 (common enemy) will set the Creature's boss death flag. So if a common enemy Creature is killed before the boss, the boss will never appear.
 95 Werewolf
   Requires enemy overlay 57.
+  Var A:
+    0 Fight starts instantly with no intro (for boss rush).
+    1 Fight doesn't start until after an intro plays.
 96 Medusa
   Requires enemy overlay 61.
+  Var A:
+    0 Fight starts instantly with no intro (for boss rush).
+    1 Fight doesn't start until after an intro plays.
 97 Mummy Man
   Requires enemy overlay 66.
+  Var A:
+    0 Fight starts instantly with no intro (for boss rush).
+    1 Fight doesn't start until after an intro plays.
 98 Whip's Memory
   Requires overlay 25.
 99 Dracula

@@ -207,8 +207,8 @@ Enemies:
 66 Balore
   Requires enemy overlay 23.
   Var A:
-    0 Boss rush Balore.
-    1 Normal Balore.
+    0 Left-facing Balore (for boss rush).
+    1 Right-facing Balore with the wall that locks you in.
     2 Cutscene where Balore lasers a bunch of ice blocks from off screen.
 67 Malphas
   Requires enemy overlay 29.

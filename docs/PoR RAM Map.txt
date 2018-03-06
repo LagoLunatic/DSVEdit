@@ -200,6 +200,14 @@
   00,2: 
   04,1:
 
+020FB520-020FB79F - List of currently loaded room entity palettes.
+  Entry length 8.
+  Number of entries: 0x50.
+  01,1: Number of palettes from this list loaded.
+    This number of sequential entries are taken up. So if this is 4, then this entry is used, and the next 3 entries are full of zeroes but still reserved and not allowed to be used.
+  04,4: The palette list pointer.
+  Room entity palettes start being loaded at index 0xA1 in the list of globally loaded palettes, so take an index in this list and add 0xA1 to get an index in list 0211ABE0.
+
 020FB798-020FB89B - List of something related to entities?
   There are 0x41 entries here. Each is a word.
   Every frame everything in this list gets zeroed out. Later some entities will store a value like 6 or 0xC here.

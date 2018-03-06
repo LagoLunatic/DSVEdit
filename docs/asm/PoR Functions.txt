@@ -371,8 +371,14 @@
 0200E954 LoadPalette
   ; r0 - Palette list pointer
   ; r1 - 0?
-  ; r2 - 0?
+  ; r2 - Number of palettes to load (or 0 to load all palettes in the list)
   ; Returns the index in the globally loaded palette list that this palette got loaded into. (This index then gets stored at entity+86 and entity+88.)
+0200EA44 GetFreeRoomEntityPaletteSlot
+  ; r0 - Palette list pointer
+  ; r1 - Number of palettes to load
+  ; Finds an appropriate spot in the list of currently loaded room entity palettes for these palettes to be loaded, and returns in the index in that list.
+  ; If this palette list is already in the room entity palette list, it returns the index it's already been loaded at.
+  ; If there's not enough consecutive free slots to fit the number of palettes needed, it returns -1 instead.
 
 021D7E80 EntityMoveToFloor
   ; Teleports entity downwards to the nearest floor.
