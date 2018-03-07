@@ -9,7 +9,7 @@
 ; Using that bit doesn't interfere with the sector/room indexes, which only use the 10 lowest bits of var B.
 
 @Overlay119Start equ 0x02308EC0
-@FreeSpace equ @Overlay119Start + 0xBC
+@FreeSpace equ @Overlay119Start + 0xC0
 
 .open "ftc/arm9.bin", 02000000h
 
