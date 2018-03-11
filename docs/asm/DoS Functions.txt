@@ -391,6 +391,17 @@
   ; This sets the player's animation state and calls SetSpriteAnimAndPropertiesIfDifferentSafe.
   ; Note that if the player has a next animation state set at player+0F0, this function will prevent that specific animation state from being set before the current animation is finishes playing. This is useful for e.g. playing the landing animation instead of the idle animation when the player touches the ground.
 
+021F8178 PlayerGetAttackAnimationIndex
+  ; r0 - Player entity
+  ; r1 - Animation state index. Should be between 3C-40 since those are the attacking animation states.
+  ; If the player is not Soma, or it is Soma but his "Can use weapons" bit is not set, then it simply returns the animation index for the given animation state.
+  ; If the player is Soma and his "Can use weapons" bit is set, it instead reads the appropriate weapon swing animation index from list 0222DFA8.
+
+0221268C GetCurrentWeaponDataPointer
+022126AC GetWeaponDataPointer
+  ; r0 - Weapon index
+  ; Returns a pointer to the weapon's item data
+
 0200705C GetCurrentSector
 02007104 GetCurrentSectorRoomIndexesFromMap
   ; r0 - 0 if in the castle, 1 if in the abyss, 2 if not on any map.

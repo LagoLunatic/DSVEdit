@@ -285,11 +285,17 @@
 021F5AC0 CheckCanSwitchPlayers
 
 021DBF9C WhipDangleUpdate
+  ; r0 - Some kind of entity pointer? (e.g. 020FF100 or 020FFD60)
   ; This function hardcodes the hand position that is the center of the whip dangle.
   ; 021DBFFC and 021DBFF8 hardcode Jonathan's hand's X and Y offsets relative to his position.
   ; 021DBFF0 and 021DBFEC hardcode Richter's hand's X and Y offsets relative to his position.
-  ; 021DBFAC and 021DBFC0 hardcode any other character's hand's X and Y offsets relative to his position.
+  ; 021DBFAC and 021DBFC0 hardcode any other character's hand's X and Y offsets relative to their position.
   ; 021DC00C hardcodes the Y offset to add when the player is crouching.
+02216F08 NebulaUpdatePosition
+  ; r0 - Weapon entity
+  ; 02216F14 hardcodes the player's hand Y offset relative to their position.
+  ; 02216F28 hardcodes the additional hand Y offset for when the player is crouching.
+  ; 02216F20 hardcodes the player's hand X offset relative to their position.
 
 02012E44 DeleteEntity
   ; r0 - Entity pointer

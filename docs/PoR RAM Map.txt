@@ -805,8 +805,8 @@ TODO: What are the other 2 for? It's not for the "recent" tab.
 0221E09C - Something related to cutin portraits for Jonathan and Charlotte?
   /sc/f_fjona00.dat uses palette 022C5B10
 
-0221E1DC-0221E23D - List of which voice line to play when switching from one character to another.
-  Halfwords. These are the SFX index of the voice line to use.
+0221E1DC-0221E23D - List of which voice SFX index to play when switching from one character to another.
+  Halfwords.
   If an entry is 0, then it just plays no sound instead.
   The index in this list is the character you're switching from times 7, plus the character you're switching to.
   In other words, every combination of one character switching to another is accounted for (7*7 possibilities).
@@ -818,10 +818,14 @@ TODO: What are the other 2 for? It's not for the "recent" tab.
   Slot 2: Right down left right Y
   Slot 3: Right down left up right Y
   Slot 4:
-0221F070 - List of criticals and combo moves. Each entry is 8 bytes long.
-  Bytes 1-4: Pointer to code for this move.
-  Byte 5: Mana cost.
-  Byte 6: If 0, you must be on the ground to do this combo move. Otherwise you can be in the air.
+
+0221E3A0-0221E3C7 - List of pointers to voice SFX indexes for grunts while swinging each weapon.
+  The index in this list is the weapon's Swing Anim.
+  If the entry is 0, no grunt voices are played while swinging this weapon.
+  Otherwhise the entry is a pointer to a list of four voice SFX indexes, each entry in the list is a halfword.
+  Which of those four is used is randomly selected.
+  There's also a random 50% chance no voice will be played when swinging a weapon regardless.
+  If the randomly selected SFX index is 0000, it uses a player-dependent voice from list 0221E768 instead.
 
 0221E3F4-0221E42B - List of quickswap subweapons lists for each player character.
   Entry length 8.
@@ -859,7 +863,20 @@ TODO: What are the other 2 for? It's not for the "recent" tab.
   25-28 Weapons.
   29-2D ?
 
-0221E7F4 - List of player data for each character.
+0221E768-0221E7F3 - List of voice SFX indexes for each player.
+  Entry length 0x14, the index is the player character index.
+  00,2: SFX index for attacking (random 1).
+  02,2: SFX index for attacking (random 2).
+  04,2: SFX index for attacking (random 3).
+  06,2: SFX index for attacking (random 4).
+  08,2: SFX index for taking damage (random 1).
+  0A,2: SFX index for taking damage (random 2).
+  0C,2: SFX index for taking damage in the air and getting knocked back.
+  0E,2: SFX index for dying.
+  10,2: 
+  12,2: 
+
+0221E7F4-0221EA5B - List of player data for each character.
 
 0221EAF0-0221EB97 - List of starting/base stats for each player.
   Entry length 0x18.
@@ -882,7 +899,6 @@ TODO: What are the other 2 for? It's not for the "recent" tab.
   For dual crushes:      0006 0020 0001 0007 0009
 
 0221ED18 - List of skill gfx.
-0221F110 - List of weapon gfx. Same format as DoS.
 
 0221F000-0221F01F - List of weapon special effect code pointers.
   00 00000000 No effect.
@@ -893,6 +909,7 @@ TODO: What are the other 2 for? It's not for the "recent" tab.
   05 02216200 Heaven's Sword (throw the weapon straight in front of you, then it comes back to you).
   06 02215EC4 Illusion Fist.
   07 02215FD8 Tori (throw the weapon diagonally upwards, then it comes back to you).
+
 0221F020-0221F06F - List of weapon swing animation types.
   Entry length 8.
   00,1: Y offset to place the weapon at compared to player when the player is crouching. (Signed.)
@@ -906,6 +923,18 @@ TODO: What are the other 2 for? It's not for the "recent" tab.
     For example this affects how hard the pieces of a zombie fly when you kill it.
     This can be negative to make things fly towards you.
   06,2: signed. stored to weapon entity+BE,2 after some modification?
+
+0221F070-0221F10F - List of criticals and combo moves.
+  Entry length 8.
+  00,4: Pointer to code for this move.
+  04,1: Mana cost.
+  05,1: If 0, you must be on the ground to do this combo move. Otherwise you can be in the air.
+
+0221F110 - List of weapon gfx.
+  Entry length 0xC.
+  00,4: GFX pointer
+  04,4: Sprite pointer
+  08,4: Palette pointer
 
 === 0221F41F: End of Overlay 0
 
