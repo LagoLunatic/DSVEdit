@@ -478,27 +478,34 @@ class Renderer
 
     palette_list = []
     (0..number_of_palettes-1).each do |palette_index| # todo: cache palettes
-      palette_data = fs.read(palette_data_start_offset + (2*color_offsets_per_palette_index)*palette_index, colors_per_palette*2, allow_length_to_exceed_end_of_file: true)
-      
-      palette = palette_data.unpack("v*").map do |color|
-        # These two bytes hold the rgb data for the color in this format:
-        # ?bbbbbgggggrrrrr
-        # the ? is unknown.
-        #unknown_bit = (color & 0b1000_0000_0000_0000) >> 15
-        blue_bits   = (color & 0b0111_1100_0000_0000) >> 10
-        green_bits  = (color & 0b0000_0011_1110_0000) >> 5
-        red_bits    =  color & 0b0000_0000_0001_1111
-        
-        red = red_bits << 3
-        green = green_bits << 3
-        blue = blue_bits << 3
-        alpha = 255
-        ChunkyPNG::Color.rgba(red, green, blue, alpha)
-      end
+      specific_palette_pointer = palette_data_start_offset + (2*color_offsets_per_palette_index)*palette_index
+      palette = read_single_palette(specific_palette_pointer, colors_per_palette)
       palette_list << palette
     end
     
     palette_list
+  end
+  
+  def read_single_palette(specific_palette_pointer, colors_per_palette)
+    palette_data = fs.read(specific_palette_pointer, colors_per_palette*2, allow_length_to_exceed_end_of_file: true)
+    
+    palette = palette_data.unpack("v*").map do |color|
+      # These two bytes hold the rgb data for the color in this format:
+      # ?bbbbbgggggrrrrr
+      # the ? is unknown.
+      #unknown_bit = (color & 0b1000_0000_0000_0000) >> 15
+      blue_bits   = (color & 0b0111_1100_0000_0000) >> 10
+      green_bits  = (color & 0b0000_0011_1110_0000) >> 5
+      red_bits    =  color & 0b0000_0000_0001_1111
+      
+      red = red_bits << 3
+      green = green_bits << 3
+      blue = blue_bits << 3
+      alpha = 255
+      ChunkyPNG::Color.rgba(red, green, blue, alpha)
+    end
+    
+    return palette
   end
   
   def export_palette_to_palette_swatches_file(palette, file_path)
@@ -583,6 +590,10 @@ class Renderer
     end
     
     specific_palette_pointer = palette_list_pointer + 4 + (2*color_offsets_per_palette_index)*palette_index
+    save_palette_by_specific_palette_pointer(specific_palette_pointer, colors)
+  end
+  
+  def save_palette_by_specific_palette_pointer(specific_palette_pointer, colors)
     new_palette_data = convert_chunky_color_list_to_palette_data(colors)
     fs.write(specific_palette_pointer, new_palette_data)
   end
