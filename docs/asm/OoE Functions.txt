@@ -241,6 +241,8 @@
   ; r1 - Y pos
   ; r2 - Z pos
   ; r3 - Global ID+1 of the item in the chest.
+  ; [r13] - Pickup flag index for the chest being opened
+  ; [r13,4] - 0?
 02061F0C SpawnNoDamageBlueChest
   ; r0 - X pos
   ; r1 - Y pos
@@ -323,6 +325,9 @@
 020331E4 AssetGetPointer
   ; r0 - Asset index
   ; Returns the pointer at 020D8CEC+(r0*0x20)
+02033228 AssetGetType
+  ; r0 - Asset index
+  ; Returns 020D8CEC+(r0*0x20)+4, where the asset's type is
 02033048 AssetLoad?
   ; r0 - Asset index
 02033074 AssetGetFreeSpace
@@ -339,10 +344,23 @@
   ; r2 - Location of free space
   ; This function initializes the asset header, and also does some bookkeeping by subtracting the used size from the available free space and some other things.
 02027C9C FindFreeSpace?
+0202805C AssetGetLocationInAssetMemory
+  ; r0 - Asset index
+  ; Reads through the list of currently loaded assets (02100CCC) looking for the specified asset, if it's currently loaded it returns where in asset memory it is, otherwise it returns 0.
 
 02064F70 GetEntityAssetsListPointer
   ; r0 - Entity subtype
   ; r1 - Entity type (1 or 2)
+02064F9C GetSpritePointerFromEntityAssetList
+  ; r0 - Entity subtype
+  ; r1 - Entity type (1 or 2)
+  ; r2 - Which sprite from the list to use (this is usually 0 since there's normally only one)
+  ; Searches through this entity's asset list for the sprite asset, then gets the pointer for that and returns it.
+02065018 GetSpriteLocationInAssetMemoryFromEntityAssetList
+  ; r0 - Entity subtype
+  ; r1 - Entity type (1 or 2)
+  ; r2 - Which sprite from the list to use (this is usually 0 since there's normally only one)
+  ; Searches through this entity's asset list for the sprite asset, then returns where in asset memory the asset is currently loaded, or 0 if it's not currently loaded.
 
 02028DF4 DummyUpdate
 
@@ -554,9 +572,16 @@
   ; Loads this entity's assets from its asset list.
   ; For enemies with resistance bit 0x80000000 set, it does not load their GFX assets.
   ; Also calls LoadEnemyOverlay.
+02065094 InitializeAllSpriteFilesForEntity
+  ; r0 - Entity subtype
+  ; r1 - Entity type (1 or 2)
+  ; Initializes every sprite file in this entity's asset list.
 
-02030684 InitializeSprite
+02030684 EntityInitializeSprite
   ; r0 - Entity
+
+020330C8 InitializeSpriteFile
+  ; r0 - Pointer to the sprite file data in asset memory
 
 02028E90 InitializeVisibleEntity
   ; r0 - Entity
@@ -687,6 +712,8 @@
 02042F7C MapGetDrawXOffset
   ; r0 - Area index
 02042F94 MapGetDrawYOffset
+  ; r0 - Area index
+0203AEE0 MapGetNumExploredTiles
   ; r0 - Area index
 02043480 MapDraw?
 

@@ -38,6 +38,8 @@
   01,1: ?
   Wygol's entry seems to affect its map somehow, but otherwise this doesn't seem to have any effect.
 
+020B6364-020B7467 - Enemy DNA list.
+
 020D7FB4,4 - Starting X pos on new game.
 020D7FB8,4 - Starting Y pos on new game.
 
@@ -178,6 +180,15 @@
 
 020F3B7C - List of something related to item IDs?
   It has 37, 50, 6F in the list, which are the last Global ID+1s of arm glyphs, back glyphs, and glyph unions respectively.
+
+020F3BA0 - something related to cerberus glyphs...?
+  used by func 0206AA6C
+  entry length 8
+  04,2: 
+020EEF4C - something related to cerberus glyphs...?
+  entry length 8
+  00,4:
+  04,4:
 
 020F3BC0 - List of GFX for glyphs.
   Entry length 0x10.
@@ -543,6 +554,11 @@ A 200% attack boost (triple) takes 0xFFFF (0d65535) AP.
 0210154C - y pos to distort towards
 02100124 - x pos to distort towards
 02100128 - y pos to distort towards
+
+02100CCC-02100FEB - List of assets that are currently loaded and where.
+  Entry length 8. 0x64 entries in total.
+  00,4: Asset index. (Or -1 if this slot is currently unused.)
+  04,4: Pointer to where in asset memory the asset data is loaded. (Or 0 if this slot is currently unused.)
 
 02109280,4 - Number of skeletally animated enemies in the current room.
 

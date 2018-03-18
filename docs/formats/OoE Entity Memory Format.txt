@@ -73,6 +73,10 @@ Memory used for entities in OoE is 021092A0 - 0211DF5F. Each entity is 0x160 byt
   This function pointer is called when the entity collides with the player.
 0CC,4: On-damaged callback.
   This function pointer is called when the entity collides with a player weapon.
+132,1: Subtype.
+133,1: Type.
+13C,2: Var A.
+13E,2: Var B.
 
 For enemies:
 124,2: Bitfield of ???
@@ -82,7 +86,6 @@ For enemies:
   20C6 - petrified?
 126,1: For enemies, has the petrified palette index from the enemy DNA.
 12A,2: The magical defense value from the enemy DNA.
-132,1: Enemy ID.
 138,2: The attack value from the enemy DNA.
 13A,2: The physical defense value from the enemy DNA.
 
@@ -94,6 +97,10 @@ For items:
 
 For money:
 0E0,4: The type of money (0-6 for different values of money).
+
+For blue chests:
+0D8,4: Pointer to function (02061E28) that checks if the corresponding boss is dead to make the chest pop out of the ground.
+  For blue chests that are not for a no damage boss medal, this is 0 instead of a function pointer.
 
 For glyphs:
 0D6,2: For glyphs, ?

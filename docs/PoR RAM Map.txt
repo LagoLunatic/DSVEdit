@@ -807,9 +807,9 @@ TODO: What are the other 2 for? It's not for the "recent" tab.
 
 0221E1DC-0221E23D - List of which voice SFX index to play when switching from one character to another.
   Halfwords.
-  If an entry is 0, then it just plays no sound instead.
   The index in this list is the character you're switching from times 7, plus the character you're switching to.
   In other words, every combination of one character switching to another is accounted for (7*7 possibilities).
+  If an entry is 0, then it just plays no sound instead.
 
 0221E244 - List of which combo moves are for each player.
   This is pointed to by the player data.
@@ -822,7 +822,7 @@ TODO: What are the other 2 for? It's not for the "recent" tab.
 0221E3A0-0221E3C7 - List of pointers to voice SFX indexes for grunts while swinging each weapon.
   The index in this list is the weapon's Swing Anim.
   If the entry is 0, no grunt voices are played while swinging this weapon.
-  Otherwhise the entry is a pointer to a list of four voice SFX indexes, each entry in the list is a halfword.
+  Otherwise the entry is a pointer to a list of four voice SFX indexes, each entry in the list is a halfword.
   Which of those four is used is randomly selected.
   There's also a random 50% chance no voice will be played when swinging a weapon regardless.
   If the randomly selected SFX index is 0000, it uses a player-dependent voice from list 0221E768 instead.

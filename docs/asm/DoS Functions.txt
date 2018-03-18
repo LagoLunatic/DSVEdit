@@ -350,7 +350,7 @@
 020299B0 UpdateCurrentlyPlayingSong
   ; Plays the current song index (02115384) unless it's equal to the previous song index (0211538C). Then it updates 0211538C.
 
-0204F4D8 PlayBGMOrSfX???
+0204F4D8 PlayBGMOrSfx???
   ; r0 - Song index
   ; r1 - 0?
   ; r2 - 0?

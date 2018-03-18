@@ -53,7 +53,7 @@
   ; Returns 020CDAFC+(r0*0x20)+6, where the asset's filename starts
 0201BB44 AssetGetType
   ; r0 - Asset index
-  ; Returns 020CDAFC+(r0*0x20)+4, where the asset's index is
+  ; Returns 020CDAFC+(r0*0x20)+4, where the asset's type is
 02012358 AssetGetFreeSpace??
 
 021DCA34 LoadEntityAssets
