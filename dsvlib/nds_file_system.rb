@@ -101,10 +101,12 @@ class NDSFileSystem
       file_data = get_file_data_from_opened_files_cache(file[:file_path])
       new_file_size = file_data.length
       
-      pad = max_written_address % 0x200
-      if pad != 0
+      remainder = max_written_address % 0x200
+      if remainder != 0
         # Pad start of file to next 0x200
-        max_written_address += 0x200 - pad
+        pad_length = 0x200 - remainder
+        new_rom[max_written_address,pad_length] = "\0"*pad_length
+        max_written_address += pad_length
       end
       new_start_offset = max_written_address
       new_end_offset = new_start_offset + new_file_size
