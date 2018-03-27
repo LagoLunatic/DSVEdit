@@ -8,10 +8,10 @@ Weapon format:
     00: Fast stab.
     01: Normal stab.
     02: Slash.
-    03: Overhead swing.
-    04: Far forward stab.
-    05: Slightly different overhead swing.
-    06: Slightly different overhead swing.
+    03: Greatsword overhead swing.
+    04: Spear stab.
+    05: Axe overhead swing.
+    06: Mace overhead swing.
     07: Japanese sword.
     08: Punch.
     09: Firing a gun.
@@ -30,25 +30,23 @@ Weapon format:
   0D,1: Constitution stat (signed).
   0E,1: Intelligence stat (signed).
   0F,1: Luck stat (signed).
-  10,2: Bitfield for the elemental damage types this weapon deals.
-  12,1: 
-  13,1: 
+  10,4: Bitfield for the elemental damage types this weapon deals.
   14,1: Affects graphics of the weapon.
   15,1: Super attack animation.
     00: This weapon has no super attack.
-    01: Overhead swing while moving forward.
-    02: Quick overhead swing while moving forward.
+    01: Lunge forward.
+    02: Fast lunge forward.
     03: Backstab (Cutall/Alucard Sword).
-    04: Axe jump up.
-    05: Three fast overhead swings.
-    06: One fast overhead swing.
-    07: Overhead swing with weird effect??
+    04: Axe warp jump up and smash down.
+    05: Three attacks.
+    06: Japanese sword fast attack.
+    07: Three fast attacks.
     08: Uppercut.
-    09: Overhead swing.
-    0A: Seems to be the Death Scythe effect of sending the skull forward (though the skull's graphics are replaced with the current weapon's graphics).
-    0B: 
-    0C: Ice breath?
-    0D: Explosion?
+    09: Stationary super.
+    0A: Death Scythe's skull shooting forwards.
+    0B: Throwing weapon.
+    0C: Ice breath.
+    0D: Fire breath.
     0E: Claimh Solais' huge sword overhead swing.
     0F+: Crash.
   16,1: Which sprite animation to use.
@@ -81,10 +79,7 @@ Body armor and Accessory format:
   0D,1: Constitution stat (signed).
   0E,1: Intelligence stat (signed).
   0F,1: Luck stat (signed).
-  10,1: Bitfield for what elemental resistances this armor gives you.
-  11,1:
-  12,1:
-  13,1:
+  10,4: Bitfield for what elemental resistances this armor gives you.
 
 Consumable format:
   0x10 bytes long.

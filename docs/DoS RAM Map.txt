@@ -20,7 +20,7 @@
 02079D44-02079D5B - List of secret rooms (rooms that shouldn't show up on the map even if you have a map item for that sector).
   Entry length 2.
   00,1: Sector index of this secret room.
-  01,1: Room inex of this secret room.
+  01,1: Room index of this secret room.
   The end of the list is marked by FF FF.
 
 02079D5C-02079D7B - The palette for the map.
@@ -62,6 +62,11 @@
     0100 - 3D model.
     1000 - Font.
   06,1A: Filename. The end is padded with null bytes.
+
+0209A0E8 - List of elemental damage effects to appear when the player damages an enemy with that element?
+  Entry length 0xC.
+  04,4: 
+  08,4: 
 
 0209A4C4-0209A507 - List of pointers to each sector's list of assets.
 Each list of assets has this format:

@@ -805,7 +805,7 @@ ARM_GLYPH_FORMAT = [
   [4, "Unwanted States", :bitfield],
   [2, "Icon"],
   [2, "Swing Modifiers", :bitfield],
-  [2, "Swing Anim/???"],
+  [2, "Var A"],
   [1, "IFrames"],
   [1, "Delay"],
   [4, "Swing Sound"],

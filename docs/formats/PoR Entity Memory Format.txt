@@ -122,6 +122,7 @@ For players:
 12C,4: Drawn x pos offset for the katar critical.
 130,4: Drawn y pos offset for the axe critical.
 144,1: Most recent weapon index swung.
+146,1: Most recent button combo index input.
 
 For room entities:
 132,1: Subtype.

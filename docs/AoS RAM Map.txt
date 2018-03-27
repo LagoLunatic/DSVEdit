@@ -243,6 +243,7 @@ What each range of entity slots is for:
 0201327C,2 - Current MP.
 0201327E,2 - Max HP.
 02013280,2 - Max MP.
+02013290,4 - Current gold.
 
 List of which souls you own and how many (owned skill info):
 0201331C-02013337 - Red souls.

@@ -58,6 +58,6 @@ Player format:
     This if for collision checking with tiles, not enemies.
   52,2: Which player face icon to use. This is a frame index in the common sprite.
   54,4: Pointer to list of swing animations.
-    This points to a list of pointers, one for each swing animation type (specified in the item data for the glyph).
+    This points to a list of pointers, one for each swing animation type (specified in the item data for the weapon).
     Located at those pointers are a list of which animation to use in the player's sprite file depending on the state.
       In order: Attacking standing, attacking crouched, attacking in air, finish attacking standing, finish attacking crouched.

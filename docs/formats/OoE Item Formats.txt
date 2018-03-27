@@ -37,20 +37,38 @@ Arm glyph format:
   14,2: Icon.
     Normal icons go up to 004F. Higher than that and the glyph will be invisible or have bugged graphics.
     But if you increase this value to 3CD0 or higher, the glyph won't appear it all, it won't even be invisible.
-  16,2: Bitfield.
-    0001 Causes the player's swinging animation to not be interrupted when they land.
-      The weapon itself still gets interrupted though. And the player's swinging while jumping animation doesn't transition to the swinging while standing, so the player winds up looking like they're floating.
-    0002 Makes the weapon be locked to the upper left corner of the room, as well as the sound effects and Shanoa's voice.
-    0004 
-    0008 
-    0010 On for melee glyphs. Off for projectile glyphs. Effect unknown.
-    0040 Most melee weapons use their palette index to indicate what parts are transparent trails, but if this bit is on, they will not do that.
-    0800 ??
+  16,2: Varies by code pointer.
+    For melee weapons (code 02070890): Bitfield.
+      0001 Causes the player's swinging animation to not be interrupted when they land.
+        The weapon itself still gets interrupted though. And the player's swinging while jumping animation doesn't transition to the swinging while standing, so the player winds up looking like they're floating.
+      0002 Makes the weapon be locked to the upper left corner of the room, as well as the sound effects and Shanoa's voice.
+      0004 
+      0008 
+      0010 On for melee glyphs. Off for projectile glyphs. Effect unknown.
+      0040 Most melee weapons use their palette index to indicate what parts are transparent trails, but if this bit is on, they will not do that.
+      0800 ??
+    For knife glyphs (code 02070748): IFrames. This is used instead of the normal iframes value at 1A.
   18,2: Varies by code pointer.
-    For melee weapons: Animation Shanoa plays when swinging this weapon.
+    For melee weapons (code 02070890): Animation Shanoa plays when swinging this weapon.
       This is an index in the player's swing animations list (either the Y or X button list).
-      3 Overhead swing.
-    For shields: ?
+      00 Fast overhead swing.
+      01 Fast stab.
+      02 Fast overhead swing.
+      03 Slow overhead swing (for melee Glyph Unions).
+      04 Stab.
+      05 Medium overhead swing.
+      06 Medium overhead swing.
+      07 Bugged out animations.
+      08 Bugged out animations.
+    For axes: Which axe glyph it is.
+      This affects what sprite frame to use.
+      This should be 0 1 or 2.
+    For knives: Which knife glyph it is.
+      This affects what sprite frame to use and how many knives are thrown.
+      This should be 0 1 or 2, but can go higher to throw up to 8 knives at once. If you do increase this, note that it seems to work correctly up to a value of 7 (=8 knives per throw) but any more than that and it will not manage to create all the knives properly.
+    For shields: Which shield glyph it is.
+      This affects which sprite frame to use and how much it increases your defensive stats.
+      Should be 0 1 or 2, but can go higher to further increase defenses.
   1A,1: IFrames. An enemy hit by this glyph will be invulnerable to glyphs on the arm you used for this number of frames.
   1B,1: Delay in frames before you're allowed to use this glyph again after you use it once.
   1C,4: Swing sound?

@@ -10,6 +10,8 @@ class GenericEditable
               :game,
               :name,
               :description,
+              :name_text_id,
+              :description_text_id,
               :attributes,
               :attribute_integers,
               :attribute_integer_lengths,

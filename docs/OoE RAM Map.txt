@@ -271,6 +271,15 @@ Requirement lists for kill quests:
   020FFD42,2 - Unused?
   020FFD44,4 - Bitfield of resistances.
 020FFD48 - Player's current stats.
+  020FFD48,2 - ATK
+  020FFD4A,2 - DEF
+  020FFD4C,2 - STR
+  020FFD4E,2 - CON
+  020FFD50,2 - INT
+  020FFD52,2 - MND
+  020FFD54,2 - LCK
+  020FFD56,2 - Unused?
+  020FFD58,4 - Bitfield of resistances.
 020FFD5C - Player's current stats, with bonus stats added.
   020FFD5C,2 - ATK
   020FFD5E,2 - DEF
@@ -281,6 +290,16 @@ Requirement lists for kill quests:
   020FFD68,2 - LCK
   020FFD6A,2 - Unused?
   020FFD6C,4 - Bitfield of resistances.
+020FFD70 - Player's current bonus stats.
+  020FFD70,2 - ATK
+  020FFD72,2 - DEF
+  020FFD74,2 - STR
+  020FFD76,2 - CON
+  020FFD78,2 - INT
+  020FFD7A,2 - MND
+  020FFD7C,2 - LCK
+  020FFD7E,2 - Unused?
+  020FFD80,4 - Not bonus resistances, instead this is 0 or 1 to indicate whether any bonuses are active.
 
 020FFDDC,4 - Bitfield of damage types that most recently hit the player.
 
@@ -568,7 +587,9 @@ What each range of entity slots is for:
 00-03  021092A0-0210981F  Used when the game is booting up
 04-04  02109820-0210997F  Player.
 06-06  02109AE0-02109C3F  ?
-08-10  02109DA0-0210A9FF  Player skills.
+08-10  02109DA0-0210A9FF  Player Y-button arm glyphs.
+11-19  0210AA00-0210B65F  Player X-button arm glyphs.
+1A-20  0210B660-0210BFFF  Player back glyphs.
 2A-2A  0210CC60-0210CDBF  ?
 2A-F1  0210CC60-0211DF5F  World map icons. (In practice it uses slots 2B-3D.)
 2D-7C  0210D080-02113E7F  Room entities, including enemies and special objects.

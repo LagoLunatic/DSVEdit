@@ -794,11 +794,25 @@ TODO: What are the other 2 for? It's not for the "recent" tab.
 0221E05C-0221E06B - List of button combos.
   Each entry is just a pointer. They point to:
 0221E00C-0221E02B - These are lists of ? for each button combo.
-  Bytes 1-2: ?
-  Bytes 3-4: ?
-  Bytes 5-8: Pointer to list of buttons that need to be pressed to trigger this combo:
+  00,2: ?
+  02,2: ?
+  04,4: Pointer to list of buttons that need to be pressed to trigger this combo:
 0221E004-? - These are lists of buttons for each button combo.
-  Simply a list of buttons that must be pressed in what order. Each button is 2 bytes long.
+  Simply a list of buttons that must be pressed in what order. Each button is a halfword.
+  The different buttons are:
+    0001 - A
+    0002 - B
+    0004 - Select
+    0008 - Start
+    0010 - Right
+    0020 - Left
+    0040 - Up
+    0080 - Down
+    0100 - R
+    0200 - L
+    0400 - X
+    0800 - Y
+    2000 - Debug
   For example, 0010 0000 0010 means you must press forward, then nothing, then forward.
   The list ends when you see FFFF.
 
@@ -814,10 +828,10 @@ TODO: What are the other 2 for? It's not for the "recent" tab.
 0221E244 - List of which combo moves are for each player.
   This is pointed to by the player data.
   Each slot for a combo move is 1 byte long, each player has 4 slots. The byte is the index of the combo move in list 0221F070. 0 means no combo move.
+  Slot 0: Right right Y
   Slot 1: Up left down right Y
   Slot 2: Right down left right Y
   Slot 3: Right down left up right Y
-  Slot 4:
 
 0221E3A0-0221E3C7 - List of pointers to voice SFX indexes for grunts while swinging each weapon.
   The index in this list is the weapon's Swing Anim.
@@ -929,6 +943,7 @@ TODO: What are the other 2 for? It's not for the "recent" tab.
   00,4: Pointer to code for this move.
   04,1: Mana cost.
   05,1: If 0, you must be on the ground to do this combo move. Otherwise you can be in the air.
+  06,2: Unused, probably padding.
 
 0221F110 - List of weapon gfx.
   Entry length 0xC.

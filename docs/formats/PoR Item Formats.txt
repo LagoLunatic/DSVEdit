@@ -64,11 +64,12 @@ Weapon format:
   04,4: Store price of the item.
   08,1: Animation the player character plays when swinging the weapon.
     00: Fast stab.
+    01: Slash (unused, duplicate of 02).
     02: Slash.
-    03: Fast overhead swing.
-    04: Far forward stab.
-    05: Slow overhead swing.
-    06: Slow overhead swing, same as 05?
+    03: Greatsword overhead swing.
+    04: Spear stab.
+    05: Axe overhead swing.
+    06: Mace overhead swing.
     07: Punch.
     08: Whip.
     09: Book.
@@ -112,26 +113,26 @@ Weapon format:
   18,1: Sprite to use for the weapon when you swing it. Doesn't just effect visuals, also hitboxes.
   19,1: Palette offset/critical type.
     Bits 1-6: Critical type. Affects critical animation, MP cost, and what code is run for the critical. This is an index in the list at 0221F070.
-      00 No crit.
-      01 Normal crit.
-      02 Fast crit.
-      03 "Backstab" crit (Cinquedea).
-      04 Jump up above the screen and then attack downwards (axes).
-      05 Triple stab (for spears).
-      06 ??
-      07 Crit that shoots out ice clouds.
-      08 Crit that creates a flame explosion.
+      00 This weapon has no critical.
+      01 Lunge forward.
+      02 Fast lunge forward.
+      03 Backstab (Katar/Cinquedea).
+      04 Axe warp jump up and smash down.
+      05 Three attacks.
+      06 ???
+      07 Ice breath.
+      08 Fire breath.
       09 Nebula crit.
       0A Crit with double damage and fire attribute.
-      0B Series of very fast crits (fists).
-      0C Jump up above the screen and then attack downwards (Alucard's Spear).
+      0B Five fast attacks.
+      0C Alucard's Spear warp jump up and smash down.
       0D Teleports you to all enemies in the room and hits them (Stellar Sword).
-      0E Spinning art?
-      0F Martial art?
-      10 Martial art?
-      11 Martial art?
-      12 Spinning art?
-      13 Spinning art?
+      0E Richter's Tackle and Maria's Guardian Knuckle.
+      0F Richter's Spin Kick and Old Axe Armor's Smash.
+      10 Richter's Combo and Old Axe Armor's Deadly Axe.
+      11 Martial Art/Knee Strike.
+      12 Spinning Art.
+      13 Old Axe Armor's Running Axe.
     Bits 7-8: Palette offset.
   1A,1: IFrames. An enemy hit by this weapon will be invulnerable to weapons for this number of frames.
   1B,1: 
