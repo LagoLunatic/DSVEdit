@@ -927,7 +927,16 @@ TODO: What are the other 2 for? It's not for the "recent" tab.
 
 0221ED18 - List of skill gfx.
 
-0221F000-0221F01F - List of weapon special effect code pointers.
+0221EFE0-0221EFFF - List of weapon special effect create code pointers.
+  00 00000000 No effect.
+  01 02216D84 Nebula.
+  02 02216700 Flame Whip.
+  03 02216700 Rahab's Frost.
+  04 02216700 Agni's Flame.
+  05 02216528 Heaven's Sword (throw the weapon straight in front of you, then it comes back to you).
+  06 02216700 Illusion Fist.
+  07 02216528 Tori (throw the weapon diagonally upwards, then it comes back to you).
+0221F000-0221F01F - List of weapon special effect update code pointers.
   00 00000000 No effect.
   01 02216708 Nebula.
   02 02216638 Flame Whip.

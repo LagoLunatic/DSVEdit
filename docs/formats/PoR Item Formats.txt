@@ -76,6 +76,7 @@ Weapon format:
   09,1: Special effect.
     00: No effect.
     01: Nebula.
+      Note: The Nebula effect only kicks in when the weapon sprite's swing animation reaches keyframe index 9. So if the animation has 9 or fewer keyframes, the Nebula effect never happens.
     02: Flame Whip.
     03: Rahab's Frost.
     04: Agni's Flame.

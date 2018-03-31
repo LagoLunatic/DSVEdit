@@ -47,6 +47,9 @@
 
 020C9854-020D7477 - Most palette data.
 
+020D7478 - List of color tints? These might be used by the slash trails of weapons.
+  Entry length 8?
+
 020D7954-020D7987 - List of what song plays in each sector of Dracula's Castle.
 020D79D8-020D7A27 - List of what song plays in each area (except Dracula's Castle).
 

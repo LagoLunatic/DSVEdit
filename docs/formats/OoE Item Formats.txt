@@ -42,11 +42,20 @@ Arm glyph format:
       0001 Causes the player's swinging animation to not be interrupted when they land.
         The weapon itself still gets interrupted though. And the player's swinging while jumping animation doesn't transition to the swinging while standing, so the player winds up looking like they're floating.
       0002 Makes the weapon be locked to the upper left corner of the room, as well as the sound effects and Shanoa's voice.
-      0004 
+      0004 If this bit is on, and Shanoa manages to turn around while swinging this weapon, then the weapon will NOT turn itself to match Shanoa. (But as far as I know, there is no way to turn around while swinging a weapon anyway.)
       0008 
-      0010 On for melee glyphs. Off for projectile glyphs. Effect unknown.
+      0010 If this bit is off, ghost trails will be drawn following the weapon. However, these trails follow the weapon perfectly, so they are always underneath it and not visible at all.
+      0020 If this bit is on, the ghost trails created by bit 0010 being off are never drawn on screen.
       0040 Most melee weapons use their palette index to indicate what parts are transparent trails, but if this bit is on, they will not do that.
+      0080 
+      0100 
+      0200 
+      0400 
       0800 ??
+      1000 
+      2000 
+      4000 
+      8000 
     For knife glyphs (code 02070748): IFrames. This is used instead of the normal iframes value at 1A.
   18,2: Varies by code pointer.
     For melee weapons (code 02070890): Animation Shanoa plays when swinging this weapon.
