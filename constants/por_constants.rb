@@ -1360,13 +1360,13 @@ QUEST_LIST_FORMAT = [
   # length: 0x10
   [2, "Reward"],
   [2, "Congratulation Text ID"],
-  [2, "Reward & Requirement Types", :bitfield],
+  [2, "Quest Modifiers", :bitfield],
   [2, "Unused 1"],
   [4, "Unused 2"],
   [4, "Unused 3"],
 ]
 QUEST_BITFIELD_ATTRIBUTES = {
-  "Reward & Requirement Types" => [
+  "Quest Modifiers" => [
     "Reward is an item",
     "Reward is a subweapon or spell",
     "Reward is a relic",

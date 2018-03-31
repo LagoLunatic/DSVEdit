@@ -1,7 +1,5 @@
 
 class Player < GenericEditable
-  attr_reader :index
-  
   def initialize(index, game)
     @index = index
     

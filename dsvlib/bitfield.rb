@@ -9,10 +9,18 @@ class Bitfield
   end
   
   def [](index)
+    if index.is_a?(String)
+      index = names.index(index)
+    end
+    
     return ((@value >> index) & 0b1) > 0
   end
   
   def []=(index, bool)
+    if index.is_a?(String)
+      index = names.index(index)
+    end
+    
     if bool
       @value |= (1 << index)
     else

@@ -1378,13 +1378,13 @@ QUEST_LIST_FORMAT = [
   [2, "Reward"],
   [2, "Unused 1"],
   [4, "Requirements Pointer"],
-  [1, "Quest Type", :bitfield],
+  [1, "Quest Modifiers", :bitfield],
   [1, "Unused 2"],
   [2, "Unused 3"],
   [4, "Unused 4"],
 ]
 QUEST_BITFIELD_ATTRIBUTES = {
-  "Quest Type" => [
+  "Quest Modifiers" => [
     "Reward is gold",
     "Unknown 1",
     "Is a kill quest",
