@@ -76,10 +76,23 @@
 020DFD40 - List of quests.
   Entry length 0x10.
   00,2 Global ID+1 of the item to give as a reward. Skills start at 151.
-  04,2 Affects conditions to complete the quest somehow?
+    If this is 0, the reward is not an item (at least not a normal one).
+  02,2: Text index of the line for Wind to say when you complete the quest.
+  04,2: Specifies the type of quest's reward and requirements.
     Bit indexes:
-      00-05: ???
-      06-0B: ???
+      00 0001 - Reward is an item.
+      01 0002 - Reward is a subweapon or spell.
+      02 0004 - Reward is a relic.
+      03 0008 - Reward is an HP Max Up.
+      04 0010 - Reward is an MP Max Up.
+      05 0020 - Reward is unlocking Nest of Evil?
+      06 0040 - Requirement is obtaining one or more items.
+      07 0080 - Requirement is killing an enemy?
+      08 0100 - Requirement is having a certain amount of money.
+      09 0200 - Requirement is some kind of player status, like being cursed, wearing certain equipment, mastering a certain subweapon, etc. Maybe this means it should be checked when talking to Wind???
+      0A 0400 - Requirement is inputting a button combo?
+      0B 0800 - Requirement is for the Lonely Stage with the ghost?
+      0C 1000 - ??? Only set for the first quest, Preparations
 020DFCA0 - List of pointers to functions that check quest completion conditions. For example, checking certain flags. Use the quest index as the index in this list.
 
 020E0028-020E003B - List of pointers that each point to a list of items that get unlocked in the shop by certain boss deaths.

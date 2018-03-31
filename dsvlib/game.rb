@@ -205,6 +205,22 @@ class Game
     end
   end
   
+  def quests
+    if !["por", "ooe"].include?(GAME)
+      return []
+    end
+    
+    @quests ||= begin
+      quests = []
+      
+      QUEST_COUNT.times do |i|
+        quests << Quest.new(i, self)
+      end
+      
+      quests
+    end
+  end
+  
   def entity_type_docs
     @entity_type_docs ||= begin
       file_contents = File.read("./docs/lists/#{GAME} Entity Types.txt")
@@ -286,6 +302,16 @@ class Game
   def player_format_doc
     @player_format_docs ||= begin
       file_contents = File.read("./docs/formats/#{GAME} Player Format.txt")
+      
+      file_contents
+    end
+  rescue Errno::ENOENT => e
+    ""
+  end
+  
+  def quest_format_doc
+    @quest_format_docs ||= begin
+      file_contents = File.read("./docs/formats/#{GAME} Quest Format.txt")
       
       file_contents
     end

@@ -2,7 +2,7 @@
 require_relative 'ui_generic_editor'
 
 class GenericEditorWidget < Qt::Widget
-  attr_reader :fs, :game
+  attr_reader :fs, :game, :ui
   
   slots "item_changed(int)"
   slots "open_icon_chooser()"

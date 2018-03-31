@@ -292,3 +292,5 @@ FAKE_FREE_SPACES = [
   {path: "/ftc/overlay9_86", offset: 0x022EE224-0x022DA780, length: 0x40}, # Used by an unused room's layer list
   {path: "/ftc/overlay9_86", offset: 0x022EE1E4-0x022DA780, length: 0x40}, # Used by an unused room's layer list
 ]
+
+QUEST_LIST_POINTER = 0x020D4580

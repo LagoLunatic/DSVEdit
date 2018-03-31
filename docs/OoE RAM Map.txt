@@ -229,7 +229,7 @@ Requirement lists for fetch quests:
   Then those items are each listed as global item IDs+1. Halfwords.
 Requirement lists for kill quests:
   First halfword is the index in list 02100688, the list of enemies killed for each kill quest.
-  Second halfword is number of the enemy you need to kill.
+  Second halfword is number of that enemy you need to kill.
 
 === 020F6B3F: End of most of ARM9.
 

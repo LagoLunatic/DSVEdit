@@ -1370,3 +1370,28 @@ PLAYER_ANIM_STATE_NAMES = [
   "",
   "",
 ]
+
+QUEST_LIST_POINTER = 0x020F58B0
+QUEST_COUNT = 0x24
+QUEST_LIST_FORMAT = [
+  # length: 0x10
+  [2, "Reward"],
+  [2, "Unused 1"],
+  [4, "Requirements Pointer"],
+  [1, "Quest Type", :bitfield],
+  [1, "Unused 2"],
+  [2, "Unused 3"],
+  [4, "Unused 4"],
+]
+QUEST_BITFIELD_ATTRIBUTES = {
+  "Quest Type" => [
+    "Reward is gold",
+    "Unknown 1",
+    "Is a kill quest",
+    "Unknown 3",
+    "Unused 4",
+    "Unused 5",
+    "Unused 6",
+    "Unused 7",
+  ],
+}

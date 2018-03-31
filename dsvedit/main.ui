@@ -211,6 +211,7 @@
     <addaction name="actionTileset_Editor"/>
     <addaction name="actionSpecial_Object_Editor"/>
     <addaction name="actionShop_Editor"/>
+    <addaction name="actionQuest_Editor"/>
     <addaction name="actionWeapon_Synth_Editor"/>
     <addaction name="actionMagic_Seal_Editor"/>
     <addaction name="actionApply_ARMIPS_Patch"/>
@@ -527,6 +528,11 @@
   <action name="actionApply_ARMIPS_Patch">
    <property name="text">
     <string>Apply ARMIPS Patch</string>
+   </property>
+  </action>
+  <action name="actionQuest_Editor">
+   <property name="text">
+    <string>Quest Editor</string>
    </property>
   </action>
  </widget>

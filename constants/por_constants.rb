@@ -1353,3 +1353,35 @@ PLAYER_ANIM_STATE_NAMES = [
   "",
   "",
 ]
+
+QUEST_LIST_POINTER = 0x020DFD40
+QUEST_COUNT = 0x25
+QUEST_LIST_FORMAT = [
+  # length: 0x10
+  [2, "Reward"],
+  [2, "Congratulation Text ID"],
+  [2, "Reward & Requirement Types", :bitfield],
+  [2, "Unused 1"],
+  [4, "Unused 2"],
+  [4, "Unused 3"],
+]
+QUEST_BITFIELD_ATTRIBUTES = {
+  "Reward & Requirement Types" => [
+    "Reward is an item",
+    "Reward is a subweapon or spell",
+    "Reward is a relic",
+    "Reward is an HP Max Up",
+    "Reward is an MP Max Up",
+    "Reward is unlocking Nest of Evil",
+    "Requirement is obtaining one or more items",
+    "Requirement is killing an enemy",
+    "Requirement is having a certain amount of money",
+    "Requirement is some kind of player status?",
+    "Requirement is inputting a button combo",
+    "Requirement is for the Lonely Stage with the ghost",
+    "Unknown 1",
+    "Unused 1",
+    "Unused 2",
+    "Unused 3",
+  ],
+}

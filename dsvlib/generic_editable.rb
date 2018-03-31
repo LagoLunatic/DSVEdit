@@ -37,6 +37,8 @@ class GenericEditable
       ENEMY_DNA_BITFIELD_ATTRIBUTES
     when :player
       PLAYER_BITFIELD_ATTRIBUTES
+    when :quest
+      QUEST_BITFIELD_ATTRIBUTES
     else
       ITEM_BITFIELD_ATTRIBUTES
     end
@@ -180,6 +182,18 @@ class GenericEditable
     when :player
       @name = PLAYER_NAMES[index]
       @description = ""
+    when :quest
+      @name_text_id = TEXT_REGIONS["Quest Names"].begin + index
+      case GAME
+      when "por"
+        @description_text_id = TEXT_REGIONS["Quest Descriptions"].begin + index
+      when "ooe"
+        if index == 0
+          @description = "" # Unused "Get Business Started" quest has no description
+        else
+          @description_text_id = TEXT_REGIONS["Quest Descriptions"].begin + index - 1
+        end
+      end
     else # item
       @name_text_id = TEXT_REGIONS["Item Names"].begin + self["Item ID"]
       @description_text_id = TEXT_REGIONS["Item Descriptions"].begin + self["Item ID"]

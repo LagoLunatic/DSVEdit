@@ -391,3 +391,5 @@ SHOP_HARDCODED_ITEM_POOLS = [
 FAKE_FREE_SPACES = [
   {path: "/ftc/overlay9_45", offset: 0x022E467C-0x022C1BA0, length: 0xC0}, # Used by object 5A
 ]
+
+QUEST_LIST_POINTER = 0x020DA2C0

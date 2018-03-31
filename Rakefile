@@ -35,6 +35,7 @@ task :build_ui do
   system "rbuic4 dsvedit/special_object_editor.ui     -o dsvedit/ui_special_object_editor.rb"
   system "rbuic4 dsvedit/weapon_synth_editor.ui       -o dsvedit/ui_weapon_synth_editor.rb"
   system "rbuic4 dsvedit/shop_editor.ui               -o dsvedit/ui_shop_editor.rb"
+  system "rbuic4 dsvedit/quest_editor.ui              -o dsvedit/ui_quest_editor.rb"
   system "rbuic4 dsvedit/tileset_chooser.ui           -o dsvedit/ui_tileset_chooser.rb"
   system "rbuic4 dsvedit/door_editor.ui               -o dsvedit/ui_door_editor.rb"
   system "rbuic4 dsvedit/magic_seal_editor.ui         -o dsvedit/ui_magic_seal_editor.rb"
