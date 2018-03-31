@@ -19,7 +19,7 @@ class EnemyEditor < Qt::Dialog
       kind: :enemy,
       format: ENEMY_DNA_FORMAT
     }
-    @editor_widget = GenericEditorWidget.new(game.fs, game, enemy_type, main_window.game.enemy_format_doc)
+    @editor_widget = GenericEditorWidget.new(game.fs, game, enemy_type, main_window.game.enemy_format_doc, custom_editable_class: EnemyDNA)
     @ui.horizontalLayout.addWidget(@editor_widget)
     
     connect(@ui.buttonBox, SIGNAL("clicked(QAbstractButton*)"), self, SLOT("button_pressed(QAbstractButton*)"))

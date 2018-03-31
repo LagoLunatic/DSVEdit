@@ -8,7 +8,7 @@ class GenericEditorWidget < Qt::Widget
   slots "open_icon_chooser()"
   slots "open_color_chooser()"
   
-  def initialize(fs, game, item_type, format_doc)
+  def initialize(fs, game, item_type, format_doc, custom_editable_class: nil)
     super()
     @ui = Ui_GenericEditorWidget.new
     @ui.setup_ui(self)
@@ -25,7 +25,11 @@ class GenericEditorWidget < Qt::Widget
     
     @items = []
     (0..item_type[:count]-1).each do |index|
-      item = GenericEditable.new(index, item_type, game, fs)
+      if custom_editable_class
+        item = custom_editable_class.new(index, game)
+      else
+        item = GenericEditable.new(index, item_type, game, fs)
+      end
       @items << item
       @ui.item_list.addItem("%02X %s" % [index, item.name])
     end

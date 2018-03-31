@@ -19,7 +19,7 @@ class QuestEditor < Qt::Dialog
       kind: :quest,
       format: QUEST_LIST_FORMAT
     }
-    @editor_widget = GenericEditorWidget.new(game.fs, game, quest_type, main_window.game.quest_format_doc)
+    @editor_widget = GenericEditorWidget.new(game.fs, game, quest_type, main_window.game.quest_format_doc, custom_editable_class: Quest)
     @ui.horizontalLayout.addWidget(@editor_widget)
     
     # Adjust some of the text field sizes to be bigger for quests.

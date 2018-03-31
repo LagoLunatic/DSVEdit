@@ -19,7 +19,7 @@ class PlayerEditor < Qt::Dialog
       kind: :player,
       format: PLAYER_LIST_FORMAT
     }
-    @editor_widget = GenericEditorWidget.new(game.fs, game, player_type, main_window.game.player_format_doc)
+    @editor_widget = GenericEditorWidget.new(game.fs, game, player_type, main_window.game.player_format_doc, custom_editable_class: Player)
     @ui.horizontalLayout.addWidget(@editor_widget)
     
     connect(@ui.buttonBox, SIGNAL("clicked(QAbstractButton*)"), self, SLOT("button_pressed(QAbstractButton*)"))
