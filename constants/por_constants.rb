@@ -504,7 +504,6 @@ REUSED_SPECIAL_OBJECT_INFO = {
   0x1B => {init_code:         -1},
   0x22 => COMMON_SPRITE,
   0x23 => {init_code:         -1},
-  0x24 => {init_code:         -1},
   0x42 => {init_code:         -1},
   0x50 => {init_code:         -1},
   0x51 => {init_code:         -1},
