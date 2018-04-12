@@ -782,7 +782,7 @@ ITEM_BITFIELD_ATTRIBUTES = {
     "Effect 21",
     "Effect 22",
     "Effect 23",
-    "Effect 24",
+    "Knuckles",
     "Is a weapon",
     "Is a red soul",
     "Is a blue soul",

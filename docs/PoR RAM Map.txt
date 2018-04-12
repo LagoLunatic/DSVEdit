@@ -367,6 +367,7 @@ F5-F5  021115E0-0211173F  ?
   0x00000040 - Player is dying. Manually setting this bit causes the player to die instantly regardless of their HP, complete with screaming.
   0x00000080 - Set during events?
   0x00002000 - related to status effects on enemies? and collidable entities?
+    Also changes subweapon damage calculation to use the formula for when the subweapon's SP needed to master is 0 for all subweapons.
   0x00004000 - related to adrenaline gear?
   0x00040000 - Set during events and in Wind and Vincent's rooms?
   0x00100000 - Set when going through a door.

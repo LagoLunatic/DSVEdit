@@ -91,6 +91,12 @@ For free souls:
   2 - Runs away from the player.
 
 For used souls:
+210,4: Bitfield.
+  00000001 - Horizontally flipped.
+  00000002 - Soul was used by an enemy (Dmitrii) as opposed to the player.
+    This overrides this soul's on-hurt-enemy callback function with a different one so that it hurts the player instead.
+    It also changes the damage calculation formula, so that it uses the enemy's attack value in place of the player's INT, and so the enemy's attack value is weighted more than the soul's damage multiplier.
 214,4: Pointer to the entity that used this soul (player/Dmitrii).
 21A,2: Soul index.
 21D,1: Soul index.
+220,4: Soul level.

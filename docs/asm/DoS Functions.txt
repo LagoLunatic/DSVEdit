@@ -642,6 +642,19 @@
   ; r0 - Soul index
   ; Returns how many levels this soul has
 
+0220E994 RedSoulInitialize
+  ; r0 - Skill entity
+  ; r1 - On-hurt-enemy callback function
+  ; r2 - On-damaged callback function
+
+0220F68C CalculateSoulDamage
+  ; r0 - Skill entity
+  ; The formula is:
+  ;   damage = (dmg_mult*int)/16 + int/8 + dmg_mult
+  ;   damage += (damage/4 + 1) * curr_num_levels / num_soul_levels
+  ; If Dmitrii uses the soul, the formula is instead:
+  ;   damage = (dmg_mult*enemy_attack)/32 + enemy_attack/2 + dmg_mult
+
 02024C7C GetWarpIndexFromPos
   ; r0 - Room's x on the map
   ; r1 - Room's y on the map

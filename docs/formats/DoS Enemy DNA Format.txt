@@ -48,7 +48,7 @@ DoS Enemy DNA:
     00 means it can't be placed in enemy set mode.
   1C,4: Which elements this enemy is weak to. Bitfield.
     In DoS, weaknesses increase damage the enemy takes if the enemy is weak to any of the elements of the attack.
-    If at least one of those elements is magical (Fire/Ice/Lightning/Dark/Holy), the muliplier is 1.5x damage.
+    If at least one of those elements is magical (Fire/Ice/Lightning/Dark/Holy), the multiplier is 1.5x damage.
     Otherwise, if it's just physical or status effect weaknesses (Strike/Stab/Slash/Poison/Curse/Stone), the multiplier is 1.25x.
     Bits 1-11: Regular elemental types.
     Bit 16: The enemy is made of flesh, it makes a fleshy sound effect and graphical effect when you attack it.

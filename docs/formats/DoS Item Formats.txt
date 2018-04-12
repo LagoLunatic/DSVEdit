@@ -61,7 +61,7 @@ Weapon format:
     Bit 5: No trailing slash effect on the weapon.
     Bit 7: Makes weapon transparent.
     Bit 8: Gives weapon a shaky echo effect and moves it up above Soma higher than it should be.
-    Bit 9: Weapon doesn't stop swinging when Soma's swinging animation ends. Only seems to do anything if combined with bit 5.
+    Bit 10: Weapon doesn't stop swinging when Soma's swinging animation ends. Only seems to do anything if combined with bit 5.
   1A,2: Swinging sound effect of the weapon.
 
 Body armor and Accessory format:

@@ -214,8 +214,10 @@ There are 41 entries in the list total.
 
 What each range of entity slots is for:
 002-002  020CA930-020CABCF  Player.
+003-003  020CABD0-020CAE6F  Player yellow soul.
 004-004  020CAE70-020CB10F  ?
-01C-028  020CED70-020D0F8F  Player skills.
+005-01B  020CB110-020CED6F  Player blue souls.
+01C-028  020CED70-020D0F8F  Player red souls.
 029-02C  020D0F90-020D1A0F  Player weapons.
 02D-02D  020D1A10-020D1CAF  ?
 030-080  020D21F0-020DF68F  Room entities, including enemies and special objects.
@@ -520,10 +522,10 @@ Player's current stats:
   020F736C,2 - Natural+item ATK
   020F736E,2 - Natural+item DEF
   020F7370,2 - Natural+item STR
-  020F7382,2 - Natural+item CON
-  020F7384,2 - Natural+item INT
-  020F7386,2 - Natural+item LCK
-  020F7388,4 - Bitfield of resistances from items.
+  020F7372,2 - Natural+item CON
+  020F7374,2 - Natural+item INT
+  020F7376,2 - Natural+item LCK
+  020F7378,4 - Bitfield of resistances from items.
 020F737C-8B - Final stats.
   020F737C,2 - Final ATK
     Final ATK is calculated by taking the ATK from the current weapon and the final STR from 020F7380 and using this formula:

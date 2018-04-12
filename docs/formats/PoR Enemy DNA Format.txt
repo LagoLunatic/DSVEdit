@@ -19,7 +19,7 @@ PoR Enemy DNA:
     Same as above.
   18,4: Weaknesses
     In PoR, weaknesses increase damage the enemy takes if the enemy is weak to any of the elements of the attack.
-    If at least one of those elements is magical (Fire/Ice/Lightning/Dark/Holy), the muliplier is 2x damage.
+    If at least one of those elements is magical (Fire/Ice/Lightning/Dark/Holy), the multiplier is 2x damage.
     Otherwise, if it's just physical or status effect weaknesses (Strike/Stab/Slash/Poison/Curse/Stone), the multiplier is 1.25x.
   1C,4: Resistances
     In PoR, resistances halve damage the enemy takes if the enemy resists any of the elements of the attack. (Only counting the base 8 elements, resisting Poison/Curse/Stone doesn't doing anything.)

@@ -222,8 +222,6 @@
   ; Will return true if either player 1 or player 2 have this item equipped, but only if your partner is called out. If your partner is hidden away, only the controlled character's equipment matters.
   ; This is used for Eye for Decay.
 
-02214330 SubweaponInitialize
-
 021FC77C PlayerFullRecover
   ; Fully restores player HP and MP.
 02209AEC SubtractMP
@@ -324,6 +322,12 @@
   ; r1 - Damage value
   ; r2 - Damage types bitfield
   ; r3 - Physical force of the attack
+
+02208A38 GetStatusEffectOnPlayer
+  ; r0 - Which player index (0 or 1)
+  ; Returns the index of the lowest-indexed status effect on that player.
+  ; So if the player is both poisoned and cursed, this function will return 0 to indicate poison, not 1 to indicate cursed. If the player is cursed but not poisoned it will return 1 to indicate cursed.
+  ; Returns -1 if this player isn't afflicted by any status effect.
 
 02012F68 Rand
 02012F30 RandMax
@@ -603,6 +607,24 @@
   ; r2 - On-hurt-player callback to store at +C8
   ; r3 - On-damaged callback to store at +CC
   ; Also initializes the entity's hitbox.
+
+02214330 SubweaponInitialize
+
+022151A0 CalculateSkillDamage
+  ; r0 - Skill entity
+  ; The formula is:
+  ; (note: depends on player 1/2 obviously. also depends on "Type" from the skill.)
+  ; For spells, the code starts at 02215204:
+  ;   damage = (dmg_mult*int)/8 + int/16 + dmg_mult
+  ;   damage *= charge_mult (1 or 2 for half or fully charged)
+  ; For subweapons, it starts at 02215234:
+  ;   damage = (dmg_mult*int)/16 + int/32 + dmg_mult
+  ; If the subweapon's SP to master is 0:
+  ;   damage += (damage/2 + 1)
+  ; Otherwise:
+  ;   damage += current_sp * (damage + dmg_mult/2 + 4) / sp_to_master
+  ; If an enemy uses the skill, the formula is instead:
+  ;   damage = (dmg_mult*enemy_attack)/32 + enemy_attack/2 + dmg_mult
 
 020128E8 GetEntitySlotIndexByPointer
   ; r0 - Entity

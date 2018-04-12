@@ -101,6 +101,9 @@
   ; r0 - Level
 
 0206B2F0 CalcAPBonusAttack
+  ; r0 - Base damage
+  ; r1 - Damage types of this attack
+  ; Returns the total damage, with the AP bonus included.
 
 02023794 FloatConvertFromInt
   ; r0 - Integer
@@ -476,6 +479,28 @@
   ; r1 - Pointer to the new hitbox data on the stack to set. In halfwords, in order: left X, top Y, right X, bottom Y.
   ; r2 - Which hitbox
   ; r3 - Hitbox type
+
+0206B560 GlyphInitialize
+
+0206B4E8 CalculateGlyphDamage
+  ; r0 - Glyph entity
+  ; If the player uses the glyph, CalculatePlayerGlyphDamage is called.
+  ; If an enemy uses the glyph, the formula is instead:
+  ;   damage = (enemy_attack*(dmg_mult/2)) / 12 + enemy_attack/2 + dmg_mult/2
+0206B394 CalculatePlayerGlyphDamage
+  ; r0 - Glyph slot (0/1/2/3 for Y/X/R/Union)
+  ; r1 - Glyph index
+  ; For glyph unions, the damage multiplier is increased before calculating the damage:
+  ;   original_dmg_mult = dmg_mult
+  ;   dmg_mult *= 1.25
+  ;   for each Judgement Ring equipped: dmg_mult *= 1.5
+  ; If the glyph does physical damage and does not do magical damage (0206B424):
+  ;   damage = (dmg_mult*str)/16 + str/12 + original_dmg_mult/2
+  ; If the glyph does magical damage and does not do physical damage (0206B460):
+  ;   damage = (dmg_mult*int)/16 + int/12 + original_dmg_mult/2
+  ; If the glyph does both physical and magical damage (0206B48C):
+  ;   damage = (dmg_mult*(str+int))/24 + (str+int)/12 + original_dmg_mult/2
+  ; After those calculations, it also adds bonus damage based on your attribute points.
 
 02036D54 SetHitboxTypesToDamagePlayer?
 02036DC4 SetHitboxTypesToDamageEnemies?

@@ -102,19 +102,27 @@ For blue chests:
 0D8,4: Pointer to function (02061E28) that checks if the corresponding boss is dead to make the chest pop out of the ground.
   For blue chests that are not for a no damage boss medal, this is 0 instead of a function pointer.
 
-For glyphs:
-0D6,2: For glyphs, ?
-0D8,4: For glyphs, ?
-0DC,4: For glyphs, has the pickup flag to set.
-12C,1: For glyphs, has the type of the glyph.
+For glyph pickups:
+0D6,2: ?
+0D8,4: ?
+0DC,4: The pickup flag to set.
+12C,1: Type of the glyph.
   1 - Arm glyph.
   2 - Back glyph.
+
+For used glyphs:
+120,4: Bitfield.
+  00000001 - Horizontally flipped.
+  00000002 - Skill was used by an enemy (e.g. Fomors) as opposed to the player.
+    This overrides this skill's on-hurt-enemy callback function with a different one so that it hurts the player instead.
+    It also changes the damage calculation formula, so that it uses the enemy's attack value in place of the player's STR/INT, and so the enemy's attack value is weighted more than the skill's damage multiplier.
+124,4: Pointer to the entity that used this skill (e.g. player).
 12C,1: Slot this glyph is in.
   0 - Y-button arm glyph
   1 - X-button arm glyph
   2 - Back glyph
   3 - Glyph union
-12D,1: For glyphs, has the index of the glyph in that type's list.
+12D,1: Index of the glyph in that type's list.
 
 For used skills:
 124,4: Pointer to the entity who used this skill (e.g. 02109820 if the player used it).

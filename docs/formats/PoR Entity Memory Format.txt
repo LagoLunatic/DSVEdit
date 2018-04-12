@@ -140,7 +140,14 @@ For skeletally animated joints:
 158,4: Pointer to the joint data for this joint (in list 02112A98).
 
 For skills:
-11A,1: The ID of the skill.
+110,4: Bitfield.
+  00000001 - Horizontally flipped.
+  00000002 - Skill was used by an enemy (e.g. Doppelganger) as opposed to the player.
+    This overrides this skill's on-hurt-enemy callback function with a different one so that it hurts the player instead.
+    It also changes the damage calculation formula, so that it uses the enemy's attack value in place of the player's INT, and so the enemy's attack value is weighted more than the skill's damage multiplier.
+114,4: Pointer to the entity that used this skill (e.g. player/Doppelganger).
+11A,2: The ID of the skill.
+11D,1: The ID of the skill?
 11E,1: The skill multiplier. (1 or 2.)
   For spells it varies depending on if it's half charged or fully charged.
   For subweapons it varies depending on whether it's mastered or not.
