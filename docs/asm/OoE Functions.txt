@@ -738,6 +738,8 @@
   ; r0 - Area index
 02042F94 MapGetDrawYOffset
   ; r0 - Area index
+02043180 MapGetTotalNumTiles
+  ; r0 - Area index
 0203AEE0 MapGetNumExploredTiles
   ; r0 - Area index
 02043480 MapDraw?
@@ -760,6 +762,22 @@
   ; r0 - Area index
   ; r1 - Sector index
   ; r2 - Room index
+
+020AA94C CheckWorldMapAreaUnlocked
+  ; r0 - Area index
+  ; Calls CheckWorldMapAreaUnlockBits with r1=2
+020AA8C8 CheckWorldMapAreaBits
+  ; r0 - Area index
+  ; r1 - Bit(s) to check. 1 is for if it's visible but greyed out. 2 is for if it's unlocked.
+020AA95C UnlockWorldMapArea
+  ; r0 - Area index
+  ; r1 - Must be 1
+020AA934 SetWorldMapAreaVisible
+  ; r0 - Area index
+  ; r1 - Must be 1
+020AA8F0 SetWorldMapAreaUnlockBits
+  ; r0 - Area index
+  ; r1 - Bit(s) to set. 1 is for if it's visible but greyed out. 2 is for if it's unlocked.
 
 02035F14 SetOAMData?
   ; r0 - Pointer to the OAM data (in list 021427E0 or 02145B2C)

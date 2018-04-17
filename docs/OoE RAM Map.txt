@@ -707,6 +707,8 @@ when you first enter a new area, the game determines which entrance room to put 
 
 02149028,4 - Currently loaded sector overlay index.
 
+0214B0C6,1 - Number of explored area entrances on the current area's map.
+
 0214B1E0-021511DF - Pixel data for the map.
 
 021516D0 - Game state
