@@ -343,6 +343,10 @@
   ; r1 - Sprite ptr
   ; r2 - GFX list ptr
   ; r3 - Palette list ptr
+  ; [r13] - How to load GFX:
+  ;   0 - Loading a singular GFX...?
+  ;   1 - Loading from a list of GFX, and all GFX in the list should be loaded.
+  ;   2 - Loading from a list of GFX, but only load the first GFX in the list.
 020217C8 LoadSpriteSingleGfx
   ; r0 - Entity ptr
   ; r1 - Sprite ptr
@@ -350,6 +354,14 @@
   ; r3 - Palette list ptr
 0201FECC LoadCommonSprite
   ; r0 - Entity
+02021364 LoadSpriteMultiGfx2?
+  ; Arguments taken are the same as LoadSpriteMultiGfx.
+  ; Unsure how this is different. This is called by Andras for example.
+02010654 LoadGFX
+  ; r0 - Either the GFX pointer or the GFX list pointer
+  ; r1 - ? 0x14
+  ; r2 - Number of GFX pages to load
+  ; r3 - Size of each GFX page. 1 for 128x128 pages. 4 for 256x256 pages.
 
 020165D4 GetOAMAttributesBySpritePartSize
   ; r0 - Part width in pixels

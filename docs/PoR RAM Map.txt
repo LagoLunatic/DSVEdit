@@ -206,6 +206,8 @@
 020FA200 - List of sprite info for currently loaded entities.
   The halfword at +6C in an entity's memory is the index in this list.
   Each entry is 0x10 bytes long.
+  00,2: Index of the next entry in this list that was unused at the time that this entry was created?
+  02,2: 
   08,4: Affects GFX. Index in list 020FB208.
   0C,4: Sprite pointer.
 020FB208 - List of ?.
@@ -769,6 +771,8 @@ TODO: What are the other 2 for? It's not for the "recent" tab.
 
 0213174C - List of text currently displayed??
   Entry length 0x3C.
+
+02132070,2 - Next free slot index in the currently loaded sprite info list (020FA200).
 
 0213282C - List of something related to hitboxes?
   Entry length 1.
