@@ -49,7 +49,11 @@
 
 0200033C - Event flags.
 
-020003CC - Has the room pointer to load when loading a save.
+02000360-02000373 - Bitfield of pickup flags.
+
+02000378,4 - Bitfield of what warp rooms you've unlocked.
+
+0200037C,2 - Bitfield of which area names you've seen.
 
 0200037E,2 - Boss death flags.
   00 0001 Graham
@@ -68,6 +72,8 @@
   0D 2000 (Unused)
   0E 4000 (Unused)
   0F 8000 Great Armor
+
+020003CC,4 - Has the room pointer to load when loading a save.
 
 Variables related to delayed loading room entities:
 020003D0,1 - Direction to delayed load entities.
@@ -244,6 +250,10 @@ What each range of entity slots is for:
 0201327E,2 - Max HP.
 02013280,2 - Max MP.
 02013290,4 - Current gold.
+
+02013294-0201331B - Owned item info.
+  Each item takes up one byte. The byte is how many of the item you currently own.
+  Values higher than 9 work but may look visually odd in the menus.
 
 List of which souls you own and how many (owned skill info):
 0201331C-02013337 - Red souls.

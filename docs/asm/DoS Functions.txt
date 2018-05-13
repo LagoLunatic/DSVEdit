@@ -8,6 +8,18 @@
   ; r0 - Minimum entity index to check
   ; r1 - Maximum entity index to check
   ; r2 - Update function pointer for the new entity
+02012AE0 DeleteAndUnloadEntity
+  ; r0 - Entity
+  ; Calls UnloadSpriteInfo and DeleteEntity.
+0200EF54 UnloadSpriteInfo
+  ; r0 - Sprite info index
+02012C38 DeleteEntity
+  ; r0 - Entity
+
+02012C84 FillAreaWith0s
+  ; r0 - Start of area to fill
+  ; r1 - Number of bytes to fill.
+  ; This fills with halfword 0s, so the number of bytes to fill should be divisible by 2.
 
 021C3A00 EnemyCheckDrops
 0221029C GetNumOwnedSoul
@@ -304,9 +316,18 @@
 0201A990 LoadCommonSprite
   ; r0 - Entity
 
+0200D0BC EntityInitAnimations
+  ; r0 - Entity
+  ; Initializes the entity's pointer to its animations as well as its bitfield of animation properties.
+
 0200EE44 GetSpriteInfoPointer
   ; r0 - Index in the currently loaded sprite info list, 020C6260. This is from +68 in the entity.
   ; Returns r0 - Pointer to the entry in that list.
+
+0201B340 EntityInitSpriteAndPaletteFromParent
+  ; r0 - Parent entity
+  ; r1 - Child entity
+  ; Initializes the child with the sprite and palette of the parent.
 
 0203BC00 RenderOneDimensionalSpriteFrame?
   ; r0 - Sprite pointer (e.g. 022A9C60 for the info screen)
@@ -415,6 +436,10 @@
 021FCC9C PlayerDraw
 021FEE28 PlayerUpdateYAccel
 
+021C52EC GenericDraw
+
+0201C0CC GetPolygonID
+
 021F64BC PlayerEnableControl
 
 021FFB08 PlayerCalculateLevelUpStats
@@ -458,7 +483,7 @@
   ; r1 - 0?
   ; r2 - Asset index
 
-020125A4 MagicSealUpdate?
+020125A4 MagicSealOrItemPickupUpdate?
 02215F5C MagicSealDraw?
 
 021D9668 ActorSpawn
@@ -628,12 +653,38 @@
   ; r0 - Entity pointer
   ; r1 - Iframes
   ; Stores r1 to entity+B8 if the entity's hitbox is active (entity+A6)
+02014350 SetIframesByIndex
+  ; r0 - Entity pointer
+  ; Only does anything if the entity's hitbox is active (entity+A6)
+  ; Gets the entity's iframes index from entity+A4.
+  ; Then gets the actual iframes from list 020763DC and stores that to entity+B8.
 020143EC SetCallbacksAndIframesIndex
   ; r0 - Entity
   ; r1 - Iframes index to store at entity+A4
   ; r2 - On-hurt-player callback to store at +C8
   ; r3 - On-damaged callback to store at +CC
   ; Also initializes the entity's hitbox.
+
+021C34A8 InitializeEnemy
+  ; r0 - Entity pointer
+  ; Copies current HP, current MP, attack, and defense from the enemy DNA to the enemy entity.
+  ; Also adds the enemy's palette offset to the current palette used by this enemy entity.
+  ; Also sets bit 80 of the bitfield at entity+250.
+
+021C4DDC EntityCheckOffScreenByBitfield?
+  ; r0 - Entity
+  ; r1 - Bitfield of how large to consider the entity?
+  ;   0x08 - skip check at 021C4E40
+  ;   0x10 - skip check at 021C4E0C
+021C4B54 EntityCheckOnScreenByArea?
+  ; r0 - Entity
+  ; r1 - Minimum X pos relative to the screen
+  ; r2 - Minimum Y pos relative to the screen
+  ; r3 - Maximum X pos relative to the screen
+  ; [r13] - Maximum Y pos relative to the screen
+  ; Returns 0 if the entity is offscreen, or 1 if it's on screen.
+0220011C RegisterOnScreenEntity???
+  ; r0 - Entity
 
 02210138 GetSoulScalingType
   ; r0 - Soul index
@@ -735,6 +786,11 @@
 02239820 EnemyTombstoneUpdate
 02230A00 EnemyGhostDancerCreate
 02230C20 EnemyGhostDancerUpdate
+0223158C EnemyGhostDancerOnHurtPlayer
+02231564 EnemyGhostDancerOnDamaged
+02230FA8 EnemyGhostDancerPartnerUpdate
+02231180 EnemyGhostDancerPartnerDraw
+02231538 EnemyGhostDancerPartnerOnDamaged
 022988FC EnemyFlyingHumanoidCreate
 02298A18 EnemyFlyingHumanoidUpdate
 02281CBC EnemyMiniDevilCreate

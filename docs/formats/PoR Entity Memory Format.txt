@@ -7,7 +7,7 @@ Memory used for entities in PoR is 020FC500 - 0211173F. Each entity is 0x160 byt
 010,2: Somehow affects the projectiles/subentities spawned by this entity.
   0B is used for players.
   Any values besides 0B and the skill/weapon will damage the player, not enemies.
-012,2: 
+012,2: Globally unique ID for this entity.
 014,2: Frame counter 1.
 016,2: Frame counter 2.
 021,1: Opacity.

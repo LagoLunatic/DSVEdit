@@ -13,7 +13,7 @@
 0207708C - Map tile metadata for the castle.
 0207880C - List of secret door positions on the map for the abyss. List is empty, it ends instantly.
 02078810 - Map line data for the abyss.
-020788F4 - Map tle metadata for the abyss.
+020788F4 - Map tile metadata for the abyss.
 
 02078CAC-02079D43 - Enemy DNA list.
 
@@ -173,6 +173,8 @@ There are 41 entries in the list total.
 020C6260 - List of sprite info for currently loaded entities.
   The halfword at +68 in an entity's memory is the index in this list.
   Each entry is 0x10 bytes long.
+  00,2: 
+  02,2: 
   08,4: Affects GFX. Index in the list of currently loaded GFX files?
   0C,4: Sprite pointer.
 
@@ -186,6 +188,11 @@ There are 41 entries in the list total.
 
 020C3940 - Tile mapping for BG1 layer.
   Used for the background of menus.
+
+020CA368,2 - Next globally unique ID for an entity.
+  This is incremented every time an entity is created so that entities have a uniquely identifier number, even across different rooms.
+  This starts at 1 when resetting the game.
+  When FFFF is exceeded, it loops back around to 1. (0 is skipped.)
 
 020CA388,2 - Bitfield of what buttons the player is pressing.
   0001 - A
@@ -314,6 +321,7 @@ What each range of entity slots is for:
   0x10000000 - Makes all enemy souls drops have a 100% chance. Used during the prologue.
   0x40000000 - Set when you haven't saved the game once yet. Disables suspending.
 
+020F6E08,1 - Next available polygon ID to use. Increments from 0x16 to 0x3F then back to 0x16 as entities use these up.
 020F6E09,1 - Current magic seal index being drawn.
 020F6E0B - ??? related to paranoia somehow?
 020F6E14 - this contains a ram pointer to the metadata for the room you're currently in.
@@ -372,6 +380,8 @@ What each range of entity slots is for:
 020F7096,2 - Screen scrolling minimum y pos.
 020F7098,2 - Screen scrolling maximum x pos.
 020F709A,2 - Screen scrolling maximum y pos.
+
+020F70A4,2 - ?
 
 020F70A6,1 - Destination room sector index.
 020F70A7,1 - Destination room room index.
@@ -562,6 +572,9 @@ Player's current stats:
   00200000 - ?
   00400000 - Water acts as quicksand. This bit gets set every frame by object 05.
 
+020F7408,1 - Number of enemies/entities on screen the previous frame?
+020F7409,1 - Number of enemies/entities currently on screen?
+
 === 020F740C - 020F746B: Third region that gets saved to the save file. 60 bytes long. Corresponds to 0464-04C3 in the save file data.
 
 020F740C,2 - Current level.
@@ -676,6 +689,8 @@ Stuff related to currently loaded tilesets:
 021528E4 - Inside the sound_data.sdat file, specifically the INFO section, this has a list of the SSEQ, SBNK (instruments), and volume for each song.
 
 02195780 - Something related to playing songs, 0 for no songs, 1 for songs??
+
+=== 0219E3E0 - 0223073F: Overlay 0
 
 0222B8E0 - list of sprite pointers for area titles. the first one is shows the upper half of the gfx page. the second one shows the bottom half of the gfx page.
 0222B8E8 - list of gfx files for area titles. each area in the list is 8 bytes long. the first number is a gfx page pointer, the second is either 0 or 1. the 0 or 1 is for which sprite pointer to use. 0 means the top half, 1 means the bottom half.
@@ -855,6 +870,8 @@ Here's what each actor is (index, special object id, description):
 0222F290-0222F2D7 - List of which magic seal is needed for each boss (and its corresponding boss doors).
   The boss index is the index in this list (same order as boss death flags).
   Each entry is 4 bytes long. It's simply the magic seal index for this boss.
+
+=== 0223073F: End of Overlay 0
 
 02298D9C
 

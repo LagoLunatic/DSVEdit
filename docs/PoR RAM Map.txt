@@ -231,6 +231,11 @@
 020FC064-020FC463 - List of sprites in the top screen OAM.
   Entry length 0x10.
 
+020FC46C,2 - Next globally unique ID for an entity.
+  This is incremented every time an entity is created so that entities have a uniquely identifier number, even across different rooms.
+  This starts at 1 when resetting the game.
+  When FFFF is exceeded, it loops back around to 1. (0 is skipped.)
+
 020FC48C,2 - Bitfield of what buttons the player is pressing.
   0001 - A
   0002 - B

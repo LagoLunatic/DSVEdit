@@ -4,7 +4,10 @@ Memory used for entities in DoS is 020CA3F0 - 020F6DEF. Each entity is 0x2A0 byt
 000,4: Pointer to update code.
 004,4: Pointer to draw code.
 00D,1: State of the entity. Each entity's update code handles this differently.
-018,2: Timer.
+010,2: 1? set when the entity is first created
+012,2: Globally unique ID for this entity.
+018,2: Timer 1.
+01A,2: Timer 2.
 01E,1: ???
 01F,1: If this isn't 0, the entity will flicker. 1E is related somehow?
 020,4: X pos on the screen.
@@ -22,12 +25,16 @@ Memory used for entities in DoS is 020CA3F0 - 020F6DEF. Each entity is 0x2A0 byt
 058,4: Enable player scaling.
 068,2: Sprite info index.
   This is an index in the currently loaded sprite info list, 020C6260.
+06D,1: Light enable flags for polygon drawing.
 06E,1: var a maybe?
-070,4: Bitfield of ?
-  00000080 - Horizontally flipped.
+070,4: Bitfield related to sprite drawing.
+  00000080 - Direction. Set if facing left, clear if facing right.
 074,2: Current sprite frame index.
-076,1: Palette index in the list of globally loaded palettes.
+076,2: Palette index in the list of globally loaded palettes.
 07A,1: Palette offset for this entity. Gets added to the value at 076,2.
+07C,2: Polygon mode for drawing this entity.
+07E,2: Other polygon attribute bits to enable for drawing this entity.
+080,1: Polygon ID for drawing this entity.
 081,1: Opacity. 1F is fully opaque.
 082,10: Affects color tint of this entity. 1F for everything means normal colored.
 098,4: Pointer to sprite animation list.
@@ -57,9 +64,12 @@ Memory used for entities in DoS is 020CA3F0 - 020F6DEF. Each entity is 0x2A0 byt
 0BE,2: 
 0C8,4: On-hit-other callback function.
 0CC,4: On-get-hit callback function.
+0D4,4: Pointer to parent entity.
 0E4,4: Bitfield of ?
 250,4: Bitfield?
+  00000001 - Immune to being unloaded when there are too many enemies on screen?
   00000020 - Horizontally flipped?
+  00000080 - ??? Set for all enemies
 260,1: Subtype.
 26E,2: Var A.
 270,2: Var B.
@@ -78,6 +88,8 @@ For enemies:
 154,2: Max HP.
 258,2: Current HP.
 25A,2: Current MP.
+25C,2: Original global palette index (before 076,2 had the enemy's palette offset added to it).
+25E,1: Palette offset for this enemy.
 260,1: Enemy ID.
 26A,2: The attack value from the enemy DNA.
 26C,2: The defense value from the enemy DNA.
