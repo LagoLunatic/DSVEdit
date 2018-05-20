@@ -343,13 +343,25 @@ class CollisionTile
     [0, 1].include?(block_shape) && !has_top && !has_sides_and_bottom && !has_effect
   end
   
-  def is_solid?
+  def is_solid_block?
     block_shape == 0 && has_top && has_sides_and_bottom
+  end
+  
+  def is_solid?
+    is_solid_block? || is_valid_slope? || is_solid_half_block?
+  end
+  
+  def is_flat_floor?
+    is_solid_block? || is_jumpthrough_platform? || is_solid_half_block?
   end
   
   def is_jumpthrough_platform?
     [0, 1, 2, 3].include?(block_shape) && has_top && !has_sides_and_bottom && !has_effect
   end
+  
+  def is_solid_half_block?
+    [2, 3].include?(block_shape) && has_top && has_sides_and_bottom
+  end 
   
   def is_bottom_half?
     block_shape == 3 && is_jumpthrough_platform?
@@ -359,8 +371,41 @@ class CollisionTile
     block_shape >= 4
   end
   
+  def is_valid_slope?
+    [4, 8, 0xA, 0xC, 0xD, 0xE, 0xF].include?(block_shape)
+  end
+  
+  def is_valid_floor_slope?
+    is_valid_slope? && !vertical_flip
+  end
+  
+  def is_valid_floor_slope_left?
+    is_valid_floor_slope? && !horizontal_flip
+  end
+  
+  def is_valid_floor_slope_right?
+    is_valid_floor_slope? && horizontal_flip
+  end
+  
+  def slope_amount
+    return case block_shape
+    when 4
+      0x10
+    when 8, 0xA
+      8
+    when 0xC, 0xD, 0xE, 0xF
+      4
+    else
+      0 # Invalid
+    end
+  end
+  
   def is_damage?
     (0..1).include?(block_shape) && has_effect
+  end
+  
+  def is_blank_or_damage?
+    is_blank || is_damage?
   end
   
   def is_conveyor_left?
