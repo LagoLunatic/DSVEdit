@@ -237,4 +237,8 @@ class Entity
       end
     end
   end
+  
+  def entity_str
+    @entity_str ||= "#{room.room_str}_%02X" % room.entities.index(self)
+  end
 end
