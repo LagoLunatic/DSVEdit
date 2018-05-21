@@ -59,7 +59,11 @@ class Game
     else
       @folder = nil
       
-      @fs = NDSFileSystem.new
+      if SYSTEM == :nds
+        @fs = NDSFileSystem.new
+      else
+        @fs = GBADummyFilesystem.new
+      end
       fs.open_rom(input_rom_path)
     end
     

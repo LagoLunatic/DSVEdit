@@ -25,6 +25,11 @@ class GBADummyFilesystem
     read_original_compressed_sizes_from_text_file()
   end
   
+  def open_rom(input_rom_path)
+    @filesystem_directory = nil
+    @rom = File.open(input_rom_path, "rb") {|file| file.read}
+  end
+  
   def extract_to_hard_drive
     output_path = File.join(@filesystem_directory, "rom.gba")
     output_dir = File.dirname(output_path)
