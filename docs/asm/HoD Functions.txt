@@ -39,6 +39,7 @@
 
 08010638 GenericDraw
   ; Used by enemies, the player, and parts of the UI.
+0800F9C0 GenericDraw2
 
 08072888 PlayerUpdate
 

@@ -181,6 +181,7 @@
   ; r1 - Y pos
   ; r2 - Z pos
   ; r3 - Global ID+1 of the item
+  ; [r13] - ??? 1
 021E7AB4 GetItemGlobalID+1
   ; r0 - Item type
   ; r1 - Item index

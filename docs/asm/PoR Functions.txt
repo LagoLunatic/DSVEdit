@@ -215,12 +215,29 @@
 02214D70 SkillGetCurrentSP
   ; r0 - Skill index
   ; Returns the current SP the player has for this skill.
+02214CA4 SkillAddSP
+  ; r0 - Skill index
+  ; r1 - SP to add
+02215ACC GetSkillDamageMultiplier
+  ; r0 - ?
+  ; r1 - Skill index
+  ; Returns 1 if the subweapon is not mastered, or 2 if it is.
+02214C38 SkillCheckMastered?
+  ; r0 - Skill index
 
+02207C54 CheckAccessoryEquipped
+  ; r0 - Player index (0 or 1)
+  ; r1 - Accessory index
+  ; Checks both accessory slots on the specified player.
 02207C9C CheckItemEquippedAndActive
   ; r0 - Slot (0 for weapon, 3 for head armor, etc)
   ; r1 - Item index
   ; Will return true if either player 1 or player 2 have this item equipped, but only if your partner is called out. If your partner is hidden away, only the controlled character's equipment matters.
   ; This is used for Eye for Decay.
+02214E9C ???PlayerSkill
+  ; r0 - Pointer to a player entity
+  ; Gets the skill index of the given player's currently equipped skill, and then does something with it. This is called when you use a skill, and called constantly as Charlotte is charging up a spell.
+  ; Then returns true or false.
 
 021FC77C PlayerFullRecover
   ; Fully restores player HP and MP.

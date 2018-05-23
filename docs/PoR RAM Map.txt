@@ -509,7 +509,8 @@ F5-F5  021115E0-0211173F  ?
   20 - Currently in the middle of fighting Whip's Memory.
   21 - Already attempted to defeat Whip's Memory once and failed.
   23 - Whip's Memory defeated.
-02111BB8-02111BE7 - Bitfield of pickup flags.
+02111BB8-02111BEB - Bitfield of pickup flags.
+  Valid pickup flags range from 0 to 19F.
 
 02111BF0,4 - Bit 0x1 must be set in order to use magical tickets. It's set when you first enter the shop.
 

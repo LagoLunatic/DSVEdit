@@ -1116,6 +1116,8 @@
 0221AE10 Object16Update
 0221AFD0 Object17Create
 0221B040 Object17Update
+0221A408 RedGoldOrBlueChestCreate
+0221A53C ChestUpdate
 022C2004 Object18Create
 022C21E0 Object18Update
 022C3B2C Object19Create

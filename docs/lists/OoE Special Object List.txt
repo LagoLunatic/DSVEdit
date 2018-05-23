@@ -61,6 +61,7 @@ Special Objects:
   The item in this chest is randomized when you enter the area from the world map. The item pool used for each area can be changed in the Item Pool Editor.
   Will appear as a sparkling green chest if the item inside is was selected from a rare item pool.
   Var A: The unique ID of this chest in the area. Can be from 0-B.
+  Chests 0-B use pickup flags 180-18B respectively, in order to temporarily keep track of whether each chest has been opened or not.
   For item pools 8 and 9, chest 0 is guaranteed to be a rare chest.
   For item pool A, no chests can be rare chests.
   Otherwise, the chance for each chest to be rare is:
@@ -196,7 +197,7 @@ Special Objects:
   Var A:
     0 Spawns four Spear Guards if the player gets caught.
     1 Takes control away from the player and wakes up the Giant Skeleton. (If he's not in the room the game will softlock.)
-    2 Spawns a Tin Man if the player gets caught.
+    2 Spawns a Tin Man if the player gets caught. Killing this Tin Man spawns a blue chest with the Strength Ring in it.
     3 Spawns an Evil Force if the player gets caught.
 3F Cat.
   Var A: Which cat it is:
