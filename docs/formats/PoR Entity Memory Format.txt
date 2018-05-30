@@ -31,6 +31,7 @@ Memory used for entities in PoR is 020FC500 - 0211173F. Each entity is 0x160 byt
   0004 Enable rotation.
   0020 
   0080 Direction. Set if facing left, clear if facing right.
+  0100 
   8000 
 078,4: Pointer to sprite animation list.
 07C,2: Current animation index.

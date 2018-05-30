@@ -211,6 +211,7 @@ Special Objects:
     02 Crouched/standing, meowing. Can be picked up.
 40 The falling block puzzle from the Monastery that spawns the Cubus Glyph.
   Requires sector overlay 78.
+  Clearing out all these falling blocks spawns a blue chest with the Justice Ring in it.
 41 Object that floats (supposed to be in the water). Var A changes what it is:
   00 Log platform
   01 Crate platform

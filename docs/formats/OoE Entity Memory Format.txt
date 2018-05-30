@@ -82,10 +82,14 @@ For enemies:
 124,2: Bitfield of ???
   0001 - Does not deal or take damage.
   0080 - Initial
+  1000 - If set, the palette offset at 131,1 will be used as this enemy's palette offset when it is dying.
   20C2 - hit?
   20C6 - petrified?
 126,1: For enemies, has the petrified palette index from the enemy DNA.
 12A,2: The magical defense value from the enemy DNA.
+12E,2: Palette to use when dying?? (index in the list of globally loaded palettes).
+130,1: Palette offset?
+131,1: Palette offset?
 138,2: The attack value from the enemy DNA.
 13A,2: The physical defense value from the enemy DNA.
 

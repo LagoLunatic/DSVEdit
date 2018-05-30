@@ -278,6 +278,9 @@
   ; Spawns a glyph, but doesn't load the assets for the glyph's icon first.
   ; Same arguments as GlyphSpawn
 
+0205C618 EnemyCheckDrops
+  ; r0 - Enemy entity
+
 0206DF34 EnemyCheckGlyphDrop
   ; Checks if the random chance to drop a glyph is met, and spawns the glyph if it is.
   ; r0 - x pos in subpixels
@@ -521,6 +524,8 @@
   ; Gives EXP
 0205C930 EnemyDie2?
   ; Calls EnemyDie
+0205C3D0 Enemy???
+  ; r0 - Enemy entity
 
 0205CC48 EnemySetDefenses
   ; r0 - Enemy entity
