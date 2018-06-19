@@ -604,6 +604,14 @@ F5-F5  021115E0-0211173F  ?
   02111FE2,2 - Unused?
   02111FE4,4 - Bitfield of resistances.
 02111FE8 - Player 1's bonus stats.
+  02111FE8,2 - Bonus ATK
+  02111FEA,2 - Bonus DEF
+  02111FEC,2 - Bonus STR
+  02111FEE,2 - Bonus CON
+  02111FF0,2 - Bonus INT
+  02111FF2,2 - Bonus MND
+  02111FF4,2 - Bonus LCK
+  02111FF6,2 - Unused?
   02111FF8,4 - Not bonus resistances, instead this is 0 or 1 to indicate whether any bonuses are active.
 02111FFC - Player 2's current base stats.
 02112010 - Player 2's current stats.

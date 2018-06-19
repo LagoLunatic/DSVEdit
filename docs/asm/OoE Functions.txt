@@ -386,7 +386,7 @@
 0205BDBC CalcDamageToEnemy
   ; Calculates the damage a player/player skill should do to an enemy.
   ; r0 - Enemy entity taking damage (entity+0xA4 pointer)
-  ; r1 - Player/player weapon/player skill entity dealing damage (entity+0xA4 pointer)
+  ; r1 - Player/player skill entity dealing damage (entity+0xA4 pointer)
   ; r2 - Pointer to ?? on the stack
 
 0205DDB4 EntityMoveToFloor
