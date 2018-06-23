@@ -30,6 +30,22 @@ Each part is 0xC bytes long.
   0B,1: Affects palette?
     If the lowest bit of this value is set, then it changes the palette of this part, but only if the entity has the lowest bit of the value at entity+62 set as well.
 
+List of hitboxes:
+Each hitbox is 4 bytes long.
+ 00,1: X pos (signed).
+ 01,1: Y pos (signed).
+ 02,1: Width.
+ 03,1: Height.
+
+List of sprite frames:
+Each frame is 0x10 bytes long.
+  00,4: 00 00 00 00
+  04,1: The number of hitboxes this frame has.
+  05,1: The number of parts this frame has.
+  06,2: 00 00
+  08,4: Pointer to the first hitbox to use. 0 if this frame has 0 hitboxes.
+  0C,4: Pointer to the first part to use.
+
 Animations:
 Each animation is 0x4 bytes long.
   00,1: Number of frames in this animation.
