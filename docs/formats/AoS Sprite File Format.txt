@@ -32,10 +32,10 @@ Each part is 0xC bytes long.
 
 List of hitboxes:
 Each hitbox is 4 bytes long.
- 00,1: X pos (signed).
- 01,1: Y pos (signed).
- 02,1: Width.
- 03,1: Height.
+  00,1: X pos (signed).
+  01,1: Y pos (signed).
+  02,1: Width.
+  03,1: Height.
 
 List of sprite frames:
 Each frame is 0x10 bytes long.

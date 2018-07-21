@@ -88,7 +88,13 @@
   ;   2 - Weapon
 
 08021654 DamagePlayer
-  ; r0 - Pointer to ??? in the stack.
+  ; r0 - Pointer to a number of arguments in the stack.
+  ; [r0,0] - Enemy's attack value (halfword)
+  ; [r0,2] - Bitfield of damage types for this attack to do (halfword)
+  ; [r0,4] - ??? (halfword)
+  ; [r0,6] - ??? (halfword)
+  ; [r0,8] - X pos of the attack in subpixels (word)
+  ; [r0,0xC] - Y pos of the attack in subpixels (word)
 
 080421AC CheckCollisions
   ; r0 - Entity
