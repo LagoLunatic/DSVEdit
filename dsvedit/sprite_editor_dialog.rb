@@ -317,7 +317,7 @@ class SpriteEditor < Qt::Dialog
     
     @override_part_palette_index = 0 # Weapons always use the first palette. Instead the part's palette index value is used to indicate that it should start out partially transparent.
     @one_dimensional_render_mode = false
-    @transparent_trails = true
+    @transparent_trails = false
     load_sprite()
     
     @ui.weapon_list.setCurrentRow(weapon_gfx_index)
