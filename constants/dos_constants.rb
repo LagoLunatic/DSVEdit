@@ -279,7 +279,7 @@ REUSED_ENEMY_INFO = {
   # palette_list_ptr_index: The reused enemy uses a completely different palette list from the original. This value is which one to use.
   0x1A => {init_code: 0x0223266C, gfx_sheet_ptr_index: 0, palette_offset: 2, palette_list_ptr_index: 0}, # ghoul and zombie
   0x4D => {init_code:        nil, gfx_sheet_ptr_index: 0, palette_offset: 0, palette_list_ptr_index: 1}, # gorgon and catoblepas
-  0x54 => {init_code: 0x02270704, gfx_sheet_ptr_index: 0, palette_offset: 1, palette_list_ptr_index: 0, sprite_ptr_index: 1}, # erinys and valkyrie
+  0x54 => {init_code: 0x02270704, gfx_sheet_ptr_index: 0, palette_offset: 0, palette_list_ptr_index: 1, sprite_ptr_index: 1}, # erinys and valkyrie
   0x5C => {init_code: 0x02288FBC, gfx_sheet_ptr_index: 0, palette_offset: 0, palette_list_ptr_index: 0}, # tanjelly and slime
   0x5B => {init_code: 0x022FF9F0, gfx_sheet_ptr_index: 1, palette_offset: 0, palette_list_ptr_index: 1, sprite_ptr_index: 1}, # flame demon and devil
   0x5D => {init_code:        nil, gfx_sheet_ptr_index: 2, palette_offset: 0, palette_list_ptr_index: 2, sprite_ptr_index: 2}, # arc demon and devil
