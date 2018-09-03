@@ -284,6 +284,11 @@ class Sprite
       fs.write(offset, frame_delay.to_data)
     end
     
+    if @animation_list_offset == 0 && @animations.length > 0
+      # Sprites that originally had no animations won't have an animation list pointer either, so we need to create one.
+      @animation_list_offset = fs.get_free_space(@animations.length*Animation.data_size, nil)
+    end
+    
     offset = @animation_list_offset
     @animations.each do |animation|
       fs.write(offset, animation.to_data)
@@ -293,6 +298,25 @@ class Sprite
         # On GBA the frame delays come right after the animation itself, rather than being pointed to separately.
         offset += FrameDelay.data_size*animation.number_of_frames
       end
+    end
+    
+    if SYSTEM == :nds
+      header_data = [
+        @number_of_frames,
+        @number_of_animations,
+        @frame_list_offset,
+        @animation_list_offset,
+      ].pack("vvVV")
+      fs.write(sprite_pointer, header_data)
+    else
+      header_data = [
+        @number_of_frames,
+        @number_of_animations,
+        @frame_list_offset,
+        unknown,
+        @animation_list_offset,
+      ].pack("vvVVV")
+      fs.write(sprite_pointer, header_data)
     end
   end
   
