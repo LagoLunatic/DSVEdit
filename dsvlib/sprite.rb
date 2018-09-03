@@ -302,9 +302,13 @@ class Sprite
         fs.free_unused_space(offset, Part.data_size)
       end
       @parts_by_offset = {}
-      @parts.each do |part|
-        offset = fs.get_free_space(Part.data_size, nil)
-        @parts_by_offset[offset] = part
+      if @parts.length > 0
+        part_list_offset = fs.get_free_space(@parts.length*Part.data_size, nil)
+        offset = part_list_offset
+        @parts.each do |part|
+          @parts_by_offset[offset] = part
+          offset += Part.data_size
+        end
       end
     end
     
@@ -318,9 +322,13 @@ class Sprite
         fs.free_unused_space(offset, Hitbox.data_size)
       end
       @hitboxes_by_offset = {}
-      @hitboxes.each do |hitbox|
-        offset = fs.get_free_space(Hitbox.data_size, nil)
-        @hitboxes_by_offset[offset] = hitbox
+      if @hitboxes.length > 0
+        hitbox_list_offset = fs.get_free_space(@hitboxes.length*Hitbox.data_size, nil)
+        offset = hitbox_list_offset
+        @hitboxes.each do |hitbox|
+          @hitboxes_by_offset[offset] = hitbox
+          offset += Hitbox.data_size
+        end
       end
     end
     
