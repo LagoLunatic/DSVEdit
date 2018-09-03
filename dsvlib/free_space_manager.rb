@@ -241,6 +241,10 @@ module FreeSpaceManager
   end
   
   def get_free_space(length_needed, overlay_id = nil)
+    if length_needed <= 0
+      raise FreeSpaceFindError.new("Invalid free space length to find: #{length_needed}")
+    end
+    
     files_to_check = []
     
     if SYSTEM == :nds
