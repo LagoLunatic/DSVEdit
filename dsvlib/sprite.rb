@@ -102,7 +102,7 @@ class Sprite
     if SYSTEM == :nds
       @number_of_frames, @number_of_animations, @frame_list_offset, @animation_list_offset = fs.read(sprite_pointer, 12).unpack("vvVV")
     else
-      @number_of_frames, @number_of_animations, @frame_list_offset, unknown, @animation_list_offset = fs.read(sprite_pointer, 16).unpack("vvVVV")
+      @number_of_frames, @number_of_animations, @frame_list_offset, @unknown, @animation_list_offset = fs.read(sprite_pointer, 16).unpack("vvVVV")
     end
     
     @frames = []
@@ -417,7 +417,7 @@ class Sprite
         @number_of_frames,
         @number_of_animations,
         @frame_list_offset,
-        unknown,
+        @unknown,
         @animation_list_offset,
       ].pack("vvVVV")
       fs.write(sprite_pointer, header_data)
