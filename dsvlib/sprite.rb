@@ -168,7 +168,9 @@ class Sprite
         offset = animation.first_frame_delay_offset
         animation.number_of_frames.times do
           frame_delay_data = fs.read(offset, FrameDelay.data_size)
-          @frame_delays_by_offset[offset] ||= FrameDelay.new.from_data(frame_delay_data)
+          frame_delay = FrameDelay.new.from_data(frame_delay_data)
+          @frame_delays_by_offset[offset] ||= frame_delay
+          @frame_delays << frame_delay
           
           offset += FrameDelay.data_size
         end
