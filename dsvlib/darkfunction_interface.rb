@@ -293,15 +293,11 @@ class DarkFunctionInterface
         unanimated_frame_index = $1.to_i(16)
         
         df_cell = df_anim.css("cell").first
-        frame, this_frames_parts, this_frames_hitboxes, this_frames_unique_part_and_hitbox_strs = import_frame(
+        frame, this_frames_unique_part_and_hitbox_strs = import_frame(
           df_cell, df_unique_parts, gfx_page_width_with_padding, big_gfx_page_width, num_gfx_pages, gfx_page_canvas_width
         )
         sprite.frames[unanimated_frame_index] = frame
-        all_created_frames[unanimated_frame_index] = {
-          frame: frame,
-          frame_parts: this_frames_parts,
-          frame_hitboxes: this_frames_hitboxes
-        }
+        all_created_frames[unanimated_frame_index] = frame
         each_frames_unique_part_and_hitbox_strs[unanimated_frame_index] = this_frames_unique_part_and_hitbox_strs
       end
     end
@@ -312,7 +308,6 @@ class DarkFunctionInterface
       next unless animated
       
       animation = Animation.new
-      animation.first_frame_delay_offset = sprite.frame_delays.size*FrameDelay.data_size
       sprite.animations << animation
       
       df_cells = df_anim.css("cell")
@@ -320,9 +315,9 @@ class DarkFunctionInterface
         frame_delay = FrameDelay.new
         frame_delay.delay = df_cell["delay"].to_i
         sprite.frame_delays << frame_delay
-        animation.number_of_frames += 1
+        animation.frame_delays << frame_delay
         
-        frame, this_frames_parts, this_frames_hitboxes, this_frames_unique_part_and_hitbox_strs = import_frame(
+        frame, this_frames_unique_part_and_hitbox_strs = import_frame(
           df_cell, df_unique_parts, gfx_page_width_with_padding, big_gfx_page_width, num_gfx_pages, gfx_page_canvas_width
         )
         
@@ -343,31 +338,22 @@ class DarkFunctionInterface
           frame_delay.frame_index = frame_index
           
           sprite.frames[frame_index] = frame
-          all_created_frames[frame_index] = {
-            frame: frame,
-            frame_parts: this_frames_parts,
-            frame_hitboxes: this_frames_hitboxes
-          }
+          all_created_frames[frame_index] = frame
           each_frames_unique_part_and_hitbox_strs[frame_index] = this_frames_unique_part_and_hitbox_strs
         end
       end
     end
     
-    all_created_frames.each_with_index do |data, i|
-      if data.nil?
+    all_created_frames.each_with_index do |frame, i|
+      if frame.nil?
         # A blank spot caused by the user reducing the number of frames, but an unanimated frame remaining that we have to keep in place.
         # Create a dummy frame to get rid of the blank spot.
         frame_index = i
         frame = Frame.new
         sprite.frames[frame_index] = frame
       else
-        frame = data[:frame]
-        this_frames_parts = data[:frame_parts]
-        this_frames_hitboxes = data[:frame_hitboxes]
-        frame.first_part_offset = sprite.parts.size*Part.data_size
-        frame.first_hitbox_offset = sprite.hitboxes.size*Hitbox.data_size
-        sprite.parts.concat(this_frames_parts)
-        sprite.hitboxes.concat(this_frames_hitboxes)
+        sprite.parts.concat(frame.parts)
+        sprite.hitboxes.concat(frame.hitboxes)
       end
     end
     
@@ -378,15 +364,12 @@ class DarkFunctionInterface
     frame = Frame.new
     
     this_frames_unique_part_and_hitbox_strs = []
-    this_frames_parts = []
-    this_frames_hitboxes = []
     
     df_sprs = df_cell.css("spr")
     df_sprs_z_sorted = df_sprs.sort_by{|df_spr| df_spr["z"].to_i}
     df_sprs_z_sorted.each do |df_spr|
       if df_spr["name"].start_with?("/hitbox")
         hitbox = Hitbox.new
-        frame.number_of_hitboxes += 1
         
         df_unique_hitbox = df_unique_parts[df_spr["name"]]
         if df_unique_hitbox.nil?
@@ -398,11 +381,10 @@ class DarkFunctionInterface
         hitbox.x_pos = df_spr["x"].to_i - hitbox.width/2
         hitbox.y_pos = df_spr["y"].to_i - hitbox.height/2
         
-        this_frames_hitboxes << hitbox
+        frame.hitboxes << hitbox
         this_frames_unique_part_and_hitbox_strs << hitbox.to_data
       else
         part = Part.new
-        frame.number_of_parts += 1
         
         df_unique_part = df_unique_parts[df_spr["name"]]
         if df_unique_part.nil?
@@ -432,11 +414,11 @@ class DarkFunctionInterface
         part.horizontal_flip = (df_spr["flipH"].to_i == 1)
         part.vertical_flip = (df_spr["flipV"].to_i == 1)
         
-        this_frames_parts << part
+        frame.parts << part
         this_frames_unique_part_and_hitbox_strs << part.to_data
       end
     end
     
-    return [frame, this_frames_parts, this_frames_hitboxes, this_frames_unique_part_and_hitbox_strs]
+    return [frame, this_frames_unique_part_and_hitbox_strs]
   end
 end

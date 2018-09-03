@@ -209,6 +209,24 @@ class Sprite
     @frame_list_offset = offset
     @number_of_frames = @frames.length
     @frames.each do |frame|
+      frame.number_of_parts = frame.parts.length
+      frame.number_of_hitboxes = frame.hitboxes.length
+      
+      if frame.parts.length == 0
+        frame.first_part_offset = 0
+      else
+        first_part = frame.parts[0]
+        first_part_index = @parts.index(first_part)
+        frame.first_part_offset = first_part_index*Part.data_size
+      end
+      if frame.hitboxes.length == 0
+        frame.first_hitbox_offset = 0
+      else
+        first_hitbox = frame.hitboxes[0]
+        first_hitbox_index = @hitboxes.index(first_hitbox)
+        frame.first_hitbox_offset = first_hitbox_index*Hitbox.data_size
+      end
+      
       new_data << frame.to_data
       offset += 12
     end
@@ -222,6 +240,16 @@ class Sprite
     @animation_list_offset = offset
     @number_of_animations = @animations.length
     @animations.each do |animation|
+      animation.number_of_frames = animation.frame_delays.length
+      
+      if animation.frame_delays.length == 0
+        animation.first_frame_delay_offset = 0
+      else
+        first_frame_delay = animation.frame_delays[0]
+        first_frame_delay_index = @frame_delays.index(first_frame_delay)
+        animation.first_frame_delay_offset = first_frame_delay_index*FrameDelay.data_size
+      end
+      
       new_data << animation.to_data
       offset += 8
     end
@@ -268,8 +296,32 @@ class Sprite
   end
   
   def write_to_rom_by_pointer
+    if @parts_by_offset.values != @parts
+      # If parts were added/removed, we need to free the space used by the original parts, then get new free space for the new parts.
+      @parts_by_offset.each do |offset, part|
+        fs.free_unused_space(offset, Part.data_size)
+      end
+      @parts_by_offset = {}
+      @parts.each do |part|
+        offset = fs.get_free_space(Part.data_size, nil)
+        @parts_by_offset[offset] = part
+      end
+    end
+    
     @parts_by_offset.each do |offset, part|
       fs.write(offset, part.to_data)
+    end
+    
+    if @hitboxes_by_offset.values != @hitboxes
+      # If hitboxes were added/removed, we need to free the space used by the original hitboxes, then get new free space for the new hitboxes.
+      @hitboxes_by_offset.each do |offset, hitbox|
+        fs.free_unused_space(offset, Hitbox.data_size)
+      end
+      @hitboxes_by_offset = {}
+      @hitboxes.each do |hitbox|
+        offset = fs.get_free_space(Hitbox.data_size, nil)
+        @hitboxes_by_offset[offset] = hitbox
+      end
     end
     
     @hitboxes_by_offset.each do |offset, hitbox|
@@ -277,9 +329,42 @@ class Sprite
     end
     
     offset = @frame_list_offset
+    @number_of_frames = @frames.length
     @frames.each do |frame|
+      frame.number_of_parts = frame.parts.length
+      frame.number_of_hitboxes = frame.hitboxes.length
+      
+      if frame.parts.length == 0
+        frame.first_part_offset = 0
+      else
+        first_part = frame.parts[0]
+        frame.first_part_offset = @parts_by_offset.invert[first_part]
+      end
+      if frame.hitboxes.length == 0
+        frame.first_hitbox_offset = 0
+      else
+        first_hitbox = frame.hitboxes[0]
+        frame.first_hitbox_offset = @hitboxes_by_offset.invert[first_hitbox]
+      end
+      
       fs.write(offset, frame.to_data)
       offset += Frame.data_size
+    end
+    
+    if @frame_delays_by_offset.values != @frame_delays
+      # If frame delays were added/removed, we need to free the space used by the original frame delays, then get new free space for the new frame delays.
+      @frame_delays_by_offset.each do |offset, frame_delay|
+        fs.free_unused_space(offset, FrameDelay.data_size)
+      end
+      @frame_delays_by_offset = {}
+      if @frame_delays.length > 0
+        frame_delay_list_offset = fs.get_free_space(@frame_delays.length*FrameDelay.data_size, nil)
+        offset = frame_delay_list_offset
+        @frame_delays.each do |frame_delay|
+          @frame_delays_by_offset[offset] = frame_delay
+          offset += FrameDelay.data_size
+        end
+      end
     end
     
     @frame_delays_by_offset.each do |offset, frame_delay|
@@ -293,6 +378,15 @@ class Sprite
     
     offset = @animation_list_offset
     @animations.each do |animation|
+      animation.number_of_frames = animation.frame_delays.length
+      
+      if animation.frame_delays.length == 0
+        animation.first_frame_delay_offset = 0
+      else
+        first_frame_delay = animation.frame_delays[0]
+        animation.first_frame_delay_offset = @frame_delays_by_offset.invert[first_frame_delay]
+      end
+      
       fs.write(offset, animation.to_data)
       offset += Animation.data_size
       
