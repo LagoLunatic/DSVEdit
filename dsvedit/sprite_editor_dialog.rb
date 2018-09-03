@@ -895,6 +895,14 @@ class SpriteEditor < Qt::Dialog
   def export_to_darkfunction
     return if @sprite.nil?
     
+    if GAME == "hod"
+      Qt::MessageBox.warning(self,
+        "Cannot edit HoD sprites in darkFunction",
+        "Editing HoD sprites in darkFunction is not currently supported."
+      )
+      return
+    end
+    
     output_folder = "./darkfunction_sprites/#{sprite_name}"
     FileUtils.mkdir_p(output_folder)
     
@@ -920,6 +928,14 @@ class SpriteEditor < Qt::Dialog
   
   def import_from_darkfunction
     return if @sprite.nil?
+    
+    if GAME == "hod"
+      Qt::MessageBox.warning(self,
+        "Cannot edit HoD sprites in darkFunction",
+        "Editing HoD sprites in darkFunction is not currently supported."
+      )
+      return
+    end
     
     folder = "./darkfunction_sprites/#{sprite_name}"
     
