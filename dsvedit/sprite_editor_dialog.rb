@@ -362,7 +362,7 @@ class SpriteEditor < Qt::Dialog
     @one_dimensional_render_mode = false
     if GAME == "ooe"
       skill_item = @skill_items_for_each_gfx_index[skill_gfx_index].first
-      if skill_item["Code"] == MELEE_GLYPH_CODE && (skill_item["Unknown 4"] & 0x40) == 0
+      if skill_item && skill_item["Code"] == MELEE_GLYPH_CODE && (skill_item["Unknown 4"] & 0x40) == 0
         @transparent_trails = true
       else
         @transparent_trails = false
