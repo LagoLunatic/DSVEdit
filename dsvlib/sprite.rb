@@ -434,6 +434,7 @@ class Sprite
     end
     
     offset = @animation_list_offset
+    @number_of_animations = @animations.length
     @animations.each do |animation|
       animation.number_of_frames = animation.frame_delays.length
       
