@@ -424,6 +424,9 @@ class Part
         @palette_index = @unused = 0
     @vertical_flip = false
     @horizontal_flip = false
+    if SYSTEM == :gba
+      @unknown = @object_size_and_shape = 0
+    end
   end
   
   def from_data(part_data)
