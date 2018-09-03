@@ -934,7 +934,7 @@ class SpriteEditor < Qt::Dialog
     DarkFunctionInterface.import(folder, sprite_name, @sprite_info, @fs, @renderer)
     
     reload_sprite()
-  rescue DarkFunctionInterface::ImportError => e
+  rescue DarkFunctionInterface::ImportError, Sprite::SaveError => e
     Qt::MessageBox.warning(self,
       "Failed to import from darkFunction",
       e.message

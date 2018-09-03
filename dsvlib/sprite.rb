@@ -584,7 +584,15 @@ class Part
                 :vertical_flip,
                 :horizontal_flip,
                 :palette_index,
-                :unused
+                :unused,
+                :object_size,
+                :object_shape
+  
+  OBJ_SIZES = {
+    0 => [[8, 8], [16, 16], [32, 32], [64, 64]], # Square
+    1 => [[16, 8], [32, 8], [32, 16], [64, 32]], # Horizontal
+    2 => [[8, 16], [8, 32], [16, 32], [32, 64]], # Vertical
+  }
   
   def initialize
     @x_pos = @y_pos =
@@ -613,28 +621,17 @@ class Part
       @x_pos, @y_pos,
         @unknown, @gfx_x_offset, @gfx_y_offset,
         @width, @height,
-        @object_size_and_shape, @gfx_page_index,
+        object_size_and_shape, @gfx_page_index,
         flip_bits, @unused = part_data.unpack("ccvCCCCCCCC")
       
       @palette_index = 0
       
-      # TODO: when saving, update object size and shape as well.
-      object_size  = (@object_size_and_shape & 0x30) >> 4
-      object_shape =  @object_size_and_shape & 0x03
-      possible_sizes = {
-        square: [[8, 8], [16, 16], [32, 32], [64, 64]],
-        horizontal: [[16, 8], [32, 8], [32, 16], [64, 32]],
-        vertical: [[8, 16], [8, 32], [16, 32], [32, 64]],
-      }
-      shape_name = case object_shape
-      when 0
-        :square
-      when 1
-        :horizontal
-      when 2
-        :vertical
+      @object_size  = (object_size_and_shape & 0x30) >> 4
+      @object_shape =  object_size_and_shape & 0x03
+      size = OBJ_SIZES[@object_shape][@object_size]
+      if size != [@width, @height]
+        puts "Warning: Read a GBA part with an object size that does not match its actual size. This part will not display correctly ingame. Actual size: #{@width}x#{@height}, object size: #{size[0]}x#{size[1]}"
       end
-      size = possible_sizes[shape_name][object_size]
       
       @vertical_flip   = (flip_bits & 0b00000001) > 0
       @horizontal_flip = (flip_bits & 0b00000010) > 0
@@ -661,7 +658,23 @@ class Part
         @palette_index,
         @unused
       ].pack("s<s<vvvvCCCC")
-    else
+    else # GBA
+      @object_shape = nil
+      @object_size = nil
+      OBJ_SIZES.each do |obj_shape, possible_sizes|
+        size_index = possible_sizes.index([@width, @height])
+        if !size_index.nil?
+          @object_shape = obj_shape
+          @object_size = size_index
+          break
+        end
+      end
+      if @object_shape.nil?
+        valid_sizes_string = OBJ_SIZES.values.flatten(1).map{|w,h| "#{w}x#{h}"}.join(", ")
+        raise Sprite::SaveError.new("Invalid size for a sprite part on GBA: #{@width}x#{@height}\nValid sizes are: #{valid_sizes_string}")
+      end
+      object_size_and_shape = ((@object_size&3) << 4) | (@object_shape&3)
+      
       [
         @x_pos,
         @y_pos,
@@ -670,7 +683,7 @@ class Part
         @gfx_y_offset,
         @width,
         @height,
-        @object_size_and_shape,
+        object_size_and_shape,
         @gfx_page_index,
         flip_bits,
         @unused
