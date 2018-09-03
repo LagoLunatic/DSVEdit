@@ -895,14 +895,6 @@ class SpriteEditor < Qt::Dialog
   def export_to_darkfunction
     return if @sprite.nil?
     
-    if @sprite.sprite_file.nil?
-      Qt::MessageBox.warning(self,
-        "Sprite has no file",
-        "This sprite is hardcoded and has no standalone sprite file.\nCannot export/import this sprite."
-      )
-      return
-    end
-    
     output_folder = "./darkfunction_sprites/#{sprite_name}"
     FileUtils.mkdir_p(output_folder)
     
@@ -921,14 +913,6 @@ class SpriteEditor < Qt::Dialog
   
   def import_from_darkfunction
     return if @sprite.nil?
-    
-    if @sprite.sprite_file.nil?
-      Qt::MessageBox.warning(self,
-        "Sprite has no file",
-        "This sprite is hardcoded and has no standalone sprite file.\nCannot export/import this sprite."
-      )
-      return
-    end
     
     folder = "./darkfunction_sprites/#{sprite_name}"
     
