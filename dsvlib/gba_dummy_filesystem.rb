@@ -7,12 +7,14 @@ class GBADummyFilesystem
   
   include FreeSpaceManager
   
-  attr_reader :rom
+  attr_reader :rom,
+              :files_by_path
   
   def open_directory(filesystem_directory)
     @filesystem_directory = filesystem_directory
     input_rom_path = File.join(@filesystem_directory, "rom.gba")
     @rom = File.open(input_rom_path, "rb") {|file| file.read}
+    initialize_files_by_path()
     read_free_space_from_text_file()
     read_original_compressed_sizes_from_text_file()
   end
@@ -20,6 +22,7 @@ class GBADummyFilesystem
   def open_and_extract_rom(input_rom_path, filesystem_directory)
     @filesystem_directory = filesystem_directory
     @rom = File.open(input_rom_path, "rb") {|file| file.read}
+    initialize_files_by_path()
     extract_to_hard_drive()
     read_free_space_from_text_file()
     read_original_compressed_sizes_from_text_file()
@@ -28,6 +31,7 @@ class GBADummyFilesystem
   def open_rom(input_rom_path)
     @filesystem_directory = nil
     @rom = File.open(input_rom_path, "rb") {|file| file.read}
+    initialize_files_by_path()
   end
   
   def extract_to_hard_drive
@@ -245,9 +249,8 @@ class GBADummyFilesystem
     return ["/rom.gba", convert_address(address)]
   end
   
-  def files_by_path
-    # Dummy function for the FSM.
-    @files_by_path ||= {"/rom.gba" => {:name => "rom.gba", :type => :file, :start_offset => 0, :end_offset => 0 + @rom.size, :ram_start_offset => 0x08000000, :size => @rom.size, :file_path => "/rom.gba"}}
+  def initialize_files_by_path
+    @files_by_path = {"/rom.gba" => {:name => "rom.gba", :type => :file, :start_offset => 0, :end_offset => 0 + @rom.size, :ram_start_offset => 0x08000000, :size => @rom.size, :file_path => "/rom.gba"}}
   end
   
   def is_pointer?(value)
