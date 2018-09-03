@@ -3,8 +3,9 @@ Sprite header format:
 00,2: Number of frames this sprite has.
 02,2: Number of animations this sprite has.
 04,4: Pointer to the start of the list of the sprite's frames.
-08,4: Pointer to the start of the list of the sprite's animations?
-0C,4: Pointer to the start of the list of ??? that affects the sprite's animation?
+08,4: Pointer to the start of the this sprite's first animation.
+  If this sprite has no animations, this is just a pointer back to this sprite header instead.
+0C,4: Pointer to the start of the list of pointers to each of the sprite's animations.
 
 Sprite parts:
 Each part is 0xC bytes long.

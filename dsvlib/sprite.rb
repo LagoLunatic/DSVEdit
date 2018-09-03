@@ -102,7 +102,7 @@ class Sprite
     if SYSTEM == :nds
       @number_of_frames, @number_of_animations, @frame_list_offset, @animation_list_offset = fs.read(sprite_pointer, 12).unpack("vvVV")
     else
-      @number_of_frames, @number_of_animations, @frame_list_offset, @unknown, @animation_list_offset = fs.read(sprite_pointer, 16).unpack("vvVVV")
+      @number_of_frames, @number_of_animations, @frame_list_offset, @first_animation_offset, @animation_list_offset = fs.read(sprite_pointer, 16).unpack("vvVVV")
     end
     
     @frames = []
@@ -144,6 +144,7 @@ class Sprite
       frame.initialize_hitboxes_from_pointer(hitboxes, @hitboxes_by_offset)
     end
     
+    @animations_by_offset = {}
     @animations = []
     @frame_delays_by_offset = {}
     @frame_delays = []
@@ -153,10 +154,12 @@ class Sprite
         if SYSTEM == :nds
           animation_data = fs.read(offset, Animation.data_size)
           animation = Animation.new.from_data(animation_data, offset)
+          @animations_by_offset[offset] = animation
         else
           animation_pointer = fs.read(offset, 4).unpack("V").first
           animation_data = fs.read(animation_pointer, Animation.data_size)
           animation = Animation.new.from_data(animation_data, animation_pointer)
+          @animations_by_offset[animation_pointer] = animation
         end
         
         @animations << animation
@@ -286,7 +289,7 @@ class Sprite
       @animation_list_offset,
       0,
       0,
-      file_footer_offset, # file footer offset
+      file_footer_offset,
       @number_of_frames,
       @number_of_animations,
       new_file_size,
@@ -296,6 +299,56 @@ class Sprite
   end
   
   def write_to_rom_by_pointer
+    if @animations_by_offset.values != @animations || (SYSTEM == :gba && @frame_delays_by_offset.values != @frame_delays)
+      # If animations were added/removed, we need to free the space used by the original animations, then get new free space for the new parts.
+      # On GBA, frame delays are stored with their animation, so we also need to move the animations to free space even if only their frame delays were changed.
+      @animations_by_offset.each do |offset, anim|
+        fs.free_unused_space(offset, Animation.data_size)
+      end
+      @animations_by_offset = {}
+      
+      if SYSTEM == :gba
+        @frame_delays_by_offset.each do |offset, frame_delay|
+          fs.free_unused_space(offset, FrameDelay.data_size)
+        end
+        @frame_delays_by_offset = {}
+        
+        if @animations_by_offset.length > 0
+          fs.free_unused_space(@animation_list_offset, @animations_by_offset.length*4)
+        end
+      end
+      
+      if @animations.length > 0
+        if SYSTEM == :gba
+          @animations.each do |anim|
+            anim_offset = fs.get_free_space(Animation.data_size + anim.frame_delays.length*FrameDelay.data_size, nil)
+            @animations_by_offset[anim_offset] = anim
+            offset = anim_offset+Animation.data_size
+            @frame_delays.each do |frame_delay|
+              @frame_delays_by_offset[offset] = frame_delay
+              offset += FrameDelay.data_size
+            end
+          end
+          
+          @animation_list_offset = fs.get_free_space(@animations.length*4, nil)
+        else
+          anim_list_offset = fs.get_free_space(@animations.length*Animation.data_size, nil)
+          offset = anim_list_offset
+          @animations.each do |anim|
+            @animations_by_offset[offset] = anim
+            offset += Animation.data_size
+          end
+          
+          first_anim = @animations[0]
+          first_anim_offset = @animations_by_offset.invert[first_anim]
+          @animation_list_offset = first_anim_offset
+        end
+      else
+        # The number of animations is now 0, so get rid of the animation list pointer.
+        @animation_list_offset = 0
+      end
+    end
+    
     if @parts_by_offset.values != @parts
       # If parts were added/removed, we need to free the space used by the original parts, then get new free space for the new parts.
       @parts_by_offset.each do |offset, part|
@@ -359,8 +412,9 @@ class Sprite
       offset += Frame.data_size
     end
     
-    if @frame_delays_by_offset.values != @frame_delays
+    if @frame_delays_by_offset.values != @frame_delays && SYSTEM == :nds
       # If frame delays were added/removed, we need to free the space used by the original frame delays, then get new free space for the new frame delays.
+      # (This code is only run for NDS because GBA frame delays are stored together with the animation, so they're handled above with animations.)
       @frame_delays_by_offset.each do |offset, frame_delay|
         fs.free_unused_space(offset, FrameDelay.data_size)
       end
@@ -379,11 +433,6 @@ class Sprite
       fs.write(offset, frame_delay.to_data)
     end
     
-    if @animation_list_offset == 0 && @animations.length > 0
-      # Sprites that originally had no animations won't have an animation list pointer either, so we need to create one.
-      @animation_list_offset = fs.get_free_space(@animations.length*Animation.data_size, nil)
-    end
-    
     offset = @animation_list_offset
     @animations.each do |animation|
       animation.number_of_frames = animation.frame_delays.length
@@ -395,12 +444,29 @@ class Sprite
         animation.first_frame_delay_offset = @frame_delays_by_offset.invert[first_frame_delay]
       end
       
-      fs.write(offset, animation.to_data)
-      offset += Animation.data_size
+      if SYSTEM == :gba
+        anim_pointer = @animations_by_offset.invert[animation]
+        fs.write(anim_pointer, animation.to_data)
+        fs.write(offset, [anim_pointer].pack("V"))
+        offset += 4
+      else
+        fs.write(offset, animation.to_data)
+        offset += Animation.data_size
+      end
       
       if SYSTEM == :gba
         # On GBA the frame delays come right after the animation itself, rather than being pointed to separately.
         offset += FrameDelay.data_size*animation.number_of_frames
+      end
+    end
+    
+    if SYSTEM == :gba
+      if @animations.length == 0
+        # If the sprite has no animations, this pointer just points back to the sprite header.
+        @first_animation_offset = @sprite_pointer
+      else
+        first_anim = @animations[0]
+        @first_animation_offset = @animations_by_offset.invert[first_anim]
       end
     end
     
@@ -417,7 +483,7 @@ class Sprite
         @number_of_frames,
         @number_of_animations,
         @frame_list_offset,
-        @unknown,
+        @first_animation_offset,
         @animation_list_offset,
       ].pack("vvVVV")
       fs.write(sprite_pointer, header_data)
@@ -804,7 +870,8 @@ class Animation
     @number_of_frames = @first_frame_delay_offset = 0
     @frame_delays = []
     if SYSTEM == :gba
-      @unknown_1 = @unknown_2 = 0
+      @unknown_1 = 0
+      @unknown_2 = 1
     end
   end
   
