@@ -571,6 +571,8 @@ class Frame
   
   def initialize
     @unknown = @number_of_hitboxes = @number_of_parts = @first_hitbox_offset = @first_part_offset = 0
+    @parts = []
+    @hitboxes = []
     if SYSTEM == :gba
       @unknown_2 = 0
     end
@@ -698,6 +700,7 @@ class Animation
   
   def initialize
     @number_of_frames = @first_frame_delay_offset = 0
+    @frame_delays = []
     if SYSTEM == :gba
       @unknown_1 = @unknown_2 = 0
     end
