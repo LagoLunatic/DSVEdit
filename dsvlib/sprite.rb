@@ -105,12 +105,14 @@ class Sprite
       @number_of_frames, @number_of_animations, @frame_list_offset, @first_animation_offset, @animation_list_offset = fs.read(sprite_pointer, 16).unpack("vvVVV")
     end
     
+    @frames_by_offset = {}
     @frames = []
     offset = frame_list_offset
     number_of_frames.times do
       frame_data = fs.read(offset, Frame.data_size)
       frame = Frame.new.from_data(frame_data)
       @frames << frame
+      @frames_by_offset[offset] = frame
       
       offset += Frame.data_size
     end
@@ -387,6 +389,24 @@ class Sprite
     
     @hitboxes_by_offset.each do |offset, hitbox|
       fs.write(offset, hitbox.to_data)
+    end
+    
+    if @frames_by_offset.values != @frames
+      @frames_by_offset.each do |offset, frame|
+        fs.free_unused_space(offset, Frame.data_size)
+      end
+      @frames_by_offset = {}
+      if @frames.length > 0
+        @frame_list_offset = fs.get_free_space(@frames.length*Frame.data_size, nil)
+        offset = @frame_list_offset
+        @frames.each do |frame|
+          @frames_by_offset[offset] = frame
+          offset += Frame.data_size
+        end
+      else
+        # The number of frames is 0, so get rid of the frame list pointer.
+        @frame_list_offset = 0
+      end
     end
     
     offset = @frame_list_offset
