@@ -7,7 +7,7 @@ class DarkFunctionInterface
   
   PADDING = 4
   
-  def self.export(output_path, name, sprite_info, fs, renderer, transparent_trails: false)
+  def self.export(output_path, name, sprite_info, fs, renderer, transparent_trails: false, one_dimensional_mode: false)
     sprite = sprite_info.sprite
     
     palettes = renderer.generate_palettes(sprite_info.palette_pointer, 16)
@@ -54,7 +54,11 @@ class DarkFunctionInterface
     big_gfx_page = ChunkyPNG::Image.new(big_gfx_page_width_px, big_gfx_page_height_px)
     palettes.each_with_index do |palette, palette_index|
       sprite_info.gfx_pages.each_with_index do |gfx_page, gfx_page_index|
-        chunky_gfx_page = renderer.render_gfx_page(gfx_page.file, palette, gfx_page.canvas_width)
+        if one_dimensional_mode
+          chunky_gfx_page = renderer.render_gfx_1_dimensional_mode(gfx_page, palette)
+        else
+          chunky_gfx_page = renderer.render_gfx_page(gfx_page.file, palette, gfx_page.canvas_width)
+        end
         
         i = gfx_page_index + (palette_index*big_gfx_page_width)
         x_on_big_gfx_page = (i % big_gfx_page_width) * gfx_page_width_with_padding

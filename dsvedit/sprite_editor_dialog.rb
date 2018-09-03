@@ -898,7 +898,14 @@ class SpriteEditor < Qt::Dialog
     output_folder = "./darkfunction_sprites/#{sprite_name}"
     FileUtils.mkdir_p(output_folder)
     
-    DarkFunctionInterface.export(output_folder, sprite_name, @sprite_info, @fs, @renderer, transparent_trails: @transparent_trails)
+    DarkFunctionInterface.export(
+      output_folder,
+      sprite_name,
+      @sprite_info,
+      @fs, @renderer,
+      transparent_trails: @transparent_trails,
+      one_dimensional_mode: @one_dimensional_render_mode || SYSTEM == :gba,
+    )
     
     Qt::MessageBox.warning(self,
       "Exported to darkFunction",
