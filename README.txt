@@ -169,6 +169,6 @@ If you want to run the latest development version of DSVEdit from source, follow
 * Obtain DSVEdit's source code from GitHub: https://github.com/LagoLunatic/DSVEdit
 * Open the DSVEdit folder in a command prompt and run "gem install bundler" followed by "bundle install".
 * Run build_ui to compile DSVEdit's UI files.
-* Create a folder called armips inside the DSVEdit folder, then download a build of ARMIPS and put the executable in that folder: https://buildbot.orphis.net/armips/
+* Then you must create the armips folder in the DSVEdit folder, and put armips.exe and armips64.exe inside it. The easiest way to get those is to copy them from an official DSVEdit release build. But you can alternatively choose to compile them from source yourself if you want: https://github.com/Kingcom/armips
 * Finally run "ruby dsvedit.rb" to launch DSVEdit.
 * Note that later on when updating to a future version of DSVEdit, you may need to run build_ui again to update its UI files.
