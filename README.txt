@@ -129,9 +129,6 @@ The file with the .anim extension defines the animations and unanimated frames i
 
 After editing the exported files in darkFunction, first make sure to save your changes by pressing Ctrl+S in darkFunction. Then go back to the sprite editor in DSVEdit and click "Import from darkFunction". You should now see the changes you made reflected in DSVEdit.
 
-Note: Currently DSVEdit's darkFunction exporter/importer only supports sprites in standalone files - ones that have both a pointer and a filename in the "Sprite file" field, like this: 021155E0 (/so/p_zombi.dat)
-Compiled sprites, the ones with only a pointer in the "Sprite file" field and no filename, are not yet supported, but a future version of DSVEdit may support these as well.
-
 ### Adding a free space overlay
 
 Sometimes, you may need free space to put something, such as new entities, layers, or custom ASM code.
