@@ -50,6 +50,7 @@ local function display_hitboxes()
   end
   
   entity_ptr = entity_list_start
+  entity_index = 0
   
   screen_x = memory.readdwordsigned(screen_x_ptr)/0x1000
   screen_y = memory.readdwordsigned(screen_y_ptr)/0x1000
@@ -108,11 +109,13 @@ local function display_hitboxes()
         
         if bottom >= 0 then
           gui.drawbox(left, top, right, bottom, fillcolor, linecolor)
+          gui.text(left+1, top+2, string.format("%03X", entity_index))
         end
       end
     end
     
     entity_ptr = entity_ptr + entity_size
+    entity_index = entity_index + 1
   end
 end
 
