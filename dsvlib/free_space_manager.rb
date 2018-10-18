@@ -205,6 +205,12 @@ module FreeSpaceManager
   def automatically_remove_nonzero_free_spaces(files_to_check)
     # This is an extra safeguard to make absolutely sure no nonzero data is treated as free space.
     # This can be necessary if the _dsvedit_freespace.txt file got deleted.
+    
+    if @filesystem_directory.nil?
+      # If the ROM is just extracted into memory and does not a project directory, there can't be a free space file for the user to edit anyway, so we can skip this check.
+      return
+    end
+    
     free_spaces_to_check = @free_spaces.select{|free_space| files_to_check.include?(free_space[:path])}
     free_spaces_to_check.each do |free_space|
       (free_space[:offset]..free_space[:offset]+free_space[:length]-1).step(4) do |offset|
