@@ -90,14 +90,10 @@ task :build_releases do
       File.write("../build/#{program_name}/dsvedit.rb", code)
     else
       FileUtils.rm_f ["../build/#{program_name}/dsvrandom", "../build/#{program_name}/dsvrandom.rb"]
+      Dir.glob("./dsvrandom/*.rb").each do |file_path|
+        FileUtils.cp file_path, "../build/#{program_name}/dsvrandom"
+      end
       FileUtils.cp_r [
-        "./dsvrandom/dsvrandom.rb",
-        "./dsvrandom/completability_checker.rb",
-        "./dsvrandom/door_completability_checker.rb",
-        "./dsvrandom/randomizer.rb",
-        "./dsvrandom/randomizer_window.rb",
-        "./dsvrandom/ui_randomizer.rb",
-        "./dsvrandom/version.rb",
         "./dsvrandom/seedgen_adjectives.txt",
         "./dsvrandom/seedgen_nouns.txt",
         "./dsvrandom/progressreqs",
