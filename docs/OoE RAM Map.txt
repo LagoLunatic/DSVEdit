@@ -257,7 +257,9 @@ Requirement lists for kill quests:
 020FFCAC,2 - Current room's X pos on the map.
 020FFCAE,2 - Current room's Y pos on the map.
 020FFCB0,2 - Player's X pos on the map.
+020FFCB2,2 - Duplicate current room's X pos on the map?
 020FFCB4,2 - Player's Y pos on the map.
+020FFCB6,2 - Duplicate current room's Y pos on the map?
 020FFCB9,1 - Current area index.
 
 020FFD20,4 - Pointer to the player (02109820).
