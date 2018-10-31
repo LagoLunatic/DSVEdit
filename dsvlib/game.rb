@@ -656,10 +656,14 @@ class Game
       temp_patch_file = File.join(tmpdir, patch_file_name)
       
       stdout, stderr, status = Open3.capture3("./armips/armips.exe \"#{temp_patch_file}\"")
-      unless status.success?
-        stdout64, stderr64, status64 = Open3.capture3("./armips/armips64.exe \"#{temp_patch_file}\"")
-        unless status64.success?
-          raise "Armips call failed (try installing the Visual C++ Redistributable for Visual Studio 2015).\nError message from armips was:\n#{stdout}#{stdout64}"
+      if !status.success?
+        if ENV["PROCESSOR_ARCHITECTURE"] == "AMD64"
+          stdout64, stderr64, status64 = Open3.capture3("./armips/armips64.exe \"#{temp_patch_file}\"")
+          unless status64.success?
+            raise "Armips call failed (try installing the Visual C++ Redistributable for Visual Studio 2015).\nError message from armips was:\n#{stdout}#{stdout64}"
+          end
+        else
+          raise "Armips call failed (try installing the Visual C++ Redistributable for Visual Studio 2015).\nError message from armips was:\n#{stdout}"
         end
       end
       
