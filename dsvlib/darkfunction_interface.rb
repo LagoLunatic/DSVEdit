@@ -177,7 +177,7 @@ class DarkFunctionInterface
         else
           # It skipped a frame (or multiple frames). We must insert these as unanimated frames before this next animation so that it's correctly preserved.
           unanimated_frame_indexes_to_insert += ((max_seen_frame_index+1..frame_delay.frame_index-1).to_a & all_unanimated_frames)
-          max_seen_frame_index = frame_delay.frame_index-1
+          max_seen_frame_index = frame_delay.frame_index
         end
       end
       
