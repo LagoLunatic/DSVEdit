@@ -899,8 +899,7 @@ class Animation
     @number_of_frames = @first_frame_delay_offset = 0
     @frame_delays = []
     if SYSTEM == :gba
-      @unknown_1 = 0
-      @unknown_2 = 1
+      @function_index = 1
     end
   end
   
@@ -908,7 +907,7 @@ class Animation
     if SYSTEM == :nds
       @number_of_frames, @first_frame_delay_offset = animation_data.unpack("VV")
     else
-      @number_of_frames, @unknown_1, @unknown_2 = animation_data.unpack("CCv")
+      @number_of_frames, @function_index = animation_data.unpack("vv")
       @first_frame_delay_offset = offset + 4
     end
     
@@ -933,7 +932,7 @@ class Animation
     if SYSTEM == :nds
       [@number_of_frames, @first_frame_delay_offset].pack("VV")
     else
-      [@number_of_frames, @unknown_1, @unknown_2].pack("CCv")
+      [@number_of_frames, @function_index].pack("vv")
     end
   end
   
