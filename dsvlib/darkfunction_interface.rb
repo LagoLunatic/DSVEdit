@@ -188,7 +188,17 @@ class DarkFunctionInterface
         animations_plus_unanimated_frames << {name: "unanimated frame %02X" % unanimated_frame_index, frame_delays: [dummy_frame_delay]}
       end
       
-      animations_plus_unanimated_frames << {name: "%02X" % animation_index, frame_delays: animation.frame_delays}
+      if animation.frame_delays.length == 1
+        # If the animation only has a single frame in it, it's probably an unanimated frame in disguise ("unanimated animation").
+        # In this case we need to preserve both the animation index *and* the frame index.
+        frame_index = animation.frame_delays[0].frame_index
+        animations_plus_unanimated_frames << {
+          name: "unanimated anim %02X-%02X" % [animation_index, frame_index],
+          frame_delays: animation.frame_delays
+        }
+      else
+        animations_plus_unanimated_frames << {name: "%02X" % animation_index, frame_delays: animation.frame_delays}
+      end
     end
     
     if max_seen_frame_index < sprite.frames.size-1
@@ -296,6 +306,10 @@ class DarkFunctionInterface
       if df_anim[:name] =~ /^unanimated frame (\h+)$/
         unanimated_frame_index = $1.to_i(16)
         
+        if !sprite.frames[unanimated_frame_index].nil?
+          raise ImportError.new("There are multiple unanimated frames with index %02X" % unanimated_frame_index)
+        end
+        
         df_cell = df_anim.css("cell").first
         frame, this_frames_unique_part_and_hitbox_strs = import_frame(
           df_cell, df_unique_parts, gfx_page_width_with_padding, big_gfx_page_width, num_gfx_pages, gfx_page_canvas_width
@@ -306,13 +320,55 @@ class DarkFunctionInterface
       end
     end
     
+    # We also need to preserve both the animation index and the frame index of single-frame "unanimated animations".
+    df_anims.each do |df_anim|
+      if df_anim[:name] =~ /^unanimated anim (\h+)-(\h+)$/
+        unanimated_anim_index = $1.to_i(16)
+        unanimated_frame_index = $2.to_i(16)
+        
+        if !sprite.animations[unanimated_anim_index].nil?
+          raise ImportError.new("There are multiple unanimated anims with index %02X" % unanimated_anim_index)
+        end
+        if !sprite.frames[unanimated_frame_index].nil?
+          raise ImportError.new("There are multiple unanimated anim frames with index %02X" % unanimated_frame_index)
+        end
+        
+        df_cell = df_anim.css("cell").first
+        frame, this_frames_unique_part_and_hitbox_strs = import_frame(
+          df_cell, df_unique_parts, gfx_page_width_with_padding, big_gfx_page_width, num_gfx_pages, gfx_page_canvas_width
+        )
+        sprite.frames[unanimated_frame_index] = frame
+        all_created_frames[unanimated_frame_index] = frame
+        each_frames_unique_part_and_hitbox_strs[unanimated_frame_index] = this_frames_unique_part_and_hitbox_strs
+        
+        animation = Animation.new
+        sprite.animations[unanimated_anim_index] = animation
+        
+        frame_delay = FrameDelay.new
+        frame_delay.delay = df_cell["delay"].to_i
+        frame_delay.frame_index = unanimated_frame_index
+        sprite.frame_delays << frame_delay
+        animation.frame_delays << frame_delay
+      end
+    end
+    
     # Now import animations and animated frames.
     df_anims.each do |df_anim|
-      animated = df_anim[:name] !~ /^unanimated frame (\h+)$/
-      next unless animated
+      if df_anim[:name] =~ /^unanimated frame (\h+)$/
+        next
+      end
+      if df_anim[:name] =~ /^unanimated anim (\h+)-(\h+)$/
+        next
+      end
       
+      next_blank_anim_index = sprite.animations.index(nil)
+      if next_blank_anim_index
+        anim_index = next_blank_anim_index
+      else
+        anim_index = sprite.animations.size
+      end
       animation = Animation.new
-      sprite.animations << animation
+      sprite.animations[anim_index] = animation
       
       df_cells = df_anim.css("cell")
       df_cells.each do |df_cell|
