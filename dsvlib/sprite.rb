@@ -407,7 +407,7 @@ class Sprite
             anim_offset = fs.get_free_space(Animation.data_size + anim.frame_delays.length*FrameDelay.data_size, nil)
             @animations_by_offset[anim_offset] = anim
             offset = anim_offset+Animation.data_size
-            @frame_delays.each do |frame_delay|
+            anim.frame_delays.each do |frame_delay|
               @frame_delays_by_offset[offset] = frame_delay
               offset += FrameDelay.data_size
             end
@@ -473,11 +473,6 @@ class Sprite
       else
         fs.write(offset, animation.to_data)
         offset += Animation.data_size
-      end
-      
-      if SYSTEM == :gba
-        # On GBA the frame delays come right after the animation itself, rather than being pointed to separately.
-        offset += FrameDelay.data_size*animation.number_of_frames
       end
     end
     
