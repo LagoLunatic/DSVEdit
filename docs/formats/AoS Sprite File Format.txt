@@ -48,13 +48,12 @@ Each frame is 0x10 bytes long.
   0C,4: Pointer to the first part to use.
 
 Animations:
-Each animation is 0x4 bytes long.
-  00,1: Number of frames in this animation.
-  01,1: ?
+Each animation is 4 bytes long.
+  00,2: Number of frames in this animation.
   02,2: Function index. Index in list 080E2B34, which is a list of pointers to functions to call.
 
 List of frame delays:
-Each frame delay is 8 bytes long.
+Each frame delay is 4 bytes long.
   00,1: Frame index to use.
   01,1: Delay (in frames) for this frame to be displayed.
   02,2: ?
