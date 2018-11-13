@@ -104,7 +104,7 @@ SONG_INDEX_TO_TEXT_INDEX = [
   0x631,
   "Suspicions",
   "Welcome to Legend (Alt?)",
-  "Bloody Tears",
+  "The Beginning",
   0x632,
   0x633,
   0x634,
