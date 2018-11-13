@@ -1023,7 +1023,7 @@ ITEM_BITFIELD_ATTRIBUTES = {
     "Effect 25",
     "Is an arm glyph",
     "Is a glyph union",
-    "Effect 28",
+    "Can destroy Blood Skeletons",
     "Effect 29",
     "Effect 30",
     "Effect 31",
