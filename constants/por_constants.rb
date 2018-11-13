@@ -75,7 +75,7 @@ AREA_INDEX_TO_OVERLAY_INDEX = {
     0 => 117,
   },
   13 => {
-    0 => 118, # 118 is loaded into a different place in ram than all the other room overlays. 84 seems to be the one loaded into the normal ram slot, but that one isn't needed. This is probably related to this area being unused.
+    0 => 118, # 118 is loaded into a different place in ram than all the other room overlays. 84 seems to be the one loaded into the normal ram slot, but that one isn't needed. This is probably related to this area being only for co-op/shop mode.
   },
 }
 
@@ -93,7 +93,7 @@ AREA_INDEX_TO_AREA_NAME = {
   10 => "Boss Rush",
   11 => "Lost Gallery",
   12 => "Epilogue",
-  13 => "Unused Boss Rush",
+  13 => "Co-op Boss Rush & Shop Mode",
 }
 
 SECTOR_INDEX_TO_SECTOR_NAME = {

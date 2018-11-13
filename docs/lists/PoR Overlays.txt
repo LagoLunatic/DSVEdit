@@ -13,4 +13,4 @@
 40-42   022D7900-022E881F  
 43-77   022D7900-022E881F  Enemy code.
 78-117  022E8820-02308E9F  Rooms. (except 116?)
-118     022E04A0-022E3ABF  Rooms for area 13, an unused area.
+118     022E04A0-022E3ABF  Rooms for area 0x0D, Co-op Boss Rush & Shop Mode.
