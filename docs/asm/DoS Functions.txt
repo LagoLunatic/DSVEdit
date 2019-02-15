@@ -54,6 +54,8 @@
   ; This function reads from list 0222F290, a list of which magic seal is for each boss.
 0203BE9C SetTopScreen
   ; r0 - Top screen type to change to
+0203B998 SetTopScreenToLastUsedIngameTopScreen
+  ; Calls SetTopScreen with r0 = 0 or 1, whatever is in 020F7251 (the last used top screen in normal gameplay, map screen or info screen).
 02012DB0 GetEntityHitboxPtr
   ; r0 - Entity pointer
 021D5210 DestroyIceBlocks
