@@ -892,8 +892,8 @@ PLAYER_LIST_FORMAT = [
   [4, "Trail & width scale"],
   [4, "Player height scale"],
   [4, "Enable player scale"],
-  [2, "Palette unknown 1"],
-  [2, "Palette unknown 2"],
+  [2, "Outline color index"],
+  [2, "Outline color"],
   [4, "Sprite asset index"],
 ]
 PLAYER_BITFIELD_ATTRIBUTES = {

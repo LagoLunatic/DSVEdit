@@ -50,7 +50,7 @@ class GenericEditorWidget < Qt::Widget
       if attribute_name == "Icon"
         field = Qt::PushButton.new(self)
         connect(field, SIGNAL("clicked()"), self, SLOT("open_icon_chooser()"))
-      elsif attribute_name =~ /color/
+      elsif attribute_name =~ /color$/
         field = Qt::PushButton.new(self)
         field.objectName = attribute_name
         connect(field, SIGNAL("clicked()"), self, SLOT("open_color_chooser()"))

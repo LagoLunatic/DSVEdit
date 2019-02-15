@@ -31,6 +31,7 @@ Player format:
   48,4: Height scale multiplier for the player.
     Only does anything if "Enable player scale" is nonzero.
   4C,4: Enable player scale.
-  50,2: 
-  52,2: 
+  50,2: Which color index within the player's palette is for the player's outline.
+    You can set this to 0 to disable it, since color index 0 is always transparent anyway.
+  52,2: Outline color.
   54,4: Asset index of sprite file.

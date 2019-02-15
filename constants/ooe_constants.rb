@@ -1117,7 +1117,7 @@ PLAYER_LIST_FORMAT = [
   [4, "Damage types", :bitfield],
   [4, "Unknown 16"],
   [2, "Sprite Y offset"],
-  [2, "Outline glowing"],
+  [2, "Outline color index"],
   [2, "Outline color"],
   [2, "Unknown 19"],
   [4, "Unknown 20"],

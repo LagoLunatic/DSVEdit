@@ -16,10 +16,28 @@
 02012C38 DeleteEntity
   ; r0 - Entity
 
+02012C68 CopyBytes
+  ; r0 - Source pointer to copy from
+  ; r1 - Destination pointer to copy to
+  ; r2 - Number of bytes to copy
 02012C84 FillAreaWith0s
   ; r0 - Start of area to fill
   ; r1 - Number of bytes to fill.
   ; This fills with halfword 0s, so the number of bytes to fill should be divisible by 2.
+
+0200D2BC CopyPalettes
+  ; Just calls CopyPalettes2, same arguments
+0200F6AC CopyPalettes2
+  ; r0 - Source pointer to copy from palette(s) from
+  ; r1 - Destination palette index in the list of globally loaded palettes of the first palette to overwrite
+  ; r2 - Number of palettes to copy
+  ; Other than copying palettes, this function also stores a 1 to 0210A9E8,2.
+  ; It also seems to clean and invalidate the palette caches for these palette(s)?
+  ; Also turns on the corresponding bits in bitfields 020F82C0 and 020F8300 for all globally loaded palette slots that were written to.
+
+02060024 VACleanInvalidateDataCacheLine?
+  ; r0 - Pointer to start of cache data to clean and invalidate?
+  ; r1 - Number of bytes of cache data to clean and invalidate?
 
 021C3A00 EnemyCheckDrops
 0221029C GetNumOwnedSoul
@@ -448,6 +466,13 @@
 021FFF5C PlayerCalculateFinalAttackStat
   ; r0 - Pointer to the player's final stats (020F737C).
   ; Returns what the player's final attack stat should be.
+
+021F70A8 PlayerSetOutlineColorFromPlayerData
+  ; r0 - Player entity
+  ; Calls PlayerSetOutlineColor with r1 = the outline color from this player's player data.
+021F70D0 PlayerSetOutlineColor
+  ; r0 - Player entity
+  ; r1 - The color to set as the outline color (BGR555 short)
 
 0203FE20 CalcStatsWithSpecificItemEquip
   ; r0 - Which equip slot to assume the item specified by r1 is.

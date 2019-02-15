@@ -38,12 +38,10 @@ Player format:
     Bit 19: If this bit is off, the player can't be hit at all. Can still hit enemies.
   3C,4: 
   40,2: Sprite Y offset in pixels.
-  42,2: Enable outline glowing.
-    If 1, this makes the player's outline glow white when absorbing glyphs.
-    To be more specific, it swaps the second color in the player's palette (the first non-transparent color) out to various shades of grey to make the outline glow when absorbing glyphs.
-  44,2: Normal outline color.
-    If outline glowing is enabled, this is the what color to set the second color in the player's palette to when it's not glowing.
-    If outline glowing is disabled, this color is not used and whatever color is in the player's palette normally is used instead.
+  42,2: Which color index within the player's palette is for the player's outline.
+    Whichever color in the player's palette is at this index will glow white when absorbing glyphs.
+    To be more specific, it swaps that color between the color specified in the below "Outline color" field and various shades of grey to make the outline glow when absorbing glyphs.
+  44,2: Outline color.
   46,
   48,
   4C,4: Pointer to list of hitbox pointers.

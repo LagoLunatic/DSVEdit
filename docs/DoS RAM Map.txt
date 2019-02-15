@@ -647,11 +647,19 @@ Player's current stats:
   This is what 020F82B0 will change into when the game finishes playing a fading out animation.
 020F82B2 - ? top screen related
 
-020F8340 - start of list of all globally loaded palettes
-020FC340 - copy of above...?
+020F82C0-020F82CF - Bitfield related to palettes?
+  There's a bit for each palette in the list of globally loaded palettes (020F8340).
+  Maybe the bit being on means the palette slot is currently in use?
+020F8300-020F830F - Duplicate of 020F82C0?
 
-02100358 - ???
+020F8340-020FC33F - Start of the list of all globally loaded palettes.
+  0x200 palettes in total. Each is 0x20 bytes long (0x10 colors).
+020FC340 - Duplicate of 020F8340...? Seems to be something related to hardware caching?
+
+02100358-02100377 - Player's current outline palette?
   50,2 in player data is an index in this list. entry len 2.
+
+0210A9E8,2 - ? maybe a boolean related to palettes?
 
 0210AF18 - Start of list of hitboxes. Each entry 0x14 bytes long. The index in this list is located at offset +0xA7 within the entity's memory.
   the first 0xA bytes are the first hitbox, the second 0xA bytes are the second hitbox.
