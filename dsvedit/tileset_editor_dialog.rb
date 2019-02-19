@@ -14,6 +14,7 @@ class TilesetEditorDialog < Qt::Dialog
   slots "gfx_page_changed(int)"
   slots "palette_changed(int)"
   slots "toggle_flips(bool)"
+  slots "open_in_gfx_editor()"
   slots "update_collision_has_top(bool)"
   slots "update_collision_is_water(bool)"
   slots "update_collision_has_sides_and_bottom(bool)"
@@ -83,6 +84,7 @@ class TilesetEditorDialog < Qt::Dialog
     connect(@ui.palette_index, SIGNAL("activated(int)"), self, SLOT("palette_changed(int)"))
     connect(@ui.horizontal_flip, SIGNAL("clicked(bool)"), self, SLOT("toggle_flips(bool)"))
     connect(@ui.vertical_flip, SIGNAL("clicked(bool)"), self, SLOT("toggle_flips(bool)"))
+    connect(@ui.open_in_gfx_editor, SIGNAL("clicked()"), self, SLOT("open_in_gfx_editor()"))
     connect(@ui.reload_button, SIGNAL("released()"), self, SLOT("load_tileset()"))
     connect(@ui.display_collision, SIGNAL("clicked(bool)"), self, SLOT("toggle_display_collision(bool)"))
     
@@ -922,6 +924,38 @@ class TilesetEditorDialog < Qt::Dialog
     @selected_tile.vertical_flip = @ui.vertical_flip.checked
     load_selected_tile()
     render_tile_on_tileset(@selected_tile_index)
+  end
+  
+  def open_in_gfx_editor
+    return if @gfx_pages.nil? || @palette_pages.nil? || @selected_tile.nil?
+    
+    palette_page = @palette_pages[@palette_page_index]
+    
+    gfx_and_palette_data = {}
+    gfx_and_palette_data[:gfx_file_names] = @gfx_pages.map{|gfx| "%08X" % gfx.gfx_pointer}.join(", ")
+    if SYSTEM == :nds
+      gfx_and_palette_data[:gfx_page_index] = @selected_tile.tile_page
+    else
+      gfx_chunk_index_on_page = (@selected_tile.index_on_tile_page & 0xC0) >> 6
+      gfx_chunk_index = @selected_tile.tile_page*4 + gfx_chunk_index_on_page
+      gfx_chunk_index += 0x10 if @tileset.colors_per_palette == 16
+      gfx_chunk_index = gfx_chunk_index_on_page if @tileset.colors_per_palette == 256
+      gfx_wrapper_index, chunk_offset = @gfx_chunks[gfx_chunk_index]
+      if chunk_offset.nil?
+        gfx_and_palette_data[:gfx_page_index] = 0
+      else
+        gfx_pointer = @gfx_wrappers[gfx_wrapper_index].gfx_pointer
+        gfx_and_palette_data[:gfx_page_index] = @gfx_pages.index{|gfx| gfx.gfx_pointer == gfx_pointer}
+      end
+    end
+    gfx_and_palette_data[:palette_pointer] = palette_page.palette_list_pointer
+    if SYSTEM == :nds
+      gfx_and_palette_data[:palette_index] = @selected_tile.palette_index + palette_page.palette_index
+    else
+      gfx_and_palette_data[:palette_index] = @ui.palette_index.itemText(@selected_tile.palette_index).to_i(16)
+    end
+    
+    parent.open_gfx_editor(gfx_and_palette_data)
   end
   
   def update_collision_has_top(checked)
