@@ -483,8 +483,23 @@ class Text
     when 0x09
       "{SAMECHAR}"
     when 0x0B..0x14
-      button = %w(L R A B X Y LEFT RIGHT UP DOWN)[command_number-0x0B]
-      "{BUTTON #{button}}"
+      if GAME == "aos"
+        if command_number == 0x13
+          "{CURRENT_SAVE_FILE}"
+        elsif command_number == 0x14
+          # Seems to be unused
+          "{RAW #{data_format_string}}" % command_number
+        else
+          button = %w(B A L R UP DOWN RIGHT LEFT)[command_number-0x0B]
+          "{BUTTON #{button}}"
+        end
+      elsif GAME == "hod"
+        # No button commands in HoD
+        "{RAW #{data_format_string}}" % command_number
+      else
+        button = %w(L R A B X Y LEFT RIGHT UP DOWN)[command_number-0x0B]
+        "{BUTTON #{button}}"
+      end
     when 0x15..0x1A
       "{BUTTON #{data_format_string}}" % command_number
     else
@@ -594,15 +609,6 @@ class Text
     when "RAW"
       halfword = data.to_i(16)
       [halfword].pack("v")
-    when "BUTTON"
-      button_index = %w(L R A B X Y LEFT RIGHT UP DOWN).index(data)
-      if button_index
-        [0xF00B + button_index].pack("v")
-      elsif (0x15..0x1A).include?(data.to_i(16))
-        [0xF000 + data.to_i(16)].pack("v")
-      else
-        raise TextEncodeError.new("Failed to encode command: #{command} #{data}")
-      end
     when "PORTRAIT"
       halfword = data.to_i(16)
       [0xF003, halfword].pack("vv")
@@ -679,8 +685,10 @@ class Text
       byte = data.to_i(16)
       [byte].pack("C")
     when "BUTTON"
-      button_index = %w(L R A B X Y LEFT RIGHT UP DOWN).index(data)
+      button_index = %w(B A L R UP DOWN RIGHT LEFT).index(data)
       [0xB + button_index].pack("C")
+    when "CURRENT_SAVE_FILE"
+      [0x13].pack("C")
     when "PORTRAIT"
       byte = data.to_i(16)
       [0x3, byte].pack("CC")
