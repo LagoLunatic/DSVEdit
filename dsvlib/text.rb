@@ -650,6 +650,11 @@ class Text
     if input_char == "\n"
       return "" # Ignore newlines
     end
+    if input_char == "-"
+      # Shift JIS does not have normal ASCII hyphen-minus signs.
+      # To avoid a conversion error, convert any of those the user typed into a type of minus sign supported by Shift JIS.
+      input_char = "−"
+    end
     
     fullwidth_char = Unicode::Japanese.h2z(input_char) # Convert halfwidth text back to fullwidth before writing it
     shift_jis = fullwidth_char.encode("SHIFT_JIS").ord
