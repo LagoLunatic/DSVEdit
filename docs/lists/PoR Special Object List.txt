@@ -15,7 +15,7 @@ Special objects:
 04 Starts boss rush.
   Puts a timer on the screen.
 05 Ends boss rush?
-06 Opens boss doors after a full minute has passed.
+06 Opens boss doors when all enemies are dead or a full minute passes.
   Only opens boss doors that have Var A = 1 (the type that usually opens when there are no enemies left in the room).
 07 Unused
 08 Unused
