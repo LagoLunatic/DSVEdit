@@ -569,6 +569,7 @@ F5-F5  021115E0-0211173F  ?
 02111F60 - Current number of shop points you have.
 02111F98 - Pointer to controlled player character entity.
 02111F9C - Pointer to partner player character entity.
+02111FA4 - Pointer to ??? maybe player entity? but can be 0?
 
 02111FA8,4 - When in the room with the white barrier that blocks your way to the throne, this is a pointer to the white barrier entity.
   This is read by the player, it calls some special function of the white barrier to calculate the X velocity to add to the player.
@@ -797,8 +798,16 @@ TODO: What are the other 2 for? It's not for the "recent" tab.
 
 0213226C - List of hardcoded free spaces??
   List of pointers to entries in asset memory.
-  Index 0xA is for Richter.
-  Index 0xB is for Maria.
+  Each entry:
+    1 
+    2 
+    6 Subweapon
+    8 Dual crush sprite
+    9 Spell
+    A Richter
+    B Maria / Charlotte?
+    C Jonathan?
+    D 
   The space between each entry here seems to be hardcoded around 02011FC0. 0x8700 is the difference between Richter and Maria's sprite file space for example.
   (The last one is found first via the normal means. Then the others are spaced out before it by subtracting hardcoded values from that.)
 

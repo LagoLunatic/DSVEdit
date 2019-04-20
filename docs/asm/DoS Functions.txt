@@ -649,6 +649,8 @@
 021C31E8 FacePlayer
   ; Makes an enemy turn towards the player.
   ; r0 - Enemy entity pointer
+021C3278 GetPlayerXPos
+  ; r0 - Entity calling this function
 
 021C23E0 EntityMoveToFloor
   ; Teleports entity downwards to the nearest floor.

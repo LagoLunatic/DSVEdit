@@ -52,7 +52,7 @@
   ; r2 - The number to draw
   ; r3 - ?
 
-08008DBC LoadEntity
+08008DB4 LoadEntity
   ; r0 - Pointer to the entity entry in the room's entity list
 
 0801058C EntityInitSprite

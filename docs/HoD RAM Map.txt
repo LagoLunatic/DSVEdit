@@ -40,7 +40,7 @@
   Includes which ceilings the player has destroyed with the Crush Boots.
   Bits 0, 1, 2, and 3 are for the walls you lower by pressing a button.
 
-02000330 - Bitfield of pickup flags.
+02000330-02000353 - Bitfield of pickup flags.
 
 02000358,4 - Bitfield of boss death flags.
   01 00000002 Giant Bat

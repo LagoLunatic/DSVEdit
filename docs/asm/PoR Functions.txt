@@ -54,7 +54,8 @@
 0201BB44 AssetGetType
   ; r0 - Asset index
   ; Returns 020CDAFC+(r0*0x20)+4, where the asset's type is
-02012358 AssetGetFreeSpace??
+02012358 AssetGetHardcodedFreeSpace
+  ; r0 - Hardcoded free space index (in list 0213226C)
 
 021DCA34 LoadEntityAssets
   ; r0 - Entity subtype
@@ -439,6 +440,9 @@
   ; r0 - Entity
   ; Faces the controlled player by either setting or unsetting the horizontal flip bit (bit 0x80 of bitfield entity+0x74).
   ; Not 100% sure on some of the exact details here, it does something depending on whether bit 0x20 of bitfield entity+0x120 is set or not.
+021D8DF8 GetPlayerXPos
+  ; r0 - Entity calling this function
+  ; Might get the X pos of whichever of the 2 players is closer to the enemy?
 
 020140F4 EntityUpdateHitbox???
   ; r0 - Entity

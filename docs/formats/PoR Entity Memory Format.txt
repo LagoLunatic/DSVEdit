@@ -110,6 +110,7 @@ For players:
 0E8,2: ???.
   This is 1 when the player is doing a critical art/combo tech.
   This is 4 when the player is not present (neither player-controlled nor AI-controlled).
+  This is 8 when the player is doing a dual crush.
   Otherwise, this counts down every frame until it reaches 0.
 0EC,1: 0 for player 1, 1 for player 2.
 0ED,1: Which player character index this player is. 2 is Stella, 3 is Loretta, etc.
