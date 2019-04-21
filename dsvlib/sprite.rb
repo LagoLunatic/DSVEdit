@@ -17,6 +17,7 @@ class Sprite
               :parts_by_offset,
               :hitboxes,
               :hitboxes_by_offset,
+              :frames_by_offset,
               :frames,
               :frame_delays,
               :frame_delays_by_offset,

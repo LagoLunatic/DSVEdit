@@ -473,8 +473,15 @@ class SpriteEditor < Qt::Dialog
     @ui.sprite_file_name.text = sprite_file_text
     
     @ui.frame_index.clear()
-    @sprite.frames.each_index do |i|
-      @ui.frame_index.addItem("%02X" % i)
+    @sprite.frames.each_index do |frame_index|
+      frame = @sprite.frames[frame_index]
+      
+      frame_text = "%02X" % frame_index
+      if !@sprite.sprite_file
+        offset = @sprite.frames_by_offset.key(frame)
+        frame_text << " (%08X)" % offset
+      end
+      @ui.frame_index.addItem(frame_text)
     end
     
     @rendered_gfx_pages_by_palette = {}
