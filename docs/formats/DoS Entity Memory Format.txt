@@ -37,6 +37,8 @@ Memory used for entities in DoS is 020CA3F0 - 020F6DEF. Each entity is 0x2A0 byt
 080,1: Polygon ID for drawing this entity.
 081,1: Opacity. 1F is fully opaque.
 082,10: Affects color tint of this entity. 1F for everything means normal colored.
+094,2: Sprite x offset relative to the entity's position.
+096,2: Sprite y offset relative to the entity's position.
 098,4: Pointer to sprite animation list.
 09C,2: Current animation index.
 09E,2: Current keyframe index in this animation.

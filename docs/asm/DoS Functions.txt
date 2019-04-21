@@ -153,6 +153,30 @@
   ; r2 - Entity B
   ; If there is a collision it calls entity A's on-hit-other callback and entity B's on-get-hit callback.
 
+0201360C ???Hitbox??
+  ; r0 - Entity
+020139E0 GetHitbox???
+  ; r0 - Entity
+  ; r1 - Pointer on the stack for where to store the hitbox data
+  ; r2 - 0?
+020141C8 SetHitbox??
+  ; r0 - Entity
+  ; r1 - Bitfield of the upper left of the hitbox rect to set.
+  ;   & 0000FFFF - Left X pos
+  ;   & FFFF0000 - Top Y pos
+  ; r2 - Bitfield of the bottom right of the hitbox rect to set.
+  ;   & 0000FFFF - Right X pos
+  ;   & FFFF0000 - Bottom Y pos
+  ; r3 - Which hitbox (0 or 1)
+
+0200CD7C EntityGetGetCurrentSpriteFrameHitboxPointer
+  ; r0 - Entity
+  ; Returns r0 - pointer to the current frame's hitbox in the sprite data.
+0200CD98 EntityGetCurrentSpriteFramePointer
+  ; r0 - Entity
+  ; Returns r0 - pointer to the current frame in the sprite data.
+  ; Note that this function makes no attempt to validate that the current sprite frame index of the entity is valid (less than the number of frames in the sprite). If it's note, this function will return a pointer to invalid data.
+
 02005C54 SetFakeBlockCollision
   ; r0 - X pos of the block in pixels
   ; r1 - Y pos of the block in pixels
