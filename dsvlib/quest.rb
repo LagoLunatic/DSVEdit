@@ -1,7 +1,6 @@
 
 class Quest < GenericEditable
-  attr_accessor :is_a_kill_quest,
-                :which_kill_quest_index,
+  attr_accessor :which_kill_quest_index,
                 :num_enemies_to_kill,
                 :required_item_ids
   
@@ -23,9 +22,9 @@ class Quest < GenericEditable
     
     case GAME
     when "ooe"
-      if is_a_kill_quest?
+      if ooe_is_a_kill_quest?
         @which_kill_quest_index, @num_enemies_to_kill = fs.read(self["Requirements Pointer"], 4).unpack("vv")
-      elsif is_a_fetch_quest?
+      elsif ooe_is_a_fetch_quest?
         @num_required_items = fs.read(self["Requirements Pointer"], 2).unpack("v").first
         @required_item_ids = fs.read(self["Requirements Pointer"]+2, @num_required_items*2).unpack("v*")
       end
@@ -33,26 +32,42 @@ class Quest < GenericEditable
   end
   
   def reward_item
-    return nil if @reward == 0 || @reward == 0xFFFF
-    return game.items[@reward-1]
+    case GAME
+    when "por"
+      return nil if self["Reward"] == 0 || !por_reward_is_a_pickup?
+    when "ooe"
+      return nil if self["Reward"] == 0 || self["Reward"] == 0xFFFF || ooe_reward_is_gold?
+    end
+    
+    return game.items[self["Reward"]-1]
   end
   
-  def is_a_kill_quest?
+  def por_reward_is_a_pickup?
+    raise "Game is not PoR" if GAME != "por"
+    return true if self["Quest Modifiers"]["Reward is an item"]
+    return true if self["Quest Modifiers"]["Reward is a subweapon or spell"]
+    return true if self["Quest Modifiers"]["Reward is a relic"]
+    return false
+  end
+  
+  def ooe_is_a_kill_quest?
     raise "Game is not OoE" if GAME != "ooe"
     return self["Quest Modifiers"]["Is a kill quest"]
   end
   
-  def is_a_fetch_quest?
-    return !is_a_kill_quest? && self["Requirements Pointer"] != 0
+  def ooe_is_a_fetch_quest?
+    raise "Game is not OoE" if GAME != "ooe"
+    return !ooe_is_a_kill_quest? && self["Requirements Pointer"] != 0
   end
   
-  def reward_is_gold?
+  def ooe_reward_is_gold?
     raise "Game is not OoE" if GAME != "ooe"
     return self["Quest Modifiers"]["Reward is gold"]
   end
   
-  def reward_is_pickup?
-    return !reward_is_gold?
+  def ooe_reward_is_pickup?
+    raise "Game is not OoE" if GAME != "ooe"
+    return !ooe_reward_is_gold?
   end
   
   def write_to_rom
@@ -60,9 +75,9 @@ class Quest < GenericEditable
     
     case GAME
     when "ooe"
-      if is_a_kill_quest?
+      if ooe_is_a_kill_quest?
         fs.write(self["Requirements Pointer"], [@which_kill_quest_index, @num_enemies_to_kill].pack("vv"))
-      elsif is_a_fetch_quest?
+      elsif ooe_is_a_fetch_quest?
         # TODO: Which items are actually taken out of the player's inventory is hardcoded.
         # Changing these @required_item_ids only affects what items you need to complete the quest.
         
