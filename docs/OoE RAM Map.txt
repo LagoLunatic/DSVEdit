@@ -454,8 +454,10 @@ A 200% attack boost (triple) takes 0xFFFF (0d65535) AP.
   32 - Player saw the hand pointing at the bottom right entrance of Kalidus Channel and then entered Kalidus through any of its entrances (not necessarily the one that was pointed to).
 
 02100388 - Bitfield of event flags.
-  0x100 - can trigger event in minera prison island where albus gives you the first part of dominus?
-  0x200 - seen event in minera prison island where albus gives you the glyph.
+  08 00000100 - can trigger event in minera prison island where albus gives you the first part of dominus?
+  09 00000200 - seen event in minera prison island where albus gives you the glyph.
+  19 02000000 - activates the event where you bring the dominus pieces to barlowe before you fight him
+  1A 04000000 - activates the barlowe fight in ecclesia
 
 02100398-021003CB - Bitfield of pickup flags.
   Valid pickup flags range from 0 to 19F.

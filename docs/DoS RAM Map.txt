@@ -178,6 +178,16 @@ There are 41 entries in the list total.
   08,4: Affects GFX. Index in the list of currently loaded GFX files?
   0C,4: Sprite pointer.
 
+020C7464 - List of currently loaded GFX assets.
+  Entry length 0x14.
+  0x20 entries in totals.
+  The index in this list is argument r1 to func 0200EC6C
+  00,4: Index in this same list of the first entry for this asset.
+    Assets can take up multiple slots in a row, so if an asset is using slots 0x11-0x14, all 4 of those will have 0x11 for this value.
+    If this value is 0xFFFFFFFF this slot is empty.
+  09,1: Might be the total number of slots in this list used for this particular asset. (Only set for the first entry of each asset.)
+  0C,4: GFX asset pointer.
+
 020C75C4 - pointer to list of gfx files for entities in this room? e.g. /sc/t_fm68_0.dat for merman
 020C75F4 - changes for each room. can be 10, 13, 14, FFFFFFFF
 020C7729
@@ -313,7 +323,10 @@ What each range of entity slots is for:
   0x00000040 - In player death state. The player won't actually die from this bit alone, but it does disable doors and make Yoko scream.
   0x00000080 - Hides the HUD.
   0x00000400 - Can't enter doors.
-  0x00040000 - Used whenever an event is active, even if the player has control, such as during the prologue fight. Also set when the player is in a transition room.
+  0x00040000 - Seems to prevent the BGM from auto updating for one room transition.
+    Set whenever an event is active, even if the player has control, such as during the prologue fight.
+    Also set when the player is in a transition room, and by certain bosses when they play the boss music.
+    This bit is automatically unset after one room transition.
   0x00100000 - Freezes Soma. He won't animate, take damage, be affected by gravity or momentum, or respond to player input. Used when loading the next room.
   0x02000000 - Set in rooms with mirrors. Can affect zombie somehow, sometimes making him invisible?
   0x04000000 - Set when playing the character swap animation in Julius mode.
@@ -323,7 +336,8 @@ What each range of entity slots is for:
 
 020F6E08,1 - Next available polygon ID to use. Increments from 0x16 to 0x3F then back to 0x16 as entities use these up.
 020F6E09,1 - Current magic seal index being drawn.
-020F6E0B - ??? related to paranoia somehow?
+020F6E0B,1 - Seems to be 1 when a magic seal was just drawn successfuly by the player, 0 otherwise?
+  Bosses use this to know when they should start their death animation.
 020F6E14 - this contains a ram pointer to the metadata for the room you're currently in.
 020F6E18 - also contains a pointer to the current room metadata. but when you hit a door, this pointer updates a couple frames earlier than the above pointer. after 2 frames, the value here gets copied to the above location.
 020F6E1C - pointer to the destination door you're heading to.

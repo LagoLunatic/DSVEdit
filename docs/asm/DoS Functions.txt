@@ -42,16 +42,24 @@
 021C3A00 EnemyCheckDrops
 0221029C GetNumOwnedSoul
   ; r0 - Soul index
+
 02215774 MakeMagicSeal
   ; r0 - Which magic seal.
   ; r1 - How to complete the magic seal.
   ;   0 - Demonstration seal.
   ;   1 - Instant autoseal.
   ;   2 - Manually drawn seal.
+02214A3C PreloadMagicSealAssets
+  ; r0 - Which magic seal.
 022149E0 MakeMagicSealForBoss
   ; r0 - Boss index
   ; r1 - How to complete the magic seal (see above).
   ; This function reads from list 0222F290, a list of which magic seal is for each boss.
+022149C8 PreloadMagicSealForBossAssets
+  ; r0 - Boss index
+02213C04 CheckMagicSealShouldAutoComplete
+  ; Returns false if in Soma mode, true otherwise.
+
 0203BE9C SetTopScreen
   ; r0 - Top screen type to change to
 0203B998 SetTopScreenToLastUsedIngameTopScreen
@@ -185,6 +193,12 @@
 02027154 CheckShouldEnterDoor
   ; r0 - Pointer to the player entity
   ; Returns 1 if the player should enter a door (because they're out of bounds of the room) or 0 if they shouldn't enter a door.
+
+020270A8 SetScreenScrollingBoundaries
+  ; r0 - Min X
+  ; r1 - Min Y
+  ; r2 - Max X
+  ; r3 - Max Y
 
 021E7870 GiveItem
   ; r0 - Item type (2 is consumables, etc)
@@ -334,8 +348,19 @@
   ; r2 - GFX asset ptr
   ; r3 - Palette list ptr
 0201C2D8 LoadSpriteSingleGfx2
+  ; r0 - Entity ptr
+  ; r1 - Sprite ptr
+  ; r2 - GFX asset ptr
+  ; r3 - Palette list ptr
+  ; [r13] - ? 0?
 0201A990 LoadCommonSprite
   ; r0 - Entity
+
+0200EC6C LoadGFXAsset?
+  ; r0 - GFX asset ptr
+  ; r1 - 0x10? index in list 020C7464
+  ; r2 - 1?
+  ; r3 - 1 for 128x128 images, 4 for 256x256 images
 
 0200D0BC EntityInitAnimations
   ; r0 - Entity
