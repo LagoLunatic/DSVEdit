@@ -454,10 +454,48 @@ A 200% attack boost (triple) takes 0xFFFF (0d65535) AP.
   32 - Player saw the hand pointing at the bottom right entrance of Kalidus Channel and then entered Kalidus through any of its entrances (not necessarily the one that was pointed to).
 
 02100388 - Bitfield of event flags.
+  01 00000002 - Saw the intro event where you talk to Albus in the first room of the game.
+  02 00000004 - Saw the event the event where Albus steals Dominus.
+  03 00000008 - Saw the first tutorial event.
+  04 00000010 - Saw the second tutorial event.
+  05 00000020 - Saw the third tutorial event.
+  06 00000040 - Met Albus in Monastery.
+  07 00000080 - 
   08 00000100 - can trigger event in minera prison island where albus gives you the first part of dominus?
-  09 00000200 - seen event in minera prison island where albus gives you the glyph.
-  19 02000000 - activates the event where you bring the dominus pieces to barlowe before you fight him
-  1A 04000000 - activates the barlowe fight in ecclesia
+  09 00000200 - Met Albus in Minera Prison Island and got the first piece of Dominus from him.
+  0A 00000400 - (barlowe related, set by event 6A)
+  0B 00000800 - Saw the event at the end of the Lighthouse.
+  0C 00001000 - Met Albus in Skeleton Cave.
+  0D 00002000 - Saved George in Skeleton Cave.
+  0E 00004000 - 
+  0F 00008000 - Met Albus in Giant's Dwelling and got the second piece of Dominus from him.
+  10 00010000 - (barlowe related, set by event 70)
+  11 00020000 - Saw the event before the room with Albus in Oblivion Ridge.
+  12 00040000 - Met Albus in Oblivion Ridge.
+  13 00080000 - (barlowe related, set by event 73)
+  14 00100000 - Saw the event in the first room of Mystery Manor.
+  15 00200000 - (albus in mystery manor related, set by event 75)
+  16 00400000 - (albus in mystery manor related, set by event 76)
+  17 00800000 - Saw event where you talk to Barlowe before the bad ending.
+  18 01000000 - Saw event where Barlowe tells you to use Dominus before the bad ending.
+  19 02000000 - Saw event where Shanoa gets her memories back after absorbing the final piece of Dominus in Mystery Manor.
+    This activates the event where you bring the Dominus pieces to barlowe before you fight him.
+  1A 04000000 - Saw event before fighting Barlowe.
+    This activates the Barlowe fight in ecclesia.
+  (more)
+0210038C - Bitfield of event flags, continued.
+  2A 00000400 - Rescued Jacob
+  2D 00002000 - Rescued Abram
+  32 00040000 - Rescued Laura
+  38 01000000 - Rescued Eugen
+  3C 10000000 - Rescued Aeon
+02100390 - Bitfield of event flags, continued.
+  40 00000001 - Rescued Marcel
+  47 00000080 - Rescued Serge
+  4B 00000800 - Rescued Anna
+  4F 00008000 - Rescued Monica
+  53 00080000 - Rescued Irina
+  57 00800000 - Rescued Daniela
 
 02100398-021003CB - Bitfield of pickup flags.
   Valid pickup flags range from 0 to 19F.
@@ -471,7 +509,11 @@ A 200% attack boost (triple) takes 0xFFFF (0d65535) AP.
   170-17D - Whether you've taken the medal from a no-damage blue chest.
   180-18B - For wooden chests in each area to temporarily use.
 
-021003CC-021003D3 - which areas on the world map have been unlocked. each area takes up 2 bits. the lower bit makes the area visible on the map but not selectable. the higher bit makes it both visible and accessible, overriding the lower bit. the order the areas are in is the same as their area index - so the lowest 2 bits of the first byte are dracula's castle, etc.
+021003CC-021003D3 - Bitfield of areas unlocked on the world map.
+  Each area takes up 2 bits.
+  The lower bit makes the area visible on the map but not selectable.
+  The upper bit makes it both visible and accessible, overriding the lower bit.
+  The order the areas are in is the same as their area index - so the lowest 2 bits of the first byte are Dracula's Castle, etc.
 
 021003D8-021003DB - Bitfield of ? flags.
 02223C00-02223C13 - List of ? indexes for each area.
@@ -480,8 +522,21 @@ A 200% attack boost (triple) takes 0xFFFF (0d65535) AP.
   What is this used for?
 
 021003E4-021003E7 - Boss death flags.
-  0x0002 - Arthroverta.
-  0x4000 - Dracula?
+  01 00000002 Arthroverta
+  02 00000004 Giant Skeleton
+  03 00000008 Brachyura
+  04 00000010 Maneater
+  05 00000020 Rusalka
+  06 00000040 Goliath
+  07 00000080 Gravedorcus
+  08 00000100 Albus
+  09 00000200 Barlowe
+  0A 00000400 Wallman
+  0B 00000800 Blackmore
+  0C 00001000 Eligor
+  0D 00002000 Death
+  0E 00004000 Dracula?
+  0F 00008000 Dracula
 
 021003E8-0210054A - Start of list of what glyphs and items you own (owned item info).
   Each item takes up 1 byte.
@@ -560,6 +615,22 @@ A 200% attack boost (triple) takes 0xFFFF (0d65535) AP.
 
 02100B34,4 - Has a pointer to 022EB1A0, the start of asset memory.
 
+02100A9C,4 - Bitfield of fade out timers currently running?
+  Take the index of a timer in list 02100AC8 and add 0x10 and you get the index of a bit in this bitfield.
+  If the bit is set, the timer is still counting down.
+  If the bit is not set, the timer has reached 0.
+02100AC8 - List of fade out timer countdowns currently running? (for the bottom screen)
+02100ADC - List of fade out timer countdowns currently running? (for the top screen)
+  Each entry is a word, which is the number of frames left in the countdown.
+02100AA0 - List of increment values to add to entries in list 02100AF0 every frame (bottom screen)
+02100AB4 - List of increment values to add to entries in list 02100B04 every frame (top screen)
+02100AF0 - List of current bottom screen fade out values.
+02100B04 - List of current top screen fade out values.
+  Divide these values by 0x1000 to get the value to put in 0400006C/0400106C.
+
+02101142,1 - ?? bitfield
+  08 - player pressed start to skip a cutscene?
+
 021011F4,2 - Next globally unique ID for an entity.
   This is incremented every time an entity is created so that entities have a uniquely identifier number, even across different rooms.
   This starts at 1 when resetting the game.
@@ -571,6 +642,7 @@ A 200% attack boost (triple) takes 0xFFFF (0d65535) AP.
   00,4: Number of entities (number of tail sections peeping eye has, 8)
   30-6F: Pointers to each individual joint entity used by this enemy.
   40,4: Pointer to entity of some kind?
+  5C,1: ?
   70-8F: List of globally unique entity IDs for each individual joint entity used by this enemy.
     Halfwords. This is copied from joint entity+12.
   90,1: Number of joint entities used by this skeletally animated enemy? (number of body sections white dragon has, 0x10)
@@ -782,7 +854,8 @@ Sprite info for the pause menu:
   022B48D8,4 - Has the palette pointer.
   022B48DC-022B48F3 - Has the GFX asset indexes.
 
-022B590C - List of sprite files for each event actor (asset indexes).
+022B590C - List of sprite files for each event actor.
+  Entry length 4. Each entry is the asset index of the sprite file.
 022B5950 - List of palette pointers for each event actor.
 022B59D8
 022B5A1C

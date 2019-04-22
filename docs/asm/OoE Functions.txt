@@ -74,6 +74,22 @@
   ; r0 - Sfx index
 0202C8C8 PlaySfx??
 
+020270D4 StartScreenFadeTransition
+  ; r0 - 0 for bottom screen, 1 for top screen.
+  ; r1 - Index of the timer in list 02100AC8
+  ; r2 - Brightness value to start fading at. 0x10 for completely white, 0 for normal, -0x10 for completely black.
+  ; r3 - Brightness value to fade towards. 0x10 for completely white, 0 for normal, -0x10 for completely black.
+  ; [r13] - Number of frames for the fade out to take
+02027184 CheckFadeTransitionComplete
+  ; r0 - 0 for bottom screen, 1 for top screen.
+  ; r1 - Index of the timer in list 02100AC8
+
+02002CF4 SetScreenBrightness
+  ; r0 - Where to store the brightness value. 0400006C for the bottom screen, 0400106C for the top screen.
+  ; r1 - The brightness to set.
+  ;   Positive (1 to 0x10) makes the whole screen whiter, negative (-1 to -0x10) makes the whole screen blacker.
+  ; Used for screen fade out transitions.
+
 02038C1C ChangeRoom
   ; r0 - New room pointer
 02039508 GetAreaSectorRoomIndexesByRoomPointer
@@ -94,6 +110,9 @@
   ; r2 - Room index
   ; r3 - X pos (pixels)
   ; [r13] - Y pos (pixels)
+  ; Note that you should call TriggerRoomTransition immediately after calling this for it to actually work.
+  ; Calling TeleportPlayer without TriggerRoomTransition will just bug out the game.
+0203B014 TriggerRoomTransition
 
 0204FB1C CalcExpNeededForLevel
   ; Figures out the total EXP for a given level.
@@ -793,12 +812,22 @@
   ; r0 - Pointer to the OAM data (in list 021427E0 or 02145B2C)
   ; r1 - Pointer to ? (e.g. 021434CC)
 
-0222F848 PlayerTeleport
-  ; r0 - Pointer to entity calling this function?
-  ; r1 - ??? 0
+0222F848 CreateEventActor
+  ; r0 - Pointer to the event entity calling this function
+  ; r1 - Event actor index. 0 means Shanoa, in which case it teleports the player to the specified position.
   ; r2 - ??? 1
   ; r3 - x pos (in pixels) to set
   ; [r13,0] - y pos (in pixels) to set
+
+02061284 SpawnBossOrb
+  ; r0 - X pos
+  ; r1 - Y pos
+  ; r2 - Z pos
+  ; r3 - ?
+  ; [r13] - ?
+02060CFC BossOrbCreate
+02060D90 BossOrbDraw
+02060E24 BossOrbUpdate
 
 0206D6B0 GlyphUpdate
 0206D250 GlyphDistort
@@ -1275,6 +1304,7 @@
 022334EC Object5FUpdate
 022375E4 Object60Create
 02237A24 Object60Update
+022372B0 Object60SoulVesselUpdate
 022C20B8 Object61Create
 022C21A0 Object61Update
 022C29D4 Object62Create
