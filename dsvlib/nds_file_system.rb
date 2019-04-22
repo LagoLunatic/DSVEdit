@@ -415,11 +415,13 @@ class NDSFileSystem
     else
       constant = 2
     end
-    if bit_index == 0
+    if bit_index <= 1
       constant_shift = 0
     else
       constant_shift = (0x10 - bit_index/2)
     end
+    
+    constant_shift &= 0x0F
     
     return [constant, constant_shift]
   end
