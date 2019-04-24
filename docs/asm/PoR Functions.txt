@@ -103,6 +103,12 @@
   ; r1 - Player index you're switching to
   ; Reads from list 0221E1DC to know which voice line to play for this combination of characters.
 
+02096F04 SetScreenBrightness
+  ; r0 - Where to store the brightness value. 0400006C for the bottom screen, 0400106C for the top screen.
+  ; r1 - The brightness to set.
+  ;   Positive (1 to 0x10) makes the whole screen whiter, negative (-1 to -0x10) makes the whole screen blacker.
+  ; Used for screen fade out transitions.
+
 02050544 ShowTextPopup
   ; r0 - Text index of the text to display.
 
@@ -182,6 +188,9 @@
   ; r0 - Item type (2 is consumable, etc)
   ; r1 - Index of the item
   ; Returns r0 - global ID+1 of the item
+021E4860 GetItemTypeByGlobalID+1
+  ; r0 - Item global ID+1
+  ; Returns the item type (2 is consumables, etc)
 
 021D95D4 EnemyCheckDrops
   ; r0 - Entity
@@ -315,6 +324,9 @@
 
 02012E44 DeleteEntity
   ; r0 - Entity pointer
+02012CBC DeleteEntity2
+  ; r0 - Entity pointer
+  ; Calls the entity's detroy code, does some other things?, then calls DeleteEntity.
 
 0201291C DummyUpdate
   ; Does nothing, immediately returns.
@@ -376,8 +388,8 @@
   ; Arguments taken are the same as LoadSpriteMultiGfx.
   ; Unsure how this is different. This is called by Andras for example.
 02010654 LoadGFX
-  ; r0 - Either the GFX pointer or the GFX list pointer
-  ; r1 - ? 0x14
+  ; r0 - GFX asset pointer
+  ; r1 - 0x14? index in list 020FB204
   ; r2 - Number of GFX pages to load
   ; r3 - Size of each GFX page. 1 for 128x128 pages. 4 for 256x256 pages.
 

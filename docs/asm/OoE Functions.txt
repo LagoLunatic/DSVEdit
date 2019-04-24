@@ -18,7 +18,7 @@
   ; r2 - Update function pointer for the new entity
 02028C1C DeleteEntity
   ; r0 - Entity pointer
-02028D00 DeleteEntity2?
+02028D00 DeleteEntity2
   ; r0 - Entity pointer
   ; Calls the entity's detroy code, does some other things?, then calls DeleteEntity.
 

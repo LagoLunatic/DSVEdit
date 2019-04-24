@@ -181,7 +181,7 @@ There are 41 entries in the list total.
 020C7464 - List of currently loaded GFX assets.
   Entry length 0x14.
   0x20 entries in totals.
-  The index in this list is argument r1 to func 0200EC6C
+  The index in this list is argument r1 to func LoadGFX
   00,4: Index in this same list of the first entry for this asset.
     Assets can take up multiple slots in a row, so if an asset is using slots 0x11-0x14, all 4 of those will have 0x11 for this value.
     If this value is 0xFFFFFFFF this slot is empty.

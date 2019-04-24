@@ -321,6 +321,9 @@ Enemies:
   Requires enemy overlay 74.
 8E Legion
   Requires enemy overlay 52.
+  Var A:
+    0 Boss rush
+    1 Normal
 8F Dagon
   Requires enemy overlay 59.
   Var A:
@@ -346,8 +349,10 @@ Enemies:
   Var B: Normally 0. If greater than 0, then Loretta doesn't bob up and down or animate at all, she's just frozen completely still.
 93 Brauner
   Requires enemy overlay 55.
-  Var A and B are 1 for normal Brauner (teleports the player to sector 0, room 0 on death).
-  Var A and B are 0 for boss rush Brauner.
+  Var A:
+    0 Boss rush
+    1 Normal (teleports the player to sector 0, room 0 on death)
+  Var B: If 1, Brauner will make the screen flash white for a brief instant when you enter the room. Otherwise he won't.
 94 The Creature
   Requires enemy overlay 60.
   Var A:

@@ -165,6 +165,9 @@ Special objects:
     00 Composed of multiple logs.
     01 One long wooden plank.
 3F Platform that floats up and down.
+  Starts at position 0x80,0x80 and moves down to 0x80,0x130, then back to its starting position.
+  Var A: Which platform this is. 0-2.
+    This object is coded so that different values for this could have had different positions and movement speeds, but all three platforms have the same values, so it makes no difference.
 40 Large pushable switch.
   Requires sector overlay 81.
 41 Wall of fire and button to the left that lowers it.

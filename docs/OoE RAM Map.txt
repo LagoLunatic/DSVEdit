@@ -482,6 +482,7 @@ A 200% attack boost (triple) takes 0xFFFF (0d65535) AP.
     This activates the event where you bring the Dominus pieces to barlowe before you fight him.
   1A 04000000 - Saw event before fighting Barlowe.
     This activates the Barlowe fight in ecclesia.
+  1B 08000000 - Saw event after fighting Barlowe.
   (more)
 0210038C - Bitfield of event flags, continued.
   2A 00000400 - Rescued Jacob

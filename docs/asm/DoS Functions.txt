@@ -55,7 +55,7 @@
   ; r0 - Boss index
   ; r1 - How to complete the magic seal (see above).
   ; This function reads from list 0222F290, a list of which magic seal is for each boss.
-022149C8 PreloadMagicSealForBossAssets
+022149C8 PreloadMagicSealAssetsForBoss
   ; r0 - Boss index
 02213C04 CheckMagicSealShouldAutoComplete
   ; Returns false if in Soma mode, true otherwise.
@@ -379,12 +379,11 @@
   ; [r13] - ? 0?
 0201A990 LoadCommonSprite
   ; r0 - Entity
-
-0200EC6C LoadGFXAsset?
+0200EC6C LoadGFX
   ; r0 - GFX asset ptr
   ; r1 - 0x10? index in list 020C7464
-  ; r2 - 1?
-  ; r3 - 1 for 128x128 images, 4 for 256x256 images
+  ; r2 - Number of GFX pages to load
+  ; r3 - Size of each GFX page. 1 for 128x128 pages. 4 for 256x256 pages.
 
 0200D0BC EntityInitAnimations
   ; r0 - Entity

@@ -215,6 +215,16 @@
   00,2: 
   04,1:
 
+020FB204 - List of currently loaded GFX assets.
+  Entry length 0x14.
+  0x20 entries in totals.
+  The index in this list is argument r1 to func LoadGFX
+  00,4: Index in this same list of the first entry for this asset.
+    Assets can take up multiple slots in a row, so if an asset is using slots 0x11-0x14, all 4 of those will have 0x11 for this value.
+    If this value is 0xFFFFFFFF this slot is empty.
+  09,1: Might be the total number of slots in this list used for this particular asset. (Only set for the first entry of each asset.)
+  0C,4: GFX asset pointer.
+
 020FB520-020FB79F - List of currently loaded room entity palettes.
   Entry length 8.
   Number of entries: 0x50.
@@ -272,6 +282,14 @@
 020FC4CA,2 - Y pos on the touch screen that was last touched and held for at least 4 frames.
 020FC4CC,2 - X pos difference on the touch screen touched compared to last frame.
 020FC4CE,2 - Y pos difference on the touch screen touched compared to last frame.
+
+020F61F8,4 - Bitfield relating to screen brightness?
+  & 01 - Should set bottom screen brightness
+  & 04 - Should set top screen brightness
+020F61FC,4 - Screen brightness value to set
+020FC4DC,4 - ?
+020FC4E0,4 - ?
+020FC4E4,4 - ?
 
 === 020FC500 - 0211173F: Entities currently loaded into memory. Each is 0x160 bytes long. They range from 0-F5.
 
@@ -503,6 +521,8 @@ F5-F5  021115E0-0211173F  ?
   TODO
   Includes what breakable walls have been destroyed.
 02111BB0 - Event flags.
+  09 - Set after defeating Stella?
+  0A - Set after talking to Wind about Stella's locket?
   0E - Set after defeating sisters?
   10 - Set after defeating sisters?
   1F - Sisters cured.
