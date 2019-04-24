@@ -778,8 +778,6 @@ F0-F0  0211DCA0-0211DDFF  ?
   60,2: Bitfield of ?.
     0100 - Turn off and layer will be invisible?
 
-when you first enter a new area, the game determines which entrance room to put you at by the sector/room indexes listed on the map metadata. so if you switch the indexes of the first and second entrance the game will put you at the second instead.
-
 0213C7C0-213CFBF - Tile mapping for BG2 layer.
 
 021427E0-02142BDF - List of sprites in the bottom screen OAM.
@@ -789,6 +787,11 @@ when you first enter a new area, the game determines which entrance room to put 
 02149028,4 - Currently loaded sector overlay index.
 
 0214B0C6,1 - Number of explored area entrances on the current area's map.
+  If this is less than 2, you auto-enter the area when selecting it on the world map, instead of being given the choice of what entrance to go in.
+
+when you first enter a new area, the game determines which entrance room to put you at by the sector/room indexes listed on the map metadata. so if you switch the indexes of the first and second entrance the game will put you at the second instead.
+
+there's a switch statement at 02045A84 where it hardcodes the sector and room index of the "default" entrance for each area.
 
 0214B1E0-021511DF - Pixel data for the map.
 
