@@ -593,6 +593,7 @@ class DoSMapTile
       else
         @is_save        =  tile_metadata & 0b10000000_00000000 > 0
         @is_warp        =  tile_metadata & 0b01000000_00000000 > 0
+        @is_entrance    =  tile_metadata & 0b00001000_00000000 > 0
         @sector_index   = (tile_metadata & 0b00000011_11000000) >> 6
         @room_index     =  tile_metadata & 0b00000000_00111111
       end
@@ -630,6 +631,9 @@ class DoSMapTile
       end
       if is_warp
         @tile_metadata |= 1 << 14
+      end
+      if is_entrance
+        @tile_metadata |= 1 << 11
       end
       if GAME == "hod"
         if is_castle_b_warp
