@@ -358,8 +358,17 @@
   ; r3 - Soul index
 021E8F78 SoulUpdate
 
-021D7998 CreateRoomEntity
+021D7264 LoadRoomEntities
+021D7390 LoadRoomSpecialObjects
+021D7684 LoadRoomEnemies
+021D761C LoadRoomPickupsAndCandles
+021D72D0 LoadRoomFontLoaders
+021D7998 LoadRoomEntity
   ; r0 - Pointer to the entity in the room's entity list.
+021D786C CheckEntityHiderActive
+  ; r0 - Pointer to the room's entity list
+  ; r1 - Index of the entity hider in the entity list
+  ; Checks the entity hider's condition and returns 1 if the entity hider should hide the rest of the entities in the list, or 0 if it should not.
 
 0201C1B8 LoadSpriteMultiGfx
   ; r0 - Entity ptr

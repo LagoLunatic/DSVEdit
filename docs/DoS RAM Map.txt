@@ -446,11 +446,11 @@ What each range of entity slots is for:
   0B 00000800 - Event 67
   0C 00001000 - Event 68 (julius in silenced ruins defeated by dario)
   0D 00002000 - Event 69
-  0E 00004000 - 
-  0F 00008000 - 
-  10 00010000 - Event 6A bad end
-  11 00020000 - Unused? 6A bad end?
-  12 00040000 - Event 
+  0E 00004000 - Event 69 bad end?
+  0F 00008000 - Event 69 defeated Aguni?
+  10 00010000 - Event 6A bad end?
+  11 00020000 - Event 6A bad end?
+  12 00040000 - 
   13 00080000 - Event 6B
   14 00100000 - Event 6C for entered menace fight?
   15 00200000 - Event 6D for halfway through menace fight?

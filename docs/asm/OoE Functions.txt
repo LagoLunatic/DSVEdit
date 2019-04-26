@@ -8,6 +8,8 @@
   ; r1 - Starting address to fill
   ; r2 - Number of bytes to fill
 
+020172C0 Abs
+
 0202C610 LoadSave
 
 02032DD8 LoadOverlay
@@ -257,6 +259,9 @@
 0209D1C8 ShowEnemyName
   ; Shows name of the enemy you attacked in the bottom-right corner of the screen.
   ; r0 - Text index of the enemy name
+
+02085238 GetTextStringPointer
+  ; r0 - Text ID
 
 0221B104 SpawnBlueChest
   ; r0 - X pos
