@@ -621,6 +621,7 @@ class Game
       
       patch_file = "asm/#{patch_name}.asm"
     end
+    patch_file_dir = File.dirname(patch_file)
     
     if !File.file?(patch_file)
       raise "Could not find patch file: #{patch_file}"
@@ -654,6 +655,16 @@ class Game
       FileUtils.cp(patch_file, tmpdir)
       patch_file_name = File.basename(patch_file)
       temp_patch_file = File.join(tmpdir, patch_file_name)
+      
+      # Need to copy any files included by the patch file to the temporary directory so armips can find them.
+      patch_contents = File.read(temp_patch_file)
+      patch_contents.each_line do |line|
+        if line =~ /.include "([^"]+)"/
+          included_file_name = $1
+          included_file_path = File.join(patch_file_dir, included_file_name)
+          FileUtils.cp(included_file_path, tmpdir)
+        end
+      end
       
       stdout, stderr, status = Open3.capture3("./armips/armips.exe \"#{temp_patch_file}\"")
       if !status.success?
