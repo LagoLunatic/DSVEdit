@@ -226,6 +226,9 @@ class Room
     end
   end
   
+  alias x_pos room_xpos_on_map
+  alias y_pos room_ypos_on_map
+  
   def initialize_alternate_room_state(alternate_room_state_pointer)
     if alternate_room_state_pointer != 0
       begin
