@@ -204,16 +204,12 @@
   Used for the dynamic parts of menus like numbers and descriptions.
 
 020FA200 - List of sprite info for currently loaded entities.
-  The halfword at +6C in an entity's memory is the index in this list.
   Each entry is 0x10 bytes long.
+  The halfword at +6C in an entity's memory is the index in this list.
   00,2: Index of the next entry in this list that was unused at the time that this entry was created?
   02,2: 
-  08,4: Affects GFX. Index in list 020FB208.
+  08,4: The GFX for this sprite info. This is an index in list 020FB204.
   0C,4: Sprite pointer.
-020FB208 - List of ?.
-  Each entry is 0x14 bytes long.
-  00,2: 
-  04,1:
 
 020FB204 - List of currently loaded GFX assets.
   Entry length 0x14.
@@ -222,6 +218,8 @@
   00,4: Index in this same list of the first entry for this asset.
     Assets can take up multiple slots in a row, so if an asset is using slots 0x11-0x14, all 4 of those will have 0x11 for this value.
     If this value is 0xFFFFFFFF this slot is empty.
+  04,2: 
+  08,1: 
   09,1: Might be the total number of slots in this list used for this particular asset. (Only set for the first entry of each asset.)
   0C,4: GFX asset pointer.
 

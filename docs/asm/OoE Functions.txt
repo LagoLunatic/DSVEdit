@@ -820,9 +820,10 @@
 0222F848 CreateEventActor
   ; r0 - Pointer to the event entity calling this function
   ; r1 - Event actor index. 0 means Shanoa, in which case it teleports the player to the specified position.
-  ; r2 - ??? 1
-  ; r3 - x pos (in pixels) to set
-  ; [r13,0] - y pos (in pixels) to set
+  ; r2 - 0 for the actor to face left, 1 for them to face right.
+  ; r3 - X pos (in pixels) to set
+  ; [r13,0] - Y pos (in pixels) to set
+  ; Returns 1 if the actor was created successfully, or 0 if not.
 
 02061284 SpawnBossOrb
   ; r0 - X pos

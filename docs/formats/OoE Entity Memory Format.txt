@@ -32,7 +32,7 @@ Memory used for entities in OoE is 021092A0 - 0211DF5F. Each entity is 0x160 byt
     Note that things that affect the entire entity's palette are not affected by this, like the entity's palette offset. Only the palette specified by each sprite part is ignored.
     (This is used by the slash trails of melee weapons.)
   0040 Ignore part GFX page indexes?
-  0080 Direction. Set if facing left, clear if facing right.
+  0080 Direction. Set if facing left, clear if facing right. (Horizontal flip.)
   0200 Pulsating effect, used by Invisible Man.
   0400 If set, the entity's opacity value will only be used when drawing parts that have a nonzero palette index.
     (This is used by the slash trails of melee weapons.)
