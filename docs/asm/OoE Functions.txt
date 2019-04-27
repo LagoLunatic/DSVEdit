@@ -864,6 +864,8 @@
   ; r2 - Which summon index
   ; r3 - Summon level
 
+0223488C GetNumRescuedVillagers
+
 020FFC58 GameObject
 
 ; Enemy-specific code

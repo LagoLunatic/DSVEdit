@@ -430,6 +430,7 @@ Special Objects:
 88 Event - Good ending.
 89 Event - A villager trapped in Torpor.
   Var A: In addition to being the event flag set by this event, it also controls which villager appears. Hardcoded values:
+    0D George (Shows wrong text. For proper support, apply the ooe_allow_moving_george.asm patch.)
     2A Jacob
     2D Abram
     32 Laura

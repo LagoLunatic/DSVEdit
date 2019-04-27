@@ -460,13 +460,13 @@ A 200% attack boost (triple) takes 0xFFFF (0d65535) AP.
   04 00000010 - Saw the second tutorial event.
   05 00000020 - Saw the third tutorial event.
   06 00000040 - Met Albus in Monastery.
-  07 00000080 - 
-  08 00000100 - can trigger event in minera prison island where albus gives you the first part of dominus?
+  07 00000080 - Saw Nikolai trapped in Torpor in Wygol. (Note that this flag actually counts as rescuing Nikolai due to a bug.)
+  08 00000100 - Freed Nikolai from Torpor in Wygol. (This does not count as rescuing Nikolai.)
   09 00000200 - Met Albus in Minera Prison Island and got the first piece of Dominus from him.
   0A 00000400 - (barlowe related, set by event 6A)
   0B 00000800 - Saw the event at the end of the Lighthouse.
   0C 00001000 - Met Albus in Skeleton Cave.
-  0D 00002000 - Saved George in Skeleton Cave.
+  0D 00002000 - Rescued George in Skeleton Cave.
   0E 00004000 - 
   0F 00008000 - Met Albus in Giant's Dwelling and got the second piece of Dominus from him.
   10 00010000 - (barlowe related, set by event 70)
@@ -863,6 +863,13 @@ Sprite info for the pause menu:
 022B5950 - List of palette pointers for each event actor.
 022B59D8
 022B5A1C
+
+022B5C10 - List of villagers.
+  Entry length 0xA.
+  00,2: X pos.
+  02,2: Y pos.
+  04,1: Var A of the object 5F that should create this villager in Wygol.
+  08,1: Event flag index for this villager being rescued.
 
 022B5D60-022B5DAB - List of X and Y positions for each area's world map icon.
   Entry length 4.
