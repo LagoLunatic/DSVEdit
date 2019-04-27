@@ -258,7 +258,8 @@
   ; r0 - Index of the consumable
   ; Calls func 021E3AA8 with r1=0 and r2=1.
 
-0205582C MapUpdateAndDrawBackground
+0205582C TopScreenUpdateAndDraw
+
 02030570 MapGetExploredTileListForArea
   ; r0 - Area index
   ; Returns r0 - Pointer to the start of this area's list of explored tiles.
@@ -286,6 +287,46 @@
   ; Returns the proportion of explored map tiles on this map out of decimal 1000 (so 100% with one decimal point).
 02032E34 AllMapsGetPercentExplored
   ; Adds up the percentages explored on each of the individual 10 maps into a total percentage out of decimal 10000 (so 1000% with one decimal point).
+
+0203000C MapGet???
+  ; r0 - Area index
+  ; r1 - X pos on the map
+  ; r2 - Y pos on the map
+  ; Returns ???
+0203093C MapGetCurrentArea???
+  ; r0 - X pos on the map
+  ; r1 - Y pos on the map
+  ; Returns ???
+
+0202F138 MapDraw???ForArea
+  ; r0 - Area index
+02004000 MapShowChanges1??
+  ; This must be called after 0202F138 for any visual changes to take effect... but only for the warp select, not the map menu?
+0202E854 MapShowChanges2??
+  ; This must be called after 0202F138 for any visual changes to take effect?
+0202E5B0 MapDraw???ForCurrentArea
+
+02051B38 WarpScreenAddObjects??
+  ; Seems responsible for adding the blinking position indicator and warp selection objects to the warp screen.
+0202DF18 SetWarpSelectScreenAreaIndexAndOtherThings?
+  ; r0 - Area index (to store to 0211AA71)
+
+0203072C WarpScreenSetWarpCycleOrder
+  ; Sets the horizontal and vertical cycle orders for all the warp points.
+
+02055CF4 SetTopScreenAreaName
+  ; r0 - Area name index (to store to 0211A756)
+
+0202DB68 GetSectorIndexByRoomPosOnCurrentAreaMap
+  ; r0 - Room X pos on the map in tiles
+  ; r1 - Room Y pos on the map in tiles
+0202DB3C GetRoomIndexByRoomPosOnCurrentAreaMap
+  ; r0 - Room X pos on the map in tiles
+  ; r1 - Room Y pos on the map in tiles
+0202DBF4 GetMapTileMetadata
+  ; r0 - Room X pos on the map in tiles
+  ; r1 - Room Y pos on the map in tiles
+  ; r2 - Area index
 
 0202E5F8 UpdatePlayerPositionOnMap
   ; Updates the four variables holding both players' positions on the map (0211177C, 0211177E, 02111780, 02111782).
@@ -399,6 +440,10 @@
   ; Returns r0 - the OAM shape and size attributes that match the width and height provided.
   ; It takes both width/0x10 and height/0x10 and clamps them within range 0-3.
   ; Then it uses (width*0x10)+height*4 as the index in list 020BE4DC, which has the OAM attributes for each size.
+
+020158FC GetNextFreeOAMSlotIndex
+  ; r0 - 0 for bottom screen, 1 for top screen
+  ; Returns the next free index in the OAM list, or -1 if there are no free slots.
 
 021DD000 LoadRoomEntities
   ; r0 - Room's entity list pointer
@@ -709,6 +754,11 @@
   ; [r13,C] - Text index of the text to render (e.g. 516 is a single colon)
   ; [r13,10] - 
   ; [r13,14] - 
+
+020555B0 RenderSpriteToOAM
+  ; r0 - Pointer to the sprite header
+  ; r1 - 
+  ; r2 - 
 
 0203D3AC InitializeMenuBG1
   ; r0 - Menu entity (02110F00)

@@ -12,6 +12,9 @@
   01,1: Height.
 020BF914-020BF92F - List of the number of map tiles in each area's map. Halfwords.
 
+020BF930-020BF94F - The palette for the map.
+  This is not a palette list, just a single palette without the usual palette header.
+
 020BFA74 - List of layer scroll modes.
   Each is 0xC bytes long.
   00,4: Horizontal scrolling multiplier (0x1000 = 1.0).
@@ -237,7 +240,7 @@
 
 020FBC64-020FC063 - List of sprites in the bottom screen OAM.
 020FC064-020FC463 - List of sprites in the top screen OAM.
-  Entry length 0x10.
+  Entry length 8.
 
 020FC46C,2 - Next globally unique ID for an entity.
   This is incremented every time an entity is created so that entities have a uniquely identifier number, even across different rooms.
@@ -384,6 +387,18 @@ F5-F5  021115E0-0211173F  ?
 
 === 0211173F: End of entities currently loaded into memory.
 
+02111744,1 - State of the map on the bottom screen.
+  1 - ?? Switches to 2 after a moment
+  2 - Not displayed
+  4 - Displayed
+02111745,1 - Substate of the map on the bottom screen.
+  When state is 4:
+    0 - Debug map.
+      Touching a room on the debug map with the touch screen warps you there instantly.
+      The room you touch doesn't have to be explored.
+    1 - Warp select screen
+    2 - Maps menu
+
 0211174C - Bitfield of global game flags.
   0x00000001 - Disables pausing and switching to or calling your partner.
   0x00000002 - Set during boss fights. Disables suspending, magical tickets, and keeps boss doors shut.
@@ -415,6 +430,9 @@ F5-F5  021115E0-0211173F  ?
 0211177E,2 - Player 2's X pos on the map.
 02111780,2 - Player 1's Y pos on the map.
 02111782,2 - Player 2's Y pos on the map.
+02111784,1 - Affects how to draw the map.
+  Should be 0 to draw the map normally for a single area.
+  Otherwise it'll do some kind of debug draw where it shows all area maps on the same screen.
 02111785,1 - Current area index.
 02111789,1 - If this is 1 a save was loaded, or 0 if starting a new game (or new game+).
 
@@ -430,16 +448,16 @@ F5-F5  021115E0-0211173F  ?
   The first bit is set if it's revealed by a map item but not explored.
   Both bits are set if it's explored.
   Each area's list starts at:
-  00 02111794
-  01 021118AC
-  02 021118D6
-  03 021118F8
-  04 02111922
-  05 02111812
-  06 02111844
-  07 0211186C
-  08 02111890
-  09 0211194E
+  00 02111794 Dracula's Castle
+  01 021118AC City of Haze
+  02 021118D6 13th Street
+  03 021118F8 Sandy Grave
+  04 02111922 Forgotten City
+  05 02111812 Nation of Fools
+  06 02111844 Burnt Paradise
+  07 0211186C Forest of Doom
+  08 02111890 Dark Academy
+  09 0211194E Nest of Evil
   The game doesn't have a list of pointers to each of these lists for each area. Instead function 02030570 is used to hardcode these pointers.
 
 0211196E-021119A9 List of player-positioned map reminder markers.
@@ -780,6 +798,16 @@ TODO: What are the other 2 for? It's not for the "recent" tab.
 02112CB8 - List of pointers to joint entities.
   The pointers are to each joint's entity, so to get the joint data itself (in list 02112A98) go to this entity, and the pointer at entity+158 will be a pointer to the joint data.
 
+0211A754,1 - ???
+0211A755,1 - Old area name index?
+0211A756,1 - What area name index to show on the top screen.
+0211AA68,4 - ? function pointer or 0
+  when on warp select screen, pointer to 0202E198?
+0211AA6C,4 - ? function pointer or 0
+  when on warp select screen, pointer to 0202DF5C?
+0211AA71,1 - Area index for the warp selection screen to use?
+0211AA74,1 - 1 when on warp select screen
+
 0211AB30,1 - What type of top screen is currently displayed.
   00 Map
   01 Info screen
@@ -828,6 +856,25 @@ TODO: What are the other 2 for? It's not for the "recent" tab.
     D 
   The space between each entry here seems to be hardcoded around 02011FC0. 0x8700 is the difference between Richter and Maria's sprite file space for example.
   (The last one is found first via the normal means. Then the others are spaced out before it by subtracting hardcoded values from that.)
+
+021368AF,1 - Area index of the map you're currently viewing on the map screen.
+021368B0,2 - Bitfield of which areas you have the map unlocked for. This is used by the map menu.
+  The area index is the index of the bit.
+021368B8-021368F3 - List of unlocked warp points on the currently displayed map.
+  Entry length 5.
+  00,1: X pos of the warp.
+  01,1: Y pos of the warp.
+  02,1: X index of this warp room compared to other warp rooms.
+    Used for deciding what warp room to select when pressing left/right on the dpad. Left selects the warp room with 1 less X index, right selects the warp room with 1 more X index.
+  03,1: Y index of this warp room compared to other warp rooms.
+    Used for deciding what warp room to select when pressing up/down on the dpad. Up selects the warp room with 1 less Y index, down selects the warp room with 1 more Y index.
+  04,1: Area name index for this warp.
+  (Note that entries in this list are not zeroed out when switching maps, so don't read any more than the number of warps at 021368F6,1.)
+021368F4,1 - Index of the warp point the player is currently physically located at.
+021368F5,1 - Index of the currently selected warp on the warp select screen.
+021368F6,1 - Total number of warp points unlocked on the current map.
+
+02136900-0213C8FF - Map pixel data.
 
 0213C948 - something asset-related?
 
