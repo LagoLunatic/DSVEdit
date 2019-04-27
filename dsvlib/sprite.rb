@@ -302,6 +302,13 @@ class Sprite
   end
   
   def write_to_rom_by_pointer
+    if GAME == "dos"
+      overlay_id = 3
+      # (Note that both overlays 2 and 3 are used for sprite data in DoS, but 3 is the larger one.)
+    else
+      overlay_id = nil
+    end
+    
     if @parts_by_offset.values != @parts
       # If parts were added/removed, we need to free the space used by the original parts, then get new free space for the new parts.
       @parts_by_offset.each do |offset, part|
@@ -309,7 +316,7 @@ class Sprite
       end
       @parts_by_offset = {}
       if @parts.length > 0
-        part_list_offset = fs.get_free_space(@parts.length*Part.data_size, nil)
+        part_list_offset = fs.get_free_space(@parts.length*Part.data_size, overlay_id)
         offset = part_list_offset
         @parts.each do |part|
           @parts_by_offset[offset] = part
@@ -329,7 +336,7 @@ class Sprite
       end
       @hitboxes_by_offset = {}
       if @hitboxes.length > 0
-        hitbox_list_offset = fs.get_free_space(@hitboxes.length*Hitbox.data_size, nil)
+        hitbox_list_offset = fs.get_free_space(@hitboxes.length*Hitbox.data_size, overlay_id)
         offset = hitbox_list_offset
         @hitboxes.each do |hitbox|
           @hitboxes_by_offset[offset] = hitbox
@@ -348,7 +355,7 @@ class Sprite
       end
       @frames_by_offset = {}
       if @frames.length > 0
-        @frame_list_offset = fs.get_free_space(@frames.length*Frame.data_size, nil)
+        @frame_list_offset = fs.get_free_space(@frames.length*Frame.data_size, overlay_id)
         offset = @frame_list_offset
         @frames.each do |frame|
           @frames_by_offset[offset] = frame
@@ -405,7 +412,7 @@ class Sprite
       if @animations.length > 0
         if SYSTEM == :gba
           @animations.each do |anim|
-            anim_offset = fs.get_free_space(Animation.data_size + anim.frame_delays.length*FrameDelay.data_size, nil)
+            anim_offset = fs.get_free_space(Animation.data_size + anim.frame_delays.length*FrameDelay.data_size, overlay_id)
             @animations_by_offset[anim_offset] = anim
             offset = anim_offset+Animation.data_size
             anim.frame_delays.each do |frame_delay|
@@ -414,9 +421,9 @@ class Sprite
             end
           end
           
-          @animation_list_offset = fs.get_free_space(@animations.length*4, nil)
+          @animation_list_offset = fs.get_free_space(@animations.length*4, overlay_id)
         else
-          anim_list_offset = fs.get_free_space(@animations.length*Animation.data_size, nil)
+          anim_list_offset = fs.get_free_space(@animations.length*Animation.data_size, overlay_id)
           offset = anim_list_offset
           @animations.each do |anim|
             @animations_by_offset[offset] = anim
@@ -441,7 +448,7 @@ class Sprite
       end
       @frame_delays_by_offset = {}
       if @frame_delays.length > 0
-        frame_delay_list_offset = fs.get_free_space(@frame_delays.length*FrameDelay.data_size, nil)
+        frame_delay_list_offset = fs.get_free_space(@frame_delays.length*FrameDelay.data_size, overlay_id)
         offset = frame_delay_list_offset
         @frame_delays.each do |frame_delay|
           @frame_delays_by_offset[offset] = frame_delay
