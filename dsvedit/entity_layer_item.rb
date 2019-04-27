@@ -3,6 +3,7 @@ class EntityLayerItem < Qt::GraphicsRectItem
   attr_reader :entities
   
   VILLAGER_EVENT_FLAG_TO_NAME = {
+    0x0D => "George",
     0x2A => "Jacob",
     0x2D => "Abram",
     0x32 => "Laura",
@@ -50,7 +51,12 @@ class EntityLayerItem < Qt::GraphicsRectItem
       villager_name = VILLAGER_EVENT_FLAG_TO_NAME[entity.var_a]
       villager_info = OTHER_SPRITES.find{|other| other[:desc] == "#{villager_name} event actor"}
       sprite_info = SpriteInfo.extract_gfx_and_palette_and_sprite_from_create_code(pointer, @fs, nil, villager_info)
-      add_sprite_item_for_entity(entity, sprite_info, 0)
+      if villager_name == "George"
+        best_frame_index = 2
+      else
+        best_frame_index = 0
+      end
+      add_sprite_item_for_entity(entity, sprite_info, best_frame_index)
     elsif GAME == "aos" && entity.is_pickup? && (5..8).include?(entity.subtype) # soul candle
       soul_candle_sprite = COMMON_SPRITE.merge(palette_offset: 4)
       sprite_info = SpriteInfo.extract_gfx_and_palette_and_sprite_from_create_code(soul_candle_sprite[:pointer], @fs, soul_candle_sprite[:overlay], soul_candle_sprite)
