@@ -30,8 +30,12 @@
 .org 0x020825C0
   ldrb r0, [r0, 801h]
 
-.org 0x0208231C ; Code run right before warping, to determine if the point you selected to warp to is the one you're already at or not.
-  b @CheckSelectedWarpInCurrentArea
+; Fix the code that runs right before deciding to warp that determines if the warp you selected it he one you're already at or not.
+; Normally it only checks the warp index, but we need to also check the area index now.
+.org 0x0208231C
+  b @CheckSelectedWarpInCurrentAreaForButtons
+.org 0x02082618
+  b @CheckSelectedWarpInCurrentAreaForTouchScreen
 
 ; Code run when warping, to determine what area, sector, and room indexes you should be warping to.
 .org 0x020832C0
@@ -214,9 +218,9 @@
   strb r0, [r1]
   b 0x02082C94 ; Return to normal code
 
-@CheckSelectedWarpInCurrentArea:
+@CheckSelectedWarpInCurrentAreaForButtons:
   cmp r1, r0 ; Replace the line we overwrote to jump here which checks if the warp index selected is the warp index the player is physically at already
-  bne 0x02082320
+  bne 0x02082334
   
   ldr r0, =02111785h ; Area index the player is actually in
   ldrb r0, [r0]
@@ -225,6 +229,17 @@
   cmp r0, r1
   beq 0x02082320 ; If the warp the player selected is in the area they're physically located in, just close the warp screen as normal.
   b 0x02082334 ; Otherwise, take the warp. Even though the warp index is the same, the area index being different means it's a different warp point.
+
+@CheckSelectedWarpInCurrentAreaForTouchScreen:
+  bne 0x02082644 ; Replace the line we overwrote to jump here which checks if the warp index selected is the warp index the player is physically at already
+  
+  ldr r1, =02111785h ; Area index the player is actually in
+  ldrb r1, [r1]
+  ldr r2, =021368AFh ; Area index of the map currently displayed
+  ldrb r2, [r2]
+  cmp r1, r2
+  beq 0x0208261C ; If the warp the player selected is in the area they're physically located in, just close the warp screen as normal.
+  b 0x02082644 ; Otherwise, take the warp. Even though the warp index is the same, the area index being different means it's a different warp point.
 
 
 @DrawArrowsOnBottomScreen:
