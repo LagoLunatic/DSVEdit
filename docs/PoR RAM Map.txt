@@ -62,7 +62,7 @@
 020E0204 - List of songs available for use as BGM. Halfwords.
 022E187C - List of songs->text indexes for sound test mode.
 
-020DF2D4-020DF2EF - List of map draw offsets. These offset each map from the upper left corner of the top screen.
+020DF2D4-020DF2EF - List of map draw offsets. These offset each map from the upper left corner of the screen.
   Entry length 2.
   00,1: X offset in groups of 2 tiles.
   01,1: Y offset in groups of 2 tiles.
@@ -247,7 +247,8 @@
   This starts at 1 when resetting the game.
   When FFFF is exceeded, it loops back around to 1. (0 is skipped.)
 
-020FC48C,2 - Bitfield of what buttons the player is pressing.
+
+020FC48C,2 - Bitfield of buttons the player is currently pressing.
   0001 - A
   0002 - B
   0004 - Select
@@ -261,9 +262,9 @@
   0400 - X
   0800 - Y
   2000 - Debug
-020FC48E,2 - Bitfield of what buttons the player pressed this frame.
-020FC49C,2 - Bitfield of what buttons the player is pressing. (Duplicate?)
-020FC49E,2 - Bitfield of what buttons the player pressed this frame. (Duplicate?)
+020FC48E,2 - Bitfield of buttons the player just pressed this frame.
+020FC49C,2 - Bitfield of buttons the player is currently pressing. (Duplicate?)
+020FC49E,2 - Bitfield of buttons the player just pressed this frame. (Duplicate?)
 
 020FC4B4,1 - Whether touch screen has been touched for at least 2 frames.
 020FC4B5,1 - Whether touch screen has been touched for exactly 2 frames.
@@ -271,18 +272,19 @@
 020FC4B7,1:
   Upper nibble: Whether the location currently touched on the touch screen is different from the location touched last frame.
   Lower nibble: Whether touch screen is currently being touched or not.
-020FC4B8,2 - X pos on the touch screen that was last touched.
-020FC4BA,2 - Y pos on the touch screen that was last touched.
-020FC4BC,2 - X pos on the touch screen that was last touched.
-020FC4BE,2 - Y pos on the touch screen that was last touched.
-020FC4C0,2 - X pos on the touch screen that was last touched and held for at least 2 frames.
-020FC4C2,2 - Y pos on the touch screen that was last touched and held for at least 2 frames.
-020FC4C4,2 - X pos on the touch screen that was last touched and held for at least 3 frames.
+020FC4B8,2 - X pos on the touch screen that was last touched. (Signed.)
+020FC4BA,2 - Y pos on the touch screen that was last touched. (Signed.)
+020FC4BC,2 - X pos on the touch screen that was last touched. (Signed.)
+020FC4BE,2 - Y pos on the touch screen that was last touched. (Signed.)
+020FC4C0,2 - X pos on the touch screen that was last touched and held for at least 2 frames. (Signed.)
+020FC4C2,2 - Y pos on the touch screen that was last touched and held for at least 2 frames. (Signed.)
+020FC4C4,2 - X pos on the touch screen that was last touched and held for at least 3 frames. (Signed.)
 020FC4C6,2 - Y pos on the touch screen that was last touched and held for at least 3 frames.
-020FC4C8,2 - X pos on the touch screen that was last touched and held for at least 4 frames.
-020FC4CA,2 - Y pos on the touch screen that was last touched and held for at least 4 frames.
-020FC4CC,2 - X pos difference on the touch screen touched compared to last frame.
-020FC4CE,2 - Y pos difference on the touch screen touched compared to last frame.
+020FC4C8,2 - X pos on the touch screen that was last touched and held for at least 4 frames. (Signed.)
+020FC4CA,2 - Y pos on the touch screen that was last touched and held for at least 4 frames. (Signed.)
+020FC4CC,2 - X pos difference on the touch screen touched compared to last frame. (Signed.)
+020FC4CE,2 - Y pos difference on the touch screen touched compared to last frame. (Signed.)
+
 
 020F61F8,4 - Bitfield relating to screen brightness?
   & 01 - Should set bottom screen brightness
@@ -860,8 +862,11 @@ TODO: What are the other 2 for? It's not for the "recent" tab.
 021368AF,1 - Area index of the map you're currently viewing on the map screen.
 021368B0,2 - Bitfield of which areas you have the map unlocked for. This is used by the map menu.
   The area index is the index of the bit.
+021368B2,1 - ?
+021368B3,1 - ?
 021368B8-021368F3 - List of unlocked warp points on the currently displayed map.
   Entry length 5.
+  0xC entries in total.
   00,1: X pos of the warp.
   01,1: Y pos of the warp.
   02,1: X index of this warp room compared to other warp rooms.

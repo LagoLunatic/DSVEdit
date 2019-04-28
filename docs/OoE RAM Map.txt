@@ -91,7 +91,7 @@
   Each of those pointers points to a list of pointers, one for each sector in that area.
   Each of those pointers points to a list of assets indexes to load for that sector.
 
-020ECCE0-020ECD07 - List of map draw offsets. These offset each map from the upper left corner of the top screen.
+020ECCE0-020ECD07 - List of map draw offsets. These offset each map from the upper left corner of the screen.
   Entry length 2.
   00,1: X offset in groups of 2 tiles.
   01,1: Y offset in groups of 2 tiles.
@@ -317,8 +317,21 @@ Player's current bonus elemental attribute points (AP):
 020FFE0E,2 - Bonus holy AP. Set to 0x1800 by Diamond Ring.
 020FFE10,2 - Bonus dark AP. Set to 0x1800 by Onyx Ring.
 
-020FFE9C,2 - Bitfield of currently pressed buttons.
-020FFE9E,2 - Bitfield of buttons pressed this frame.
+020FFE9C,2 - Bitfield of buttons the player is currently pressing.
+  0001 - A
+  0002 - B
+  0004 - Select
+  0008 - Start
+  0010 - Right
+  0020 - Left
+  0040 - Up
+  0080 - Down
+  0100 - R
+  0200 - L
+  0400 - X
+  0800 - Y
+  2000 - Debug
+020FFE9E,2 - Bitfield of buttons the player just pressed this frame.
 
 020FFEC4 - List of collidable entities.
   Each entry is 8 bytes long.
@@ -629,8 +642,42 @@ A 200% attack boost (triple) takes 0xFFFF (0d65535) AP.
 02100B04 - List of current top screen fade out values.
   Divide these values by 0x1000 to get the value to put in 0400006C/0400106C.
 
-02101142,1 - ?? bitfield
-  08 - player pressed start to skip a cutscene?
+
+02101140,2 - Bitfield of buttons the player is currently pressing.
+  0001 - A
+  0002 - B
+  0004 - Select
+  0008 - Start
+  0010 - Right
+  0020 - Left
+  0040 - Up
+  0080 - Down
+  0100 - R
+  0200 - L
+  0400 - X
+  0800 - Y
+  2000 - Debug
+02101142,2 - Bitfield of buttons the player just pressed this frame.
+
+02101124,1 - Whether touch screen has been touched for at least 2 frames.
+02101125,1 - Whether touch screen has been touched for exactly 2 frames.
+02101126,1 - Whether the location currently touched on the touch screen is the same as the location touched last frame.
+02101127,1:
+  Upper nibble: Whether the location currently touched on the touch screen is different from the location touched last frame.
+  Lower nibble: Whether touch screen is currently being touched or not.
+02101128,2 - X pos on the touch screen that was last touched. (Signed.)
+0210112A,2 - Y pos on the touch screen that was last touched. (Signed.)
+0210112C,2 - X pos on the touch screen that was last touched. (Signed.)
+0210112E,2 - Y pos on the touch screen that was last touched. (Signed.)
+02101130,2 - X pos on the touch screen that was last touched and held for at least 2 frames. (Signed.)
+02101132,2 - Y pos on the touch screen that was last touched and held for at least 2 frames. (Signed.)
+02101134,2 - X pos on the touch screen that was last touched and held for at least 3 frames. (Signed.)
+02101136,2 - Y pos on the touch screen that was last touched and held for at least 3 frames.
+02101138,2 - X pos on the touch screen that was last touched and held for at least 4 frames. (Signed.)
+0210113A,2 - Y pos on the touch screen that was last touched and held for at least 4 frames. (Signed.)
+0210113C,2 - X pos difference on the touch screen touched compared to last frame. (Signed.)
+0210113E,2 - Y pos difference on the touch screen touched compared to last frame. (Signed.)
+
 
 021011F4,2 - Next globally unique ID for an entity.
   This is incremented every time an entity is created so that entities have a uniquely identifier number, even across different rooms.
@@ -780,14 +827,68 @@ F0-F0  0211DCA0-0211DDFF  ?
 
 0213C7C0-213CFBF - Tile mapping for BG2 layer.
 
-021427E0-02142BDF - List of sprites in the bottom screen OAM.
-02145B2C-02145F2B - List of sprites in the top screen OAM.
+
+021427E0-02142BDF - List of OBJs in the bottom screen OAM.
   Entry length 0x10.
+02142D60,4 - Pointer to the OAM sprite slots list for the bottom screen (02142DC4).
+02142D64,4 - Total number of slots in the OAM sprite slots list for the bottom screen (A0).
+02142D7C - List of ? for the bottom screen OAM.
+  Entry length 4.
+
+02145B2C-02145F2B - List of OBJs in the top screen OAM.
+  Entry length 0x10.
+021460AC,4 - Pointer to the OAM sprite slots list for the top screen (02146110).
+021460B0,4 - Total number of slots in the OAM sprite slots list for the top screen (A0).
+021460C8 - List of ? for the top screen OAM.
+  Entry length 4.
+
+02142DC4-02145343 - OAM sprite slots list for the bottom screen.
+02146110-0214868F - OAM sprite slots list for the top screen.
+  Format:
+  00,2: Bitfield
+  02,2: Bitfield
+    & 0020 - If set, this sprite is visible.
+    & 0040 - If set, this slot is in use. Otherwise, it's considered a free slot.
+  08,1: GFX tile index offset, in terms of 0x80 8x8 tiles (or 0x1000 bytes).
+  09,1: Palette index offset.
+  0C,4: 
+  10,4: 
+  14,2: 
+  24,4: X pos (in subpixels).
+  28,4: Y pos (in subpixels).
+  2C,4: Z pos (0-F).
+  34,4: Pointer to 020B5C78??
+  38,2: FFFF?
+  3A,2: Frame index
+  34,4: Pointer to the sprite data
+
+0214B124 - List of OAM sprite slot pointers in use by the map screen.
+  0x16 entries in total.
+0214B180 - List of OAM sprite slot pointers in use by the warp select screen.
+  0xA entries in total.
+
 
 02149028,4 - Currently loaded sector overlay index.
 
+0214B08C,1 - Area index of the map you're currently viewing on the map screen.
+0214B090,4 - Bitfield of which areas you have the map unlocked for. This is used by the map menu.
+  The area index is the index of the bit.
 0214B0C6,1 - Number of explored area entrances on the current area's map.
   If this is less than 2, you auto-enter the area when selecting it on the world map, instead of being given the choice of what entrance to go in.
+0214B0C7-0214B0EE - List of unlocked warp points on the currently displayed map.
+  Entry length 5.
+  8 entries in total.
+  00,1: X pos of the warp.
+  01,1: Y pos of the warp.
+  02,1: X index of this warp room compared to other warp rooms.
+    Used for deciding what warp room to select when pressing left/right on the dpad. Left selects the warp room with 1 less X index, right selects the warp room with 1 more X index.
+  03,1: Y index of this warp room compared to other warp rooms.
+    Used for deciding what warp room to select when pressing up/down on the dpad. Up selects the warp room with 1 less Y index, down selects the warp room with 1 more Y index.
+  04,1: Area name index for this warp.
+  (Note that entries in this list are not zeroed out when switching maps, so don't read any more than the number of warps at 0214B0F1,1.)
+0214B0EF,1 - Index of the warp point the player is currently physically located at.
+0214B0F0,1 - Index of the currently selected warp on the warp select screen.
+0214B0F1,1 - Total number of warp points unlocked on the current map.
 
 when you first enter a new area, the game determines which entrance room to put you at by the sector/room indexes listed on the map metadata. so if you switch the indexes of the first and second entrance the game will put you at the second instead.
 
@@ -821,7 +922,8 @@ there's a switch statement at 02045A84 where it hardcodes the sector and room in
 0215AA08 - Song currently playing. FF when no song is playing.
 0215AA10 - Music volume.
 
-021DD240 - what area name is shown on the top screen on the world map (0 is dracula's castle, etc).
+021DD240 - Area name index shown on the top scren.
+  Used for the world map as well as warp points.
 
 === 021DD280 - 021FFD9F: Overlays 0-1 (Strings)
 
@@ -953,8 +1055,6 @@ Asset format:
   10+: The actual asset data.
 
 022FFA90 - shanoa's hitbox data
-
-02345D74 - current area index?
 
 0234C200-0237FFFF - Free space.
 

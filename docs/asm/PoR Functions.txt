@@ -278,7 +278,7 @@
   ; r0 - Area index
 02030984 MapGetDrawYOffset
   ; r0 - Area index
-02030710 MapGetNumTiles
+02030710 MapGetTotalNumTiles
   ; r0 - Area index
 02032E68 MapGetNumExploredTiles
   ; r0 - Area index
@@ -287,6 +287,7 @@
   ; Returns the proportion of explored map tiles on this map out of decimal 1000 (so 100% with one decimal point).
 02032E34 AllMapsGetPercentExplored
   ; Adds up the percentages explored on each of the individual 10 maps into a total percentage out of decimal 10000 (so 1000% with one decimal point).
+0203022C MapGreyOutAllExploredTiles
 
 0203000C MapGet???
   ; r0 - Area index

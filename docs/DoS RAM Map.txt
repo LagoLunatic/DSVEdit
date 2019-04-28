@@ -204,7 +204,7 @@ There are 41 entries in the list total.
   This starts at 1 when resetting the game.
   When FFFF is exceeded, it loops back around to 1. (0 is skipped.)
 
-020CA388,2 - Bitfield of what buttons the player is pressing.
+020CA388,2 - Bitfield of buttons the player is currently pressing.
   0001 - A
   0002 - B
   0004 - Select
@@ -219,7 +219,7 @@ There are 41 entries in the list total.
   0800 - Y
   2000 - Debug
   These can also be set programmatically by events or enemies to make Soma act a certain way when controls are disabled.
-020CA38C,2 - Bitfield of what buttons the player just pressed this frame.
+020CA38C,2 - Bitfield of buttons the player just pressed this frame.
 
 020CA398 - normally 0, if 1 then soma can't move. but the game puts it back to 0 if you try to make it 1, so you need a cheat to stop soma from moving (or vice versa).
 

@@ -64,6 +64,10 @@
   ; r1 - Time for the fade out/in to take, in number of frames.
   ;   This counter is used twice, once for the fade out and once for the fade in. So the total time is twice this.
   ; r2 - Type of fade out to use. 1 is a fade to black, 0 is a fade to white.
+020AEDB4 SetTopScreenAreaName
+  ; r0 - Time for the fade out/in to take, in number of frames.
+  ; r1 - Type of fade out to use. 1 is a fade to black, 0 is a fade to white.
+  ; r2 - Area name index (to store to 021DD240)
 
 020AA508 PlaySfxAtPos
   ; r0 - Sfx index?
@@ -776,7 +780,24 @@
   ; r0 - Area index
 0203AEE0 MapGetNumExploredTiles
   ; r0 - Area index
-02043480 MapDraw?
+020431B4 MapGreyOutAllExploredTiles
+
+02043480 MapDraw???ForArea
+  ; r0 - Area index
+02042E74 MapShowChanges1??
+02042CE4 MapShowChanges2??
+02042FF4 WarpScreenSetWarpCycleOrder
+
+0204479C GetSectorIndexByRoomPosOnCurrentAreaMap
+  ; r0 - Room X pos on the map in tiles
+  ; r1 - Room Y pos on the map in tiles
+020447BC GetRoomIndexByRoomPosOnCurrentAreaMap
+  ; r0 - Room X pos on the map in tiles
+  ; r1 - Room Y pos on the map in tiles
+02044710 GetMapTileMetadata
+  ; r0 - Room X pos on the map in tiles
+  ; r1 - Room Y pos on the map in tiles
+  ; r2 - Area index
 
 020444E0 UpdatePlayerPositionOnMap
   ; Updates the two variables holding the player's position on the map (020FFCB0, 020FFCB4).
@@ -813,9 +834,17 @@
   ; r0 - Area index
   ; r1 - Bit(s) to set. 1 is for if it's visible but greyed out. 2 is for if it's unlocked.
 
-02035F14 SetOAMData?
-  ; r0 - Pointer to the OAM data (in list 021427E0 or 02145B2C)
-  ; r1 - Pointer to ? (e.g. 021434CC)
+
+0203561C GetNextFreeOAMSpriteSlot
+  ; r0 - 0 for bottom screen, 1 for top screen
+  ; Returns a pointer to a free OAM sprite slot
+0203571C MarkOAMSpriteSlotAsFree
+  ; r0 - Pointer to the OAM sprite slot
+  
+02035F14 RenderSpriteToOAM?
+  ; r0 - Pointer to the OAM data (021427E0 for bottom screen, 02145B2C for top screen)
+  ; r1 - Pointer to an OAM sprite slot
+
 
 0222F848 CreateEventActor
   ; r0 - Pointer to the event entity calling this function
