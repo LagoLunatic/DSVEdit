@@ -19,6 +19,16 @@
 .org 0x02082C90 ; Warp point update code, specifically the part where it's just about to open the warp select screen
   b @SetAreaIndexOnWarpScreenOpen
 
+; Make the code that detects what warp point you touched on the touch screen use the correct map draw offsets.
+; Read the area index from 0211AA71 instead of 02111785.
+.org 0x0208259C
+  add r0, r0, 24000h
+  ldrb r0, [r0, 801h]
+.org 0x020825B8
+  add r0, r1, 24000h
+.org 0x020825C0
+  ldrb r0, [r0, 801h]
+
 .org 0x0208231C ; Code run right before warping, to determine if the point you selected to warp to is the one you're already at or not.
   b @CheckSelectedWarpInCurrentArea
 
