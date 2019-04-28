@@ -4,6 +4,7 @@
 
 ; This patch allows for warp points in PoR to take you between different areas.
 ; To do this, simply press L or R on the warp select screen and it will cycle through the different area maps (only ones that you've unlocked at least one warp point for).
+; This patch also adds a left and right arrow button to the warp select screen, and touching them with the touch screen cycles through maps the same way the L and R buttons do.
 
 @Overlay119Start equ 0x02308EC0
 @FreeSpace equ 0x02308EC0 + 0x19C
@@ -230,8 +231,8 @@
   ; Draws arrow icons on the right and left of the screen to visually indicate that the area can be switched by touching the screen.
   push r4, r5, r6
   ldr r4, =020FBC64h
-  mov r5, 0058h ; OAM attribute 0
-  ldr r6, =4002h ; OAM attribute 2
+  mov r5, 0058h ; OAM attribute 0 (Y pos 58, OBJ shape square)
+  ldr r6, =4002h ; OAM attribute 2 (GFX tile index 2)
   
   ; Create the right arrow
   mov r0, 0h ; Bottom screen
@@ -241,7 +242,7 @@
   
   add r1, r4, r0, lsl 3h
   strh r5, [r1]
-  ldr r0, =40F0h ; OAM attribute 1
+  ldr r0, =40F0h ; OAM attribute 1 (X pos F0, OBJ size 16x16)
   strh r0, [r1, 2h]
   strh r6, [r1, 4h]
   
@@ -253,7 +254,7 @@
   
   add r1, r4, r0, lsl 3h
   strh r5, [r1]
-  ldr r0, =5000h ; OAM attribute 1
+  ldr r0, =5000h ; OAM attribute 1 (X pos 0, horizontal flip, OBJ size 16x16)
   strh r0, [r1, 2h]
   strh r6, [r1, 4h]
   
@@ -263,6 +264,6 @@
   b 0202E03Ch ; Return
 
 
-.pool ; Single pool for all the next code we added
+.pool ; Single pool for all the new code we added
 
 .close
