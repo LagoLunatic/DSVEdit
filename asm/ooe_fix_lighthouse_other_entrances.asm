@@ -7,7 +7,7 @@
 ; Also, if the player enters it from the bottom right door the wall there would softlock the player and prevent them from entering, so that wall is removed.
 
 @Overlay86Start equ 0x022EB1A0
-@FreeSpace equ 0x022EB1A0
+@FreeSpace equ @Overlay86Start
 
 .open "ftc/overlay9_53", 022C1FE0h
 

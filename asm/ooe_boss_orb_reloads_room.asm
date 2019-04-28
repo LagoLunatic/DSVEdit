@@ -7,7 +7,7 @@
 ; Albus/Barlowe normally reload the room on defeat, but in boss randomizer something else needs to do it.
 
 @Overlay86Start equ 0x022EB1A0
-@FreeSpace equ 0x022EB1A0 + 0x48
+@FreeSpace equ @Overlay86Start + 0x48
 
 .open "ftc/arm9.bin", 02000000h
 

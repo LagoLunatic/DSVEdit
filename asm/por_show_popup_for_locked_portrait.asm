@@ -6,7 +6,7 @@
 ; This is necessary for portrait randomizer when the Forest of Doom portrait isn't in the normal location, since the normal event only works in that sector.
 
 @Overlay119Start equ 0x02308EC0
-@FreeSpace equ 0x02308EC0
+@FreeSpace equ @Overlay119Start
 
 .open "ftc/arm9.bin", 02000000h
 

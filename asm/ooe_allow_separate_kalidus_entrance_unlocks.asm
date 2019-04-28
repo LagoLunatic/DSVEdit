@@ -10,7 +10,7 @@
 ; * Unlock the back entrance with Var A = 6 and Var B = 1 (same as vanilla)
 
 @Overlay86Start equ 0x022EB1A0
-@FreeSpace equ 0x022EB1A0 + 0xB0
+@FreeSpace equ @Overlay86Start + 0xB0
 
 .open "ftc/arm9.bin", 02000000h
 
