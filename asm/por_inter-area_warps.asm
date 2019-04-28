@@ -7,7 +7,7 @@
 ; This patch also adds a left and right arrow button to the warp select screen, and touching them with the touch screen cycles through maps the same way the L and R buttons do.
 
 @Overlay119Start equ 0x02308EC0
-@FreeSpace equ 0x02308EC0 + 0x19C
+@FreeSpace equ @Overlay119Start + 0x19C
 
 .open "ftc/arm9.bin", 02000000h
 
@@ -137,7 +137,7 @@
   bl 02055CF4h ; SetTopScreenAreaName
   
   pop r4
-  b 02082398h ; Return to normal code
+  b 0x02082398 ; Return to normal code
 
 
 @GetRoomIndexByRoomPosOnSelectedAreaMap:
@@ -158,7 +158,7 @@
 
 
 @CheckSelectedAreaHasAnyExploredWarpPoints:
-  push r4-r7,r14
+  push r3-r7,r14
   
   ldr r4, =021368AFh
   ldrb r4, [r4] ; Area index of the selected map
@@ -172,7 +172,7 @@
   mov r6, r0
   
   mov r0, r4
-  bl 02030710h ; MapGetNumTiles
+  bl 02030710h ; MapGetTotalNumTiles
   mov r7, r0 ; Total number of tiles
   
   mov r3, 0h ; Current tile index
@@ -203,7 +203,7 @@
 @CheckSelectedAreaHasAnyExploredWarpPointsFoundOne:
   mov r0, 1h
 @CheckSelectedAreaHasAnyExploredWarpPointsReturn:
-  pop r4-r7,r15
+  pop r3-r7,r15
 
 
 ; Need to initialize the area index when the player opens the warp screen.
@@ -230,7 +230,7 @@
 @DrawArrowsOnBottomScreen:
   ; Draws arrow icons on the right and left of the screen to visually indicate that the area can be switched by touching the screen.
   push r4, r5, r6
-  ldr r4, =020FBC64h
+  ldr r4, =020FBC64h ; Bottom screen OAM sprites list
   mov r5, 0058h ; OAM attribute 0 (Y pos 58, OBJ shape square)
   ldr r6, =4002h ; OAM attribute 2 (GFX tile index 2)
   
@@ -261,7 +261,7 @@
 @DrawArrowsOnBottomScreenReturn:
   pop r4, r5, r6
   mov r0, 0h ; Replace the line we overwrote to jump here
-  b 0202E03Ch ; Return
+  b 0x0202E03C ; Return
 
 
 .pool ; Single pool for all the new code we added
