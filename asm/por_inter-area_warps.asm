@@ -13,6 +13,9 @@
 .org 0x02082364 ; Update code for the warp select screen
   beq @CheckShouldSwitchAreaOnWarpScreen
 
+.org 0x0202E038 ; In the function for rendering OAM objects to the bottom screen on the warp screen
+  b @DrawArrowsOnBottomScreen
+
 .org 0x02082C90 ; Warp point update code, specifically the part where it's just about to open the warp select screen
   b @SetAreaIndexOnWarpScreenOpen
 
@@ -46,6 +49,24 @@
   bne @IncreaseAreaIndexOnWarpScreen
   ands r0, r1, 0200h ; L button
   bne @DecreaseAreaIndexOnWarpScreen
+  
+  ldr r0, =020FC4B4h
+  ldrb r1, [r0, 1h] ; Check if touch screen just touched
+  cmp r1, 0h
+  beq 0x02082398 ; Return
+  
+  ldrsh r1, [r0, 6h] ; Y pos touched
+  cmp r1, 58h
+  ble 0x02082398 ; Return
+  cmp r1, 68h
+  bge 0x02082398 ; Return
+  
+  ldrsh r1, [r0, 4h] ; X pos touched
+  cmp r1, 10h
+  blt @DecreaseAreaIndexOnWarpScreen
+  cmp r1, 0F0h
+  bgt @IncreaseAreaIndexOnWarpScreen
+  
   b 0x02082398 ; Return to normal code
 
 @IncreaseAreaIndexOnWarpScreen:
@@ -193,6 +214,43 @@
   cmp r0, r1
   beq 0x02082320 ; If the warp the player selected is in the area they're physically located in, just close the warp screen as normal.
   b 0x02082334 ; Otherwise, take the warp. Even though the warp index is the same, the area index being different means it's a different warp point.
+
+
+@DrawArrowsOnBottomScreen:
+  ; Draws arrow icons on the right and left of the screen to visually indicate that the area can be switched by touching the screen.
+  push r4, r5, r6
+  ldr r4, =020FBC64h
+  mov r5, 0058h ; OAM attribute 0
+  ldr r6, =4002h ; OAM attribute 2
+  
+  ; Create the right arrow
+  mov r0, 0h ; Bottom screen
+  bl 020158FCh ; GetNextFreeOAMSlotIndex
+  cmp r0, -1h ; No slots available
+  beq @DrawArrowsOnBottomScreenReturn
+  
+  add r1, r4, r0, lsl 3h
+  strh r5, [r1]
+  ldr r0, =40F0h ; OAM attribute 1
+  strh r0, [r1, 2h]
+  strh r6, [r1, 4h]
+  
+  ; Create the left arrow
+  mov r0, 0h ; Bottom screen
+  bl 020158FCh ; GetNextFreeOAMSlotIndex
+  cmp r0, -1h ; No slots available
+  beq @DrawArrowsOnBottomScreenReturn
+  
+  add r1, r4, r0, lsl 3h
+  strh r5, [r1]
+  ldr r0, =5000h ; OAM attribute 1
+  strh r0, [r1, 2h]
+  strh r6, [r1, 4h]
+  
+@DrawArrowsOnBottomScreenReturn:
+  pop r4, r5, r6
+  mov r0, 0h ; Replace the line we overwrote to jump here
+  b 0202E03Ch ; Return
 
 
 .pool ; Single pool for all the next code we added
