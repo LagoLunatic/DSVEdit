@@ -95,7 +95,23 @@ class Renderer
       rendered_layer.compose!(tile_gfx, x_on_level*TILE_WIDTH, y_on_level*TILE_HEIGHT)
     end
     
-    # TODO: OPACITY
+    if layer.opacity != 0x1F
+      alpha = (layer.opacity << 3) | (layer.opacity >> 2) # Swizzle 5 bits to 8 bits
+      
+      rendered_layer.height.times do |y|
+        rendered_layer.width.times do |x|
+          color = rendered_layer[x, y]
+          orig_alpha = ChunkyPNG::Color.a(color)
+          next if orig_alpha < alpha
+          
+          r = ChunkyPNG::Color.r(color)
+          g = ChunkyPNG::Color.g(color)
+          b = ChunkyPNG::Color.b(color)
+          rendered_layer[x, y] = ChunkyPNG::Color.rgba(r, g, b, alpha)
+        end
+      end
+    end
+    
     return rendered_layer
   end
   
