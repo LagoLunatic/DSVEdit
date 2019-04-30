@@ -35,9 +35,11 @@ class Renderer
     rendered_layers = []
     
     if collision
-      rendered_layers << render_layer(folder, layers.first, room, collision)
+      rendered_layers << render_layer(folder, room.layers.first, room, collision)
     else
       room.z_ordered_layers.each do |layer|
+        next if layer.layer_metadata_ram_pointer == 0
+        
         rendered_layers << render_layer(folder, layer, room, collision)
       end
     end
@@ -72,7 +74,7 @@ class Renderer
       tileset_filename = "#{folder}/#{room.area_name}/Tilesets/#{layer.tileset_filename}_collision.png"
       tileset = render_collision_tileset(layer.collision_tileset_pointer, tileset_filename)
     else
-      tileset = get_tileset(layer.tileset_pointer, layer.tileset_type, room.palette_pages, room.graphic_tilesets_for_room, layer.colors_per_palette, layer.collision_tileset_pointer, tileset_filename)
+      tileset = get_tileset(layer.tileset_pointer, layer.tileset_type, room.palette_pages, room.gfx_pages, layer.colors_per_palette, layer.collision_tileset_pointer, tileset_filename)
     end
     
     layer.tiles.each_with_index do |tile, index_on_level|
