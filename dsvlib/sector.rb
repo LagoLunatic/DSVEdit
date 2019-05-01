@@ -113,6 +113,8 @@ class Sector
     
     new_room.layers.each do |layer|
       layer.opacity = 0x1F
+      layer.scroll_mode = 1
+      layer.z_index = 0x16
       layer.write_layer_list_entry_to_rom()
     end
     
