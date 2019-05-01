@@ -12,6 +12,11 @@ class TMXInterface
     validate_properties(room_props, "Room", %w(map_x map_y))
     room.room_xpos_on_map = room_props["map_x"]
     room.room_ypos_on_map = room_props["map_y"]
+    room.gfx_list_pointer = room_props["gfx_list_pointer"]
+    room.palette_wrapper_pointer = room_props["palette_wrapper_pointer"]
+    if room_props["palette_page_index"] && ["por", "ooe"].include?(GAME)
+      room.palette_page_index = room_props["palette_page_index"]
+    end
     room.write_extra_data_to_rom()
     
     all_tilesets_for_room = room.layers.map{|layer| layer.tileset_filename}.uniq.compact
@@ -120,6 +125,11 @@ class TMXInterface
         xml.properties {
           xml.property(:name => "map_x", :value => "%02X" % room.room_xpos_on_map)
           xml.property(:name => "map_y", :value => "%02X" % room.room_ypos_on_map)
+          xml.property(:name => "gfx_list_pointer", :value => "%08X" % room.gfx_list_pointer)
+          xml.property(:name => "palette_wrapper_pointer", :value => "%08X" % room.palette_wrapper_pointer)
+          if ["por", "ooe"].include?(GAME)
+            xml.property(:name => "palette_page_index", :value => "%02X" % room.palette_page_index)
+          end
         }
         
         all_tilesets_for_room.each do |tileset|
