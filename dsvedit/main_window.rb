@@ -823,6 +823,8 @@ class DSVEdit < Qt::MainWindow
     
     # Need to reload the sector so the room shows up in the list.
     change_sector(@sector_index, force=true)
+    
+    change_room(@sector.rooms.length-1, true)
   rescue FreeSpaceManager::FreeSpaceFindError => e
     Qt::MessageBox.warning(self,
       "Failed to find free space",
