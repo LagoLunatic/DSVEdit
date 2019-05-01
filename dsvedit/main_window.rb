@@ -42,14 +42,19 @@ class DSVEdit < Qt::MainWindow
   slots "extract_rom_dialog()"
   slots "open_folder_dialog()"
   slots "save_files()"
+  
   slots "files_changed_on_hard_drive(QString)"
+  
   slots "edit_room_data()"
   slots "edit_layers()"
   slots "open_entity_editor()"
   slots "open_door_editor()"
   slots "add_new_entity()"
   slots "add_new_door()"
+  slots "add_new_room()"
+  
   slots "update_visible_view_items()"
+  
   slots "open_enemy_dna_dialog()"
   slots "open_text_editor()"
   slots "open_sprite_editor()"
@@ -70,9 +75,11 @@ class DSVEdit < Qt::MainWindow
   slots "open_armips_patcher()"
   slots "add_new_overlay()"
   slots "open_settings()"
+  
   slots "write_to_rom()"
   slots "build_and_run()"
   slots "build_and_test()"
+  
   slots "open_about()"
   
   slots "cancel_write_to_rom_thread()"
@@ -124,6 +131,7 @@ class DSVEdit < Qt::MainWindow
     connect(@ui.actionEdit_Doors, SIGNAL("activated()"), self, SLOT("open_door_editor()"))
     connect(@ui.actionAdd_Entity, SIGNAL("activated()"), self, SLOT("add_new_entity()"))
     connect(@ui.actionAdd_Door, SIGNAL("activated()"), self, SLOT("add_new_door()"))
+    connect(@ui.actionAdd_Room, SIGNAL("activated()"), self, SLOT("add_new_room()"))
     connect(@ui.actionEntities, SIGNAL("activated()"), self, SLOT("update_visible_view_items()"))
     connect(@ui.actionDoors, SIGNAL("activated()"), self, SLOT("update_visible_view_items()"))
     connect(@ui.actionCollision, SIGNAL("activated()"), self, SLOT("update_visible_view_items()"))
@@ -193,6 +201,7 @@ class DSVEdit < Qt::MainWindow
     @ui.actionEdit_Doors.setEnabled(false);
     @ui.actionAdd_Entity.setEnabled(false);
     @ui.actionAdd_Door.setEnabled(false);
+    @ui.actionAdd_Room.setEnabled(false);
     @ui.actionEntities.setEnabled(false);
     @ui.actionDoors.setEnabled(false);
     @ui.actionCollision.setEnabled(false);
@@ -229,6 +238,7 @@ class DSVEdit < Qt::MainWindow
     @ui.actionEdit_Doors.setEnabled(true);
     @ui.actionAdd_Entity.setEnabled(true);
     @ui.actionAdd_Door.setEnabled(true);
+    @ui.actionAdd_Room.setEnabled(true);
     @ui.actionEntities.setEnabled(true);
     @ui.actionDoors.setEnabled(true);
     @ui.actionCollision.setEnabled(true);
@@ -805,6 +815,19 @@ class DSVEdit < Qt::MainWindow
     @room.read_from_rom() # Reload room to get rid of the failed changes.
     load_room()
     Qt::MessageBox.warning(self, "Cannot add door", e.message)
+  end
+  
+  def add_new_room
+    @sector.add_new_room()
+    room = @sector.rooms[-1]
+    
+    # Need to reload the sector so the room shows up in the list.
+    change_sector(@sector_index, force=true)
+  rescue FreeSpaceManager::FreeSpaceFindError => e
+    Qt::MessageBox.warning(self,
+      "Failed to find free space",
+      "Failed to find free space to put the new room.\n\n#{NO_FREE_SPACE_MESSAGE}"
+    )
   end
   
   def update_visible_view_items

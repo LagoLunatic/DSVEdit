@@ -252,6 +252,7 @@
     <addaction name="actionEdit_Doors"/>
     <addaction name="actionAdd_Entity"/>
     <addaction name="actionAdd_Door"/>
+    <addaction name="actionAdd_Room"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuEdit"/>
@@ -533,6 +534,11 @@
   <action name="actionQuest_Editor">
    <property name="text">
     <string>Quest Editor</string>
+   </property>
+  </action>
+  <action name="actionAdd_Room">
+   <property name="text">
+    <string>Add Room</string>
    </property>
   </action>
  </widget>

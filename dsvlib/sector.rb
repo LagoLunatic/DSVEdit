@@ -108,7 +108,13 @@ class Sector
       new_room.color_effects = 0
     end
     
+    # This both saves the room and then reads it to initialize various other things like layers.
     new_room.write_to_rom()
+    
+    new_room.layers.each do |layer|
+      layer.opacity = 0x1F
+      layer.write_layer_list_entry_to_rom()
+    end
     
     @rooms << new_room
     @room_pointers << new_room_pointer
