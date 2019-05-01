@@ -317,6 +317,9 @@ Enemies:
   Var B: When 2, the scripted Behemoth that chases you. When 0, normal Behemoth.
 8C Keremet
   Requires enemy overlay 56.
+  Var A:
+    0 Boss rush
+    1 Normal
 8D Astarte
   Requires enemy overlay 74.
 8E Legion

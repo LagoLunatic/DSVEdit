@@ -448,6 +448,7 @@
   ; Stores it to 02115384. This does not change the song playing itself.
 020299B0 UpdateCurrentlyPlayingSong
   ; Plays the current song index (02115384) unless it's equal to the previous song index (0211538C). Then it updates 0211538C.
+020298A0 MuteBGM??
 
 0204F4D8 PlayBGMOrSfx???
   ; r0 - Song index
@@ -515,6 +516,7 @@
 021FEE28 PlayerUpdateYAccel
 
 021C52EC GenericDraw
+021C5250 GenericDraw2?
 
 0201C0CC GetPolygonID
 
@@ -550,9 +552,6 @@
   ; Calculates the damage a player/player weapon/player skill should do to an enemy.
   ; r0 - Enemy entity taking damage (entity+0xA4 pointer)
   ; r1 - Player/player weapon/player skill entity dealing damage (entity+0xA4 pointer)
-
-021C5250 SkillDraw?
-  ; used by killer fish soul, check if others use it
 
 0200467C DrawBGLayer
   ; r0 - Layer metadata pointer

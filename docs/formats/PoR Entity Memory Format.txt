@@ -113,6 +113,8 @@ For players:
   This is 4 when the player is not present (neither player-controlled nor AI-controlled).
   This is 8 when the player is doing a dual crush.
   Otherwise, this counts down every frame until it reaches 0.
+0EA,2: Number of frames left before the current spell is charged.
+  Normally decreases by 1 per frame, but decreases by 2 per frame when Sorceress Crest is equipped.
 0EC,1: 0 for player 1, 1 for player 2.
 0ED,1: Which player character index this player is. 2 is Stella, 3 is Loretta, etc.
 0F4,4: Pointer to their state->anims mapping.

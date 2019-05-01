@@ -318,6 +318,7 @@ What each range of entity slots is for:
 020F6DFC-020F6DFF - Bitfield of global game flags.
   0x00000001 - Disables controls. Used during events and while warping.
   0x00000002 - Set during boss fights. Disables suspending, keeps boss doors shut, and turns mirrors into boss mirrors.
+  0x00000004 - 
   0x00000008 - A magic seal is currently in progress (either an example automatic one or a manual one).
   0x00000020 - ? something related to input? or magic seals?
   0x00000040 - In player death state. The player won't actually die from this bit alone, but it does disable doors and make Yoko scream.
@@ -705,8 +706,9 @@ Stuff related to currently loaded tilesets:
   Each is a word.
   FFFFFFFF indicates an unused slot.
 
-02115384 - Currently playing song.
-0211538C - Previously playing song.
+02115384,4 - Currently playing song.
+02115388,4 - 0 or 1? 1 is related to muting?
+0211538C,4 - Previously playing song.
 
 021528E4 - Inside the sound_data.sdat file, specifically the INFO section, this has a list of the SSEQ, SBNK (instruments), and volume for each song.
 
