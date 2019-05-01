@@ -705,9 +705,11 @@ class DSVEdit < Qt::MainWindow
     
     update_room_position_indicator()
   rescue StandardError => e
+    msg = "Failed to load room %08X.\n" % @room.room_metadata_ram_pointer
+    msg += "#{e.message}\n\n#{e.backtrace.join("\n")}"
     Qt::MessageBox.warning(self,
       "Failed to load room",
-      "Failed to load room %08X.\n#{e.message}\n\n#{e.backtrace.join("\n")}" % @room.room_metadata_ram_pointer
+      msg
     )
   end
   
@@ -717,9 +719,11 @@ class DSVEdit < Qt::MainWindow
       load_layer(layer)
     end
   rescue StandardError => e
+    msg = "Failed to load layers for room %08X.\n" % @room.room_metadata_ram_pointer
+    msg += "#{e.message}\n\n#{e.backtrace.join("\n")}"
     Qt::MessageBox.warning(self,
       "Failed to load layers",
-      "Failed to load layers for room %08X.\n#{e.message}\n\n#{e.backtrace.join("\n")}" % @room.room_metadata_ram_pointer
+      msg
     )
   end
   
@@ -728,9 +732,11 @@ class DSVEdit < Qt::MainWindow
     layer_item = LayerItem.new(layer, tileset_filename)
     layer_item.setParentItem(@layers_view_item)
   rescue StandardError => e
+    msg = "Failed to load layer %08X.\n" % layer.layer_list_entry_ram_pointer
+    msg += "#{e.message}\n\n#{e.backtrace.join("\n")}"
     Qt::MessageBox.warning(self,
       "Failed to load layer",
-      "Failed to load layer %08X.\n#{e.message}\n\n#{e.backtrace.join("\n")}" % layer.layer_list_entry_ram_pointer
+      msg
     )
   end
   
