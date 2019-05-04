@@ -28,6 +28,15 @@
   ; r1 - Maximum entity index to check
   ; r2 - Update function pointer for the new entity
 
+0201DA80 GetExtraEntityMemory
+  ; r0 - Entity
+  ; r1 - Number of free bytes needed
+  ; Looks for a consecutive number of free slots in list 02112698 that are enough to cover the number of bytes needed.
+  ; (Note that it determines the number of slots needed with (num_bytes/0x100)+1, so if num_bytes is divisible by 0x100 it gives you one more slot than is actually needed.)
+  ; It then stores a pointer to the start of that free memory to entity+158.
+  ; It also stores the index of the first free slot in the list to entity+15C.
+  ; It also returns that pointer to the start of the free memory.
+
 02015078 UpdateGame
 
 02012920 UpdateAndDrawAllEntitiesAndTiles
@@ -478,6 +487,24 @@
   ; If this palette list is already in the room entity palette list, it returns the index it's already been loaded at.
   ; If there's not enough consecutive free slots to fit the number of palettes needed, it returns -1 instead.
 
+
+0202125C EntitySetVertexColorMultipliers
+  ; r0 - Entity
+  ; r1 - The color multipliers to set. In the form of 00BBGGRR.
+  ; Gives all four corner vertexes the same color multipliers.
+
+0202131C GetNextFreePolygonID
+  ; Increments the value at 0211175C, and returns the new value.
+
+0202BD9C SpriteDrawAnim???
+  ; r0 - Entity
+  ; r1 - 
+  ; r2 - 
+  ; r3 - 
+  ; [r13] - 
+  ; [r13,4] - Animation index
+
+
 021D7E80 EntityMoveToFloor
   ; Teleports entity downwards to the nearest floor.
   ; r0 - Pointer to entity
@@ -550,9 +577,10 @@
 020108B0 GetSpriteInfoPointer
   ; r0 - Index in the currently loaded sprite info list, 020FA200. This is from entity+0x6C.
   ; Returns r0 - Pointer to the entry in that list. (0x020FA200 + index*0x10)
-0200E76C GetSpritePointer
+
+0200E76C EntityGetCurrentSpriteFramePointer
   ; r0 - Entity pointer
-  ; Returns the pointer to the entity's sprite data, from the currently loaded sprite info list.
+  ; Returns a pointer in the entity's sprite data to the frame corresponding to the entity's current frame index.
 
 0200EF40 SpriteDrawEntity
   ; A number of entities have this has their draw code.
@@ -779,9 +807,12 @@
   ; r0 - Entity pointer
   ; r1 - Which portrait sprite to use (index in list 020F4E84)
   ; r2 - Which portrait frame to use? 0 for the frame used by early game portraits. 1 for the frame used by portraits in the Studio Portrait room. TODO
-  ; r3 - 4000?
+  ; r3 - Speed that the whole portrait oscillates up and down at. Also affects how far it oscillates.
+  ;   Usually this speed is 0x4000. But the portrait that leads to the throne room uses 0.
   ; [r13] - X pos for this portrait to place the player at after they take it
-  ; [r13,4] - ?
+  ; [r13,4] - 1 if the boss of this portrait has been defeated, 0 if it's still alive.
+02079980 PortraitDraw
+  ; r0 - Portrait entity
 
 02010788 EntityInitSpriteAndPalette
   ; r0 - Child entity

@@ -8,6 +8,7 @@ Memory used for entities in OoE is 021092A0 - 0211DF5F. Each entity is 0x160 byt
 010,2:
 012,2: Globally unique ID for this entity.
 01A,2: Frame counter.
+020,1: Polygon ID for drawing this entity.
 021,1: Opacity.
 024,4: X pos on the screen.
 028,4: Y pos on the screen.
@@ -52,7 +53,22 @@ Memory used for entities in OoE is 021092A0 - 0211DF5F. Each entity is 0x160 byt
 08A,2: Palette offset for this entity. Gets added to the value at 086,2.
 08E,2: Polygon attributes to use when drawing this entity.
   Refer to GBATEK for details.
-090,10: Affects color tint of this entity. 1F for everything means normal colored.
+090,1: Upper left corner vertex's red color multiplier.
+091,1: Upper left corner vertex's green color multiplier.
+092,1: Upper left corner vertex's blue color multiplier.
+093,1: Upper left corner vertex's unused color multiplier.
+094,1: Lower left corner vertex's red color multiplier.
+095,1: Lower left corner vertex's green color multiplier.
+096,1: Lower left corner vertex's blue color multiplier.
+097,1: Lower left corner vertex's unused color multiplier.
+098,1: Lower right corner vertex's red color multiplier.
+099,1: Lower right corner vertex's green color multiplier.
+09A,1: Lower right corner vertex's blue color multiplier.
+09B,1: Lower right corner vertex's unused color multiplier.
+09C,1: Upper right corner vertex's red color multiplier.
+09D,1: Upper right corner vertex's green color multiplier.
+09E,1: Upper right corner vertex's blue color multiplier.
+09F,1: Upper right corner vertex's unused color multiplier.
 0A0,2: Sprite x offset relative to the entity's position.
 0A2,2: Sprite y offset relative to the entity's position.
 0A4,1: Controls the iframes this entity should give.
@@ -77,6 +93,9 @@ Memory used for entities in OoE is 021092A0 - 0211DF5F. Each entity is 0x160 byt
 133,1: Type.
 13C,2: Var A.
 13E,2: Var B.
+158,4: Pointer to the extra entity memory for this entity in list 02101200.
+  Or 0 if the entity does not have any extra entity memory.
+15C,4: Index in list 02101200 of the first extra entity memory slot used.
 
 For enemies:
 124,2: Bitfield of ???
@@ -92,9 +111,6 @@ For enemies:
 131,1: Palette offset?
 138,2: The attack value from the enemy DNA.
 13A,2: The physical defense value from the enemy DNA.
-
-For skeletally animated enemies:
-158,4: Pointer to the skeletal animation entry for this enemy, in list 02101200.
 
 For items:
 0E0,4: The global ID+1 of the item.

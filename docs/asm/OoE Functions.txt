@@ -24,6 +24,15 @@
   ; r0 - Entity pointer
   ; Calls the entity's detroy code, does some other things?, then calls DeleteEntity.
 
+0202B9FC GetExtraEntityMemory
+  ; r0 - Entity
+  ; r1 - Number of free bytes needed
+  ; Looks for a consecutive number of free slots in list 02101200 that are enough to cover the number of bytes needed.
+  ; (Note that it determines the number of slots needed with (num_bytes/0x100)+1, so if num_bytes is divisible by 0x100 it gives you one more slot than is actually needed.)
+  ; It then stores a pointer to the start of that free memory to entity+158.
+  ; It also stores the index of the first free slot in the list to entity+15C.
+  ; It also returns that pointer to the start of the free memory.
+
 02033298 Rand
 020332E0 RandMax
   ; Max random number is r0-1. Min is 0.
@@ -538,11 +547,6 @@
 0205B5DC SetHitBoxTypesBitBitfield?
   ; r0 - Entity
   ; r1 - Bitfield. TODO
-
-0202B9FC EntitySpawnSkeletallyAnimatedJoint?
-  ; r0 - Entity
-  ; r1 - 84?
-  ; Initializes the values at entity+158
 
 0203BE0C Spawn???
   ; this gets called by melee glyphs if you unset swing modifier bit 0010

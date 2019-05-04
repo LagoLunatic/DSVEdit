@@ -36,7 +36,22 @@ Memory used for entities in DoS is 020CA3F0 - 020F6DEF. Each entity is 0x2A0 byt
 07E,2: Other polygon attribute bits to enable for drawing this entity.
 080,1: Polygon ID for drawing this entity.
 081,1: Opacity. 1F is fully opaque.
-082,10: Affects color tint of this entity. 1F for everything means normal colored.
+082,1: Upper left corner vertex's red color multiplier.
+083,1: Upper left corner vertex's green color multiplier.
+084,1: Upper left corner vertex's blue color multiplier.
+085,1: Upper left corner vertex's unused color multiplier.
+086,1: Lower left corner vertex's red color multiplier.
+087,1: Lower left corner vertex's green color multiplier.
+088,1: Lower left corner vertex's blue color multiplier.
+089,1: Lower left corner vertex's unused color multiplier.
+08A,1: Lower right corner vertex's red color multiplier.
+08B,1: Lower right corner vertex's green color multiplier.
+08C,1: Lower right corner vertex's blue color multiplier.
+08D,1: Lower right corner vertex's unused color multiplier.
+08E,1: Upper right corner vertex's red color multiplier.
+08F,1: Upper right corner vertex's green color multiplier.
+090,1: Upper right corner vertex's blue color multiplier.
+091,1: Upper right corner vertex's unused color multiplier.
 094,2: Sprite x offset relative to the entity's position.
 096,2: Sprite y offset relative to the entity's position.
 098,4: Pointer to sprite animation list.

@@ -11,6 +11,7 @@ Memory used for entities in PoR is 020FC500 - 0211173F. Each entity is 0x160 byt
 012,2: Globally unique ID for this entity.
 014,2: Frame counter 1.
 016,2: Frame counter 2.
+020,1: Polygon ID for drawing this entity.
 021,1: Opacity.
 024,4: X pos on the screen.
 028,4: Y pos on the screen.
@@ -52,10 +53,22 @@ Memory used for entities in PoR is 020FC500 - 0211173F. Each entity is 0x160 byt
   2 - Sprite is rendered as black, transparency is normal.
   3 - Sprite and transparency are transparent.
 08E,2: ??? 8000
-090,4: Color tint 1?
-094,4: Color tint 2?
-098,4: Color tint 3?
-09C,4: Color tint 4?
+090,1: Upper left corner vertex's red color multiplier.
+091,1: Upper left corner vertex's green color multiplier.
+092,1: Upper left corner vertex's blue color multiplier.
+093,1: Upper left corner vertex's unused color multiplier.
+094,1: Lower left corner vertex's red color multiplier.
+095,1: Lower left corner vertex's green color multiplier.
+096,1: Lower left corner vertex's blue color multiplier.
+097,1: Lower left corner vertex's unused color multiplier.
+098,1: Lower right corner vertex's red color multiplier.
+099,1: Lower right corner vertex's green color multiplier.
+09A,1: Lower right corner vertex's blue color multiplier.
+09B,1: Lower right corner vertex's unused color multiplier.
+09C,1: Upper right corner vertex's red color multiplier.
+09D,1: Upper right corner vertex's green color multiplier.
+09E,1: Upper right corner vertex's blue color multiplier.
+09F,1: Upper right corner vertex's unused color multiplier.
 0A0,2: Sprite x offset relative to the entity's position.
 0A2,2: Sprite y offset relative to the entity's position.
 0A4,1: Controls the iframes this entity should give.
@@ -95,6 +108,9 @@ Memory used for entities in PoR is 020FC500 - 0211173F. Each entity is 0x160 byt
 13C,2: Var A.
 13E,2: Var B.
 149,1: 
+158,4: Pointer to the extra entity memory for this entity in list 02112698.
+  Or 0 if the entity does not have any extra entity memory.
+15C,4: Index in list 02112698 of the first extra entity memory slot used.
 
 For players:
 0D0,4: Bitfield of player state booleans.
@@ -140,9 +156,6 @@ For enemies:
 12A,2: The magical defense value from the enemy DNA.
 138,2: The attack value from the enemy DNA.
 13A,2: The physical defense value from the enemy DNA.
-
-For skeletally animated joints:
-158,4: Pointer to the joint data for this joint (in list 02112A98).
 
 For skills:
 110,4: Bitfield.

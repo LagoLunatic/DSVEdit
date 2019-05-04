@@ -684,16 +684,29 @@ A 200% attack boost (triple) takes 0xFFFF (0d65535) AP.
   This starts at 1 when resetting the game.
   When FFFF is exceeded, it loops back around to 1. (0 is skipped.)
 
-02101200 - List of skeletally animated enemies in the current room?
-  Entry length 0x100.
-  Also used by procedurally animated enemies like Peeping Eye's eye and tail and White Dragon's body sections.
-  00,4: Number of entities (number of tail sections peeping eye has, 8)
+02101200-021091FF - List of extra entity memory.
+  Each slot takes up 0x100 bytes.
+  0x80 entries in total.
+  Known to be used by:
+  * Skeletally animated joints
+  * Peeping Eye's eye and tail
+  * White Dragon's body sections
+  * Background curtains waving in the wind
+
+Format of extra entity memory used for skeletally animated joints:
+  00,4: Number of entities
   30-6F: Pointers to each individual joint entity used by this enemy.
   40,4: Pointer to entity of some kind?
   5C,1: ?
   70-8F: List of globally unique entity IDs for each individual joint entity used by this enemy.
     Halfwords. This is copied from joint entity+12.
-  90,1: Number of joint entities used by this skeletally animated enemy? (number of body sections white dragon has, 0x10)
+  90,1: Number of joint entities used by this skeletally animated enemy?
+
+02109200-0210927F - List of how many consecutive slots are used in list 02112698 for each entity.
+  Each entry is a byte. The byte is the number of slots in a row that are used by this group of entity slots.
+  For example, if an entity requests 5 slots of entity memory, the first 5 bytes in this list will all be 5.
+
+02109280,4 - Total slots in list 02101200 that are currently in use.
 
 02101308 - Pointer to glyph entity that should trigger an event when it's absorbed.
 0210130C - Pointer to ?? entity. Related to glyph that triggers an event when it's absorbed.

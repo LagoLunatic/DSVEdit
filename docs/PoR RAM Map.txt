@@ -238,6 +238,15 @@
   There are 0x41 entries here. Each is a word.
   Every frame everything in this list gets zeroed out. Later some entities will store a value like 6 or 0xC here.
 
+020FB89C - List of color tints for an entity?
+  Each entry is a halfword.
+  There are at least 4 entries: the upper left corner, the 
+  Format:
+    00,2: Bitfield.
+      & 001F: Red multiplier.
+      & 03E0: Green multiplier.
+      & 7C00: Blue multiplier.
+
 020FBC64-020FC063 - List of sprites in the bottom screen OAM.
 020FC064-020FC463 - List of sprites in the top screen OAM.
   Entry length 8.
@@ -422,6 +431,9 @@ F5-F5  021115E0-0211173F  ?
   00000002 - Can't switch to or call partner.
   00000004 - Partner is out?
   00000200 - Currently switching players.
+
+0211175C,1 - Next free polygon ID for drawing an entity.
+  Loops from 0x15 to 0x3F, increasing by 1 every time this function is called.
 
 02111768 - Pointer to the current room's metadata.
 0211176C - Pointer to next room to transition into.
@@ -757,8 +769,14 @@ TODO: What are the other 2 for? It's not for the "recent" tab.
   60,2: Bitfield of ?.
     0100 - Turn off and layer will be invisible?
 
-02112A98 - Start of skeleton joints data.
-  Each joint takes up 0x100 bytes.
+02112698-0211A697 - List of extra entity memory.
+  Each slot takes up 0x100 bytes.
+  0x80 entries in total.
+  Known to be used by:
+  * Skeletally animated joints
+  * The painting inside of portraits
+
+Format of extra entity memory used for skeletally animated joints:
   00,4: X pos?
     If this joint inherits its parent's rotation, it copies 00,4 from its parent to here. If it doesn't inherit, it copies 08,4 from its parent instead.
     This copy code is around 021D6A9C.
@@ -797,8 +815,29 @@ TODO: What are the other 2 for? It's not for the "recent" tab.
   64,4: Pointer to the main entity.
   80,4: Pointer to the main entity.
 
-02112CB8 - List of pointers to joint entities.
-  The pointers are to each joint's entity, so to get the joint data itself (in list 02112A98) go to this entity, and the pointer at entity+158 will be a pointer to the joint data.
+Format of extra entity memory used for portrait paintings:
+  000,4: Pointer to the D-pad up animated icon entity that becomes visible when the player is in front of the portrait.
+  008,4: Pointer to the wavy effect entity that becomes visible over the painting when the player is in front of the portrait.
+  100,2: X pos in pixels. (Not used?)
+  102,2: Y pos in pixels. (Not used?)
+  118,4: X pos in subpixels. (Not used?)
+  11C,4: Y pos in subpixels.
+    This is the base position of the portrait entity, not taking into account the position oscillating up and down.
+  120,1: Red color multiplier out of 0x1F.
+  121,1: Green color multiplier out of 0x1F.
+  122,1: Blue color multiplier out of 0x1F.
+  124,4: Scale.
+  128,4: Speed that the whole portrait oscillates up and down at. Also affects how far it oscillates.
+  130,1: Opacity of the wavy effect overlay.
+    This opacity is out of 0x1F, but it only goes up to 0x10 at most.
+
+0211A698-0211A717 - List of how many consecutive slots are used in list 02112698 for each entity.
+  Each entry is a byte. The byte is the number of slots in a row that are used by this group of entity slots.
+  For example, if an entity requests 5 slots of entity memory, the first 5 bytes in this list will all be 5.
+  (Note that the function responsible for reading this and finding the next free slot (0201DA80) seems to have a bug where it will skip one more slot than is necessary per group of entity slots, which can result in inefficient packing of slots together.)
+
+0211A718,4 - Total slots in list 02112698 that are currently in use.
+  (The game engine might be bugged and sometimes resets this to 0 even when slots are in use...?)
 
 0211A754,1 - ???
 0211A755,1 - Old area name index?
