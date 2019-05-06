@@ -65,57 +65,103 @@ end
 task :build_releases do
   # Updates the executable builds with any changes to the code, delete unnecessary files, and then pack everything into zip files.
   
+  build_dir = "../build"
+  root_dir = "."
+  dsvrandom_dir = "#{root_dir}/dsvrandom"
+  docs_dir = "#{root_dir}/docs"
+  
   ["DSVania Editor", "DSVania Randomizer", "DSVania Editor x64", "DSVania Randomizer x64"].each do |program_name|
     next if program_name.include?("DSVania Randomizer") && !defined?(DSVRANDOM_VERSION)
     
-    FileUtils.rm_f ["../build/#{program_name}/armips", "../build/#{program_name}/asm", "../build/#{program_name}/constants", "../build/#{program_name}/dsvlib", "../build/#{program_name}/images", "../build/#{program_name}/dsvlib.rb", "../build/#{program_name}/version.rb"]
-    FileUtils.cp_r ["./armips", "./asm", "./constants", "./dsvlib", "dsvlib.rb"], "../build/#{program_name}"
+    out_dir = File.join(build_dir, program_name)
     
-    FileUtils.rm_rf "../build/#{program_name}/docs"
+    FileUtils.rm_f [
+      "#{out_dir}/armips",
+      "#{out_dir}/asm",
+      "#{out_dir}/constants",
+      "#{out_dir}/dsvlib",
+      "#{out_dir}/images",
+      "#{out_dir}/dsvlib.rb",
+      "#{out_dir}/version.rb"
+    ]
+    FileUtils.cp_r [
+      "#{root_dir}/armips",
+      "#{root_dir}/asm",
+      "#{root_dir}/constants",
+      "#{root_dir}/dsvlib",
+      "#{root_dir}/dsvlib.rb"
+    ], "#{out_dir}"
+    
+    FileUtils.rm_rf "#{out_dir}/docs"
     
     if program_name.include?("DSVania Editor")
-      FileUtils.mkdir "../build/#{program_name}/docs"
-      FileUtils.cp_r ["./docs/formats", "./docs/lists", "./docs/asm"], "../build/#{program_name}/docs"
-      FileUtils.cp_r ["./docs/DoS RAM Map.txt", "./docs/PoR RAM Map.txt", "./docs/OoE RAM Map.txt", "./docs/AoS RAM Map.txt"], "../build/#{program_name}/docs"
+      FileUtils.mkdir "#{out_dir}/docs"
+      FileUtils.cp_r [
+        "#{docs_dir}/formats",
+        "#{docs_dir}/lists",
+        "#{docs_dir}/asm"
+      ], "#{out_dir}/docs"
+      FileUtils.cp_r [
+        "#{docs_dir}/DoS RAM Map.txt",
+        "#{docs_dir}/PoR RAM Map.txt",
+        "#{docs_dir}/OoE RAM Map.txt",
+        "#{docs_dir}/AoS RAM Map.txt"
+      ], "#{out_dir}/docs"
       
-      FileUtils.rm_f ["../build/#{program_name}/dsvedit", "../build/#{program_name}/dsvedit.rb"]
-      FileUtils.cp_r ["./dsvedit", "dsvedit.rb"], "../build/#{program_name}"
-      FileUtils.cp_r ["./images", "version.rb", "LICENSE.txt"], "../build/#{program_name}"
-      FileUtils.cp_r "README.md", "../build/#{program_name}/README.txt"
-      FileUtils.rm_f "../build/#{program_name}/images/dsvrandom_icon.ico"
-      FileUtils.rm_f "../build/#{program_name}/settings.yml"
+      FileUtils.rm_f [
+        "#{out_dir}/dsvedit",
+        "#{out_dir}/dsvedit.rb"
+      ]
+      FileUtils.cp_r [
+        "#{root_dir}/dsvedit",
+        "#{root_dir}/dsvedit.rb"
+      ], "#{out_dir}"
+      FileUtils.cp_r [
+        "#{root_dir}/images",
+        "#{root_dir}/version.rb",
+        "#{root_dir}/LICENSE.txt"
+      ], "#{out_dir}"
+      FileUtils.cp_r "#{root_dir}/README.md", "#{out_dir}/README.txt"
+      FileUtils.rm_f "#{out_dir}/images/dsvrandom_icon.ico"
+      FileUtils.rm_f "#{out_dir}/settings.yml"
       
       # Automatically set the debug variable to false.
-      code = File.read("../build/#{program_name}/dsvedit.rb")
+      code = File.read("#{out_dir}/dsvedit.rb")
       code.gsub!(/DEBUG = true/, "DEBUG = false")
-      File.write("../build/#{program_name}/dsvedit.rb", code)
+      File.write("#{out_dir}/dsvedit.rb", code)
     else
-      FileUtils.rm_f ["../build/#{program_name}/dsvrandom", "../build/#{program_name}/dsvrandom.rb"]
-      Dir.glob("./dsvrandom/*.rb").each do |file_path|
-        FileUtils.cp file_path, "../build/#{program_name}/dsvrandom"
+      FileUtils.rm_f [
+        "#{out_dir}/dsvrandom",
+        "#{out_dir}/dsvrandom.rb"
+      ]
+      Dir.glob("#{dsvrandom_dir}/*.rb").each do |file_path|
+        FileUtils.cp file_path, "#{out_dir}/dsvrandom"
       end
       FileUtils.cp_r [
-        "./dsvrandom/seedgen_adjectives.txt",
-        "./dsvrandom/seedgen_nouns.txt",
-        "./dsvrandom/progressreqs",
-        "./dsvrandom/assets",
-        "./dsvrandom/roomedits",
-        "./dsvrandom/images",
-        "./dsvrandom/randomizers",
-        "./dsvrandom/constants"
-      ], "../build/#{program_name}/dsvrandom"
-      FileUtils.cp_r "./dsvrandom/LICENSE.txt", "../build/#{program_name}"
-      FileUtils.cp_r "./dsvrandom/README.md", "../build/#{program_name}/README.txt"
-      FileUtils.rm_f ["../build/#{program_name}/dsvrandom/README.txt", "../build/#{program_name}/dsvrandom/LICENSE.txt"]
-      FileUtils.rm_f "../build/#{program_name}/images/dsvedit_icon.ico"
-      FileUtils.rm_f "../build/#{program_name}/randomizer_settings.yml"
-      FileUtils.rm_rf "../build/#{program_name}/dsvrandom/roomedits/Tilesets"
+        "#{dsvrandom_dir}/seedgen_adjectives.txt",
+        "#{dsvrandom_dir}/seedgen_nouns.txt",
+        "#{dsvrandom_dir}/progressreqs",
+        "#{dsvrandom_dir}/assets",
+        "#{dsvrandom_dir}/roomedits",
+        "#{dsvrandom_dir}/images",
+        "#{dsvrandom_dir}/randomizers",
+        "#{dsvrandom_dir}/constants"
+      ], "#{out_dir}/dsvrandom"
+      FileUtils.cp_r "#{dsvrandom_dir}/LICENSE.txt", "#{out_dir}"
+      FileUtils.cp_r "#{dsvrandom_dir}/README.md", "#{out_dir}/README.txt"
+      FileUtils.rm_f [
+        "#{out_dir}/dsvrandom/README.txt",
+        "#{out_dir}/dsvrandom/LICENSE.txt"
+      ]
+      FileUtils.rm_f "#{out_dir}/images/dsvedit_icon.ico"
+      FileUtils.rm_f "#{out_dir}/randomizer_settings.yml"
+      FileUtils.rm_rf "#{out_dir}/dsvrandom/roomedits/Tilesets"
     end
     
-    FileUtils.rm_rf "../build/#{program_name}/cache"
-    FileUtils.rm_f "../build/#{program_name}/crashlog.txt"
+    FileUtils.rm_rf "#{out_dir}/cache"
+    FileUtils.rm_f "#{out_dir}/crashlog.txt"
     
-    zip_path = "../build/"
+    zip_path = build_dir.dup
     if program_name.include?("DSVania Editor")
       zip_path << "DSVania_Editor_#{DSVEDIT_VERSION}"
     else
@@ -130,8 +176,8 @@ task :build_releases do
     FileUtils.rm_f zip_path
     
     Zip::File.open(zip_path, Zip::File::CREATE) do |zipfile|
-      Dir.glob("../build/#{program_name}/**/*.*").each do |file_path|
-        relative_path = Pathname.new(file_path).relative_path_from(Pathname.new("../build/#{program_name}"))
+      Dir.glob("#{out_dir}/**/*.*").each do |file_path|
+        relative_path = Pathname.new(file_path).relative_path_from(Pathname.new("#{out_dir}"))
         zipfile.add(relative_path, file_path)
       end
     end
