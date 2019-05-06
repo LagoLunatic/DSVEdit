@@ -4,11 +4,6 @@ require 'zip'
 require 'pathname'
 
 require_relative 'version'
-begin
-  require_relative 'dsvrandom/version'
-rescue LoadError
-  # Swallow
-end
 
 task :build_ui do
   # Use rbuic4 to compile the ui files into ruby code.
@@ -18,18 +13,10 @@ task :build_ui do
     output_path = "dsvedit/ui_%s.rb" % base_name
     system "rbuic4 dsvedit/#{base_name}.ui -o #{output_path}"
   end
-  
-  if defined?(DSVRANDOM_VERSION)
-    Dir.glob("dsvrandom/*.ui").each do |file_path|
-      base_name = File.basename(file_path, ".*")
-      output_path = "dsvrandom/ui_%s.rb" % base_name
-      system "rbuic4 dsvrandom/#{base_name}.ui -o #{output_path}"
-    end
-  end
 end
 
 task :build_installers do
-  # Builds the installers for DSVEdit and DSVRandom. Requires OCRA and Inno Setup.
+  # Builds the installers, which are just an intermediary step to building the portable zips. Requires OCRA and Inno Setup.
   
   # The gem version of OCRA won't work, it's missing the most recent few commits which fix building the Inno Setup file.
   # Instead you need to use the latest version of OCRA from the source: https://github.com/larsch/ocra/tree/2e7c88fd6ac7ae5f881d838dedd7ad437bda018b
@@ -39,10 +26,6 @@ task :build_installers do
 
   system "C:/Ruby23/bin/ruby ocra-1.3.6/bin/ocra dsvedit.rb --output DSVEdit.exe --no-lzma --chdir-first --innosetup setup_dsvedit.iss --icon ./images/dsvedit_icon.ico"
   system "C:/Ruby23-x64/bin/ruby ocra-1.3.6/bin/ocra dsvedit.rb --output DSVEdit_x64.exe --no-lzma --chdir-first --innosetup setup_dsvedit_x64.iss --icon ./images/dsvedit_icon.ico"
-  if defined?(DSVRANDOM_VERSION)
-    system "C:/Ruby23/bin/ruby ocra-1.3.6/bin/ocra dsvrandom/dsvrandom.rb --output DSVRandom.exe --no-lzma --chdir-first --innosetup setup_dsvrandom.iss --windows --icon ./dsvrandom/images/dsvrandom_icon.ico"
-    system "C:/Ruby23-x64/bin/ruby ocra-1.3.6/bin/ocra dsvrandom/dsvrandom.rb --output DSVRandom_x64.exe --no-lzma --chdir-first --innosetup setup_dsvrandom_x64.iss --windows --icon ./dsvrandom/images/dsvrandom_icon.ico"
-  end
 end
 
 task :build_releases do
@@ -50,12 +33,9 @@ task :build_releases do
   
   build_dir = "../build"
   root_dir = "."
-  dsvrandom_dir = "#{root_dir}/dsvrandom"
   docs_dir = "#{root_dir}/docs"
   
-  ["DSVania Editor", "DSVania Randomizer", "DSVania Editor x64", "DSVania Randomizer x64"].each do |program_name|
-    next if program_name.include?("DSVania Randomizer") && !defined?(DSVRANDOM_VERSION)
-    
+  ["DSVania Editor", "DSVania Editor x64"].each do |program_name|
     out_dir = File.join(build_dir, program_name)
     
     FileUtils.rm_f [
@@ -77,76 +57,42 @@ task :build_releases do
     
     FileUtils.rm_rf "#{out_dir}/docs"
     
-    if program_name.include?("DSVania Editor")
-      FileUtils.mkdir "#{out_dir}/docs"
-      FileUtils.cp_r [
-        "#{docs_dir}/formats",
-        "#{docs_dir}/lists",
-        "#{docs_dir}/asm"
-      ], "#{out_dir}/docs"
-      Dir.glob("#{docs_dir}/*.txt").each do |file_path|
-        FileUtils.cp file_path, "#{out_dir}/docs"
-      end
-      
-      FileUtils.rm_f [
-        "#{out_dir}/dsvedit",
-        "#{out_dir}/dsvedit.rb"
-      ]
-      FileUtils.cp_r [
-        "#{root_dir}/dsvedit",
-        "#{root_dir}/dsvedit.rb"
-      ], "#{out_dir}"
-      FileUtils.cp_r [
-        "#{root_dir}/images",
-        "#{root_dir}/version.rb",
-        "#{root_dir}/LICENSE.txt"
-      ], "#{out_dir}"
-      FileUtils.cp_r "#{root_dir}/README.md", "#{out_dir}/README.txt"
-      FileUtils.rm_f "#{out_dir}/images/dsvrandom_icon.ico"
-      FileUtils.rm_f "#{out_dir}/settings.yml"
-      
-      # Automatically set the debug variable to false.
-      code = File.read("#{out_dir}/dsvedit.rb")
-      code.gsub!(/DEBUG = true/, "DEBUG = false")
-      File.write("#{out_dir}/dsvedit.rb", code)
-    else
-      FileUtils.rm_f [
-        "#{out_dir}/dsvrandom",
-        "#{out_dir}/dsvrandom.rb"
-      ]
-      Dir.glob("#{dsvrandom_dir}/*.rb").each do |file_path|
-        FileUtils.cp file_path, "#{out_dir}/dsvrandom"
-      end
-      FileUtils.cp_r [
-        "#{dsvrandom_dir}/seedgen_adjectives.txt",
-        "#{dsvrandom_dir}/seedgen_nouns.txt",
-        "#{dsvrandom_dir}/progressreqs",
-        "#{dsvrandom_dir}/assets",
-        "#{dsvrandom_dir}/roomedits",
-        "#{dsvrandom_dir}/images",
-        "#{dsvrandom_dir}/randomizers",
-        "#{dsvrandom_dir}/constants"
-      ], "#{out_dir}/dsvrandom"
-      FileUtils.cp_r "#{dsvrandom_dir}/LICENSE.txt", "#{out_dir}"
-      FileUtils.cp_r "#{dsvrandom_dir}/README.md", "#{out_dir}/README.txt"
-      FileUtils.rm_f [
-        "#{out_dir}/dsvrandom/README.txt",
-        "#{out_dir}/dsvrandom/LICENSE.txt"
-      ]
-      FileUtils.rm_f "#{out_dir}/images/dsvedit_icon.ico"
-      FileUtils.rm_f "#{out_dir}/randomizer_settings.yml"
-      FileUtils.rm_rf "#{out_dir}/dsvrandom/roomedits/Tilesets"
+    FileUtils.mkdir "#{out_dir}/docs"
+    FileUtils.cp_r [
+      "#{docs_dir}/formats",
+      "#{docs_dir}/lists",
+      "#{docs_dir}/asm"
+    ], "#{out_dir}/docs"
+    Dir.glob("#{docs_dir}/*.txt").each do |file_path|
+      FileUtils.cp file_path, "#{out_dir}/docs"
     end
+    
+    FileUtils.rm_f [
+      "#{out_dir}/dsvedit",
+      "#{out_dir}/dsvedit.rb"
+    ]
+    FileUtils.cp_r [
+      "#{root_dir}/dsvedit",
+      "#{root_dir}/dsvedit.rb"
+    ], "#{out_dir}"
+    FileUtils.cp_r [
+      "#{root_dir}/images",
+      "#{root_dir}/version.rb",
+      "#{root_dir}/LICENSE.txt"
+    ], "#{out_dir}"
+    FileUtils.cp_r "#{root_dir}/README.md", "#{out_dir}/README.txt"
+    FileUtils.rm_f "#{out_dir}/settings.yml"
+    
+    # Automatically set the debug variable to false.
+    code = File.read("#{out_dir}/dsvedit.rb")
+    code.gsub!(/DEBUG = true/, "DEBUG = false")
+    File.write("#{out_dir}/dsvedit.rb", code)
     
     FileUtils.rm_rf "#{out_dir}/cache"
     FileUtils.rm_f "#{out_dir}/crashlog.txt"
     
     zip_path = "#{build_dir}/"
-    if program_name.include?("DSVania Editor")
-      zip_path << "DSVania_Editor_#{DSVEDIT_VERSION}"
-    else
-      zip_path << "DSVania_Randomizer_#{DSVRANDOM_VERSION}"
-    end
+    zip_path << "DSVania_Editor_#{DSVEDIT_VERSION}"
     if program_name.include?("x64")
       zip_path << "_x64"
     end
