@@ -141,7 +141,7 @@ task :build_releases do
     FileUtils.rm_rf "#{out_dir}/cache"
     FileUtils.rm_f "#{out_dir}/crashlog.txt"
     
-    zip_path = build_dir.dup
+    zip_path = "#{build_dir}/"
     if program_name.include?("DSVania Editor")
       zip_path << "DSVania_Editor_#{DSVEDIT_VERSION}"
     else
