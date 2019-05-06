@@ -109,7 +109,7 @@ task :build_releases do
       FileUtils.rm_f ["../build/#{program_name}/dsvrandom/README.txt", "../build/#{program_name}/dsvrandom/LICENSE.txt"]
       FileUtils.rm_f "../build/#{program_name}/images/dsvedit_icon.ico"
       FileUtils.rm_f "../build/#{program_name}/randomizer_settings.yml"
-      FileUtils.rm_rf "../build/#{"DSVania Randomizer"}/dsvrandom/roomedits/Tilesets"
+      FileUtils.rm_rf "../build/#{program_name}/dsvrandom/roomedits/Tilesets"
     end
     
     FileUtils.rm_rf "../build/#{program_name}/cache"
