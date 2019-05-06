@@ -343,6 +343,8 @@ class CollisionTile
     [0, 1].include?(block_shape) && !has_top && !has_sides_and_bottom && !has_effect
   end
   
+  alias is_blank? is_blank
+  
   def is_solid_block?
     block_shape == 0 && has_top && has_sides_and_bottom
   end
