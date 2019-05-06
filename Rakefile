@@ -84,12 +84,9 @@ task :build_releases do
         "#{docs_dir}/lists",
         "#{docs_dir}/asm"
       ], "#{out_dir}/docs"
-      FileUtils.cp_r [
-        "#{docs_dir}/DoS RAM Map.txt",
-        "#{docs_dir}/PoR RAM Map.txt",
-        "#{docs_dir}/OoE RAM Map.txt",
-        "#{docs_dir}/AoS RAM Map.txt"
-      ], "#{out_dir}/docs"
+      Dir.glob("#{docs_dir}/*.txt").each do |file_path|
+        FileUtils.cp file_path, "#{out_dir}/docs"
+      end
       
       FileUtils.rm_f [
         "#{out_dir}/dsvedit",
