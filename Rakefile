@@ -13,36 +13,19 @@ end
 task :build_ui do
   # Use rbuic4 to compile the ui files into ruby code.
   
-  system "rbuic4 dsvedit/main.ui                      -o dsvedit/ui_main.rb"
-  system "rbuic4 dsvedit/enemy_editor.ui              -o dsvedit/ui_enemy_editor.rb"
-  system "rbuic4 dsvedit/text_editor.ui               -o dsvedit/ui_text_editor.rb"
-  system "rbuic4 dsvedit/settings.ui                  -o dsvedit/ui_settings.rb"
-  system "rbuic4 dsvedit/sprite_editor.ui             -o dsvedit/ui_sprite_editor.rb"
-  system "rbuic4 dsvedit/item_editor.ui               -o dsvedit/ui_item_editor.rb"
-  system "rbuic4 dsvedit/generic_editor.ui            -o dsvedit/ui_generic_editor.rb"
-  system "rbuic4 dsvedit/entity_search.ui             -o dsvedit/ui_entity_search.rb"
-  system "rbuic4 dsvedit/icon_chooser.ui              -o dsvedit/ui_icon_chooser.rb"
-  system "rbuic4 dsvedit/map_editor.ui                -o dsvedit/ui_map_editor.rb"
-  system "rbuic4 dsvedit/entity_editor.ui             -o dsvedit/ui_entity_editor.rb"
-  system "rbuic4 dsvedit/skeleton_editor.ui           -o dsvedit/ui_skeleton_editor.rb"
-  system "rbuic4 dsvedit/room_editor.ui               -o dsvedit/ui_room_editor.rb"
-  system "rbuic4 dsvedit/layers_editor.ui             -o dsvedit/ui_layers_editor.rb"
-  system "rbuic4 dsvedit/item_pool_editor.ui          -o dsvedit/ui_item_pool_editor.rb"
-  system "rbuic4 dsvedit/gfx_editor.ui                -o dsvedit/ui_gfx_editor.rb"
-  system "rbuic4 dsvedit/music_editor.ui              -o dsvedit/ui_music_editor.rb"
-  system "rbuic4 dsvedit/tileset_editor.ui            -o dsvedit/ui_tileset_editor.rb"
-  system "rbuic4 dsvedit/player_editor.ui             -o dsvedit/ui_player_editor.rb"
-  system "rbuic4 dsvedit/special_object_editor.ui     -o dsvedit/ui_special_object_editor.rb"
-  system "rbuic4 dsvedit/weapon_synth_editor.ui       -o dsvedit/ui_weapon_synth_editor.rb"
-  system "rbuic4 dsvedit/shop_editor.ui               -o dsvedit/ui_shop_editor.rb"
-  system "rbuic4 dsvedit/quest_editor.ui              -o dsvedit/ui_quest_editor.rb"
-  system "rbuic4 dsvedit/tileset_chooser.ui           -o dsvedit/ui_tileset_chooser.rb"
-  system "rbuic4 dsvedit/door_editor.ui               -o dsvedit/ui_door_editor.rb"
-  system "rbuic4 dsvedit/magic_seal_editor.ui         -o dsvedit/ui_magic_seal_editor.rb"
-  system "rbuic4 dsvedit/player_state_anims_editor.ui -o dsvedit/ui_player_state_anims_editor.rb"
-  system "rbuic4 dsvedit/armips_patcher.ui            -o dsvedit/ui_armips_patcher.rb"
+  Dir.glob("dsvedit/*.ui").each do |file_path|
+    base_name = File.basename(file_path, ".*")
+    output_path = "dsvedit/ui_%s.rb" % base_name
+    system "rbuic4 dsvedit/#{base_name}.ui -o #{output_path}"
+  end
   
-  system "rbuic4 dsvrandom/randomizer.ui           -o dsvrandom/ui_randomizer.rb" if defined?(DSVRANDOM_VERSION)
+  if defined?(DSVRANDOM_VERSION)
+    Dir.glob("dsvrandom/*.ui").each do |file_path|
+      base_name = File.basename(file_path, ".*")
+      output_path = "dsvrandom/ui_%s.rb" % base_name
+      system "rbuic4 dsvrandom/#{base_name}.ui -o #{output_path}"
+    end
+  end
 end
 
 task :build_installers do
