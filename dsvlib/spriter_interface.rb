@@ -26,7 +26,7 @@ class SpriterInterface
     #palette = palettes[0]
     #
     #gfx_page = sprite_info.gfx_pages[0]
-    #chunky_gfx_page = renderer.render_gfx_page(gfx_page.file, palette, gfx_page.canvas_width)
+    #chunky_gfx_page = renderer.render_gfx_page(gfx_page, palette, gfx_page.canvas_width)
     #chunky_gfx_page.save(output_path + "/#{name}.png", :fast_rgba)
     
     builder = Nokogiri::XML::Builder.new do |xml|

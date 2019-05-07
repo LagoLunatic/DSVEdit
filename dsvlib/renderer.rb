@@ -193,7 +193,7 @@ class Renderer
         next # TODO: figure out why this sometimes happens.
       end
       
-      graphic_tile = render_graphic_tile(gfx.file, palette, tile.index_on_tile_page)
+      graphic_tile = render_graphic_tile(gfx, palette, tile.index_on_tile_page)
       
       if tile.horizontal_flip
         graphic_tile.mirror!
@@ -305,20 +305,20 @@ class Renderer
     return rendered_tileset
   end
   
-  def render_graphic_tile(gfx_file, palette, tile_index_on_page)
+  def render_graphic_tile(gfx_page, palette, tile_index_on_page)
     x_block_on_tileset = tile_index_on_page % 8
     y_block_on_tileset = tile_index_on_page / 8
-    render_gfx(gfx_file, palette, x=x_block_on_tileset*16, y=y_block_on_tileset*16, width=16, height=16)
+    render_gfx(gfx_page, palette, x=x_block_on_tileset*16, y=y_block_on_tileset*16, width=16, height=16)
   end
   
-  def render_gfx_page(gfx_file, palette, canvas_width=16)
-    render_gfx(gfx_file, palette, x=0, y=0, width=canvas_width*8, height=canvas_width*8, canvas_width=canvas_width*8)
+  def render_gfx_page(gfx_page, palette, canvas_width=16)
+    render_gfx(gfx_page, palette, x=0, y=0, width=canvas_width*8, height=canvas_width*8, canvas_width=canvas_width*8)
   end
   
-  def render_gfx(gfx_file, palette, x, y, width, height, canvas_width=128)
+  def render_gfx(gfx_page, palette, x, y, width, height, canvas_width=128)
     rendered_gfx = ChunkyPNG::Image.new(width, height, ChunkyPNG::Color::TRANSPARENT)
     
-    if gfx_file.nil?
+    if gfx_page.nil?
       # Invalid graphics, render a red rectangle instead.
       
       rendered_gfx = ChunkyPNG::Image.new(width, height, ChunkyPNG::Color.rgba(255, 0, 0, 255))
@@ -345,7 +345,7 @@ class Renderer
     (0..height-1).each do |i|
       pixels_for_chunky = []
       
-      fs.read_by_file(gfx_file[:file_path], offset, bytes_per_requested_row, allow_reading_into_next_file_in_ram: true).each_byte do |byte|
+      gfx_page.gfx_data[offset, bytes_per_requested_row].each_byte do |byte|
         if pixels_per_byte == 2
           pixels = [byte & 0b00001111, byte >> 4] # get the low 4 bits, then the high 4 bits (it's reversed). each is one pixel, two pixels total inside this byte.
         else
@@ -1238,8 +1238,7 @@ class Renderer
           if one_dimensional_mode
             rendered_gfx_file = render_gfx_1_dimensional_mode(gfx_page, palette || dummy_palette)
           else
-            gfx_file = gfx_page.file
-            rendered_gfx_file = render_gfx(gfx_file, palette || dummy_palette, 0, 0, canvas_width*8, canvas_width*8, canvas_width=canvas_width*8)
+            rendered_gfx_file = render_gfx(gfx_page, palette || dummy_palette, 0, 0, canvas_width*8, canvas_width*8, canvas_width=canvas_width*8)
           end
           
           if rendered_gfx_file.height < 128
@@ -1348,7 +1347,7 @@ class Renderer
     if mode == :item
       gfx_page_image = render_gfx_1_dimensional_mode(gfx_page, palette)
     else
-      gfx_page_image = render_gfx_page(gfx_page.file, palette)
+      gfx_page_image = render_gfx_page(gfx_page, palette)
     end
     
     x_pos = ((icon_index % icons_per_page) % icons_per_row) * icon_width

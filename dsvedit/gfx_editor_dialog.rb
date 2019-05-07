@@ -166,7 +166,7 @@ class GfxEditorDialog < Qt::Dialog
     if @ui.one_dimensional_mode.checked
       chunky_image = @renderer.render_gfx_1_dimensional_mode(gfx, palette)
     else
-      chunky_image = @renderer.render_gfx_page(gfx.file, palette, gfx.canvas_width)
+      chunky_image = @renderer.render_gfx_page(gfx, palette, gfx.canvas_width)
     end
     
     pixmap = Qt::Pixmap.new
@@ -266,7 +266,7 @@ class GfxEditorDialog < Qt::Dialog
       if @ui.one_dimensional_mode.checked
         chunky_image = @renderer.render_gfx_1_dimensional_mode(gfx, palette)
       else
-        chunky_image = @renderer.render_gfx_page(gfx.file, palette, gfx.canvas_width)
+        chunky_image = @renderer.render_gfx_page(gfx, palette, gfx.canvas_width)
       end
       file_basename = File.basename(gfx_name, ".*")
       gfx_file_path = "#{@output_folder}/#{file_basename}_#{palette_name}.png"

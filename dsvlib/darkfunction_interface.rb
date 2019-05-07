@@ -57,7 +57,7 @@ class DarkFunctionInterface
         if one_dimensional_mode
           chunky_gfx_page = renderer.render_gfx_1_dimensional_mode(gfx_page, palette)
         else
-          chunky_gfx_page = renderer.render_gfx_page(gfx_page.file, palette, gfx_page.canvas_width)
+          chunky_gfx_page = renderer.render_gfx_page(gfx_page, palette, gfx_page.canvas_width)
         end
         
         i = gfx_page_index + (palette_index*big_gfx_page_width)

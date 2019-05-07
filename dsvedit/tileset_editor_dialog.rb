@@ -391,7 +391,7 @@ class TilesetEditorDialog < Qt::Dialog
     end
     
     if SYSTEM == :nds
-      chunky_tile = @renderer.render_graphic_tile(gfx.gfx_wrapper.file, palette, tile.index_on_tile_page)
+      chunky_tile = @renderer.render_graphic_tile(gfx.gfx_wrapper, palette, tile.index_on_tile_page)
     else
       gfx_chunk_index_on_page = (tile.index_on_tile_page & 0xC0) >> 6
       gfx_chunk_index = tile.tile_page*4 + gfx_chunk_index_on_page
@@ -529,7 +529,7 @@ class TilesetEditorDialog < Qt::Dialog
       end
       
       @ui.gfx_file.text = gfx_wrapper.file[:file_path]
-      chunky_image = @renderer.render_gfx_page(gfx_wrapper.file, palette)
+      chunky_image = @renderer.render_gfx_page(gfx_wrapper, palette)
     else
       chunky_image = ChunkyPNG::Image.new(128, 128, ChunkyPNG::Color::TRANSPARENT)
       gfx_pointers_used_on_this_page = []

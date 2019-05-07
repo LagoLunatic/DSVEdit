@@ -56,7 +56,7 @@ class GfxWrapper
   
   def gfx_data
     if SYSTEM == :nds
-      if @gfx_data_pointer
+      @gfx_data ||= if @gfx_data_pointer
         fs.read(@gfx_data_pointer, 0x2000*render_mode)
       else
         fs.read_by_file(file[:file_path], 0, 0x2000*render_mode, allow_reading_into_next_file_in_ram: true)
@@ -86,9 +86,9 @@ class GfxWrapper
         end
         fs.write(gfx_data_pointer, new_gfx_data)
       end
-      
-      @gfx_data = nil # Clear gfx data cache
     end
+    
+    @gfx_data = nil # Clear gfx data cache
   end
   
   def write_to_rom

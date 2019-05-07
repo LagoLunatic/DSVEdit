@@ -89,7 +89,7 @@ class IconChooserDialog < Qt::Dialog
         if @mode == :item
           chunky_image = @renderer.render_gfx_1_dimensional_mode(gfx_page, @palettes[palette_index])
         else
-          chunky_image = @renderer.render_gfx_page(gfx_page.file, @palettes[palette_index])
+          chunky_image = @renderer.render_gfx_page(gfx_page, @palettes[palette_index])
         end
         
         pixmap = Qt::Pixmap.new
