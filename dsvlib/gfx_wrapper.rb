@@ -103,7 +103,7 @@ class GfxWrapper
       0x2000*render_mode
     else
       if compressed?
-        compressed_data_header = fs.read(gfx_data_pointer, 4).unpack("V")
+        compressed_data_header = fs.read(gfx_data_pointer, 4).unpack("V").first
         uncompressed_size = (compressed_data_header & 0xFFFFFF00) >> 8
         uncompressed_size
       else
