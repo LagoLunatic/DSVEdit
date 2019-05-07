@@ -275,8 +275,8 @@ class TMXInterface
     
     tmx_tiles.each do |block|
       block = 1 if block == 0
-      horizontal_flip  = (block & 0x80000000) != 0
-      vertical_flip    = (block & 0x40000000) != 0
+      horizontal_flip  = (block & 0x80000000) > 0
+      vertical_flip    = (block & 0x40000000) > 0
       index_on_tileset = (block & ~(0x80000000 | 0x40000000 | 0x20000000))
       index_on_tileset -= 1 # TMX indexes start at 1 instead of 0.
       index_on_tileset = index_on_tileset % NUM_BLOCKS_IN_TILESET_IMAGE # Account for the block offset for different tilesets. 1024/512 blocks in each tileset (NDS/GBA).

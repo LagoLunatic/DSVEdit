@@ -425,8 +425,8 @@ class LayerTile
   
   def from_game_data(tile_data)
     @index_on_tileset = (tile_data & 0b0011111111111111)
-    @horizontal_flip  = (tile_data & 0b0100000000000000) != 0
-    @vertical_flip    = (tile_data & 0b1000000000000000) != 0
+    @horizontal_flip  = (tile_data & 0b0100000000000000) > 0
+    @vertical_flip    = (tile_data & 0b1000000000000000) > 0
     
     return self
   end
