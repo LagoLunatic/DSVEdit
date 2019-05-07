@@ -7,15 +7,7 @@ class TextDatabase
   
   def initialize(fs)
     @fs = fs
-    read_from_rom()
-  end
-  
-  def read_from_rom
-    @text_list = []
-    TEXT_RANGE.each do |text_id|
-      text = Text.new(text_id, fs)
-      @text_list << text
-    end
+    @text_list = TextList.new(fs) # Lazy loader
   end
   
   def write_to_rom
@@ -82,5 +74,36 @@ class TextDatabase
         text.write_to_rom()
       end
     end
+  end
+end
+
+class TextList
+  include Enumerable
+  
+  attr_reader :fs
+  
+  def initialize(fs)
+    @fs = fs
+    @text_list = [nil]*TEXT_RANGE.size
+  end
+  
+  # Only create and cache the texts that were specifically requested.
+  def [](text_id_or_range)
+    if text_id_or_range.is_a?(Integer)
+      text_id = text_id_or_range
+      @text_list[text_id] ||= Text.new(text_id, fs)
+    elsif text_id_or_range.is_a?(Range)
+      range = text_id_or_range
+      range.map do |text_id|
+        @text_list[text_id] ||= Text.new(text_id, fs)
+      end
+    else
+      raise "Invalid argument to text list: #{text_id_or_range.inspect}"
+    end
+  end
+  
+  def each(&block)
+    self[TEXT_RANGE] # Need to initialize the full text list before iterating over it.
+    @text_list.each(&block)
   end
 end
