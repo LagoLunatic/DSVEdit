@@ -345,7 +345,7 @@ class Renderer
     (0..height-1).each do |i|
       pixels_for_chunky = []
       
-      gfx_page.gfx_data[offset, bytes_per_requested_row].each_byte do |byte|
+      gfx_page.read_from_data(offset, bytes_per_requested_row).each_byte do |byte|
         if pixels_per_byte == 2
           pixels = [byte & 0b00001111, byte >> 4] # get the low 4 bits, then the high 4 bits (it's reversed). each is one pixel, two pixels total inside this byte.
         else
@@ -402,7 +402,7 @@ class Renderer
     pixels_for_chunky = []
     
     offset = bytes_per_block*minitile_index_on_page
-    gfx_page.gfx_data[offset, bytes_per_block].each_byte do |byte|
+    gfx_page.read_from_data(offset, bytes_per_block).each_byte do |byte|
       if pixels_per_byte == 2
         pixels = [byte & 0b00001111, byte >> 4] # get the low 4 bits, then the high 4 bits (it's reversed). each is one pixel, two pixels total inside this byte.
       else

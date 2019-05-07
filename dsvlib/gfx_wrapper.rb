@@ -46,7 +46,7 @@ class GfxWrapper
         raise "Unknown GFX wrapper data type: %02X" % data_type
       end
       
-      if compressed
+      if compressed?
         @gfx_data_pointer = fs.read(gfx_pointer+4, 4).unpack("V").first
       else
         @gfx_data_pointer = gfx_pointer+4
@@ -57,15 +57,57 @@ class GfxWrapper
   def gfx_data
     if SYSTEM == :nds
       @gfx_data ||= if @gfx_data_pointer
-        fs.read(@gfx_data_pointer, 0x2000*render_mode)
+        fs.read(@gfx_data_pointer, gfx_data_length)
       else
-        fs.read_by_file(file[:file_path], 0, 0x2000*render_mode, allow_reading_into_next_file_in_ram: true)
+        fs.read_by_file(file[:file_path], 0, gfx_data_length, allow_reading_into_next_file_in_ram: true)
       end
     else
-      @gfx_data ||= if compressed
+      @gfx_data ||= if compressed?
         fs.decompress(gfx_data_pointer)
       else
-        fs.read(gfx_data_pointer, 512*size_in_512_chunks)
+        fs.read(gfx_data_pointer, gfx_data_length)
+      end
+    end
+  end
+  
+  def read_from_data(offset, length)
+    # This function allows reading only part of the GFX data, for better performance than reading the entire thing.
+    
+    if offset + length > gfx_data_length
+      raise "Offset %08X (length %08X) is past end of GFX data %08X (%08X bytes long)" % [offset, length, gfx_pointer, gfx_data_length]
+    end
+    
+    if @gfx_data
+      # If the GFX data is already cached, we've already read the whole thing, so just read from the cache instead of from the filesystem again.
+      gfx_data[offset, length]
+    else
+      if SYSTEM == :nds
+        if @gfx_data_pointer
+          fs.read(@gfx_data_pointer + offset, length)
+        else
+          fs.read_by_file(file[:file_path], offset, length, allow_reading_into_next_file_in_ram: true)
+        end
+      else
+        if compressed?
+          # If the data is compressed, there's no choice but to decompress the whole thing if we want to read part of it.
+          gfx_data[offset, length]
+        else
+          fs.read(gfx_data_pointer + offset, length)
+        end
+      end
+    end
+  end
+  
+  def gfx_data_length
+    if SYSTEM == :nds
+      0x2000*render_mode
+    else
+      if compressed?
+        compressed_data_header = fs.read(gfx_data_pointer, 4).unpack("V")
+        uncompressed_size = (compressed_data_header & 0xFFFFFF00) >> 8
+        uncompressed_size
+      else
+        512*size_in_512_chunks
       end
     end
   end
@@ -78,7 +120,7 @@ class GfxWrapper
         fs.write(@gfx_data_pointer, new_gfx_data)
       end
     else
-      if compressed
+      if compressed?
         fs.compress_write(gfx_data_pointer, new_gfx_data)
       else
         if new_gfx_data.length > 512*size_in_512_chunks
@@ -110,6 +152,8 @@ class GfxWrapper
       raise "Unknown render mode: %02X" % render_mode
     end
   end
+  
+  alias compressed? compressed
   
   def self.from_gfx_list_pointer(gfx_list_pointer, fs)
     offset = gfx_list_pointer
