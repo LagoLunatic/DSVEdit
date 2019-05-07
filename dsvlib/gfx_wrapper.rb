@@ -156,15 +156,13 @@ class GfxWrapper
   alias compressed? compressed
   
   def self.from_gfx_list_pointer(gfx_list_pointer, fs)
-    offset = gfx_list_pointer
+    num_gfx_pages = fs.read(gfx_list_pointer+2, 2).unpack("v").first
+    gfx_wrappers_list_start = fs.read(gfx_list_pointer+4, 4).unpack("V").first
+    
     gfx_wrappers = []
-    while true
-      gfx_pointer, unknown = fs.read(offset, 8).unpack("VV")
-      break if gfx_pointer == 0
-      
+    num_gfx_pages.times do |i|
+      gfx_pointer = fs.read(gfx_wrappers_list_start + i*4, 4).unpack("V").first
       gfx_wrappers << GfxWrapper.new(gfx_pointer, fs)
-      
-      offset += 8
     end
     
     return gfx_wrappers
