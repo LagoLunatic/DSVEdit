@@ -191,11 +191,11 @@ class NDSFileSystem
   
   def convert_ram_address_to_path_and_offset(ram_address)
     @currently_loaded_files.each do |ram_start_offset, file|
-      ram_range = (file[:ram_start_offset]..file[:ram_start_offset]+file[:size]-1)
-      if ram_range.include?(ram_address)
-        offset_in_file = ram_address - file[:ram_start_offset]
-        return [file[:file_path], offset_in_file]
-      end
+      next if ram_address < file[:ram_start_offset]
+      next if ram_address >= file[:ram_start_offset]+file[:size]
+      
+      offset_in_file = ram_address - file[:ram_start_offset]
+      return [file[:file_path], offset_in_file]
     end
     
     str = ""
