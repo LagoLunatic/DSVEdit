@@ -1134,9 +1134,13 @@ Format of extra entity memory used for portrait paintings:
 
 022C5860 - This one 256 color palette is used for all face portraits.
 
-022C1490 - Palette list for the map background.
-022CBA90 - GFX wrapper for the map background.
+022C1490 - Palette list for the map background on the top screen.
+022CBA90 - GFX wrapper for the map background on the top screen.
   Note that there is no sprite file for the map background unlike in OoE. Instead it uses some unknown layout format to assemble the map background, which is located at 020DF630.
+
+022C1554 - Palette list for the parts of the UI on the bottom screen.
+022CDA9C - GFX wrapper for parts of the UI on the bottom screen.
+  This includes the health bar and map reminder markers.
 
 === 022D0F3F: End of Overlay 7
 

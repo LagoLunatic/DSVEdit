@@ -40,6 +40,21 @@
 0207ABFC-0207AD7B - Layer tile list for the background of the bestiary.
   Menu backgrounds are handled very similarly to room layers.
 
+0207B63C - Layer data for the pause menu.
+02083EB0 - Tileset for the pause menu,
+  Entry length 4.
+  Format:
+  00,4: Bitfield.
+    & 00000007: X pos in terms of 16x16 tiles on the GFX page.
+    & 00000078: Y pos in terms of 16x16 tiles on the GFX page.
+    & 00000F80: Unused.
+    & 0000F000: GFX page index.
+    & 0F000000: BG palette index.
+    & F0000000: Unused.
+02079E70 - GFX list for the pause menu.
+  022D9E4C,022D9E58,022D9E64 - GFX wrappers for the pause menu. (/bc/f_main0.dat, /bc/f_main1.dat, /bc/f_main2.dat)
+022DA3D4 - Palette list for the pause menu.
+
 02086394-0208A393 - List of sine and cosine values.
   Entry length 4.
   There are 0x1000 entries in this list, with the index corresponding to an input value of 0 to 359 degrees.
@@ -51,6 +66,8 @@
 
 0208AD8C - List of room pointers for transition rooms.
   00000000 marks the end of the list.
+
+0208CA90 - List of files to load for enemies.
 
 0208CC6C-0209A0C3 - List of assets.
   Entry length 0x28.
@@ -74,8 +91,6 @@ Each list of assets has this format:
   00,4: Asset index of the asset.
   04,4: 2?
   The list is terminated by FFFFFFFF.
-
-0208CA90 - List of files to load for enemies.
 
 0209A188-0209A19F - List of the x and y positions (in map tiles) of each the icon of each warp room on the map.
   This list is only for the position of the square icon on top of each warp room when you're using a warp point.

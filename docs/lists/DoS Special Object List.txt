@@ -266,7 +266,7 @@ Special objects:
     02 Killer Clown
     03 Ukoback
 4A Visual effect used by Dario when showing off his power.
-4B Mothman puzzle that can be zapped.
+4B Mothman's searchlight that can be zapped.
 4C An item. If it's the Chaos Ring, only appears if you have all souls.
   Var A: Flag for having picked this item up.
   Var B: Global ID of the item + 1. CE is Chaos Ring. (Different from normal items, where Var B is the local ID of the item.)

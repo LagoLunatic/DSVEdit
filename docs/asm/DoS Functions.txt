@@ -564,7 +564,8 @@
   ; r1 - Layer metadata pointer
 02041798 LoadMenuGFXAsset
   ; r0 - Menu entity to load the GFX for
-  ; r1 - 0?
+  ; r1 - May affect the offset within tiles VRAM to load this GFX page at, multiply this value by 0x2000 to get the offset.
+  ;   It seems like this is unused in practice though.
   ; r2 - Asset index
 
 020125A4 MagicSealOrItemPickupUpdate?
@@ -789,7 +790,7 @@
   ; The formula is:
   ;   damage = (dmg_mult*int)/16 + int/8 + dmg_mult
   ;   damage += (damage/4 + 1) * curr_num_levels / num_soul_levels
-  ; If Dmitrii uses the soul, the formula is instead:
+  ; If an enemy (Dmitrii/Somacula) uses the soul, the formula is instead:
   ;   damage = (dmg_mult*enemy_attack)/32 + enemy_attack/2 + dmg_mult
 
 02024C7C GetWarpIndexFromPos
