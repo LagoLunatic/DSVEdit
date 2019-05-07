@@ -24,7 +24,7 @@
 .org @FreeSpace
 ; reference: 02041C50 is where vanilla starts drawing the map markers
 @DrawMarkersOnTopScreen:
-  push r4, r5, r8, r9
+  push r4, r5, r6, r7, r8, r9
   
   ldr r4, =020C553Ch ; Map sprite pointer (includes the marker)
   ldr r5, =@TopScreenMapMarkerOAMSpriteSlots
@@ -38,10 +38,21 @@
   ldr r0, =021006CFh ; List of map marker positions
   add r8, r0, r8
   
+  mov r6, 18h ; Default marker X position
+  mov r7, 20h ; Default marker Y position
+  
   mov r9, 0h ; Loop counter for number of markers we've drawn so far
   
 @DrawMarkerOnTopScreenLoopStart:
-  ; Create the marker
+  ldrb r1, [r8, 0h] ; Read X pos of current marker
+  cmp r1, r6 ; Check if the X pos is different from its default position
+  bne @DrawMarkerOnTopScreenLoopCreateMarker
+  ldrb r1, [r8, 1h] ; Read Y pos of current marker
+  cmp r1, r7 ; Check if the Y pos is different from its default position
+  ; If both X and Y are at the default position, we assume this marker has not been moved, so we don't draw this marker.
+  beq @DrawMarkerOnTopScreenLoopContinue
+  
+@DrawMarkerOnTopScreenLoopCreateMarker:
   mov r0, 1h ; Top screen
   bl 0203561Ch ; GetNextFreeOAMSpriteSlot
   str r0, [r5] ; Preserve a reference to this OAM sprite so we know to delete it later
@@ -51,7 +62,7 @@
   str r4, [r0, 34h] ; Set sprite pointer
   mov r1, 2h
   strh r1, [r0, 3Ah] ; Set sprite frame index
-  ldrb r1, [r8, 0h] ; Read Y pos of current marker
+  ldrb r1, [r8, 0h] ; Read X pos of current marker
   mov r1, r1, lsl 0Ch ; Convert pixels to subpixels
   str r1, [r0, 24h] ; Set X pos
   ldrb r1, [r8, 1h] ; Read Y pos of current marker
@@ -60,14 +71,16 @@
   mov r1, 1h
   str r1, [r0, 2Ch] ; Set Z pos
   
+@DrawMarkerOnTopScreenLoopContinue:
   add r5, r5, 4h
+  add r6, r6, 10h ; The default X pos of every marker is 0x10 pixels to the right of the last one
   add r8, r8, 2h
   add r9, r9, 1h
   cmp r9, 5h ; Draw 5 map markers in total
   blt @DrawMarkerOnTopScreenLoopStart
   
 @DrawMarkersOnTopScreenReturn:
-  pop r4, r5, r8, r9
+  pop r4, r5, r6, r7, r8, r9
   mov r0, r8 ; Replace the line we overwrote to jump here
   b 0x020418F0
 
