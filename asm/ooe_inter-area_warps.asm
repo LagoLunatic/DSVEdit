@@ -315,7 +315,7 @@
   
   ; Create the left arrow
   mov r0, 0h ; Bottom screen
-  bl 0203561Ch ; GetNextFreeOAMSpriteFramePointer
+  bl 0203561Ch ; GetNextFreeOAMSpriteSlot
   str r0, [r5, 0h] ; Preserve a reference to this OAM sprite so we know to delete it later
   cmp r0, 0h ; No slots available
   beq @DrawArrowsOnBottomScreenReturn
@@ -332,7 +332,7 @@
   
   ; Create the right arrow
   mov r0, 0h ; Bottom screen
-  bl 0203561Ch ; GetNextFreeOAMSpriteFramePointer
+  bl 0203561Ch ; GetNextFreeOAMSpriteSlot
   str r0, [r5, 4h] ; Preserve a reference to this OAM sprite so we know to delete it later
   cmp r0, 0h ; No slots available
   beq @DrawArrowsOnBottomScreenReturn
