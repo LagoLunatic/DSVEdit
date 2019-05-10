@@ -100,7 +100,13 @@ class GfxWrapper
   
   def gfx_data_length
     if SYSTEM == :nds
-      0x2000*render_mode
+      if canvas_width > 0x10
+        # 256x256 canvas
+        0x8000*render_mode
+      else
+        # 128x128 canvas
+        0x2000*render_mode
+      end
     else
       if compressed?
         compressed_data_header = fs.read(gfx_data_pointer, 4).unpack("V").first
