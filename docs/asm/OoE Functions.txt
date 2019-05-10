@@ -946,8 +946,8 @@
 022422E8 EnemyKillerFishUpdate
 0226C41C EnemyForneusCreate
 0226C2F8 EnemyForneusUpdate
-022C1CE0 EnemyTheCreatureCreate
-022C1DFC EnemyTheCreatureUpdate
+022C1CE0 EnemyTheCreatureCreate ; Overlay 38
+022C1DFC EnemyTheCreatureUpdate ; Overlay 38
 022698D8 EnemyBlackCrowCreate
 02269688 EnemyBlackCrowUpdate
 0228AA44 EnemySkullSpiderCreate
@@ -1022,8 +1022,8 @@
 0228D8A8 EnemyYetiUpdate
 022594A0 EnemyThunderDemonCreate
 02258100 EnemyThunderDemonUpdate
-022B9F10 EnemyOwlCreate
-022B97C0 EnemyOwlUpdate
+022B9F10 EnemyOwlCreate ; Overlay 38
+022B97C0 EnemyOwlUpdate ; Overlay 38
 02244938 EnemyWerewolfCreate
 02243578 EnemyWerewolfUpdate
 0228F0E4 EnemyAltairCreate
@@ -1032,8 +1032,8 @@
 022642E0 EnemyMandragoraUpdate
 0227D060 EnemyJerseyDevilCreate
 0227D158 EnemyJerseyDevilUpdate
-022BABA0 EnemyOwlKnightCreate
-022BA000 EnemyOwlKnightUpdate
+022BABA0 EnemyOwlKnightCreate ; Overlay 38
+022BA000 EnemyOwlKnightUpdate ; Overlay 38
 0228E298 EnemyChosenUneCreate
 0228E3A8 EnemyChosenUneUpdate
 022657AC EnemyStoneRoseCreate
@@ -1060,8 +1060,8 @@
 0228BF20 EnemyBlackPantherUpdate
 0228A0BC EnemyMimicCreate
 0228A1D4 EnemyMimicUpdate
-022BCD44 EnemyDraculinaCreate
-022BBB18 EnemyDraculinaUpdate
+022BCD44 EnemyDraculinaCreate ; Overlay 38
+022BBB18 EnemyDraculinaUpdate ; Overlay 38
 02210180 EnemyTinManCreate
 022102CC EnemyTinManUpdate
 02277B90 EnemyPolkirCreate
@@ -1092,8 +1092,8 @@
 02267D58 EnemyImpUpdate
 022422B0 EnemyBugbearCreate
 022422A4 EnemyBugbearUpdate
-022BF7A4 EnemySpectralSwordCreate
-022BF6D0 EnemySpectralSwordUpdate
+022BF7A4 EnemySpectralSwordCreate ; Overlay 38
+022BF6D0 EnemySpectralSwordUpdate ; Overlay 38
 0228D334 EnemyAutomatonZX27Create
 0228D328 EnemyAutomatonZX27Update
 02245E74 EnemyMedusaHeadCreate
@@ -1110,8 +1110,8 @@
 02262358 EnemyWingedSkeletonUpdate
 022556F4 EnemyFinalKnightCreate
 02254E68 EnemyFinalKnightUpdate
-022B9E40 EnemyJiangShiCreate
-022B9F90 EnemyJiangShiUpdate
+022B9E40 EnemyJiangShiCreate ; Overlay 29
+022B9F90 EnemyJiangShiUpdate ; Overlay 29
 0225EB24 EnemyDemonLordCreate
 0225D8EC EnemyDemonLordUpdate
 0228FC58 EnemyDoubleHammerCreate
@@ -1120,32 +1120,32 @@
 02289EF4 EnemyWeaponMasterUpdate
 022792A4 EnemyGiantSkeletonCreate
 0227951C EnemyGiantSkeletonUpdate
-022BA1BC EnemyArthrovertaCreate
-022B89AC EnemyArthrovertaUpdate
-022B978C EnemyBrachyuraCreate
-022B9954 EnemyBrachyuraUpdate
-022BAD38 EnemyManeaterCreate
-022B9C08 EnemyManeaterUpdate
-022BB61C EnemyRusalkaCreate
-022BA278 EnemyRusalkaUpdate
-022BC134 EnemyGoliathCreate
-022BC3F4 EnemyGoliathUpdate
-022BA0A0 EnemyGravedorcusCreate
-022BA2D0 EnemyGravedorcusUpdate
-022B9050 EnemyAlbusCreate
-022B8F80 EnemyAlbusUpdate
-022B73AC EnemyBarloweCreate
-022B8048 EnemyBarloweUpdate
-022BA4E8 EnemyWallmanCreate
-022B93F8 EnemyWallmanUpdate
-022B9A48 EnemyBlackmoreCreate
-022B991C EnemyBlackmoreUpdate
-022BD8D8 EnemyEligorCreate
-022BDCB0 EnemyEligorUpdate
-022BC2CC EnemyDeathCreate
-022BA12C EnemyDeathUpdate
-022BEA6C EnemyDraculaCreate
-022BEC60 EnemyDraculaUpdate
+022BA1BC EnemyArthrovertaCreate ; Overlay 24
+022B89AC EnemyArthrovertaUpdate ; Overlay 24
+022B978C EnemyBrachyuraCreate ; Overlay 30
+022B9954 EnemyBrachyuraUpdate ; Overlay 30
+022BAD38 EnemyManeaterCreate ; Overlay 26
+022B9C08 EnemyManeaterUpdate ; Overlay 26
+022BB61C EnemyRusalkaCreate ; Overlay 27
+022BA278 EnemyRusalkaUpdate ; Overlay 27
+022BC134 EnemyGoliathCreate ; Overlay 32
+022BC3F4 EnemyGoliathUpdate ; Overlay 32
+022BA0A0 EnemyGravedorcusCreate ; Overlay 33
+022BA2D0 EnemyGravedorcusUpdate ; Overlay 33
+022B9050 EnemyAlbusCreate ; Overlay 36
+022B8F80 EnemyAlbusUpdate ; Overlay 36
+022B73AC EnemyBarloweCreate ; Overlay 37
+022B8048 EnemyBarloweUpdate ; Overlay 37
+022BA4E8 EnemyWallmanCreate ; Overlay 28
+022B93F8 EnemyWallmanUpdate ; Overlay 28
+022B9A48 EnemyBlackmoreCreate ; Overlay 35
+022B991C EnemyBlackmoreUpdate ; Overlay 35
+022BD8D8 EnemyEligorCreate ; Overlay 31
+022BDCB0 EnemyEligorUpdate ; Overlay 31
+022BC2CC EnemyDeathCreate ; Overlay 25
+022BA12C EnemyDeathUpdate ; Overlay 25
+022BEA6C EnemyDraculaCreate ; Overlay 34
+022BEC60 EnemyDraculaUpdate ; Overlay 34
 
 ; Special object-specific code
 02065A8C Object00Create
@@ -1212,8 +1212,8 @@
 02299914 Object1DUpdate
 02299B40 Object1ECreate
 02299C4C Object1EUpdate
-022C2F80 Object1FCreate
-022C3094 Object1FUpdate
+022C2F80 Object1FCreate ; Overlay 68
+022C3094 Object1FUpdate ; Overlay 68
 0221F704 Object20Create
 0221F820 Object20Update
 020AE298 Object21Create
@@ -1224,28 +1224,28 @@
 022C1FF8 Object23Update
 0229A3F4 Object24Create
 0229A328 Object24Update
-022C28AC Object25Create
-022C2928 Object25Update
+022C28AC Object25Create ; Overlay 62
+022C2928 Object25Update ; Overlay 62
 0229B7F8 Object26Create
 0229B91C Object26Update
-022C2B90 Object27Create
-022C2B58 Object27Update
-022C39A4 Object28Create
-022C37A8 Object28Update
+022C2B90 Object27Create ; Overlay 51
+022C2B58 Object27Update ; Overlay 51
+022C39A4 Object28Create ; Overlay 53
+022C37A8 Object28Update ; Overlay 53
 0229B3CC Object29Create
 0229B5F4 Object29Update
 0229B7F0 Object2ACreate
 0229B7F4 Object2AUpdate
 0221D8C8 Object2BCreate
 0221D5F8 Object2BUpdate
-022C2204 Object2CCreate
-022C1FEC Object2CUpdate
+022C2204 Object2CCreate ; Overlay 41
+022C1FEC Object2CUpdate ; Overlay 41
 022C2AA0 Object2DCreate
 022C26A8 Object2DUpdate
 0229970C Object2ECreate
 02299348 Object2EUpdate
-022C47C0 Object2FCreate
-022C47B4 Object2FUpdate
+022C47C0 Object2FCreate ; Overlay 53
+022C47B4 Object2FUpdate ; Overlay 53
 0229AB00 Object30Create
 0229A858 Object30Update
 0221E1B4 Object31Create
@@ -1262,83 +1262,83 @@
 0229B078 Object36Update
 02298B5C Object37Create
 02298B30 Object37Update
-022C27B0 Object38Create
-022C2890 Object38Update
+022C27B0 Object38Create ; Overlay 46
+022C2890 Object38Update ; Overlay 46
 0229F608 Object39Create
 0229F70C Object39Update
-022C2AAC Object3ACreate
-022C2CD0 Object3AUpdate
-022C2870 Object3BCreate
-022C2790 Object3BUpdate
+022C2AAC Object3ACreate ; Overlay 46
+022C2CD0 Object3AUpdate ; Overlay 46
+022C2870 Object3BCreate ; Overlay 55
+022C2790 Object3BUpdate ; Overlay 55
 0229F190 Object3CCreate
 0229F1F4 Object3CUpdate
-022C23D8 Object3DCreate
-022C2284 Object3DUpdate
+022C23D8 Object3DCreate ; Overlay 69
+022C2284 Object3DUpdate ; Overlay 69
 022A1704 Object3ECreate
 022A098C Object3EUpdate
 0221D168 Object3FCreate
 0221CFF0 Object3FUpdate
 0221B560 Object3FCatUpdate
-022C3108 Object40Create
-022C2FB8 Object40Update
+022C3108 Object40Create ; Overlay 78
+022C2FB8 Object40Update ; Overlay 78
 0229E9C0 Object41Create
 0229E7B8 Object41Update
 02214398 Object42Create
 02214038 Object42Update
-022C2704 Object43Create
-022C2644 Object43Update
-022C2C14 Object44Create
-022C23DC Object44Update
-022C2354 Object45Create
-022C2208 Object45Update
+022C2704 Object43Create ; Overlay 65
+022C2644 Object43Update ; Overlay 65
+022C2C14 Object44Create ; Overlay 68
+022C23DC Object44Update ; Overlay 68
+022C2354 Object45Create ; Overlay 55
+022C2208 Object45Update ; Overlay 55
 0229CCAC Object46Create
 0229D1B8 Object46Update
-022C221C Object47Create
-022C2544 Object47Update
-022C2C50 Object48Create
-022C2F04 Object48Update
-022C378C Object49Create
-022C38A4 Object49Update
-022C3954 Object4ACreate
-022C3A74 Object4AUpdate
+022C221C Object47Create ; Overlay 57
+022C2544 Object47Update ; Overlay 57
+022C2C50 Object48Create ; Overlay 57
+022C2F04 Object48Update ; Overlay 57
+022C378C Object49Create ; Overlay 57
+022C38A4 Object49Update ; Overlay 57
+022C3954 Object4ACreate ; Overlay 57
+022C3A74 Object4AUpdate ; Overlay 57
 02297188 Object4BCreate
 02296A58 Object4BUpdate
-022C23F4 Object4CCreate
-022C1FF8 Object4CUpdate
-022C74B4 Object4DCreate
-022C70F4 Object4DUpdate
-022C6800 Object4ECreate
-022C6280 Object4EUpdate
-022C3774 Object4FCreate
-022C3154 Object4FUpdate
-022C2060 Object50Create
-022C2054 Object50Update
-022C2290 Object51Create
-022C2100 Object51Update
+022C23F4 Object4CCreate ; Overlay 52
+022C1FF8 Object4CUpdate ; Overlay 52
+022C74B4 Object4DCreate ; Overlay 42
+022C70F4 Object4DUpdate ; Overlay 42
+022C6800 Object4ECreate ; Overlay 42
+022C6280 Object4EUpdate ; Overlay 42
+022C3774 Object4FCreate ; Overlay 63
+022C3154 Object4FUpdate ; Overlay 63
+022C2060 Object50Create ; Overlay 76
+022C2054 Object50Update ; Overlay 76
+022C2290 Object51Create ; Overlay 77
+022C2100 Object51Update ; Overlay 77
 0221F12C Object52Create
 0221E6F4 Object52Update
-022C2410 Object53Create
-022C2294 Object53Update
-022C2F5C Object54Create
-022C2E68 Object54Update
+022C2410 Object53Create ; Overlay 72
+022C2294 Object53Update ; Overlay 72
+022C2F5C Object54Create ; Overlay 60
+022C2E68 Object54Update ; Overlay 60
 0229515C Object55Create
 0229507C Object55Update
 02299D68 Object56Create
 02299CDC Object56Update
-022C2578 Object57Create
-022C24C0 Object57Update
-022C2430 Object58Create
-022C242C Object58Update
-022C233C Object59Create
-022C2280 Object59Update
-022C3F54 Object5ACreate
-022C3DF4 Object5AUpdate
-022C4134 Object5BCreate
-022C4130 Object5BUpdate
+022C2578 Object57Create ; Overlay 72
+022C24C0 Object57Update ; Overlay 72
+022C2430 Object58Create ; Overlay 41
+022C242C Object58Update ; Overlay 41
+022C233C Object59Create ; Overlay 66
+022C2280 Object59Update ; Overlay 66
+022C3F54 Object5ACreate ; Overlay 46
+022C3DF4 Object5AUpdate ; Overlay 46
+022C4134 Object5BCreate ; Overlay 46
+022C4130 Object5BUpdate ; Overlay 46
 02297DA4 Object5CCreate
 02297BD8 Object5CUpdate
-022C25CC Object5DCreate
-022C2234 Object5DUpdate
+022C25CC Object5DCreate ; Overlay 84
+022C2234 Object5DUpdate ; Overlay 84
 022A2184 Object5ECreate
 022A1F94 Object5EUpdate
 022331D8 Object5FCreate
@@ -1356,8 +1356,8 @@
 022C43B4 Object64Update
 022C47D4 Object65Create
 022C4848 Object65Update
-022C2278 Object66Create
-022C232C Object66Update
+022C2278 Object66Create ; Overlay 78
+022C232C Object66Update ; Overlay 78
 022C26F0 Object67Create
 022C27FC Object67Update
 022C2BF8 Object68Create

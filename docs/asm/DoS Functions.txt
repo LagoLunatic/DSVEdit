@@ -848,16 +848,16 @@
 02276B84 EnemySlaughtererUpdate
 0223E7B8 EnemyBomberArmorCreate
 0223E8B4 EnemyBomberArmorUpdate
-022FFC94 EnemyGolemCreate
-022FFFD8 EnemyGolemUpdate
+022FFC94 EnemyGolemCreate ; Overlay 28
+022FFFD8 EnemyGolemUpdate ; Overlay 28
 02288FBC EnemySlimeCreate
 02289168 EnemySlimeUpdate
 02249320 EnemyUneCreate
 02249474 EnemyUneUpdate
 0227D4E0 EnemySkeletonApeCreate
 0227D01C EnemySkeletonApeUpdate
-022FFCE8 EnemyManticoreCreate
-02300014 EnemyManticoreUpdate
+022FFCE8 EnemyManticoreCreate ; Overlay 27
+02300014 EnemyManticoreUpdate ; Overlay 27
 022963A4 EnemyMolluscaCreate
 02296594 EnemyMolluscaUpdate
 02254B00 EnemyRycudaCreate
@@ -870,8 +870,8 @@
 02253FD0 EnemySkeletonFarmerUpdate
 022946FC EnemyTheCreatureCreate
 02294820 EnemyTheCreatureUpdate
-022FF9D8 EnemyCatoblepasCreate
-022FFD8C EnemyCatoblepasUpdate
+022FF9D8 EnemyCatoblepasCreate ; Overlay 32
+022FFD8C EnemyCatoblepasUpdate ; Overlay 32
 022324B8 EnemyGhoulCreate
 022324C4 EnemyGhoulUpdate
 02249304 EnemyCorpseweedCreate
@@ -893,14 +893,14 @@
 02281DA4 EnemyMiniDevilUpdate
 0228EDA8 EnemyQuetzalcoatlCreate
 0228EEC0 EnemyQuetzalcoatlUpdate
-022FFFE4 EnemyTreantCreate
-023002B0 EnemyTreantUpdate
+022FFFE4 EnemyTreantCreate ; Overlay 28
+023002B0 EnemyTreantUpdate ; Overlay 28
 0228285C EnemyAmalaricSniperCreate
 02282960 EnemyAmalaricSniperUpdate
 02270704 EnemyValkyrieCreate
 02270858 EnemyValkyrieUpdate
-02300304 EnemyGreatArmorCreate
-023005CC EnemyGreatArmorUpdate
+02300304 EnemyGreatArmorCreate ; Overlay 24
+023005CC EnemyGreatArmorUpdate ; Overlay 24
 0224AE0C EnemyKillerDollCreate
 0224AF20 EnemyKillerDollUpdate
 022366C8 EnemyWaiterSkeletonCreate
@@ -919,8 +919,8 @@
 0227B2F0 EnemySkelerangUpdate
 02238FF8 EnemyFleamanCreate
 022391AC EnemyFleamanUpdate
-022FF9F0 EnemyDevilCreate
-022FFBE4 EnemyDevilUpdate
+022FF9F0 EnemyDevilCreate ; Overlay 31
+022FFBE4 EnemyDevilUpdate ; Overlay 31
 02274A70 EnemyGuillotinerCreate
 02274B8C EnemyGuillotinerUpdate
 0227F9AC EnemyDraghignazzoCreate
@@ -979,16 +979,16 @@
 02252228 EnemyProcelUpdate
 022345C4 EnemyBoneArkCreate
 02234734 EnemyBoneArkUpdate
-022FF9C0 EnemyGorgonCreate
-022FF9CC EnemyGorgonUpdate
+022FF9C0 EnemyGorgonCreate ; Overlay 32
+022FF9CC EnemyGorgonUpdate ; Overlay 32
 02246AA0 EnemyAluraUneCreate
 02246C24 EnemyAluraUneUpdate
 0223C418 EnemyGreatAxeArmorCreate
 0223C570 EnemyGreatAxeArmorUpdate
 022696D8 EnemyMothmanCreate
 02269858 EnemyMothmanUpdate
-022FF9C0 EnemyMushussuCreate
-022FFCDC EnemyMushussuUpdate
+022FF9C0 EnemyMushussuCreate ; Overlay 27
+022FFCDC EnemyMushussuUpdate ; Overlay 27
 0226D1D4 EnemyDeadCrusaderCreate
 0226D300 EnemyDeadCrusaderUpdate
 0227C6C8 EnemyDeadWarriorCreate
@@ -1007,56 +1007,56 @@
 02298220 EnemyGiantSlugUpdate
 02267438 EnemyWerewolfCreate
 0226756C EnemyWerewolfUpdate
-022FF9D8 EnemyFlameDemonCreate
-022FF9E4 EnemyFlameDemonUpdate
+022FF9D8 EnemyFlameDemonCreate ; Overlay 31
+022FF9E4 EnemyFlameDemonUpdate ; Overlay 31
 0228CDB0 EnemyTanjellyCreate
 0228CDE4 EnemyTanjellyUpdate
-022FF9C0 EnemyArcDemonCreate
-022FF9CC EnemyArcDemonUpdate
+022FF9C0 EnemyArcDemonCreate ; Overlay 31
+022FF9CC EnemyArcDemonUpdate ; Overlay 31
 0224E6D0 EnemyGaibonCreate
 0224E7D0 EnemyGaibonUpdate
 0224D4E0 EnemySlograCreate
 0224D5DC EnemySlograUpdate
 022730E0 EnemyStolasCreate
 02273398 EnemyStolasUpdate
-022FF9C0 EnemyFinalGuardCreate
-022FFA0C EnemyFinalGuardUpdate
+022FF9C0 EnemyFinalGuardCreate ; Overlay 24
+022FFA0C EnemyFinalGuardUpdate ; Overlay 24
 0227F9A0 EnemyMalacodaCreate
 0227F834 EnemyMalacodaUpdate
 02290980 EnemyAlastorCreate
 02290A84 EnemyAlastorUpdate
-022FF9C0 EnemyIronGolemCreate
-022FFC88 EnemyIronGolemUpdate
-022FF9C0 EnemyFlyingArmorCreate
-022FFDE8 EnemyFlyingArmorUpdate
-022FFB8C EnemyBaloreCreate
-022FFE48 EnemyBaloreUpdate
-022FF9C0 EnemyMalphasCreate
-022FFB40 EnemyMalphasUpdate
-022FF9C0 EnemyDmitriiCreate
-022FFC20 EnemyDmitriiUpdate
+022FF9C0 EnemyIronGolemCreate ; Overlay 28
+022FFC88 EnemyIronGolemUpdate ; Overlay 28
+022FF9C0 EnemyFlyingArmorCreate ; Overlay 30
+022FFDE8 EnemyFlyingArmorUpdate ; Overlay 30
+022FFB8C EnemyBaloreCreate ; Overlay 23
+022FFE48 EnemyBaloreUpdate ; Overlay 23
+022FF9C0 EnemyMalphasCreate ; Overlay 29
+022FFB40 EnemyMalphasUpdate ; Overlay 29
+022FF9C0 EnemyDmitriiCreate ; Overlay 40
+022FFC20 EnemyDmitriiUpdate ; Overlay 40
 0225A660 EnemyDarioCreate
 0225A930 EnemyDarioUpdate
-022FF9F0 EnemyPuppetMasterCreate
-022FFC88 EnemyPuppetMasterUpdate
-022FF9C0 EnemyRahabCreate
-022FFBD0 EnemyRahabUpdate
-022FF9C0 EnemyGergothCreate
-022FFDC8 EnemyGergothUpdate
-022FF9C0 EnemyZephyrCreate
-022FFC7C EnemyZephyrUpdate
-022FF9C0 EnemyBatCompanyCreate
-022FFB98 EnemyBatCompanyUpdate
-02305A24 EnemyParanoiaCreate
-02304560 EnemyParanoiaUpdate
+022FF9F0 EnemyPuppetMasterCreate ; Overlay 25
+022FFC88 EnemyPuppetMasterUpdate ; Overlay 25
+022FF9C0 EnemyRahabCreate ; Overlay 26
+022FFBD0 EnemyRahabUpdate ; Overlay 26
+022FF9C0 EnemyGergothCreate ; Overlay 36
+022FFDC8 EnemyGergothUpdate ; Overlay 36
+022FF9C0 EnemyZephyrCreate ; Overlay 33
+022FFC7C EnemyZephyrUpdate ; Overlay 33
+022FF9C0 EnemyBatCompanyCreate ; Overlay 37
+022FFB98 EnemyBatCompanyUpdate ; Overlay 37
+02305A24 EnemyParanoiaCreate ; Overlay 35
+02304560 EnemyParanoiaUpdate ; Overlay 35
 02243C04 EnemyAguniCreate
 02243E1C EnemyAguniUpdate
-022FF9C0 EnemyDeathCreate
-022FFB9C EnemyDeathUpdate
-022FF9C0 EnemyAbaddonCreate
-022FFB78 EnemyAbaddonUpdate
-022FF9C0 EnemyMenaceCreate
-022FFEE0 EnemyMenaceUpdate
+022FF9C0 EnemyDeathCreate ; Overlay 34
+022FFB9C EnemyDeathUpdate ; Overlay 34
+022FF9C0 EnemyAbaddonCreate ; Overlay 39
+022FFB78 EnemyAbaddonUpdate ; Overlay 39
+022FF9C0 EnemyMenaceCreate ; Overlay 38
+022FFEE0 EnemyMenaceUpdate ; Overlay 38
 02237D08 EnemySomaCreate
 02237F2C EnemySomaUpdate
 022370AC EnemyDraculaCreate
@@ -1157,8 +1157,8 @@
 021A60D4 Object2CUpdate
 021BC0B0 Object2DCreate
 021BC168 Object2DUpdate
-022FF9E0 Object2ECreate
-022FF9EC Object2EUpdate
+022FF9E0 Object2ECreate ; Overlay 25
+022FF9EC Object2EUpdate ; Overlay 25
 021A07B0 Object2FCreate
 021A0828 Object2FUpdate
 021B5B3C Object30Create
