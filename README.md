@@ -163,11 +163,11 @@ If you want to run the latest development version of DSVEdit from source, follow
 
 * Download and install Ruby 2.3.3 from here: https://rubyinstaller.org/downloads/
 * Also download the development kit from that same page. Make sure whether it's 32 bit or 64 bit matches with the version of Ruby you installed.
-* Extract the devkit and move it into the folder where Ruby is installed. Open the devkit folder in a command prompt and run "ruby dk.rb init" followed by "ruby dk.rb install".
+* Extract the devkit and move it into the folder where Ruby is installed. Open the devkit folder in a command prompt and run `ruby dk.rb init` followed by `ruby dk.rb install`.
 * Download and install Qt 4.8.6 from here: https://download.qt.io/archive/qt/4.8/4.8.6/
 * Obtain DSVEdit's source code from GitHub: https://github.com/LagoLunatic/DSVEdit
-* Open the DSVEdit folder in a command prompt and run "gem install bundler" followed by "bundle install".
-* Run build_ui to compile DSVEdit's UI files.
+* Open the DSVEdit folder in a command prompt and run `gem install bundler` followed by `bundle install`.
+* Run the `build_ui` batch file to compile DSVEdit's UI files.
 * Then you must create the armips folder in the DSVEdit folder, and put armips.exe and armips64.exe inside it. The easiest way to get those is to copy them from an official DSVEdit release build. But you can alternatively choose to compile them from source yourself if you want: https://github.com/Kingcom/armips
-* Finally run "ruby dsvedit.rb" to launch DSVEdit.
+* Finally run `ruby dsvedit.rb` to launch DSVEdit.
 * Note that later on when updating to a future version of DSVEdit, you may need to run build_ui again to update its UI files.
