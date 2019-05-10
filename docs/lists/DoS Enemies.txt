@@ -8,6 +8,7 @@ Enemies:
   Var A: When 0, it's a single bat that hangs on the ceiling. When greater than 0, it's a spawner for bats that flying from the sides of the screen. Var a controls the delay in frames between each bat spawning, so lower values cause bats to spawn more quickly.
 02 Ghost
 03 Skeleton
+  Var B: If nonzero, this is the cutscene Skeleton used during the prologue fight. This should not be set manually; the prologue cutscene object sets it automatically when creating the Skeleton.
 04 Ouija Table
 05 Peeping Eye
 06 Axe Armor
@@ -23,6 +24,9 @@ Enemies:
 0D Bomber Armor
 0E Golem
   Requires enemy overlay 28.
+  Var B: Affects Z-index:
+    0 Use Z-index 0x19
+    1 Use Z-index 0x11
 0F Slime
   Var A:
     0 On floor.

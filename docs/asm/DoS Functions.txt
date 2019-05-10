@@ -433,6 +433,15 @@
   ; r1 - ?
   ; Returns pointer to free space
 
+02018C18 InitializeCutsceneEnemy
+  ; r0 - Enemy entity
+  ; r1 - Index in list 020F74F4 to store the entity at
+02018BD4 GetCutsceneEnemy
+  ; r0 - Index in list 020F74F4 to read the entity from
+  ; Returns a pointer to the enemy entity.
+02018BF4 DeleteCutsceneEnemy
+  ; r0 - Index in list 020F74F4 to delete the entity at
+
 0202991C PlaySong
   ; r0 - Song
   ; 1003 means song 3

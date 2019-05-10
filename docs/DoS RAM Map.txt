@@ -647,6 +647,12 @@ Player's current stats:
     2 - A completely solid block.
   04,4: Pointer to the entity.
 
+020F74F4 - List of cutscene enemies.
+  Entry length 0xC.
+  If Skeleton's var B is nonzero, it stores itself to the first entry in this list.
+  00,4: Pointer to the entity.
+  04,1: Set to 0 on initialization?
+
 020F7596 - The maximum address that can be corrupted by the broken map code by getting out of bounds (aka memory corruption).
   Also remember bits can only be set on by memory corruption, never off.
 

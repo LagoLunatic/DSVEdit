@@ -747,6 +747,8 @@ TODO: What are the other 2 for? It's not for the "recent" tab.
   Each is a halfword; a bitfield of which buttons were pressed.
   This is used by the code that checks if you're pressing a certain button combo.
 
+021123D8 - List of cutscene enemies?
+
 0211243E
 
 02112458-02112617 - Data for the current room's 4 layers. Each is 0x70 bytes long.
