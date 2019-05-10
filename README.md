@@ -170,4 +170,4 @@ If you want to run the latest development version of DSVEdit from source, follow
 * Run the `build_ui` batch file to compile DSVEdit's UI files.
 * Then you must create the armips folder in the DSVEdit folder, and put armips.exe and armips64.exe inside it. The easiest way to get those is to copy them from an official DSVEdit release build. But you can alternatively choose to compile them from source yourself if you want: https://github.com/Kingcom/armips
 * Finally run `ruby dsvedit.rb` to launch DSVEdit.
-* Note that later on when updating to a future version of DSVEdit, you may need to run build_ui again to update its UI files.
+* Note that later on when updating to a future version of DSVEdit, you may need to run `build_ui` again to update its UI files.
