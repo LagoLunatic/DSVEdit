@@ -452,6 +452,7 @@ OVERLAY_FILE_FOR_SPECIAL_OBJECT = {
   0x46 => 85,
   0x48 => 86,
   0x4A => 85,
+  0x4B => 65, # This uses True Dracula's enemy overlay.
   0x4E => 79,
   0x50 => 109,
   0x51 => 110,

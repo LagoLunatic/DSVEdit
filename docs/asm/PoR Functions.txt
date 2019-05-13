@@ -1296,8 +1296,8 @@
 020680EC Object49Update
 022E982C Object4ACreate ; Overlay 85
 022E98D0 Object4AUpdate ; Overlay 85
-022D7900 Object4BCreate
-022D7960 Object4BUpdate
+022D7900 Object4BCreate ; Overlay 65
+022D7960 Object4BUpdate ; Overlay 65
 0206F328 Object4CCreate
 0206F3C8 Object4CUpdate
 02064E5C Object4DCreate
