@@ -183,7 +183,11 @@ class Renderer
   end
   
   def render_room_tileset_nds(tileset_offset, tileset_type, palette_pages, gfx_pages, colors_per_palette, collision_tileset_offset, output_filename=nil, one_dimensional_mode: false)
-    palette_list_pointer = palette_pages.first.palette_list_pointer
+    if palette_pages.empty?
+      palette_list_pointer = nil
+    else
+      palette_list_pointer = palette_pages.first.palette_list_pointer
+    end
     gfx_wrappers = gfx_pages.map{|gfx_page| gfx_page.gfx_wrapper}
     
     return render_tileset_nds(
