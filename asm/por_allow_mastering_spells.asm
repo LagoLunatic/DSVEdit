@@ -57,6 +57,11 @@
   addne r2, r2, r4 ; r4 has the bonus multiplier for fully charging the spell (0 or 1)
   strneb r2, [r0,11Eh]
 
+; Fixes Charlotte not yelling out the name of the spell when it's charged to level 3.
+.org 0x021F227C
+  cmp r0, 1h
+  beq 0x021F22AC
+
 .close
 
 .open "ftc/arm9.bin", 02000000h
