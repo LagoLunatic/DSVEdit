@@ -72,3 +72,40 @@
   cmp r0, 51h
 
 .close
+
+; Now make some fixes to specific spells at level 3.
+
+.open "ftc/overlay9_0", 021CDF60h
+
+; Spirit of Light
+.org 0x021EFF8C
+  ; Normally it would only create 2 projectiles if the multiplier is 2.
+  ; Instead we change it to create 2 projectiles as long as the multiplier is not 1.
+  cmp r0, 1h
+  beq 0x021EFFC8
+
+; Stone Circle
+.org 0x021ECD90
+  ; Normally level 3 Stone Circle would attempt to create 12 stones, but there's only enough entity slots for 9, so there would be a gap in the circle.
+  ; So limit it to 9 stones.
+  cmp r8, 9h
+  movgt r8, 9h
+
+; Ice Needle
+.org 0x021EC700
+  ; Similar to the above, we limit it to 9 projectiles instead of 12.
+  mov r5, 1h
+  mov r1, r2, lsl 2h
+  cmp r1, 9h
+  movgt r1, 9h
+  strh r1, [r4, 18h]
+  ; But then we also need to adjust the delay in frames in between creating each projectile.
+  ; Normally for level 1 it waits 0x10 frames between creating each one, and for level 2 it waits 8 frames. Either way it takes 0x40 frames in total.
+  ; It calculates this as 10-((level-1)*8).
+  ; Since that formula wouldn't work for level 3 (it would wait 0 frames between each projectile), we change it to calculate the number of frames as 0x40 divided by the number of projectiles.
+  mov r0, 40h
+  bl 0x020BD93C ; Divide
+  strh r0, [r4, 1Ch]
+  strb r5, [r4, 0Dh]
+
+.close
