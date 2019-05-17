@@ -175,6 +175,9 @@ class NDSFileSystem
   end
   
   def load_file(new_file)
+    # Already loaded, don't try to load again for performance sake.
+    return if @currently_loaded_files[new_file[:ram_start_offset]] == new_file
+    
     # First unload any files overlapping this new one.
     # This is so there are no conflicts where something tries to read from the new file, but reads from an older on that wasn't loaded in the exact same place but overlapped it nonetheless.
     new_file_ram_range = (new_file[:ram_start_offset]..new_file[:ram_start_offset]+new_file[:size]-1)
