@@ -998,8 +998,8 @@ class SpriteEditor < Qt::Dialog
     return if check_sprite_hardcoded()
     
     new_index = @sprite.animations.length
-    animation = Animation.new("\0"*8)
-    animation.initialize_frame_delays(@sprite.frame_delays, @sprite.frame_delays_by_offset)
+    animation = Animation.new
+    animation.initialize_frame_delays_from_pointer(@sprite.frame_delays, @sprite.frame_delays_by_offset)
     @sprite.animations << animation
     
     @ui.animation_index.addItem("%02X" % new_index)
@@ -1026,9 +1026,9 @@ class SpriteEditor < Qt::Dialog
     return if check_sprite_hardcoded()
     
     new_index = @sprite.frames.length
-    frame = Frame.new("\0"*12)
+    frame = Frame.new
     frame.initialize_parts(@sprite.parts, @sprite.parts_by_offset)
-    frame.initialize_hitboxes_from_sprite_file([])
+    frame.initialize_hitboxes_from_pointer([], {})
     @sprite.frames << frame
     
     @ui.frame_index.addItem("%02X" % new_index)
@@ -1055,7 +1055,7 @@ class SpriteEditor < Qt::Dialog
     return if check_sprite_hardcoded()
     
     new_index = @sprite.parts.length
-    part = Part.new("\0"*16)
+    part = Part.new
     @sprite.parts << part
     next_part_offset = @sprite.parts_by_offset.keys.max + 16
     @sprite.parts_by_offset[next_part_offset] = part
@@ -1093,7 +1093,7 @@ class SpriteEditor < Qt::Dialog
     
     return if @current_animation.nil?
     
-    frame_delay = FrameDelay.new("\0"*8)
+    frame_delay = FrameDelay.new
     @sprite.frame_delays << frame_delay
     next_frame_delay_offset = @sprite.frame_delays_by_offset.keys.max + 8
     @sprite.frame_delays_by_offset[next_frame_delay_offset] = frame_delay
