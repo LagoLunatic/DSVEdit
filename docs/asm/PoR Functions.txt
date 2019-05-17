@@ -18,6 +18,11 @@
   ; r0 - Value to fill with
   ; r1 - Starting address to fill
   ; r2 - Number of bytes to fill
+0209E584 CopyMemory
+  ; r0 - Address to copy from
+  ; r1 - Address to copy to
+  ; r2 - Number of bytes to copy
+  ; Copies in groups of words. Won't work right if the number of bytes to copy isn't divisible by 4.
 
 02042FA4 LoadSave
 

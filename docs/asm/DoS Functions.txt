@@ -511,10 +511,21 @@
   ; r0 - Weapon index
   ; Returns a pointer to the weapon's item data
 
-0200705C GetCurrentSector
-02007104 GetCurrentSectorRoomIndexesFromMap
-  ; r0 - 0 if in the castle, 1 if in the abyss, 2 if not on any map.
-  ; Returns the sector/room index data from the current map tile. The low 6 bits are the room index, then the next 4 bits are the sector index.
+0200705C GetCurrentSectorIndex
+  ; r0 - Player's X pos witin the current room in pixels
+  ; r1 - Player's Y pos witin the current room in pixels
+  ; Return the sector index of the current map tile.
+0200702C GetCurrentRoomIndex
+  ; r0 - Player's X pos witin the current room in pixels
+  ; r1 - Player's Y pos witin the current room in pixels
+  ; Return the room index of the current map tile.
+02007104 GetCurrentSectorAndRoomIndexesFromMap
+  ; r0 - Player's X pos witin the current room in pixels
+  ; r1 - Player's Y pos witin the current room in pixels
+  ; r2 - 0 if in the castle, 1 if in the abyss, 2 if not on any map.
+  ; Returns the sector/room index data from the current map tile:
+  ; & 003F - Room index
+  ; & 03C0 - Sector index
 
 02000D80 CheckAoSInGBASlot
   ; Returns the value located at 020C0740 in RAM.
@@ -616,7 +627,7 @@
   ; r0 - Map X
   ; r1 - Map Y
   ; r2 - 
-  ; r3 - 
+  ; r3 - 0 if visited, 1 if only revealed by a map item?
   ; [r13] - Which map (0/1/2 for Castle/Abyss/???)
 02023FBC MapTileDrawDoorPixels
   ; r0 - Map X

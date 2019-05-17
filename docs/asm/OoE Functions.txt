@@ -443,6 +443,13 @@
   ;   1 - A jump-through platform you can fall through.
   ;   3 - A completely solid block.
 
+020343E8 SetFakeBlockCollisionRect
+  ; r0 - X pos of the upper left block in pixels
+  ; r1 - Y pos of the upper left block in pixels
+  ; r2 - Number of blocks wide
+  ; r3 - Number of blocks tall
+  ; Used by the frozen Tristis waterfall.
+
 02034658 GetLayerPointer
   ; r0 - Layer index
   ; Returns a pointer to the layer of the given index in the list of currently loaded layers (0213A5C0).
@@ -822,6 +829,22 @@
   ; r1 - Sector index
   ; r2 - Room index
 
+02044760 GetCurrentSectorIndex
+  ; r0 - Player's X pos witin the current room in pixels
+  ; r1 - Player's Y pos witin the current room in pixels
+  ; Return the sector index of the current map tile.
+02044780 GetCurrentRoomIndex
+  ; r0 - Player's X pos witin the current room in pixels
+  ; r1 - Player's Y pos witin the current room in pixels
+  ; Return the room index of the current map tile.
+020446E8 GetCurrentSectorAndRoomIndexesFromMap
+  ; r0 - Player's X pos witin the current room in pixels
+  ; r1 - Player's Y pos witin the current room in pixels
+  ; r2 - Area index
+  ; Returns the sector/room index data from the current map tile:
+  ; & 003F - Room index
+  ; & 03C0 - Sector index
+
 020AA94C CheckWorldMapAreaUnlocked
   ; r0 - Area index
   ; Calls CheckWorldMapAreaUnlockBits with r1=2
@@ -898,6 +921,9 @@
   ; r3 - Summon level
 
 0223488C GetNumRescuedVillagers
+022349F8 GetVillagerData
+  ; r0 - Villager index
+  ; Returns a pointer to the villager's data in list 022B5C10
 
 020FFC58 GameObject
 

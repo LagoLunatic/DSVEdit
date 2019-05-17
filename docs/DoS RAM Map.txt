@@ -442,10 +442,24 @@ What each range of entity slots is for:
   includes what area titles you've seen when entering the area.
   includes what breakable walls physically (not on the map)
   also whether you've seen save/warp room tutorial message.
-  02 - Drained the water in the Lost Village drawbridge room.
-  03 - Drawbridge is lowered.
-  3A - Seen the save room tutorial message.
-  3B - Seen the warp room tutorial message.
+  02 00000004 Drained the water in the Lost Village drawbridge room.
+  03 00000008 Drawbridge is lowered.
+  09 00000200 First floor broken in Gergoth's tower.
+  0A 00000400 ?
+  0B 00000800 Second floor broken in Gergoth's tower.
+  0C 00001000 ?
+  0D 00002000 Third floor broken in Gergoth's tower.
+  0E 00004000 ?
+  0F 00008000 Fourth floor broken in Gergoth's tower.
+  10 00010000 ?
+  11 00020000 Fifth floor broken in Gergoth's tower.
+  12 00040000 ?
+  13 00080000 Sixth floor broken in Gergoth's tower.
+  14 00100000 ?
+  15 00200000 Seventh floor broken in Gergoth's tower.
+More misc flags (020F7184):
+  3A 04000000 Seen the save room tutorial message.
+  3B 08000000 Seen the warp room tutorial message.
 020F7188-020F718B - Bitfield of event flags seen by the player.
   01 00000002 - Event 5D (prologue)
   02 00000004 - Event 5E

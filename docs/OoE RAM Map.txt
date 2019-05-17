@@ -496,6 +496,7 @@ A 200% attack boost (triple) takes 0xFFFF (0d65535) AP.
   1A 04000000 - Saw event before fighting Barlowe.
     This activates the Barlowe fight in ecclesia.
   1B 08000000 - Saw event after fighting Barlowe.
+  1C 10000000 - Saw Dracula's Castle appearing in the distance.
   (more)
 0210038C - Bitfield of event flags, continued.
   2A 00000400 - Rescued Jacob
@@ -935,8 +936,11 @@ there's a switch statement at 02045A84 where it hardcodes the sector and room in
 0215AA08 - Song currently playing. FF when no song is playing.
 0215AA10 - Music volume.
 
-021DD240 - Area name index shown on the top scren.
+021DD240 - Area name index shown on the top screen.
   Used for the world map as well as warp points.
+
+021DD05C,4 - Bitfield.
+  & 00000001 - If this is not set, the player hasn't saved the game once yet?
 
 === 021DD280 - 021FFD9F: Overlays 0-1 (Strings)
 
@@ -984,7 +988,12 @@ Sprite info for the pause menu:
   00,2: X pos.
   02,2: Y pos.
   04,1: Var A of the object 5F that should create this villager in Wygol.
+  05,1: Area index this villager is in.
+  06,1: Sector index this villager is in.
+  07,1: Room index this villager is in.
+    The area/sector/room indexes are used during the bad ending when cycling through the villagers the player missed.
   08,1: Event flag index for this villager being rescued.
+  09,1: Padding, always 00.
 
 022B5D60-022B5DAB - List of X and Y positions for each area's world map icon.
   Entry length 4.
@@ -1046,6 +1055,8 @@ Sprite info for the pause menu:
   08,4: Palette list pointer.
   0C,2: ???
   0E,2: Affects special effects.
+
+022B7298,1 - Next villager index to show in the bad ending when cycling through missed villagers.
 
 === 022B73A0 - 022C1FBF: Overlays 24-38 (Enemy code)
 

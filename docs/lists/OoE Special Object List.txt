@@ -410,7 +410,7 @@ Special Objects:
 7A Event - Before fighting Barlowe.
   Requires sector overlay 42.
 7B Event - After defeating Barlowe.
-7C Event - Bad ending.
+7C Event - Dracula's Castle appearing in the distance.
 7D Event - Shanoa talking to herself in Ecclesia after Dracula revives.
 7E Event - View of Shanoa approaching the castle.
   Requires sector overlay 67.

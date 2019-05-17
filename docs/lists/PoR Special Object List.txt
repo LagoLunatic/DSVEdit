@@ -389,7 +389,7 @@ A1 Event - At the barrier that blocks the way to the Throne Room.
   Requires sector overlay 88.
 A2 Event - in the sister's boss room.
   Requires sector overlay 89.
-A3 Event - in the sister's boss room.
+A3 Event - in the sister's boss room. (bad end?)
   Requires sector overlay 89.
 A4 Event - in the sister's boss room.
   Requires sector overlay 89.
@@ -403,7 +403,7 @@ A8 Event - in dracula's throne room?
   Requires sector overlay 87.
 A9 Event - Dracula defeated and evaporating in the sunlight.
   Requires sector overlay 90.
-AA Event - in epilogue
+AA Event - in epilogue (bad end?)
   Requires sector overlay 117.
 AB Event - in epilogue
   Requires sector overlay 117.
