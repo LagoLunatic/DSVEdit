@@ -94,9 +94,11 @@ class TextList
       @text_list[text_id] ||= Text.new(text_id, fs)
     elsif text_id_or_range.is_a?(Range)
       range = text_id_or_range
-      range.map do |text_id|
+      @text_list[range].each_index do |text_id_offset|
+        text_id = range.begin + text_id_offset
         @text_list[text_id] ||= Text.new(text_id, fs)
       end
+      @text_list[range]
     else
       raise "Invalid argument to text list: #{text_id_or_range.inspect}"
     end
