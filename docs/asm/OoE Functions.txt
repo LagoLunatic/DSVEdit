@@ -1224,10 +1224,10 @@
 0221B040 Object17Update
 0221A408 RedGoldOrBlueChestCreate
 0221A53C ChestUpdate
-022C2004 Object18Create
-022C21E0 Object18Update
-022C3B2C Object19Create
-022C3B30 Object19Update
+022C2004 Object18Create ; Overlay 71
+022C21E0 Object18Update ; Overlay 71
+022C3B2C Object19Create ; Overlay 57
+022C3B30 Object19Update ; Overlay 57
 0229A400 Object1ACreate
 0229A458 Object1AUpdate
 0229FBA8 Object1BCreate
@@ -1246,8 +1246,8 @@
 020AE3A0 Object21Update
 0229B0E8 Object22Create
 0229B11C Object22Update
-022C1FE0 Object23Create
-022C1FF8 Object23Update
+022C1FE0 Object23Create ; Overlay 43
+022C1FF8 Object23Update ; Overlay 43
 0229A3F4 Object24Create
 0229A328 Object24Update
 022C28AC Object25Create ; Overlay 62
@@ -1266,8 +1266,8 @@
 0221D5F8 Object2BUpdate
 022C2204 Object2CCreate ; Overlay 41
 022C1FEC Object2CUpdate ; Overlay 41
-022C2AA0 Object2DCreate
-022C26A8 Object2DUpdate
+022C2AA0 Object2DCreate ; Overlay 40
+022C26A8 Object2DUpdate ; Overlay 40
 0229970C Object2ECreate
 02299348 Object2EUpdate
 022C47C0 Object2FCreate ; Overlay 53
@@ -1372,68 +1372,68 @@
 022375E4 Object60Create
 02237A24 Object60Update
 022372B0 Object60SoulVesselUpdate
-022C20B8 Object61Create
-022C21A0 Object61Update
-022C29D4 Object62Create
-022C2A9C Object62Update
-022C38DC Object63Create
-022C39A4 Object63Update
-022C433C Object64Create
-022C43B4 Object64Update
-022C47D4 Object65Create
-022C4848 Object65Update
+022C20B8 Object61Create ; Overlay 42
+022C21A0 Object61Update ; Overlay 42
+022C29D4 Object62Create ; Overlay 42
+022C2A9C Object62Update ; Overlay 42
+022C38DC Object63Create ; Overlay 42
+022C39A4 Object63Update ; Overlay 42
+022C433C Object64Create ; Overlay 42
+022C43B4 Object64Update ; Overlay 42
+022C47D4 Object65Create ; Overlay 42
+022C4848 Object65Update ; Overlay 42
 022C2278 Object66Create ; Overlay 78
 022C232C Object66Update ; Overlay 78
-022C26F0 Object67Create
-022C27FC Object67Update
-022C2BF8 Object68Create
-022C2CEC Object68Update
-022C1FE0 Object69Create
-022C2064 Object69Update
-022C4AE8 Object6ACreate
-022C4B68 Object6AUpdate
-022C1FE0 Object6BCreate
-022C2014 Object6BUpdate
-022C1FE0 Object6CCreate
-022C20D4 Object6CUpdate
-022C24D4 Object6DCreate
-022C25DC Object6DUpdate
-022C24AC Object6ECreate
-022C255C Object6EUpdate
-022C1FE0 Object6FCreate
-022C2064 Object6FUpdate
-022C4D54 Object70Create
-022C4DD4 Object70Update
-022C1FE0 Object71Create
-022C2014 Object71Update
-022C2104 Object72Create
-022C21C4 Object72Update
-022C4FC0 Object73Create
-022C5040 Object73Update
-022C1FE0 Object74Create
-022C2014 Object74Update
-022C2114 Object75Create
-022C218C Object75Update
-022C2518 Object76Create
-022C25EC Object76Update
-022C52D0 Object77Create
-022C5370 Object77Update
-022C54B8 Object78Create
-022C5558 Object78Update
-022C29A0 Object79Create
-022C29FC Object79Update
-022C5B40 Object7ACreate
-022C5BC0 Object7AUpdate
+022C26F0 Object67Create ; Overlay 41
+022C27FC Object67Update ; Overlay 41
+022C2BF8 Object68Create ; Overlay 41
+022C2CEC Object68Update ; Overlay 41
+022C1FE0 Object69Create ; Overlay 51
+022C2064 Object69Update ; Overlay 51
+022C4AE8 Object6ACreate ; Overlay 42
+022C4B68 Object6AUpdate ; Overlay 42
+022C1FE0 Object6BCreate ; Overlay 53
+022C2014 Object6BUpdate ; Overlay 53
+022C1FE0 Object6CCreate ; Overlay 64
+022C20D4 Object6CUpdate ; Overlay 64
+022C24D4 Object6DCreate ; Overlay 64
+022C25DC Object6DUpdate ; Overlay 64
+022C24AC Object6ECreate ; Overlay 41
+022C255C Object6EUpdate ; Overlay 41
+022C1FE0 Object6FCreate ; Overlay 59
+022C2064 Object6FUpdate ; Overlay 59
+022C4D54 Object70Create ; Overlay 42
+022C4DD4 Object70Update ; Overlay 42
+022C1FE0 Object71Create ; Overlay 62
+022C2014 Object71Update ; Overlay 62
+022C2104 Object72Create ; Overlay 62
+022C21C4 Object72Update ; Overlay 62
+022C4FC0 Object73Create ; Overlay 42
+022C5040 Object73Update ; Overlay 42
+022C1FE0 Object74Create ; Overlay 60
+022C2014 Object74Update ; Overlay 60
+022C2114 Object75Create ; Overlay 60
+022C218C Object75Update ; Overlay 60
+022C2518 Object76Create ; Overlay 60
+022C25EC Object76Update ; Overlay 60
+022C52D0 Object77Create ; Overlay 42
+022C5370 Object77Update ; Overlay 42
+022C54B8 Object78Create ; Overlay 42
+022C5558 Object78Update ; Overlay 42
+022C29A0 Object79Create ; Overlay 60
+022C29FC Object79Update ; Overlay 60
+022C5B40 Object7ACreate ; Overlay 42
+022C5BC0 Object7AUpdate ; Overlay 42
 02238D24 Object7BCreate
 02238E00 Object7BUpdate
 022396E4 Object7CCreate
 02239774 Object7CUpdate
 02239844 Object7DCreate
 022398A0 Object7DUpdate
-022C2450 Object7ECreate
-022C24E0 Object7EUpdate
-022C2590 Object7FCreate
-022C2620 Object7FUpdate
+022C2450 Object7ECreate ; Overlay 67
+022C24E0 Object7EUpdate ; Overlay 67
+022C2590 Object7FCreate ; Overlay 67
+022C2620 Object7FUpdate ; Overlay 67
 022399AC Object80Create
 02239A00 Object80Update
 02239B38 Object81Create
@@ -1444,10 +1444,10 @@
 02239E14 Object83Update
 02239E20 Object84Create
 02239E58 Object84Update
-022C1FE0 Object85Create
-022C2080 Object85Update
-022C416C Object86Create
-022C4194 Object86Update
+022C1FE0 Object85Create ; Overlay 75
+022C2080 Object85Update ; Overlay 75
+022C416C Object86Create ; Overlay 75
+022C4194 Object86Update ; Overlay 75
 0223A768 Object87Create
 0223A888 Object87Update
 0223ADB0 Object88Create
