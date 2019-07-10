@@ -800,6 +800,80 @@ class Game
     text_database.write_to_rom()
   end
   
+  def print_symbols
+    File.open("./docs/asm/#{GAME} auto-generated function symbols.txt", "w") do |f|
+      used_names = []
+      
+      enemy_dnas.each_with_index do |enemy_dna, i|
+        create_code_ptr = enemy_dna["Create Code"] & 0xFFFFFFFC
+        update_code_ptr = enemy_dna["Update Code"] & 0xFFFFFFFC
+        
+        name = "Enemy#{enemy_dna.name.tr(" ", "")}"
+        if GAME == "ooe" && enemy_dna.name == "Merman"
+          name << "%02X" % i
+        end
+        used_names << name
+        
+        overlay_id = OVERLAY_FILE_FOR_ENEMY_AI[i]
+        if overlay_id.is_a?(Array)
+          # Dracula needs one overlay for his AI and one for his palette.
+          overlay_id = overlay_id[0]
+        end
+        create_code_overlay_id_comment = ""
+        update_code_overlay_id_comment = ""
+        if overlay_id
+          overlay = fs.overlays[overlay_id]
+          if (overlay[:ram_start_offset]..overlay[:ram_start_offset]+overlay[:size]-1).include?(create_code_ptr)
+            create_code_overlay_id_comment = " ; Overlay %d" % overlay_id
+          end
+          if (overlay[:ram_start_offset]..overlay[:ram_start_offset]+overlay[:size]-1).include?(update_code_ptr)
+            update_code_overlay_id_comment = " ; Overlay %d" % overlay_id
+          end
+        end
+        
+        f.puts "%08X #{name}Create#{create_code_overlay_id_comment}" % create_code_ptr
+        f.puts "%08X #{name}Update#{update_code_overlay_id_comment}" % update_code_ptr
+      end
+      f.puts
+      
+      special_objects.each_with_index do |obj, i|
+        create_code_ptr = obj.create_code_pointer & 0xFFFFFFFC
+        update_code_ptr = obj.update_code_pointer & 0xFFFFFFFC
+        
+        name = "Object%02X" % i
+        name << "DUPLICATE" if used_names.include?(name)
+        used_names << name
+        
+        overlay_id = OVERLAY_FILE_FOR_SPECIAL_OBJECT[i]
+        create_code_overlay_id_comment = ""
+        update_code_overlay_id_comment = ""
+        if overlay_id
+          overlay = fs.overlays[overlay_id]
+          if (overlay[:ram_start_offset]..overlay[:ram_start_offset]+overlay[:size]-1).include?(create_code_ptr)
+            create_code_overlay_id_comment = " ; Overlay %d" % overlay_id
+          end
+          if (overlay[:ram_start_offset]..overlay[:ram_start_offset]+overlay[:size]-1).include?(update_code_ptr)
+            update_code_overlay_id_comment = " ; Overlay %d" % overlay_id
+          end
+        end
+        
+        f.puts "%08X #{name}Create#{create_code_overlay_id_comment}" % create_code_ptr
+        f.puts "%08X #{name}Update#{update_code_overlay_id_comment}" % update_code_ptr
+      end
+      f.puts
+      
+      items[SKILL_GLOBAL_ID_RANGE].each_with_index do |item, i|
+        name = "Skill#{item.name.tr(" ", "")}"
+        name << "%02X" % i if name == "Skill"
+        name << "DUPLICATE" if used_names.include?(name)
+        used_names << name
+        next if item["Code"] == 0
+        f.puts "%08X #{name}Use" % (item["Code"] & 0xFFFFFFFC)
+      end
+      f.puts
+    end
+  end
+  
 private
   
   def verify_game_and_load_constants(header_path)
