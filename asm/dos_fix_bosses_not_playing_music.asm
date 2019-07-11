@@ -28,25 +28,39 @@
   
   pop r15
 
-@InitializeEnemyAndOverridePlayBossMusic1:
+@InitializeEnemyAndOverridePlayBossMusicForFlyingArmor:
   push r14
   ldr r1, =1002h ; Music ID for Evil Invitation
   bl @InitializeEnemyAndOverridePlayBossMusic
   pop r15
 
-@InitializeEnemyAndOverridePlayBossMusic2:
+@InitializeEnemyAndOverridePlayBossMusic2ForDmitriiAndDario:
   push r14
   ldr r1, =1005h ; Music ID for Scarlet Battle Soul
   bl @InitializeEnemyAndOverridePlayBossMusic
   pop r15
 
-@InitializeEnemyAndOverridePlayBossMusic3:
+@InitializeEnemyAndOverridePlayBossMusicForZephyr:
   push r14
+  
+  add r1, r10, 200h
+  ldr r1, [r1, 6Eh] ; Read Zephyr's Var A
+  cmp r1, 1h ; Normal Zephyr
+  beq @ZephyrOnlyInitializeEnemy
+  
+  ; For boss rush Zephyr, we want to play the music immediately.
   ldr r1, =1003h ; Music ID for Into The Dark Night
   bl @InitializeEnemyAndOverridePlayBossMusic
+  b @ZephyrInitializeEnemyEnd
+  
+  @ZephyrOnlyInitializeEnemy:
+  ; For normal Zephyr, we don't want to play music on initialization, or it will bug out because of how he starts the music later.
+  bl 021C34A8h ; InitializeEnemy
+  
+  @ZephyrInitializeEnemyEnd:
   pop r15
 
-@InitializeEnemyAndOverridePlayBossMusic4:
+@InitializeEnemyAndOverridePlayBossMusicForAguni:
   push r14
   ldr r1, =101Ah ; Music ID for Portal To Dark Bravery
   bl @InitializeEnemyAndOverridePlayBossMusic
@@ -60,7 +74,7 @@
 
 ; Flying Armor
 .org 0x022FFA50
-  bl @InitializeEnemyAndOverridePlayBossMusic1
+  bl @InitializeEnemyAndOverridePlayBossMusicForFlyingArmor
 
 .close
 
@@ -68,7 +82,7 @@
 
 ; Dmitrii
 .org 0x022FFA54
-  bl @InitializeEnemyAndOverridePlayBossMusic2
+  bl @InitializeEnemyAndOverridePlayBossMusic2ForDmitriiAndDario
 
 .close
 
@@ -76,7 +90,7 @@
 
 ; Dario
 .org 0x0225A714
-  bl @InitializeEnemyAndOverridePlayBossMusic2
+  bl @InitializeEnemyAndOverridePlayBossMusic2ForDmitriiAndDario
 
 .close
 
@@ -84,7 +98,7 @@
 
 ; Zephyr
 .org 0x022FFA80
-  bl @InitializeEnemyAndOverridePlayBossMusic3
+  bl @InitializeEnemyAndOverridePlayBossMusicForZephyr
 
 .close
 
@@ -92,6 +106,6 @@
 
 ; Aguni
 .org 0x02243C98
-  bl @InitializeEnemyAndOverridePlayBossMusic4
+  bl @InitializeEnemyAndOverridePlayBossMusicForAguni
 
 .close
