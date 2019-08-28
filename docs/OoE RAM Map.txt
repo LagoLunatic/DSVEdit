@@ -983,7 +983,7 @@ Sprite info for the pause menu:
 022B59D8
 022B5A1C
 
-022B5C10 - List of villagers.
+022B5C10-022B5C91 - List of villagers.
   Entry length 0xA.
   00,2: X pos.
   02,2: Y pos.

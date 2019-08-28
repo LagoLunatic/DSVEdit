@@ -117,6 +117,13 @@
   ; r1 - Player index you're switching to
   ; Reads from list 0221E1DC to know which voice line to play for this combination of characters.
 
+0204D168 GetSongIndexForArea
+  ; r0 - Area index
+  ; Returns the song index for this area's background music.
+  ; It has some hardcoded return values:
+  ;   For area index E, it returns song index 3 (Jail of Jewels).
+  ;   For the Forgotten City, if the current room's Y pos on the map is >= 3, it returns song index B (In Search of the Secret Spell).
+
 02096F04 SetScreenBrightness
   ; r0 - Where to store the brightness value. 0400006C for the bottom screen, 0400106C for the top screen.
   ; r1 - The brightness to set.

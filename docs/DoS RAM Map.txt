@@ -258,9 +258,11 @@ What each range of entity slots is for:
 10E-10E  020F68B0-020F6B4F  ?
 10F-10F  020F6B50-020F6DEF  ?
 
-020CA930 - Start of the player's entity memory.
-020CA95C,020CA960 - The player's x pos and y pos.
-020CA968,020CA96C - The player's current x and y velocity.
+020CA930 - Start of the player entity.
+020CA95C,4 - Player's current X pos.
+020CA960,4 - Player's current Y pos.
+020CA968,4 - Player's current X velocity.
+020CA96C,4 - Player's current Y velocity.
 020CA980 - Scale multiplier for the player's trail. 1000 means 1x.
 020CA984 - Scale multiplier for the player. Only does anything if 020CA984 is nonzero.
 020CA988 - Enable player scaling.
@@ -424,7 +426,7 @@ What each range of entity slots is for:
 
 020F70C4 - Bitfield used by spinning spikes to track which unique IDs have already been used in this room.
 
-020F70CC - Pointer to list of entities for the current room.
+020F70CC,4 - The current room's entity list pointer.
 
 === 020F70D0 - 020F732B: Second region that gets saved to the save file. 25C bytes long. Corresponds to 0208-0463 in the save file data.
 
