@@ -18,14 +18,13 @@ end
 task :build_installers do
   # Builds the installers, which are just an intermediary step to building the portable zips. Requires OCRA and Inno Setup.
   
-  # The gem version of OCRA won't work, it's missing the most recent few commits which fix building the Inno Setup file.
-  # Instead you need to use the latest version of OCRA from the source: https://github.com/larsch/ocra/tree/2e7c88fd6ac7ae5f881d838dedd7ad437bda018b
-  # The easiest way to do this is to install the latest gem version of OCRA, then go to the folder where OCRA was installed in your Ruby installation and replace the file /bin/ocra with the /bin/ocra from the source.
+  # But OCRA has a bug that causes Inno Setup installer builds to fail, so this must be fixed manually.
+  # Install OCRA gem version 1.3.10, then go to the folder where OCRA was installed in your Ruby installation and edit the file /bin/ocra so that line 26 is `@path = path` instead of `@path = path && path.encode('UTF-8')`.
   
-  # OCRA normally places all the source files in the /src directory. In order to make it place them in the base directory open up /bin/ocra and change line 204 from SRCDIR = Pathname.new('src') to SRCDIR = Pathname.new('.').
-
-  system "C:/Ruby24/bin/ruby ocra-1.3.6/bin/ocra dsvedit.rb --output DSVEdit.exe --no-lzma --chdir-first --innosetup setup_dsvedit.iss --icon ./images/dsvedit_icon.ico"
-  system "C:/Ruby24-x64/bin/ruby ocra-1.3.6/bin/ocra dsvedit.rb --output DSVEdit_x64.exe --no-lzma --chdir-first --innosetup setup_dsvedit_x64.iss --icon ./images/dsvedit_icon.ico"
+  # Also, OCRA normally places all the source files in the /src directory. In order to make it place them in the base directory, edit /bin/ocra at line 204 to change `SRCDIR = Pathname.new('src')` to `SRCDIR = Pathname.new('.')`.
+  
+  system "C:/Ruby24/bin/ruby ocra-1.3.10/bin/ocra dsvedit.rb --output DSVEdit.exe --no-lzma --chdir-first --innosetup setup_dsvedit.iss --icon ./images/dsvedit_icon.ico"
+  system "C:/Ruby24-x64/bin/ruby ocra-1.3.10/bin/ocra dsvedit.rb --output DSVEdit_x64.exe --no-lzma --chdir-first --innosetup setup_dsvedit_x64.iss --icon ./images/dsvedit_icon.ico"
 end
 
 task :build_releases do
