@@ -527,8 +527,6 @@ class Game
     transition_rooms = []
     
     if GAME == "dos" || GAME == "aos"
-      transition_room_pointers = fs.read_until_end_marker(TRANSITION_ROOM_LIST_POINTER, [0, 0, 0, 0]).unpack("V*")
-      
       transition_rooms = transition_room_pointers.map do |pointer|
         get_room_by_metadata_pointer(pointer)
       end
@@ -798,6 +796,85 @@ class Game
     end
     
     text_database.write_to_rom()
+  end
+  
+  def transition_room_pointers
+    @transition_room_pointers ||= begin
+      transition_room_pointers = []
+      
+      transition_room_list_pointer = fs.read(TRANSITION_ROOM_LIST_POINTER_HARDCODED_LOCATIONS.first, 4).unpack("V").first
+      transition_room_pointers = fs.read_until_end_marker(transition_room_list_pointer, [0, 0, 0, 0]).unpack("V*")
+      
+      @original_number_of_transition_rooms = transition_room_pointers.length
+      
+      transition_room_pointers
+    end
+  end
+  
+  def mark_room_as_transition_room(room)
+    return unless GAME == "dos" || GAME == "aos"
+    
+    if transition_room_pointers.include?(room.room_metadata_ram_pointer)
+      # Already a transition room, do nothing.
+      return
+    end
+    
+    @transition_room_pointers << room.room_metadata_ram_pointer
+    
+    save_list_of_transition_rooms()
+  end
+  
+  def unmark_room_as_transition_room(room)
+    return unless GAME == "dos" || GAME == "aos"
+    
+    if !transition_room_pointers.include?(room.room_metadata_ram_pointer)
+      # Already not a transition room, do nothing.
+      return
+    end
+    
+    @transition_room_pointers.delete(room.room_metadata_ram_pointer)
+    
+    save_list_of_transition_rooms()
+  end
+  
+  def save_list_of_transition_rooms
+    return unless GAME == "dos" || GAME == "aos"
+    
+    transition_room_list_pointer = fs.read(TRANSITION_ROOM_LIST_POINTER_HARDCODED_LOCATIONS.first, 4).unpack("V").first
+    
+    if transition_room_pointers.length > @original_number_of_transition_rooms
+      # Repoint the transition room list to free space.
+      
+      original_length = (@original_number_of_transition_rooms+1)*4 # +1 for the end marker
+      length_needed = (transition_room_pointers.length+1)*4
+      
+      new_transition_room_list_pointer = fs.free_old_space_and_find_new_free_space(
+        transition_room_list_pointer,
+        original_length,
+        length_needed
+      )
+      
+      # Now update all hardcoded places where the pointer to this list was referenced.
+      TRANSITION_ROOM_LIST_POINTER_HARDCODED_LOCATIONS.each do |hardcoded_location|
+        fs.write(hardcoded_location, [new_transition_room_list_pointer].pack("V"))
+      end
+      
+      @original_number_of_transition_rooms = transition_room_pointers.length
+      
+      transition_room_list_pointer = new_transition_room_list_pointer
+    elsif transition_room_pointers.length < @original_number_of_transition_rooms
+      original_length = (@original_number_of_transition_rooms+1)*4
+      length_needed = (transition_room_pointers.length+1)*4
+      
+      fs.free_unused_space(transition_room_list_pointer + length_needed, original_length - length_needed)
+      
+      @original_number_of_transition_rooms = transition_room_pointers.length
+    end
+    
+    # Write the transition room pointers to the list.
+    fs.write(transition_room_list_pointer, transition_room_pointers.pack("V*"))
+    # Write the end marker.
+    fs.write(transition_room_list_pointer+(transition_room_pointers.length*4), [0].pack("V"))
   end
   
   def print_symbols

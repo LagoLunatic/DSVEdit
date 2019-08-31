@@ -108,6 +108,9 @@ Starting stats (hardcoded):
   14,2: 
   16,?
 
+0850E968 - List of room pointers for transition rooms.
+  00000000 marks the end of the list.
+
 085255FC - List of palette shifts.
   Entry length 8.
   0,4: Palette list pointer.
