@@ -313,4 +313,6 @@ class GBADummyFilesystem
       f.write(output_string)
     end
   end
+  
+  def inspect; to_s; end
 end

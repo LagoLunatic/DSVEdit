@@ -951,6 +951,8 @@ class Game
     end
   end
   
+  def inspect; to_s; end
+  
 private
   
   def verify_game_and_load_constants(header_path)
