@@ -407,22 +407,7 @@ class DoSMap < Map
       @draw_y_offset = 0
     end
     
-    if GAME == "dos"
-      @warp_rooms = []
-      WARP_ROOM_COUNT.times do |i|
-        @warp_rooms << DoSWarpRoom.new(i, fs)
-      end
-    elsif GAME == "aos"
-      @warp_rooms = []
-      WARP_ROOM_COUNT.times do |i|
-        @warp_rooms << AoSWarpRoom.new(i, fs)
-      end
-    elsif GAME == "hod"
-      @warp_rooms = []
-      WARP_ROOM_COUNT.times do |i|
-        @warp_rooms << HoDWarpRoom.new(i, fs)
-      end
-    end
+    read_warp_rooms()
   end
   
   def write_to_rom
@@ -462,6 +447,29 @@ class DoSMap < Map
       game.fs.write(@draw_y_offset_pointer, [@draw_y_offset].pack("C"))
     end
     
+    save_warp_rooms()
+  end
+  
+  def read_warp_rooms
+    if GAME == "dos"
+      @warp_rooms = []
+      WARP_ROOM_COUNT.times do |i|
+        @warp_rooms << DoSWarpRoom.new(i, fs)
+      end
+    elsif GAME == "aos"
+      @warp_rooms = []
+      WARP_ROOM_COUNT.times do |i|
+        @warp_rooms << AoSWarpRoom.new(i, fs)
+      end
+    elsif GAME == "hod"
+      @warp_rooms = []
+      WARP_ROOM_COUNT.times do |i|
+        @warp_rooms << HoDWarpRoom.new(i, fs)
+      end
+    end
+  end
+  
+  def save_warp_rooms
     if is_abyss
       # Do nothing.
     elsif GAME == "dos"
