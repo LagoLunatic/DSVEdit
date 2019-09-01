@@ -456,7 +456,7 @@ class WarpPositionIndicator < Qt::GraphicsEllipseItem
     return super(change, value)
   end
   
-  def mouseReleaseEvent(event)
+  def mousePressEvent(event)
     @map_editor.selected_warp_room_changed(@warp_room, self)
     super(event)
   end
