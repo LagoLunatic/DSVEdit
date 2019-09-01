@@ -458,9 +458,20 @@ class DoSMap < Map
       end
     elsif GAME == "aos"
       @warp_rooms = []
-      WARP_ROOM_COUNT.times do |i|
-        @warp_rooms << AoSWarpRoom.new(i, fs)
+      i = 0
+      warp_room_list_start = fs.read(WARP_ROOM_LIST_POINTER_HARDCODED_LOCATIONS.first, 4).unpack("V").first
+      while true
+        warp_room_pointer = warp_room_list_start + i*AoSWarpRoom.data_size
+        if fs.read(warp_room_pointer, 8).unpack("VV") == [0, 0]
+          break
+        end
+        
+        @warp_rooms << AoSWarpRoom.new(i, fs).from_data(warp_room_pointer)
+        
+        i += 1
       end
+      
+      @original_number_of_warp_rooms = warp_rooms.length
     elsif GAME == "hod"
       @warp_rooms = []
       WARP_ROOM_COUNT.times do |i|
@@ -496,13 +507,65 @@ class DoSMap < Map
         warp_room.write_to_rom()
       end
     elsif GAME == "aos"
+      warp_room_list_start = fs.read(WARP_ROOM_LIST_POINTER_HARDCODED_LOCATIONS.first, 4).unpack("V").first
+      
+      if warp_rooms.length > 0x20
+        raise "Too many warp rooms. AoS supports a maximum of 32 warps."
+      end
+      
+      if warp_rooms.length > @original_number_of_warp_rooms
+        # Repoint the warp room list to free space.
+        
+        original_length = (@original_number_of_warp_rooms+1)*AoSWarpRoom.data_size # +1 for the end marker
+        length_needed = (warp_rooms.length+1)*AoSWarpRoom.data_size
+        
+        new_warp_room_list_pointer = fs.free_old_space_and_find_new_free_space(
+          warp_room_list_start,
+          original_length,
+          length_needed
+        )
+        
+        # Now update all hardcoded places where the pointer to this list was referenced.
+        WARP_ROOM_LIST_POINTER_HARDCODED_LOCATIONS.each do |hardcoded_location|
+          fs.write(hardcoded_location, [new_warp_room_list_pointer].pack("V"))
+        end
+        
+        @original_number_of_warp_rooms = warp_rooms.length
+        
+        warp_room_list_start = new_warp_room_list_pointer
+      elsif warp_rooms.length < @original_number_of_warp_rooms
+        original_length = (@original_number_of_warp_rooms+1)*AoSWarpRoom.data_size
+        length_needed = (warp_rooms.length+1)*AoSWarpRoom.data_size
+        
+        fs.free_unused_space(warp_room_list_start + length_needed, original_length - length_needed)
+        
+        @original_number_of_warp_rooms = warp_rooms.length
+      end
+      
+      # Now update all hardcoded places where the index number of the last warp room is referenced (for handling when the player loops from the last warp to the first and vice versa).
+      WARP_ROOM_LAST_INDEX_HARDCODED_LOCATIONS.each do |hardcoded_location|
+        fs.write(hardcoded_location, [warp_rooms.length-1].pack("C"))
+      end
+      
+      # Write the warp room pointers to the list.
+      new_warp_room_pointer = warp_room_list_start
       warp_rooms.each do |warp_room|
+        warp_room.warp_room_data_pointer = new_warp_room_pointer
+        
         warp_tile = @tiles.find{|tile| tile.x_pos == warp_room.x_pos_in_tiles && tile.y_pos == warp_room.y_pos_in_tiles}
-        room = game.areas[0].sectors[warp_tile.sector_index].rooms[warp_tile.room_index]
+        if warp_tile.is_blank
+          room = game.areas[0].sectors[0].rooms[0]
+        else
+          room = game.areas[0].sectors[warp_tile.sector_index].rooms[warp_tile.room_index]
+        end
         warp_room.room_pointer = room.room_metadata_ram_pointer
         
         warp_room.write_to_rom()
+        
+        new_warp_room_pointer += AoSWarpRoom.data_size
       end
+      # Write the end marker.
+      fs.write(warp_room_list_start+(warp_rooms.length*AoSWarpRoom.data_size), [0, 0].pack("VV"))
     elsif GAME == "hod"
       warp_rooms.each do |warp_room|
         # In HoD the map tile doesn't have the sector/room indexes so we need to search through all rooms in the game to find a matching one.
@@ -749,10 +812,10 @@ class DoSWarpRoom
 end
 
 class AoSWarpRoom
-  attr_reader :warp_room_index,
-              :fs,
-              :warp_room_data_pointer
-  attr_accessor :x_pos_in_tiles,
+  attr_reader :fs
+  attr_accessor :warp_room_index,
+                :warp_room_data_pointer,
+                :x_pos_in_tiles,
                 :y_pos_in_tiles,
                 :room_pointer
   
@@ -760,10 +823,20 @@ class AoSWarpRoom
     @warp_room_index = warp_room_index
     @fs = fs
     
-    @warp_room_data_pointer = WARP_ROOM_LIST_START + warp_room_index*8
+    @warp_room_data_pointer = nil
+    
+    @x_pos_in_tiles = 0
+    @y_pos_in_tiles = 0
+    @room_pointer = nil
+  end
+  
+  def from_data(warp_room_pointer)
+    @warp_room_data_pointer = warp_room_pointer
     
     @x_pos_in_tiles, @y_pos_in_tiles,
       @room_pointer = fs.read(warp_room_data_pointer, 8).unpack("vvV")
+    
+    return self
   end
   
   def write_to_rom
@@ -772,6 +845,10 @@ class AoSWarpRoom
       @y_pos_in_tiles,
       @room_pointer
     ].pack("vvV"))
+  end
+  
+  def self.data_size
+    8
   end
 end
 

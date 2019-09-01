@@ -112,6 +112,20 @@
       </widget>
      </item>
      <item>
+      <widget class="QPushButton" name="add_warp_button">
+       <property name="text">
+        <string>Add Warp</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="delete_warp_button">
+       <property name="text">
+        <string>Delete Warp</string>
+       </property>
+      </widget>
+     </item>
+     <item>
       <widget class="QLabel" name="warp_name_label">
        <property name="text">
         <string>Warp name:</string>

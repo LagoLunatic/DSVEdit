@@ -9,6 +9,8 @@ class MapEditorDialog < Qt::Dialog
   slots "reload_available_tiles()"
   slots "reload_map_and_available_tiles()"
   slots "toggle_edit_warps()"
+  slots "add_warp()"
+  slots "delete_warp()"
   slots "warp_name_changed(int)"
   slots "button_box_clicked(QAbstractButton*)"
   
@@ -149,9 +151,13 @@ class MapEditorDialog < Qt::Dialog
         @ui.warp_name.addItem(area_name)
       end
     end
+    @ui.add_warp_button.hide()
+    @ui.delete_warp_button.hide()
     @ui.warp_name_label.hide()
     @ui.warp_name.hide()
     connect(@ui.edit_warps_button, SIGNAL("released()"), self, SLOT("toggle_edit_warps()"))
+    connect(@ui.add_warp_button, SIGNAL("released()"), self, SLOT("add_warp()"))
+    connect(@ui.delete_warp_button, SIGNAL("released()"), self, SLOT("delete_warp()"))
     connect(@ui.warp_name, SIGNAL("activated(int)"), self, SLOT("warp_name_changed(int)"))
     
     connect(@ui.color_code_regions, SIGNAL("stateChanged(int)"), self, SLOT("reload_map_and_available_tiles()"))
@@ -335,6 +341,9 @@ class MapEditorDialog < Qt::Dialog
       if GAME == "dos"
         @ui.warp_name_label.show()
         @ui.warp_name.show()
+      elsif GAME == "aos"
+        @ui.add_warp_button.show()
+        @ui.delete_warp_button.show()
       end
     else
       @position_indicator_timeline.stop()
@@ -346,8 +355,56 @@ class MapEditorDialog < Qt::Dialog
       
       @ui.edit_warps_button.text = "Edit Warps"
       
+      @ui.add_warp_button.hide()
+      @ui.delete_warp_button.hide()
       @ui.warp_name_label.hide()
       @ui.warp_name.hide()
+    end
+  end
+  
+  def add_warp
+    if @map.warp_rooms.length >= 0x20
+      Qt::MessageBox.warning(self,
+        "Cannot add warp",
+        "Cannot add more warps. 32 is the maximum number of warp rooms."
+      )
+      return
+    end
+    
+    new_warp_index = @map.warp_rooms.length
+    new_warp_room = AoSWarpRoom.new(new_warp_index, @game.fs)
+    @map.warp_rooms << new_warp_room
+    
+    new_position_indicator = WarpPositionIndicator.new(new_warp_room, @position_indicator_timeline, self)
+    @map_graphics_scene.addItem(new_position_indicator)
+    @position_indicators << new_position_indicator
+    
+    selected_warp_room_changed(new_warp_room, new_position_indicator)
+  end
+  
+  def delete_warp
+    if @map.warp_rooms.length <= 1
+      Qt::MessageBox.warning(self,
+        "Cannot delete warp",
+        "Cannot delete warp. Cannot have fewer than 1 warp room."
+      )
+      return
+    end
+    
+    @map.warp_rooms.delete(@selected_warp_room)
+    
+    selected_indicator = @position_indicators.find{|indicator| indicator.warp_room == @selected_warp_room}
+    @position_indicators.delete(selected_indicator)
+    @map_graphics_scene.removeItem(selected_indicator)
+    
+    @selected_warp_room = @map.warp_rooms.first
+    selected_warp_room_changed(@selected_warp_room, @position_indicators.first)
+    
+    # Regenerate warp indexes.
+    i = 0
+    @map.warp_rooms.each do |warp_room|
+      warp_room.warp_room_index = i
+      i += 1
     end
   end
   
