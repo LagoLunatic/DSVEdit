@@ -138,6 +138,13 @@ class EntityLayerItem < Qt::GraphicsRectItem
         frame_num_for_studio_portrait_frame,
         sprite_offset: BEST_SPRITE_OFFSET_FOR_SPECIAL_OBJECT[special_object_id],
         portrait_art: [studio_portrait_art_image, art_offset_x, art_offset_y])
+    elsif GAME == "por" && entity.is_special_object? && entity.subtype == 0x3A
+      # Objects from the Behemoth chase room.
+      special_object_id = entity.subtype
+      sprite_info = SpecialObjectType.new(special_object_id, @fs).extract_gfx_and_palette_and_sprite_from_create_code
+      
+      frame_index = entity.var_a
+      add_sprite_item_for_entity(entity, sprite_info, frame_index)
     elsif entity.is_special_object?
       special_object_id = entity.subtype
       sprite_info = SpecialObjectType.new(special_object_id, @fs).extract_gfx_and_palette_and_sprite_from_create_code
