@@ -314,7 +314,7 @@ class MapEditorDialog < Qt::Dialog
     if @edit_warps_mode
       @position_indicator_timeline = Qt::TimeLine.new
       @position_indicator_timeline.updateInterval = 1
-      @position_indicator_timeline.duration = 40.0/60.0 * 1000.0
+      @position_indicator_timeline.duration = 0.7 * 40.0/60.0 * 1000.0 # 0.7x because we only go down to 30% size instead of 0%.
       @position_indicator_timeline.curveShape = Qt::TimeLine::LinearCurve
       @position_indicator_timeline.loopCount = 0
       @position_indicator_timeline.start
@@ -426,7 +426,7 @@ class WarpPositionIndicator < Qt::GraphicsEllipseItem
     @animation = Qt::GraphicsItemAnimation.new(@map_graphics_view) do |anim|
       anim.item = self
       anim.setTimeLine(position_indicator_timeline)
-      anim.setScaleAt(1, 0.0, 0.0)
+      anim.setScaleAt(1, 0.3, 0.3) # Animate to scale down to 30% size. If we let it scale all the way down to 0% it's too hard to click.
     end
   end
   
