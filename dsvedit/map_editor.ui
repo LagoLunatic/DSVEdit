@@ -126,6 +126,46 @@
       </widget>
      </item>
      <item>
+      <widget class="QPushButton" name="decrease_warp_index_button">
+       <property name="maximumSize">
+        <size>
+         <width>30</width>
+         <height>16777215</height>
+        </size>
+       </property>
+       <property name="text">
+        <string>↓</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLabel" name="warp_index_label">
+       <property name="text">
+        <string>Warp index:</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLabel" name="warp_index_number">
+       <property name="text">
+        <string>999</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="increase_warp_index_button">
+       <property name="maximumSize">
+        <size>
+         <width>30</width>
+         <height>16777215</height>
+        </size>
+       </property>
+       <property name="text">
+        <string>↑</string>
+       </property>
+      </widget>
+     </item>
+     <item>
       <widget class="QLabel" name="warp_name_label">
        <property name="text">
         <string>Warp name:</string>

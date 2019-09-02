@@ -11,6 +11,8 @@ class MapEditorDialog < Qt::Dialog
   slots "toggle_edit_warps()"
   slots "add_warp()"
   slots "delete_warp()"
+  slots "decrease_warp_index()"
+  slots "increase_warp_index()"
   slots "warp_name_changed(int)"
   slots "button_box_clicked(QAbstractButton*)"
   
@@ -153,11 +155,17 @@ class MapEditorDialog < Qt::Dialog
     end
     @ui.add_warp_button.hide()
     @ui.delete_warp_button.hide()
+    @ui.decrease_warp_index_button.hide()
+    @ui.warp_index_label.hide()
+    @ui.warp_index_number.hide()
+    @ui.increase_warp_index_button.hide()
     @ui.warp_name_label.hide()
     @ui.warp_name.hide()
     connect(@ui.edit_warps_button, SIGNAL("released()"), self, SLOT("toggle_edit_warps()"))
     connect(@ui.add_warp_button, SIGNAL("released()"), self, SLOT("add_warp()"))
     connect(@ui.delete_warp_button, SIGNAL("released()"), self, SLOT("delete_warp()"))
+    connect(@ui.decrease_warp_index_button, SIGNAL("released()"), self, SLOT("decrease_warp_index()"))
+    connect(@ui.increase_warp_index_button, SIGNAL("released()"), self, SLOT("increase_warp_index()"))
     connect(@ui.warp_name, SIGNAL("activated(int)"), self, SLOT("warp_name_changed(int)"))
     
     connect(@ui.color_code_regions, SIGNAL("stateChanged(int)"), self, SLOT("reload_map_and_available_tiles()"))
@@ -344,6 +352,10 @@ class MapEditorDialog < Qt::Dialog
       elsif GAME == "aos"
         @ui.add_warp_button.show()
         @ui.delete_warp_button.show()
+        @ui.decrease_warp_index_button.show()
+        @ui.warp_index_label.show()
+        @ui.warp_index_number.show()
+        @ui.increase_warp_index_button.show()
       end
     else
       @position_indicator_timeline.stop()
@@ -357,6 +369,10 @@ class MapEditorDialog < Qt::Dialog
       
       @ui.add_warp_button.hide()
       @ui.delete_warp_button.hide()
+      @ui.decrease_warp_index_button.hide()
+      @ui.warp_index_label.hide()
+      @ui.warp_index_number.hide()
+      @ui.increase_warp_index_button.hide()
       @ui.warp_name_label.hide()
       @ui.warp_name.hide()
     end
@@ -400,7 +416,40 @@ class MapEditorDialog < Qt::Dialog
     @selected_warp_room = @map.warp_rooms.first
     selected_warp_room_changed(@selected_warp_room, @position_indicators.first)
     
-    # Regenerate warp indexes.
+    regenerate_warp_indexes()
+  end
+  
+  def decrease_warp_index
+    old_index = @map.warp_rooms.index(@selected_warp_room)
+    if old_index == 0
+      new_index = @map.warp_rooms.length - 1
+    else
+      new_index = old_index - 1
+    end
+    
+    @map.warp_rooms.delete(@selected_warp_room)
+    @map.warp_rooms.insert(new_index, @selected_warp_room)
+    
+    regenerate_warp_indexes()
+    update_warp_index_number()
+  end
+  
+  def increase_warp_index
+    old_index = @map.warp_rooms.index(@selected_warp_room)
+    if old_index == @map.warp_rooms.length-1
+      new_index = 0
+    else
+      new_index = old_index + 1
+    end
+    
+    @map.warp_rooms.delete(@selected_warp_room)
+    @map.warp_rooms.insert(new_index, @selected_warp_room)
+    
+    regenerate_warp_indexes()
+    update_warp_index_number()
+  end
+  
+  def regenerate_warp_indexes
     i = 0
     @map.warp_rooms.each do |warp_room|
       warp_room.warp_room_index = i
@@ -424,10 +473,16 @@ class MapEditorDialog < Qt::Dialog
       position_indicator.setBrush(Qt::Brush.new(Qt::Color.new(255, 255, 255, 127)))
     end
     selected_position_indicator.setBrush(Qt::Brush.new(Qt::Color.new(255, 255, 255, 255)))
+    
+    update_warp_index_number()
   end
   
   def update_used_tiles_number
     @ui.used_tiles_number.text = "#{@map.tiles.length}/#{@map.number_of_tiles}"
+  end
+  
+  def update_warp_index_number
+    @ui.warp_index_number.text = "#{@selected_warp_room.warp_room_index}"
   end
   
   def save_changes
