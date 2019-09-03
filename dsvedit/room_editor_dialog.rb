@@ -197,6 +197,11 @@ class RoomEditorDialog < Qt::Dialog
     end
     
     save_room()
+  rescue FreeSpaceManager::FreeSpaceFindError => e
+    Qt::MessageBox.warning(self,
+      "Failed to find free space",
+      "Failed to find free space for the changes to these layers.\n\n#{NO_FREE_SPACE_MESSAGE}"
+    )
   end
   
   def button_box_clicked(button)
