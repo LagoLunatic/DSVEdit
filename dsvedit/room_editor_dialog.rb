@@ -186,6 +186,11 @@ class RoomEditorDialog < Qt::Dialog
     tileset_pointer = $1.to_i(16)
     collision_tileset_pointer = $2.to_i(16)
     @room.layers.each do |layer|
+      if layer.layer_metadata_ram_pointer == 0
+        # No need to set the tileset pointers for empty layers. That'll just wastefully allocate free space for the empty tiles.
+        next
+      end
+      
       layer.tileset_pointer = tileset_pointer
       layer.collision_tileset_pointer = collision_tileset_pointer
       layer.write_to_rom()
