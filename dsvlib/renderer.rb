@@ -157,10 +157,10 @@ class Renderer
   
   def ensure_tilesets_exist(folder, room, collision=false)
     room.layers.each do |layer|
-      next if layer.layer_metadata_ram_pointer == 0 # TODO
+      next if layer.layer_metadata_ram_pointer == 0 # Empty layer
       
       tileset_filename = "#{folder}/#{room.area_name}/Tilesets/#{layer.tileset_filename}.png"
-      if !File.exist?(tileset_filename)
+      if !File.exist?(tileset_filename) && layer.tileset_pointer != 0
         render_tileset(layer.tileset_pointer, layer.tileset_type, room.palette_pages, room.gfx_pages, layer.colors_per_palette, layer.collision_tileset_pointer, tileset_filename)
       end
       
