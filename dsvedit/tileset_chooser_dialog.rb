@@ -30,6 +30,7 @@ class TilesetChooserDialog < Qt::Dialog
     @sector.rooms.each do |room|
       @renderer.ensure_tilesets_exist("cache/#{GAME}/rooms/", room)
       room.layers.each do |layer|
+        next if layer.layer_metadata_ram_pointer == 0 # Empty layer
         @all_tileset_names << layer.tileset_filename
       end
     end
