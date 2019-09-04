@@ -850,6 +850,11 @@ class SpriteEditor < Qt::Dialog
     return if @sprite.nil?
     
     @sprite.write_to_rom()
+  rescue FreeSpaceManager::FreeSpaceFindError => e
+    Qt::MessageBox.warning(self,
+      "Failed to find free space",
+      "Failed to find free space for the sprite changes.\n\n#{NO_FREE_SPACE_MESSAGE}"
+    )
   rescue Sprite::SaveError => e
     Qt::MessageBox.warning(self,
       "Failed to save sprite",
