@@ -349,7 +349,7 @@ class MapEditorDialog < Qt::Dialog
       if GAME == "dos"
         @ui.warp_name_label.show()
         @ui.warp_name.show()
-      elsif GAME == "aos"
+      elsif GAME == "aos" || GAME == "hod"
         @ui.add_warp_button.show()
         @ui.delete_warp_button.show()
         @ui.decrease_warp_index_button.show()
@@ -387,8 +387,8 @@ class MapEditorDialog < Qt::Dialog
       return
     end
     
-    new_warp_index = @map.warp_rooms.length
-    new_warp_room = AoSWarpRoom.new(new_warp_index, @game.fs)
+    warp_class = @map.warp_class
+    new_warp_room = warp_class.new(@game.fs)
     @map.warp_rooms << new_warp_room
     
     new_position_indicator = WarpPositionIndicator.new(new_warp_room, @position_indicator_timeline, self)
@@ -415,8 +415,6 @@ class MapEditorDialog < Qt::Dialog
     
     @selected_warp_room = @map.warp_rooms.first
     selected_warp_room_changed(@selected_warp_room, @position_indicators.first)
-    
-    regenerate_warp_indexes()
   end
   
   def decrease_warp_index
@@ -430,7 +428,6 @@ class MapEditorDialog < Qt::Dialog
     @map.warp_rooms.delete(@selected_warp_room)
     @map.warp_rooms.insert(new_index, @selected_warp_room)
     
-    regenerate_warp_indexes()
     update_warp_index_number()
   end
   
@@ -445,16 +442,7 @@ class MapEditorDialog < Qt::Dialog
     @map.warp_rooms.delete(@selected_warp_room)
     @map.warp_rooms.insert(new_index, @selected_warp_room)
     
-    regenerate_warp_indexes()
     update_warp_index_number()
-  end
-  
-  def regenerate_warp_indexes
-    i = 0
-    @map.warp_rooms.each do |warp_room|
-      warp_room.warp_room_index = i
-      i += 1
-    end
   end
   
   def warp_name_changed(warp_name_index)
@@ -482,7 +470,8 @@ class MapEditorDialog < Qt::Dialog
   end
   
   def update_warp_index_number
-    @ui.warp_index_number.text = "#{@selected_warp_room.warp_room_index}"
+    warp_room_index = @map.warp_rooms.index(@selected_warp_room)
+    @ui.warp_index_number.text = "#{warp_room_index}"
   end
   
   def save_changes
@@ -491,9 +480,14 @@ class MapEditorDialog < Qt::Dialog
     parent.load_map()
     return true
   rescue FreeSpaceManager::FreeSpaceFindError => e
+    if GAME == "por" || GAME == "ooe"
+      msg = "Failed to find free space to put the expanded map height.\n\n#{NO_FREE_SPACE_MESSAGE}"
+    else
+      msg = "Failed to find free space to put new warp rooms.\n\n#{NO_FREE_SPACE_MESSAGE}"
+    end
     Qt::MessageBox.warning(self,
       "Failed to find free space",
-      "Failed to find free space to put the expanded map height.\n\n#{NO_FREE_SPACE_MESSAGE}"
+      msg
     )
     return false
   end

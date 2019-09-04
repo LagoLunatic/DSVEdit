@@ -877,6 +877,8 @@ class Game
     fs.write(transition_room_list_pointer+(transition_room_pointers.length*4), [0].pack("V"))
   end
   
+  # TODO: allow adding/removing warp rooms in dos
+  
   def print_symbols
     File.open("./docs/asm/#{GAME} auto-generated function symbols.txt", "w") do |f|
       used_names = []
