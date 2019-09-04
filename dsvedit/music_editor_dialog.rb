@@ -27,6 +27,16 @@ class MusicEditor < Qt::Dialog
         sector = game.areas[0].sectors[sector_index]
         break if sector.is_hardcoded # For the Boss Rush sector in AoS
         
+        if GAME == "dos" && sector_index == 16
+          # The Throne Room sector with the final boss of Julius mode.
+          # That sector doesn't actually care about the BGM that's set for it - instead, the BGM set here is used by Mine of Judgement since that's not its own sector.
+          # So we display the name of this sector as Mine of Judgement for clarity.
+          sector_name = "Mine of Judgment"
+        elsif GAME == "dos" && sector_index == 5
+          # And for the actual Condemned Tower & Mine of Judgment sector, display the name as just Condemned Tower.
+          sector_name = "Condemned Tower"
+        end
+        
         @ui.sector_index.addItem("%02X %s" % [sector_index, sector_name])
       end
     end
