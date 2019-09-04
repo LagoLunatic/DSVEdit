@@ -204,6 +204,7 @@ module FreeSpaceManager
   
   def automatically_remove_nonzero_free_spaces(files_to_check)
     # This is an extra safeguard to make absolutely sure no nonzero data is treated as free space.
+    # (We also count FF as zero data, since HoD's free space is all FFs by default.)
     # This can be necessary if the _dsvedit_freespace.txt file got deleted.
     
     if @filesystem_directory.nil?
@@ -223,22 +224,22 @@ module FreeSpaceManager
         case space_left_in_file
         when 1
           byte = read_by_file(free_space[:path], offset, 1).unpack("C").first
-          if byte != 0
+          if byte != 0 && byte != 0xFF
             remove_free_space(free_space[:path], offset, 1)
           end
         when 2
           halfword = read_by_file(free_space[:path], offset, 2).unpack("v").first
-          if halfword != 0
+          if halfword != 0 && byte != 0xFFFF
             remove_free_space(free_space[:path], offset, 2)
           end
         when 3
           bytes = read_by_file(free_space[:path], offset, 3).unpack("CCC")
-          unless bytes.all?{|byte| byte == 0}
+          unless bytes.all?{|byte| byte == 0 || byte == 0xFF}
             remove_free_space(free_space[:path], offset, 2)
           end
         else
           word = read_by_file(free_space[:path], offset, 4).unpack("V").first
-          if word != 0
+          if word != 0 && word != 0xFFFFFFFF
             remove_free_space(free_space[:path], offset, 4)
           end
         end
