@@ -24,6 +24,11 @@ class GfxEditorDialog < Qt::Dialog
     @ui = Ui_GfxEditor.new
     @ui.setup_ui(self)
     
+    if SYSTEM == :gba
+      @ui.one_dimensional_mode.checked = true
+      @ui.label_2.text = "GFX pointer(s)"
+    end
+    
     @gfx_file_graphics_scene = Qt::GraphicsScene.new
     @gfx_file_graphics_scene.setBackgroundBrush(ClickableGraphicsScene::BACKGROUND_BRUSH)
     @ui.gfx_file_graphics_view.setScene(@gfx_file_graphics_scene)
@@ -51,11 +56,6 @@ class GfxEditorDialog < Qt::Dialog
         gfx_page_changed(gfx_page_index)
       end
       palette_changed(gfx_and_palette_data[:palette_index])
-    end
-    
-    if SYSTEM == :gba
-      @ui.one_dimensional_mode.checked = true
-      @ui.label_2.text = "GFX pointer(s)"
     end
     
     self.show()

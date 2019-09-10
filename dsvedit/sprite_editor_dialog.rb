@@ -460,6 +460,10 @@ class SpriteEditor < Qt::Dialog
       @ui.view_skeleton_button.enabled = false
     end
     
+    if SYSTEM == :gba
+      @one_dimensional_render_mode = true
+    end
+    
     @current_frame_index = 0
     @current_part_index = 0
     
