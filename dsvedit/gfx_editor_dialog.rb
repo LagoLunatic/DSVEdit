@@ -183,6 +183,12 @@ class GfxEditorDialog < Qt::Dialog
       "Error loading GFX",
       message
     )
+  rescue StandardError => e
+    Qt::MessageBox.warning(self,
+      "Loading GFX failed",
+      "Failed to load GFX.\n#{e.message}\n\n#{e.backtrace.join("\n")}"
+    )
+    return
   end
   
   def gfx_page_changed(gfx_index)
