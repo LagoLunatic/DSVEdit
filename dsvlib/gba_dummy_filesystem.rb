@@ -136,7 +136,8 @@ class GBADummyFilesystem
       # Preserve this value forever so we can tell whether new data being written here would overwrite stuff after this or not.
       @original_compressed_sizes[address] = compressed_size
     end
-    return [decompressed_data[4..-1], compressed_size]
+    decompressed_data = decompressed_data[4..-1] # Remove the 4 byte header
+    return [decompressed_data, compressed_size]
   end
   
   def compress_write(address, new_data)

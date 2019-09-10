@@ -111,6 +111,7 @@ class GfxWrapper
       if compressed?
         compressed_data_header = fs.read(gfx_data_pointer, 4).unpack("V").first
         uncompressed_size = (compressed_data_header & 0xFFFFFF00) >> 8
+        uncompressed_size -= 4 # Remove the 4 byte header
         uncompressed_size
       else
         512*size_in_512_chunks
