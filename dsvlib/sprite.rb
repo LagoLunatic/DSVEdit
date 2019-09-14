@@ -645,10 +645,9 @@ class Part
       @x_pos, @y_pos,
         @unknown, @gfx_x_offset, @gfx_y_offset,
         @width, @height,
-        object_size_and_shape, @unknown_2,
+        object_size_and_shape, @gfx_page_index,
         flip_bits, @unused = part_data.unpack("ccvCCCCCCCC")
       
-      @gfx_page_index = 0
       @palette_index = 0
       
       @object_size  = (object_size_and_shape & 0x30) >> 4
@@ -709,7 +708,7 @@ class Part
         @width,
         @height,
         object_size_and_shape,
-        @unknown_2,
+        @gfx_page_index,
         flip_bits,
         @unused
       ].pack("ccvCCCCCCCC")
