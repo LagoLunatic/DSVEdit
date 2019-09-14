@@ -305,8 +305,21 @@ class SpriteEditor < Qt::Dialog
       palette_offset = 0
       sprite_pointer = weapon.sprite_file_pointer
       skeleton_file = nil
+      if GAME == "aos"
+        ignore_part_gfx_page = true
+      else
+        ignore_part_gfx_page = false
+      end
       
-      @sprite_info = SpriteInfo.new(gfx_file_pointers, palette_pointer, palette_offset, sprite_pointer, skeleton_file, @fs)
+      @sprite_info = SpriteInfo.new(
+        gfx_file_pointers,
+        palette_pointer,
+        palette_offset,
+        sprite_pointer,
+        skeleton_file,
+        @fs,
+        ignore_part_gfx_page: ignore_part_gfx_page
+      )
     rescue StandardError => e
       Qt::MessageBox.warning(self,
         "Weapon sprite extraction failed",
