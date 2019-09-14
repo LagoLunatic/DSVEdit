@@ -436,6 +436,8 @@ class SpriteEditor < Qt::Dialog
     @frame_graphics_scene.clear()
     @part_graphics_scene.clear()
     @gfx_file_graphics_scene.clear()
+    
+    @current_animation = nil
   end
   
   def load_sprite
