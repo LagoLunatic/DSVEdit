@@ -815,6 +815,12 @@ class SpriteEditor < Qt::Dialog
       millisecond_delay = (frame_delay.delay / 60.0 * 1000).round
       @animation_timer.start(millisecond_delay)
     end
+  rescue StandardError => e
+    Qt::MessageBox.warning(self,
+      "Failed advance to next animation frame",
+      e.message
+    )
+    set_animation_paused(true)
   end
   
   def frame_delay_changed
