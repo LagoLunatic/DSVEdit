@@ -869,7 +869,7 @@ GLYPH_UNION_FORMAT = [
   [4, "Effects", :bitfield],
   [4, "Unwanted States", :bitfield],
   [2, "Icon"],
-  [2, "Unknown 4"],
+  [2, "Swing Modifiers", :bitfield],
   [2, "Swing Anim"],
   [1, "IFrames"],
   [1, "Unknown 9"],
