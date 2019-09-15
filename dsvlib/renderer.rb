@@ -542,7 +542,7 @@ class Renderer
     end
     
     width = 128
-    height = (num_minitiles/16.0).ceil * 8
+    height = (num_minitiles+15)/16*8
     
     rendered_gfx = ChunkyPNG::Image.new(width, height, ChunkyPNG::Color::TRANSPARENT)
     
