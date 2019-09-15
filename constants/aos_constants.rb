@@ -585,10 +585,12 @@ BEST_SPRITE_OFFSET_FOR_SPECIAL_OBJECT = {
 OTHER_SPRITES = [
   COMMON_SPRITE,
   
-  # soma sprite 080E11C4
-  # soma gfx 081717CC or maybe 081674B8 or maybe 081664B4
-  # soma's gfx list is around 080E11E0?
-  # palette is either 082097D4 (his palette is also the first in 0820B164 but that's not used?)
+  # Soma's sprite pointer isn't normal. Using it here like this doesn't show any correct frames or animations, because of the unusual way that Soma is animated by swapping the GFX in VRAM out on the fly while keeping the sprite animation still.
+  # But we put it here anyway just so something can be in the sprite editor, since editing the GFX and palettes in the GFX editor still works fine.
+  # Soma's GFX list is at 080E11D4.
+  {desc: "Soma player", sprite: 0x080E11C4, palette: 0x082097D4, gfx_files: [0x081604A8, 0x081624AC, 0x081644B0, 0x081664B4, 0x081684B8, 0x0816A4BC, 0x0816C4C0, 0x0816E4C4, 0x081704C8, 0x081724CC, 0x081744D0, 0x081764D4, 0x081784D8, 0x0817A4DC, 0x0817C4E0, 0x0817E4E4, 0x081804E8, 0x081824EC, 0x081844F0, 0x081864F4, 0x081884F8, 0x0818A4FC, 0x0818C500, 0x0818E504, 0x08190508, 0x0819250C, 0x08194510, 0x08196514, 0x08198518, 0x0819A51C, 0x0819C520, 0x0819E524, 0x081A0528, 0x081A252C, 0x081A4530, 0x081A6534, 0x081A8538]},
+  # Julius's GFX list is at 080E12C8.
+  {desc: "Julius player", sprite: 0x08252748, palette: 0x0820C028, gfx_files: [0x081F42A4, 0x081F52A8, 0x081F62AC, 0x081F72B0]},
   
   {desc: "Breakable walls 1", pointer: 0x08526004},
   {desc: "Breakable walls 2", pointer: 0x08526010},
