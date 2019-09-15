@@ -384,7 +384,19 @@ class Renderer
   end
   
   def render_gfx_page(gfx_page, palette, canvas_width=16)
-    render_gfx(gfx_page, palette, x=0, y=0, width=canvas_width*8, height=canvas_width*8, canvas_width=canvas_width*8)
+    if palette.length == 16
+      pixels_per_byte = 2
+    elsif palette.length == 256
+      pixels_per_byte = 1
+    else
+      raise "Unknown palette length: #{palette.length}"
+    end
+    
+    width = canvas_width*8
+    num_pixels = gfx_page.gfx_data_length * pixels_per_byte
+    height = num_pixels / width
+    
+    render_gfx(gfx_page, palette, x=0, y=0, width=width, height=height, canvas_width=canvas_width*8)
   end
   
   def render_gfx(gfx_page, palette, x, y, width, height, canvas_width=128)
