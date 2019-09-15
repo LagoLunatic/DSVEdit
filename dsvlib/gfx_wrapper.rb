@@ -59,7 +59,7 @@ class GfxWrapper
       @gfx_data ||= if @gfx_data_pointer
         fs.read(@gfx_data_pointer, gfx_data_length)
       else
-        fs.read_by_file(file[:file_path], 0, gfx_data_length, allow_reading_into_next_file_in_ram: true)
+        fs.read_by_file(file[:file_path], 0, gfx_data_length)
       end
     else
       @gfx_data ||= if compressed?
@@ -85,7 +85,7 @@ class GfxWrapper
         if @gfx_data_pointer
           fs.read(@gfx_data_pointer + offset, length)
         else
-          fs.read_by_file(file[:file_path], offset, length, allow_reading_into_next_file_in_ram: true)
+          fs.read_by_file(file[:file_path], offset, length)
         end
       else
         if compressed?

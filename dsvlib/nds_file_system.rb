@@ -226,13 +226,6 @@ class NDSFileSystem
       max_offset = offset_in_file + length
     end
     if max_offset > file[:size]
-      if options[:allow_reading_into_next_file_in_ram] && file[:asset_pointer]
-        next_file_in_ram = assets_by_pointer[file[:asset_pointer]+0xC]
-        if next_file_in_ram
-          return read_by_file(next_file_in_ram[:file_path], offset_in_file - file[:size], length, options=options)
-        end
-      end
-      
       raise OffsetPastEndOfFileError.new("Offset %08X (length %08X) is past end of file #{file_path} (%08X bytes long)" % [offset_in_file, length, file[:size]])
     end
     
