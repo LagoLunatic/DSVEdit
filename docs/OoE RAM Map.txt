@@ -4,6 +4,8 @@
 02007354,4 - Hardcodes 022EB1A0, the start of asset memory.
 020072A8,4 - Hardcodes 023E0000, the end of asset memory.
 
+0206D994,1 - Hardcodes the number of attribute points (1) to give to all attributes when the player absorbs a glyph.
+
 020B0854-020B4853 - List of sine and cosine values.
   Entry length 4.
   There are 0x1000 entries in this list, with the index corresponding to an input value of 0 to 359 degrees.

@@ -129,8 +129,13 @@ Special objects:
   Requires sector overlay 86.
 3A Various objects from corridor where Behemoth chases you.
   Requires sector overlay 79.
-  Unique ID: If this is between 14-29 or FE-FF, the object will no longer appear after Behemoth chased you.
-  Var A: The sprite frame to use for this object. 0-9 are pillars, A-B are platforms, C-D are the steel door at the end of the corridor.
+  Var A: The sprite frame to use for this object.
+    0, 1 - Top/bottom pillar pieces.
+    2, 4, 5, 7, 8 - Pillar pieces that are destroyed by Behemoth and don't come back.
+    A - Platform that is destroyed by Behemoth and doesn't come back.
+    C - Steel door at the end of the corridor that is destroyed by Behemoth and doesn't come back.
+    3, 6, 9, B, D - These sprite frames don't work when placed directly as objects, they have no collision.
+  Unique ID: The original developers gave these objects unique IDs, but they don't seem to be necessary, these objects still work when they all have 0 for their unique IDs.
 3B Breakable wall.
   Var A: Index of this wall in the breakable wall list for this area.
     The data in that list affects the sprite frame to use as well as the flag for the breakable wall being destroyed.

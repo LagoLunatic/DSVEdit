@@ -19,9 +19,8 @@ Each part is 0xC bytes long.
   08,1: OBJ size and shape.
     Bits 0x0F: OBJ shape.
     Bits 0xF0: OBJ size.
-  09,1: Affects GFX?
-    used around 030047E0
-    If this is 0, it ignores ??? (read into r0 at 030047DC) (affects the GFX to use).
+  09,1: GFX page index.
+    Not everything uses this as the GFX page index though - weapons for example seem to use it for something else.
   0A,1: Flip bits.
     Least significant bit first.
     Bit 1: Vertical flip

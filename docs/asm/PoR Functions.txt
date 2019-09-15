@@ -95,7 +95,7 @@
   ; r0 - Gfx pointer
 
 0201BA0C InitializeSpriteAssetFile
-  ; Initializes the standole sprite file format with pointers in place of file offsets so that it can be used by the game engine.
+  ; Initializes the standalone sprite file format with pointers in place of file offsets so that it can be used by the game engine.
 
 02015AFC LoadPalette
   ; r0 - Palette list pointer

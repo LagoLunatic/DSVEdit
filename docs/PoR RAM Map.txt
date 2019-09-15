@@ -114,6 +114,9 @@
   02,2: The global ID+1 of the item to unlock.
   FFFFFFFF terminates the list.
 
+020E0224 - List of face sprites. Just a bunch of strings.
+  To get the full filename, prepend /sc/f_ to the front of each string, and append .dat to the end.
+
 020E1CEC - Leg armor.
 020E1FA4 - Head armor.
 020E2334 - Accessories.

@@ -141,8 +141,23 @@ Glyph union format:
   14,2: Icon.
     Normal icons go up to 004F. Higher than that and the glyph will be invisible or have bugged graphics.
     But if you increase this value to 3CD0 or higher, the glyph won't appear it all, it won't even be invisible.
-  16,2: Bitfield
-    Bit 1: ?
+  16,2: Bitfield.
+    0001 Causes the player's swinging animation to not be interrupted when they land.
+    0002 Makes the weapon be locked to the upper left corner of the room, as well as the sound effects and Shanoa's voice.
+    0004 
+    0008 Does not cause the player to change into a swinging animation, and instead seems to lock the player into whatever animation they were in before the swing started?
+    0010 
+    0020 
+    0040 Most melee weapons use their palette index to indicate what parts are transparent trails, but if this bit is on, they will not do that.
+    0080 
+    0100 
+    0200 
+    0400 
+    0800 
+    1000 
+    2000 
+    4000 
+    8000 
   18,2: Animation Shanoa plays when using this Union.
     This is an index in the player's swing animations list (the Y button list).
   1A,1: ?

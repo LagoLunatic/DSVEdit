@@ -77,7 +77,7 @@
   04,4: Room pointer of this warp room in Castle A.
   08,4: Room pointer of this warp room in Castle B.
     Note that these two pointers are used when warping when pressing down.
-    When switching castles by pressing up, it simply uses the door in the room overlapping the room.
+    When switching castles by pressing up, it simply uses the door in the room that is on top of the room itself.
 
 084950DC - List of songs that play in each sector.
   Entry length 2.

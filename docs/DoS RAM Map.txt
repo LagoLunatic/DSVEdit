@@ -669,6 +669,9 @@ Player's current stats:
   00,4: Pointer to the entity.
   04,1: Set to 0 on initialization?
 
+020F7528,2 - Text ID of the event currently playing.
+  This is FFFF if no event is currently playing.
+
 020F7596 - The maximum address that can be corrupted by the broken map code by getting out of bounds (aka memory corruption).
   Also remember bits can only be set on by memory corruption, never off.
 
@@ -759,6 +762,10 @@ Stuff related to currently loaded tilesets:
 0222BAB8 - ??? list of pointers
 0222BF74 - list of ??? pointers
 
+0222C614-0222C623 - List of text IDs for the event that should play when each character confronts Somacula.
+  4 entries, one for each character. The index in this list is the current player index.
+  The first entry in this list is for Soma, though it's just set to 0, which is not an event so it doesn't work right.
+
 0222C714 - List of pointers to special object create codes.
 0222C8F0 - List of pointers to special object update codes.
 
@@ -797,6 +804,7 @@ Abyss tele destination data for taking you out of the Abyss:
 Abyss tele destination data for Soma mode final boss:
 0222BE14,1 - Sector index
 0222BE15,1 - Room index
+0222BE16,2 - ???
 0222BE18,2 - X pos
 0222BE1A,2 - Y pos
 

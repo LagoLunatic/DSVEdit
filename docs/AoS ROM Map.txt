@@ -117,7 +117,7 @@ Starting stats (hardcoded):
   4,2: Palette index.
   6,2: Duration in frames to stay on this palette.
 
-08525FB0 - List of warp points.
+08525FBC-08525FFB - List of warp points.
   Entry length 8.
   00,2: X pos on the map in tiles.
   02,2: Y pos on the map in tiles.

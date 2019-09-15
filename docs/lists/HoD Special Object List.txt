@@ -1,6 +1,11 @@
 00 Save point.
 01 Warp point.
   Allows you to warp between castles by pressing up, and between warp points in the same castle by pressing down.
+  You should place two of these objects in each warp room - one should have Unique ID 0, and the other should have Unique ID 1.
+  (Only the one with Unique ID 0 is necessary for the warp to work correctly, but the one with Unique ID 1 is the other half of the warp gate, so the warping between castles animation will look strange without it.)
+  Var A: Affects the palette of the warp gate.
+    0 Castle A palette
+    1 Castle B palette
 02 Teleporter.
 03 Breakable wall.
   Var A: Which breakable wall flag to check.
