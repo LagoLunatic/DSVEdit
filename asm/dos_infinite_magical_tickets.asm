@@ -3,7 +3,7 @@
 .erroronwarning on
 
 @Overlay41Start equ 0x02308920
-@FreeSpace equ @Overlay41Start
+@FreeSpace equ @Overlay41Start + 0x7C
 
 .open "ftc/overlay9_0", 0219E3E0h
 
@@ -26,7 +26,7 @@
 .open "ftc/overlay9_41", @Overlay41Start
 
 ; Don't consume magical tickets on use.
-.org @FreeSpace+0x7C
+.org @FreeSpace
   mov r0, 42h ; This is the SFX that will be played on use.
   b 0x021EF264 ; Return to the consumable code after the part where it would remove the item from your inventory.
 
