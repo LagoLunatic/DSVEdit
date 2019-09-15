@@ -706,6 +706,9 @@ class SpriteEditor < Qt::Dialog
     if palette_index == @palette_index && !force
       return
     end
+    if palette_index >= @palettes.length
+      palette_index = 0
+    end
     @palette_index = palette_index
     
     old_gfx_page_index = @gfx_page_index
