@@ -322,6 +322,8 @@ class SpriteInfo
         return is_single_uncompressed_gfx_page
       end
     end
+  rescue NDSFileSystem::ConversionError => e
+    return false
   end
   
   def self.check_if_valid_gfx_list_pointer(pointer, fs)
@@ -350,6 +352,8 @@ class SpriteInfo
         false
       end
     end
+  rescue NDSFileSystem::ConversionError => e
+    return false
   end
   
   def self.check_if_valid_palette_pointer(pointer, fs)
