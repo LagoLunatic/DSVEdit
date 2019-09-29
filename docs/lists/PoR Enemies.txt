@@ -314,7 +314,12 @@ Enemies:
   Var B: No apparent effect, but normal Dullahan has 1 for this, while boss rush Dullahan has 0 for this.
 8B Behemoth
   Requires enemy overlay 53.
-  Var B: When 2, the scripted Behemoth that chases you. When 0, normal Behemoth.
+  Var A:
+    0 Still appears after its boss death flag is set.
+    1+ Stays dead when its boss death flag is set.
+  Var B:
+    0 Normal Behemoth
+    2 The scripted Behemoth that chases you
 8C Keremet
   Requires enemy overlay 56.
   Var A:

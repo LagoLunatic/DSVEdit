@@ -493,7 +493,7 @@ F5-F5  021115E0-0211173F  ?
 
 021119D0,4 - Bitfield of which map items you own.
 
-021119DC - Boss death flags.
+021119DC,4 - Boss death flags.
   01 00000002 Dullahan
   02 00000004 Behemoth
   03 00000008 Dragon Zombie in Buried Chamber
@@ -1060,6 +1060,15 @@ Format of extra entity memory used for portrait paintings:
   0E,2: Unused?
   10,4: Bitfield of resistances.
   14,4: ??? 0x8004 0x8044 0x0005
+
+0221ECF4-0221ED03 - List of skill indexes ranges for each type of skill.
+  Each entry is a word. There are 4 entries in total.
+  Each entry is the first skill index of that type of skill.
+  The entries are:
+    0x00 (for subweapons/spells)
+    0x51 (for dual crushes)
+    0x5C (for relics)
+    0x5C (?? duplicate for relics)
 
 0221ED04 - List of ? for each type of skill.
   Each entry is 0xA bytes long.

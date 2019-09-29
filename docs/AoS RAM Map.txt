@@ -253,6 +253,7 @@ What each range of entity slots is for:
 0201327C,2 - Current MP.
 0201327E,2 - Max HP.
 02013280,2 - Max MP.
+0201328C,4 - Current experience.
 02013290,4 - Current gold.
 
 02013294-0201331B - Owned item info.
