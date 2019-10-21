@@ -1,3 +1,4 @@
+
 class Sector
   class SectorReadError < StandardError ; end
   
@@ -63,7 +64,9 @@ class Sector
     new_room_pointer = fs.get_free_space(Room.data_size, nil)
     new_room = Room.new(self, new_room_pointer, area.area_index, sector_index, new_room_index, game)
     
-    new_room.layer_list_ram_pointer = fs.get_free_space(Room.max_number_of_layers*RoomLayer.layer_list_entry_size, overlay_id)
+    length_needed = Room.max_number_of_layers*RoomLayer.layer_list_entry_size
+    new_room.layer_list_ram_pointer = fs.get_free_space(length_needed, overlay_id)
+    fs.write(new_room.layer_list_ram_pointer, [0].pack("C")*length_needed)
     
     other_room_in_sector = rooms.first
     if other_room_in_sector
@@ -96,13 +99,15 @@ class Sector
       new_room.alternate_room_state_pointer = 0
     end
     if GAME == "hod"
-      new_room.entity_gfx_list_pointer = fs.get_free_space(4, nil)
+      # Create an empty entity gfx list which just immediately has the end marker.
+      new_room.entity_gfx_list_pointer = fs.get_free_space(4)
+      fs.write(new_room.entity_gfx_list_pointer, [0].pack("V"))
+      new_room.initialize_entity_gfx_list(new_room.entity_gfx_list_pointer)
+      
       new_room.palette_shift_func = 0
       new_room.palette_shift_index = 0
       new_room.is_castle_b = (sector_index % 2)
       new_room.has_breakable_wall = 0
-      
-      initialize_entity_gfx_list(new_room.entity_gfx_list_pointer)
     end
     if GAME == "aos"
       new_room.color_effects = 0
@@ -117,6 +122,28 @@ class Sector
       layer.z_index = 0x16
       layer.write_layer_list_entry_to_rom()
     end
+    
+    default_tileset_pointer = 0
+    default_tileset_type = 0
+    default_collision_tileset_pointer = 0
+    rooms.each do |other_room|
+      other_room_main_layer = other_room.layers.first
+      if other_room_main_layer.layer_metadata_ram_pointer == 0
+        # Empty layer.
+        next
+      end
+      
+      default_tileset_pointer = other_room_main_layer.tileset_pointer
+      default_tileset_type = other_room_main_layer.tileset_type
+      default_collision_tileset_pointer = other_room_main_layer.collision_tileset_pointer
+      break
+    end
+    
+    main_layer = new_room.layers.first
+    main_layer.tileset_pointer = default_tileset_pointer
+    main_layer.tileset_type = default_tileset_type
+    main_layer.collision_tileset_pointer = default_collision_tileset_pointer
+    main_layer.write_to_rom()
     
     @rooms << new_room
     @room_pointers << new_room_pointer
