@@ -152,7 +152,7 @@ class TilesetEditorDialog < Qt::Dialog
     @palette_page_index = @ui.palette_page_index.text.to_i(16)
     @collision_tileset_pointer = @ui.collision_tileset_pointer.text.to_i(16)
     
-    return if @tileset_pointer == 0 || @gfx_list_pointer == 0 || @palette_page_list_pointer == 0
+    return if @tileset_pointer == 0 || @gfx_list_pointer == 0 || @palette_page_list_pointer == 0 || @collision_tileset_pointer == 0
     
     begin
       @tileset = Tileset.new(@tileset_pointer, @tileset_type, @fs)
