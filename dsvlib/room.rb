@@ -434,6 +434,8 @@ class Room
   end
   
   def write_doors_to_rom
+    return if doors.length == 0 && @original_number_of_doors == 0
+    
     sector.load_necessary_overlay()
     
     if GAME == "hod"
