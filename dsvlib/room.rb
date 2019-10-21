@@ -454,7 +454,7 @@ class Room
       old_length = @original_number_of_doors*Door.data_size + end_marker_size
       new_length = doors.length*Door.data_size + end_marker_size
       
-      if old_length > 0
+      if @original_number_of_doors > 0
         new_door_list_pointer = fs.free_old_space_and_find_new_free_space(door_list_ram_pointer, old_length, new_length, overlay_id)
       else
         new_door_list_pointer = fs.get_free_space(new_length, overlay_id)
