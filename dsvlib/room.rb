@@ -166,6 +166,10 @@ class Room
     if GAME == "hod"
       i = 0
       while true
+        if door_list_ram_pointer == 0
+          break
+        end
+        
         door_pointer = door_list_ram_pointer + i*Door.data_size
         
         dest_room_pointer = fs.read(door_pointer, 4).unpack("V").first
