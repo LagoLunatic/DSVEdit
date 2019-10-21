@@ -116,10 +116,22 @@ class Sector
     # This both saves the room and then reads it to initialize various other things like layers.
     new_room.write_to_rom()
     
-    new_room.layers.each do |layer|
+    new_room.layers.each_with_index do |layer, layer_index|
       layer.opacity = 0x1F
       layer.scroll_mode = 1
-      layer.z_index = 0x16
+      layer.z_index = 0x16 + layer_index
+      
+      if GAME == "hod"
+        layer.bg_control = 0x1D40 + (layer_index << 8)
+        
+        if layer_index == 0
+          layer.visual_effect = 1
+        else
+          layer.visual_effect = 0
+        end
+      elsif GAME == "aos"
+        layer.bg_control = 0x1D48 + (layer_index << 8)
+      end
       layer.write_layer_list_entry_to_rom()
     end
     
