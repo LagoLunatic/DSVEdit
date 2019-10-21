@@ -26,9 +26,6 @@ begin
   begin
     $qApp.exec
   rescue StandardError => e
-    logger = Logger.new("crashlog.txt")
-    logger.error e
-    
     window.save_settings()
     
     if window.game && window.game.fs && window.game.fs.has_uncommitted_changes?
@@ -40,6 +37,9 @@ begin
     raise e
   end
 rescue ScriptError, StandardError => e
+  logger = Logger.new("crashlog.txt")
+  logger.error e
+  
   unless DEBUG
     $qApp = Qt::Application.new(ARGV)
     msg = "DSVEdit has crashed.\nPlease report this bug with a screenshot of this error:\n\n"
