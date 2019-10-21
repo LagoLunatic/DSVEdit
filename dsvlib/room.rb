@@ -493,7 +493,7 @@ class Room
     end
     
     @number_of_doors = doors.length
-    write_extra_data_to_rom()
+    write_extra_data_to_rom() if GAME != "hod"
   end
   
   def update_entity_gfx_list
