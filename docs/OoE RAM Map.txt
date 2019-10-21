@@ -942,7 +942,7 @@ there's a switch statement at 02045A84 where it hardcodes the sector and room in
   Used for the world map as well as warp points.
 
 021DD05C,4 - Bitfield.
-  & 00000001 - If this is not set, the player hasn't saved the game once yet?
+  & 00000001 - If this is not set, the player hasn't saved the game once yet.
 
 === 021DD280 - 021FFD9F: Overlays 0-1 (Strings)
 

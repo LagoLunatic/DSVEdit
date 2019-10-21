@@ -112,6 +112,13 @@
 0204D6B0 PlaySfx???2
 0205C798 PlaySong
   ; r0 - Song index
+0204D4E4 PlaySongWithVariableUpdates
+  ; r0 - Song index
+  ; Calls PlaySong, then stores the song index to 0213D654 and 0213D65C (the song about to be played and the song currently playing variables).
+0204D374 PlaySongWithVariableUpdatesExceptInBossRush
+  ; r0 - Song index
+  ; If game mode (at 02111F51) is boss rush (4) this will do nothing.
+  ; Otherwise it calls PlaySongWithVariableUpdates.
 021FBA9C PlayCharSwitchVoice
   ; r0 - Player index you're switching from
   ; r1 - Player index you're switching to
