@@ -26,6 +26,11 @@
 .org 0x0221D800
   b @CheckIsKalidusFrontEntranceUnlock
 
+; Remove the code that sets misc flag 0x31 when Var B is 1.
+; That misc flag makes Kalidus be marked as NEW, and instead of that going away when the player enters Kalidus like a normal area, it would only go away after the player has unlocked more than one entrance into Kalidus and opens the screen to select which entrance to use.
+.org 0x0221D81C
+  nop
+
 .close
 
 .open "ftc/overlay9_86", @Overlay86Start
