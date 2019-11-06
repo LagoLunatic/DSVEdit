@@ -504,7 +504,7 @@ class DoSMap < Map
     elsif GAME == "aos" || GAME == "hod"
       warp_room_list_start = fs.read(WARP_ROOM_LIST_POINTER_HARDCODED_LOCATIONS.first, 4).unpack("V").first
       
-      if warp_rooms.length > 0x20
+      if GAME == "aos" && warp_rooms.length > 0x20
         raise "Too many warp rooms. AoS supports a maximum of 32 warps."
       end
       

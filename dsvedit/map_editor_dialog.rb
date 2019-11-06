@@ -379,10 +379,10 @@ class MapEditorDialog < Qt::Dialog
   end
   
   def add_warp
-    if @map.warp_rooms.length >= 0x20
+    if GAME == "aos" && @map.warp_rooms.length >= 0x20
       Qt::MessageBox.warning(self,
         "Cannot add warp",
-        "Cannot add more warps. 32 is the maximum number of warp rooms."
+        "Cannot add more warps. 32 is the maximum number of warp rooms AoS supports."
       )
       return
     end

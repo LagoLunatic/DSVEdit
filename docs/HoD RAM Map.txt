@@ -79,6 +79,7 @@
   00000001 - Disables controls. Used while going through doors, warping, etc.
   00000008 - Makes the screen flash white? Related to subweapon's "Unknown" field?
   00000020 - Set during events?
+  00000040 - Set during warping?
   00000200 - Set while warping and during events?
   00000400 - Set during ending event?
   00008000 - Set during ending event?
