@@ -530,6 +530,8 @@ class Game
       transition_rooms = transition_room_pointers.map do |pointer|
         get_room_by_metadata_pointer(pointer)
       end
+    elsif GAME == "hod"
+      # Do nothing, HoD has no transition rooms.
     else
       areas.each_with_index do |area, area_index|
         map = get_map(area_index, 0)

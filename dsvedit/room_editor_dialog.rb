@@ -69,6 +69,9 @@ class RoomEditorDialog < Qt::Dialog
       field_item = @ui.formLayout.itemAt(3, Qt::FormLayout::FieldRole)
       @ui.formLayout.removeItem(field_item)
     end
+    if !["dos", "aos"].include?(GAME)
+      @ui.is_transition_room.hide()
+    end
     
     if !["por", "ooe"].include?(GAME)
       @ui.palette_page_index.enabled = false
@@ -113,6 +116,11 @@ class RoomEditorDialog < Qt::Dialog
     
     @position_indicator = @map_graphics_scene.addRect(-2, -2, 4, 4, Qt::Pen.new(Qt::NoPen), Qt::Brush.new(Qt::Color.new(255, 255, 128, 128)))
     update_room_position_indicator()
+    
+    if !["dos", "aos"].include?(GAME)
+      transition_rooms = game.get_transition_rooms()
+      @ui.is_transition_room.setChecked(transition_rooms.include?(@room))
+    end
   end
   
   def update_room_position_indicator
@@ -167,6 +175,23 @@ class RoomEditorDialog < Qt::Dialog
     @room.write_to_rom()
     
     @game.fix_map_sector_and_room_indexes(@room.area_index, @room.sector_index)
+    
+    if ["dos", "aos"].include?(GAME)
+      begin
+        if @ui.is_transition_room.checked
+          game.mark_room_as_transition_room(@room)
+        else
+          game.unmark_room_as_transition_room(@room)
+        end
+        
+        parent.load_map()
+      rescue FreeSpaceManager::FreeSpaceFindError => e
+        Qt::MessageBox.warning(self,
+          "Failed to find free space",
+          "Failed to find free space for marking this room as a transition room.\n(Any other changes you made to this room's properties besides being a transition room were still saved.)\n\n#{NO_FREE_SPACE_MESSAGE}"
+        )
+      end
+    end
     
     read_room()
     parent.load_room_and_states()
