@@ -589,7 +589,7 @@
   ; r2 - Asset index
 
 020125A4 MagicSealOrItemPickupUpdate?
-02215F5C MagicSealDraw?
+02215F5C MagicSealUpdate
 
 021D9668 ActorSpawn
 021D9288 ActorSetVelocity

@@ -792,25 +792,28 @@ Stuff related to currently loaded tilesets:
 Abyss tele destination data for taking you to the Abyss:
 0222BE04,1 - Sector index
 0222BE05,1 - Room index
+0222BE06,2 - Sprite frame index for this teleporter to use.
 0222BE08,2 - X pos
 0222BE0A,2 - Y pos
 
 Abyss tele destination data for taking you out of the Abyss:
 0222BE0C,1 - Sector index
 0222BE0D,1 - Room index
+0222BE0E,2 - Sprite frame index for this teleporter to use.
 0222BE10,2 - X pos
 0222BE12,2 - Y pos
 
 Abyss tele destination data for Soma mode final boss:
 0222BE14,1 - Sector index
 0222BE15,1 - Room index
-0222BE16,2 - ???
+0222BE16,2 - Sprite frame index for this teleporter to use.
 0222BE18,2 - X pos
 0222BE1A,2 - Y pos
 
 Abyss tele destination data for Julius mode final boss:
 0222BE1C,1 - Sector index
 0222BE1D,1 - Room index
+0222BE1E,2 - Sprite frame index for this teleporter to use.
 0222BE20,2 - X pos
 0222BE22,2 - Y pos
 
@@ -942,6 +945,9 @@ Here's what each actor is (index, special object id, description):
 
 === 0223073F: End of Overlay 0
 
+02230744,4 - Has a pointer to the Condemned Towers breakable floors object (special object type 18) in the current room, or 0 for none.
+  This is what Gergoth uses to tell the floor to start breaking.
+
 02298D9C
 
 022B9F48-022C675F - palette data.
@@ -977,8 +983,8 @@ Here's what each actor is (index, special object id, description):
 
 02348C00 - when drawing your name, the pixel data is here. changing this doesn't change what's on screen, but does affect whether you can press the OK button or not. also, if you start a new game and then save, it will actually be the displayed signature.
 
-027FFDA0,4 - Has a pointer to 02308920, the start of asset memory
-027FFDC4,4 - Has a pointer to 023C0000, the end of asset memory.
+023FFDA0,4 - Has a pointer to 02308920, the start of asset memory
+023FFDC4,4 - Has a pointer to 023C0000, the end of asset memory.
 
 === 02A00000 - 02A063BF: Rest of ARM9 (except missing 0x98 bytes at the end)
 

@@ -1086,8 +1086,8 @@ Asset format:
 
 023FFC20 - Number times the player has soft reset the game with select+start+L+R. If this is greater than 0, the game skips showing the Nintendo/Konami/Actimagine/ESRB logos as well as the intro movie on startup.
 
-027FFDA0,4 - Has a pointer to 022EB1A0, the start of asset memory
-027FFDC4,4 - Has a pointer to 023E0000, the end of asset memory.
+023FFDA0,4 - Has a pointer to 022EB1A0, the start of asset memory
+023FFDC4,4 - Has a pointer to 023E0000, the end of asset memory.
 
 === 02900000 - 0290103F: Some of ARM9
 === 02A00000 - 02A0726F: Some of ARM9

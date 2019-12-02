@@ -1165,8 +1165,8 @@ Format of extra entity memory used for portrait paintings:
 
 === 023E0000 - 023F7CBF: Some of /dwc/utility.bin (for wifi)
 
-027FFDA0,4 - Has a pointer to 02308EC0, the start of asset memory
-027FFDC4,4 - Has a pointer to 023E0000, the end of asset memory.
+023FFDA0,4 - Has a pointer to 02308EC0, the start of asset memory
+023FFDC4,4 - Has a pointer to 023E0000, the end of asset memory.
 
 === 02900000 - 02900650: Some of ARM9
 === 02A00000 - 02A063FF: Some of ARM9

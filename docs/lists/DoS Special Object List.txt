@@ -207,7 +207,11 @@ Special objects:
     0 has a door on the left.
     1 has a door on the right.
 31 Warp room, works just like save room.
-32 Room that transports you to the abyss.
+32 Abyss teleporter.
+  Var A: Affects which sprite frame to use for the teleporter, and which teleport destination to use:
+    0 Teleports you to the first room of the Abyss.
+    1 Teleports you to the last room of Mine of Judgement.
+    2 Teleports you to the final boss room. Menace if in Soma mode, or Somacula if in Julius mode.
 33 The 3D background model for either the Lost Village or the Pinnacle.
   The model is chosen automatically depending on what sector you're in.
   Var A: Which camera angle to view the model from. 0 to 4.
