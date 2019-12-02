@@ -18,11 +18,15 @@
   
   ; Overrides the X/Y pos loaded from the save file.
   ; Unlike the DSVanias these are halfwords.
-  ldr r1, =02000338h
+  ldr r1, =02000334h
+  ldr r0, =100h
+  strh r0, [r1] ; Screen's X pos
+  ldr r0, =200h
+  strh r0, [r1,2h] ; Screen's Y pos
   ldr r0, =80h
-  strh r0, [r1]
+  strh r0, [r1,4h] ; Player's X pos on the screen
   ldr r0, =60h
-  strh r0, [r1,2h]
+  strh r0, [r1,6h] ; Player's Y pos on the screen
   
   ; Return 4 so the state manager changes the state to ingame.
   mov r0, 4h

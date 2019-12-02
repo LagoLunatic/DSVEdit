@@ -1263,15 +1263,14 @@ class DSVEdit < Qt::MainWindow
     scene_pos = @ui.room_graphics_view.mapToScene(@ui.room_graphics_view.mapFromGlobal(Qt::Cursor.pos))
     x_pos = scene_pos.x
     y_pos = scene_pos.y
-    room_width = @room.main_layer_width * SCREEN_WIDTH_IN_PIXELS
-    room_height = @room.main_layer_height * SCREEN_HEIGHT_IN_PIXELS
-    if x_pos < 0 || y_pos < 0 || x_pos >= room_width || y_pos >= room_height
-      x_pos = 0x80
-      y_pos = 0x60
-    end
     game.start_test_room(save_file_index, @area_index, @sector_index, @room_index, @room.room_metadata_ram_pointer, x_pos, y_pos)
     
     write_to_rom(launch_emulator = true)
+  rescue StandardError => e
+    Qt::MessageBox.warning(self,
+      "Error",
+      "Test room failed with error:\n#{e.message}\n\n#{e.backtrace.join("\n")}"
+    )
   end
   
   def open_about

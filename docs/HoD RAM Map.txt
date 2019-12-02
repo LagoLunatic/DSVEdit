@@ -123,6 +123,11 @@ D0-EF  02006C18-02007C17  ?
     0D - Layer 01 will be transparent.
     0F - Layer 00 will be transparent.
 
+0200A444,4 - X pos of the left of the camera in subpixels.
+0200A448,4 - Y pos of the top of the camera in subpixels.
+0200A44C,4 - X velocity of the camera in subpixels.
+0200A450,4 - Y velocity of the camera in subpixels. 
+
 0201444C - Bitfield of which tiles in the current room are breakable wall tiles.
 
 0201524D,1 - "Has Breakable Wall" flag copied from the current room's room data. 0 or 1.

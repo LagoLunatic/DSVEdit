@@ -744,10 +744,9 @@ class Game
     
     fs.load_overlay(TEST_ROOM_OVERLAY) if TEST_ROOM_OVERLAY
     
-    if SYSTEM == :nds
-      x_pos *= 0x1000
-      y_pos *= 0x1000
-    end
+    room = areas[area_index].sectors[sector_index].rooms[room_index]
+    room_width_in_pixels = room.width * SCREEN_WIDTH_IN_PIXELS
+    room_height_in_pixels = room.height * SCREEN_HEIGHT_IN_PIXELS
     
     if GAME == "aos"
       save_file_index *= 2
@@ -755,16 +754,91 @@ class Game
     
     fs.write(TEST_ROOM_SAVE_FILE_INDEX_LOCATION, [save_file_index].pack("C")) if TEST_ROOM_SAVE_FILE_INDEX_LOCATION
     
-    if GAME == "hod"
-      fs.write(TEST_ROOM_POINTER_LOCATION, [room_pointer].pack("V"))
-      fs.write(TEST_ROOM_X_POS_LOCATION          , [x_pos].pack("v"))
-      fs.write(TEST_ROOM_Y_POS_LOCATION          , [y_pos].pack("v"))
-    else
-      fs.write(TEST_ROOM_AREA_INDEX_LOCATION     , [area_index].pack("C")) if TEST_ROOM_AREA_INDEX_LOCATION
-      fs.write(TEST_ROOM_SECTOR_INDEX_LOCATION   , [sector_index].pack("C"))
-      fs.write(TEST_ROOM_ROOM_INDEX_LOCATION     , [room_index].pack("C"))
-      fs.write(TEST_ROOM_X_POS_LOCATION          , [x_pos].pack("V"))
-      fs.write(TEST_ROOM_Y_POS_LOCATION          , [y_pos].pack("V"))
+    if SYSTEM == :nds
+      # Clamp position within the room.
+      if x_pos < 0 || y_pos < 0 || x_pos >= room_width_in_pixels || y_pos >= room_height_in_pixels
+        x_pos = 0x80
+        y_pos = 0x60
+      end
+      
+      fs.write(TEST_ROOM_AREA_INDEX_LOCATION  , [area_index].pack("C")) if TEST_ROOM_AREA_INDEX_LOCATION
+      fs.write(TEST_ROOM_SECTOR_INDEX_LOCATION, [sector_index].pack("C"))
+      fs.write(TEST_ROOM_ROOM_INDEX_LOCATION  , [room_index].pack("C"))
+      fs.write(TEST_ROOM_X_POS_LOCATION       , [x_pos*0x1000].pack("V"))
+      fs.write(TEST_ROOM_Y_POS_LOCATION       , [y_pos*0x1000].pack("V"))
+    else # GBA
+      if GAME == "hod"
+        fs.write(TEST_ROOM_POINTER_LOCATION     , [room_pointer].pack("V"))
+      else # AoS
+        fs.write(TEST_ROOM_SECTOR_INDEX_LOCATION, [sector_index].pack("C"))
+        fs.write(TEST_ROOM_ROOM_INDEX_LOCATION  , [room_index].pack("C"))
+      end
+      
+      # For the GBA games we need to store two separate positions: the camera's position for scrolling the screen, and the player's position on the screen.
+      # To do this properly we need to emulate how the game's camera works a little bit.
+      
+      # The camera doesn't get within 16 pixels of the right of the room if it's only one screen wide
+      room_width_in_pixels -= 16 if room.width == 1
+      if GAME == "aos"
+        # The camera doesn't get within 48 pixels of the top or bottom of the room
+        room_height_in_pixels -= 48*2
+      else # HoD
+        # The camera doesn't get within 96 pixels of the bottom of the room if it's only one screen tall
+        room_height_in_pixels -= 96 if room.height == 1
+      end
+      
+      # Clamp position within the room.
+      if GAME == "aos"
+        if x_pos < 0 || y_pos < 48 || x_pos >= room_width_in_pixels || y_pos-48 >= room_height_in_pixels
+          x_pos = 0x80
+          y_pos = 0x80
+        end
+      else # HoD
+        if x_pos < 0 || y_pos < 0 || x_pos >= room_width_in_pixels || y_pos >= room_height_in_pixels
+          x_pos = 0x80
+          y_pos = 0x60
+        end
+      end
+      
+      player_x_pos_on_screen = 120
+      if GAME == "aos"
+        player_y_pos_on_screen = 111
+      else # HoD
+        player_y_pos_on_screen = 96
+      end
+      
+      camera_center_x_pos = x_pos
+      camera_center_y_pos = y_pos
+      if GAME == "aos"
+        # The camera doesn't get within 48 pixels of the top of the room, so adjust the clicked Y position to account for this
+        camera_center_y_pos -= 48
+      end
+      # Also account for the height difference between the center of the screen and where the player's feet are when the camera is centered
+      camera_center_y_pos -= (player_y_pos_on_screen - 80)
+      
+      screen_x_pos = camera_center_x_pos - 120
+      screen_y_pos = camera_center_y_pos - 80
+      if screen_x_pos < 0
+        player_x_pos_on_screen += screen_x_pos
+        screen_x_pos = 0
+      end
+      if screen_y_pos < 0
+        player_y_pos_on_screen += screen_y_pos
+        screen_y_pos = 0
+      end
+      if screen_x_pos + 240 > room_width_in_pixels
+        player_x_pos_on_screen -= ((room_width_in_pixels - 240) - screen_x_pos)
+        screen_x_pos = room_width_in_pixels - 240
+      end
+      if screen_y_pos + 160 > room_height_in_pixels
+        player_y_pos_on_screen -= ((room_height_in_pixels - 160) - screen_y_pos)
+        screen_y_pos = room_height_in_pixels - 160
+      end
+      
+      fs.write(TEST_ROOM_SCREEN_X_POS_LOCATION, [screen_x_pos].pack("V"))
+      fs.write(TEST_ROOM_SCREEN_Y_POS_LOCATION, [screen_y_pos].pack("V"))
+      fs.write(TEST_ROOM_X_POS_LOCATION       , [player_x_pos_on_screen].pack("V"))
+      fs.write(TEST_ROOM_Y_POS_LOCATION       , [player_y_pos_on_screen].pack("V"))
     end
     
     # In OoE the test room overlay and area overlay are loaded at the same spot.

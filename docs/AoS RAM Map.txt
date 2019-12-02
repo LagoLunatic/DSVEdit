@@ -44,8 +44,11 @@
 
 020000B4 - List of map tiles you've explored. Each takes up 1 bit.
 
-02000336,2 - ?
-  Initialized to 200 on starting a new game. That initial value is at 084F0D92 in ROM.
+02000334,2 - Camera's X pos to load from the save.
+02000336,2 - Camera's Y pos to load from the save.
+  Initialized to 200 on starting a new game. That initial value is at 084F0D92 in ROM. (or actually at 084F0D90?)
+02000338,2 - Player's X pos on the screen to load from the save.
+0200033A,2 - Player's Y pos on the screen to load from the save.
 
 0200033C - Event flags.
 
