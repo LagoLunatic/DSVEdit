@@ -330,6 +330,11 @@ class Room
   def write_entities_to_rom
     sector.load_necessary_overlay()
     
+    if entity_list_ram_pointer == 0 && GAME == "hod" && entities.length == 0
+      # No entities before or after, so nothing to save.
+      return
+    end
+    
     if GAME == "hod"
       entity_list_pointer_location = room_metadata_ram_pointer+6*4
     else
