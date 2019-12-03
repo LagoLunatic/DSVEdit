@@ -443,12 +443,6 @@ class Room
     
     sector.load_necessary_overlay()
     
-    if GAME == "hod"
-      end_marker_size = 4
-    else
-      end_marker_size = 0
-    end
-    
     if doors.length > @original_number_of_doors
       # Repoint the door list so there's room for more doors without overwriting anything.
       # Doors are originally stored in the arm9 file, but we can't expand that. Instead put them into an overlay file, which can be expanded.
@@ -458,8 +452,8 @@ class Room
         raise WriteError.new("Cannot add new doors to a room with no layers. Add a new layer first.")
       end
       
-      old_length = @original_number_of_doors*Door.data_size + end_marker_size
-      new_length = doors.length*Door.data_size + end_marker_size
+      old_length = @original_number_of_doors*Door.data_size
+      new_length = doors.length*Door.data_size
       
       if @original_number_of_doors > 0
         new_door_list_pointer = fs.free_old_space_and_find_new_free_space(door_list_ram_pointer, old_length, new_length, overlay_id)
@@ -476,8 +470,8 @@ class Room
         fs.write(room_metadata_ram_pointer+6*4, [door_list_ram_pointer].pack("V"))
       end
     elsif doors.length < @original_number_of_doors
-      old_length = @original_number_of_doors*Door.data_size + end_marker_size
-      new_length = doors.length*Door.data_size + end_marker_size
+      old_length = @original_number_of_doors*Door.data_size
+      new_length = doors.length*Door.data_size
       
       fs.free_unused_space(door_list_ram_pointer + new_length, old_length - new_length)
       
@@ -490,11 +484,6 @@ class Room
       door.write_to_rom()
       
       new_door_pointer += Door.data_size
-    end
-    
-    if GAME == "hod"
-      end_marker_location = door_list_ram_pointer + doors.length*Door.data_size
-      fs.write(end_marker_location, [0].pack("V")) # Marks the end of the entity list
     end
     
     @number_of_doors = doors.length
