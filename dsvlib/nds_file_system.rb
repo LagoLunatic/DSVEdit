@@ -434,7 +434,7 @@ class NDSFileSystem
   end
   
   def is_pointer?(value)
-    value >= 0x02000000 && value < 0x03000000
+    value >= 0x02000000 && value < 0x02400000
   end
   
   def commit_changes(base_directory = @filesystem_directory)
