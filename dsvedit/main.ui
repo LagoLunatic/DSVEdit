@@ -162,8 +162,8 @@
         <rect>
          <x>0</x>
          <y>0</y>
-         <width>991</width>
-         <height>693</height>
+         <width>996</width>
+         <height>707</height>
         </rect>
        </property>
        <layout class="QVBoxLayout" name="verticalLayout_2">
@@ -182,7 +182,7 @@
      <x>0</x>
      <y>0</y>
      <width>1280</width>
-     <height>26</height>
+     <height>21</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -217,6 +217,7 @@
     <addaction name="actionApply_ARMIPS_Patch"/>
     <addaction name="actionAdd_Overlay"/>
     <addaction name="actionEntity_Search"/>
+    <addaction name="actionAddress_Converter"/>
     <addaction name="actionSettings"/>
    </widget>
    <widget class="QMenu" name="menuBuild">
@@ -539,6 +540,11 @@
   <action name="actionAdd_Room">
    <property name="text">
     <string>Add Room</string>
+   </property>
+  </action>
+  <action name="actionAddress_Converter">
+   <property name="text">
+    <string>Address Converter</string>
    </property>
   </action>
  </widget>

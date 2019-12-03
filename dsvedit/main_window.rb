@@ -11,6 +11,7 @@ require_relative 'settings_dialog'
 require_relative 'sprite_editor_dialog'
 require_relative 'item_editor_dialog'
 require_relative 'entity_search_dialog'
+require_relative 'address_converter_dialog'
 require_relative 'icon_chooser_dialog'
 require_relative 'map_editor_dialog'
 require_relative 'entity_editor_dialog'
@@ -64,6 +65,7 @@ class DSVEdit < Qt::MainWindow
   slots "open_item_pool_editor()"
   slots "open_tileset_editor()"
   slots "open_entity_search()"
+  slots "open_address_converter()"
   slots "open_map_editor()"
   slots "open_player_editor()"
   slots "open_player_state_anims_editor()"
@@ -155,6 +157,7 @@ class DSVEdit < Qt::MainWindow
     connect(@ui.actionApply_ARMIPS_Patch, SIGNAL("activated()"), self, SLOT("open_armips_patcher()"))
     connect(@ui.actionAdd_Overlay, SIGNAL("activated()"), self, SLOT("add_new_overlay()"))
     connect(@ui.actionEntity_Search, SIGNAL("activated()"), self, SLOT("open_entity_search()"))
+    connect(@ui.actionAddress_Converter, SIGNAL("activated()"), self, SLOT("open_address_converter()"))
     connect(@ui.actionSettings, SIGNAL("activated()"), self, SLOT("open_settings()"))
     connect(@ui.actionBuild, SIGNAL("activated()"), self, SLOT("write_to_rom()"))
     connect(@ui.actionBuild_and_Run, SIGNAL("activated()"), self, SLOT("build_and_run()"))
@@ -225,6 +228,7 @@ class DSVEdit < Qt::MainWindow
     @ui.actionApply_ARMIPS_Patch.setEnabled(false);
     @ui.actionAdd_Overlay.setEnabled(false);
     @ui.actionEntity_Search.setEnabled(false);
+    @ui.actionAddress_Converter.setEnabled(false);
     @ui.actionBuild.setEnabled(false);
     @ui.actionBuild_and_Run.setEnabled(false);
     @ui.actionBuild_and_Test.setEnabled(false);
@@ -262,6 +266,7 @@ class DSVEdit < Qt::MainWindow
     @ui.actionApply_ARMIPS_Patch.setEnabled(true);
     @ui.actionAdd_Overlay.setEnabled(true);
     @ui.actionEntity_Search.setEnabled(true);
+    @ui.actionAddress_Converter.setEnabled(true);
     @ui.actionBuild.setEnabled(true);
     @ui.actionBuild_and_Run.setEnabled(true);
     @ui.actionBuild_and_Test.setEnabled(true);
@@ -914,6 +919,15 @@ class DSVEdit < Qt::MainWindow
   
   def open_entity_search
     @open_dialogs << EntitySearchDialog.new(self)
+  end
+  
+  def open_address_converter
+    if SYSTEM == :gba
+      Qt::MessageBox.warning(self, "Can't convert addresses", "The address converter only works for the NDS games.\nGBA games do not load files into RAM, so converting addresses isn't needed.")
+      return
+    end
+    
+    @open_dialogs << AddressConverterDialog.new(self)
   end
   
   def open_map_editor
