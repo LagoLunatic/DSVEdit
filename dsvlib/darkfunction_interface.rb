@@ -347,7 +347,6 @@ class DarkFunctionInterface
         frame_delay = FrameDelay.new
         frame_delay.delay = df_cell["delay"].to_i
         frame_delay.frame_index = unanimated_frame_index
-        sprite.frame_delays << frame_delay
         animation.frame_delays << frame_delay
       end
     end
@@ -374,7 +373,6 @@ class DarkFunctionInterface
       df_cells.each do |df_cell|
         frame_delay = FrameDelay.new
         frame_delay.delay = df_cell["delay"].to_i
-        sprite.frame_delays << frame_delay
         animation.frame_delays << frame_delay
         
         frame, this_frames_unique_part_and_hitbox_strs = import_frame(
@@ -414,6 +412,12 @@ class DarkFunctionInterface
       else
         sprite.parts.concat(frame.parts)
         sprite.hitboxes.concat(frame.hitboxes)
+      end
+    end
+    
+    sprite.animations.each do |animation|
+      animation.frame_delays.each do |frame_delay|
+        sprite.frame_delays << frame_delay
       end
     end
     
