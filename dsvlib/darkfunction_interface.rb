@@ -404,14 +404,24 @@ class DarkFunctionInterface
     
     all_created_frames.each_with_index do |frame, i|
       if frame.nil?
-        # A blank spot caused by the user reducing the number of frames, but an unanimated frame remaining that we have to keep in place.
-        # Create a dummy frame to get rid of the blank spot.
+        # A blank spot caused by the user reducing the number of frames, but an unanimated frame remains that we have to keep in place.
+        # Create a dummy frame to fill in the blank spot.
         frame_index = i
         frame = Frame.new
         sprite.frames[frame_index] = frame
       else
         sprite.parts.concat(frame.parts)
         sprite.hitboxes.concat(frame.hitboxes)
+      end
+    end
+    
+    sprite.animations.each_with_index do |animation, i|
+      if animation.nil?
+        # A blank spot caused by the user reducing the number of animations, but an unanimated animation remains that we have to keep in place.
+        # Create a dummy animation to fill in the blank spot.
+        animation_index = i
+        animation = Animation.new
+        sprite.animations[animation_index] = animation
       end
     end
     
