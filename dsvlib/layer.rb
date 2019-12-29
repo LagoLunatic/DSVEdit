@@ -284,16 +284,25 @@ class RoomLayer
       fs.write(layer_list_entry_ram_pointer+6, [height*0xC0].pack("v")) if GAME == "dos"
       fs.write(layer_list_entry_ram_pointer+8, [main_gfx_page_index].pack("C"))
       fs.write(layer_list_entry_ram_pointer+12, [layer_metadata_ram_pointer].pack("V"))
-    elsif GAME == "aos"
-      fs.write(layer_list_entry_ram_pointer+1, [scroll_mode].pack("C"))
-      fs.write(layer_list_entry_ram_pointer+2, [bg_control].pack("v"))
-      fs.write(layer_list_entry_ram_pointer+6, [height*0x100].pack("v")) # Unlike in DoS this doesn't seem necessary for jumpthrough platforms to work, but do it anyway.
-      fs.write(layer_list_entry_ram_pointer+4, [main_gfx_page_index].pack("C"))
-      fs.write(layer_list_entry_ram_pointer+8, [layer_metadata_ram_pointer].pack("V"))
-    else # HoD
-      fs.write(layer_list_entry_ram_pointer+1, [visual_effect].pack("C"))
-      fs.write(layer_list_entry_ram_pointer+2, [bg_control].pack("v"))
-      fs.write(layer_list_entry_ram_pointer+4, [layer_metadata_ram_pointer].pack("V"))
+    else # GBA
+      # Force the screen base block value in the BG control to the correct value.
+      # There's no reason the user would need this to be changed to an incorrect value.
+      # Also, because of the hack DSVEdit uses for detecting where a door list ends in HoD, we need to be 100% sure the BG control can't resemble the start of a pointer. If the user could change the screen base block freely they could theoretically set it to something that looks like a pointer.
+      layer_index = room.layers.index(self)
+      @bg_control &= ~0x1F00
+      @bg_control |= (0x1D + layer_index) << 8
+      
+      if GAME == "aos"
+        fs.write(layer_list_entry_ram_pointer+1, [scroll_mode].pack("C"))
+        fs.write(layer_list_entry_ram_pointer+2, [bg_control].pack("v"))
+        fs.write(layer_list_entry_ram_pointer+6, [height*0x100].pack("v")) # Unlike in DoS this doesn't seem necessary for jumpthrough platforms to work, but do it anyway.
+        fs.write(layer_list_entry_ram_pointer+4, [main_gfx_page_index].pack("C"))
+        fs.write(layer_list_entry_ram_pointer+8, [layer_metadata_ram_pointer].pack("V"))
+      else # HoD
+        fs.write(layer_list_entry_ram_pointer+1, [visual_effect].pack("C"))
+        fs.write(layer_list_entry_ram_pointer+2, [bg_control].pack("v"))
+        fs.write(layer_list_entry_ram_pointer+4, [layer_metadata_ram_pointer].pack("V"))
+      end
     end
   end
   

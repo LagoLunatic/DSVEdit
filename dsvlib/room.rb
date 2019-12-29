@@ -441,16 +441,58 @@ class Room
   def write_doors_to_rom
     return if doors.length == 0 && @original_number_of_doors == 0
     
+    if doors.length > @original_number_of_doors && layers.empty?
+      raise WriteError.new("Cannot add new doors to a room with no layers. Add a new layer first.")
+    end
+    
     sector.load_necessary_overlay()
     
-    if doors.length > @original_number_of_doors
+    if GAME == "hod"
+      # We handle saving HoD doors differently from the other games.
+      # In HoD, the number of doors a room has isn't stored anywhere.
+      # So in order for DSVEdit to be able to accurately detect when to stop reading doors, we need to ensure the word immediately following the final door is not in the 0x08000000-0x08FFFFFF range, because that would look like the start of another door.
+      # The way we accomplish this is by always moving the room's layer list to right after the door list every time the door list is saved.
+      # (Also, when saving the layer list in HoD, we also automatically set some bits in the BG control value to the value they should be for that layer, just to avoid the user manually editing the BG control and making it look like the start of a door, causing the issue again.)
+      
+      old_length = @original_number_of_doors*Door.data_size
+      new_length_needed = doors.length*Door.data_size
+      
+      layer_list_length = Room.max_number_of_layers*RoomLayer.layer_list_entry_size
+      new_length_needed += layer_list_length
+      
+      old_layer_list_data_backup = fs.read(layer_list_ram_pointer, layer_list_length)
+      fs.free_unused_space(layer_list_ram_pointer, layer_list_length)
+      
+      begin
+        if @original_number_of_doors > 0
+          new_door_list_pointer = fs.free_old_space_and_find_new_free_space(door_list_ram_pointer, old_length, new_length_needed, overlay_id)
+        else
+          new_door_list_pointer = fs.get_free_space(new_length_needed, overlay_id)
+        end
+      rescue FreeSpaceManager::FreeSpaceFindError => e
+        # If there's an error grabbing free space here, we need to revert the layer list back to how it was as well.
+        fs.write(layer_list_ram_pointer, old_layer_list_data_backup)
+        raise e
+      end
+      
+      @door_list_ram_pointer = new_door_list_pointer
+      
+      # Then actually move the layer list data to the new location after the door list.
+      @layer_list_ram_pointer = door_list_ram_pointer + doors.length*Door.data_size
+      fs.write(room_metadata_ram_pointer+2*4, [layer_list_ram_pointer].pack("V"))
+      
+      layers.each_with_index do |layer, layer_i|
+        layer.layer_list_entry_ram_pointer = @layer_list_ram_pointer + layer_i*RoomLayer.layer_list_entry_size
+        layer.write_layer_list_entry_to_rom()
+      end
+      
+      if doors.length == 0
+        @door_list_ram_pointer = 0
+      end
+    elsif doors.length > @original_number_of_doors
       # Repoint the door list so there's room for more doors without overwriting anything.
       # Doors are originally stored in the arm9 file, but we can't expand that. Instead put them into an overlay file, which can be expanded.
       # We use the same overlay that the the room's layers are stored on.
-      
-      if layers.empty?
-        raise WriteError.new("Cannot add new doors to a room with no layers. Add a new layer first.")
-      end
       
       old_length = @original_number_of_doors*Door.data_size
       new_length = doors.length*Door.data_size
@@ -461,21 +503,20 @@ class Room
         new_door_list_pointer = fs.get_free_space(new_length, overlay_id)
       end
       
-      @original_number_of_doors = doors.length
-      
       @door_list_ram_pointer = new_door_list_pointer
-      if GAME == "hod"
-        fs.write(room_metadata_ram_pointer+7*4, [door_list_ram_pointer].pack("V"))
-      else
-        fs.write(room_metadata_ram_pointer+6*4, [door_list_ram_pointer].pack("V"))
-      end
     elsif doors.length < @original_number_of_doors
       old_length = @original_number_of_doors*Door.data_size
       new_length = doors.length*Door.data_size
       
       fs.free_unused_space(door_list_ram_pointer + new_length, old_length - new_length)
-      
-      @original_number_of_doors = doors.length
+    end
+    
+    @original_number_of_doors = doors.length
+    
+    if GAME == "hod"
+      fs.write(room_metadata_ram_pointer+7*4, [door_list_ram_pointer].pack("V"))
+    else
+      fs.write(room_metadata_ram_pointer+6*4, [door_list_ram_pointer].pack("V"))
     end
     
     new_door_pointer = door_list_ram_pointer
