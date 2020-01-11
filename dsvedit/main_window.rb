@@ -1040,6 +1040,11 @@ class DSVEdit < Qt::MainWindow
     
     game.add_new_overlay()
     
+    #new_overlay_path = "/ftc/overlay9_#{NEW_OVERLAY_ID}"
+    #new_overlay_file = game.fs.files_by_path[new_overlay_path]
+    #new_overlay_size = new_overlay_file[:size]
+    #game.fs.mark_space_unused(new_overlay_path, new_overlay_size, NEW_OVERLAY_FREE_SPACE_MAX_SIZE-new_overlay_size)
+    
     msg = "Successfully added new overlay /ftc/overlay9_#{NEW_OVERLAY_ID}.\n\n"
     msg << "This overlay will be loaded at %08X in RAM. The maximum size you can make this overlay is %08X bytes.\n\n" % [NEW_OVERLAY_FREE_SPACE_START, NEW_OVERLAY_FREE_SPACE_MAX_SIZE]
     msg << "If you are going to manually modify this file in a hex editor, only do so while DSVEdit is closed. DSVEdit may not notice files changed while it's open."
