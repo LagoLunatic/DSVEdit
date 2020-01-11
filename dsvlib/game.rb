@@ -122,6 +122,20 @@ class Game
     room
   end
   
+  def get_room_by_metadata_pointer_dont_load_from_rom(room_metadata_pointer)
+    sector = @sectors_by_room_metadata_pointer[room_metadata_pointer]
+    if sector.nil?
+      raise RoomFindError.new("Error: %08X does not point to a valid room." % room_metadata_pointer)
+    end
+    if sector.rooms_list_read_from_rom_yet
+      index = sector.room_pointers.index(room_metadata_pointer)
+      room = sector.rooms[index]
+      room
+    else
+      nil
+    end
+  end
+  
   def room_by_str(room_str)
     room_str =~ /^(\h\h)-(\h\h)-(\h\h)$/
     area_index, sector_index, room_index = $1.to_i(16), $2.to_i(16), $3.to_i(16)

@@ -10,7 +10,8 @@ class Sector
               :sector_index,
               :room_pointers,
               :rooms,
-              :is_hardcoded
+              :is_hardcoded,
+              :rooms_list_read_from_rom_yet
 
   def initialize(area, sector_index, sector_ram_pointer, game, next_sector_pointer: nil, hardcoded_room_pointers: nil)
     @area = area
@@ -27,6 +28,8 @@ class Sector
     else
       read_room_pointers_from_rom()
     end
+    
+    @rooms_list_read_from_rom_yet = false
   end
   
   def rooms
@@ -228,11 +231,24 @@ private
     load_necessary_overlay()
     
     rooms = []
+    loaded_rooms_by_room_pointer = {}
     room_pointers.each_with_index do |room_pointer, room_index|
-      room = Room.new(self, room_pointer, area.area_index, sector_index, room_index, game)
-      room.read_from_rom()
+      # Avoid instantiating duplicate rooms even if the room list has the same pointer multiple times (e.g. first room of HoD).
+      existing_room_in_this_sector = loaded_rooms_by_room_pointer[room_pointer]
+      existing_room_in_other_sector = game.get_room_by_metadata_pointer_dont_load_from_rom(room_pointer)
+      if existing_room_in_this_sector
+        room = existing_room_in_this_sector
+      elsif existing_room_in_other_sector
+        room = existing_room_in_other_sector
+      else
+        room = Room.new(self, room_pointer, area.area_index, sector_index, room_index, game)
+        room.read_from_rom()
+      end
       rooms << room
+      loaded_rooms_by_room_pointer[room_pointer] = room
     end
+    
+    @rooms_list_read_from_rom_yet = true
     
     rooms
   end
