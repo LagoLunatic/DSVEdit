@@ -174,11 +174,27 @@ class Sector
     
     load_necessary_overlay()
     
+    if GAME == "aos"
+      # AoS is the only game without a null word marking the end of the room pointers list for some reason.
+      end_marker_size = 0
+    else
+      end_marker_size = 4
+    end
+    
+    old_length = (@original_number_of_rooms)*4 + end_marker_size
+    new_length = (room_pointers.length)*4 + end_marker_size
+    
+    if GAME == "aos"
+      new_length += 4 # For the custom end marker we'll add.
+      
+      if fs.read(sector_ram_pointer+old_length, 4).unpack("V").first == 0xDEADBEEF
+        # Old list was already relocated once by DSVEdit and has the custom end marker.
+        old_length += 4
+      end
+    end
+    
     if room_pointers.length > @original_number_of_rooms
       # Repoint the room list so there's space for more doors without overwriting anything.
-      
-      old_length = (@original_number_of_rooms+1)*4
-      new_length = (room_pointers.length+1)*4
       
       new_room_list_pointer = fs.free_old_space_and_find_new_free_space(sector_ram_pointer, old_length, new_length, nil)
       
@@ -186,13 +202,20 @@ class Sector
       
       @sector_ram_pointer = new_room_list_pointer
       fs.write(area.area_ram_pointer + sector_index*4, [sector_ram_pointer].pack("V"))
-    elsif room_pointers.length < @original_number_of_rooms
-      old_length = (@original_number_of_rooms+1)*4
-      new_length = (room_pointers.length+1)*4
       
+      if GAME == "aos"
+        # Write a custom end marker so DSVEdit knows when to stop reading the list.
+        fs.write(sector_ram_pointer+new_length-4, [0xDEADBEEF].pack("V"))
+      end
+    elsif room_pointers.length < @original_number_of_rooms
       fs.free_unused_space(sector_ram_pointer + new_length, old_length - new_length)
       
       @original_number_of_rooms = room_pointers.length
+      
+      if GAME == "aos"
+        # Write a custom end marker so DSVEdit knows when to stop reading the list.
+        fs.write(sector_ram_pointer+new_length-4, [0xDEADBEEF].pack("V"))
+      end
     end
     
     offset = sector_ram_pointer
@@ -200,7 +223,9 @@ class Sector
       fs.write(offset, [room_pointer].pack("V"))
       offset += 4
     end
-    fs.write(offset, [0].pack("V")) # End marker
+    if GAME != "aos"
+      fs.write(offset, [0].pack("V")) # End marker
+    end
   end
   
   def inspect; to_s; end
@@ -211,12 +236,15 @@ private
     @room_pointers = []
     room_index = 0
     while true
-      break if sector_ram_pointer + room_index*4 == @next_sector_pointer
+      offset = sector_ram_pointer + room_index*4
+      break if offset == @next_sector_pointer
       
-      room_metadata_ram_pointer = fs.read(sector_ram_pointer + room_index*4, 4).unpack("V*").first
+      room_metadata_ram_pointer = fs.read(offset, 4).unpack("V*").first
       
       break if room_metadata_ram_pointer == 0
-      break if room_metadata_ram_pointer < 0x0850EF9C && GAME == "aos" # TODO: less hacky way to do this
+      break if room_metadata_ram_pointer == 0xDEADBEEF && GAME == "aos" # Used by DSVEdit to signify the end of the rooms list if a new room has been added in AoS.
+      break unless fs.is_pointer?(room_metadata_ram_pointer)
+      break if offset == area.area_ram_pointer && GAME == "aos"
       
       room_pointers << room_metadata_ram_pointer
       
