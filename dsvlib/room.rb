@@ -234,6 +234,7 @@ class Room
   alias y_pos room_ypos_on_map
   
   def initialize_alternate_room_state(alternate_room_state_pointer)
+    @alternate_room_state = nil
     if alternate_room_state_pointer != 0
       begin
         @alternate_room_state = game.get_room_by_metadata_pointer(alternate_room_state_pointer)
@@ -824,6 +825,39 @@ class Room
     write_entities_to_rom()
     
     return entity
+  end
+  
+  def clear_contents
+    @entities = []
+    write_entities_to_rom()
+    
+    @doors = []
+    write_doors_to_rom()
+    
+    layers.each do |layer|
+      layer.clear_contents()
+    end
+    
+    case GAME
+    when "aos"
+      @color_effects = 0
+    when "hod"
+      @palette_shift_func = 0
+      @palette_shift_index = 0
+      @is_castle_b = (sector_index % 2)
+      @has_breakable_wall = 0
+    end
+    if SYSTEM == :gba
+      @lcd_control = 0x1F00
+      @state_swap_event_flag = 0xFFFF
+      @alternate_room_state_pointer = 0
+      
+      if !@alternate_room_state.nil?
+        @alternate_room_state.clear_contents()
+      end
+    end
+    
+    write_to_rom()
   end
   
   def overlay_id

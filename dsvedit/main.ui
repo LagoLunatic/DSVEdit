@@ -254,6 +254,7 @@
     <addaction name="actionAdd_Entity"/>
     <addaction name="actionAdd_Door"/>
     <addaction name="actionAdd_Room"/>
+    <addaction name="actionClear_Room_Contents"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuEdit"/>
@@ -545,6 +546,11 @@
   <action name="actionAddress_Converter">
    <property name="text">
     <string>Address Converter</string>
+   </property>
+  </action>
+  <action name="actionClear_Room_Contents">
+   <property name="text">
+    <string>Clear Room Contents</string>
    </property>
   </action>
  </widget>

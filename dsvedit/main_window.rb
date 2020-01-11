@@ -53,6 +53,7 @@ class DSVEdit < Qt::MainWindow
   slots "add_new_entity()"
   slots "add_new_door()"
   slots "add_new_room()"
+  slots "clear_room_contents()"
   
   slots "update_visible_view_items()"
   
@@ -134,6 +135,7 @@ class DSVEdit < Qt::MainWindow
     connect(@ui.actionAdd_Entity, SIGNAL("activated()"), self, SLOT("add_new_entity()"))
     connect(@ui.actionAdd_Door, SIGNAL("activated()"), self, SLOT("add_new_door()"))
     connect(@ui.actionAdd_Room, SIGNAL("activated()"), self, SLOT("add_new_room()"))
+    connect(@ui.actionClear_Room_Contents, SIGNAL("activated()"), self, SLOT("clear_room_contents()"))
     connect(@ui.actionEntities, SIGNAL("activated()"), self, SLOT("update_visible_view_items()"))
     connect(@ui.actionDoors, SIGNAL("activated()"), self, SLOT("update_visible_view_items()"))
     connect(@ui.actionCollision, SIGNAL("activated()"), self, SLOT("update_visible_view_items()"))
@@ -205,6 +207,7 @@ class DSVEdit < Qt::MainWindow
     @ui.actionAdd_Entity.setEnabled(false);
     @ui.actionAdd_Door.setEnabled(false);
     @ui.actionAdd_Room.setEnabled(false);
+    @ui.actionClear_Room_Contents.setEnabled(false);
     @ui.actionEntities.setEnabled(false);
     @ui.actionDoors.setEnabled(false);
     @ui.actionCollision.setEnabled(false);
@@ -243,6 +246,7 @@ class DSVEdit < Qt::MainWindow
     @ui.actionAdd_Entity.setEnabled(true);
     @ui.actionAdd_Door.setEnabled(true);
     @ui.actionAdd_Room.setEnabled(true);
+    @ui.actionClear_Room_Contents.setEnabled(true);
     @ui.actionEntities.setEnabled(true);
     @ui.actionDoors.setEnabled(true);
     @ui.actionCollision.setEnabled(true);
@@ -841,6 +845,19 @@ class DSVEdit < Qt::MainWindow
       "Failed to find free space",
       "Failed to find free space to put the new room.\n\n#{NO_FREE_SPACE_MESSAGE}"
     )
+  end
+  
+  def clear_room_contents
+    msg = "This option will delete everything inside the current room, from entities to doors to tiles, freeing up most of the space it uses and leaving it empty as a blank slate to be edited. (The room itself is not deleted.)\n\n"
+    msg << "Are you sure you want to delete everything in this room?"
+    response = Qt::MessageBox.question(self, "Clear room contents", msg, Qt::MessageBox::No | Qt::MessageBox::Yes, Qt::MessageBox::No)
+    
+    if response == Qt::MessageBox::No
+      return
+    end
+    
+    @room.clear_contents()
+    load_room_and_states()
   end
   
   def update_visible_view_items

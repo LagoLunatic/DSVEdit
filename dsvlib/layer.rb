@@ -182,6 +182,22 @@ class BGLayer
     tile_data = tiles.map(&:to_tile_data).pack("v*")
     fs.write(layer_tiledata_ram_start_offset, tile_data)
   end
+  
+  def clear_contents
+    # Clear out all the tiles.
+    (@height*SCREEN_HEIGHT_IN_TILES*@width*SCREEN_WIDTH_IN_TILES).times do |i|
+      tiles[i].index_on_tileset = 0
+      tiles[i].horizontal_flip = false
+      tiles[i].vertical_flip = false
+    end
+    
+    @width = 1
+    @height = 1
+    
+    # We don't clear the tileset that this layer uses, just leave that as it was so it's not blank.
+    
+    write_to_rom()
+  end
 end
 
 class RoomLayer
@@ -318,6 +334,24 @@ class RoomLayer
         fs.write(layer_list_entry_ram_pointer+4, [layer_metadata_ram_pointer].pack("V"))
       end
     end
+  end
+  
+  def clear_contents
+    layer_index = room.layers.index(self)
+    @z_index = 0x16 + layer_index
+    @scroll_mode = 1
+    @opacity = 0x1F
+    @bg_control = 0x1D40 + (layer_index << 8)
+    if layer_index == 0
+      @visual_effect = 1
+    else
+      @visual_effect = 0
+    end
+    @main_gfx_page_index = 0
+    @palette_offset = 0
+    
+    @bg_layer.clear_contents()
+    write_to_rom()
   end
   
   def self.layer_list_entry_size
