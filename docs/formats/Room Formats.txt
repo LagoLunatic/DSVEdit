@@ -48,7 +48,9 @@ Layer list entry format:
     This is used by the collision checker to tell if the player is standing on a jump-through platform.
     If you set this value too small, for example setting it to C0 in a room 2 screens tall, then the player won't be able to properly stand on jump-through platforms below that point in the level.
     Note that in PoR and OoE this value is automatically calculated every time you enter a room, so the bug described above can only happen in DoS.
-  08,1: Render mode of the layer. 00 and 01 are normal 16 color mode. Anything higher is 256 color mode. However different areas require a different, specific value. TODO: Figure out how this works.
+  08,1: Main GFX page.
+    This is an index in the current tileset's list of GFX pages.
+    It affects the render mode of the layer, 16 color or 256 color. If the index references a 16 color GFX page, then this whole layer will be rendered as 16 color. If it references a 256 color GFX page, the whole layer will be rendered as 256 color.
   09,1: Affects palette somehow?
   0A,2: Affects tileset and palette somehow? Only has an effect when in 256 color mode.
   0C,4: Pointer to layer metadata.

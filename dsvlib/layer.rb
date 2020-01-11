@@ -210,9 +210,9 @@ class RoomLayer
   
   def read_from_layer_list_entry
     if SYSTEM == :nds
-      @z_index, @scroll_mode, @opacity, _, _, 
+      @z_index, @scroll_mode, @opacity, _, _, height_in_pixels,
         @main_gfx_page_index, _, _, _,
-        layer_metadata_ram_pointer = fs.read(layer_list_entry_ram_pointer, 16).unpack("CCCCVCCCCV")
+        layer_metadata_ram_pointer = fs.read(layer_list_entry_ram_pointer, 16).unpack("CCCCvvCCCCV")
     elsif GAME == "aos"
       @z_index, @scroll_mode, @bg_control, 
         @main_gfx_page_index, _, _, _,
@@ -281,7 +281,10 @@ class RoomLayer
     if SYSTEM == :nds
       fs.write(layer_list_entry_ram_pointer+1, [scroll_mode].pack("C"))
       fs.write(layer_list_entry_ram_pointer+2, [opacity].pack("C"))
-      fs.write(layer_list_entry_ram_pointer+6, [height*0xC0].pack("v")) if GAME == "dos"
+      if GAME == "dos"
+        height_in_pixels = height*SCREEN_HEIGHT_IN_PIXELS
+        fs.write(layer_list_entry_ram_pointer+6, [height_in_pixels].pack("v"))
+      end
       fs.write(layer_list_entry_ram_pointer+8, [main_gfx_page_index].pack("C"))
       fs.write(layer_list_entry_ram_pointer+12, [layer_metadata_ram_pointer].pack("V"))
     else # GBA
