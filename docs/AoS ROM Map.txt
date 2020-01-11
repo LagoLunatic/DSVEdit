@@ -5,6 +5,8 @@ Starting stats (hardcoded):
 08033DCA,1 - Starting INT
 08033DCE,1 - Starting LCK
 
+0804BA26,1 - Number of ability souls in the game (hardcoded).
+
 080E0DF8 - List of songs->text indexes for sound test mode.
   Entry length 4.
   00,2: Song index.
@@ -27,6 +29,13 @@ Starting stats (hardcoded):
 
 080E15A8 - List of red souls.
 
+080E1CD0 - List of OBJ palette indexes for each soul type.
+  4 entries, each is a byte, the OBJ palette index for that type of soul.
+  0 (red) - 7
+  1 (blue) - 6
+  2 (yellow) - 8
+  3 (ability) - 9
+
 080E2B04-080E2B23 - List of how VRAM indexes map to tile offsets in VRAM.
   Each entry is a halfword.
   The index is a VRAM index in terms of 128x32px chunks.
@@ -43,6 +52,11 @@ Starting stats (hardcoded):
   So e.g. F means the player's spot in VRAM, 0 means the common sprite's spot, E means the player's weapon's spot, etc.
 
 080E9644 - List of enemy DNA.
+
+080EA628-020EA709 - List of the enemy name text IDs.
+  Entry length 2.
+08506936-08506A49 - List of item description text IDs.
+  Entry length 2.
 
 080E11C4 - Soma's sprite pointer.
   This sprite has no animations and only a single static frame composed of two parts placed on top of each other.

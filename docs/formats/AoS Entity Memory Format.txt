@@ -5,6 +5,10 @@ Memory used for entities in AoS is 020004E4 - 02007863. Each entity is 0x84 byte
 04,4: Pointer to draw code.
 0A,1: State.
 0B,1: Substate.
+10,1: Entity slot index.
+  The index this entity is at in list 020004E4.
+1C,4: Varies.
+  For enemies composed of multiple entities, this may be a pointer to the parent entity.
 22,2: Frame counter.
 24,4: 
 2C,4: X acceleration?
@@ -39,11 +43,13 @@ Memory used for entities in AoS is 020004E4 - 02007863. Each entity is 0x84 byte
   80 Vertical flip.
 59,1: Bitfield?
   04 ?
-5A,1: Bitfield related to sprite drawing?
+5A,1: Another bitfield related to sprite drawing.
   01 Enables mosaic for this entity.
     In order for this to have an effect, the system mosaic size must also be set (at 03002CA4).
   02 Draw entity semi-transparent.
-  20 Draw the entity completely white.
+  04 
+  78 The OBJ palette index to use to draw this entity, 0-F.
+  08 
 5C,1: InitializeEnemyFromDNA sets this to 0x12?
 62,1: Affects palette?
   If the lowest bit of this value is set, then it changes the palette of this entity's sprite, but only for the parts that have the lowest bit of the value at part+0B set as well.

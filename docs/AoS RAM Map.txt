@@ -105,15 +105,22 @@ Variables related to delayed loading room entities:
 020004BE,2 - Number of frames left for time to be stopped with Chronomage's soul.
   Enemies that are affected by time stop read this value every frame, and if it's not 0, skip some of their code so they appear to be frozen.
 
+020004D0,4 - Current language.
+  1 - English.
+  2 - French.
+  3 - German.
+
 === 020004E4-02007863: Entity memory. Each entity is 0x84 bytes long. Entities range from 00-DF.
 
 What each range of entity slots is for:
 00-00  020004E4-02000567  Player.
 02-10  020005EC-02000DA7  Player weapons/red souls/blue souls/Julius skills
 11-11  02000DA8-02000E2B  Yellow soul in Soma mode. Subweapon icon in Julius mode.
+12-12  02000E2C-02000EAF  Menu?
 16-19  0200103C-0200124B  ?
 1B-48  020012D0-02002A87  Room entities, including enemies and special objects.
 49-CF  02002A88-02007023  Various things including particles and enemy projectiles.
+D0-DF  02007024-02007863  ?
 
 020004E4 - Player's entity memory.
 02000526,2 - Player's current x pos in pixels.
@@ -222,7 +229,7 @@ What each range of entity slots is for:
 020133F4 - base stats?
 02013286 - ???
 
-02013260 - Bitfield of effects on the player.
+02013260 - Bitfield of passive effects on the player.
   00000100 - Flying Armor. Fall slowly. The visual Flying Armor does not appear, you need to actual soul for that.
   00000200 - Giant Bat. Setting this bit without using the actual Giant Bat soul doesn't actually do anything. Unsetting this bit when the player is transformed into a bat does bug the transformation out though.
   00000400 - Black Panther. The player moves faster and uses the dashing sprite with visible waves, but this doesn't make the waves do damage to enemies, you need the actual soul for that.
@@ -273,7 +280,7 @@ List of which souls you own and how many (owned skill info):
 02013392-02013394 - Ability souls.
   Each soul takes up a nibble (half a byte). So you can have up to 15 of each soul (or up to 30 if you use the unused second lists as well) (note that double digits slightly bug out the display number).
 
-02013396 - Bitfield of currently equipped ability souls.
+02013396,1 - Bitfield of currently equipped ability souls.
 
 0201336E - ??? could be related to which souls you own. or soul chances? or something. specifically for yellow souls. each soul takes up half a byte.
 02013380 - ??? for yellow souls. each soul takes up half a byte.

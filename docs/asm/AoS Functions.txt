@@ -7,6 +7,9 @@
   ; r0 - Minimum entity index to check
   ; r1 - Maximum entity index to check
   ; r2 - Update function pointer for the new entity
+0806DFF8 GetRoomEntitySlot?
+  ; r0 - Update function pointer for the new entity
+  ; Usually calls GetEntitySlot with min=0x1B,max=0x48, but if [0200008E] & 0x40 is set, it will use min=0xD0,max=0xDF instead.
 08000E14 DeleteEntity
   ; r0 - Pointer to the entity to delete.
 
@@ -25,6 +28,10 @@
 080DAA00 RandClampToMax
   ; r0 - Random number
   ; r1 - Maximum is r1-1
+
+08041434 GetTextPointerByID
+  ; r0 - Text ID
+  ; Returns r0 - Pointer to the text string
 
 0802D284 GetRedSoulPointer
   ; r0 - Index of the red soul
@@ -65,6 +72,12 @@
   ; r0 - Soul type
   ; r1 - Soul index-1
 
+08032AB8 CheckAbilitySoulEquipped
+  ; r0 - Index of the ability soul to check
+08032ADC SetAbilitySoulEquipped
+  ; r0 - Index of the ability soul to set
+  ; r1 - 1 to equip, 0 to unequip
+
 0804459C SpawnSoul
   ; r0 - X pos in pixels on the screen
   ; r1 - Y pos in pixels on the screen
@@ -76,6 +89,19 @@
   ; r1 - Y pos in pixels on the screen
   ; r2 - Enemy ID
   ; r3 - Boss death flag to set when the soul has been absorbed
+
+08032B14 GetPaletteIndexForSoulType
+  ; r0 - Soul type
+  ; Returns r0 - the OBJ palette index to use for this soul type
+
+0804BA18 MenuAbilitySoulsCreate
+0804BB40 MenuAbilitySoulsUpdate
+
+08046DD4 CreateBGMap?
+  ; r0 - 
+  ; r1 - 
+  ; r2 - 
+  ; r3 - 
 
 080233BC GetCurrentWeaponAttackAnimation
   ; r0 - Player's state, 0 for standing, 1 for crouching, 2 for in the air. (Maybe more?)
@@ -98,6 +124,9 @@
 
 080421AC CheckCollisions
   ; r0 - Entity
+
+08021E38 CheckPlayerPassiveStatus
+  ; r0 - Bit mask to check
 
 08022028 AddMP
   ; r0 - MP to add
@@ -210,7 +239,10 @@
   ; r2 - Number of palettes to load
   ; r3 - Index to load the palettes at in palette RAM (e.g. 9 to replace the 9th object palette)
 
-0803B9D1 EnemyDraw
+0803B9D0 GenericSpriteDraw
+  ; Just calls GenericSpriteDraw2
+0803AC40 GenericSpriteDraw2
+  ; r0 - Entity
 
 0803F2C8 EntityChangeAnimation
   ; r0 - Entity
@@ -300,6 +332,7 @@
 080AFC7C EnemySkullArcherCreate
 080AFD94 EnemySkullArcherUpdate
 08087F98 EnemyPeepingEyeCreate
+08088D98 EnemyPeepingEyeCreateEyeball
 08087DC0 EnemyPeepingEyeUpdate
 0806F988 EnemyKillerFishCreate
 0806F864 EnemyKillerFishUpdate
