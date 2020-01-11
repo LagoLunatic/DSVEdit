@@ -560,10 +560,12 @@ class DSVEdit < Qt::MainWindow
     @room = room
     @ui.room.setCurrentIndex(@room_index)
     
+    @room_state_index = 0
     load_room_and_states()
   end
   
   def room_state_index_changed(new_room_state_index)
+    @room_state_index = new_room_state_index
     @room = @room_states[new_room_state_index]
     load_room()
     @ui.room_state.setCurrentIndex(new_room_state_index)
@@ -684,6 +686,7 @@ class DSVEdit < Qt::MainWindow
       end
       @ui.room_state.addItem("%02X %08X (#{condition})" % [state_index, room_state.room_metadata_ram_pointer])
     end
+    @ui.room_state.setCurrentIndex(@room_state_index)
     
     load_room()
   end
@@ -859,8 +862,11 @@ class DSVEdit < Qt::MainWindow
       return
     end
     
-    @room.clear_contents()
-    load_room_and_states()
+    # Clear contents starting at the default room state, since starting at a child state won't properly clear everything.
+    @room.room_states[0].clear_contents()
+    
+    # Reload the room, switching to the default room state since the others are deleted.
+    change_room(@room_index, force=true)
   end
   
   def update_visible_view_items
