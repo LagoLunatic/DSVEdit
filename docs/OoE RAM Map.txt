@@ -830,7 +830,7 @@ F0-F0  0211DCA0-0211DDFF  ?
   18,4: Scroll mode's vertical multiplier (0x1000 = 1.0).
   1C,4: Scroll mode's autoscroll type.
   34,4: RGBA color multipliers.
-  38,2: Height in pixels.
+  38,2: Width in pixels.
   3A,2: Height in pixels.
   3C,2: Texture format for how this layer should be rendered. 0-7.
     3 - 16 colors.

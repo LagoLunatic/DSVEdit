@@ -194,6 +194,7 @@ class RoomLayer
                 :scroll_mode,
                 :opacity,
                 :main_gfx_page_index,
+                :palette_offset, # NOTE: Palette offset is not implemented into DSVEdit's GUI, neither for editing nor displaying.
                 :bg_control,
                 :visual_effect
   
@@ -210,19 +211,22 @@ class RoomLayer
   
   def read_from_layer_list_entry
     if SYSTEM == :nds
-      @z_index, @scroll_mode, @opacity, _, _, height_in_pixels,
-        @main_gfx_page_index, _, _, _,
-        layer_metadata_ram_pointer = fs.read(layer_list_entry_ram_pointer, 16).unpack("CCCCvvCCCCV")
+      @z_index, @scroll_mode, @opacity, _, @width_in_pixels, @height_in_pixels,
+        @main_gfx_page_index, @palette_offset, unknown,
+        layer_metadata_ram_pointer = fs.read(layer_list_entry_ram_pointer, 16).unpack("CCCCvvCCvV")
     elsif GAME == "aos"
       @z_index, @scroll_mode, @bg_control, 
-        @main_gfx_page_index, _, _, _,
-        layer_metadata_ram_pointer = fs.read(layer_list_entry_ram_pointer, 12).unpack("CCvCCCCV")
+        @width_in_pixels, @height_in_pixels,
+        layer_metadata_ram_pointer = fs.read(layer_list_entry_ram_pointer, 12).unpack("CCvvvV")
+      @main_gfx_page_index = 0
       @opacity = 0x1F
+      @palette_offset = 0
     elsif GAME == "hod"
       @z_index, @visual_effect, @bg_control,
         layer_metadata_ram_pointer = fs.read(layer_list_entry_ram_pointer, 8).unpack("CCvV")
       @main_gfx_page_index = 0 # TODO
       @scroll_mode = 0 # TODO
+      @palette_offset = 0
       @opacity = 0x1F
       if visual_effect == 0xD
         @opacity = 0x0F
@@ -282,10 +286,13 @@ class RoomLayer
       fs.write(layer_list_entry_ram_pointer+1, [scroll_mode].pack("C"))
       fs.write(layer_list_entry_ram_pointer+2, [opacity].pack("C"))
       if GAME == "dos"
-        height_in_pixels = height*SCREEN_HEIGHT_IN_PIXELS
-        fs.write(layer_list_entry_ram_pointer+6, [height_in_pixels].pack("v"))
+        @width_in_pixels = width*SCREEN_WIDTH_IN_PIXELS
+        @height_in_pixels = height*SCREEN_HEIGHT_IN_PIXELS
+        fs.write(layer_list_entry_ram_pointer+4, [@width_in_pixels].pack("v"))
+        fs.write(layer_list_entry_ram_pointer+6, [@height_in_pixels].pack("v"))
       end
       fs.write(layer_list_entry_ram_pointer+8, [main_gfx_page_index].pack("C"))
+      fs.write(layer_list_entry_ram_pointer+9, [palette_offset].pack("C"))
       fs.write(layer_list_entry_ram_pointer+12, [layer_metadata_ram_pointer].pack("V"))
     else # GBA
       # Force the screen base block value in the BG control to the correct value.
@@ -298,8 +305,12 @@ class RoomLayer
       if GAME == "aos"
         fs.write(layer_list_entry_ram_pointer+1, [scroll_mode].pack("C"))
         fs.write(layer_list_entry_ram_pointer+2, [bg_control].pack("v"))
-        fs.write(layer_list_entry_ram_pointer+6, [height*0x100].pack("v")) # Unlike in DoS this doesn't seem necessary for jumpthrough platforms to work, but do it anyway.
-        fs.write(layer_list_entry_ram_pointer+4, [main_gfx_page_index].pack("C"))
+        
+        @width_in_pixels = width*SCREEN_WIDTH_IN_PIXELS
+        @height_in_pixels = height*SCREEN_HEIGHT_IN_PIXELS
+        fs.write(layer_list_entry_ram_pointer+4, [@width_in_pixels].pack("v"))
+        fs.write(layer_list_entry_ram_pointer+6, [@height_in_pixels].pack("v")) # Unlike in DoS this doesn't seem necessary for jumpthrough platforms to work, but do it anyway to be safe.
+        
         fs.write(layer_list_entry_ram_pointer+8, [layer_metadata_ram_pointer].pack("V"))
       else # HoD
         fs.write(layer_list_entry_ram_pointer+1, [visual_effect].pack("C"))

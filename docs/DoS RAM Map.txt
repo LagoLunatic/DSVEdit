@@ -680,9 +680,11 @@ Player's current stats:
 020F75A4,2 - Timer for how many more frames to display the name of the last soul you got in the upper right corner of the screen.
 020F75A6,2 - Timer for how many more frames to display the name of the last item you got in the lower right corner of the screen.
 
-020F75A8 - Has a pointer to the first (collision) layer for the current room.
-
 020F75A8-020F7767 - Data for the current room's 4 layers. Each is 0x70 bytes long.
+  00,4: Pointer to the layer's metadata.
+  38,2: Width in pixels.
+  3A,2: Height in pixels.
+  5E,2: Palette index offset to use for this layer.
 
 020F8018 - Current area name shown on the top screen (in warp rooms).
 

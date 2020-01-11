@@ -42,16 +42,17 @@ Layer list entry format:
     This is an index in the list of scroll modes, which is different between games.
   02,1: Opacity of the layer. 0 is invisible, 0x1F is fully visible.
     In OoE 0 looks fully visible, so the lowest you can get there is 1.
-  03,1: Unknown.
-  04,2: Unknown.
-  06,2: Should be equal to the layer's height in pixels.
+  03,1: Unused, just padding.
+  04,2: Should be equal to the width in pixels of this room's collision layer.
+  06,2: Should be equal to the height in pixels of this room's collision layer.
     This is used by the collision checker to tell if the player is standing on a jump-through platform.
     If you set this value too small, for example setting it to C0 in a room 2 screens tall, then the player won't be able to properly stand on jump-through platforms below that point in the level.
     Note that in PoR and OoE this value is automatically calculated every time you enter a room, so the bug described above can only happen in DoS.
   08,1: Main GFX page.
     This is an index in the current tileset's list of GFX pages.
     It affects the render mode of the layer, 16 color or 256 color. If the index references a 16 color GFX page, then this whole layer will be rendered as 16 color. If it references a 256 color GFX page, the whole layer will be rendered as 256 color.
-  09,1: Affects palette somehow?
+  09,1: Palette index offset to use for this layer.
+    Always 0 in the original games, but it works as expected.
   0A,2: Affects tileset and palette somehow? Only has an effect when in 256 color mode.
   0C,4: Pointer to layer metadata.
 
