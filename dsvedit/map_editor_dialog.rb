@@ -250,28 +250,32 @@ class MapEditorDialog < Qt::Dialog
     case button
     when Qt::LeftButton
       if old_tile
-        curr_num_warps = @map.tiles.count{|tile| tile.is_warp}
-        if GAME == "por" && curr_num_warps >= MAP_MAX_NUM_WARPS && !old_tile.is_warp
-          Qt::MessageBox.warning(self, "Can't add more warps", "Can't add more than #{MAP_MAX_NUM_WARPS} warp rooms per map in PoR.")
-          return
-        end
-        if GAME == "ooe" && curr_num_warps >= MAP_MAX_NUM_WARPS && !old_tile.is_warp
-          Qt::MessageBox.warning(self, "Can't add more warps", "Can't add more than #{MAP_MAX_NUM_WARPS} warp rooms per map in OoE.")
-          return
+        if @selected_map_tile.is_warp
+          curr_num_warps = @map.tiles.count{|tile| tile.is_warp}
+          if GAME == "por" && curr_num_warps >= MAP_MAX_NUM_WARPS && !old_tile.is_warp
+            Qt::MessageBox.warning(self, "Can't add more warps", "Can't add more than #{MAP_MAX_NUM_WARPS} warp rooms per map in PoR.")
+            return
+          end
+          if GAME == "ooe" && curr_num_warps >= MAP_MAX_NUM_WARPS && !old_tile.is_warp
+            Qt::MessageBox.warning(self, "Can't add more warps", "Can't add more than #{MAP_MAX_NUM_WARPS} warp rooms per map in OoE.")
+            return
+          end
         end
         
         change_map_tile(old_tile)
       elsif @map.is_a?(DoSMap)
         # Do nothing.
       else # PoR/OoE
-        curr_num_warps = @map.tiles.count{|tile| tile.is_warp}
-        if GAME == "por" && curr_num_warps >= MAP_MAX_NUM_WARPS
-          Qt::MessageBox.warning(self, "Can't add more warps", "Can't add more than #{MAP_MAX_NUM_WARPS} warp rooms per map in PoR.")
-          return
-        end
-        if GAME == "ooe" && curr_num_warps >= MAP_MAX_NUM_WARPS
-          Qt::MessageBox.warning(self, "Can't add more warps", "Can't add more than #{MAP_MAX_NUM_WARPS} warp rooms per map in OoE.")
-          return
+        if @selected_map_tile.is_warp
+          curr_num_warps = @map.tiles.count{|tile| tile.is_warp}
+          if GAME == "por" && curr_num_warps >= MAP_MAX_NUM_WARPS
+            Qt::MessageBox.warning(self, "Can't add more warps", "Can't add more than #{MAP_MAX_NUM_WARPS} warp rooms per map in PoR.")
+            return
+          end
+          if GAME == "ooe" && curr_num_warps >= MAP_MAX_NUM_WARPS
+            Qt::MessageBox.warning(self, "Can't add more warps", "Can't add more than #{MAP_MAX_NUM_WARPS} warp rooms per map in OoE.")
+            return
+          end
         end
         
         add_map_tile(x, y)
