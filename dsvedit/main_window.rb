@@ -695,6 +695,9 @@ class DSVEdit < Qt::MainWindow
     @room_graphics_scene.addItem(@layers_view_item)
     @room.sector.load_necessary_overlay()
     load_layers()
+    main_layer_border_rect = Qt::GraphicsRectItem.new(0, 0, SCREEN_WIDTH_IN_PIXELS*@room.width-1, SCREEN_HEIGHT_IN_PIXELS*@room.height-1)
+    main_layer_border_rect.setZValue(-1)
+    @room_graphics_scene.addItem(main_layer_border_rect)
     
     load_room_collision_tileset()
     
