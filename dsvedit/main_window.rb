@@ -839,6 +839,11 @@ class DSVEdit < Qt::MainWindow
   end
   
   def add_new_room
+    if @sector.is_hardcoded
+      Qt::MessageBox.warning(self, "Can't add new room", "This isn't a real sector, DSVEdit just uses this fake sector to display hardcoded rooms not contained in any sector.\nTherefore, you cannot add new rooms to this sector. Choose a different one.")
+      return
+    end
+    
     @sector.add_new_room()
     room = @sector.rooms[-1]
     
