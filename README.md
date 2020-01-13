@@ -11,7 +11,7 @@ Report issues here: https://github.com/LagoLunatic/DSVEdit/issues
 ### Features
 
 * Editing rooms (tiles, entities, and doors)
-* Resizing rooms, and adding and removing entities and doors. Files are automatically expanded as necessary to avoid overwriting other data.
+* Adding new rooms, resizing rooms, and adding and removing entities and doors. Files are automatically expanded as necessary to avoid overwriting other data.
 * Editing enemies (max HP, attack, items dropped, etc.)
 * Editing items
 * Editing GFX and palettes
