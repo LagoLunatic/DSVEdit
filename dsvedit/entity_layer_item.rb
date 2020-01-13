@@ -85,13 +85,6 @@ class EntityLayerItem < Qt::GraphicsRectItem
       sprite_info = SpriteInfo.extract_gfx_and_palette_and_sprite_from_create_code(soul_candle_sprite[:pointer], @fs, soul_candle_sprite[:overlay], soul_candle_sprite)
       add_sprite_item_for_entity(entity, sprite_info, 0x6B)
     elsif GAME == "aos" && entity.is_special_object? && [8, 9].include?(entity.subtype) # Breakable wall
-      (0..0x12).each do |x|
-        graphic_index = @fs.read(0x08526064+x*0xC, 1).unpack("C").first
-        palette_index = @fs.read(0x08526064+x*0xC+2, 1).unpack("C").first
-        frame_index = @fs.read(0x08526064+x*0xC+3, 1).unpack("C").first
-        puts "0x%02X => [#{graphic_index}, #{palette_index}, #{frame_index}]," % x
-      end
-      
       if AOS_BREAKABLE_WALL_INDEX_TO_DATA.include?(entity.var_a)
         graphic_index, palette_index, frame_index = AOS_BREAKABLE_WALL_INDEX_TO_DATA[entity.var_a]
         breakable_wall_sprite = OTHER_SPRITES.find{|spr| spr[:desc] == "Breakable wall graphics %d" % graphic_index}
