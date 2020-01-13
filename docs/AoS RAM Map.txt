@@ -52,6 +52,8 @@
 
 0200033C - Event flags.
 
+02000344 - Bitfield of miscellaneous flags.
+
 02000360-02000373 - Bitfield of pickup flags.
 
 02000378,4 - Bitfield of what warp rooms you've unlocked.

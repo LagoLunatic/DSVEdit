@@ -125,6 +125,14 @@
 080421AC CheckCollisions
   ; r0 - Entity
 
+080428F0 SetHitbox
+  ; r0 - Entity
+  ; r1 - Bitfield.
+  ;   & 000000FF - X offset (signed).
+  ;   & 0000FF00 - Y offset (signed).
+  ;   & 00FF0000 - Width.
+  ;   & FF000000 - Height.
+
 08021E38 CheckPlayerPassiveStatus
   ; r0 - Bit mask to check
 
@@ -204,7 +212,7 @@
 0806E0D0 LoadSprite
   ; r0 - Entity ptr
   ; r1 - GFX asset ptr
-  ; r2 - Palette pointer
+  ; r2 - Palette list pointer
   ; r3 - 0? Palette offset?
   ; [r13,0] - Sprite ptr
 0804DF3C LoadCommonSprite

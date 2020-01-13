@@ -133,9 +133,14 @@
       Var B: Song index.
       Note: This doesn't work if you load into the room directly, such as with test room or if its the first room of the game. You must walk into it via a door.
 08 Breakable wall.
-09 Wall that can be destroyed.
-  Var A: ???
-  Var B: Misc flag?
+  Var A: Which breakable wall appearance to use. 00-12. Affects graphics and hitbox.
+  Var B: Miscellaneous flag index.
+    The breakable wall sets this when it's destroyed and uses it to stay destroyed.
+    If this index is 0, the wall will never stay permanently destroyed. (testme)
+09 Wall that can be destroyed (not by the player's weapon).
+  Var A: Which breakable wall appearance to use. 00-12. Affects graphics and hitbox.
+  Var B: Miscellaneous flag index.
+    Once something else sets this flag, the wall will destroy itself.
 0A Boss-death-conditional enemy.
   Once a certain boss death flag has been set this will spawn an enemy.
   Var A: Enemy ID to spawn.
@@ -163,6 +168,9 @@
     2 Moon.
     3 Moon. Positioned lower than 2.
 13 Ball on a chain you can swing by attacking.
+  Var A: ?
+  Var B: Miscellaneous flag index.
+    Once the player swings this ball far enough, it will set this flag.
 14 Boat.
   Var A:
     0 Boats spawn from the background that are affected by physics in the water. Always moves right.
@@ -214,28 +222,48 @@
 25 Legion members emerging from the background.
 26 Statue in the background of the Arena that attacks you with its hand and foot.
 27 The damaging hand from one of the background statues in the Arena.
-  This object shouldn't be placed manually, it should be spawned automatically by object 26.
+  This object is normally spawned by object 26 instead of being placed manually, but it can also be placed manually and seems to work.
 28 The damaging foot from one of the background statues in the Arena.
-  This object shouldn't be placed manually, it should be spawned automatically by object 26.
+  This object is spawned by object 26. It doesn't seem to appear when placed manually.
 29 Vertically moving platform.
+  Var A: The target Y pos it should move before cycling back to its starting position.
+  Var B:
+    0 Metal platform.
+    1 Metal platform.
+    2 Wet rock platform.
+    3 Platform with a clock in it.
 2A Horizontally moving platform.
+  Var A: The target X pos it should move before cycling back to its starting position.
+  Var B:
+    0 Metal platform.
+    1 Metal platform.
+    2 Wet rock platform.
+    3 Platform with a clock in it.
 2B Water flowing from the large fountian in the Floating Garden.
 2C Clouds moving in the background of the Floating Garden.
 2D Statue before the stairway to the throne room.
 2E Three flames in the eyes of a background skull.
   Light up when you get near it.
 2F Something from the Julius fight?
+  Var A: ?
 30 Something from the Julius fight?
 31 Something from the Julius fight?
+  Var A: ?
 32 Crumbling platform.
-33 Waterfall splashes?
+33 Visual effect of water splashing at the bottom of a waterfall.
 34 Swinging pendulum.
-  Var A: ???
-  Var B: ???
+  Var A: Initial swing direction.
+    0 Swing left first.
+    1 Swing right first.
+  Var B: Affects how wide and slowly it swings.
+    The lower the number, the slower and wider it will swing.
+    For example, 2 slowly swings a full 180 degrees, while 4 swings 90 degrees.
+    0 and 1 do not properly swing back and forth at all, it simply continues to rotate in a circle forever.
 35 Metal gate/button.
   Var A:
     0 Button.
     1 Metal gate.
 36 Cog.
+  Var A: ?
 37 Demon head gate.
   Must face away from it for its mouth to open.

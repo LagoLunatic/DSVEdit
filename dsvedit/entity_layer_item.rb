@@ -17,6 +17,29 @@ class EntityLayerItem < Qt::GraphicsRectItem
     0x57 => "Daniela",
   }
   
+  AOS_BREAKABLE_WALL_INDEX_TO_DATA = {
+    # Graphic index, palette index, frame index
+    0x00 => [0, 0, 0],
+    0x01 => [0, 1, 1],
+    0x02 => [0, 2, 2],
+    0x03 => [1, 0, 0],
+    0x04 => [1, 1, 1],
+    0x05 => [1, 2, 1],
+    0x06 => [2, 0, 0],
+    0x07 => [2, 1, 1],
+    0x08 => [5, 4, 0],
+    0x09 => [3, 0, 0],
+    0x0A => [3, 0, 1],
+    0x0B => [4, 4, 3],
+    0x0C => [4, 5, 4],
+    0x0D => [4, 3, 5],
+    0x0E => [1, 2, 3],
+    0x0F => [6, 3, 1],
+    0x10 => [6, 3, 0],
+    0x11 => [7, 6, 6],
+    0x12 => [2, 0, 0],
+  }
+  
   def initialize(entities, main_window, game, renderer)
     super()
     
@@ -50,7 +73,7 @@ class EntityLayerItem < Qt::GraphicsRectItem
     elsif entity.is_villager? && VILLAGER_EVENT_FLAG_TO_NAME.keys.include?(entity.var_a)
       villager_name = VILLAGER_EVENT_FLAG_TO_NAME[entity.var_a]
       villager_info = OTHER_SPRITES.find{|other| other[:desc] == "#{villager_name} event actor"}
-      sprite_info = SpriteInfo.extract_gfx_and_palette_and_sprite_from_create_code(pointer, @fs, nil, villager_info)
+      sprite_info = SpriteInfo.extract_gfx_and_palette_and_sprite_from_create_code(nil, @fs, nil, villager_info)
       if villager_name == "George"
         best_frame_index = 2
       else
@@ -61,6 +84,34 @@ class EntityLayerItem < Qt::GraphicsRectItem
       soul_candle_sprite = COMMON_SPRITE.merge(palette_offset: 4)
       sprite_info = SpriteInfo.extract_gfx_and_palette_and_sprite_from_create_code(soul_candle_sprite[:pointer], @fs, soul_candle_sprite[:overlay], soul_candle_sprite)
       add_sprite_item_for_entity(entity, sprite_info, 0x6B)
+    elsif GAME == "aos" && entity.is_special_object? && [8, 9].include?(entity.subtype) # Breakable wall
+      (0..0x12).each do |x|
+        graphic_index = @fs.read(0x08526064+x*0xC, 1).unpack("C").first
+        palette_index = @fs.read(0x08526064+x*0xC+2, 1).unpack("C").first
+        frame_index = @fs.read(0x08526064+x*0xC+3, 1).unpack("C").first
+        puts "0x%02X => [#{graphic_index}, #{palette_index}, #{frame_index}]," % x
+      end
+      
+      if AOS_BREAKABLE_WALL_INDEX_TO_DATA.include?(entity.var_a)
+        graphic_index, palette_index, frame_index = AOS_BREAKABLE_WALL_INDEX_TO_DATA[entity.var_a]
+        breakable_wall_sprite = OTHER_SPRITES.find{|spr| spr[:desc] == "Breakable wall graphics %d" % graphic_index}
+        breakable_wall_sprite = breakable_wall_sprite.merge(palette_offset: palette_index)
+      else
+        breakable_wall_sprite = OTHER_SPRITES.find{|spr| spr[:desc] == "Breakable wall graphics 0"}
+        frame_index = 0
+      end
+      
+      sprite_info = SpriteInfo.extract_gfx_and_palette_and_sprite_from_create_code(breakable_wall_sprite[:pointer], @fs, nil, breakable_wall_sprite)
+      add_sprite_item_for_entity(entity, sprite_info, frame_index)
+    elsif GAME == "aos" && entity.is_special_object? && [0x29, 0x2A].include?(entity.subtype) && [2, 3].include?(entity.var_b) # Moving platform that doesn't use the normal sprite
+      case entity.var_b
+      when 2
+        other_sprite = OTHER_SPRITES.find{|spr| spr[:desc] == "Wet rock moving platform"}
+      when 3
+        other_sprite = OTHER_SPRITES.find{|spr| spr[:desc] == "Clock moving platform"}
+      end
+      sprite_info = SpriteInfo.extract_gfx_and_palette_and_sprite_from_create_code(other_sprite[:pointer], @fs, nil, other_sprite)
+      add_sprite_item_for_entity(entity, sprite_info, 0)
     elsif GAME == "hod" && entity.is_pickup? && entity.subtype == 9 && (0..1).include?(entity.var_b) # max up
       chunky_image = @renderer.render_icon(0xB + entity.var_b, 1)
       

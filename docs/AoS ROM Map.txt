@@ -138,19 +138,27 @@ Starting stats (hardcoded):
   04,4: Room pointer of the warp point.
 
 08526004 - List of breakable wall gfx/palette/sprites.
+  Entry length 0xC.
+  0x8 entries total.
+  00,4: GFX asset pointer.
+  04,4: Palette list pointer.
+  08,4: Sprite pointer.
 
 08526064 - List of breakable walls.
   Entry length 0xC.
-  Var A of the breakable wall entity is index in this list.
-  00,2: Sprite frame
-  02,1: Palette
-  03,1: Affects sprite
+  0x12 entries total.
+  Var A of the breakable wall entity is the index in this list.
+  00,2: Which visual type to use for this wall.
+    Index in list 08526004.
+  02,1: Palette index.
+  03,1: Sprite frame index.
   04,1: 
   05,1: 
-  06,1:
-  07,1:
+  06,1: Width in pixels.
+  07,1: Height in pixels.
   08,1: 
-  09,1: 
+  09,1: (gets copied to the breakable wall entity+14,1)
+  0A,2: Unused, padding?
 
 08526390-085263A7 - List of boss rush rewards.
   00,2: Maximum number of frames you can take to complete boss rush and still get this reward.

@@ -7,6 +7,7 @@ Memory used for entities in AoS is 020004E4 - 02007863. Each entity is 0x84 byte
 0B,1: Substate.
 10,1: Entity slot index.
   The index this entity is at in list 020004E4.
+14,1: ?
 1C,4: Varies.
   For enemies composed of multiple entities, this may be a pointer to the parent entity.
 22,2: Frame counter.
