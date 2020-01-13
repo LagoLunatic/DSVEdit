@@ -51,6 +51,11 @@ Memory used for entities in AoS is 020004E4 - 02007863. Each entity is 0x84 byte
   04 
   78 The OBJ palette index to use to draw this entity, 0-F.
   08 
+5B,1: Current sprite animation type.
+  0 Normal animation.
+  1 Julius animation.
+  2 Used by some bosses with several graphics pages like Death and Headhunter.
+  3 Soma animation.
 5C,1: InitializeEnemyFromDNA sets this to 0x12?
 62,1: Affects palette?
   If the lowest bit of this value is set, then it changes the palette of this entity's sprite, but only for the parts that have the lowest bit of the value at part+0B set as well.

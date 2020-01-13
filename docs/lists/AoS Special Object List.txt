@@ -159,6 +159,7 @@
 0E Destructible.
   Var A: Which destructible. 0-D.
 0F Flame.
+  Var A: ?
 10 Boss rush clear reward.
 11 Starts boss rush.
 12 Various background visuals.
@@ -189,6 +190,7 @@
 1C Save point.
   Object 1D must also be in the room for the save point to work?
 1D Walls of save room/warp room.
+  Var A: ?
 1E Nothing, unused.
 1F Warp point.
 20 Event.
@@ -220,6 +222,8 @@
 23 Water flowing down in the bath room.
 24 Mist in the bath room.
 25 Legion members emerging from the background.
+  Var A: ?
+  Var B: ?
 26 Statue in the background of the Arena that attacks you with its hand and foot.
 27 The damaging hand from one of the background statues in the Arena.
   This object is normally spawned by object 26 instead of being placed manually, but it can also be placed manually and seems to work.
@@ -251,6 +255,7 @@
   Var A: ?
 32 Crumbling platform.
 33 Visual effect of water splashing at the bottom of a waterfall.
+  Var A: ?
 34 Swinging pendulum.
   Var A: Initial swing direction.
     0 Swing left first.

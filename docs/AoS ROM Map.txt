@@ -51,6 +51,10 @@ Starting stats (hardcoded):
     [    B    ] [    F    ]
   So e.g. F means the player's spot in VRAM, 0 means the common sprite's spot, E means the player's weapon's spot, etc.
 
+080E2B34-080E2B43 - List of animation function pointers?
+  4 entries in total.
+  The animation's function index is the index in this list.
+
 080E9644 - List of enemy DNA.
 
 080EA628-020EA709 - List of the enemy name text IDs.
@@ -164,9 +168,9 @@ Starting stats (hardcoded):
   00,2: Maximum number of frames you can take to complete boss rush and still get this reward.
   04,4: Item global ID+1 of the reward.
 
-08526650 - List of pointers to event create functions (for object 20).
+08526658-085266D7 - List of pointers to event create functions (for object 20).
   The event object's var A is the index in this list.
-085266D8 - List of pointers to event update functions (for object 20).
+085266D8-08526757 - List of pointers to event update functions (for object 20).
   The event object's var A is the index in this list.
 
 Shop item pools:

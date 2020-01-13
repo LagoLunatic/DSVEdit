@@ -1,6 +1,8 @@
 Enemies:
 00 Bat
 01 Zombie
+  Var A: ?
+  Var B: ?
 02 Skeleton
 03 Merman
   For a single Merman on the ground, set both var A and B to 0.
@@ -8,16 +10,20 @@ Enemies:
   Other combinations of var A and B will result in buggy Mermen.
 04 Axe Armor
 05 Skull Archer
+  Var A: ?
 06 Peeping Eye
   Var A:
     0 Normal.
-    1 In the background, cannot be hit the player or be hit.
+    1 In the background, cannot hit or be hit by the player.
 07 Killer Fish
+  Var B: ?
 08 Bone Pillar
   Var A: Number of them stacked on top of each other.
 09 Blue Crow
 0A Buer
+  Var A: ?
 0B White Dragon
+  Var A: ?
 0C Zombie Soldier
 0D Skeleton Knight
 0E Ghost
@@ -31,11 +37,16 @@ Enemies:
 12 Rock Armor
 13 Giant Ghost
 14 Winged Skeleton
+  Var A: ?
+  Var B: ?
 15 Minotaur
 16 Student Witch
 17 Arachne
 18 Fleaman
+  Var A: ?
+  Var B: ?
 19 Evil Butcher
+  Var B: ?
 1A Quezlcoatl
 1B Ectoplasm
 1C Catoblepas
@@ -65,6 +76,8 @@ Enemies:
 2A Witch
 2B Curly
 2C Altair
+  Var A: ?
+  Var B: ?
 2D Red Crow
 2E Cockatrice
 2F Dead Warrior
@@ -93,24 +106,33 @@ Enemies:
 3A Bomber Armor
 3B Lightning Doll
 3C Great Armor
+  Var A: ?
 3D Une
+  Var B: ?
 3E Giant Worm
 3F Needles
   Var A:
     0 Stays completely still.
     1 Floats up and down slightly.
 40 Man-Eater
+  Var A: ?
 41 Fish Head
   Var A: Number of them stacked on top of each other.
 42 Nightmare
+  Var A: ?
 43 Triton
 44 Slime
+  Var A: ?
+  Var B: ?
 45 Big Golem
+  Var A: ?
 46 Dryad
 47 Poison Worm
 48 Arc Demon
 49 Cagnazzo
 4A Ripper
+  Var A: ?
+  Var B: ?
 4B Werejaguar
 4C Ukoback
 4D Alura Une
@@ -131,6 +153,7 @@ Enemies:
 5C Giant Skeleton
 5D Gladiator
 5E Bael
+  Var A: ?
 5F Succubus
   Var A:
     0 Succubus pretending to be Mina.
@@ -158,9 +181,17 @@ Enemies:
 68 Flame Demon
 69 Shadow Knight
 6A Headhunter
+  Var A: ?
 6B Death
+  Var A: ?
 6C Legion
+  Var A: ?
 6D Balore
+  Var A: ?
 6E Belmont
+  Var A: ?
 6F Graham
+  Var A: ?
 70 Chaos
+  Var A: ?
+  Var B: ?

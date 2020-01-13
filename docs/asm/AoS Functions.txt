@@ -29,6 +29,23 @@
   ; r0 - Random number
   ; r1 - Maximum is r1-1
 
+080DA79C CallFuncInLR
+080DA7A0 CallFuncInR0
+080DA7A4 CallFuncInR1
+080DA7A8 CallFuncInR2
+080DA7AC CallFuncInR3
+080DA7B0 CallFuncInR4
+080DA7B4 CallFuncInR5
+080DA7B8 CallFuncInR6
+080DA7BC CallFuncInR7
+080DA7C0 CallFuncInR8
+080DA7C4 CallFuncInR9
+080DA7C8 CallFuncInR10
+080DA7CC CallFuncInR11
+080DA7D0 CallFuncInR12
+080DA7D4 CallFuncInR13
+080DA7D8 CallFuncInR14
+
 08041434 GetTextPointerByID
   ; r0 - Text ID
   ; Returns r0 - Pointer to the text string
