@@ -40,6 +40,12 @@ class EntityLayerItem < Qt::GraphicsRectItem
     0x12 => [2, 0, 0],
   }
   
+  AOS_NPC_EVENT_INDEX_TO_NAME_AND_FRAME = {
+    0x1A => ["Hammer event actor", 9],
+    0x1B => ["Mina event actor", 0],
+    0x1C => ["Yoko event actor", 0xF],
+  }
+  
   def initialize(entities, main_window, game, renderer)
     super()
     
@@ -84,6 +90,12 @@ class EntityLayerItem < Qt::GraphicsRectItem
       soul_candle_sprite = COMMON_SPRITE.merge(palette_offset: 4)
       sprite_info = SpriteInfo.extract_gfx_and_palette_and_sprite_from_create_code(soul_candle_sprite[:pointer], @fs, soul_candle_sprite[:overlay], soul_candle_sprite)
       add_sprite_item_for_entity(entity, sprite_info, 0x6B)
+    elsif GAME == "aos" && entity.is_special_object? && entity.subtype == 0x20 && AOS_NPC_EVENT_INDEX_TO_NAME_AND_FRAME.include?(entity.var_a) # NPC
+      other_sprite_name, frame_index = AOS_NPC_EVENT_INDEX_TO_NAME_AND_FRAME[entity.var_a]
+      other_sprite = OTHER_SPRITES.find{|spr| spr[:desc] == other_sprite_name}
+      
+      sprite_info = SpriteInfo.extract_gfx_and_palette_and_sprite_from_create_code(other_sprite[:pointer], @fs, nil, other_sprite)
+      add_sprite_item_for_entity(entity, sprite_info, frame_index)
     elsif GAME == "aos" && entity.is_special_object? && [8, 9].include?(entity.subtype) # Breakable wall
       if AOS_BREAKABLE_WALL_INDEX_TO_DATA.include?(entity.var_a)
         graphic_index, palette_index, frame_index = AOS_BREAKABLE_WALL_INDEX_TO_DATA[entity.var_a]
