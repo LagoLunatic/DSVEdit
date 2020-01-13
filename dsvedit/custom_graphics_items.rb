@@ -62,7 +62,7 @@ class EntityRectItem < Qt::GraphicsRectItem
   attr_reader :entity
   
   def initialize(entity, main_window)
-    super(-8, -8, 16, 16)
+    super(-8, -8, 16-1, 16-1)
     setPos(entity.x_pos, entity.y_pos)
     
     @main_window = main_window
@@ -123,7 +123,7 @@ class DoorItem < Qt::GraphicsRectItem
   attr_reader :door
   
   def initialize(door, door_index, main_window)
-    super(0, 0, SCREEN_WIDTH_IN_PIXELS, SCREEN_HEIGHT_IN_PIXELS)
+    super(0, 0, SCREEN_WIDTH_IN_PIXELS-1, SCREEN_HEIGHT_IN_PIXELS-1)
     
     x = door.x_pos
     y = door.y_pos
@@ -179,8 +179,8 @@ class DoorDestinationMarkerItem < Qt::GraphicsRectItem
   BRUSH = Qt::Brush.new(Qt::Color.new(255, 127, 0, 120))
   
   def initialize(dest_x, dest_y, dest_room, door_editor)
-    @width = SCREEN_WIDTH_IN_PIXELS
-    @height = SCREEN_HEIGHT_IN_PIXELS
+    @width = SCREEN_WIDTH_IN_PIXELS-1
+    @height = SCREEN_HEIGHT_IN_PIXELS-1
     if GAME == "hod"
       @height -= 0x60
     end
