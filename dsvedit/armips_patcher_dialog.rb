@@ -22,7 +22,7 @@ class ArmipsPatcherDialog < Qt::Dialog
     default_folder = "./asm"
     
     filename_prefix = @game.armips_patch_filename_prefix()
-    filter = "Program Files (#{filename_prefix}_*.asm);;All Files (*)"
+    filter = "Assembly Files (#{filename_prefix}_*.asm);;All Files (*)"
     
     patch_path = Qt::FileDialog.getOpenFileName(self, "Select ARMIPS patch location", default_folder, filter)
     return if patch_path.nil?
