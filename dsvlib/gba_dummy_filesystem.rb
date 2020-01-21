@@ -79,6 +79,15 @@ class GBADummyFilesystem
   end
   
   def write(address, new_data)
+    if !@changes_in_current_free_space_batch.nil?
+      if new_data.length != 0
+        old_data = read(address, new_data.length)
+        if old_data.length != 0
+          @changes_in_current_free_space_batch << [:overwrite, [address, old_data]]
+        end
+      end
+    end
+    
     offset = convert_address(address)
     rom[offset, new_data.length] = new_data
     
@@ -96,6 +105,15 @@ class GBADummyFilesystem
     file = files_by_path[file_path]
     if offset_in_file + new_data.length > file[:size]
       raise OffsetPastEndOfFileError.new("Offset %08X is past end of the rom (%08X bytes long)" % [offset_in_file, file[:size]])
+    end
+    
+    if !@changes_in_current_free_space_batch.nil?
+      if new_data.length != 0
+        old_data = read_by_file(file_path, offset_in_file, new_data.length)
+        if old_data.length != 0
+          @changes_in_current_free_space_batch << [:overwrite_by_file, [file_path, offset_in_file, old_data]]
+        end
+      end
     end
     
     rom[offset_in_file, new_data.length] = new_data

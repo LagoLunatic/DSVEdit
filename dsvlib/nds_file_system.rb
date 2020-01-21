@@ -252,6 +252,15 @@ class NDSFileSystem
       raise OffsetPastEndOfFileError.new("Offset %08X (length %08X) is past end of file #{file_path} (%08X bytes long)" % [offset_in_file, new_data.length, file[:size]])
     end
     
+    if !@changes_in_current_free_space_batch.nil?
+      if new_data.length != 0
+        old_data = read_by_file(file_path, offset_in_file, new_data.length)
+        if old_data.length != 0
+          @changes_in_current_free_space_batch << [:overwrite_by_file, [file_path, offset_in_file, old_data]]
+        end
+      end
+    end
+    
     file_data = get_file_data_from_opened_files_cache(file_path)
     file_data[offset_in_file, new_data.length] = new_data
     @opened_files_cache[file_path] = file_data

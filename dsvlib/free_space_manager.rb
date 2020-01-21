@@ -6,6 +6,7 @@ module FreeSpaceManager
   
   def read_free_space_from_text_file
     @free_spaces = []
+    @changes_in_current_free_space_batch = nil
     
     if SYSTEM == :nds
       initialize_sector_overlay_free_spaces()
@@ -101,6 +102,11 @@ module FreeSpaceManager
   
   def free_unused_space(ram_address, length)
     return if length <= 0
+    
+    if !@changes_in_current_free_space_batch.nil?
+      data = read(ram_address, length)
+      @changes_in_current_free_space_batch << [:free_unused_space, [ram_address, data]]
+    end
     
     path, offset = convert_ram_address_to_path_and_offset(ram_address)
     @free_spaces << {path: path, offset: offset, length: length}
@@ -286,6 +292,10 @@ module FreeSpaceManager
           expand_file(file, expand_length_needed)
         end
         
+        if !@changes_in_current_free_space_batch.nil?
+          @changes_in_current_free_space_batch << [:found_free_space, [file_path, free_space[:offset], length_needed]]
+        end
+        
         remove_free_space(file_path, free_space[:offset], length_needed)
         
         free_space_ram_pointer = file[:ram_start_offset] + free_space[:offset]
@@ -300,11 +310,45 @@ module FreeSpaceManager
     old_data = read(old_pointer, old_length)
     free_unused_space(old_pointer, old_length)
     
-    return get_free_space(new_length_needed, overlay_id)
-  rescue FreeSpaceFindError => e
-    # Failed to find space, so put the old data back how it was, then re-raise the error.
-    write(old_pointer, old_data)
-    raise e
+    begin
+      return get_free_space(new_length_needed, overlay_id)
+    rescue FreeSpaceFindError => e
+      # Failed to find space, so put the old data back how it was, then re-raise the error.
+      write(old_pointer, old_data)
+      raise e
+    end
+  end
+  
+  def start_free_space_batch
+    @changes_in_current_free_space_batch = []
+  end
+  
+  def end_free_space_batch
+    @changes_in_current_free_space_batch = nil
+  end
+  
+  def undo_free_space_batch
+    changes_in_current_free_space_batch = @changes_in_current_free_space_batch
+    @changes_in_current_free_space_batch = nil
+    
+    changes_in_current_free_space_batch.reverse_each do |change_type, params|
+      case change_type
+      when :free_unused_space
+        old_pointer, old_data = params
+        write(old_pointer, old_data)
+      when :found_free_space
+        file_path, offset_in_file, length = params
+        mark_space_unused(file_path, offset_in_file, length)
+      when :overwrite
+        old_pointer, old_data = params
+        write(old_pointer, old_data)
+      when :overwrite_by_file
+        file_path, offset_in_file, old_data = params
+        write_by_file(file_path, offset_in_file, old_data)
+      else
+        raise "Invalid free space batch change type: #{change_type}"
+      end
+    end
   end
   
   def initialize_copy(orig)

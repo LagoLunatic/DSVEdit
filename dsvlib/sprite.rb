@@ -302,6 +302,8 @@ class Sprite
   end
   
   def write_to_rom_by_pointer
+    fs.start_free_space_batch()
+    
     if GAME == "dos"
       overlay_id = 3
       # (Note that both overlays 2 and 3 are used for sprite data in DoS, but 3 is the larger one.)
@@ -512,6 +514,11 @@ class Sprite
       ].pack("vvVVV")
       fs.write(sprite_pointer, header_data)
     end
+    
+    fs.end_free_space_batch()
+  rescue StandardError => e
+    fs.undo_free_space_batch()
+    raise e
   end
   
   def min_x
