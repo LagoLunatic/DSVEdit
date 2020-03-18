@@ -7,6 +7,7 @@ class Game
   class InvalidFileError < StandardError ; end
   class RoomFindError < StandardError ; end
   class ShopAllowableItemPoolTooLargeError < StandardError ; end
+  class InvalidSaveFileFormatError < StandardError ; end
   
   attr_reader :areas,
               :fs,
@@ -1034,11 +1035,21 @@ class Game
     
     save_data = File.open(save_path, "rb") {|f| f.read}
     
+    if save_data[0,0x1F] == "NocashGbaBackupMediaSavDataFile"
+      save_data = save_data[0x4C..-1]
+    end
+    
+    if save_data.nil? || save_data.length <= 0x10000
+      raise InvalidSaveFileFormatError.new
+    end
+    
+    if save_data[0,4].unpack("V").first != SAVE_FILE_MAGIC_BYTES
+      raise InvalidSaveFileFormatError.new
+    end
+    
     (0..5).each do |slot_index|
       slot_exists = save_data[8 + slot_index].unpack("C").first
       next if slot_exists == 0
-      
-      puts slot_index
       
       slot_data = save_data[0x3800 + 0x1800*slot_index,save_slot_size]
       

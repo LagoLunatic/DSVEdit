@@ -218,6 +218,7 @@
     <addaction name="actionAdd_Overlay"/>
     <addaction name="actionEntity_Search"/>
     <addaction name="actionAddress_Converter"/>
+    <addaction name="actionFix_Save_Files"/>
     <addaction name="actionSettings"/>
    </widget>
    <widget class="QMenu" name="menuBuild">
@@ -551,6 +552,11 @@
   <action name="actionClear_Room_Contents">
    <property name="text">
     <string>Clear Room Contents</string>
+   </property>
+  </action>
+  <action name="actionFix_Save_Files">
+   <property name="text">
+    <string>Fix Save Files</string>
    </property>
   </action>
  </widget>
