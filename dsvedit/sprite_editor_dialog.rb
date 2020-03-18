@@ -1006,7 +1006,7 @@ class SpriteEditor < Qt::Dialog
     chunky_frames, _ = @renderer.render_sprite(@sprite_info, override_part_palette_index: @override_part_palette_index, one_dimensional_mode: @one_dimensional_render_mode, transparent_trails: @transparent_trails)
     chunky_frames.each_with_index do |chunky_frame, i|
       type_name = ""
-      filename = "#{output_folder}/frame_#{i}.png"
+      filename = "%s/frame%03X.png" % [output_folder, i]
       chunky_frame.save(filename, :fast_rgba)
     end
     

@@ -128,7 +128,7 @@ class DarkFunctionInterface
               i_on_big_gfx_page = gfx_page_index + (part.palette_index*big_gfx_page_width)
               big_gfx_x_offset = (i_on_big_gfx_page % big_gfx_page_width) * gfx_page_width_with_padding
               big_gfx_y_offset = (i_on_big_gfx_page / big_gfx_page_width) * gfx_page_width_with_padding
-              xml.spr(:name => "part%02X" % part_index,
+              xml.spr(:name => "part%03X" % part_index,
                       :x => part.gfx_x_offset + big_gfx_x_offset,
                       :y => part.gfx_y_offset + big_gfx_y_offset,
                       :w => part.width,
@@ -232,7 +232,7 @@ class DarkFunctionInterface
                   horizontal_flip = dup_data[:horizontal_flip]
                   vertical_flip = dup_data[:vertical_flip]
                   unique_part_index = sprite.parts.index(part)
-                  xml.spr(:name => "/part%02X" % unique_part_index,
+                  xml.spr(:name => "/part%03X" % unique_part_index,
                           :x => x + part.width/2,
                           :y => y + part.height/2,
                           :z => part_z_index,
