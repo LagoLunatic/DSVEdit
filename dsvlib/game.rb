@@ -1,6 +1,7 @@
 
 require 'open3'
 require 'tmpdir'
+require 'digest'
 
 class Game
   class InvalidFileError < StandardError ; end
@@ -968,6 +969,84 @@ class Game
   end
   
   # TODO: allow adding/removing warp rooms in dos
+  
+  def get_save_file_sections
+    if GAME != "por"
+      raise NotImplementedError.new
+    end
+    
+    old_save_file_sections_list_ptr = fs.read(SAVE_FILE_SECTIONS_LIST_POINTER_HARDCODED_LOCATIONS.first, 4).unpack("V").first
+    save_file_sections = []
+    i = 0
+    while true
+      ram_location, section_size = fs.read(old_save_file_sections_list_ptr + i*8, 8).unpack("VV")
+      if ram_location == 0
+        break
+      end
+      
+      save_file_sections << {ram_location: ram_location, size: section_size}
+      
+      i += 1
+    end
+    return save_file_sections
+  end
+  
+  def get_save_file_total_used_size_per_slot
+    save_file_sections = get_save_file_sections()
+    total_size = 0
+    save_file_sections.each do |section|
+      total_size += section[:size]
+    end
+    return total_size
+  end
+  
+  def write_save_file_sections(new_save_file_sections)
+    if GAME != "por"
+      raise NotImplementedError.new
+    end
+    
+    old_save_file_sections_list_ptr = fs.read(SAVE_FILE_SECTIONS_LIST_POINTER_HARDCODED_LOCATIONS.first, 4).unpack("V").first
+    old_save_file_sections = get_save_file_sections()
+    
+    end_marker_length = 8
+    orig_length = old_save_file_sections.length*8 + end_marker_length
+    new_length = new_save_file_sections.length*8 + end_marker_length
+    new_save_sections_list_ptr = fs.free_old_space_and_find_new_free_space(old_save_file_sections_list_ptr, orig_length, new_length, nil)
+    
+    offset = new_save_sections_list_ptr
+    new_save_file_sections.each do |section|
+      fs.write(offset, [section[:ram_location], section[:size]].pack("VV"))
+      offset += 8
+    end
+    fs.write(offset, [0, 0].pack("VV")) # End marker
+    
+    SAVE_FILE_SECTIONS_LIST_POINTER_HARDCODED_LOCATIONS.each do |hardcoded_location|
+      fs.write(hardcoded_location, [new_save_sections_list_ptr].pack("V"))
+    end
+  end
+  
+  def fix_save_file_hashes(save_path)
+    if GAME != "por"
+      raise NotImplementedError.new
+    end
+    
+    save_slot_size = get_save_file_total_used_size_per_slot()
+    
+    save_data = File.open(save_path, "rb") {|f| f.read}
+    
+    (0..5).each do |slot_index|
+      slot_exists = save_data[8 + slot_index].unpack("C").first
+      next if slot_exists == 0
+      
+      puts slot_index
+      
+      slot_data = save_data[0x3800 + 0x1800*slot_index,save_slot_size]
+      
+      save_data[0xE020 + slot_index*0x20,0x14] = Digest::SHA1.digest(slot_data)
+    end
+    
+    File.open(save_path, "wb") {|f| f.write(save_data)}
+  end
   
   def print_symbols
     File.open("./docs/asm/#{GAME} auto-generated function symbols.txt", "w") do |f|
