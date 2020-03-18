@@ -40,6 +40,8 @@ NO_FREE_SPACE_MESSAGE = "Refer to the \"Adding a free space overlay\" section of
 class DSVEdit < Qt::MainWindow
   attr_reader :game
   
+  attr_accessor :settings
+  
   slots "extract_rom_dialog()"
   slots "open_folder_dialog()"
   slots "save_files()"
