@@ -477,6 +477,7 @@ F5-F5  021115E0-0211173F  ?
   08 02111890 Dark Academy
   09 0211194E Nest of Evil
   The game doesn't have a list of pointers to each of these lists for each area. Instead function 02030570 is used to hardcode these pointers.
+  Note that these bits are grouped into halfword bitfields. So the next area's list doesn't start until the next multiple of 2 bytes after the previous list ended.
 
 0211196E-021119A9 List of player-positioned map reminder markers.
   Each marker is 2 bytes long:
@@ -640,6 +641,9 @@ F5-F5  021115E0-0211173F  ?
   02111FBC,4 - Bitfield of resistances.
 02111FC0 - Player 1's current stats.
   02111FC0,2 - ATK
+    The player's ATK is calculated by CalcPlayerAttack based on the current weapon's ATK and the player's STR with the following formula:
+      (((ATK/4 + 1) * STR) / 0x18) + (STR+1)/4 + (ATK/4 + 2)
+      (Note: This does not take the Miser Ring into account.)
   02111FC2,2 - DEF
   02111FC4,2 - STR
   02111FC6,2 - CON
@@ -881,6 +885,13 @@ Format of extra entity memory used for portrait paintings:
   Entry length 0x3C.
 
 02132070,2 - Next free slot index in the currently loaded sprite info list (020FA200).
+
+02132180,20 - Things related to calculating save file SHA1 hashes.
+  00,14: Buffer.
+  14,04: Length of the data to calculate the SHA1 for in bytes times 8.
+  18,04: ?
+  1C,04: ?
+020F5C88,4 - Pointer to some function to call during the SHA1 calculation process? e.g. 020A3634
 
 0213282C - List of something related to hitboxes?
   Entry length 1.

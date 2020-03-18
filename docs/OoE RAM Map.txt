@@ -352,6 +352,8 @@ Player's current bonus elemental attribute points (AP):
 
 0210013C,4 - Pointer to current room's entity list.
 
+=== 02100144 - 021007D3: Data that gets saved to the save file. 0x690 bytes long.
+
 Bitfields of which map tiles you have explored:
 02100144-021001C1: Dracula's Castle
 021001C2-021001C5: Wygol Village
@@ -627,6 +629,8 @@ A 200% attack boost (triple) takes 0xFFFF (0d65535) AP.
   There are 0xC items in this list, each is a halfword.
   This list is randomized every time you enter an area.
   See 02223B08 for which items are available to be chosen in which areas.
+
+=== 021007D3: End of data that gets saved to the save file.
 
 021007D5 - 0 when starting a new game, 1 when loading a save.
 

@@ -11,6 +11,10 @@
 020172C0 Abs
 
 0202C610 LoadSave
+0202CCE8 CopyDataFromSaveToRAM
+  ; r0 - Offset within the save file
+  ; r1 - RAM address to copy the data to
+  ; r2 - Number of bytes to copy
 
 02032DD8 LoadOverlay
 
@@ -542,11 +546,11 @@
   ;   dmg_mult *= 1.25
   ;   for each Judgement Ring equipped: dmg_mult *= 1.5
   ; If the glyph does physical damage and does not do magical damage (0206B424):
-  ;   damage = (dmg_mult*str)/16 + str/12 + original_dmg_mult/2
+  ;   damage = (dmg_mult*str)/0x10 + str/0xC + original_dmg_mult/2
   ; If the glyph does magical damage and does not do physical damage (0206B460):
-  ;   damage = (dmg_mult*int)/16 + int/12 + original_dmg_mult/2
+  ;   damage = (dmg_mult*int)/0x10 + int/0xC + original_dmg_mult/2
   ; If the glyph does both physical and magical damage (0206B48C):
-  ;   damage = (dmg_mult*(str+int))/24 + (str+int)/12 + original_dmg_mult/2
+  ;   damage = (dmg_mult*(str+int))/0x18 + (str+int)/0xC + original_dmg_mult/2
   ; After those calculations, it also adds bonus damage based on your attribute points.
 
 02036D54 SetHitboxTypesToDamagePlayer?

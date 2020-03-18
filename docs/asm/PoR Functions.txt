@@ -25,6 +25,42 @@
   ; Copies in groups of words. Won't work right if the number of bytes to copy isn't divisible by 4.
 
 02042FA4 LoadSave
+  ; r0 - Save slot
+  ; Returns r0 - ? seems to be 0 when save loaded successfully, 4 when the save is corrupted
+
+02043744 LoadSaveRelated??
+  ; r0 - ? 0?
+  ; r1 - ? 1?
+  ; r2 - ? 02122C10?
+  ; r3 - Total length of the save file in bytes.
+  ; If this returns 0, the save is corrupted, or 1 for not corrupted...?
+020B0728 LoadSaveRelated2??
+  ; r0 - 0213D264?
+  ; r1 - 0213D144?
+  ; r2 - Length in bytes to check
+  ; Compares two sequences of bytes to see if they're equal. Returns 0 if equal, 1 if not.
+
+020118B8 CalculateSHA1
+  ; r0 - Pointer to where to store the calculated SHA1 hash
+  ; r1 - Pointer to the start of the data to calculate the SHA1 for
+  ; r2 - Length in bytes of the data to calculate the SHA1 for
+020A35D0 InitializeSHA1Buffer
+  ; r0 - Pointer to the SHA1 buffer (02132180)
+  ; Stores the following bytes to the buffer:
+  ; 01 23 45 67 89 AB CD EF FE DC BA 98 76 54 32 10 F0 E1 D2 C3 00 00 00 00 00 00 00 00 00 00 00 00
+  ; Or in words instead of bytes, that's:
+  ; 67452301 EFCDAB89 98BADCFE 10325476 C3D2E1F0 
+020A3474 ???SHA1
+  ; r0 - Pointer to the SHA1 buffer (02132180)
+  ; r1 - Pointer to the start of the data to calculate the SHA1 for
+  ; r2 - Length in bytes of the data to calculate the SHA1 for
+020A3278 ???SHA12
+  ; r0 - Pointer to the SHA1 buffer (02132180)
+  ; r1 - Pointer to where to store the calculated SHA1
+020A3634 ???SHA13MultiplesOf0x40BytesOnly
+  ; r0 - Pointer to the SHA1 buffer (02132180)
+  ; r1 - Pointer to the start of the data to calculate the SHA1 for
+  ; r2 - Length in bytes of the data to calculate the SHA1 for, rounded DOWN to the nearest 0x40
 
 02007970 LoadOverlay
 
@@ -402,7 +438,7 @@
   ; Does nothing, immediately returns.
 
 02208C28 CalcPlayerAttack
-  ; r0 - ?
+  ; r0 - Player index
   ; r1 - ?
   ; Returns r0 - the new attack value
 

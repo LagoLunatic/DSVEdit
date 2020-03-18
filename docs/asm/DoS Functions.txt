@@ -321,6 +321,8 @@
   ; [r13,10] - 0
 0200ABC0 RenderNumberToBG?2
 0200AE90 RenderCharacterToBG?2
+  ; r0 - The character to render, a single byte.
+  ; r1 - 
 02008F68 RenderString1?
   ; r0 - 0 or 1
   ; r1 - 0
@@ -331,6 +333,12 @@
   ; r1 - Y position to render the string at in the Tiles 2 layer.
   ; r2 - FF
   ; r3 - 0
+
+0200B978 GetFontCharacterByCharacterByte
+  ; r0 - The character byte
+  ; r1 - Pointer to where the font file is loaded in RAM +2 bytes
+  ; r2 - The number of bytes each entry in the font file takes up (0xA for font/LD_font_u8.DAT)
+  ; Returns r1 + r2*r3
 
 0203B308 SetEnemyOnTopScreen
   ; r0 - Enemy ID

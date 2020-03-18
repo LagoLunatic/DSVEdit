@@ -62,6 +62,8 @@
   02,2: Cosine of the input value.
   The sine/cosine values range from -0x1000 to 0x1000, corresponding to -1.0 to 1.0.
 
+0208AC68,4 - Has a pointer to where /font/LD_font_u8.DAT is loaded in RAM.
+
 0208ACC0 - List of update code pointers for each game state (020C07E8).
 
 0208AD8C - List of room pointers for transition rooms.
