@@ -232,7 +232,7 @@ class DarkFunctionInterface
                   horizontal_flip = dup_data[:horizontal_flip]
                   vertical_flip = dup_data[:vertical_flip]
                   unique_part_index = sprite.parts.index(part)
-                  xml.spr(:name => "/part%02X" % unique_part_index,
+                  xml.spr(:name => "/part%03X" % unique_part_index,
                           :x => x + part.width/2,
                           :y => y + part.height/2,
                           :z => part_z_index,
