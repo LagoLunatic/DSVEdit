@@ -32,16 +32,25 @@ class SettingsDialog < Qt::Dialog
   end
   
   def browse_for_tiled_path
-    possible_install_path = File.join(ENV["ProgramFiles"], "Tiled", "tiled.exe")
-    possible_install_path_x86 = File.join(ENV["ProgramFiles(x86)"], "Tiled", "tiled.exe")
-    possible_install_path_x64 = File.join(ENV["ProgramW6432"], "Tiled", "tiled.exe")
-    if File.file?(possible_install_path)
-      default_dir = possible_install_path
-    elsif File.file?(possible_install_path_x86)
-      default_dir = possible_install_path_x86
-    elsif File.file?(possible_install_path_x64)
-      default_dir = possible_install_path_x64
+    env_vars_to_check = [
+      "ProgramFiles",
+      "ProgramFiles(x86)",
+      "ProgramW6432",
+    ]
+    
+    default_dir = nil
+    env_vars_to_check.each do |env_var_name|
+      if !ENV.include?(env_var_name)
+        next
+      end
+      
+      possible_install_path = File.join(ENV[env_var_name], "Tiled", "tiled.exe")
+      if File.file?(possible_install_path)
+        default_dir = possible_install_path
+        break
+      end
     end
+    
     tiled_path = Qt::FileDialog.getOpenFileName(self, "Select Tiled install location", default_dir, "Program Files (*.exe)")
     return if tiled_path.nil?
     @ui.tiled_path.text = tiled_path
