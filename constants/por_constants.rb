@@ -1107,7 +1107,7 @@ ITEM_BITFIELD_ATTRIBUTES = {
     "Player can move",
     "No Slash Trail",
     "Modifier 6",
-    "Modifier 7",
+    "No transparent slash trail",
     "Shaky weapon",
     "Modifier 9",
     "Modifier 10",

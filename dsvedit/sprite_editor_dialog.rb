@@ -150,6 +150,7 @@ class SpriteEditor < Qt::Dialog
     end
     
     @weapons = []
+    @weapon_items_for_each_gfx_index = {}
     (0..WEAPON_GFX_COUNT-1).each do |weapon_gfx_index|
       weapon = WeaponGfx.new(weapon_gfx_index, fs)
       @weapons << weapon
@@ -171,6 +172,9 @@ class SpriteEditor < Qt::Dialog
       else
         weapon_name = "Unused"
       end
+      
+      @weapon_items_for_each_gfx_index[weapon_gfx_index] = items
+      
       @ui.weapon_list.addItem("%02X %s" % [weapon_gfx_index, weapon_name])
     end
     
@@ -330,7 +334,17 @@ class SpriteEditor < Qt::Dialog
     
     @override_part_palette_index = 0 # Weapons always use the first palette. Instead the part's palette index value is used to indicate that it should start out partially transparent.
     @one_dimensional_render_mode = false
-    @transparent_trails = false
+    if GAME == "por"
+      @override_part_palette_index = nil
+      weapon_item = @weapon_items_for_each_gfx_index[weapon_gfx_index].first
+      if weapon_item && !weapon_item["Swing Modifiers"]["No transparent slash trail"]
+        @transparent_trails = true
+      else
+        @transparent_trails = false
+      end
+    else
+      @transparent_trails = false
+    end
     load_sprite()
     
     @ui.weapon_list.setCurrentRow(weapon_gfx_index)
