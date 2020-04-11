@@ -1105,7 +1105,7 @@ ITEM_BITFIELD_ATTRIBUTES = {
     "Weapon floats in place",
     "Modifier 3",
     "Player can move",
-    "No Slash Trail",
+    "No trail gradual fadeout",
     "Modifier 6",
     "No transparent slash trail",
     "Shaky weapon",

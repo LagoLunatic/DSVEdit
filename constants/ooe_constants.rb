@@ -1101,7 +1101,7 @@ ITEM_BITFIELD_ATTRIBUTES = {
     "Weapon floats in corner of room",
     "Unknown 3",
     "Unknown 4",
-    "Unknown 5",
+    "No trail gradual fadeout",
     "Unknown 6",
     "No transparent slash trail",
     "Unknown 8",
