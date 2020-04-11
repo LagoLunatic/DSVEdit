@@ -332,10 +332,11 @@ class SpriteEditor < Qt::Dialog
       return
     end
     
-    @override_part_palette_index = 0 # Weapons always use the first palette. Instead the part's palette index value is used to indicate that it should start out partially transparent.
+    @override_part_palette_index = nil
     @one_dimensional_render_mode = false
-    if GAME == "por"
-      @override_part_palette_index = nil
+    if GAME == "dos"
+      @transparent_trails = true
+    elsif GAME == "por"
       weapon_item = @weapon_items_for_each_gfx_index[weapon_gfx_index].first
       if weapon_item && !weapon_item["Swing Modifiers"]["No transparent slash trail"]
         @transparent_trails = true
