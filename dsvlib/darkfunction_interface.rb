@@ -118,6 +118,7 @@ class DarkFunctionInterface
             unique_parts.each_with_index do |part, i|
               part_index = sprite.parts.index(part)
               gfx_page_index = part.gfx_page_index
+              part_palette_index = part.palette_index
               if sprite_info.ignore_part_gfx_page
                 gfx_page_index = 0
               end
@@ -125,7 +126,11 @@ class DarkFunctionInterface
                 # 256x256 pages take up 4 times the space of 128x128 pages.
                 gfx_page_index = gfx_page_index / 4
               end
-              i_on_big_gfx_page = gfx_page_index + (part.palette_index*big_gfx_page_width)
+              if part_palette_index >= num_palettes
+                # Failsafe to prevent parts from being put in the hitbox area if there's some invalid palette index.
+                part_palette_index = 0
+              end
+              i_on_big_gfx_page = gfx_page_index + (part_palette_index*big_gfx_page_width)
               big_gfx_x_offset = (i_on_big_gfx_page % big_gfx_page_width) * gfx_page_width_with_padding
               big_gfx_y_offset = (i_on_big_gfx_page / big_gfx_page_width) * gfx_page_width_with_padding
               xml.spr(:name => "part%03X" % part_index,
