@@ -993,6 +993,12 @@ class Game
   end
   
   def get_save_file_total_used_size_per_slot
+    if GAME != "por"
+      raise NotImplementedError.new
+    end
+    
+    # Vanilla PoR used 0xCE9 bytes per save slot.
+    
     save_file_sections = get_save_file_sections()
     total_size = 0
     save_file_sections.each do |section|
