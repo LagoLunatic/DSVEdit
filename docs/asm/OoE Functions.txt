@@ -613,6 +613,10 @@
   ; r3 - Palette list ptr
 0203C834 LoadCommonSprite
   ; r0 - Entity
+0204160C LoadSpriteMultiGfx2?
+  ; Arguments taken are the same as LoadSpriteMultiGfx.
+  ; Unsure how this is different. This is called by Arthroverta for example.
+0202ECF8 LoadGFX?
 
 0202BD8C GetSpriteInfo
   ; r0 - Index in currently loaded sprite infos list

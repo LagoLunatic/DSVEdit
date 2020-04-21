@@ -479,7 +479,7 @@
   ; r1 - Sprite ptr
   ; r2 - GFX list ptr
   ; r3 - Palette list ptr
-  ; [r13] - How to load GFX:
+  ; [r13],1 - How to load GFX:
   ;   0 - Loading a singular GFX...?
   ;   1 - Loading from a list of GFX, and all GFX in the list should be loaded.
   ;   2 - Loading from a list of GFX, but only load the first GFX in the list.
