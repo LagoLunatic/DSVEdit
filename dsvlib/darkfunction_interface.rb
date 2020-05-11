@@ -334,14 +334,22 @@ class DarkFunctionInterface
         if !sprite.animations[unanimated_anim_index].nil?
           raise ImportError.new("There are multiple unanimated anims with index %02X" % unanimated_anim_index)
         end
-        if !sprite.frames[unanimated_frame_index].nil?
-          raise ImportError.new("There are multiple unanimated anim frames with index %02X" % unanimated_frame_index)
-        end
         
         df_cell = df_anim.css("cell").first
         frame, this_frames_unique_part_and_hitbox_strs = import_frame(
           df_cell, df_unique_parts, gfx_page_width_with_padding, big_gfx_page_width, num_gfx_pages, gfx_page_canvas_width
         )
+        
+        if !sprite.frames[unanimated_frame_index].nil?
+          # Sometimes, like with Albus's sprite, the same frame is used for multiple animations.
+          # If the frames are still identical, we allow the import to happen.
+          # Only throw an error if the user changed one instance of the frame without changing all instances of it.
+          existing_frame_part_and_hitbox_strs = each_frames_unique_part_and_hitbox_strs[unanimated_frame_index]
+          if this_frames_unique_part_and_hitbox_strs != existing_frame_part_and_hitbox_strs
+            raise ImportError.new("There are multiple unanimated anim frames with index %02X that are not identical." % unanimated_frame_index)
+          end
+        end
+        
         sprite.frames[unanimated_frame_index] = frame
         all_created_frames[unanimated_frame_index] = frame
         each_frames_unique_part_and_hitbox_strs[unanimated_frame_index] = this_frames_unique_part_and_hitbox_strs
