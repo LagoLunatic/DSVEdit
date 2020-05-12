@@ -684,7 +684,7 @@ OTHER_SPRITES = [
   {pointer: 0x020EEDB8, desc: "Arma Felix player"},
   {pointer: 0x020EEE14, desc: "Arma Chiroptera player"},
   {pointer: 0x020EEE70, desc: "Arma Machina player"},
-  {pointer: 0x020EEECC, desc: "Albus player"},
+  {pointer: 0x020EEECC, desc: "Albus player", sprite: 0x021DCAEC},
   
   {desc: "Albus event actor", sprite: 0x021DCCC4, palette: 0x020D4F3C, gfx_wrapper: 0x022A5CCC},
   {desc: "Barlowe event actor", sprite: 0x021DCCC0, palette: 0x020D4F60, gfx_wrapper: 0x022A5CD4},
