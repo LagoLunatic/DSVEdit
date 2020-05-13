@@ -7,7 +7,8 @@ class Text
   
   attr_reader :text_id,
               :text_ram_pointer,
-              :fs
+              :fs,
+              :original_encoded_string_length
   attr_accessor :string_ram_pointer,
                 :decoded_string,
                 :encoded_string
@@ -37,6 +38,7 @@ class Text
       @encoded_string = fs.read_until_end_marker(string_ram_pointer+2, [0xEA]) # Skip the first 2 bytes which are always 01 00.
     end
     
+    @original_encoded_string_length = @encoded_string.length
     @decoded_string = decode_string(@encoded_string)
   end
   
@@ -52,6 +54,7 @@ class Text
       data = [1].pack("v") + encoded_string + [0xEA].pack("C")
     end
     fs.write(string_ram_pointer, data)
+    @original_encoded_string_length = @encoded_string.length
   end
   
   def overlay_id

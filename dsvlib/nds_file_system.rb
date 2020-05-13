@@ -472,11 +472,9 @@ class NDSFileSystem
     !@uncommitted_files.empty?
   end
   
-  def expand_file_and_get_end_of_file_ram_address(ram_address, length_to_expand_by)
-    file_path, offset_in_file = convert_ram_address_to_path_and_offset(ram_address)
-    file = @currently_loaded_files.values.find{|file| file[:file_path] == file_path}
-    
-    return expand_file_and_get_end(file, length_to_expand_by)
+  def expand_overlay_and_get_end(overlay_id, length_to_expand_by)
+    overlay = @overlays[overlay_id]
+    return expand_file_and_get_end(overlay, length_to_expand_by)
   end
   
   def expand_file_and_get_end(file, length_to_expand_by)

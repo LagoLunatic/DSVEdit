@@ -103,14 +103,24 @@ module FreeSpaceManager
   def free_unused_space(ram_address, length)
     return if length <= 0
     
+    actual_length = length
+    path, offset = convert_ram_address_to_path_and_offset(ram_address)
+    file = files_by_path[path]
+    if offset + length > file[:size]
+      diff = (offset + length) - file[:size]
+      if diff < 4
+        # If the free space goes 1-3 bytes past the end of the file, it's probably just something caused by rounding the free spaces up to the nearest 4 bytes, so simply decrease the length to avoid the error.
+        actual_length -= diff
+      end
+    end
+    
     if !@changes_in_current_free_space_batch.nil?
       data = read(ram_address, length)
       @changes_in_current_free_space_batch << [:free_unused_space, [ram_address, data]]
     end
     
-    path, offset = convert_ram_address_to_path_and_offset(ram_address)
     @free_spaces << {path: path, offset: offset, length: length}
-    write_by_file(path, offset, "\0"*length, freeing_space: true)
+    write_by_file(path, offset, "\0"*actual_length, freeing_space: true)
     merge_overlapping_free_spaces()
     
     round_free_spaces()
@@ -208,6 +218,11 @@ module FreeSpaceManager
     end
   end
   
+  def automatically_remove_nonzero_free_spaces_for_overlay(overlay_id = nil)
+    files_to_check = get_files_to_check_for_overlay(overlay_id)
+    automatically_remove_nonzero_free_spaces(files_to_check)
+  end
+  
   def automatically_remove_nonzero_free_spaces(files_to_check)
     # This is an extra safeguard to make absolutely sure no nonzero data is treated as free space.
     # (We also count FF as zero data, since HoD's free space is all FFs by default.)
@@ -253,11 +268,7 @@ module FreeSpaceManager
     end
   end
   
-  def get_free_space(length_needed, overlay_id = nil)
-    if length_needed <= 0
-      raise FreeSpaceFindError.new("Invalid free space length to find: #{length_needed}")
-    end
-    
+  def get_files_to_check_for_overlay(overlay_id = nil)
     files_to_check = []
     
     if SYSTEM == :nds
@@ -273,7 +284,19 @@ module FreeSpaceManager
       files_to_check << "/rom.gba"
     end
     
-    automatically_remove_nonzero_free_spaces(files_to_check)
+    return files_to_check
+  end
+  
+  def get_free_space(length_needed, overlay_id = nil, remove_nonzero_spaces = true)
+    if length_needed <= 0
+      raise FreeSpaceFindError.new("Invalid free space length to find: #{length_needed}")
+    end
+    
+    files_to_check = get_files_to_check_for_overlay(overlay_id)
+    
+    if remove_nonzero_spaces
+      automatically_remove_nonzero_free_spaces(files_to_check)
+    end
     
     free_spaces_sorted = @free_spaces.sort_by{|free_space| free_space[:length]}
     
