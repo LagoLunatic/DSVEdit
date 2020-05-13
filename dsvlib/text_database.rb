@@ -33,20 +33,20 @@ class TextDatabase
       text_list_for_overlay = text_list.select{|text| text.overlay_id == overlay}
       
       next_string_ram_pointer = STRING_DATABASE_START_OFFSET
-      should_write_to_end_of_file = false
+      writing_to_end_of_file = false
       text_list_for_overlay.each do |text|
         if next_string_ram_pointer + text.encoded_string.length + header_footer_length >= STRING_DATABASE_ALLOWABLE_END_OFFSET
           # Writing strings past this point would result in something being overwritten, so raise an error.
-          
           raise StringDatabaseTooLargeError.new
         end
         
         region_name = TEXT_REGIONS.find{|name, range| range.include?(text.text_id)}[0]
         
-        if GAME == "ooe" && next_string_ram_pointer + text.encoded_string.length + header_footer_length >= STRING_DATABASE_ORIGINAL_END_OFFSET
+        if !writing_to_end_of_file && GAME == "ooe" && next_string_ram_pointer + text.encoded_string.length + header_footer_length >= STRING_DATABASE_ORIGINAL_END_OFFSET
           # Reached the end of where strings were in the original game, but in OoE we can expand the file.
-          
-          should_write_to_end_of_file = true
+          writing_to_end_of_file = true
+        end
+        if writing_to_end_of_file
           next_string_ram_pointer = fs.expand_file_and_get_end_of_file_ram_address(text.string_ram_pointer, text.encoded_string.length + header_footer_length)
         end
         
@@ -58,9 +58,7 @@ class TextDatabase
         
         text.string_ram_pointer = next_string_ram_pointer
         
-        if should_write_to_end_of_file
-          next_string_ram_pointer = fs.expand_file_and_get_end_of_file_ram_address(text.string_ram_pointer, text.encoded_string.length + header_footer_length)
-        else
+        if !writing_to_end_of_file
           next_string_ram_pointer += text.encoded_string.length + header_footer_length
         end
       end
