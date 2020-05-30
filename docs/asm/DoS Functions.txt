@@ -600,6 +600,11 @@
 02215F5C MagicSealUpdate
 
 021D9668 ActorSpawn
+  ; r0 - Pointer to the event entity
+  ; r1 - Actor index (in list 0222CBE0) or -1 for Soma
+  ; r2 - ?
+  ; r3 - X pos
+  ; [r13] - Y pos
 021D9288 ActorSetVelocity
 021D9114 ActorCheckXPos
 021D91B8 ActorSetAnim
