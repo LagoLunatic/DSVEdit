@@ -191,6 +191,9 @@ class DSVEdit < Qt::MainWindow
       toggle_hide_map()
     end
     
+    # Temporarily hide unfinished features.
+    @ui.menuTools.removeAction(@ui.actionFix_Save_Files)
+    
     self.setWindowState(Qt::WindowMaximized)
     self.setWindowTitle("DSVania Editor #{DSVEDIT_VERSION}")
     
