@@ -618,6 +618,9 @@ A 200% attack boost (triple) takes 0xFFFF (0d65535) AP.
 02100798,1 - SFX volume.
 02100799,1 - Voice volume.
 0210079A,1 - Max level.
+0210079B,1 - Audio-related bitfield.
+  & 01 - Set for English voices, clear for Japanese voices.
+  & 02 - Set for surround sound, clear otherwise.
 0210079C,2 - Bonus HP given by HP max ups.
   Each HP max up gives +0x14 HP. The maximum is +0x258 HP, then any additional HP max ups do nothing. That's equivalent to 0x1E HP max ups in total.
 0210079E,2 - Bonus MP given by MP max ups.
@@ -941,6 +944,8 @@ there's a switch statement at 02045A84 where it hardcodes the sector and room in
 02151CDC - Song currently playing in sound test?
 0215AA08 - Song currently playing. FF when no song is playing.
 0215AA10 - Music volume.
+
+0215A8E4,2 - 1 for English voices, 0 for Japanese voices.
 
 021DD240 - Area name index shown on the top screen.
   Used for the world map as well as warp points.

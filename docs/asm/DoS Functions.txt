@@ -85,6 +85,11 @@
   ; Call this after SetDestinationRoomSectorAndRoomIndexes so the room actually changes.
 
 02012D78 Rand
+02012D38 RandMax
+  ; Max random number is r0-1. Min is 0.
+02012D18 RandMinMax
+  ; r0 - Minimum value
+  ; r1 - Maximum value
 
 0202E520 ShowTextPopup
   ; r0 - Text index of the text to display.
