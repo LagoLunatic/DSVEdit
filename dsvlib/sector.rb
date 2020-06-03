@@ -143,7 +143,7 @@ class Sector
     default_collision_tileset_pointer = 0
     rooms.each do |other_room|
       other_room_main_layer = other_room.layers.first
-      if other_room_main_layer.layer_metadata_ram_pointer == 0
+      if other_room_main_layer.nil? || other_room_main_layer.layer_metadata_ram_pointer == 0
         # Empty layer.
         next
       end
