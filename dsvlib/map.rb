@@ -76,10 +76,10 @@ class Map
       @row_widths << row_width
       total_tiles_found += row_width
     end
+    @original_number_of_rows = row_widths.length
     if total_tiles_found != number_of_tiles
       raise "Error reading map row widths: Total number of tiles does not match (#{total_tiles_found} tiles found, should be #{number_of_tiles})"
     end
-    @original_number_of_rows = row_widths.length
   end
   
   def write_to_rom(allow_changing_num_tiles: false)
@@ -128,7 +128,7 @@ class Map
       raise "Error writing map row widths: Total number of tiles does not match (#{sum_of_row_widths} tiles found, should be #{@tiles.length})"
     end
     
-    if allow_changing_num_tiles
+    if allow_changing_num_tiles && @tiles.length <= @number_of_tiles
       @number_of_tiles = @tiles.length
       fs.write(MAP_LENGTH_DATA_START_OFFSET + area_index*2, [number_of_tiles].pack("v"))
     elsif @number_of_tiles != @tiles.length
