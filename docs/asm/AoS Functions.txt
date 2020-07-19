@@ -50,6 +50,9 @@
   ; r0 - Text ID
   ; Returns r0 - Pointer to the text string
 
+08040AB8 DrawTextCharacterVariableWidth
+  ; r0 - The index of the character to draw.
+
 0802D284 GetRedSoulPointer
   ; r0 - Index of the red soul
   ; If in Julius mode, will return the Julius skill of that index instead of the red soul.

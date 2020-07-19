@@ -165,6 +165,9 @@ D0-DF  02007024-02007863  ?
   08,4: 
   0C,4: Sprite pointer.
 
+020115A6,2 - X position of the caret when drawing text.
+  This is the X offset, in pixels, of the start of the current character being drawn, compared to the left edge of the canvas being drawn on.
+
 020121DC - Object palettes currently loaded.
   This gets copied to VRAM.
 
