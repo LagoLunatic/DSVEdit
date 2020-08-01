@@ -8,6 +8,7 @@ class RoomEditorDialog < Qt::Dialog
   
   slots "reposition_room_on_map(int, int, const Qt::MouseButton&)"
   slots "open_tileset_chooser()"
+  slots "open_color_effects_editor()"
   slots "button_box_clicked(QAbstractButton*)"
   
   def initialize(main_window, room, renderer)
@@ -28,6 +29,7 @@ class RoomEditorDialog < Qt::Dialog
     connect(@map_graphics_scene, SIGNAL("moved(int, int, const Qt::MouseButton&)"), self, SLOT("reposition_room_on_map(int, int, const Qt::MouseButton&)"))
     
     connect(@ui.select_tileset_button, SIGNAL("clicked()"), self, SLOT("open_tileset_chooser()"))
+    connect(@ui.edit_color_effects_button, SIGNAL("clicked()"), self, SLOT("open_color_effects_editor()"))
     connect(@ui.buttonBox, SIGNAL("clicked(QAbstractButton*)"), self, SLOT("button_box_clicked(QAbstractButton*)"))
     
     if GAME != "hod"
@@ -48,29 +50,25 @@ class RoomEditorDialog < Qt::Dialog
       
       @ui.label_14.hide()
       @ui.entity_gfx_page_list.hide()
-      label_item = @ui.formLayout.itemAt(5, Qt::FormLayout::LabelRole)
-      @ui.formLayout.removeItem(label_item)
-      field_item = @ui.formLayout.itemAt(5, Qt::FormLayout::FieldRole)
-      @ui.formLayout.removeItem(field_item)
+      @ui.formLayout.removeWidget(@ui.label_14)
+      @ui.formLayout.removeWidget(@ui.entity_gfx_page_list)
     end
     if SYSTEM == :nds
       @ui.lcd_control.hide()
       @ui.label_9.hide()
-      label_item = @ui.formLayout.itemAt(4, Qt::FormLayout::LabelRole)
-      @ui.formLayout.removeItem(label_item)
-      field_item = @ui.formLayout.itemAt(4, Qt::FormLayout::FieldRole)
-      @ui.formLayout.removeItem(field_item)
+      @ui.formLayout.removeWidget(@ui.lcd_control)
+      @ui.formLayout.removeWidget(@ui.label_9)
     end
     if GAME != "aos"
       @ui.color_effects.hide()
       @ui.label_5.hide()
-      label_item = @ui.formLayout.itemAt(3, Qt::FormLayout::LabelRole)
-      @ui.formLayout.removeItem(label_item)
-      field_item = @ui.formLayout.itemAt(3, Qt::FormLayout::FieldRole)
-      @ui.formLayout.removeItem(field_item)
+      @ui.edit_color_effects_button.hide()
     end
     if !["dos", "aos"].include?(GAME)
       @ui.is_transition_room.hide()
+      
+      # Spacer in the row with Is Transition Room and Color Effects, hide this so it doesn't create an empty row.
+      @ui.horizontalLayout_5.removeItem(@ui.horizontalSpacer_4)
     end
     
     if !["por", "ooe"].include?(GAME)
@@ -201,6 +199,10 @@ class RoomEditorDialog < Qt::Dialog
     @tileset_chooser = TilesetChooserDialog.new(self, @game, @room.sector, @renderer)
   end
   
+  def open_color_effects_editor
+    @color_effects_editor = ColorEffectsEditorDialog.new(self, @room, @ui.color_effects.text.to_i(16))
+  end
+  
   def set_tileset(tileset_name)
     tileset_name =~ /^(\h{8})-(\h{8})_(\h{8})-(\h{2})_(\h{8})$/
     
@@ -227,6 +229,10 @@ class RoomEditorDialog < Qt::Dialog
       "Failed to find free space",
       "Failed to find free space for the changes to these layers.\n\n#{NO_FREE_SPACE_MESSAGE}"
     )
+  end
+  
+  def set_color_effects(color_effects)
+    @ui.color_effects.text = "%04X" % color_effects
   end
   
   def button_box_clicked(button)

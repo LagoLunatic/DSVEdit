@@ -16,47 +16,6 @@
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
     <layout class="QGridLayout" name="gridLayout">
-     <item row="3" column="2">
-      <widget class="QLabel" name="label_7">
-       <property name="text">
-        <string>Tileset</string>
-       </property>
-      </widget>
-     </item>
-     <item row="0" column="0">
-      <widget class="QLabel" name="label">
-       <property name="text">
-        <string>Layer</string>
-       </property>
-      </widget>
-     </item>
-     <item row="1" column="0">
-      <widget class="QLabel" name="label_2">
-       <property name="text">
-        <string>Width</string>
-       </property>
-      </widget>
-     </item>
-     <item row="1" column="2">
-      <widget class="QLabel" name="label_3">
-       <property name="text">
-        <string>Height</string>
-       </property>
-      </widget>
-     </item>
-     <item row="1" column="3">
-      <widget class="QLineEdit" name="height"/>
-     </item>
-     <item row="1" column="1">
-      <widget class="QLineEdit" name="width"/>
-     </item>
-     <item row="2" column="0">
-      <widget class="QLabel" name="label_10">
-       <property name="text">
-        <string>Scroll Mode</string>
-       </property>
-      </widget>
-     </item>
      <item row="1" column="4">
       <widget class="QLabel" name="label_4">
        <property name="text">
@@ -67,8 +26,46 @@
      <item row="1" column="5">
       <widget class="QLineEdit" name="z_index"/>
      </item>
-     <item row="2" column="1">
-      <widget class="QLineEdit" name="scroll_mode"/>
+     <item row="3" column="2">
+      <widget class="QLabel" name="label_7">
+       <property name="text">
+        <string>Tileset</string>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="2">
+      <widget class="QLabel" name="label_3">
+       <property name="text">
+        <string>Height</string>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="1">
+      <widget class="QLineEdit" name="width"/>
+     </item>
+     <item row="1" column="0">
+      <widget class="QLabel" name="label_2">
+       <property name="text">
+        <string>Width</string>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="3">
+      <widget class="QLineEdit" name="height"/>
+     </item>
+     <item row="0" column="0">
+      <widget class="QLabel" name="label">
+       <property name="text">
+        <string>Layer</string>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="0">
+      <widget class="QLabel" name="label_10">
+       <property name="text">
+        <string>Scroll Mode</string>
+       </property>
+      </widget>
      </item>
      <item row="2" column="2">
       <widget class="QLabel" name="label_5">
@@ -77,15 +74,18 @@
        </property>
       </widget>
      </item>
+     <item row="2" column="1">
+      <widget class="QLineEdit" name="scroll_mode"/>
+     </item>
+     <item row="2" column="5">
+      <widget class="QComboBox" name="main_gfx_page_index"/>
+     </item>
      <item row="2" column="4">
       <widget class="QLabel" name="label_6">
        <property name="text">
         <string>Main GFX Page</string>
        </property>
       </widget>
-     </item>
-     <item row="2" column="5">
-      <widget class="QComboBox" name="main_gfx_page_index"/>
      </item>
      <item row="2" column="3">
       <widget class="QSlider" name="opacity">
@@ -104,8 +104,8 @@
        </property>
       </widget>
      </item>
-     <item row="3" column="1">
-      <widget class="QLineEdit" name="tileset_type"/>
+     <item row="3" column="5">
+      <widget class="QLineEdit" name="collision_tileset"/>
      </item>
      <item row="3" column="4">
       <widget class="QLabel" name="label_8">
@@ -114,29 +114,29 @@
        </property>
       </widget>
      </item>
-     <item row="3" column="5">
-      <widget class="QLineEdit" name="collision_tileset"/>
-     </item>
      <item row="3" column="3">
       <widget class="QLineEdit" name="tileset"/>
      </item>
-     <item row="4" column="0">
-      <widget class="QLabel" name="label_11">
-       <property name="text">
-        <string>BG Control</string>
-       </property>
-      </widget>
-     </item>
-     <item row="4" column="1">
-      <widget class="QLineEdit" name="bg_control"/>
+     <item row="3" column="1">
+      <widget class="QLineEdit" name="tileset_type"/>
      </item>
      <item row="0" column="1" colspan="4">
       <widget class="QComboBox" name="layer_index"/>
+     </item>
+     <item row="4" column="1">
+      <widget class="QLineEdit" name="bg_control"/>
      </item>
      <item row="0" column="5">
       <widget class="QPushButton" name="copy_layer_pointer">
        <property name="text">
         <string>Copy layer pointer to clipboard</string>
+       </property>
+      </widget>
+     </item>
+     <item row="4" column="0">
+      <widget class="QLabel" name="label_11">
+       <property name="text">
+        <string>BG Control</string>
        </property>
       </widget>
      </item>
@@ -149,6 +149,13 @@
      </item>
      <item row="4" column="3">
       <widget class="QLineEdit" name="visual_effect"/>
+     </item>
+     <item row="4" column="4" colspan="2">
+      <widget class="QLabel" name="label_13">
+       <property name="text">
+        <string>(AoS layer transparency is controlled by Color Effects in Room Props.)</string>
+       </property>
+      </widget>
      </item>
     </layout>
    </item>
@@ -168,8 +175,8 @@
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>996</width>
-        <height>508</height>
+        <width>1000</width>
+        <height>534</height>
        </rect>
       </property>
       <layout class="QVBoxLayout" name="verticalLayout_2">

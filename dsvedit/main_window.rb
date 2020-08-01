@@ -33,6 +33,7 @@ require_relative 'door_editor_dialog'
 require_relative 'magic_seal_editor_dialog'
 require_relative 'player_state_anims_editor_dialog'
 require_relative 'armips_patcher_dialog'
+require_relative 'color_effects_editor_dialog'
 
 require_relative 'ui_main'
 

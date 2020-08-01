@@ -51,19 +51,26 @@ class LayersEditorDialog < Qt::Dialog
     if SYSTEM == :gba
       @ui.opacity.hide()
       @ui.label_5.hide()
-      @ui.gridLayout.addWidget(@ui.bg_control, 2, 3)
-      @ui.gridLayout.addWidget(@ui.label_11, 2, 2)
+      @ui.main_gfx_page_index.hide()
+      @ui.label_6.hide()
+      @ui.gridLayout.addWidget(@ui.bg_control, 2, 5)
+      @ui.gridLayout.addWidget(@ui.label_11, 2, 4)
     end
     if GAME == "hod"
       @ui.scroll_mode.hide()
       @ui.label_10.hide()
       @ui.gridLayout.addWidget(@ui.visual_effect, 2, 1)
       @ui.gridLayout.addWidget(@ui.label_12, 2, 0)
-      @ui.label_6.hide()
-      @ui.main_gfx_page_index.hide()
     else
       @ui.visual_effect.hide()
       @ui.label_12.hide()
+    end
+    if GAME == "aos"
+      # Add the explanation label for how Color Effects is what controls transparent layers in AoS.
+      # 2-column span so it takes up both the label cell and the field cell in the grid.
+      @ui.gridLayout.addWidget(@ui.label_13, 2, 2, 1, 2)
+    else
+      @ui.label_13.hide()
     end
     
     layer_changed(0)
