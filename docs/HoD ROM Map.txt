@@ -66,9 +66,24 @@
 08494EA4 - List of special object create code pointers.
 08494F6C - List of special object update code pointers.
 
-08495034-08495047 - List of palette shift function pointers.
-  The room's "Palette shift func" minus 1 is the index in this list.
-  These functions get called with the room's "Palette shift index" as argument r0.
+08495034-08495047 - List of room special effect function pointers.
+  The room's "Special Effect" number minus 1 is the index in this list.
+  These functions get called with the room's "Palette Shift Type" as argument r0.
+  There are 5 function in total.
+  The functions:
+    00 - No function
+    01 - 08026A58 - Shifts palettes.
+      The argument determines which palettes are shifted and how.
+      Specifically, the argument is an index used to determine which function to call.
+      The list of palette shifting function pointers is 084B1470.
+      There are 0x13 entries in total, so the argument can be 00-12.
+    02 - 08026BC8 - Gives the background the 3D-perspective effect (for Sky Walkway's sky).
+    03 - 08026BE0 - Scrolls the background horizontally, and also shifts palettes.
+      The argument determines which palettes are shifted and how, but if the argument is 0 no palettes will be shifted.
+      Also, removing this special effect from the rooms that have it in vanilla causes them to lag very badly?
+    04 - 08026C04 - Gives the background the 3D-perspective effect, and also shifts palettes.
+      The argument determines which palettes are shifted and how.
+    05 - 08026B34 - 3D-looking clock tower in the background.
 
 0849507C - List of warp rooms.
   Entry length 0xC.

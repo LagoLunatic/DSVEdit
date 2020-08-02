@@ -36,8 +36,8 @@ class Room
                 :doors,
                 :entity_gfx_list_pointer,
                 :entity_gfx_list,
-                :palette_shift_func,
-                :palette_shift_index,
+                :special_effect,
+                :palette_shift_type,
                 :is_castle_b,
                 :has_breakable_wall,
                 :number_of_doors,
@@ -209,19 +209,13 @@ class Room
       @room_ypos_on_map   = (extra_data_2 & 0b00111111_10000000_00000000_00000000) >> 23
       @palette_page_index = 0 # Always 0 in AoS
     elsif GAME == "hod"
-      @palette_shift_func  = (extra_data & 0b00000000_00000000_00000000_11111111)
-      @palette_shift_index = (extra_data & 0b00000000_00000000_11111111_00000000) >> 8
-      @room_xpos_on_map    = (extra_data & 0b00000000_01111111_00000000_00000000) >> 16
-      @room_ypos_on_map    = (extra_data & 0b00111111_10000000_00000000_00000000) >> 23
-      @is_castle_b         = (extra_data & 0b01000000_00000000_00000000_00000000) >> 30
-      @has_breakable_wall  = (extra_data & 0b10000000_00000000_00000000_00000000) >> 31
-      @palette_page_index  = 0 # Always 0 in HoD
-      if palette_shift_func != 0
-        # palette_shift_func is not just for palette shifts, also the fake 3D tower on the stairway is from this.
-        # palette_shift_func-1 is an index in list 08495034. this is a function pointer to call.
-        # palette_shift_index is the argument to that function.
-        #puts room_str
-      end
+      @special_effect     = (extra_data & 0b00000000_00000000_00000000_11111111)
+      @palette_shift_type = (extra_data & 0b00000000_00000000_11111111_00000000) >> 8
+      @room_xpos_on_map   = (extra_data & 0b00000000_01111111_00000000_00000000) >> 16
+      @room_ypos_on_map   = (extra_data & 0b00111111_10000000_00000000_00000000) >> 23
+      @is_castle_b        = (extra_data & 0b01000000_00000000_00000000_00000000) >> 30
+      @has_breakable_wall = (extra_data & 0b10000000_00000000_00000000_00000000) >> 31
+      @palette_page_index = 0 # Always 0 in HoD
     else # PoR or OoE
       @number_of_doors    = (extra_data & 0b00000000_00000000_00000000_01111111)
       @room_xpos_on_map   = (extra_data & 0b00000000_00000000_00111111_10000000) >> 7
@@ -632,7 +626,7 @@ class Room
       end
     end
     
-    if palette_shift_func == 5
+    if special_effect == 5
       begin
         # Has the fake 3D clock tower
         other_sprite = OTHER_SPRITES.find{|spr| spr[:desc] == "Clock tower in BG"}
@@ -734,12 +728,12 @@ class Room
       fs.write(room_metadata_ram_pointer+7*4, [extra_data].pack("V"))
       fs.write(room_metadata_ram_pointer+8*4, [extra_data_2].pack("V"))
     elsif GAME == "hod"
-      extra_data |= (@palette_shift_func       ) & 0b00000000_00000000_00000000_11111111
-      extra_data |= (@palette_shift_index  << 8) & 0b00000000_00000000_11111111_00000000
-      extra_data |= (@room_xpos_on_map    << 16) & 0b00000000_01111111_00000000_00000000
-      extra_data |= (@room_ypos_on_map    << 23) & 0b00111111_10000000_00000000_00000000
-      extra_data |= (@is_castle_b         << 30) & 0b01000000_00000000_00000000_00000000
-      extra_data |= (@has_breakable_wall  << 31) & 0b10000000_00000000_00000000_00000000
+      extra_data |= (@special_effect          ) & 0b00000000_00000000_00000000_11111111
+      extra_data |= (@palette_shift_type <<  8) & 0b00000000_00000000_11111111_00000000
+      extra_data |= (@room_xpos_on_map   << 16) & 0b00000000_01111111_00000000_00000000
+      extra_data |= (@room_ypos_on_map   << 23) & 0b00111111_10000000_00000000_00000000
+      extra_data |= (@is_castle_b        << 30) & 0b01000000_00000000_00000000_00000000
+      extra_data |= (@has_breakable_wall << 31) & 0b10000000_00000000_00000000_00000000
       
       fs.write(room_metadata_ram_pointer+8*4, [extra_data].pack("V"))
     else
@@ -842,8 +836,8 @@ class Room
     when "aos"
       @color_effects = 0
     when "hod"
-      @palette_shift_func = 0
-      @palette_shift_index = 0
+      @special_effect = 0
+      @palette_shift_type = 0
       @is_castle_b = (sector_index % 2)
       @has_breakable_wall = 0
     end

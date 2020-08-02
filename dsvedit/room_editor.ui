@@ -127,32 +127,56 @@
      <item>
       <widget class="QLabel" name="label_15">
        <property name="text">
-        <string>Palette shift func</string>
+        <string>Special Effect</string>
        </property>
       </widget>
      </item>
      <item>
-      <widget class="QLineEdit" name="palette_shift_func">
-       <property name="maximumSize">
-        <size>
-         <width>30</width>
-         <height>16777215</height>
-        </size>
-       </property>
+      <widget class="QComboBox" name="special_effect">
+       <item>
+        <property name="text">
+         <string>None</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Shift palettes</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>3D perspective background</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Scrolling background + shift palettes</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>3D perspective background + shift palettes</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>3D clock tower in background</string>
+        </property>
+       </item>
       </widget>
      </item>
      <item>
       <widget class="QLabel" name="label_16">
        <property name="text">
-        <string>Palette shift index</string>
+        <string>Palette Shift Type</string>
        </property>
       </widget>
      </item>
      <item>
-      <widget class="QLineEdit" name="palette_shift_index">
+      <widget class="QComboBox" name="palette_shift_type">
        <property name="maximumSize">
         <size>
-         <width>30</width>
+         <width>40</width>
          <height>16777215</height>
         </size>
        </property>

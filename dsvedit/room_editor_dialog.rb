@@ -32,6 +32,10 @@ class RoomEditorDialog < Qt::Dialog
     connect(@ui.edit_color_effects_button, SIGNAL("clicked()"), self, SLOT("open_color_effects_editor()"))
     connect(@ui.buttonBox, SIGNAL("clicked(QAbstractButton*)"), self, SLOT("button_box_clicked(QAbstractButton*)"))
     
+    0x13.times do |i|
+      @ui.palette_shift_type.addItem("%02X" % i)
+    end
+    
     if GAME != "hod"
       @ui.label_12.hide()
       @ui.alternate_state_event_flag.hide()
@@ -40,9 +44,9 @@ class RoomEditorDialog < Qt::Dialog
       @ui.horizontalLayout_3.removeItem(@ui.horizontalSpacer_2)
       
       @ui.label_15.hide()
-      @ui.palette_shift_func.hide()
+      @ui.special_effect.hide()
       @ui.label_16.hide()
-      @ui.palette_shift_index.hide()
+      @ui.palette_shift_type.hide()
       @ui.horizontalLayout_4.removeItem(@ui.horizontalSpacer_3)
       
       @ui.is_castle_b.hide()
@@ -91,8 +95,8 @@ class RoomEditorDialog < Qt::Dialog
     @ui.alternate_state_event_flag.text = "%04X" % @room.state_swap_event_flag if GAME == "hod"
     @ui.alternate_state_room_pointer.text = "%08X" % @room.alternate_room_state_pointer if GAME == "hod"
     
-    @ui.palette_shift_func.text = "%02X" % @room.palette_shift_func if GAME == "hod"
-    @ui.palette_shift_index.text = "%02X" % @room.palette_shift_index if GAME == "hod"
+    @ui.special_effect.setCurrentIndex(@room.special_effect) if GAME == "hod"
+    @ui.palette_shift_type.setCurrentIndex(@room.palette_shift_type) if GAME == "hod"
     
     @ui.is_castle_b.checked = @room.is_castle_b == 0 ? false : true if GAME == "hod"
     @ui.has_breakable_wall.checked = @room.has_breakable_wall == 0 ? false : true if GAME == "hod"
@@ -155,8 +159,8 @@ class RoomEditorDialog < Qt::Dialog
     @room.state_swap_event_flag = @ui.alternate_state_event_flag.text.to_i(16) if GAME == "hod"
     @room.alternate_room_state_pointer = @ui.alternate_state_room_pointer.text.to_i(16) if GAME == "hod"
     
-    @room.palette_shift_func = @ui.palette_shift_func.text.to_i(16) if GAME == "hod"
-    @room.palette_shift_index = @ui.palette_shift_index.text.to_i(16) if GAME == "hod"
+    @room.special_effect = @ui.special_effect.currentIndex if GAME == "hod"
+    @room.palette_shift_type = @ui.palette_shift_type.currentIndex if GAME == "hod"
     
     @room.is_castle_b = @ui.is_castle_b.checked ? 1 : 0 if GAME == "hod"
     @room.has_breakable_wall = @ui.has_breakable_wall.checked ? 1 : 0 if GAME == "hod"

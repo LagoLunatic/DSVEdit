@@ -108,6 +108,13 @@ D0-EF  02006C18-02007C17  ?
 
 === 02007C17: End of entities currently loaded into memory.
 
+Extra memory used for rendering special effects:
+02007C18,1 - bitfield?
+02007C19,1 - "V-Count Setting", the upper 8 bytes to be stored to the I/O register "General LCD Status".
+02007C1A,1 - Size of the data in bytes...?
+02007C1C,4 - Pointer to where the data should be DMAed to.
+02007C20,??? - The data.
+
 0200A428 - Data for the current room's layers. Each is 0x18 bytes long.
   There are 4 entries here:
     00 0200A428 - Seems to be for collision?

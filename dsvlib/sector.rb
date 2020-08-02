@@ -107,8 +107,8 @@ class Sector
       fs.write(new_room.entity_gfx_list_pointer, [0].pack("V"))
       new_room.initialize_entity_gfx_list(new_room.entity_gfx_list_pointer)
       
-      new_room.palette_shift_func = 0
-      new_room.palette_shift_index = 0
+      new_room.special_effect = 0
+      new_room.palette_shift_type = 0
       new_room.is_castle_b = (sector_index % 2)
       new_room.has_breakable_wall = 0
     end
