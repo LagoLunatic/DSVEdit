@@ -254,5 +254,8 @@ class RoomEditorDialog < Qt::Dialog
     if @tileset_chooser
       @tileset_chooser.close()
     end
+    if @color_effects_editor
+      @color_effects_editor.close()
+    end
   end
 end
