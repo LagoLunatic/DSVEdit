@@ -609,6 +609,8 @@ OTHER_SPRITES = [
   {desc: "Breakable wall graphics 6", pointer: 0x0852604C, ignore_part_gfx_page: true},
   {desc: "Breakable wall graphics 7", pointer: 0x08526058, ignore_part_gfx_page: true},
   
+  COMMON_SPRITE.merge(desc: "Candles", gfx_files: [0x81C3DFC]), # TODO: sprite file is wrong, it has no sprite
+  
   {desc: "Destructible 0", pointer: 0x08526214},
   {desc: "Destructible 1", pointer: 0x08526220},
   {desc: "Destructible 2", pointer: 0x0852622C},
@@ -644,7 +646,7 @@ OTHER_SPRITES = [
 
 CANDLE_FRAME_IN_COMMON_SPRITE = 0x1E
 MONEY_FRAME_IN_COMMON_SPRITE = 0x21
-CANDLE_SPRITE = COMMON_SPRITE.merge(palette_offset: 3)
+CANDLE_SPRITE = OTHER_SPRITES.find{|spr| spr[:desc] == "Candles"}
 MONEY_SPRITE = COMMON_SPRITE.merge(palette_offset: 2)
 
 WEAPON_GFX_LIST_START = 0x084F10C0
