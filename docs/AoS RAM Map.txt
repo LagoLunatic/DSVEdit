@@ -34,8 +34,10 @@
 
 0200008E,1 - Bitfield, bit 40 messes the game up
 
-0200009E - Sector index for save file.
-0200009F - Room index for save file.
+02000092,1 - Candle graphic type currently loaded. (Var A of a candle entity.)
+
+0200009E,1 - Sector index for save file.
+0200009F,1 - Room index for save file.
 
 020000A1,1 - Current game mode.
   Low nibble: 0 for Julius mode, 1 for Soma mode.

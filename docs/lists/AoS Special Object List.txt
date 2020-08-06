@@ -59,9 +59,9 @@
       Var B:
         00 - Makes the moon flicker in the background (Castle Corridor) (unused)
         01 - Makes the moon flicker in the background (Castle Corridor)
-        02 - ??? (Castle Corridor)
+        02 - Makes the moon flicker in the background (Castle Corridor)
         03 - Animates surface of the water so it looks like it's moving (Castle Corridor)
-        04 - ??? (Castle Corridor)
+        04 - Makes the moon's reflection on the surface of the water flicker (Castle Corridor)
         05 - ??? (Castle Corridor)
         06 - Makes the moon flicker in the background (Castle Corridor)
         07 - ??? (Underground Reservoir)
@@ -158,6 +158,15 @@
   Rings when you land on top of it.
 0E Destructible.
   Var A: Which destructible. 0-D.
+  Var B: Affects amount of money this destructible can drop.
+    0 - 1 or 10G
+    1 - 10 or 50G
+    2 - 1G
+    3 - 10G
+    4 - 50G
+    5 - 100G
+    6 - 500G
+    7 - 1000G
 0F Flame.
   Var A: ?
 10 Boss rush clear reward.

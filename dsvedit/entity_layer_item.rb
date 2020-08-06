@@ -114,6 +114,22 @@ class EntityLayerItem < Qt::GraphicsRectItem
       
       sprite_info = SpriteInfo.extract_gfx_and_palette_and_sprite_from_create_code(breakable_wall_sprite[:pointer], @fs, nil, breakable_wall_sprite)
       add_sprite_item_for_entity(entity, sprite_info, frame_index)
+    elsif GAME == "aos" && entity.is_special_object? && entity.subtype == 0xE # Destructible
+      if entity.var_a <= 0xD
+        graphic_index = entity.var_a
+        destructible_sprite = OTHER_SPRITES.find{|spr| spr[:desc] == "Destructible %X" % graphic_index}
+        
+        sprite_info = SpriteInfo.extract_gfx_and_palette_and_sprite_from_create_code(
+          destructible_sprite[:pointer],
+          @fs, nil,
+          destructible_sprite
+        )
+        frame_index = 0
+        add_sprite_item_for_entity(entity, sprite_info, frame_index)
+      else
+        graphics_item = EntityRectItem.new(entity, @main_window)
+        graphics_item.setParentItem(self)
+      end
     elsif GAME == "aos" && entity.is_special_object? && [0x29, 0x2A].include?(entity.subtype) && [2, 3].include?(entity.var_b) # Moving platform that doesn't use the normal sprite
       case entity.var_b
       when 2
@@ -227,6 +243,25 @@ class EntityLayerItem < Qt::GraphicsRectItem
           graphics_item.setParentItem(self)
         else
           add_sprite_item_for_entity(entity, sprite_info, candle_frame)
+        end
+      elsif GAME == "aos"
+        if entity.var_a <= 0xF
+          gfx_page = GfxWrapper.new(CANDLE_SPRITE[:gfx_files][0], @fs)
+          palette = @renderer.generate_palettes(CANDLE_SPRITE[:palette], 16)[3]
+          x = (entity.var_a % 2) * 64
+          y = (entity.var_a / 2) * 16
+          width = 16
+          height = 16
+          chunky_image = @renderer.render_gfx_1_dimensional_mode(gfx_page, palette)
+          chunky_image = chunky_image.crop(x, y, width, height)
+          
+          graphics_item = EntityChunkyItem.new(chunky_image, entity, @main_window)
+          graphics_item.setOffset(-8, -8)
+          graphics_item.setPos(entity.x_pos, entity.y_pos)
+          graphics_item.setParentItem(self)
+        else
+          graphics_item = EntityRectItem.new(entity, @main_window)
+          graphics_item.setParentItem(self)
         end
       else
         sprite_info = SpriteInfo.extract_gfx_and_palette_and_sprite_from_create_code(CANDLE_SPRITE[:pointer], @fs, CANDLE_SPRITE[:overlay], CANDLE_SPRITE)

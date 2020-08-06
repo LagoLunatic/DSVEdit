@@ -10,7 +10,8 @@ Entity types:
 
 03 Generic candle.
   Unaffected by subtype.
-  Var A: Affects candle graphic.
+  Var A: Which candle graphic. 0-F.
+    Note that this only matters for the last candle placed in the room. All other candles in the room copy the last one.
   Var B: Affects amount of money this candle can drop.
     0 - 1 or 10G
     1 - 10 or 50G
