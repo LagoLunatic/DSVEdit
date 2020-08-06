@@ -425,6 +425,11 @@ class SpriteEditor < Qt::Dialog
   
   def load_blank_sprite
     @sprite_info = nil
+    
+    clear_sprite()
+  end
+  
+  def clear_sprite
     @sprite = nil
     
     @ui.view_skeleton_button.enabled = false
@@ -465,10 +470,49 @@ class SpriteEditor < Qt::Dialog
     @part_graphics_scene.clear()
     @gfx_file_graphics_scene.clear()
     
+    @current_frame_index = nil
+    @current_part_index = nil
+    
     @current_animation = nil
   end
   
+  def load_no_sprite_with_gfx_and_palette
+    clear_sprite()
+    
+    @gfx_pages_with_blanks = @sprite_info.gfx_pages
+    
+    if @sprite_info.gfx_pages.first.render_mode == 1
+      @palettes = @renderer.generate_palettes(@sprite_info.palette_pointer, 16)
+    elsif @sprite_info.gfx_pages.first.render_mode == 2
+      @palettes = @renderer.generate_palettes(@sprite_info.palette_pointer, 256)
+    else
+      raise "Unknown render mode: #{@sprite_info.gfx_pages.first.render_mode}"
+    end
+    
+    @palettes.each_with_index do |palette, i|
+      @ui.palette_index.addItem("%02X" % i)
+    end
+    palette_changed(0, force=true)
+    
+    @gfx_pages_with_blanks.each_with_index do |gfx_page, i|
+      @ui.gfx_page_index.addItem("%02X" % i)
+    end
+    gfx_page_changed(0)
+    
+    @ui.gfx_pointer.text = @sprite_info.gfx_file_pointers.map{|ptr| "%08X" % ptr}.join(", ")
+    @ui.palette_pointer.text = "%08X" % @sprite_info.palette_pointer
+  end
+  
   def load_sprite
+    if SYSTEM == :gba
+      @one_dimensional_render_mode = true
+    end
+    
+    if @sprite_info.sprite.nil?
+      load_no_sprite_with_gfx_and_palette()
+      return
+    end
+    
     @ui.frame_first_part.enabled = true
     @ui.frame_number_of_parts.enabled = true
     @ui.part_horizontal_flip.enabled = true
@@ -488,10 +532,6 @@ class SpriteEditor < Qt::Dialog
       @ui.view_skeleton_button.enabled = true
     else
       @ui.view_skeleton_button.enabled = false
-    end
-    
-    if SYSTEM == :gba
-      @one_dimensional_render_mode = true
     end
     
     @current_frame_index = 0

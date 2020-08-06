@@ -24,7 +24,12 @@ class SpriteInfo
     @sprite_file_pointer = sprite_file_pointer
     @skeleton_file = skeleton_file
     @sprite_file = fs.assets_by_pointer[sprite_file_pointer]
-    @sprite = Sprite.new(sprite_file_pointer, fs)
+    
+    if @sprite_file_pointer.nil?
+      @sprite = nil
+    else
+      @sprite = Sprite.new(sprite_file_pointer, fs)
+    end
     
     @gfx_pages = @gfx_file_pointers.map do |gfx_pointer|
       GfxWrapper.new(gfx_pointer, fs)
@@ -71,6 +76,16 @@ class SpriteInfo
     gfx_list_pointer       = reused_info[:gfx_wrapper] || nil
     palette_pointer        = reused_info[:palette] || nil
     ignore_part_gfx_page   = reused_info[:ignore_part_gfx_page] || false
+    
+    if reused_info[:no_sprite]
+      sprite_file_pointer = nil
+      if gfx_file_pointers && palette_pointer
+        return SpriteInfo.new(gfx_file_pointers, palette_pointer, palette_offset, sprite_file_pointer, nil, fs)
+      elsif gfx_list_pointer && palette_pointer
+        gfx_file_pointers = unpack_gfx_pointer_list(gfx_list_pointer, fs)
+        return SpriteInfo.new(gfx_file_pointers, palette_pointer, palette_offset, sprite_file_pointer, nil, fs)
+      end
+    end
     
     if sprite_file_pointer && gfx_file_pointers && palette_pointer
       return SpriteInfo.new(gfx_file_pointers, palette_pointer, palette_offset, sprite_file_pointer, nil, fs, ignore_part_gfx_page: ignore_part_gfx_page)
