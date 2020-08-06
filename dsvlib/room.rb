@@ -410,6 +410,15 @@ class Room
         end
       end
       
+      # Also, any nothing-type entities have to be at the end because the game will stop reading the list as soon as it sees one.
+      entities.sort_by! do |entity|
+        if entity.type == NOTHING_ENTITY_TYPE
+          1
+        else
+          0
+        end
+      end
+      
       new_entity_pointer = entity_list_ram_pointer
       i = 0
       entities.each do |entity|
