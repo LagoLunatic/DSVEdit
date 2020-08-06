@@ -575,11 +575,10 @@ class Room
         @entity_gfx_list += sprite_info.gfx_list_pointer_or_gfx_file_pointers
       end
       
-      # TODO: add check that the id is within the list of valid id numbers, otherwise skip it so we don't get a crash in dsvedit.
-      
-      sprite_info = game.enemy_dnas[enemy_id].extract_gfx_and_palette_and_sprite_from_init_ai
-      
-      @entity_gfx_list += sprite_info.gfx_list_pointer_or_gfx_file_pointers
+      if ENEMY_IDS.include?(enemy_id)
+        sprite_info = game.enemy_dnas[enemy_id].extract_gfx_and_palette_and_sprite_from_init_ai
+        @entity_gfx_list += sprite_info.gfx_list_pointer_or_gfx_file_pointers
+      end
     rescue SpriteInfo::CreateCodeReadError => e
       puts e.message
     end
@@ -589,6 +588,7 @@ class Room
     objects.each do |object|
       object_id = object.subtype
       begin
+        sprite_info = nil
         if object_id == 5 && object.var_a > 1 # Skull door or Lure door
           other_sprite = OTHER_SPRITES.find{|spr| spr[:desc] == "Skull door"}
           sprite_info = SpriteInfo.extract_gfx_and_palette_and_sprite_from_create_code(other_sprite[:init_code], fs, nil, other_sprite)
@@ -607,7 +607,7 @@ class Room
             next
           end
           sprite_info = game.special_objects[object_id].extract_gfx_and_palette_and_sprite_from_create_code
-        else
+        elsif SPECIAL_OBJECT_IDS.include?(object_id)
           sprite_info = game.special_objects[object_id].extract_gfx_and_palette_and_sprite_from_create_code
         end
         
@@ -618,7 +618,9 @@ class Room
           @entity_gfx_list += lift_sprite_info.gfx_list_pointer_or_gfx_file_pointers
         end
         
-        @entity_gfx_list += sprite_info.gfx_list_pointer_or_gfx_file_pointers
+        if sprite_info
+          @entity_gfx_list += sprite_info.gfx_list_pointer_or_gfx_file_pointers
+        end
       rescue SpriteInfo::CreateCodeReadError, GBADummyFilesystem::ReadError => e
         puts e.message
       end
