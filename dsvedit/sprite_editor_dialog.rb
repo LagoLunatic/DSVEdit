@@ -492,7 +492,7 @@ class SpriteEditor < Qt::Dialog
     @palettes.each_with_index do |palette, i|
       @ui.palette_index.addItem("%02X" % i)
     end
-    palette_changed(0, force=true)
+    palette_changed(@sprite_info.palette_offset, force=true)
     
     @gfx_pages_with_blanks.each_with_index do |gfx_page, i|
       @ui.gfx_page_index.addItem("%02X" % i)
@@ -795,7 +795,7 @@ class SpriteEditor < Qt::Dialog
     if @override_part_palette_index
       palette_changed(@override_part_palette_index)
     else
-      palette_changed(part.palette_index)
+      palette_changed(part.palette_index + @sprite_info.palette_offset)
     end
     
     @ui.part_horizontal_flip.setChecked(part.horizontal_flip)
