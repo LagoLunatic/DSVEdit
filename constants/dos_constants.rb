@@ -1153,3 +1153,96 @@ PLAYER_ANIM_STATE_NAMES = [
   "Stop attacking while crouching (unused for Soma)",
   "",
 ]
+
+MENU_BG_LAYER_INFOS = [
+  {
+    name: "Main menu",
+    gfx_list_pointer:       0x02079F64,
+    palette_list_pointer:   0x022DA284,
+    layer_metadata_pointer: 0x0207C8CC,
+  },
+  {
+    name: "Sound config",
+    gfx_file_pointer:       0x022D9F3C,
+    palette_list_pointer:   0x022D9F60,
+    layer_metadata_pointer: 0x0207C29C,
+  },
+  {
+    name: "Sound mode",
+    gfx_file_pointer:       0x022D9F3C,
+    palette_list_pointer:   0x022D9F60,
+    layer_metadata_pointer: 0x0207C4AC,
+  },
+  {
+    name: "Shop",
+    gfx_list_pointer:       0x02079EE4,
+    palette_list_pointer:   0x022D9FC4,
+    layer_metadata_pointer: 0x0207C6BC,
+  },
+  {
+    name: "Weapon synthesis",
+    gfx_list_pointer:       0x02079EEC,
+    palette_list_pointer:   0x022D9FE8,
+    layer_metadata_pointer: 0x0207BA5C,
+  },
+  {
+    name: "Pause screen",
+    gfx_list_pointer:       0x02079E70,
+    palette_list_pointer:   0x022DA3D4,
+    layer_metadata_pointer: 0x0207B63C,
+  },
+  {
+    name: "Equip",
+    gfx_file_pointer:       0x022D9E70,
+    palette_list_pointer:   0x022DA2A8,
+    layer_metadata_pointer: 0x0207BC6C,
+  },
+  {
+    name: "Use item",
+    gfx_file_pointer:       0x022D9EA0,
+    palette_list_pointer:   0x022DA240,
+    layer_metadata_pointer: 0x0207B00C,
+  },
+  {
+    name: "Ability souls",
+    gfx_file_pointer:       0x022D9EAC,
+    palette_list_pointer:   0x022DA1DC,
+    layer_metadata_pointer: 0x0207A7CC,
+  },
+  {
+    name: "Config",
+    gfx_file_pointer:       0x022D9EB8,
+    palette_list_pointer:   0x022DA0D4,
+    layer_metadata_pointer: 0x0207A9DC,
+  },
+  {
+    name: "Bestiary list",
+    gfx_list_pointer:       0x02217CA8,
+    palette_list_pointer:   0x022DA138,
+    layer_metadata_pointer: 0x0207ABEC,
+  },
+  {
+    name: "Bestiary entry",
+    gfx_list_pointer:       0x02217CA8,
+    palette_list_pointer:   0x022DA138,
+    layer_metadata_pointer: 0x0207ADFC,
+  },
+  {
+    name: "Library list",
+    gfx_file_pointer:       0x022D9EDC,
+    palette_list_pointer:   0x022DA070,
+    layer_metadata_pointer: 0x0207B21C,
+  },
+  {
+    name: "Library entry",
+    gfx_file_pointer:       0x022D9EDC,
+    palette_list_pointer:   0x022DA070,
+    layer_metadata_pointer: 0x0207B42C,
+  },
+  {
+    name: "Magic Seal practice",
+    gfx_file_pointer:       0x022D9EE8,
+    palette_list_pointer:   0x022DA00C,
+    layer_metadata_pointer: 0x0207B84C,
+  },
+]

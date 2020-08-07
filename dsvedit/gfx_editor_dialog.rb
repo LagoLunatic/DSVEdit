@@ -55,7 +55,9 @@ class GfxEditorDialog < Qt::Dialog
       if (0..@gfx_pages.size-1).include?(gfx_page_index)
         gfx_page_changed(gfx_page_index)
       end
-      palette_changed(gfx_and_palette_data[:palette_index])
+      if !gfx_and_palette_data[:palette_index].nil?
+        palette_changed(gfx_and_palette_data[:palette_index])
+      end
     end
     
     self.show()

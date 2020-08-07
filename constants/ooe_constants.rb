@@ -1489,3 +1489,7 @@ QUEST_BITFIELD_ATTRIBUTES = {
     "Unused 7",
   ],
 }
+
+MENU_BG_LAYER_INFOS = [
+  # TODO
+]

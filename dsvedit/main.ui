@@ -209,6 +209,7 @@
     <addaction name="actionMusic_Editor"/>
     <addaction name="actionItem_Pool_Editor"/>
     <addaction name="actionTileset_Editor"/>
+    <addaction name="actionMenu_Editor"/>
     <addaction name="actionSpecial_Object_Editor"/>
     <addaction name="actionShop_Editor"/>
     <addaction name="actionQuest_Editor"/>
@@ -557,6 +558,11 @@
   <action name="actionFix_Save_Files">
    <property name="text">
     <string>Fix Save Files</string>
+   </property>
+  </action>
+  <action name="actionMenu_Editor">
+   <property name="text">
+    <string>Menu Editor</string>
    </property>
   </action>
  </widget>

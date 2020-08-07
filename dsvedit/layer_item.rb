@@ -8,7 +8,7 @@ class LayerItem < Qt::GraphicsRectItem
     @layer = layer
     @tileset = Qt::Pixmap.new(tileset_filename)
     
-    if !collision
+    if !collision && !layer.is_a?(BGLayer)
       setZValue(-layer.z_index)
       setOpacity(layer.opacity/31.0)
     end
@@ -18,8 +18,6 @@ class LayerItem < Qt::GraphicsRectItem
   
   def render_layer
     @layer.tiles.each_with_index do |tile, index_on_level|
-      next if tile.index_on_tileset == 0
-      
       x_on_tileset = tile.index_on_tileset % TILESET_WIDTH_IN_TILES
       y_on_tileset = tile.index_on_tileset / TILESET_WIDTH_IN_TILES
       x_on_level = index_on_level % (@layer.width*SCREEN_WIDTH_IN_TILES)

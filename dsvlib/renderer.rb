@@ -174,6 +174,40 @@ class Renderer
     end
   end
   
+  def render_tileset_for_bg_layer_by_gfx_list(bg_layer, gfx_list_pointer, palette_list_pointer)
+    gfx_wrappers = GfxWrapper.from_gfx_list_pointer(gfx_list_pointer, fs)
+    
+    return render_tileset_for_bg_layer(bg_layer, gfx_wrappers, palette_list_pointer)
+  end
+  
+  def render_tileset_for_bg_layer_by_gfx_asset(bg_layer, gfx_asset_pointer, palette_list_pointer)
+    gfx_wrappers = [GfxWrapper.new(gfx_asset_pointer, fs)]
+    
+    return render_tileset_for_bg_layer(bg_layer, gfx_wrappers, palette_list_pointer)
+  end
+  
+  def render_tileset_for_bg_layer(bg_layer, gfx_wrappers, palette_list_pointer)
+    folder = "cache/#{GAME}/menus"
+    tileset_path = "#{folder}/Tilesets/%08X.png" % bg_layer.tileset_pointer
+    colors_per_palette = 16
+    
+    tileset = render_tileset_nds(
+      bg_layer.tileset_pointer,
+      bg_layer.tileset_type,
+      palette_list_pointer,
+      gfx_wrappers,
+      colors_per_palette,
+      bg_layer.collision_tileset_pointer,
+      tileset_filename=nil,
+      one_dimensional_mode: true
+    )
+    
+    FileUtils::mkdir_p(File.dirname(tileset_path))
+    tileset.save(tileset_path)
+    
+    return tileset_path
+  end
+  
   def render_tileset(tileset_offset, tileset_type, palette_pages, gfx_pages, colors_per_palette, collision_tileset_offset, output_filename=nil, one_dimensional_mode: false)
     if SYSTEM == :nds
       render_room_tileset_nds(tileset_offset, tileset_type, palette_pages, gfx_pages, colors_per_palette, collision_tileset_offset, output_filename, one_dimensional_mode: one_dimensional_mode)

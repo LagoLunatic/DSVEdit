@@ -34,6 +34,7 @@ require_relative 'magic_seal_editor_dialog'
 require_relative 'player_state_anims_editor_dialog'
 require_relative 'armips_patcher_dialog'
 require_relative 'color_effects_editor_dialog'
+require_relative 'menu_editor_dialog'
 
 require_relative 'ui_main'
 
@@ -70,6 +71,7 @@ class DSVEdit < Qt::MainWindow
   slots "open_music_editor()"
   slots "open_item_pool_editor()"
   slots "open_tileset_editor()"
+  slots "open_menu_editor()"
   slots "open_entity_search()"
   slots "open_address_converter()"
   slots "open_save_file_fixer()"
@@ -154,6 +156,7 @@ class DSVEdit < Qt::MainWindow
     connect(@ui.actionMusic_Editor, SIGNAL("activated()"), self, SLOT("open_music_editor()"))
     connect(@ui.actionItem_Pool_Editor, SIGNAL("activated()"), self, SLOT("open_item_pool_editor()"))
     connect(@ui.actionTileset_Editor, SIGNAL("activated()"), self, SLOT("open_tileset_editor()"))
+    connect(@ui.actionMenu_Editor, SIGNAL("activated()"), self, SLOT("open_menu_editor()"))
     connect(@ui.actionMap_Editor, SIGNAL("activated()"), self, SLOT("open_map_editor()"))
     connect(@ui.actionPlayer_Editor, SIGNAL("activated()"), self, SLOT("open_player_editor()"))
     connect(@ui.actionPlayer_State_Anims_Editor, SIGNAL("activated()"), self, SLOT("open_player_state_anims_editor()"))
@@ -230,6 +233,7 @@ class DSVEdit < Qt::MainWindow
     @ui.actionMusic_Editor.setEnabled(false);
     @ui.actionItem_Pool_Editor.setEnabled(false);
     @ui.actionTileset_Editor.setEnabled(false);
+    @ui.actionMenu_Editor.setEnabled(false);
     @ui.actionMap_Editor.setEnabled(false);
     @ui.actionPlayer_Editor.setEnabled(false);
     @ui.actionPlayer_State_Anims_Editor.setEnabled(false);
@@ -270,6 +274,7 @@ class DSVEdit < Qt::MainWindow
     @ui.actionMusic_Editor.setEnabled(true);
     @ui.actionItem_Pool_Editor.setEnabled(true);
     @ui.actionTileset_Editor.setEnabled(true);
+    @ui.actionMenu_Editor.setEnabled(true);
     @ui.actionMap_Editor.setEnabled(true);
     @ui.actionPlayer_Editor.setEnabled(true);
     @ui.actionPlayer_State_Anims_Editor.setEnabled(true);
@@ -962,6 +967,10 @@ class DSVEdit < Qt::MainWindow
   
   def open_tileset_editor
     @open_dialogs << TilesetEditorDialog.new(self, game.fs, @renderer, @room)
+  end
+  
+  def open_menu_editor
+    @open_dialogs << MenuEditorDialog.new(self, game.fs, @renderer)
   end
   
   def open_entity_search

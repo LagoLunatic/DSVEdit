@@ -1500,3 +1500,7 @@ QUEST_BITFIELD_ATTRIBUTES = {
     "Unused 3",
   ],
 }
+
+MENU_BG_LAYER_INFOS = [
+  # TODO
+]
