@@ -46,6 +46,33 @@ class EntityLayerItem < Qt::GraphicsRectItem
     0x1C => ["Yoko event actor", 0xF],
   }
   
+  DOS_DESTRUCTIBLE_INDEX_TO_DATA = {
+    # Graphic index, animation index
+    0x00 => [0x00, 0x00],
+    0x01 => [0x01, 0x01],
+    0x02 => [0x01, 0x04],
+    0x03 => [0x01, 0x04],
+    0x04 => [0x01, 0x00],
+    0x05 => [0x01, 0x03],
+    0x06 => [0x01, 0x05],
+    0x07 => [0x02, 0x02],
+    0x08 => [0x02, 0x04],
+    0x09 => [0x03, 0x00],
+    0x0A => [0x03, 0x01],
+    0x0B => [0x08, 0x00],
+    0x0C => [0x08, 0x01],
+    0x0D => [0x00, 0x01],
+    0x0E => [0x02, 0x00],
+    0x0F => [0x02, 0x01],
+    0x10 => [0x01, 0x06],
+    0x11 => [0x01, 0x07],
+    0x12 => [0x00, 0x02],
+    0x13 => [0x02, 0x03],
+    0x14 => [0x05, 0x00],
+    0x15 => [0x06, 0x00],
+    0x16 => [0x07, 0x00],
+  }
+  
   def initialize(entities, main_window, game, renderer)
     super()
     
@@ -78,10 +105,17 @@ class EntityLayerItem < Qt::GraphicsRectItem
         graphics_item = EntityRectItem.new(entity, @main_window)
         graphics_item.setParentItem(self)
       end
-    elsif GAME == "dos" && entity.is_special_object? && entity.subtype == 0x01 && entity.var_a == 0 # soul candle
-      pointer = OTHER_SPRITES.find{|spr| spr[:desc] == "Destructibles 0"}[:pointer]
-      sprite_info = SpriteInfo.extract_gfx_and_palette_and_sprite_from_create_code(pointer, @fs, nil, {})
-      add_sprite_item_for_entity(entity, sprite_info, 0)
+    elsif GAME == "dos" && entity.is_special_object? && entity.subtype == 0x01 # Destructible
+      if DOS_DESTRUCTIBLE_INDEX_TO_DATA.include?(entity.var_a)
+        graphic_index, anim_index = DOS_DESTRUCTIBLE_INDEX_TO_DATA[entity.var_a]
+        pointer = OTHER_SPRITES.find{|spr| spr[:desc] == "Destructibles %d" % graphic_index}[:pointer]
+        sprite_info = SpriteInfo.extract_gfx_and_palette_and_sprite_from_create_code(pointer, @fs, nil, {})
+        frame_index = sprite_info.sprite.animations[anim_index].frame_delays[0].frame_index
+        add_sprite_item_for_entity(entity, sprite_info, frame_index)
+      else
+        graphics_item = EntityRectItem.new(entity, @main_window)
+        graphics_item.setParentItem(self)
+      end
     elsif entity.is_villager? && VILLAGER_EVENT_FLAG_TO_NAME.keys.include?(entity.var_a)
       villager_name = VILLAGER_EVENT_FLAG_TO_NAME[entity.var_a]
       villager_info = OTHER_SPRITES.find{|other| other[:desc] == "#{villager_name} event actor"}
