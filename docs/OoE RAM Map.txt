@@ -994,6 +994,14 @@ Sprite info for the pause menu:
 022B59D8
 022B5A1C
 
+022B5B1C-022B5B8B - List of face portrait GFX asset indexes.
+  0x1C entries in total.
+022B5B8C-022B5BFB - List of face portrait palette pointers.
+  0x1C entries in total.
+  All entries just point to 021FFDA0. Not because they all have the same palette, but because their palettes are all at the start of different overlays each starting at 021FFDA0.
+022A5D40-022A5DAF - List of face portrait palette overlay indexes.
+  0x1C entries in total.
+
 022B5C10-022B5C91 - List of villagers.
   Entry length 0xA.
   00,2: X pos.

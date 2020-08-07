@@ -27,6 +27,8 @@ Memory used for entities in DoS is 020CA3F0 - 020F6DEF. Each entity is 0x2A0 byt
   This is an index in the currently loaded sprite info list, 020C6260.
 06D,1: Light enable flags for polygon drawing.
 070,4: Bitfield related to sprite drawing.
+  00000020 - Ignore part palette indexes. Always used palette 0 for every part.
+    Note that things that affect the entire entity's palette are not affected by this, like the entity's palette offset. Only the palette specified by each sprite part is ignored.
   00000080 - Direction. Set if facing left, clear if facing right. (Horizontal flip.)
 074,2: Current sprite frame index.
 076,2: Palette index in the list of globally loaded palettes.

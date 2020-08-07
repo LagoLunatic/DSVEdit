@@ -7,8 +7,7 @@ Special objects:
     00 The glowing lamp vessel containing a soul (var B is the index of the soul in it).
     01-0F Just normal candles, each with a different graphic.
     10 Chest containing money.
-    11-17 More candle graphics, including statues and grandfather clocks.
-    18-FF Buggy candles, that have mismatched graphics, sfx, and contents, or they just don't show up at all.
+    11-16 Other destructibles like statues and grandfather clocks. 13 and 14 are unused in the vanilla game.
 02 Water level.
   Var B: The misc flag for the water being lowered. Set to the same as the lever's Var B.
 03 Waterfall that pushes the player downwards when they jump up into it.

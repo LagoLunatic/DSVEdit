@@ -41,7 +41,7 @@
   Menu backgrounds are handled very similarly to room layers.
 
 0207B63C - Layer data for the pause menu.
-02083EB0 - Tileset for the pause menu,
+02083EB0 - Tileset for the pause menu.
   Entry length 4.
   Format:
   00,4: Bitfield.
@@ -766,6 +766,26 @@ Stuff related to currently loaded tilesets:
 
 0222BAB8 - ??? list of pointers
 0222BF74 - list of ??? pointers
+
+0222BB18-0222BBCF - List of destructibles.
+  Entry length 8.
+  0x17 entries in total.
+  00,01: Destructible graphic to use (index in list 0222BAAC).
+  01,01: Sprite animation index to use.
+  02,01: Sprite frame index to use when destroyed.
+  03,01: Behavior type.
+    00 - Candle or other normal object that spawns a single money drop when destroyed.
+    01 - Chest that spawns a lot of money when destroyed.
+      If you're not in Soma mode, it spawns a large heart instead.
+    02 - Soul vessel.
+  04,04: Bitfield.
+    00000001 - If set, the destructible is horizontally flipped.
+    00000002 - If clear, the destructible has a circular glowing aura around it (for lights).
+0222BAAC-0222BB0B - List of destructible graphics.
+  Entry length 0xC.
+  00,04: GFX pointer.
+  04,04: Sprite pointer.
+  08,04: Palette list pointer.
 
 0222C614-0222C623 - List of text IDs for the event that should play when each character confronts Somacula.
   4 entries, one for each character. The index in this list is the current player index.
