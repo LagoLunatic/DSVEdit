@@ -66,6 +66,14 @@ class MagicSealEditorDialog < Qt::Dialog
     @ui.rotation.text = "%04X" % @magic_seal.rotation
     @ui.time_limit.text = "%04X" % @magic_seal.time_limit
     
+    # Check if there are any lines using points that were cut off by the number of points being reduced.
+    # If there are, remove all lines from that point forward.
+    @magic_seal.point_order_list.each_with_index do |point_index, i|
+      if point_index >= @magic_seal.num_points
+        @magic_seal.point_order_list = @magic_seal.point_order_list[0...i]
+      end
+    end
+    
     render_magic_seal()
   end
   
