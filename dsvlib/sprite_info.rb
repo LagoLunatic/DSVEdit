@@ -73,9 +73,16 @@ class SpriteInfo
     ignore_files_to_load   = reused_info[:ignore_files_to_load] || false
     sprite_file_pointer    = reused_info[:sprite] || nil
     gfx_file_pointers      = reused_info[:gfx_files] || nil
+    gfx_file_names         = reused_info[:gfx_file_names] || nil
     gfx_list_pointer       = reused_info[:gfx_wrapper] || nil
     palette_pointer        = reused_info[:palette] || nil
     ignore_part_gfx_page   = reused_info[:ignore_part_gfx_page] || false
+    
+    if gfx_file_pointers.nil? && gfx_file_names
+      gfx_file_pointers = gfx_file_names.map do |gfx_file_name|
+        fs.files_by_path[gfx_file_name][:asset_pointer]
+      end
+    end
     
     if reused_info[:no_sprite]
       sprite_file_pointer = nil

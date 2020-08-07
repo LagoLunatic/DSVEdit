@@ -119,6 +119,7 @@ Each list of assets has this format:
   Bytes 1-4: GFX pointer.
   Bytes 5-8: Palette pointer.
   Bytes 9-16: Gfx filename (e.g. "soma0".)
+    To get the full filepath, prepend /sc/f_f to the front of each string, and append .dat to the end.
   Bytes 17-20: Asset index of the gfx file.
 There are 41 entries in the list total.
 
