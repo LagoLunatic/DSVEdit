@@ -738,6 +738,66 @@ OTHER_SPRITES = [
   {desc: "Map", sprite: 0x020C553C, gfx_files: [0x020BA78C], palette: 0x020D23B0, one_dimensional_mode: true},
   
   {desc: "World Map", sprite: 0x021DCCF8, gfx_files: [0x020BA678, 0x020BA684, 0x020BA690, 0x020BA69C, 0x020BA6A8, 0x020BA6B4, 0x020BA6C0], palette: 0x020D1E88},
+  
+  # TODO: event face portraits in OoE use different palettes, but at the same pointer. the overlay indexes are as follows:
+  #  0x12
+  #  0x12
+  #  0x12
+  #  0x12
+  #  0x12
+  #  0x03
+  #  0x03
+  #  0x03
+  #  0x03
+  #  0x03
+  #  0x05
+  #  0x05
+  #  0x05
+  #  0x10
+  #  0x0C
+  #  0x02
+  #  0x0D
+  #  0x09
+  #  0x0B
+  #  0x0E
+  #  0x0A
+  #  0x11
+  #  0x04
+  #  0x0F
+  #  0x08
+  #  0x06
+  #  0x07
+  #  0x07
+  #{desc: "Event face portraits 00-1B", no_sprite: true, palette: 0x021FFDA0, gfx_file_names: [
+  #  "/sc/f_fsha00.dat",
+  #  "/sc/f_fsha01.dat",
+  #  "/sc/f_fsha02.dat",
+  #  "/sc/f_fsha03.dat",
+  #  "/sc/f_fsha04.dat",
+  #  "/sc/f_falb00.dat",
+  #  "/sc/f_falb01.dat",
+  #  "/sc/f_falb02.dat",
+  #  "/sc/f_falb03.dat",
+  #  "/sc/f_falb04.dat",
+  #  "/sc/f_fbar00.dat",
+  #  "/sc/f_fbar01.dat",
+  #  "/sc/f_fbar02.dat",
+  #  "/sc/f_fnic00.dat",
+  #  "/sc/f_fjak00.dat",
+  #  "/sc/f_fabr00.dat",
+  #  "/sc/f_flol00.dat",
+  #  "/sc/f_feug00.dat",
+  #  "/sc/f_fiwo00.dat",
+  #  "/sc/f_fmar00.dat",
+  #  "/sc/f_fgeo00.dat",
+  #  "/sc/f_fser00.dat",
+  #  "/sc/f_fann00.dat",
+  #  "/sc/f_fmon00.dat",
+  #  "/sc/f_fele00.dat",
+  #  "/sc/f_fdan00.dat",
+  #  "/sc/f_fdra00.dat",
+  #  "/sc/f_fdra01.dat",
+  #]},
 ]
 
 CANDLE_FRAME_IN_COMMON_SPRITE = 0xDB
