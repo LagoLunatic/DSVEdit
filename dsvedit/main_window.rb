@@ -40,7 +40,8 @@ require_relative 'ui_main'
 NO_FREE_SPACE_MESSAGE = "Refer to the \"Adding a free space overlay\" section of the README for an explanation of how to create free space that can be used by DSVEdit."
 
 class DSVEdit < Qt::MainWindow
-  attr_reader :game
+  attr_reader :game,
+              :tiled
   
   attr_accessor :settings
   
@@ -390,6 +391,8 @@ class DSVEdit < Qt::MainWindow
         self.setWindowTitle("DSVania Editor #{DSVEDIT_VERSION} - #{folder_name}")
         
         check_for_incompatible_overlay()
+        
+        save_settings()
       end
     end
   rescue Game::InvalidFileError, NDSFileSystem::InvalidFileError
@@ -423,6 +426,8 @@ class DSVEdit < Qt::MainWindow
     self.setWindowTitle("DSVania Editor #{DSVEDIT_VERSION} - #{folder_name}")
     
     check_for_incompatible_overlay()
+    
+    save_settings()
   rescue Game::InvalidFileError, NDSFileSystem::InvalidFileError
     Qt::MessageBox.warning(self, "Invalid file", "Selected folder is not a DSVania.")
   rescue NDSFileSystem::InvalidRevisionError => e
@@ -1145,7 +1150,6 @@ class DSVEdit < Qt::MainWindow
       return
     end
     
-    puts "Close event triggered."
     save_settings()
   end
   
@@ -1153,11 +1157,7 @@ class DSVEdit < Qt::MainWindow
     if @room.layers.length == 0
       Qt::MessageBox.warning(self, "Room has no layers", "Cannot edit a room that has no layers. Open the layers editor in order to create a layer list for this room.")
       return
-    elsif @settings[:tiled_path].nil? || @settings[:tiled_path].empty?
-      Qt::MessageBox.warning(self, "Failed to run Tiled", "You must specify where Tiled is installed.")
-      return
-    elsif !File.file?(@settings[:tiled_path])
-      Qt::MessageBox.warning(self, "Failed to run Tiled", "Tiled install path is invalid.")
+    elsif check_invalid_tiled_path()
       return
     end
     folder = "cache/#{GAME}/rooms"
@@ -1250,6 +1250,17 @@ class DSVEdit < Qt::MainWindow
       if response == Qt::MessageBox::No
         return true
       end
+    end
+    return false
+  end
+  
+  def check_invalid_tiled_path
+    if @settings[:tiled_path].nil? || @settings[:tiled_path].empty?
+      Qt::MessageBox.warning(self, "Failed to run Tiled", "You must specify where Tiled is installed.")
+      return true
+    elsif !File.file?(@settings[:tiled_path])
+      Qt::MessageBox.warning(self, "Failed to run Tiled", "Tiled install path is invalid.")
+      return true
     end
     return false
   end
