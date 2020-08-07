@@ -19,8 +19,6 @@ class TMXInterface
     end
     room.write_extra_data_to_rom()
     
-    all_tilesets_for_room = room.layers.map{|layer| layer.tileset_filename}.uniq.compact
-    
     tiled_layers = xml.css("layer")
     tiled_layers.each do |tmx_layer|
       props = extract_properties(tmx_layer)
@@ -233,6 +231,75 @@ class TMXInterface
               }
             }
           end
+        }
+      }
+    end
+    
+    FileUtils::mkdir_p(File.dirname(filename))
+    File.open(filename, "w") do |f|
+      f.write(builder.to_xml)
+    end
+  end
+  
+  def import_tmx_menu_bg_layer(filename, game_layer)
+    tiled_layer = File.read(filename)
+    xml = Nokogiri::XML(tiled_layer)
+    
+    tiled_layers = xml.css("layer")
+    if tiled_layers.size == 0
+      raise ImportError.new("TMX file had no layers")
+    end
+    if tiled_layers.size > 1
+      raise ImportError.new("TMX file had more than one layer")
+    end
+    tmx_layer = tiled_layers[0]
+    
+    props = extract_properties(tmx_layer)
+    validate_properties(props, "Layer", %w(layer_width layer_height tileset collision_tileset))
+    
+    game_layer.width  = props["layer_width"]
+    game_layer.height = props["layer_height"]
+    game_layer.tileset_pointer = props["tileset"]
+    game_layer.collision_tileset_pointer = props["collision_tileset"]
+    game_layer.tiles = from_tmx_level_data(tmx_layer.css("data").text)
+    
+    game_layer.write_to_rom()
+  end
+  
+  def export_tmx_menu_bg_layer(filename, layer, tileset_path)
+    layer_width_in_blocks = layer.width * SCREEN_WIDTH_IN_TILES
+    layer_height_in_blocks = layer.height * SCREEN_HEIGHT_IN_TILES
+    
+    builder = Nokogiri::XML::Builder.new do |xml|
+      xml.map(:version => "1.0", 
+              :orientation => "orthogonal", 
+              :renderorder => "right-down", 
+              :width => layer_width_in_blocks, :height => layer_height_in_blocks, 
+              :tilewidth => TILE_WIDTH, :tileheight => TILE_HEIGHT, 
+              :nextobjectid => 1) {
+        
+        tileset_filename = "%08X.png" % layer.tileset_pointer
+        xml.tileset(:firstgid => 1,
+                    :name => tileset_filename,
+                    :tilewidth => TILE_WIDTH, :tileheight => TILE_HEIGHT) {
+          xml.image(:source => "./Tilesets/#{tileset_filename}",
+                    :width => TILESET_WIDTH_IN_TILES*TILE_WIDTH,
+                    :height => TILESET_HEIGHT_IN_TILES*TILE_HEIGHT)
+        }
+        
+        layer_name = "layer"
+        xml.layer(:name => layer_name,
+                  :width => layer.width*SCREEN_WIDTH_IN_TILES, :height => layer.height*SCREEN_HEIGHT_IN_TILES) {
+          
+          xml.properties {
+            xml.property(:name => "layer_width",         :value => "%02X" % layer.width)
+            xml.property(:name => "layer_height",        :value => "%02X" % layer.height)
+            xml.property(:name => "tileset",             :value => "%08X" % layer.tileset_pointer)
+            xml.property(:name => "collision_tileset",   :value => "%08X" % layer.collision_tileset_pointer)
+          }
+          
+          block_offset = 1
+          xml.data(to_tmx_level_data(layer.tiles, layer.width, block_offset), :encoding => "csv")
         }
       }
     end
