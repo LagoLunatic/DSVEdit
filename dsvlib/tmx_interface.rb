@@ -4,7 +4,7 @@ require 'nokogiri'
 class TMXInterface
   class ImportError < StandardError ; end
   
-  def read(filename, room)
+  def import_tmx_map(filename, room)
     tiled_room = File.read(filename)
     xml = Nokogiri::XML(tiled_room)
     
@@ -110,7 +110,7 @@ class TMXInterface
     #puts "Read tmx file #{filename} and saved to rom"
   end
   
-  def create(filename, room)
+  def export_tmx_map(filename, room)
     all_tilesets_for_room = room.layers.map{|layer| layer.tileset_filename}.uniq.compact
     room_width_in_blocks = room.max_layer_width * SCREEN_WIDTH_IN_TILES
     room_height_in_blocks = room.max_layer_height * SCREEN_HEIGHT_IN_TILES

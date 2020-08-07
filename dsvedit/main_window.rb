@@ -1164,7 +1164,7 @@ class DSVEdit < Qt::MainWindow
     tmx_path = "#{folder}/#{@room.area_name}/#{@room.filename}.tmx"
     
     @renderer.ensure_tilesets_exist(folder, @room)
-    @tiled.create(tmx_path, @room)
+    @tiled.export_tmx_map(tmx_path, @room)
     system("start \"#{@settings[:tiled_path]}\" \"#{tmx_path}\"")
   rescue StandardError => e
     Qt::MessageBox.warning(self,
@@ -1186,7 +1186,7 @@ class DSVEdit < Qt::MainWindow
       return
     end
     
-    @tiled.read(tmx_path, @room)
+    @tiled.import_tmx_map(tmx_path, @room)
     game.fix_map_sector_and_room_indexes(@area_index, @sector_index)
     
     load_room()
