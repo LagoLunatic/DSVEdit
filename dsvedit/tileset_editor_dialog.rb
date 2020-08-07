@@ -359,9 +359,6 @@ class TilesetEditorDialog < Qt::Dialog
         # Dummy blank tile from an incomplete row
         return
       end
-      if tile.is_blank
-        return
-      end
       
       render_tile_to_pixmap_item(tile, tile_pixmap_item)
     end

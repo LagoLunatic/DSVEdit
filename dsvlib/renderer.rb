@@ -220,10 +220,6 @@ class Renderer
     end
     
     tileset.tiles.each_with_index do |tile, index_on_tileset|
-      if tile.is_blank
-        next
-      end
-      
       gfx = gfx_wrappers[tile.tile_page]
       if gfx.nil?
         next # TODO: figure out why this sometimes happens.
@@ -302,10 +298,6 @@ class Renderer
     end
 
     tileset.tiles.each_with_index do |tile, index_on_tileset|
-      if tile.is_blank
-        next
-      end
-      
       rendered_tile = ChunkyPNG::Image.new(32, 32)
       minitile_x = 0
       minitile_y = 0
