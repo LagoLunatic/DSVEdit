@@ -590,12 +590,12 @@
   ; r0 - Menu entity
   ; r1 - GFX list pointer
   ; r2 - Palette list pointer
-  ; r3 - Pointer to the layer metadata for the menu
+  ; r3 - Layer metadata pointer
 020420E0 LoadBGLayerSingleGfx
   ; r0 - Menu entity
   ; r1 - GFX asset pointer
   ; r2 - Palette list pointer
-  ; r3 - Pointer to the layer metadata for the menu
+  ; r3 - Layer metadata pointer
 02041F68 LoadBGLayerWithoutAssets
   ; r0 - Menu entity
   ; r1 - Layer metadata pointer
@@ -611,6 +611,11 @@
   ; r1 - May affect the offset within tiles VRAM to load this GFX page at, multiply this value by 0x2000 to get the offset.
   ;   It seems like this is unused in practice though.
   ; r2 - Asset index
+02041E48 LoadMenuOAMSprite???
+  ; r0 - Menu entity
+  ; r1 - GFX asset pointer
+  ; r2 - Palette list pointer
+  ; r3 - GFX asset index
 
 020125A4 MagicSealOrItemPickupUpdate?
 02215F5C MagicSealUpdate

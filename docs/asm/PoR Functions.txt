@@ -846,11 +846,18 @@
 
 0203D3AC InitializeMenuBG1
   ; r0 - Menu entity (02110F00)
-0205B5C0 DrawMenuBG1
+0205B5C0 LoadBGLayerMultiGfx
   ; r0 - Menu entity (02110F00)
-  ; r1 - GFX list
-  ; r2 - Palette list
-  ; r3 - Layer metadata
+  ; r1 - GFX list pointer
+  ; r2 - Palette list pointer
+  ; r3 - Layer metadata pointer
+0205B6CC LoadBGLayerSingleGfx
+  ; r1 - GFX asset pointer
+  ; r2 - Palette list pointer
+  ; r3 - Layer metadata pointer
+0205B20C LoadMenuGFXAsset
+  ; r0 - Menu entity to load the GFX for
+  ; r1 - Asset index
 
 020557C8 SetTopScreen
   ; r0 - Top screen type to change to

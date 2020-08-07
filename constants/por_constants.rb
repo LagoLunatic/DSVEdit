@@ -1502,5 +1502,97 @@ QUEST_BITFIELD_ATTRIBUTES = {
 }
 
 MENU_BG_LAYER_INFOS = [
-  # TODO
+  {
+    name: "Main menu",
+    gfx_list_pointer:       0x020C336C,
+    palette_list_pointer:   0x022D6E6C,
+    layer_metadata_pointer: 0x020C3444,
+    overlay: 9,
+  },
+  {
+    name: "Shop",
+    gfx_list_pointer:       0x020BFE14,
+    palette_list_pointer:   0x022D7464,
+    layer_metadata_pointer: 0x020C4864,
+    overlay: 42,
+  },
+  {
+    name: "Pause screen",
+    gfx_list_pointer:       0x020BFC24,
+    palette_list_pointer:   0x022D6FB8,
+    layer_metadata_pointer: 0x020C3C04,
+    overlay: 12,
+  },
+  {
+    name: "Equip",
+    gfx_file_pointer:       0x022D1AA4,
+    palette_list_pointer:   0x022D70E0,
+    layer_metadata_pointer: 0x020C3654,
+    overlay: 10,
+  },
+  {
+    name: "Use item",
+    gfx_file_pointer:       0x022D6DD0,
+    palette_list_pointer:   0x022D705C,
+    layer_metadata_pointer: 0x020C4C04,
+    overlay: 18,
+  },
+  {
+    name: "Config",
+    gfx_file_pointer:       0x022D21AC,
+    palette_list_pointer:   0x022D7164,
+    layer_metadata_pointer: 0x020C3864,
+    overlay: 11,
+  },
+  {
+    name: "Partner talk screen",
+    gfx_list_pointer:       0x020BFC1C,
+    palette_list_pointer:   0x022D71A8,
+    layer_metadata_pointer: 0x020C4A74,
+    overlay: 17,
+  },
+  {
+    name: "Relics",
+    gfx_file_pointer:       0x022D2AF4,
+    palette_list_pointer:   0x022D722C,
+    layer_metadata_pointer: 0x020C4234,
+    overlay: 15,
+  },
+  {
+    name: "Bestiary list",
+    gfx_file_pointer:       0x022D6E3C,
+    palette_list_pointer:   0x022D7270,
+    layer_metadata_pointer: 0x020C5024,
+    overlay: 20,
+  },
+  {
+    name: "Bestiary entry",
+    gfx_file_pointer:       0x022D6E30,
+    palette_list_pointer:   0x022D72B4,
+    layer_metadata_pointer: 0x020C4E14,
+    overlay: 19,
+  },
+  {
+    name: "Items",
+    gfx_file_pointer:       0x022D6E48,
+    palette_list_pointer:   0x022D72F8,
+    layer_metadata_pointer: 0x020C5234,
+    overlay: 21,
+  },
+  {
+    name: "Skills",
+    gfx_file_pointer:       0x022D6E60,
+    palette_list_pointer:   0x022D73BC,
+    layer_metadata_pointer: 0x020C5444,
+    overlay: 23,
+  },
+  {
+    name: "Quests",
+    gfx_list_pointer:       0x020BFC2C,
+    palette_list_pointer:   0x022D7400,
+    layer_metadata_pointer: 0x020C4024,
+    overlay: 14,
+    # Note: Wind's quests menu uses GFX list 0x020BFD80 instead of the 0x020BFC2C used by the pause screen.
+    # But the GFX inside the list are identical, as are the other properties here, so Wind's quests menu is not listed.
+  },
 ]

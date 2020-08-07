@@ -141,6 +141,10 @@ There are 41 entries in the list total.
     03,1: 00
     00000000 indicates the end of this chain of weapon synths.
 
+0209D004 - List of OAM data for the weapon synthesis menu foreground?
+  Entry length 0x10.
+  Unknown format.
+
 0209D124 - List of extra soul data.
   Entry length 2.
   Byte 1: Maximum you can have when you have 1 of this soul.
@@ -257,6 +261,7 @@ What each range of entity slots is for:
 02D-02D  020D1A10-020D1CAF  ?
 030-080  020D21F0-020DF68F  Room entities, including enemies and special objects.
 081-0EF  020DF690-020F19EF  Various things including particles and enemy projectiles.
+0F0-0F1  020F19F0-020F1F2F  Menu entities?
 0F2-0F2  020F1F30-020F21CF  ?
 10E-10E  020F68B0-020F6B4F  ?
 10F-10F  020F6B50-020F6DEF  ?
