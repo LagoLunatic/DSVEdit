@@ -386,6 +386,9 @@ class EntityLayerItem < Qt::GraphicsRectItem
     sprite_filename = @renderer.ensure_sprite_exists("cache/#{GAME}/sprites/", sprite_info, frame_to_render)
     chunky_frame = ChunkyPNG::Image.from_file(sprite_filename)
     
+    offset_x = sprite_info.sprite.min_x
+    offset_y = sprite_info.sprite.min_y
+    
     if item_icon_image
       chunky_frame.compose!(item_icon_image, 6, 0)
     end
@@ -395,10 +398,22 @@ class EntityLayerItem < Qt::GraphicsRectItem
       chunky_frame.compose!(portrait_art_image, x_offset, y_offset)
     end
     
+    # Crop the image.
+    # This is so the giant blank space around the frame doesn't count as clickable.
+    frame = sprite_info.sprite.frames[frame_to_render]
+    crop_x_offset = frame.min_x-sprite_info.sprite.min_x
+    crop_y_offset = frame.min_y-sprite_info.sprite.min_y
+    chunky_frame.crop!(
+      crop_x_offset,
+      crop_y_offset,
+      frame.max_x-frame.min_x,
+      frame.max_y-frame.min_y,
+    )
+    offset_x += crop_x_offset
+    offset_y += crop_y_offset
+    
     graphics_item = EntityChunkyItem.new(chunky_frame, entity, @main_window)
     
-    offset_x = sprite_info.sprite.min_x
-    offset_y = sprite_info.sprite.min_y
     if sprite_offset
       offset_x += sprite_offset[:x] || 0
       offset_y += sprite_offset[:y] || 0

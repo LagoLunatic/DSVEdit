@@ -827,6 +827,30 @@ class Frame
     @hitbox_indexes = @hitboxes.map{|hitbox| all_sprite_hitboxes.index(hitbox)}
   end
   
+  def min_x
+    (parts + hitboxes).map{|item| item.x_pos}.min
+  end
+  
+  def min_y
+    (parts + hitboxes).map{|item| item.y_pos}.min
+  end
+  
+  def max_x
+    (parts + hitboxes).map{|item| item.x_pos + item.width}.max
+  end
+  
+  def max_y
+    (parts + hitboxes).map{|item| item.y_pos + item.height}.max
+  end
+  
+  def full_width
+    max_x - min_x
+  end
+  
+  def full_height
+    max_y - min_y
+  end
+  
   def to_data
     if SYSTEM == :nds
       [

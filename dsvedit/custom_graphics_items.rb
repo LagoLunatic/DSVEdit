@@ -6,6 +6,36 @@ class GraphicsChunkyItem < Qt::GraphicsPixmapItem
     pixmap.loadFromData(blob, blob.length)
     super(pixmap)
   end
+  
+  def boundingRect
+    # If the sprite is smaller than 16x16, make sure the bounding rectangle is at least 16x16.
+    
+    orig_rect = super()
+    top = orig_rect.top()
+    bottom = orig_rect.bottom()
+    left = orig_rect.left()
+    right = orig_rect.right()
+    
+    width = bottom - top
+    height = right - left
+    if width < 8
+      left -= (8-width)/2
+      right += (8-width)/2
+    end
+    if height < 8
+      top -= (8-height)/2
+      bottom += (8-height)/2
+    end
+    
+    return Qt::RectF.new(left, top, right-left, bottom-top)
+  end
+  
+  def shape
+    # Make the whole bounding rectangle clickable, instead of just the sprite's pixels.
+    path = Qt::PainterPath.new
+    path.addRect(boundingRect())
+    return path
+  end
 end
 
 class EntityChunkyItem < GraphicsChunkyItem
