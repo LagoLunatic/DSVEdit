@@ -492,6 +492,14 @@ OTHER_SPRITES = [
   {pointer: 0x0204908C, desc: "Enemy set retry/complete"},
   {pointer: 0x020490A0, desc: "Wi-fi menu"},
   
+  
+  {desc: "Equip menu foreground", no_sprite: true, palette: 0x022C46E8, one_dimensional_mode: true, gfx_file_names: [
+    "/sc/f_mainob.dat",
+  ]},
+  {desc: "Weapon synthesis menu foreground", no_sprite: true, palette: 0x022C490C, one_dimensional_mode: true, gfx_file_names: [
+    "/sc/f_mix_e.dat",
+  ]},
+  
   {desc: "Event face portraits 00-03", no_sprite: true, palette: 0x022C64D8, gfx_file_names: [
     "/sc/f_fsoma0.dat",
     "/sc/f_fsoma1.dat",
@@ -571,9 +579,6 @@ OTHER_SPRITES = [
     "/sc/f_fsoma7.dat",
     "/sc/f_fsoma8.dat",
   ]},
-  
-  #{gfx_files: [0x022D0B00], palette: 0x022C490C} # weapon synth menu, /sc/f_mix_e.dat
-  #{gfx_files: [0x022D9EC4, 0x022D9ED0], palette: ?} # bestiary, /bc/f_ene1.dat
 ]
 
 CANDLE_FRAME_IN_COMMON_SPRITE = 0xDB
