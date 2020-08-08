@@ -985,6 +985,8 @@ class DSVEdit < Qt::MainWindow
         tileset_data[:collision_tileset_pointer] = layer.collision_tileset_pointer
         tileset_data[:tileset_type]              = layer.tileset_type
       end
+      
+      tileset_data[:one_dimensional_mode] = (SYSTEM == :gba)
     end
     
     @open_dialogs << TilesetEditorDialog.new(self, game.fs, @renderer, tileset_data)

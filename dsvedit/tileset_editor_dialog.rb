@@ -34,6 +34,11 @@ class TilesetEditorDialog < Qt::Dialog
     @fs = fs
     @renderer = renderer
     
+    if SYSTEM == :gba
+      @ui.one_dimensional_mode.checked = true
+      @ui.label_8.text = "GFX pointer(s)"
+    end
+    
     @tileset_graphics_scene = ClickableGraphicsScene.new
     @ui.tileset_graphics_view.setScene(@tileset_graphics_scene)
     @ui.tileset_graphics_view.setMouseTracking(true) # Detect mouse move even when not clicking
