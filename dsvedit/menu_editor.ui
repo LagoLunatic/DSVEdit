@@ -101,6 +101,13 @@
              </widget>
             </item>
             <item>
+             <widget class="QPushButton" name="open_in_tileset_editor">
+              <property name="text">
+               <string>Open in Tileset Editor</string>
+              </property>
+             </widget>
+            </item>
+            <item>
              <widget class="QPushButton" name="tiled_export">
               <property name="text">
                <string>Open in Tiled</string>

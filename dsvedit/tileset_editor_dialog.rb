@@ -26,7 +26,7 @@ class TilesetEditorDialog < Qt::Dialog
   slots "toggle_display_collision(bool)"
   slots "button_box_clicked(QAbstractButton*)"
   
-  def initialize(main_window, fs, renderer, room)
+  def initialize(main_window, fs, renderer, tileset_data)
     super(main_window, Qt::WindowTitleHint | Qt::WindowSystemMenuHint)
     @ui = Ui_TilesetEditor.new
     @ui.setup_ui(self)
@@ -108,15 +108,6 @@ class TilesetEditorDialog < Qt::Dialog
     @selection_width = 0
     @selection_height = 0
     
-    self.show()
-    
-    room.sector.load_necessary_overlay()
-    
-    if room.palette_pages.empty?
-      Qt::MessageBox.warning(self, "No palette", "The current room has no palette pages.")
-      return
-    end
-    
     if SYSTEM == :nds
       @tile_width = @tile_height = 16
       @tileset_width = 16
@@ -130,16 +121,28 @@ class TilesetEditorDialog < Qt::Dialog
     end
     @tileset_graphics_scene.setSceneRect(0, 0, @tileset_width*@tile_width, @tileset_height*@tile_height)
     
-    layer = room.layers.first
-    if layer
-      @ui.tileset_pointer.text = "%08X" % layer.tileset_pointer
-      @ui.collision_tileset_pointer.text = "%08X" % layer.collision_tileset_pointer
-      @ui.tileset_type.text = "%04X" % layer.tileset_type
+    tileset_data[:room_gfx_list_pointer] ||= 0
+    tileset_data[:gfx_list_pointer] ||= 0
+    tileset_data[:gfx_file_pointer] ||= 0
+    tileset_data[:palette_wrapper_pointer] ||= 0
+    tileset_data[:palette_page_index] ||= 0
+    tileset_data[:palette_list_pointer] ||= 0
+    @ui.room_gfx_list_pointer.text            = "%08X" % tileset_data[:room_gfx_list_pointer]
+    @ui.gfx_list_pointer.text                 = "%08X" % tileset_data[:gfx_list_pointer]
+    @ui.gfx_file_pointer.text                 = "%08X" % tileset_data[:gfx_file_pointer]
+    @ui.one_dimensional_mode.checked          = !!tileset_data[:one_dimensional_mode]
+    @ui.palette_page_list_pointer.text        = "%08X" % tileset_data[:palette_wrapper_pointer]
+    @ui.palette_page_index.text               = "%02X" % tileset_data[:palette_page_index]
+    @ui.palette_list_pointer_for_tileset.text = "%02X" % tileset_data[:palette_list_pointer]
+    if tileset_data[:tileset_pointer]
+      @ui.tileset_pointer.text           = "%08X" % tileset_data[:tileset_pointer]
+      @ui.collision_tileset_pointer.text = "%08X" % tileset_data[:collision_tileset_pointer]
+      @ui.tileset_type.text              = "%04X" % tileset_data[:tileset_type]
     end
-    @ui.gfx_list_pointer.text = "%08X" % room.gfx_list_pointer
-    @ui.palette_page_list_pointer.text = "%08X" % room.palette_wrapper_pointer
-    @ui.palette_page_index.text = "%02X" % room.palette_page_index
+    
     load_tileset()
+    
+    self.show()
   end
   
   def load_tileset
@@ -147,12 +150,18 @@ class TilesetEditorDialog < Qt::Dialog
     
     @tileset_pointer = @ui.tileset_pointer.text.to_i(16)
     @tileset_type = @ui.tileset_type.text.to_i(16)
+    @room_gfx_list_pointer = @ui.room_gfx_list_pointer.text.to_i(16)
     @gfx_list_pointer = @ui.gfx_list_pointer.text.to_i(16)
+    @gfx_file_pointer = @ui.gfx_file_pointer.text.to_i(16)
+    @one_dimensional_mode = @ui.one_dimensional_mode.checked
     @palette_page_list_pointer = @ui.palette_page_list_pointer.text.to_i(16)
     @palette_page_index = @ui.palette_page_index.text.to_i(16)
+    @palette_list_pointer = @ui.palette_list_pointer_for_tileset.text.to_i(16)
     @collision_tileset_pointer = @ui.collision_tileset_pointer.text.to_i(16)
     
-    return if @tileset_pointer == 0 || @gfx_list_pointer == 0 || @palette_page_list_pointer == 0 || @collision_tileset_pointer == 0
+    return if @tileset_pointer == 0 
+    return if @palette_page_list_pointer == 0 && @palette_list_pointer == 0
+    return if @room_gfx_list_pointer == 0 && @gfx_list_pointer == 0 && @gfx_file_pointer == 0
     
     begin
       @tileset = Tileset.new(@tileset_pointer, @tileset_type, @fs)
@@ -162,18 +171,27 @@ class TilesetEditorDialog < Qt::Dialog
         "The tileset data doesn't appear to be compressed.\nThe Tileset Type may be incorrect."
       )
     end
-    begin
-      @collision_tileset = CollisionTileset.new(@collision_tileset_pointer, @fs)
-    rescue GBALZ77::DecompressionError => e
-      Qt::MessageBox.warning(self,
-        "Decompression error",
-        "The collision tileset data doesn't appear to be compressed.\nThe Tileset Type may be incorrect."
-      )
+    
+    if @collision_tileset_pointer == 0
+      @collision_tileset = nil
+    else
+      begin
+        @collision_tileset = CollisionTileset.new(@collision_tileset_pointer, @fs)
+      rescue GBALZ77::DecompressionError => e
+        Qt::MessageBox.warning(self,
+          "Decompression error",
+          "The collision tileset data doesn't appear to be compressed.\nThe Tileset Type may be incorrect."
+        )
+      end
     end
     
     if SYSTEM == :nds
       @tiles = @tileset.tiles
-      @collision_tiles = @collision_tileset.tiles
+      if @collision_tileset.nil?
+        @collision_tiles = nil
+      else
+        @collision_tiles = @collision_tileset.tiles
+      end
     else
       @tiles = []
       @tileset.tiles.each_slice(16) do |row_of_tiles|
@@ -197,48 +215,67 @@ class TilesetEditorDialog < Qt::Dialog
           @tiles += minitiles[12,4]
         end
       end
+      
       @collision_tiles = []
-      @collision_tileset.tiles.each_slice(256) do |row_of_big_tiles|
-        if row_of_big_tiles.length < 256
-          # If the last row of tiles isn't a full row we must pad it with nil.
-          row_of_big_tiles.fill(nil, row_of_big_tiles.length...256)
-        end
-        row_of_big_tiles.each_slice(16) do |big_tile|
-          @collision_tiles += big_tile[0,4]
-        end
-        row_of_big_tiles.each_slice(16) do |big_tile|
-          @collision_tiles += big_tile[4,4]
-        end
-        row_of_big_tiles.each_slice(16) do |big_tile|
-          @collision_tiles += big_tile[8,4]
-        end
-        row_of_big_tiles.each_slice(16) do |big_tile|
-          @collision_tiles += big_tile[12,4]
+      unless @collision_tileset.nil?
+        @collision_tileset.tiles.each_slice(256) do |row_of_big_tiles|
+          if row_of_big_tiles.length < 256
+            # If the last row of tiles isn't a full row we must pad it with nil.
+            row_of_big_tiles.fill(nil, row_of_big_tiles.length...256)
+          end
+          row_of_big_tiles.each_slice(16) do |big_tile|
+            @collision_tiles += big_tile[0,4]
+          end
+          row_of_big_tiles.each_slice(16) do |big_tile|
+            @collision_tiles += big_tile[4,4]
+          end
+          row_of_big_tiles.each_slice(16) do |big_tile|
+            @collision_tiles += big_tile[8,4]
+          end
+          row_of_big_tiles.each_slice(16) do |big_tile|
+            @collision_tiles += big_tile[12,4]
+          end
         end
       end
     end
     
-    @gfx_pages = RoomGfxPage.from_room_gfx_page_list(@gfx_list_pointer, @fs)
-    @gfx_wrappers = @gfx_pages.map{|page| page.gfx_wrapper}
+    if @room_gfx_list_pointer != 0
+      @gfx_pages = RoomGfxPage.from_room_gfx_page_list(@room_gfx_list_pointer, @fs)
+      @gfx_wrappers = @gfx_pages.map{|page| page.gfx_wrapper}
+    elsif @gfx_list_pointer != 0
+      @gfx_pages = nil
+      @gfx_wrappers = GfxWrapper.from_gfx_list_pointer(@gfx_list_pointer, @fs)
+    else
+      @gfx_pages = nil
+      @gfx_wrappers = [GfxWrapper.new(@gfx_file_pointer, @fs)]
+    end
     
     @gfx_chunks = []
-    @gfx_pages.each_with_index do |gfx_page, gfx_wrapper_index|
-      gfx_page.num_chunks.times do |i|
-        @gfx_chunks[gfx_page.gfx_load_offset+i] = [gfx_wrapper_index, gfx_page.first_chunk_index+i]
+    if @gfx_pages
+      @gfx_pages.each_with_index do |gfx_page, gfx_wrapper_index|
+        gfx_page.num_chunks.times do |i|
+          @gfx_chunks[gfx_page.gfx_load_offset+i] = [gfx_wrapper_index, gfx_page.first_chunk_index+i]
+        end
       end
     end
     
-    @palette_pages = PaletteWrapper.from_palette_wrapper_pointer(@palette_page_list_pointer, @fs)
-    
-    if @palette_pages[@palette_page_index].nil?
-      @palette_page_index = 0
-      @ui.palette_page_index.text = "%02X" % @palette_page_index
+    if @palette_page_list_pointer != 0
+      @palette_pages = PaletteWrapper.from_palette_wrapper_pointer(@palette_page_list_pointer, @fs)
+      
+      if @palette_pages[@palette_page_index].nil?
+        @palette_page_index = 0
+        @ui.palette_page_index.text = "%02X" % @palette_page_index
+      end
+    else
+      palette_wrapper = PaletteWrapper.new(@fs)
+      palette_wrapper.palette_list_pointer = @palette_list_pointer
+      @palette_pages = [palette_wrapper]
     end
     
     if SYSTEM == :nds
       palette_page = @palette_pages[@palette_page_index]
       @palettes = @renderer.generate_palettes(palette_page.palette_list_pointer, 16)
-      if @gfx_pages.any?{|gfx| gfx.colors_per_palette == 256}
+      if @gfx_wrappers.any?{|gfx| gfx.colors_per_palette == 256}
         @palettes_256 = @renderer.generate_palettes(palette_page.palette_list_pointer, 256)
       end
       
@@ -264,7 +301,7 @@ class TilesetEditorDialog < Qt::Dialog
           @palette_indexes_to_palette_list_pointer[palette_index] = palette_page.palette_list_pointer
         end
       end
-      if @gfx_pages.any?{|gfx| gfx.colors_per_palette == 256}
+      if @gfx_wrappers.any?{|gfx| gfx.colors_per_palette == 256}
         @palettes_256 = []
         @palette_pages.each do |palette_page|
           next if palette_page.palette_type == 1 # Foreground palette
@@ -277,8 +314,8 @@ class TilesetEditorDialog < Qt::Dialog
     end
     
     @ui.gfx_page_index.clear()
-    @gfx_pages.each_with_index do |gfx_page, i|
-      if gfx_page.colors_per_palette == 16
+    @gfx_wrappers.each_with_index do |gfx_wrapper, i|
+      if gfx_wrapper.colors_per_palette == 16
         @ui.gfx_page_index.addItem("%02X" % i)
       else
         @ui.gfx_page_index.addItem("%02X (256 colors)" % i)
@@ -312,11 +349,6 @@ class TilesetEditorDialog < Qt::Dialog
     
     @tileset_pixmap_items = []
     @tiles.each_with_index do |tile, index_on_tileset|
-      if index_on_tileset == 0
-        @tileset_pixmap_items << nil
-        next
-      end
-      
       tile_pixmap_item = Qt::GraphicsPixmapItem.new
       @tileset_pixmap_items << tile_pixmap_item
       
@@ -365,8 +397,8 @@ class TilesetEditorDialog < Qt::Dialog
   end
   
   def render_tile(tile)
-    gfx = @gfx_pages[tile.tile_page]
-    if gfx.nil?
+    gfx_wrapper = @gfx_wrappers[tile.tile_page]
+    if gfx_wrapper.nil?
       # Invalid gfx page index
       return ChunkyPNG::Image.new(@tile_width, @tile_height)
     end
@@ -376,7 +408,7 @@ class TilesetEditorDialog < Qt::Dialog
       return
     end
     
-    if gfx.colors_per_palette == 16
+    if gfx_wrapper.colors_per_palette == 16
       palette = @palettes[tile.palette_index]
     else
       palette = @palettes_256[tile.palette_index]
@@ -388,7 +420,11 @@ class TilesetEditorDialog < Qt::Dialog
     end
     
     if SYSTEM == :nds
-      chunky_tile = @renderer.render_graphic_tile(gfx.gfx_wrapper, palette, tile.index_on_tile_page)
+      if @one_dimensional_mode
+        chunky_tile = @renderer.render_16x16_graphic_tile_1_dimensional_mode(gfx_wrapper, palette, tile.index_on_tile_page)
+      else
+        chunky_tile = @renderer.render_graphic_tile(gfx_wrapper, palette, tile.index_on_tile_page)
+      end
     else
       gfx_chunk_index_on_page = (tile.index_on_tile_page & 0xC0) >> 6
       gfx_chunk_index = tile.tile_page*4 + gfx_chunk_index_on_page
@@ -475,35 +511,34 @@ class TilesetEditorDialog < Qt::Dialog
     render_tile_to_pixmap_item(@selected_tile, selected_tile_pixmap_item)
     @selected_tile_graphics_scene.addItem(selected_tile_pixmap_item)
     
-    tile_x_pos_on_page = @selected_tile.index_on_tile_page % @tiles_per_gfx_page_row
-    tile_y_pos_on_page = @selected_tile.index_on_tile_page / @tiles_per_gfx_page_row
-    
-    @ui.has_top.checked = @selected_collision_tile.has_top
-    @ui.is_water.checked = @selected_collision_tile.is_water
-    if @selected_collision_tile.block_shape >= 4
-      @ui.has_sides_and_bottom.enabled = @ui.has_sides_and_bottom.checked = false
-      @ui.has_effect.enabled = @ui.has_effect.checked = false
-      @ui.coll_vertical_flip.enabled = true
-      @ui.coll_horizontal_flip.enabled = true
-      @ui.coll_vertical_flip.checked = @selected_collision_tile.vertical_flip
-      @ui.coll_horizontal_flip.checked = @selected_collision_tile.horizontal_flip
-    else
-      @ui.has_sides_and_bottom.enabled = true
-      @ui.has_effect.enabled = true
-      @ui.coll_vertical_flip.enabled = @ui.coll_vertical_flip.checked = false
-      @ui.coll_horizontal_flip.enabled = @ui.coll_horizontal_flip.checked = false
-      @ui.has_sides_and_bottom.checked = @selected_collision_tile.has_sides_and_bottom
-      @ui.has_effect.checked = @selected_collision_tile.has_effect
+    unless @collision_tileset.nil?
+      @ui.has_top.checked = @selected_collision_tile.has_top
+      @ui.is_water.checked = @selected_collision_tile.is_water
+      if @selected_collision_tile.block_shape >= 4
+        @ui.has_sides_and_bottom.enabled = @ui.has_sides_and_bottom.checked = false
+        @ui.has_effect.enabled = @ui.has_effect.checked = false
+        @ui.coll_vertical_flip.enabled = true
+        @ui.coll_horizontal_flip.enabled = true
+        @ui.coll_vertical_flip.checked = @selected_collision_tile.vertical_flip
+        @ui.coll_horizontal_flip.checked = @selected_collision_tile.horizontal_flip
+      else
+        @ui.has_sides_and_bottom.enabled = true
+        @ui.has_effect.enabled = true
+        @ui.coll_vertical_flip.enabled = @ui.coll_vertical_flip.checked = false
+        @ui.coll_horizontal_flip.enabled = @ui.coll_horizontal_flip.checked = false
+        @ui.has_sides_and_bottom.checked = @selected_collision_tile.has_sides_and_bottom
+        @ui.has_effect.checked = @selected_collision_tile.has_effect
+      end
+      @ui.block_shape.setCurrentIndex(@selected_collision_tile.block_shape)
+      
+      chunky_coll_tile = @renderer.render_collision_tile(@selected_collision_tile)
+      selected_tile_coll_pixmap_item = Qt::GraphicsPixmapItem.new
+      pixmap = Qt::Pixmap.new
+      blob = chunky_coll_tile.to_blob
+      pixmap.loadFromData(blob, blob.length)
+      selected_tile_coll_pixmap_item.pixmap = pixmap
+      @selected_tile_collision_graphics_scene.addItem(selected_tile_coll_pixmap_item)
     end
-    @ui.block_shape.setCurrentIndex(@selected_collision_tile.block_shape)
-    
-    chunky_coll_tile = @renderer.render_collision_tile(@selected_collision_tile)
-    selected_tile_coll_pixmap_item = Qt::GraphicsPixmapItem.new
-    pixmap = Qt::Pixmap.new
-    blob = chunky_coll_tile.to_blob
-    pixmap.loadFromData(blob, blob.length)
-    selected_tile_coll_pixmap_item.pixmap = pixmap
-    @selected_tile_collision_graphics_scene.addItem(selected_tile_coll_pixmap_item)
   end
   
   def gfx_page_changed(gfx_page_index)
@@ -526,7 +561,12 @@ class TilesetEditorDialog < Qt::Dialog
       end
       
       @ui.gfx_file.text = gfx_wrapper.file[:file_path]
-      chunky_image = @renderer.render_gfx_page(gfx_wrapper, palette)
+      
+      if @one_dimensional_mode
+        chunky_image = @renderer.render_gfx_1_dimensional_mode(gfx_wrapper, palette)
+      else
+        chunky_image = @renderer.render_gfx_page(gfx_wrapper, palette)
+      end
     else
       chunky_image = ChunkyPNG::Image.new(128, 128, ChunkyPNG::Color::TRANSPARENT)
       gfx_pointers_used_on_this_page = []
@@ -774,7 +814,9 @@ class TilesetEditorDialog < Qt::Dialog
     
     @selected_tile_index = tile_index
     @selected_tile = @tiles[tile_index].dup
-    @selected_collision_tile = @collision_tiles[tile_index].dup
+    unless @collision_tiles.nil?
+      @selected_collision_tile = @collision_tiles[tile_index].dup
+    end
     
     @ui.gfx_page_index.setCurrentIndex(@selected_tile.tile_page)
     @ui.palette_index.setCurrentIndex(@selected_tile.palette_index)
@@ -924,12 +966,12 @@ class TilesetEditorDialog < Qt::Dialog
   end
   
   def open_in_gfx_editor
-    return if @gfx_pages.nil? || @palette_pages.nil? || @selected_tile.nil?
+    return if @gfx_wrappers.nil? || @palette_pages.nil? || @selected_tile.nil?
     
     palette_page = @palette_pages[@palette_page_index]
     
     gfx_and_palette_data = {}
-    gfx_and_palette_data[:gfx_file_names] = @gfx_pages.map{|gfx| "%08X" % gfx.gfx_pointer}.join(", ")
+    gfx_and_palette_data[:gfx_file_names] = @gfx_wrappers.map{|gfx| "%08X" % gfx.gfx_pointer}.join(", ")
     if SYSTEM == :nds
       gfx_and_palette_data[:gfx_page_index] = @selected_tile.tile_page
     else
@@ -942,7 +984,7 @@ class TilesetEditorDialog < Qt::Dialog
         gfx_and_palette_data[:gfx_page_index] = 0
       else
         gfx_pointer = @gfx_wrappers[gfx_wrapper_index].gfx_pointer
-        gfx_and_palette_data[:gfx_page_index] = @gfx_pages.index{|gfx| gfx.gfx_pointer == gfx_pointer}
+        gfx_and_palette_data[:gfx_page_index] = @gfx_wrappers.index{|gfx| gfx.gfx_pointer == gfx_pointer}
       end
     end
     gfx_and_palette_data[:palette_pointer] = palette_page.palette_list_pointer
@@ -1056,6 +1098,10 @@ class TilesetEditorDialog < Qt::Dialog
   end
   
   def toggle_display_collision(checked)
+    if @collision_tileset.nil?
+      return
+    end
+    
     @collision_mode = checked
     
     @selected_tiles = []
@@ -1105,7 +1151,9 @@ class TilesetEditorDialog < Qt::Dialog
   
   def save_tileset
     @tileset.write_to_rom()
-    @collision_tileset.write_to_rom()
+    unless @collision_tileset.nil?
+      @collision_tileset.write_to_rom()
+    end
     
     # Clear the tileset cache so the changes show up in the editor.
     parent.clear_cache()

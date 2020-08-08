@@ -1,17 +1,20 @@
 
 class PaletteWrapper
-  attr_reader :palette_wrapper_pointer,
-              :palette_list_pointer,
-              :fs,
-              :palette_index,
-              :num_palettes,
-              :palette_load_offset,
-              :unknown_2,
-              :palette_type
+  attr_accessor :palette_wrapper_pointer,
+                :palette_list_pointer,
+                :fs,
+                :palette_index,
+                :num_palettes,
+                :palette_load_offset,
+                :unknown_2,
+                :palette_type
               
-  def initialize(palette_wrapper_pointer, fs)
-    @palette_wrapper_pointer = palette_wrapper_pointer
+  def initialize(fs)
     @fs = fs
+  end
+  
+  def read(palette_wrapper_pointer)
+    @palette_wrapper_pointer = palette_wrapper_pointer
     
     if GAME == "hod"
       @palette_type, @palette_wrapper_info, @palette_list_pointer = fs.read(palette_wrapper_pointer, 8).unpack("vvV")
@@ -63,7 +66,9 @@ class PaletteWrapper
       end
       break if palette_list_pointer == 0
       
-      palette_wrappers << PaletteWrapper.new(offset, fs)
+      palette_wrapper = PaletteWrapper.new(fs)
+      palette_wrapper.read(offset)
+      palette_wrappers << palette_wrapper
       
       offset += 8
     end

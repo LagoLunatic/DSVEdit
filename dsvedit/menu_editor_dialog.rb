@@ -4,6 +4,7 @@ require_relative 'ui_menu_editor'
 class MenuEditorDialog < Qt::Dialog
   slots "menu_changed(int)"
   slots "open_in_gfx_editor()"
+  slots "open_in_tileset_editor()"
   slots "open_in_tiled()"
   slots "import_from_tiled()"
   slots "load_menu()"
@@ -27,6 +28,7 @@ class MenuEditorDialog < Qt::Dialog
     
     connect(@ui.menu_list, SIGNAL("currentRowChanged(int)"), self, SLOT("menu_changed(int)"))
     connect(@ui.open_in_gfx_editor, SIGNAL("clicked()"), self, SLOT("open_in_gfx_editor()"))
+    connect(@ui.open_in_tileset_editor, SIGNAL("clicked()"), self, SLOT("open_in_tileset_editor()"))
     connect(@ui.tiled_export, SIGNAL("clicked()"), self, SLOT("open_in_tiled()"))
     connect(@ui.tiled_import, SIGNAL("clicked()"), self, SLOT("import_from_tiled()"))
     connect(@ui.reload_button, SIGNAL("released()"), self, SLOT("load_menu()"))
@@ -121,6 +123,28 @@ class MenuEditorDialog < Qt::Dialog
     gfx_and_palette_data[:one_dimensional_mode] = true
     
     parent.open_gfx_editor(gfx_and_palette_data)
+  end
+  
+  def open_in_tileset_editor
+    return unless @is_menu_loaded
+    
+    tileset_data = {}
+    
+    if @gfx_list_pointer
+      tileset_data[:gfx_list_pointer] = @gfx_list_pointer
+    else
+      tileset_data[:gfx_file_pointer] = @gfx_file_pointer
+    end
+    tileset_data[:palette_list_pointer] = @palette_list_pointer
+    tileset_data[:palette_page_index] = 0
+    
+    tileset_data[:tileset_pointer]           = @bg_layer.tileset_pointer
+    tileset_data[:collision_tileset_pointer] = @bg_layer.collision_tileset_pointer
+    tileset_data[:tileset_type]              = @bg_layer.tileset_type
+    
+    tileset_data[:one_dimensional_mode] = true
+    
+    parent.open_tileset_editor(tileset_data)
   end
   
   def open_in_tiled

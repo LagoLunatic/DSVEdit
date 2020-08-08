@@ -15,62 +15,38 @@
   </property>
   <layout class="QVBoxLayout" name="verticalLayout_2">
    <item>
-    <layout class="QHBoxLayout" name="horizontalLayout_2">
-     <item>
-      <widget class="QLabel" name="label_5">
+    <layout class="QGridLayout" name="gridLayout_2">
+     <item row="1" column="13">
+      <widget class="QCheckBox" name="display_collision">
+       <property name="layoutDirection">
+        <enum>Qt::RightToLeft</enum>
+       </property>
        <property name="text">
-        <string>Tileset</string>
+        <string>Edit collision?</string>
        </property>
       </widget>
      </item>
-     <item>
-      <widget class="QLineEdit" name="tileset_pointer"/>
-     </item>
-     <item>
-      <widget class="QLabel" name="label_6">
+     <item row="2" column="2">
+      <widget class="QLabel" name="label_16">
        <property name="text">
-        <string>Tileset Type</string>
+        <string>Palette list pointer</string>
        </property>
       </widget>
      </item>
-     <item>
-      <widget class="QLineEdit" name="tileset_type">
-       <property name="maximumSize">
-        <size>
-         <width>40</width>
-         <height>16777215</height>
-        </size>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QLabel" name="label_9">
-       <property name="text">
-        <string>GFX list pointer</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QLineEdit" name="gfx_list_pointer"/>
-     </item>
-     <item>
-      <widget class="QLabel" name="label_7">
-       <property name="text">
-        <string>Palette page list pointer</string>
-       </property>
-      </widget>
-     </item>
-     <item>
+     <item row="2" column="5">
       <widget class="QLineEdit" name="palette_page_list_pointer"/>
      </item>
-     <item>
+     <item row="2" column="6">
       <widget class="QLabel" name="label_13">
        <property name="text">
         <string>Pal page index</string>
        </property>
       </widget>
      </item>
-     <item>
+     <item row="2" column="3">
+      <widget class="QLineEdit" name="palette_list_pointer_for_tileset"/>
+     </item>
+     <item row="2" column="7">
       <widget class="QLineEdit" name="palette_page_index">
        <property name="maximumSize">
         <size>
@@ -80,37 +56,98 @@
        </property>
       </widget>
      </item>
-     <item>
-      <widget class="QLabel" name="label_10">
-       <property name="text">
-        <string>Collision Tileset</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QLineEdit" name="collision_tileset_pointer"/>
-     </item>
-     <item>
-      <widget class="QPushButton" name="reload_button">
-       <property name="text">
-        <string>Reload</string>
-       </property>
-      </widget>
-     </item>
-     <item>
+     <item row="1" column="12" rowspan="2">
       <widget class="Line" name="line_2">
        <property name="orientation">
         <enum>Qt::Vertical</enum>
        </property>
       </widget>
      </item>
-     <item>
-      <widget class="QCheckBox" name="display_collision">
-       <property name="layoutDirection">
-        <enum>Qt::RightToLeft</enum>
-       </property>
+     <item row="1" column="2">
+      <widget class="QLabel" name="label_15">
        <property name="text">
-        <string>Edit collision?</string>
+        <string>GFX list pointer</string>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="0" rowspan="2">
+      <widget class="QLabel" name="label_5">
+       <property name="text">
+        <string>Tileset</string>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="1" rowspan="2">
+      <widget class="QLineEdit" name="tileset_pointer"/>
+     </item>
+     <item row="2" column="0">
+      <widget class="QLabel" name="label_10">
+       <property name="text">
+        <string>Collision Tileset</string>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="3">
+      <widget class="QLineEdit" name="gfx_list_pointer"/>
+     </item>
+     <item row="1" column="4">
+      <widget class="QLabel" name="label_9">
+       <property name="text">
+        <string>Room GFX list pointer</string>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="5">
+      <widget class="QLineEdit" name="room_gfx_list_pointer"/>
+     </item>
+     <item row="2" column="4">
+      <widget class="QLabel" name="label_7">
+       <property name="text">
+        <string>Palette page list pointer</string>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="1">
+      <widget class="QLineEdit" name="collision_tileset_pointer"/>
+     </item>
+     <item row="2" column="8">
+      <widget class="QLabel" name="label_6">
+       <property name="text">
+        <string>Tileset Type</string>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="9">
+      <widget class="QLineEdit" name="tileset_type">
+       <property name="maximumSize">
+        <size>
+         <width>40</width>
+         <height>16777215</height>
+        </size>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="8" colspan="2">
+      <widget class="QLineEdit" name="gfx_file_pointer"/>
+     </item>
+     <item row="1" column="6" colspan="2">
+      <widget class="QLabel" name="label_17">
+       <property name="text">
+        <string>GFX file pointer</string>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="13">
+      <widget class="QPushButton" name="reload_button">
+       <property name="text">
+        <string>Reload</string>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="11">
+      <widget class="QCheckBox" name="one_dimensional_mode">
+       <property name="text">
+        <string>One dimensional mode</string>
        </property>
       </widget>
      </item>
