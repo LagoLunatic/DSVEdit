@@ -122,14 +122,16 @@ class TilesetEditorDialog < Qt::Dialog
     @tileset_graphics_scene.setSceneRect(0, 0, @tileset_width*@tile_width, @tileset_height*@tile_height)
     
     tileset_data[:room_gfx_list_pointer] ||= 0
-    tileset_data[:gfx_list_pointer] ||= 0
-    tileset_data[:gfx_file_pointer] ||= 0
+    tileset_data[:gfx_file_pointers] ||= []
     tileset_data[:palette_wrapper_pointer] ||= 0
     tileset_data[:palette_page_index] ||= 0
     tileset_data[:palette_list_pointer] ||= 0
     @ui.room_gfx_list_pointer.text            = "%08X" % tileset_data[:room_gfx_list_pointer]
-    @ui.gfx_list_pointer.text                 = "%08X" % tileset_data[:gfx_list_pointer]
-    @ui.gfx_file_pointer.text                 = "%08X" % tileset_data[:gfx_file_pointer]
+    if tileset_data[:gfx_list_pointer] && tileset_data[:gfx_list_pointer] != 0
+      gfx_wrappers = GfxWrapper.from_gfx_list_pointer(tileset_data[:gfx_list_pointer], @fs)
+      tileset_data[:gfx_file_pointers] = gfx_wrappers.map{|gfx| gfx.gfx_pointer}
+    end
+    @ui.gfx_file_pointers.text                = tileset_data[:gfx_file_pointers].map{|gfx_ptr| "%08X" % gfx_ptr}.join(", ")
     @ui.one_dimensional_mode.checked          = !!tileset_data[:one_dimensional_mode]
     @ui.palette_page_list_pointer.text        = "%08X" % tileset_data[:palette_wrapper_pointer]
     @ui.palette_page_index.text               = "%02X" % tileset_data[:palette_page_index]
@@ -151,8 +153,7 @@ class TilesetEditorDialog < Qt::Dialog
     @tileset_pointer = @ui.tileset_pointer.text.to_i(16)
     @tileset_type = @ui.tileset_type.text.to_i(16)
     @room_gfx_list_pointer = @ui.room_gfx_list_pointer.text.to_i(16)
-    @gfx_list_pointer = @ui.gfx_list_pointer.text.to_i(16)
-    @gfx_file_pointer = @ui.gfx_file_pointer.text.to_i(16)
+    @gfx_file_pointers = @ui.gfx_file_pointers.text.split(",").map{|ptr_str| ptr_str.to_i(16)}
     @one_dimensional_mode = @ui.one_dimensional_mode.checked
     @palette_page_list_pointer = @ui.palette_page_list_pointer.text.to_i(16)
     @palette_page_index = @ui.palette_page_index.text.to_i(16)
@@ -161,7 +162,7 @@ class TilesetEditorDialog < Qt::Dialog
     
     return if @tileset_pointer == 0 
     return if @palette_page_list_pointer == 0 && @palette_list_pointer == 0
-    return if @room_gfx_list_pointer == 0 && @gfx_list_pointer == 0 && @gfx_file_pointer == 0
+    return if @room_gfx_list_pointer == 0 && @gfx_file_pointers.empty?
     
     begin
       @tileset = Tileset.new(@tileset_pointer, @tileset_type, @fs)
@@ -242,12 +243,9 @@ class TilesetEditorDialog < Qt::Dialog
     if @room_gfx_list_pointer != 0
       @gfx_pages = RoomGfxPage.from_room_gfx_page_list(@room_gfx_list_pointer, @fs)
       @gfx_wrappers = @gfx_pages.map{|page| page.gfx_wrapper}
-    elsif @gfx_list_pointer != 0
-      @gfx_pages = nil
-      @gfx_wrappers = GfxWrapper.from_gfx_list_pointer(@gfx_list_pointer, @fs)
     else
       @gfx_pages = nil
-      @gfx_wrappers = [GfxWrapper.new(@gfx_file_pointer, @fs)]
+      @gfx_wrappers = @gfx_file_pointers.map{|gfx_ptr| GfxWrapper.new(gfx_ptr, @fs)}
     end
     
     @gfx_chunks = []
@@ -255,6 +253,12 @@ class TilesetEditorDialog < Qt::Dialog
       @gfx_pages.each_with_index do |gfx_page, gfx_wrapper_index|
         gfx_page.num_chunks.times do |i|
           @gfx_chunks[gfx_page.gfx_load_offset+i] = [gfx_wrapper_index, gfx_page.first_chunk_index+i]
+        end
+      end
+    else
+      @gfx_wrappers.each_with_index do |gfx_wrapper, gfx_wrapper_index|
+        4.times do |i|
+          @gfx_chunks[0x10+gfx_wrapper_index*4+i] = [gfx_wrapper_index, i]
         end
       end
     end
@@ -269,6 +273,10 @@ class TilesetEditorDialog < Qt::Dialog
     else
       palette_wrapper = PaletteWrapper.new(@fs)
       palette_wrapper.palette_list_pointer = @palette_list_pointer
+      palette_wrapper.palette_load_offset = 0
+      palette_wrapper.palette_index = 0
+      palette_wrapper.num_palettes = 0x10
+      palette_wrapper.unknown_2 = 0
       @palette_pages = [palette_wrapper]
     end
     
@@ -993,6 +1001,8 @@ class TilesetEditorDialog < Qt::Dialog
     else
       gfx_and_palette_data[:palette_index] = @ui.palette_index.itemText(@selected_tile.palette_index).to_i(16)
     end
+    
+    gfx_and_palette_data[:one_dimensional_mode] = @one_dimensional_mode
     
     parent.open_gfx_editor(gfx_and_palette_data)
   end

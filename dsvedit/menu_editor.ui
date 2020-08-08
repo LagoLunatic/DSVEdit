@@ -27,24 +27,14 @@
       <widget class="QLineEdit" name="bg_layer_pointer"/>
      </item>
      <item>
-      <widget class="QLabel" name="label_9">
-       <property name="text">
-        <string>GFX list pointer</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QLineEdit" name="gfx_list_pointer"/>
-     </item>
-     <item>
       <widget class="QLabel" name="label">
        <property name="text">
-        <string>GFX file</string>
+        <string>GFX pointers</string>
        </property>
       </widget>
      </item>
      <item>
-      <widget class="QLineEdit" name="gfx_file_pointer"/>
+      <widget class="QLineEdit" name="gfx_file_pointers"/>
      </item>
      <item>
       <widget class="QLabel" name="label_7">

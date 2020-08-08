@@ -42,8 +42,7 @@ class MenuEditorDialog < Qt::Dialog
     @is_menu_loaded = false
     
     @layer_metadata_pointer = nil
-    @gfx_list_pointer       = nil
-    @gfx_file_pointer       = nil
+    @gfx_file_pointers      = nil
     @palette_list_pointer   = nil
   end
   
@@ -51,16 +50,20 @@ class MenuEditorDialog < Qt::Dialog
     menu_info = MENU_BG_LAYER_INFOS[menu_index]
     
     layer_metadata_pointer = menu_info[:layer_metadata_pointer]
-    gfx_list_pointer       = menu_info[:gfx_list_pointer] || 0
-    gfx_file_pointer       = menu_info[:gfx_file_pointer] || 0
+    gfx_list_pointer       = menu_info[:gfx_list_pointer]
+    gfx_file_pointers      = menu_info[:gfx_file_pointers]
     palette_list_pointer   = menu_info[:palette_list_pointer]
     overlay_id             = menu_info[:overlay]
+    
+    if gfx_list_pointer
+      gfx_wrappers = GfxWrapper.from_gfx_list_pointer(gfx_list_pointer, fs)
+      gfx_file_pointers = gfx_wrappers.map{|gfx| gfx.gfx_poiner}
+    end
     
     @fs.load_overlay(overlay_id)
     
     @ui.bg_layer_pointer.text     = "%08X" % layer_metadata_pointer
-    @ui.gfx_list_pointer.text     = "%08X" % gfx_list_pointer
-    @ui.gfx_file_pointer.text     = "%08X" % gfx_file_pointer
+    @ui.gfx_file_pointers.text    = gfx_file_pointers.map{|gfx_ptr| "%08X" % gfx_ptr}.join(", ")
     @ui.palette_list_pointer.text = "%08X" % palette_list_pointer
     
     load_menu()
@@ -70,14 +73,10 @@ class MenuEditorDialog < Qt::Dialog
     @layer_graphics_scene.clear()
     
     @layer_metadata_pointer = @ui.bg_layer_pointer.text.to_i(16)
-    @gfx_list_pointer       = @ui.gfx_list_pointer.text.to_i(16)
-    @gfx_file_pointer       = @ui.gfx_file_pointer.text.to_i(16)
+    @gfx_file_pointers      = @ui.gfx_file_pointers.text.split(",").map{|ptr_str| ptr_str.to_i(16)}
     @palette_list_pointer   = @ui.palette_list_pointer.text.to_i(16)
     
-    @gfx_list_pointer = nil if @gfx_list_pointer == 0
-    @gfx_file_pointer = nil if @gfx_file_pointer == 0
-    
-    if (@gfx_list_pointer || @gfx_file_pointer) && @layer_metadata_pointer && @palette_list_pointer
+    if @gfx_file_pointers && @gfx_file_pointers.size > 0 && @layer_metadata_pointer && @palette_list_pointer
       @is_menu_loaded = true
     else
       load_blank_menu()
@@ -87,11 +86,7 @@ class MenuEditorDialog < Qt::Dialog
     @bg_layer = BGLayer.new(@layer_metadata_pointer, @fs)
     @bg_layer.read_from_rom()
     
-    if @gfx_list_pointer
-      @tileset_path = @renderer.render_tileset_for_bg_layer_by_gfx_list(@bg_layer, @gfx_list_pointer, @palette_list_pointer)
-    else
-      @tileset_path = @renderer.render_tileset_for_bg_layer_by_gfx_asset(@bg_layer, @gfx_file_pointer, @palette_list_pointer)
-    end
+    @tileset_path = @renderer.render_tileset_for_bg_layer(@bg_layer, @gfx_file_pointers, @palette_list_pointer)
     
     layer_item = LayerItem.new(@bg_layer, @tileset_path)
     @layer_graphics_scene.addItem(layer_item)
@@ -109,14 +104,7 @@ class MenuEditorDialog < Qt::Dialog
     
     gfx_and_palette_data = {}
     
-    if @gfx_list_pointer
-      gfx_wrappers = GfxWrapper.from_gfx_list_pointer(@gfx_list_pointer, @fs)
-    elsif @gfx_file_pointer
-      gfx_wrappers = [GfxWrapper.new(@gfx_file_pointer, @fs)]
-    else
-      return
-    end
-    gfx_and_palette_data[:gfx_file_names] = gfx_wrappers.map{|gfx| "%08X" % gfx.gfx_pointer}.join(", ")
+    gfx_and_palette_data[:gfx_file_names] = @gfx_file_pointers.map{|gfx_ptr| "%08X" % gfx_ptr}.join(", ")
     
     gfx_and_palette_data[:palette_pointer] = @palette_list_pointer
     
@@ -133,7 +121,7 @@ class MenuEditorDialog < Qt::Dialog
     if @gfx_list_pointer
       tileset_data[:gfx_list_pointer] = @gfx_list_pointer
     else
-      tileset_data[:gfx_file_pointer] = @gfx_file_pointer
+      tileset_data[:gfx_file_pointers] = @gfx_file_pointers
     end
     tileset_data[:palette_list_pointer] = @palette_list_pointer
     tileset_data[:palette_page_index] = 0

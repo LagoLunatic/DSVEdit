@@ -156,33 +156,52 @@ class Renderer
     end
   end
   
-  def render_tileset_for_bg_layer_by_gfx_list(bg_layer, gfx_list_pointer, palette_list_pointer)
-    gfx_wrappers = GfxWrapper.from_gfx_list_pointer(gfx_list_pointer, fs)
-    
-    return render_tileset_for_bg_layer(bg_layer, gfx_wrappers, palette_list_pointer)
-  end
-  
-  def render_tileset_for_bg_layer_by_gfx_asset(bg_layer, gfx_asset_pointer, palette_list_pointer)
-    gfx_wrappers = [GfxWrapper.new(gfx_asset_pointer, fs)]
-    
-    return render_tileset_for_bg_layer(bg_layer, gfx_wrappers, palette_list_pointer)
-  end
-  
-  def render_tileset_for_bg_layer(bg_layer, gfx_wrappers, palette_list_pointer)
+  def render_tileset_for_bg_layer(bg_layer, gfx_file_pointers, palette_list_pointer)
     folder = "cache/#{GAME}/menus"
     tileset_path = "#{folder}/Tilesets/%08X.png" % bg_layer.tileset_pointer
     colors_per_palette = 16
     
-    tileset = render_tileset_nds(
-      bg_layer.tileset_pointer,
-      bg_layer.tileset_type,
-      palette_list_pointer,
-      gfx_wrappers,
-      colors_per_palette,
-      bg_layer.collision_tileset_pointer,
-      tileset_filename=nil,
-      one_dimensional_mode: true
-    )
+    gfx_wrappers = gfx_file_pointers.map{|gfx_ptr| GfxWrapper.new(gfx_ptr, fs)}
+    
+    if SYSTEM == :nds
+      tileset = render_tileset_nds(
+        bg_layer.tileset_pointer,
+        bg_layer.tileset_type,
+        palette_list_pointer,
+        gfx_wrappers,
+        colors_per_palette,
+        bg_layer.collision_tileset_pointer,
+        output_filename=nil,
+        one_dimensional_mode: true
+      )
+    else
+      gfx_chunks = []
+      gfx_wrappers.each_with_index do |gfx_wrapper, gfx_wrapper_index|
+        4.times do |i|
+          gfx_chunks[0x10+gfx_wrapper_index*4+i] = [gfx_wrapper_index, i]
+        end
+      end
+      
+      palettes = generate_palettes(palette_list_pointer, colors_per_palette)
+      
+      if gfx_wrappers.any?{|gfx| gfx.colors_per_palette == 256}
+        palettes_256 = generate_palettes(palette_list_pointer, 256)
+      else
+        palettes_256 = []
+      end
+      
+      tileset = render_tileset_gba(
+        bg_layer.tileset_pointer,
+        bg_layer.tileset_type,
+        palettes,
+        palettes_256,
+        gfx_wrappers,
+        gfx_chunks,
+        colors_per_palette,
+        bg_layer.collision_tileset_pointer,
+        output_filename=nil
+      )
+    end
     
     FileUtils::mkdir_p(File.dirname(tileset_path))
     tileset.save(tileset_path)
@@ -194,7 +213,32 @@ class Renderer
     if SYSTEM == :nds
       render_room_tileset_nds(tileset_offset, tileset_type, palette_pages, gfx_pages, colors_per_palette, collision_tileset_offset, output_filename, one_dimensional_mode: one_dimensional_mode)
     else
-      render_tileset_gba(tileset_offset, tileset_type, palette_pages, gfx_pages, colors_per_palette, collision_tileset_offset, output_filename)
+      gfx_wrappers = []
+      gfx_chunks = []
+      gfx_pages.each do |gfx_page|
+        gfx_wrappers << gfx_page.gfx_wrapper
+        gfx_wrapper_index = gfx_wrappers.length-1
+        
+        gfx_page.num_chunks.times do |i|
+          gfx_chunks[gfx_page.gfx_load_offset+i] = [gfx_wrapper_index, gfx_page.first_chunk_index+i]
+        end
+      end
+      
+      palettes = []
+      palettes_256 = []
+      palette_pages.each do |palette_page|
+        next if palette_page.palette_type == 1 # Foreground palette
+        
+        pals_for_page = generate_palettes(palette_page.palette_list_pointer, colors_per_palette)
+        palettes[palette_page.palette_load_offset, palette_page.num_palettes] = pals_for_page[palette_page.palette_index, palette_page.num_palettes]
+        
+        if gfx_wrappers.any?{|gfx| gfx.colors_per_palette == 256}
+          pals_for_page_256 = generate_palettes(palette_page.palette_list_pointer, 256)
+          palettes_256[palette_page.palette_load_offset, palette_page.num_palettes] = pals_for_page_256[palette_page.palette_index, palette_page.num_palettes]
+        end
+      end
+      
+      render_tileset_gba(tileset_offset, tileset_type, palettes, palettes_256, gfx_wrappers, gfx_chunks, colors_per_palette, collision_tileset_offset, output_filename)
     end
   end
   
@@ -281,10 +325,10 @@ class Renderer
     return rendered_tileset
   end
   
-  def render_tileset_gba(tileset_offset, tileset_type, palette_pages, gfx_pages, colors_per_palette, collision_tileset_offset, output_filename=nil)
+  def render_tileset_gba(tileset_offset, tileset_type, palettes, palettes_256, gfx_wrappers, gfx_chunks, colors_per_palette, collision_tileset_offset, output_filename=nil)
     rendered_tileset = ChunkyPNG::Image.new(TILESET_WIDTH_IN_TILES*TILE_WIDTH, TILESET_HEIGHT_IN_TILES*TILE_HEIGHT, ChunkyPNG::Color::TRANSPARENT)
     
-    if gfx_pages.empty?
+    if gfx_wrappers.empty?
       if output_filename
         FileUtils::mkdir_p(File.dirname(output_filename))
         rendered_tileset.save(output_filename, :fast_rgba)
@@ -293,26 +337,7 @@ class Renderer
     end
     
     tileset = Tileset.new(tileset_offset, tileset_type, fs)
-    palettes = []
-    palette_pages.each do |palette_page|
-      next if palette_page.palette_type == 1 # Foreground palette
-      
-      pals_for_page = generate_palettes(palette_page.palette_list_pointer, colors_per_palette)
-      
-      palettes[palette_page.palette_load_offset, palette_page.num_palettes] = pals_for_page[palette_page.palette_index, palette_page.num_palettes]
-    end
     
-    gfx_chunks = []
-    gfx_wrappers = []
-    gfx_pages.each do |gfx_page|
-      gfx_wrappers << gfx_page.gfx_wrapper
-      gfx_wrapper_index = gfx_wrappers.length-1
-      
-      gfx_page.num_chunks.times do |i|
-        gfx_chunks[gfx_page.gfx_load_offset+i] = [gfx_wrapper_index, gfx_page.first_chunk_index+i]
-      end
-    end
-
     tileset.tiles.each_with_index do |tile, index_on_tileset|
       rendered_tile = ChunkyPNG::Image.new(32, 32)
       minitile_x = 0
@@ -335,10 +360,15 @@ class Renderer
             minitile_index_on_page = minitile.index_on_tile_page & 0x3F
             minitile_index_on_page += chunk_offset * 0x40
             
-            gfx_page = gfx_wrappers[gfx_wrapper_index]
-            palette = palettes[minitile.palette_index]
+            gfx = gfx_wrappers[gfx_wrapper_index]
             
-            rendered_minitile = render_1_dimensional_minitile(gfx_page, palette, minitile_index_on_page)
+            if gfx.colors_per_palette == 16
+              palette = palettes[minitile.palette_index]
+            else
+              palette = palettes_256[minitile.palette_index]
+            end
+            
+            rendered_minitile = render_1_dimensional_minitile(gfx, palette, minitile_index_on_page)
           end
         end
         
