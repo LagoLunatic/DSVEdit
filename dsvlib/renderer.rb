@@ -105,24 +105,6 @@ class Renderer
     return rendered_layer
   end
   
-  def render_bg_layer(layer, palette_list_pointer, gfx_list_pointer)
-    gfx_wrappers = GfxWrapper.from_gfx_list_pointer(gfx_list_pointer, fs)
-    colors_per_palette = 16
-    
-    tileset = render_tileset_nds(
-      layer.tileset_pointer,
-      layer.tileset_type,
-      palette_list_pointer,
-      gfx_wrappers,
-      colors_per_palette,
-      layer.collision_tileset_pointer,
-      tileset_filename=nil,
-      one_dimensional_mode: true
-    )
-    
-    return render_layer(layer, tileset)
-  end
-  
   def render_layer(layer, tileset)
     rendered_layer = ChunkyPNG::Image.new(layer.width*SCREEN_WIDTH_IN_PIXELS, layer.height*SCREEN_HEIGHT_IN_PIXELS, ChunkyPNG::Color::TRANSPARENT)
     
