@@ -312,11 +312,7 @@ class TMXInterface
   
   def to_tmx_level_data(tiles, layer_width, block_offset)
     tmx_level_data = tiles.map do |tile|
-      if tile.index_on_tileset == 0
-        tmx_tile_number = 0
-      else
-        tmx_tile_number = tile.index_on_tileset + block_offset
-      end
+      tmx_tile_number = tile.index_on_tileset + block_offset
       tmx_tile_number |= 0x80000000 if tile.horizontal_flip
       tmx_tile_number |= 0x40000000 if tile.vertical_flip
       tmx_tile_number
