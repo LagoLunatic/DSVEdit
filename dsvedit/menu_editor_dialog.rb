@@ -52,6 +52,9 @@ class MenuEditorDialog < Qt::Dialog
     gfx_list_pointer       = menu_info[:gfx_list_pointer] || 0
     gfx_file_pointer       = menu_info[:gfx_file_pointer] || 0
     palette_list_pointer   = menu_info[:palette_list_pointer]
+    overlay_id             = menu_info[:overlay]
+    
+    @fs.load_overlay(overlay_id)
     
     @ui.bg_layer_pointer.text     = "%08X" % layer_metadata_pointer
     @ui.gfx_list_pointer.text     = "%08X" % gfx_list_pointer
