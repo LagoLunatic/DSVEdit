@@ -266,11 +266,40 @@
   ; r1 - Palette index of the first palette in the list to load
   ; r2 - Number of palettes to load
   ; r3 - Index to load the palettes at in palette RAM (e.g. 9 to replace the 9th object palette)
+0803C918 LoadBGPalette
+  ; r0 - Palette list pointer
+  ; r1 - Palette index of the first palette in the list to load
+  ; r2 - Number of palettes to load
+  ; r3 - Index to load the palettes at in palette RAM (e.g. 9 to replace the 9th object palette)
+0803C8B0 LoadAllSixteenBGPalettes
+  ; r0 - Palette list pointer
 
 0803B9D0 GenericSpriteDraw
   ; Just calls GenericSpriteDraw2
 0803AC40 GenericSpriteDraw2
   ; r0 - Entity
+
+0803F8A8 LoadBGLayer
+  ; r0 - Which BG layer index to use (BG0, BG1, BG2, BG3)
+  ; r1 - Layer metadata pointer
+  ; r2 - 0?
+  ; r3 - 0?
+0803FD9C LoadBGTilesGfx
+  ; r0 - Pointer to the GFX data
+  ; r1 - Pointer to where in VRAM to load the GFX data
+  ; r2 - 0?
+0805B864 ???BGLayer
+
+0800ED5C RoomLayerGet???ForScrollMode1
+  ; r0 - 
+  ; r1 - Scroll mode (can be 00-24)
+  ; r2 - 
+  ; r3 - 
+0800EE54 RoomLayerGet???ForScrollMode2
+  ; r0 - 
+  ; r1 - Scroll mode (can be 00-24)
+  ; r2 - 
+  ; r3 - 
 
 0803F2C8 EntityChangeAnimation
   ; r0 - Entity

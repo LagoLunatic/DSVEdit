@@ -136,6 +136,18 @@ Starting stats (hardcoded):
 0850E968 - List of room pointers for transition rooms.
   00000000 marks the end of the list.
 
+085254A0-085254BF - List of layer metadata pointer for each pause menu subscreen.
+  8 entries in total.
+  Each entry:
+    00 0815E940 - Main pause screen
+    01 0815E790 - Soul set
+    02 0815E8B0 - Equip
+    03 0815E820 - Item use
+    04 0815E700 - Ability souls
+    05 0815E700 - Unused (would be for Sleep)
+    06 0815E670 - Config
+    07 0815E700 - Unused (would be for Enemy)
+
 085255FC - List of palette shifts.
   Entry length 8.
   0,4: Palette list pointer.
@@ -191,3 +203,9 @@ Shop item pools:
   Each entry is 4 bytes long.
   00,1: Item type.
   01,1: Item index.
+
+08526C78-08526CE3 - List of BG layer info for each event face portrait.
+  Entry length 0xC.
+  00,04: GFX pointer.
+  04,04: Palette list pointer.
+  08,04: Layer metadata pointer.
