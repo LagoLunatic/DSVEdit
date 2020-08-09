@@ -606,34 +606,54 @@ class Renderer
     end
     
     if colors_per_palette == 256
-      # color_offsets_per_palette_index: How many colors one index offsets by. This is always 16 for 16-color palettes. But for 256-color palettes it differs between DoS and PoR/OoE. In DoS one index only offsets by 16 colors, meaning you use indexes 0x00, 0x10, 0x20, etc. In PoR and OoE one index offsets by the full 256 colors, meaning you use indexes 0x00, 0x01, 0x02, etc
+      # color_offsets_per_palette_index: How many colors one index offsets by. This is always 16 for 16-color palettes. But for 256-color palettes it differs between HoD/AoS/DoS and PoR/OoE. In DoS one index only offsets by 16 colors, meaning you use indexes 0x00, 0x10, 0x20, etc. In PoR and OoE one index offsets by the full 256 colors, meaning you use indexes 0x00, 0x01, 0x02, etc
       color_offsets_per_palette_index = COLOR_OFFSETS_PER_256_PALETTE_INDEX
     else
       color_offsets_per_palette_index = 16
     end
     
-    number_of_palettes = fs.read(palette_data_start_offset+2,1).unpack("C*").first / (color_offsets_per_palette_index/16)
+    number_of_palettes_rows = fs.read(palette_data_start_offset+2,1).unpack("C*").first
+    if color_offsets_per_palette_index == 256
+      number_of_palettes = (number_of_palettes_rows+15) / 16 # +15 to round upwards
+    else
+      number_of_palettes = number_of_palettes_rows
+    end
     
     palette_data_start_offset += 4 # Skip the first 4 bytes, as they contain the length of this palette page, not the palette data itself.
-
+    
+    palette_data_end_offset = palette_data_start_offset + number_of_palettes_rows*2*16
+    
     palette_list = []
-    (0..number_of_palettes-1).each do |palette_index| # todo: cache palettes
+    (0..number_of_palettes-1).each do |palette_index|
       specific_palette_pointer = palette_data_start_offset + (2*color_offsets_per_palette_index)*palette_index
-      palette = read_single_palette(specific_palette_pointer, colors_per_palette)
+      
+      # Don't read past the end of the palette list.
+      num_colors_to_read = colors_per_palette
+      remaining_num_colors = (palette_data_end_offset - specific_palette_pointer) / 2
+      if num_colors_to_read > remaining_num_colors
+        num_colors_to_read = remaining_num_colors
+      end
+      
+      palette = read_single_palette(specific_palette_pointer, num_colors_to_read)
+      
+      # If we need more colors to finish a 256 color palette, use a dummy bright red color to fill in the blanks.
+      if num_colors_to_read < colors_per_palette
+        palette += [ChunkyPNG::Color.rgba(255, 0, 0, 255)]*(colors_per_palette-num_colors_to_read)
+      end
+      
       palette_list << palette
     end
     
     palette_list
   end
   
-  def read_single_palette(specific_palette_pointer, colors_per_palette)
-    palette_data = fs.read(specific_palette_pointer, colors_per_palette*2, allow_length_to_exceed_end_of_file: true)
+  def read_single_palette(specific_palette_pointer, num_colors_to_read)
+    palette_data = fs.read(specific_palette_pointer, num_colors_to_read*2)
     
     palette = palette_data.unpack("v*").map do |color|
       # These two bytes hold the rgb data for the color in this format:
-      # ?bbbbbgggggrrrrr
-      # the ? is unknown.
-      #unknown_bit = (color & 0b1000_0000_0000_0000) >> 15
+      # Xbbbbbgggggrrrrr
+      # the X is unused.
       blue_bits   = (color & 0b0111_1100_0000_0000) >> 10
       green_bits  = (color & 0b0000_0011_1110_0000) >> 5
       red_bits    =  color & 0b0000_0000_0001_1111
