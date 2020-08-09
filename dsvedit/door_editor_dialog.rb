@@ -90,6 +90,8 @@ class DoorEditorDialog < Qt::Dialog
     room.sector.load_necessary_overlay()
     @renderer.ensure_tilesets_exist("cache/#{GAME}/rooms/", room)
     room.layers.each do |layer|
+      next if layer.tileset_pointer == 0
+      
       tileset_filename = "cache/#{GAME}/rooms/#{room.area_name}/Tilesets/#{layer.tileset_filename}.png"
       layer_item = LayerItem.new(layer, tileset_filename)
       layer_item.setParentItem(@layers_view_item)

@@ -764,6 +764,8 @@ class DSVEdit < Qt::MainWindow
   end
   
   def load_layer(layer)
+    return if layer.tileset_pointer == 0
+    
     tileset_filename = "cache/#{GAME}/rooms/#{@room.area_name}/Tilesets/#{layer.tileset_filename}.png"
     layer_item = LayerItem.new(layer, tileset_filename)
     layer_item.setParentItem(@layers_view_item)

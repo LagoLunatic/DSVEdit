@@ -112,6 +112,9 @@ class LayersEditorDialog < Qt::Dialog
     @layers_view_item = Qt::GraphicsRectItem.new
     @layer_graphics_scene.addItem(@layers_view_item)
     @room.sector.load_necessary_overlay()
+    
+    return if layer.tileset_pointer == 0
+    
     @renderer.ensure_tilesets_exist("cache/#{GAME}/rooms/", @room)
     tileset_filename = "cache/#{GAME}/rooms/#{@room.area_name}/Tilesets/#{layer.tileset_filename}.png"
     layer_item = LayerItem.new(layer, tileset_filename)

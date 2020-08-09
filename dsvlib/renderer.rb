@@ -66,6 +66,11 @@ class Renderer
   end
   
   def render_room_layer(folder, layer, room, collision = false)
+    if layer.layer_metadata_ram_pointer == 0
+      # Empty layer
+      return ChunkyPNG::Image.new(layer.width*SCREEN_WIDTH_IN_PIXELS, layer.height*SCREEN_HEIGHT_IN_PIXELS, ChunkyPNG::Color::TRANSPARENT)
+    end
+    
     tileset_filename = "#{folder}/#{room.area_name}/Tilesets/#{layer.tileset_filename}.png"
     fs.load_overlay(AREA_INDEX_TO_OVERLAY_INDEX[room.area_index][room.sector_index])
     if collision

@@ -467,7 +467,7 @@ class RoomLayer
   
   def tileset_filename
     if tileset_pointer == 0
-      # Empty layer.
+      # Has no tileset assigned.
       return nil
     end
     
