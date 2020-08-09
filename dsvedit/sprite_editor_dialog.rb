@@ -957,12 +957,33 @@ class SpriteEditor < Qt::Dialog
   end
   
   def reload_sprite
-    gfx_file_pointers = @ui.gfx_pointer.text.split(/,\s*/).map{|ptr| ptr.to_i(16)}
+    gfx_file_names = @ui.gfx_pointer.text.split(/,\s*/)
+    gfx_file_pointers = []
+    gfx_file_names.each do |gfx_file_name|
+      gfx_file_name = gfx_file_name.strip
+      gfx_file_pointer = gfx_file_name.to_i(16)
+      if !fs.is_pointer?(gfx_file_pointer) && SYSTEM == :nds
+        gfx_file = @fs.files_by_path[gfx_file_name]
+        if gfx_file
+          gfx_file_pointer = gfx_file[:asset_pointer]
+        end
+      end
+      gfx_file_pointers << gfx_file_pointer
+    end
+    
     palette_pointer = @ui.palette_pointer.text.to_i(16)
+    
     if @ui.sprite_file_name.text.strip.empty?
       sprite_pointer = nil
     else
-      sprite_pointer = @ui.sprite_file_name.text.to_i(16)
+      sprite_file_name = @ui.sprite_file_name.text.strip
+      sprite_pointer = sprite_file_name.to_i(16)
+      if !fs.is_pointer?(sprite_pointer) && SYSTEM == :nds
+        sprite_file = @fs.files_by_path[sprite_file_name]
+        if sprite_file
+          sprite_pointer = sprite_file[:asset_pointer]
+        end
+      end
     end
     
     begin
