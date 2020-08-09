@@ -56,8 +56,8 @@ class MenuEditorDialog < Qt::Dialog
     overlay_id             = menu_info[:overlay]
     
     if gfx_list_pointer
-      gfx_wrappers = GfxWrapper.from_gfx_list_pointer(gfx_list_pointer, fs)
-      gfx_file_pointers = gfx_wrappers.map{|gfx| gfx.gfx_poiner}
+      gfx_wrappers = GfxWrapper.from_gfx_list_pointer(gfx_list_pointer, @fs)
+      gfx_file_pointers = gfx_wrappers.map{|gfx| gfx.gfx_pointer}
     end
     
     @fs.load_overlay(overlay_id)
