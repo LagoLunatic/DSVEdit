@@ -423,8 +423,15 @@ class EntityLayerItem < Qt::GraphicsRectItem
     offset_x = sprite_info.sprite.min_x
     offset_y = sprite_info.sprite.min_y
     
+    frame = sprite_info.sprite.frames[frame_to_render]
+    crop_left_x   = frame.min_x-sprite_info.sprite.min_x
+    crop_top_y    = frame.min_y-sprite_info.sprite.min_y
+    crop_right_x  = frame.max_x-sprite_info.sprite.min_x
+    crop_bottom_y = frame.max_y-sprite_info.sprite.min_y
+    
     if item_icon_image
       chunky_frame.compose!(item_icon_image, 6, 0)
+      crop_top_y = 0
     end
     
     if portrait_art
@@ -434,14 +441,15 @@ class EntityLayerItem < Qt::GraphicsRectItem
     
     # Crop the image.
     # This is so the giant blank space around the frame doesn't count as clickable.
-    frame = sprite_info.sprite.frames[frame_to_render]
-    crop_x_offset = frame.min_x-sprite_info.sprite.min_x
-    crop_y_offset = frame.min_y-sprite_info.sprite.min_y
+    crop_x_offset = crop_left_x
+    crop_y_offset = crop_top_y
+    crop_width    = crop_right_x-crop_left_x
+    crop_height   = crop_bottom_y-crop_top_y
     chunky_frame.crop!(
       crop_x_offset,
       crop_y_offset,
-      frame.max_x-frame.min_x,
-      frame.max_y-frame.min_y,
+      crop_width,
+      crop_height,
     )
     offset_x += crop_x_offset
     offset_y += crop_y_offset
