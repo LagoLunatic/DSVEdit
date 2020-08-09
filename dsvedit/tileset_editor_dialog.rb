@@ -127,7 +127,7 @@ class TilesetEditorDialog < Qt::Dialog
     @ui.one_dimensional_mode.checked          = !!tileset_data[:one_dimensional_mode]
     @ui.palette_page_list_pointer.text        = "%08X" % tileset_data[:palette_wrapper_pointer]
     @ui.palette_page_index.text               = "%02X" % tileset_data[:palette_page_index]
-    @ui.palette_list_pointer_for_tileset.text = "%02X" % tileset_data[:palette_list_pointer]
+    @ui.palette_list_pointer_for_tileset.text = "%08X" % tileset_data[:palette_list_pointer]
     if tileset_data[:tileset_pointer]
       @ui.tileset_pointer.text           = "%08X" % tileset_data[:tileset_pointer]
       @ui.collision_tileset_pointer.text = "%08X" % tileset_data[:collision_tileset_pointer]
@@ -1048,7 +1048,12 @@ class TilesetEditorDialog < Qt::Dialog
     if SYSTEM == :nds
       gfx_and_palette_data[:palette_index] = @selected_tile.palette_index + palette_page.palette_index
     else
-      gfx_and_palette_data[:palette_index] = @ui.palette_index.itemText(@selected_tile.palette_index).to_i(16)
+      palette_index_text = @ui.palette_index.itemText(@selected_tile.palette_index)
+      if palette_index_text.nil?
+        gfx_and_palette_data[:palette_index] = 0
+      else
+        gfx_and_palette_data[:palette_index] = palette_index_text.to_i(16)
+      end
     end
     
     gfx_and_palette_data[:one_dimensional_mode] = @one_dimensional_mode
