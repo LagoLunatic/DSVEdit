@@ -101,13 +101,12 @@ class GfxEditorDialog < Qt::Dialog
       end
     end
     
-    success = load_palettes(gfx_pages.first.colors_per_palette)
+    success = load_palettes()
     return unless success
     
     @palette_index = 0
     @gfx_index = 0
     
-    #@gfx = gfx
     @gfx_pages = gfx_pages
     
     @ui.gfx_index.clear()
@@ -118,13 +117,6 @@ class GfxEditorDialog < Qt::Dialog
     @colors_per_palette = @gfx_pages.first.colors_per_palette
     
     load_gfx()
-    
-    load_palette_image()
-    
-    @ui.palette_index.clear()
-    @palettes.each_index do |i|
-      @ui.palette_index.addItem("%02X" % i)
-    end
     
     if SYSTEM == :nds
       @ui.gfx_file_names.text = @gfx_pages.map do |gfx|
@@ -142,27 +134,33 @@ class GfxEditorDialog < Qt::Dialog
     Qt::MessageBox.warning(self, "Error", "Error loading gfx:\n#{e.message}\n\n#{e.backtrace.join("\n")}")
   end
   
-  def load_palettes(colors_per_palette)
+  def load_palettes
     palette_pointer = @ui.palette_pointer.text.to_i(16)
     
     begin
-      palettes = @renderer.generate_palettes(palette_pointer, colors_per_palette)
+      palettes_16 = @renderer.generate_palettes(palette_pointer, 16)
+      palettes_256 = @renderer.generate_palettes(palette_pointer, 256)
     rescue NDSFileSystem::ConversionError => e
       Qt::MessageBox.warning(self, "Invalid pointer", "Palette list pointer is invalid.")
       return false
     end
-    if palettes.empty?
+    if palettes_16.empty?
       Qt::MessageBox.warning(self, "Invalid pointer", "Palette list pointer is invalid.")
       return false
     end
     
     @palette_pointer = palette_pointer
-    @palettes = palettes
+    @palettes_16 = palettes_16
+    @palettes_256 = palettes_256
+    @palettes = @palettes_16
     return true
   end
   
   def load_gfx
     gfx = @gfx_pages[@gfx_index]
+    
+    update_colors_per_palette(gfx.colors_per_palette)
+    
     palette = @palettes[@palette_index]
     
     if @ui.one_dimensional_mode.checked
@@ -211,6 +209,30 @@ class GfxEditorDialog < Qt::Dialog
     @ui.palette_index.setCurrentIndex(palette_index)
   end
   
+  def update_colors_per_palette(new_colors_per_palette)
+    if @colors_per_palette == 256 && new_colors_per_palette == 16
+      @palette_index *= (COLOR_OFFSETS_PER_256_PALETTE_INDEX/16)
+    elsif @colors_per_palette == 16 && new_colors_per_palette == 256
+      @palette_index /= (COLOR_OFFSETS_PER_256_PALETTE_INDEX/16)
+    end
+    
+    @colors_per_palette = new_colors_per_palette
+    
+    if @colors_per_palette == 256
+      @palettes = @palettes_256
+    else
+      @palettes = @palettes_16
+    end
+    
+    @ui.palette_index.clear()
+    @palettes.each_index do |i|
+      @ui.palette_index.addItem("%02X" % i)
+    end
+    @ui.palette_index.setCurrentIndex(@palette_index)
+    
+    load_palette_image()
+  end
+  
   def load_palette_image
     palette = @palettes[@palette_index]
     palette_image = @renderer.convert_palette_to_palette_swatches_image(palette)
@@ -248,7 +270,7 @@ class GfxEditorDialog < Qt::Dialog
     palette[clicked_palette_index] = new_chunky_color
     @renderer.save_palette(palette, @palette_pointer, @palette_index, @colors_per_palette)
     
-    load_palettes(@colors_per_palette)
+    load_palettes()
     load_gfx()
     load_palette_image()
   end
@@ -371,7 +393,7 @@ class GfxEditorDialog < Qt::Dialog
       return
     end
     
-    load_palettes(@colors_per_palette)
+    load_palettes()
     load_gfx()
     load_palette_image()
   end
@@ -395,7 +417,7 @@ class GfxEditorDialog < Qt::Dialog
     
     @renderer.save_palette(colors, @palette_pointer, @palette_index, @colors_per_palette)
     
-    load_palettes(@colors_per_palette)
+    load_palettes()
     load_gfx()
     load_palette_image()
   end
