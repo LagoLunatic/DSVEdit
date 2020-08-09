@@ -299,6 +299,7 @@ class TilesetEditorDialog < Qt::Dialog
     else
       @gfx_wrappers.each_with_index do |gfx_wrapper, gfx_wrapper_index|
         4.times do |i|
+          @gfx_chunks[gfx_wrapper_index*4+i] = [gfx_wrapper_index, i] # For 256 colors
           @gfx_chunks[0x10+gfx_wrapper_index*4+i] = [gfx_wrapper_index, i]
         end
       end
@@ -452,29 +453,29 @@ class TilesetEditorDialog < Qt::Dialog
   end
   
   def render_tile(tile)
-    gfx_wrapper = @gfx_wrappers[tile.tile_page]
-    if gfx_wrapper.nil?
-      # Invalid gfx page index
-      return ChunkyPNG::Image.new(@tile_width, @tile_height)
-    end
-    
     if tile.palette_index == 0xFF # TODO. 255 seems to have some special meaning besides an actual palette index.
       puts "Palette index is 0xFF, tileset %08X" % @tileset_pointer
       return
     end
     
-    if gfx_wrapper.colors_per_palette == 16
-      palette = @palettes[tile.palette_index]
-    else
-      palette = @palettes_256[tile.palette_index]
-    end
-    if palette.nil?
-      # TODO: figure out why this sometimes happens.
-      puts "Palette index #{tile.palette_index} out of range, tileset %08X" % @tileset_pointer
-      palette = @renderer.generate_palettes(nil, 16).first # Dummy red palette
-    end
-    
     if SYSTEM == :nds
+      gfx_wrapper = @gfx_wrappers[tile.tile_page]
+      if gfx_wrapper.nil?
+        # Invalid gfx page index
+        return ChunkyPNG::Image.new(@tile_width, @tile_height)
+      end
+      
+      if gfx_wrapper.colors_per_palette == 16
+        palette = @palettes[tile.palette_index]
+      else
+        palette = @palettes_256[tile.palette_index]
+      end
+      if palette.nil?
+        # TODO: figure out why this sometimes happens.
+        puts "Palette index #{tile.palette_index} out of range, tileset %08X" % @tileset_pointer
+        palette = @renderer.generate_palettes(nil, 16).first # Dummy red palette
+      end
+      
       if @one_dimensional_mode
         chunky_tile = @renderer.render_16x16_graphic_tile_1_dimensional_mode(gfx_wrapper, palette, tile.index_on_tile_page)
       else
@@ -493,6 +494,17 @@ class TilesetEditorDialog < Qt::Dialog
         minitile_index_on_page += chunk_offset * 0x40
         
         gfx_wrapper = @gfx_wrappers[gfx_wrapper_index]
+        
+        if gfx_wrapper.colors_per_palette == 16
+          palette = @palettes[tile.palette_index]
+        else
+          palette = @palettes_256[tile.palette_index]
+        end
+        if palette.nil?
+          # TODO: figure out why this sometimes happens.
+          puts "Palette index #{tile.palette_index} out of range, tileset %08X" % @tileset_pointer
+          palette = @renderer.generate_palettes(nil, 16).first # Dummy red palette
+        end
         
         chunky_tile = @renderer.render_1_dimensional_minitile(gfx_wrapper, palette, minitile_index_on_page)
       end
@@ -629,7 +641,7 @@ class TilesetEditorDialog < Qt::Dialog
       4.times do |i|
         gfx_chunk_index = @selected_tile.tile_page*4 + i
         gfx_chunk_index += 0x10 if @tileset.colors_per_palette == 16
-        gfx_chunk_index = 0 if @tileset.colors_per_palette == 256
+        gfx_chunk_index = i if @tileset.colors_per_palette == 256
         gfx_wrapper_index, chunk_offset = @gfx_chunks[gfx_chunk_index]
         
         if chunk_offset.nil?
