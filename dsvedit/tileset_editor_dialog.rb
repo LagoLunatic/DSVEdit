@@ -113,19 +113,6 @@ class TilesetEditorDialog < Qt::Dialog
     @selection_width = 0
     @selection_height = 0
     
-    if SYSTEM == :nds
-      @tile_width = @tile_height = 16
-      @tileset_width = 16
-      @tileset_height = 64
-      @tiles_per_gfx_page_row = 8
-    else
-      @tile_width = @tile_height = 8
-      @tileset_width = 16*4
-      @tileset_height = 64
-      @tiles_per_gfx_page_row = 16
-    end
-    @tileset_graphics_scene.setSceneRect(0, 0, @tileset_width*@tile_width, @tileset_height*@tile_height)
-    
     tileset_data[:room_gfx_list_pointer] ||= 0
     tileset_data[:gfx_file_pointers] ||= []
     tileset_data[:palette_wrapper_pointer] ||= 0
@@ -152,6 +139,42 @@ class TilesetEditorDialog < Qt::Dialog
     self.show()
   end
   
+  def load_blank_tileset
+    @tileset_graphics_scene.clear()
+    
+    @tileset = nil
+    @collision_tileset = nil
+    @tiles = []
+    @collision_tiles = nil
+    @gfx_pages = []
+    @gfx_wrappers = []
+    @gfx_chunks = []
+    @palette_pages = []
+    @palettes = []
+    
+    @ui.gfx_page_index.clear()
+    @ui.palette_index.clear()
+    
+    render_tileset()
+    
+    select_tile(0)
+    
+    @gfx_page_graphics_scene.clear()
+    
+    @selected_tile = nil
+    @selected_tiles = []
+    @selection_x = 0
+    @selection_y = 0
+    @selection_width = 0
+    @selection_height = 0
+    
+    @tile_width = @tile_height = 16
+    @tileset_width = 0
+    @tileset_height = 0
+    @tiles_per_gfx_page_row = 16
+    @tileset_graphics_scene.setSceneRect(0, 0, @tileset_width*@tile_width, @tileset_height*@tile_height)
+  end
+  
   def load_tileset
     @tileset_graphics_scene.clear()
     
@@ -168,6 +191,19 @@ class TilesetEditorDialog < Qt::Dialog
     return if @tileset_pointer == 0 
     return if @palette_page_list_pointer == 0 && @palette_list_pointer == 0
     return if @room_gfx_list_pointer == 0 && @gfx_file_pointers.empty?
+    
+    if SYSTEM == :nds
+      @tile_width = @tile_height = 16
+      @tileset_width = 16
+      @tileset_height = 64
+      @tiles_per_gfx_page_row = 8
+    else
+      @tile_width = @tile_height = 8
+      @tileset_width = 16*4
+      @tileset_height = 64
+      @tiles_per_gfx_page_row = 16
+    end
+    @tileset_graphics_scene.setSceneRect(0, 0, @tileset_width*@tile_width, @tileset_height*@tile_height)
     
     begin
       @tileset = Tileset.new(@tileset_pointer, @tileset_type, @fs)
@@ -350,6 +386,12 @@ class TilesetEditorDialog < Qt::Dialog
     select_tile(0)
     
     palette_changed(0)
+  rescue StandardError => e
+    Qt::MessageBox.warning(self,
+      "Loading tileset failed",
+      "Failed to load tileset.\n#{e.message}\n\n#{e.backtrace.join("\n")}"
+    )
+    load_blank_tileset()
   end
   
   def render_tileset
@@ -936,6 +978,7 @@ class TilesetEditorDialog < Qt::Dialog
   
   def mouse_clicked_on_gfx_page(mouse_x, mouse_y, button)
     return unless (0..@gfx_page_graphics_scene.width-1).include?(mouse_x) && (0..@gfx_page_graphics_scene.height-1).include?(mouse_y)
+    return if @selected_tile.nil?
     
     if @collision_mode
       i = mouse_x/@tile_width + mouse_y/@tile_width*16
@@ -972,6 +1015,7 @@ class TilesetEditorDialog < Qt::Dialog
   end
   
   def toggle_flips(checked)
+    return if @selected_tile.nil?
     @selected_tile.horizontal_flip = @ui.horizontal_flip.checked
     @selected_tile.vertical_flip = @ui.vertical_flip.checked
     load_selected_tile()
