@@ -944,16 +944,16 @@ class TilesetEditorDialog < Qt::Dialog
         curr_y = @selection_y + y_off
         i = curr_x + curr_y*@tileset_width
         if @collision_mode
-          tile = @collision_tiles[i]
+          tile = @collision_tiles[i].dup
           if tile.nil?
             # If the tile is a dummy blank from an incomplete row, copy the first tile since it's always blank.
-            tile = @collision_tiles[0]
+            tile = @collision_tiles[0].dup
           end
         else
-          tile = @tiles[i]
+          tile = @tiles[i].dup
           if tile.nil?
             # If the tile is a dummy blank from an incomplete row, copy the first tile since it's always blank.
-            tile = @tiles[0]
+            tile = @tiles[0].dup
           end
         end
         @selected_tiles << tile
