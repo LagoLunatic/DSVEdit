@@ -7,9 +7,24 @@
   00 - Konami logo
   01 - Title screen
   02 - Game start
+  03 - 
   04 - Ingame
-  0C - Nintendo logo
+  05 - Game over
+  06 - Credits
+  07 - Prologue
+  08 - Boss rush select file
+  09 - 
+  0A - Soul trade
+  0B - Sound mode
+  0C - Nintendo/Konami logos
   0D - Bootup
+  0E - 
+  0F - 
+  10 - Debug map select menu ("Exit")
+  11 - 
+  12 - 
+  13 - Debug graphics testing menu? ("2739")
+  14 - 
 
 02000014 - Bitfield of currently pressed buttons.
   0001 - A
@@ -26,6 +41,16 @@
 02000018 - Bitfield of buttons pressed this frame.
 
 02000060 - ?? if this is 3, you can skip events with start.
+
+02000064,1 - menu state? transition state?
+  it's an index used in switch statement at 0800BEDA, can be 0-E
+  1 - Ingame
+  3 - Transitioning between rooms
+  6 - Pause screen
+  8 - ?
+  9 - Hammer's shop
+02000065,1 - substate to the above state
+  it's an index used in switch statement at 0804777E, can be 0-7
 
 02000088 - Pointer to current room metadata.
 0200008C,2:
@@ -45,6 +70,10 @@
     Hard mode slightly increases the chance of getting souls you don't already own, reduces player damage, increases enemy damage, allows Hard mode pickups to appear, and possibly other changes too.
 
 020000B4 - List of map tiles you've explored. Each takes up 1 bit.
+
+0200042C,4 - Bitfield of global game flags.
+  00000002 - Set during boss fights. Disables suspending.
+  00004000 - Got the good ending?
 
 02000334,2 - Camera's X pos to load from the save.
 02000336,2 - Camera's Y pos to load from the save.
@@ -141,7 +170,21 @@ D0-DF  02007024-02007863  ?
 
 === 02007863: End of entities currently loaded into memory.
 
-0200A094,4 - Pointer to ???
+0200A078 - List of BG layers currently loaded.
+  Entry length 0x1C.
+  4 entries in total. The index in the list is the BG index (BG0, BG1, etc).
+  00,04: Pointer to the BG layer metadata for this layer.
+  04,04: X scroll position in subpixels.
+  08,04: Y scroll position in subpixels.
+  0C,04: X scroll velocity in subpixels.
+  10,04: Y scroll velocity in subpixels.
+  14,04: ?
+  18,04: ?
+
+0200A078,4 - Pointer to the current BG0 layer metadata.
+0200A094,4 - Pointer to the current BG1 layer metadata.
+0200A0B0,4 - Pointer to the current BG2 layer metadata.
+0200A0CC,4 - Pointer to the current BG3 layer metadata.
 
 0200A098,4 - X pos of the left of the camera in subpixels.
 0200A09C,4 - Y pos of the top of the camera in subpixels.
@@ -149,11 +192,6 @@ D0-DF  02007024-02007863  ?
 0200A0A4,4 - Y velocity of the camera in subpixels. 
 0200A09A,2 - X pos of the left of the camera in pixels.
 0200A09E,2 - Y pos of the top of the camera in pixels.
-
-0200A0A0,4 - X distance the screen moved this frame.
-0200A0A4,4 - Y distance the screen moved this frame.
-
-0200A0B8 - screen Y?
 
 0200A100 - Decompressed tileset data.
 0200C0EC - tileset data again?
@@ -305,3 +343,5 @@ Player's button config:
 020254CC - Override song index.
   This is set by certain objects when they override the currently playing song to something else, like in the first room of the game and the room that warps you to Chaos.
   However, simply setting this value by itself doesn't do anything.
+
+02025553,1 - On the pause screen, this is the index of which submenu you have highlighted with the cursor.

@@ -238,10 +238,10 @@
 0804DF3C LoadCommonSprite
   ; r0 - Entity
 
-0803B800 LoadGFX
+0803B800 LoadObjectTilesGfx
   ; r0 - GFX wrapper or list pointer
   ; r1 - ?
-08039E90 LoadGFX2
+08039E90 LoadObjectTilesGfx2
   ; Run for GFX types 0 and 1 (uncompressed and compressed)
   ; r0 - GFX wrapper pointer
   ; r1 - ?
@@ -284,11 +284,16 @@
   ; r1 - Layer metadata pointer
   ; r2 - 0?
   ; r3 - 0?
-0803FD9C LoadBGTilesGfx
-  ; r0 - Pointer to the GFX data
-  ; r1 - Pointer to where in VRAM to load the GFX data
-  ; r2 - 0?
 0805B864 ???BGLayer
+0803FD9C LoadBGTilesGfx
+  ; r0 - Pointer to the GFX header
+  ; r1 - Pointer to where in VRAM to load the GFX data
+  ; r2 - 0 or 1?
+0803FE0C LoadBGTilesGfx2
+  ; r0 - Pointer to the GFX header
+  ; r1 - Offset to load the GFX at into VRAM, in terms of 0x800 byte chunks
+  ; r2 - Offset from the start of the GFX page to load from, in terms of 0x800 byte chunks
+  ; r3 - Size of the GFX data to load, in terms of 0x800 byte chunks
 
 0800ED5C RoomLayerGet???ForScrollMode1
   ; r0 - 
