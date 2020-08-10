@@ -141,6 +141,7 @@ class TilesetEditorDialog < Qt::Dialog
   
   def load_blank_tileset
     @tileset_graphics_scene.clear()
+    @gfx_page_graphics_scene.clear()
     
     @tileset = nil
     @collision_tileset = nil
@@ -155,12 +156,6 @@ class TilesetEditorDialog < Qt::Dialog
     @ui.gfx_page_index.clear()
     @ui.palette_index.clear()
     
-    render_tileset()
-    
-    select_tile(0)
-    
-    @gfx_page_graphics_scene.clear()
-    
     @selected_tile = nil
     @selected_tiles = []
     @selection_x = 0
@@ -173,6 +168,9 @@ class TilesetEditorDialog < Qt::Dialog
     @tileset_height = 0
     @tiles_per_gfx_page_row = 16
     @tileset_graphics_scene.setSceneRect(0, 0, @tileset_width*@tile_width, @tileset_height*@tile_height)
+    
+    render_tileset()
+    select_tile(0)
   end
   
   def load_tileset
@@ -528,6 +526,12 @@ class TilesetEditorDialog < Qt::Dialog
     end
     
     return chunky_tile
+  rescue StandardError => e
+    Qt::MessageBox.warning(self,
+      "Rendering tile failed",
+      "Failed to render tile.\n#{e.message}\n\n#{e.backtrace.join("\n")}"
+    )
+    return nil
   end
   
   def render_tile_to_pixmap_item(tile, tile_pixmap_item)
