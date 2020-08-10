@@ -20,7 +20,7 @@ class MenuEditorDialog < Qt::Dialog
     @layer_graphics_scene = Qt::GraphicsScene.new
     @ui.layer_graphics_view.setScene(@layer_graphics_scene)
     @ui.layer_graphics_view.setDragMode(Qt::GraphicsView::ScrollHandDrag)
-    self.setStyleSheet("QGraphicsView { background-color: transparent; }");
+    @ui.layer_graphics_view.setBackgroundBrush(Qt::Brush.new(Qt::Color.new(200, 200, 200, 255)))
     
     MENU_BG_LAYER_INFOS.each do |menu_info|
       @ui.menu_list.addItem(menu_info[:name])
@@ -93,6 +93,8 @@ class MenuEditorDialog < Qt::Dialog
     
     layer_item = LayerItem.new(@bg_layer, @tileset_path)
     @layer_graphics_scene.addItem(layer_item)
+    
+    @layer_graphics_scene.setSceneRect(@layer_graphics_scene.itemsBoundingRect())
   rescue StandardError => e
     load_blank_menu()
     Qt::MessageBox.warning(self,
