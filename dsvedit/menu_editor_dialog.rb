@@ -53,6 +53,7 @@ class MenuEditorDialog < Qt::Dialog
     gfx_list_pointer       = menu_info[:gfx_list_pointer]
     gfx_file_pointers      = menu_info[:gfx_file_pointers]
     palette_list_pointer   = menu_info[:palette_list_pointer]
+    first_palette_index    = menu_info[:first_palette_index] || 0
     overlay_id             = menu_info[:overlay]
     
     if gfx_list_pointer
@@ -65,6 +66,7 @@ class MenuEditorDialog < Qt::Dialog
     @ui.bg_layer_pointer.text     = "%08X" % layer_metadata_pointer
     @ui.gfx_file_pointers.text    = gfx_file_pointers.map{|gfx_ptr| "%08X" % gfx_ptr}.join(", ")
     @ui.palette_list_pointer.text = "%08X" % palette_list_pointer
+    @ui.first_palette_index.text  = "%02X" % first_palette_index
     
     load_menu()
   end
@@ -75,6 +77,7 @@ class MenuEditorDialog < Qt::Dialog
     @layer_metadata_pointer = @ui.bg_layer_pointer.text.to_i(16)
     @gfx_file_pointers      = @ui.gfx_file_pointers.text.split(",").map{|ptr_str| ptr_str.to_i(16)}
     @palette_list_pointer   = @ui.palette_list_pointer.text.to_i(16)
+    @first_palette_index    = @ui.first_palette_index.text.to_i(16)
     
     if @gfx_file_pointers && @gfx_file_pointers.size > 0 && @layer_metadata_pointer && @palette_list_pointer
       @is_menu_loaded = true
@@ -86,7 +89,7 @@ class MenuEditorDialog < Qt::Dialog
     @bg_layer = BGLayer.new(@layer_metadata_pointer, @fs)
     @bg_layer.read_from_rom()
     
-    @tileset_path = @renderer.render_tileset_for_bg_layer(@bg_layer, @gfx_file_pointers, @palette_list_pointer)
+    @tileset_path = @renderer.render_tileset_for_bg_layer(@bg_layer, @gfx_file_pointers, @palette_list_pointer, @first_palette_index)
     
     layer_item = LayerItem.new(@bg_layer, @tileset_path)
     @layer_graphics_scene.addItem(layer_item)

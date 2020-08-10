@@ -161,7 +161,7 @@ class Renderer
     end
   end
   
-  def render_tileset_for_bg_layer(bg_layer, gfx_file_pointers, palette_list_pointer)
+  def render_tileset_for_bg_layer(bg_layer, gfx_file_pointers, palette_list_pointer, first_palette_index=0)
     folder = "cache/#{GAME}/menus"
     tileset_path = "#{folder}/Tilesets/%08X.png" % bg_layer.tileset_pointer
     colors_per_palette = 16
@@ -188,9 +188,11 @@ class Renderer
       end
       
       palettes = generate_palettes(palette_list_pointer, colors_per_palette)
+      palettes = palettes[first_palette_index..-1]
       
       if gfx_wrappers.any?{|gfx| gfx.colors_per_palette == 256}
         palettes_256 = generate_palettes(palette_list_pointer, 256)
+        palettes_256 = palettes_256[first_palette_index..-1]
       else
         palettes_256 = []
       end
