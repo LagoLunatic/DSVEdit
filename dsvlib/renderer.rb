@@ -181,9 +181,19 @@ class Renderer
       )
     else
       gfx_chunks = []
+      added_16_color_gfxs = 0
+      added_256_color_gfxs = 0
       gfx_wrappers.each_with_index do |gfx_wrapper, gfx_wrapper_index|
-        4.times do |i|
-          gfx_chunks[0x10+gfx_wrapper_index*4+i] = [gfx_wrapper_index, i]
+        if gfx_wrapper.colors_per_palette == 256
+          4.times do |i|
+            gfx_chunks[added_256_color_gfxs*4+i] = [gfx_wrapper_index, i]
+          end
+          added_256_color_gfxs += 1
+        else
+          4.times do |i|
+            gfx_chunks[0x10+added_16_color_gfxs*4+i] = [gfx_wrapper_index, i]
+          end
+          added_16_color_gfxs += 1
         end
       end
       
