@@ -164,9 +164,14 @@ class Renderer
   def render_tileset_for_bg_layer(bg_layer, gfx_file_pointers, palette_list_pointer, first_palette_index=0)
     folder = "cache/#{GAME}/menus"
     tileset_path = "#{folder}/Tilesets/%08X.png" % bg_layer.tileset_pointer
-    colors_per_palette = 16
     
     gfx_wrappers = gfx_file_pointers.map{|gfx_ptr| GfxWrapper.new(gfx_ptr, fs)}
+    
+    if gfx_wrappers.all?{|gfx| gfx.colors_per_palette == 256}
+      colors_per_palette = 256
+    else
+      colors_per_palette = 16
+    end
     
     if SYSTEM == :nds
       tileset = render_tileset_nds(
