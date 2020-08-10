@@ -236,13 +236,14 @@ class TilesetEditorDialog < Qt::Dialog
       end
     else
       @tiles = []
-      @tileset.tiles.each_slice(16) do |row_of_tiles|
+      width_in_32x32_tiles = @tileset_width/4
+      @tileset.tiles.each_slice(width_in_32x32_tiles) do |row_of_tiles|
         row_of_tiles.map! do |tile|
           tile.minitiles
         end
-        if row_of_tiles.length < 16
+        if row_of_tiles.length < width_in_32x32_tiles
           # If the last row of tiles isn't a full row we must pad it with nil.
-          row_of_tiles.fill([nil]*16, row_of_tiles.length...16)
+          row_of_tiles.fill([nil]*16, row_of_tiles.length...width_in_32x32_tiles)
         end
         row_of_tiles.each do |minitiles|
           @tiles += minitiles[0,4]
