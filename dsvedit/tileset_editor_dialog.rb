@@ -1189,6 +1189,8 @@ class TilesetEditorDialog < Qt::Dialog
   
   def toggle_display_collision(checked)
     if @collision_tileset.nil?
+      @collision_mode = false
+      @ui.display_collision.checked = false
       return
     end
     
