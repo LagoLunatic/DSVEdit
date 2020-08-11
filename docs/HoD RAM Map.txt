@@ -9,9 +9,24 @@
   02 - Game start.
   03 - Ingame.
   04 - Select boss rush difficulty.
+  05 - 
   06 - Sound mode.
+  07 - Game over screen
+  08 - 
+  09 - Credits
+  0A - Prologue
+  0B - Beat boss rush hard mode congratulations screen with "SIMON BELMONT FOREVER" text
   0C - Nintendo logo screen.
+  0D - Debug menu, main screen
+  0E - Debug menu, sprite viewer
+  0F - Spawns you in a test room with a bat
+  10 - Debug menu, ???
+  11 - Debug menu, ???
+  12 - Debug menu, ???
+  13 - Debug menu, ???
 0200000D,1 - Game substate.
+
+02000010,1 - 
 
 02000011,1 - Entity index of the last entity created.
 
@@ -115,12 +130,13 @@ Extra memory used for rendering special effects:
 02007C1C,4 - Pointer to where the data should be DMAed to.
 02007C20,??? - The data.
 
-0200A428 - Data for the current room's layers. Each is 0x18 bytes long.
+0200A428 - List of BG layers currently loaded.
+  Entry length 0x18.
   There are 4 entries here:
-    00 0200A428 - Seems to be for collision?
-    01 0200A440 - Room layer 00.
-    02 0200A458 - Room layer 01.
-    03 0200A470 - Room layer 02.
+    00 0200A428 - BG0
+    01 0200A440 - BG1 (room layer 00).
+    02 0200A458 - BG2 (room layer 01).
+    03 0200A470 - BG3 (room layer 02).
   Format:
   00,4: Pointer to layer metadata.
   14,1: Visual effect.

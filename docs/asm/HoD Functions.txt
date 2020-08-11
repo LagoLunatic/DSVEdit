@@ -18,14 +18,12 @@
   ; r1 - Dest X in pixels
   ; r2 - Dest Y in pixels
 
+08000518 UpdateGameState
+  ; Calls the update code function for the current game state (0200000C).
+  ; If that function returns a new state value, it sets the game state to that value.
+
 0800B288 LoadItemIconGFX
   ; r0 - Icon index
-
-08010F8C LoadObjectPalette
-  ; r0 - Palette list pointer
-  ; r1 - Palette index of the first palette in the list to load
-  ; r2 - Number of palettes to load
-  ; r3 - Index to load the palettes at in palette RAM (e.g. 9 to replace the 9th object palette)
 
 08077DF4 RemoveStatusEffects
   ; r0 - Bitfield of status effects to remove:
@@ -81,6 +79,26 @@
 
 0801CF8C ???Draw
 
+08013C4C LoadBGLayer
+  ; r0 - Which BG layer index to use (BG0, BG1, BG2, BG3)
+  ; r1 - Layer metadata pointer
+  ; r2 - 0?
+  ; r3 - 0?
+08013DD0 LoadBGLayer2
+  ; r0 - Which BG layer index to use (BG0, BG1, BG2, BG3)
+  ; r1 - Layer metadata pointer
+  ; r2 - 0?
+  ; r3 - 0?
+08013EA4 LoadBGTilesGfx
+  ; r0 - Pointer to the GFX header
+  ; r1 - Pointer to where in VRAM to load the GFX data
+  ; r2 - 0 or 1?
+
+0802B658 LoadFacePortrait
+  ; r0 - GFX pointer
+  ; r1 - Palette list pointer
+  ; r2 - BG layer metadata pointer
+
 080BD748 Divide
   ; Returns r0 / r1
 080BD74C Modulo
@@ -88,19 +106,34 @@
 
 08000A78 Rand
 
-0801045C LoadGfx
+0801045C LoadObjectTilesGfx
   ; r0 - Gfx wrapper
   ; r1 - 0?
   ; Returns: The index in vram??
-08010644 LoadGfx2
+08010644 LoadObjectTilesGfx2
   ; r0 - Gfx wrapper
-08044A52 LoadPalette
+
+08010F8C LoadObjectPalette
+  ; r0 - Palette list pointer
+  ; r1 - Palette index of the first palette in the list to load
+  ; r2 - Number of palettes to load
+  ; r3 - Index to load the palettes at in palette RAM (e.g. 9 to replace the 9th object palette)
+
+08044A52 Load???Palette
   ; r0 - Palette list pointer
   ; r1 - 0?
-0803118C LoadPalette2
+0803118C Load???Palette2
   ; r0 - Palette list pointer
   ; r1 - Palette index?
   ; Returns: The index in object palette VRAM this palette was loaded at.
+
+080110F0 LoadBGPalette
+  ; r0 - Palette list pointer
+  ; r1 - Palette index of the first palette in the list to load
+  ; r2 - Number of palettes to load
+  ; r3 - Index to load the palettes at in palette RAM (e.g. 9 to replace the 9th object palette)
+08011088 LoadAllSixteenBGPalettes
+  ; r0 - Palette list pointer
 
 08013F28 SetColorSpecialEffects
   ; r0 - 
@@ -111,11 +144,6 @@
   ; r0 - X pos in pixels
   ; r1 - Y pos in pixels
   ; Returns the collision data of the tile at the designated point.
-
-08013EA4 LoadRoomGFXPage?
-  ; r0 - GFX wrapper pointer
-  ; r1 - VRAM pointer to load the GFX to
-  ; r2 - 0?
 
 080BB560 PlaySound
   ; r0 - Sound index

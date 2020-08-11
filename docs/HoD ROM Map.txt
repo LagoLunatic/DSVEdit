@@ -137,6 +137,11 @@
 084B099C-084B099F - List of palette indexes for different buttons and the walls they open (object 09).
   The button's var A is the index in these lists. Should be 0-3.
 
+084B1554-084B15A7 - List of face portrait assets.
+  00,04: GFX pointer.
+  04,04: Palette list pointer.
+  08,04: BG layer metadata pointer.
+
 084B15C0 - List of allowable items that can be in the shop.
   Entry length 4.
   00,1: Item type:

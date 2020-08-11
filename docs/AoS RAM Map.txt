@@ -25,6 +25,7 @@
   12 - 
   13 - Debug graphics testing menu? ("2739")
   14 - 
+02000011,1 - Current game substate.
 
 02000014 - Bitfield of currently pressed buttons.
   0001 - A
