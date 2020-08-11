@@ -87,7 +87,19 @@ class EntityLayerItem < Qt::GraphicsRectItem
   end
   
   def add_graphics_item_for_entity(entity)
-    if entity.is_enemy? && ENEMY_IDS.include?(entity.subtype)
+    if GAME == "hod" && entity.is_enemy? && entity.subtype == 0x6A # Enemy spawner
+      enemy_id = entity.var_b
+      if ENEMY_IDS.include?(enemy_id)
+        sprite_info = @game.enemy_dnas[enemy_id].extract_gfx_and_palette_and_sprite_from_init_ai
+        add_sprite_item_for_entity(entity, sprite_info,
+          BEST_SPRITE_FRAME_FOR_ENEMY[enemy_id],
+          sprite_offset: BEST_SPRITE_OFFSET_FOR_ENEMY[enemy_id]
+        )
+      else
+        graphics_item = EntityRectItem.new(entity, @main_window)
+        graphics_item.setParentItem(self)
+      end
+    elsif entity.is_enemy? && ENEMY_IDS.include?(entity.subtype)
       enemy_id = entity.subtype
       sprite_info = @game.enemy_dnas[enemy_id].extract_gfx_and_palette_and_sprite_from_init_ai
       add_sprite_item_for_entity(entity, sprite_info,
