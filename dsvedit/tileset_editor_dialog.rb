@@ -449,6 +449,12 @@ class TilesetEditorDialog < Qt::Dialog
     end
     
     load_selected_tile()
+  rescue StandardError => e
+    Qt::MessageBox.warning(self,
+      "Rendering tileset failed",
+      "Failed to render tileset.\n#{e.message}\n\n#{e.backtrace.join("\n")}"
+    )
+    return
   end
   
   def render_tile_on_tileset(tile_index)
@@ -547,12 +553,6 @@ class TilesetEditorDialog < Qt::Dialog
     end
     
     return chunky_tile
-  rescue StandardError => e
-    Qt::MessageBox.warning(self,
-      "Rendering tile failed",
-      "Failed to render tile.\n#{e.message}\n\n#{e.backtrace.join("\n")}"
-    )
-    return nil
   end
   
   def render_tile_to_pixmap_item(tile, tile_pixmap_item)
