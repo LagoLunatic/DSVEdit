@@ -82,6 +82,7 @@ class Renderer
         layer.tileset_type,
         room.palette_pages,
         room.gfx_pages,
+        layer.gfx_base_block,
         layer.colors_per_palette,
         layer.collision_tileset_pointer,
         tileset_filename
@@ -134,11 +135,20 @@ class Renderer
     return rendered_layer
   end
   
-  def get_tileset(pointer_to_tileset_for_layer, tileset_type, palette_pages, gfx_pages, colors_per_palette, collision_tileset_offset, tileset_filename)
+  def get_tileset(pointer_to_tileset_for_layer, tileset_type, palette_pages, gfx_pages, gfx_base_block, colors_per_palette, collision_tileset_offset, tileset_filename)
     if File.exist?(tileset_filename)
       ChunkyPNG::Image.from_file(tileset_filename)
     else
-      render_tileset(pointer_to_tileset_for_layer, tileset_type, palette_pages, gfx_pages, colors_per_palette, collision_tileset_offset, tileset_filename)
+      render_tileset(
+        pointer_to_tileset_for_layer,
+        tileset_type,
+        palette_pages,
+        gfx_pages,
+        gfx_base_block,
+        colors_per_palette,
+        collision_tileset_offset,
+        tileset_filename
+      )
     end
   end
   
@@ -148,7 +158,16 @@ class Renderer
       
       tileset_filename = "#{folder}/#{room.area_name}/Tilesets/#{layer.tileset_filename}.png"
       if !File.exist?(tileset_filename) && layer.tileset_pointer != 0
-        render_tileset(layer.tileset_pointer, layer.tileset_type, room.palette_pages, room.gfx_pages, layer.colors_per_palette, layer.collision_tileset_pointer, tileset_filename)
+        render_tileset(
+          layer.tileset_pointer,
+          layer.tileset_type,
+          room.palette_pages,
+          room.gfx_pages,
+          layer.gfx_base_block,
+          layer.colors_per_palette,
+          layer.collision_tileset_pointer,
+          tileset_filename
+        )
       end
       
       if collision && layer.collision_tileset_pointer != 0
@@ -186,21 +205,13 @@ class Renderer
       )
     else
       gfx_chunks = []
-      added_16_color_gfxs = 0
-      added_256_color_gfxs = 0
       gfx_wrappers.each_with_index do |gfx_wrapper, gfx_wrapper_index|
-        if gfx_wrapper.colors_per_palette == 256
-          4.times do |i|
-            gfx_chunks[added_256_color_gfxs*4+i] = [gfx_wrapper_index, i]
-          end
-          added_256_color_gfxs += 1
-        else
-          4.times do |i|
-            gfx_chunks[0x10+added_16_color_gfxs*4+i] = [gfx_wrapper_index, i]
-          end
-          added_16_color_gfxs += 1
+        4.times do |i|
+          gfx_chunks[gfx_wrapper_index*4+i] = [gfx_wrapper_index, i]
         end
       end
+      
+      gfx_base_block = 0
       
       palettes = generate_palettes(palette_list_pointer, colors_per_palette)
       palettes = palettes[first_palette_index..-1]
@@ -219,6 +230,7 @@ class Renderer
         palettes_256,
         gfx_wrappers,
         gfx_chunks,
+        gfx_base_block,
         colors_per_palette,
         bg_layer.collision_tileset_pointer,
         output_filename=nil
@@ -231,7 +243,7 @@ class Renderer
     return tileset_path
   end
   
-  def render_tileset(tileset_offset, tileset_type, palette_pages, gfx_pages, colors_per_palette, collision_tileset_offset, output_filename=nil, one_dimensional_mode: false)
+  def render_tileset(tileset_offset, tileset_type, palette_pages, gfx_pages, gfx_base_block, colors_per_palette, collision_tileset_offset, output_filename=nil, one_dimensional_mode: false)
     if SYSTEM == :nds
       render_room_tileset_nds(tileset_offset, tileset_type, palette_pages, gfx_pages, colors_per_palette, collision_tileset_offset, output_filename, one_dimensional_mode: one_dimensional_mode)
     else
@@ -260,7 +272,7 @@ class Renderer
         end
       end
       
-      render_tileset_gba(tileset_offset, tileset_type, palettes, palettes_256, gfx_wrappers, gfx_chunks, colors_per_palette, collision_tileset_offset, output_filename)
+      render_tileset_gba(tileset_offset, tileset_type, palettes, palettes_256, gfx_wrappers, gfx_chunks, gfx_base_block, colors_per_palette, collision_tileset_offset, output_filename)
     end
   end
   
@@ -347,7 +359,7 @@ class Renderer
     return rendered_tileset
   end
   
-  def render_tileset_gba(tileset_offset, tileset_type, palettes, palettes_256, gfx_wrappers, gfx_chunks, colors_per_palette, collision_tileset_offset, output_filename=nil)
+  def render_tileset_gba(tileset_offset, tileset_type, palettes, palettes_256, gfx_wrappers, gfx_chunks, gfx_base_block, colors_per_palette, collision_tileset_offset, output_filename=nil)
     rendered_tileset = ChunkyPNG::Image.new(TILESET_WIDTH_IN_TILES*TILE_WIDTH, TILESET_HEIGHT_IN_TILES*TILE_HEIGHT, ChunkyPNG::Color::TRANSPARENT)
     
     if gfx_wrappers.empty?
@@ -372,9 +384,7 @@ class Renderer
           rendered_minitile = ChunkyPNG::Image.new(8, 8, ChunkyPNG::Color.rgba(255, 0, 0, 255))
         else
           gfx_chunk_index_on_page = (minitile.index_on_tile_page & 0xC0) >> 6
-          gfx_chunk_index = minitile.tile_page*4 + gfx_chunk_index_on_page
-          gfx_chunk_index += 0x10 if colors_per_palette == 16
-          gfx_chunk_index = gfx_chunk_index_on_page if colors_per_palette == 256
+          gfx_chunk_index = gfx_base_block*8 + minitile.tile_page*4 + gfx_chunk_index_on_page
           gfx_wrapper_index, chunk_offset = gfx_chunks[gfx_chunk_index]
           if chunk_offset.nil?
             rendered_minitile = ChunkyPNG::Image.new(8, 8, ChunkyPNG::Color.rgba(255, 0, 0, 255))

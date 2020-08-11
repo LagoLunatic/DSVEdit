@@ -115,6 +115,7 @@ class TilesetEditorDialog < Qt::Dialog
     
     tileset_data[:room_gfx_list_pointer] ||= 0
     tileset_data[:gfx_file_pointers] ||= []
+    tileset_data[:gfx_base_block] ||= 0
     tileset_data[:palette_wrapper_pointer] ||= 0
     tileset_data[:palette_page_index] ||= 0
     tileset_data[:palette_list_pointer] ||= 0
@@ -124,6 +125,7 @@ class TilesetEditorDialog < Qt::Dialog
       tileset_data[:gfx_file_pointers] = gfx_wrappers.map{|gfx| gfx.gfx_pointer}
     end
     @ui.gfx_file_pointers.text                = tileset_data[:gfx_file_pointers].map{|gfx_ptr| "%08X" % gfx_ptr}.join(", ")
+    @ui.gfx_base_block.text                   = "%02X" % tileset_data[:gfx_base_block]
     @ui.one_dimensional_mode.checked          = !!tileset_data[:one_dimensional_mode]
     @ui.palette_page_list_pointer.text        = "%08X" % tileset_data[:palette_wrapper_pointer]
     @ui.palette_page_index.text               = "%02X" % tileset_data[:palette_page_index]
@@ -180,15 +182,38 @@ class TilesetEditorDialog < Qt::Dialog
     @tileset_type = @ui.tileset_type.text.to_i(16)
     @room_gfx_list_pointer = @ui.room_gfx_list_pointer.text.to_i(16)
     @gfx_file_pointers = @ui.gfx_file_pointers.text.split(",").map{|ptr_str| ptr_str.to_i(16)}
+    @gfx_base_block = @ui.gfx_base_block.text.to_i(16)
     @one_dimensional_mode = @ui.one_dimensional_mode.checked
     @palette_page_list_pointer = @ui.palette_page_list_pointer.text.to_i(16)
     @palette_page_index = @ui.palette_page_index.text.to_i(16)
     @palette_list_pointer = @ui.palette_list_pointer_for_tileset.text.to_i(16)
     @collision_tileset_pointer = @ui.collision_tileset_pointer.text.to_i(16)
     
-    return if @tileset_pointer == 0 
-    return if @palette_page_list_pointer == 0 && @palette_list_pointer == 0
-    return if @room_gfx_list_pointer == 0 && @gfx_file_pointers.empty?
+    if @tileset_pointer == 0
+      load_blank_tileset()
+      return
+    end
+    if @palette_page_list_pointer == 0 && @palette_list_pointer == 0
+      load_blank_tileset()
+      return
+    end
+    if @room_gfx_list_pointer == 0 && @gfx_file_pointers.empty?
+      load_blank_tileset()
+      return
+    end
+    
+    @gfx_base_block = 0 if @gfx_base_block < 0
+    @gfx_base_block = 3 if @gfx_base_block > 3
+    
+    @ui.gfx_file_pointers.text                = @gfx_file_pointers.map{|gfx_ptr| "%08X" % gfx_ptr}.join(", ")
+    @ui.gfx_base_block.text                   = "%02X" % @gfx_base_block
+    @ui.one_dimensional_mode.checked          = @one_dimensional_mode
+    @ui.palette_page_list_pointer.text        = "%08X" % @palette_page_list_pointer
+    @ui.palette_page_index.text               = "%02X" % @palette_page_index
+    @ui.palette_list_pointer_for_tileset.text = "%08X" % @palette_list_pointer
+    @ui.tileset_pointer.text                  = "%08X" % @tileset_pointer
+    @ui.collision_tileset_pointer.text        = "%08X" % @collision_tileset_pointer
+    @ui.tileset_type.text                     = "%04X" % @tileset_type
     
     if SYSTEM == :nds
       @tile_width = @tile_height = 16
@@ -296,19 +321,9 @@ class TilesetEditorDialog < Qt::Dialog
         end
       end
     else
-      added_16_color_gfxs = 0
-      added_256_color_gfxs = 0
       @gfx_wrappers.each_with_index do |gfx_wrapper, gfx_wrapper_index|
-        if gfx_wrapper.colors_per_palette == 256
-          4.times do |i|
-            @gfx_chunks[added_256_color_gfxs*4+i] = [gfx_wrapper_index, i]
-          end
-          added_256_color_gfxs += 1
-        else
-          4.times do |i|
-            @gfx_chunks[0x10+added_16_color_gfxs*4+i] = [gfx_wrapper_index, i]
-          end
-          added_16_color_gfxs += 1
+        4.times do |i|
+          @gfx_chunks[gfx_wrapper_index*4+i] = [gfx_wrapper_index, i]
         end
       end
     end
@@ -372,11 +387,19 @@ class TilesetEditorDialog < Qt::Dialog
     end
     
     @ui.gfx_page_index.clear()
-    @gfx_wrappers.each_with_index do |gfx_wrapper, i|
-      if gfx_wrapper.colors_per_palette == 16
-        @ui.gfx_page_index.addItem("%02X" % i)
-      else
-        @ui.gfx_page_index.addItem("%02X (256 colors)" % i)
+    if SYSTEM == :nds
+      @gfx_wrappers.each_with_index do |gfx_wrapper, i|
+        if gfx_wrapper.colors_per_palette == 16
+          @ui.gfx_page_index.addItem("%02X" % i)
+        else
+          @ui.gfx_page_index.addItem("%02X (256 colors)" % i)
+        end
+      end
+    else
+      first_gfx_page_index = @gfx_base_block*2
+      num_gfx_pages = [4, 8-first_gfx_page_index].min
+      (first_gfx_page_index...first_gfx_page_index+num_gfx_pages).each do |gfx_page_index|
+        @ui.gfx_page_index.addItem("%02X" % gfx_page_index)
       end
     end
     @ui.gfx_page_index.setCurrentIndex(0)
@@ -491,9 +514,7 @@ class TilesetEditorDialog < Qt::Dialog
       end
     else
       gfx_chunk_index_on_page = (tile.index_on_tile_page & 0xC0) >> 6
-      gfx_chunk_index = tile.tile_page*4 + gfx_chunk_index_on_page
-      gfx_chunk_index += 0x10 if @tileset.colors_per_palette == 16
-      gfx_chunk_index = gfx_chunk_index_on_page if @tileset.colors_per_palette == 256
+      gfx_chunk_index = @gfx_base_block*8 + tile.tile_page*4 + gfx_chunk_index_on_page
       gfx_wrapper_index, chunk_offset = @gfx_chunks[gfx_chunk_index]
       if chunk_offset.nil?
         chunky_tile = ChunkyPNG::Image.new(8, 8, ChunkyPNG::Color.rgba(255, 0, 0, 255))
@@ -653,9 +674,7 @@ class TilesetEditorDialog < Qt::Dialog
       gfx_pointers_used_on_this_page = []
       @ui.gfx_file.text = ""
       4.times do |i|
-        gfx_chunk_index = @selected_tile.tile_page*4 + i
-        gfx_chunk_index += 0x10 if @tileset.colors_per_palette == 16
-        gfx_chunk_index = i if @tileset.colors_per_palette == 256
+        gfx_chunk_index = @gfx_base_block*8 + @selected_tile.tile_page*4 + i
         gfx_wrapper_index, chunk_offset = @gfx_chunks[gfx_chunk_index]
         
         if chunk_offset.nil?
@@ -1059,9 +1078,7 @@ class TilesetEditorDialog < Qt::Dialog
       gfx_and_palette_data[:gfx_page_index] = @selected_tile.tile_page
     else
       gfx_chunk_index_on_page = (@selected_tile.index_on_tile_page & 0xC0) >> 6
-      gfx_chunk_index = @selected_tile.tile_page*4 + gfx_chunk_index_on_page
-      gfx_chunk_index += 0x10 if @tileset.colors_per_palette == 16
-      gfx_chunk_index = gfx_chunk_index_on_page if @tileset.colors_per_palette == 256
+      gfx_chunk_index = @gfx_base_block*8 + @selected_tile.tile_page*4 + gfx_chunk_index_on_page
       gfx_wrapper_index, chunk_offset = @gfx_chunks[gfx_chunk_index]
       if chunk_offset.nil?
         gfx_and_palette_data[:gfx_page_index] = 0

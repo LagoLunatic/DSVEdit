@@ -986,6 +986,7 @@ class DSVEdit < Qt::MainWindow
         tileset_data[:tileset_pointer]           = layer.tileset_pointer
         tileset_data[:collision_tileset_pointer] = layer.collision_tileset_pointer
         tileset_data[:tileset_type]              = layer.tileset_type
+        tileset_data[:gfx_base_block]            = layer.gfx_base_block
       end
       
       tileset_data[:one_dimensional_mode] = (SYSTEM == :gba)

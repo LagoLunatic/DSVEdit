@@ -986,10 +986,11 @@ class RoomGfxPage
       
       if GAME == "hod"
         if i == 3
-          # The one at position 3 in HoD is always a 256 color GFX page that needs to be positioned differently.
-          hod_gfx_load_offset = 0 
+          # The one at index 3 in HoD is always a 256 color GFX page that gets loaded to 06008000 in VRAM.
+          hod_gfx_load_offset = 0x10
         else
-          hod_gfx_load_offset = 0x10 + i*4
+          # The ones at indexes 0-2 are 16 color GFX pages that get loaded to 06000000, 06002000, 06004000 in VRAM.
+          hod_gfx_load_offset = i*4
         end
       end
       

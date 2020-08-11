@@ -108,9 +108,6 @@
        </property>
       </widget>
      </item>
-     <item row="2" column="7">
-      <widget class="QLineEdit" name="palette_list_pointer_for_tileset"/>
-     </item>
      <item row="2" column="3">
       <widget class="QLineEdit" name="palette_page_list_pointer"/>
      </item>
@@ -134,7 +131,27 @@
        </property>
       </widget>
      </item>
-     <item row="1" column="10">
+     <item row="2" column="7">
+      <widget class="QLineEdit" name="palette_list_pointer_for_tileset"/>
+     </item>
+     <item row="2" column="10">
+      <widget class="QLabel" name="label_15">
+       <property name="text">
+        <string>GFX base block</string>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="11">
+      <widget class="QLineEdit" name="gfx_base_block">
+       <property name="maximumSize">
+        <size>
+         <width>30</width>
+         <height>16777215</height>
+        </size>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="10" colspan="2">
       <widget class="QCheckBox" name="one_dimensional_mode">
        <property name="text">
         <string>One dimensional mode</string>
