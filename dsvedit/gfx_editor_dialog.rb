@@ -46,11 +46,18 @@ class GfxEditorDialog < Qt::Dialog
     connect(@ui.import_palette_button, SIGNAL("clicked()"), self, SLOT("import_palette()"))
     connect(@ui.generate_palette_from_files, SIGNAL("clicked()"), self, SLOT("generate_palette_from_multiple_files()"))
     
+    self.show()
+    
     if gfx_and_palette_data
       @ui.gfx_file_names.text = gfx_and_palette_data[:gfx_file_names]
       @ui.palette_pointer.text = "%08X" % gfx_and_palette_data[:palette_pointer]
       @ui.one_dimensional_mode.checked = !!gfx_and_palette_data[:one_dimensional_mode]
-      load_gfx_file_and_palette_list()
+      success = load_gfx_file_and_palette_list()
+      if !success
+        self.close()
+        return
+      end
+      
       gfx_page_index = gfx_and_palette_data[:gfx_page_index]
       if (0..@gfx_pages.size-1).include?(gfx_page_index)
         gfx_page_changed(gfx_page_index)
@@ -59,8 +66,6 @@ class GfxEditorDialog < Qt::Dialog
         palette_changed(gfx_and_palette_data[:palette_index])
       end
     end
-    
-    self.show()
   end
   
   def load_gfx_file_and_palette_list
@@ -130,8 +135,11 @@ class GfxEditorDialog < Qt::Dialog
       @ui.gfx_file_names.text = @gfx_pages.map{|gfx| "%08X" % gfx.gfx_pointer}.join(", ")
     end
     @ui.palette_pointer.text = "%08X" % @palette_pointer
+    
+    return true
   rescue StandardError => e
     Qt::MessageBox.warning(self, "Error", "Error loading gfx:\n#{e.message}\n\n#{e.backtrace.join("\n")}")
+    return false
   end
   
   def load_palettes
