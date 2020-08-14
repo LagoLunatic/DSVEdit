@@ -426,6 +426,10 @@ class SpriteEditor < Qt::Dialog
   def load_blank_sprite
     @sprite_info = nil
     
+    @ui.sprite_file_name.text = ""
+    @ui.gfx_pointer.text = ""
+    @ui.palette_pointer.text = ""
+    
     clear_sprite()
   end
   
@@ -433,11 +437,8 @@ class SpriteEditor < Qt::Dialog
     @sprite = nil
     
     @ui.view_skeleton_button.enabled = false
-    @ui.sprite_file_name.text = ""
-    @ui.gfx_pointer.text = ""
     @ui.frame_index.clear()
     @ui.gfx_page_index.clear()
-    @ui.palette_pointer.text = ""
     @ui.palette_index.clear()
     @ui.frame_first_part.text = ""
     @ui.frame_number_of_parts.text = ""
@@ -478,6 +479,8 @@ class SpriteEditor < Qt::Dialog
   
   def load_no_sprite_with_gfx_and_palette
     clear_sprite()
+    
+    @ui.sprite_file_name.text = ""
     
     @gfx_pages_with_blanks = @sprite_info.gfx_pages
     
@@ -632,7 +635,7 @@ class SpriteEditor < Qt::Dialog
       "Failed to load sprite",
       "Failed to load sprite.\n#{e.message}\n\n#{e.backtrace.join("\n")}"
     )
-    load_blank_sprite()
+    clear_sprite()
   end
   
   def ensure_gfx_pages_for_palette_exist(palette_index)
