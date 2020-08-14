@@ -731,7 +731,7 @@ OTHER_SPRITES = [
   {pointer: 0x022D7CBC, desc: "Brauner inside mirror portrait", overlay: 55},
   {pointer: 0x022D7C98, desc: "Brauner curse beast", overlay: 55},
   
-  {desc: "Event face portraits 00-36", no_sprite: true, palette: 0x022C5860, gfx_file_names: [
+  {desc: "Face portraits 00-36", no_sprite: true, palette: 0x022C5860, gfx_file_names: [
     "/sc/f_fdeth00.dat",
     "/sc/f_fdrac01.dat",
     "/sc/f_fdrac00.dat",

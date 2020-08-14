@@ -739,65 +739,65 @@ OTHER_SPRITES = [
   
   {desc: "World Map", sprite: 0x021DCCF8, gfx_files: [0x020BA678, 0x020BA684, 0x020BA690, 0x020BA69C, 0x020BA6A8, 0x020BA6B4, 0x020BA6C0], palette: 0x020D1E88},
   
-  {desc: "Event face portraits 00-04", no_sprite: true, palette: 0x021FFDA0, overlay: 0x12, gfx_file_names: [
+  {desc: "Face portraits 00-04 (Shanoa)", no_sprite: true, palette: 0x021FFDA0, overlay: 0x12, gfx_file_names: [
     "/sc/f_fsha00.dat",
     "/sc/f_fsha01.dat",
     "/sc/f_fsha02.dat",
     "/sc/f_fsha03.dat",
     "/sc/f_fsha04.dat",
   ]},
-  {desc: "Event face portraits 05-09", no_sprite: true, palette: 0x021FFDA0, overlay: 0x03, gfx_file_names: [
+  {desc: "Face portraits 05-09 (Albus)", no_sprite: true, palette: 0x021FFDA0, overlay: 0x03, gfx_file_names: [
     "/sc/f_falb00.dat",
     "/sc/f_falb01.dat",
     "/sc/f_falb02.dat",
     "/sc/f_falb03.dat",
     "/sc/f_falb04.dat",
   ]},
-  {desc: "Event face portraits 0A-0C", no_sprite: true, palette: 0x021FFDA0, overlay: 0x05, gfx_file_names: [
+  {desc: "Face portraits 0A-0C (Barlowe)", no_sprite: true, palette: 0x021FFDA0, overlay: 0x05, gfx_file_names: [
     "/sc/f_fbar00.dat",
     "/sc/f_fbar01.dat",
     "/sc/f_fbar02.dat",
   ]},
-  {desc: "Event face portrait 0D", no_sprite: true, palette: 0x021FFDA0, overlay: 0x10, gfx_file_names: [
+  {desc: "Face portrait 0D (Nikolai)", no_sprite: true, palette: 0x021FFDA0, overlay: 0x10, gfx_file_names: [
     "/sc/f_fnic00.dat",
   ]},
-  {desc: "Event face portrait 0E", no_sprite: true, palette: 0x021FFDA0, overlay: 0x0C, gfx_file_names: [
+  {desc: "Face portrait 0E (Jacob)", no_sprite: true, palette: 0x021FFDA0, overlay: 0x0C, gfx_file_names: [
     "/sc/f_fjak00.dat",
   ]},
-  {desc: "Event face portrait 0F", no_sprite: true, palette: 0x021FFDA0, overlay: 0x02, gfx_file_names: [
+  {desc: "Face portrait 0F (Abram)", no_sprite: true, palette: 0x021FFDA0, overlay: 0x02, gfx_file_names: [
     "/sc/f_fabr00.dat",
   ]},
-  {desc: "Event face portrait 10", no_sprite: true, palette: 0x021FFDA0, overlay: 0x0D, gfx_file_names: [
+  {desc: "Face portrait 10 (Laura)", no_sprite: true, palette: 0x021FFDA0, overlay: 0x0D, gfx_file_names: [
     "/sc/f_flol00.dat",
   ]},
-  {desc: "Event face portrait 11", no_sprite: true, palette: 0x021FFDA0, overlay: 0x09, gfx_file_names: [
+  {desc: "Face portrait 11 (Eugen)", no_sprite: true, palette: 0x021FFDA0, overlay: 0x09, gfx_file_names: [
     "/sc/f_feug00.dat",
   ]},
-  {desc: "Event face portrait 12", no_sprite: true, palette: 0x021FFDA0, overlay: 0x0B, gfx_file_names: [
+  {desc: "Face portrait 12 (Aeon)", no_sprite: true, palette: 0x021FFDA0, overlay: 0x0B, gfx_file_names: [
     "/sc/f_fiwo00.dat",
   ]},
-  {desc: "Event face portrait 13", no_sprite: true, palette: 0x021FFDA0, overlay: 0x0E, gfx_file_names: [
+  {desc: "Face portrait 13 (Marcel)", no_sprite: true, palette: 0x021FFDA0, overlay: 0x0E, gfx_file_names: [
     "/sc/f_fmar00.dat",
   ]},
-  {desc: "Event face portrait 14", no_sprite: true, palette: 0x021FFDA0, overlay: 0x0A, gfx_file_names: [
+  {desc: "Face portrait 14 (George)", no_sprite: true, palette: 0x021FFDA0, overlay: 0x0A, gfx_file_names: [
     "/sc/f_fgeo00.dat",
   ]},
-  {desc: "Event face portrait 15", no_sprite: true, palette: 0x021FFDA0, overlay: 0x11, gfx_file_names: [
+  {desc: "Face portrait 15 (Serge)", no_sprite: true, palette: 0x021FFDA0, overlay: 0x11, gfx_file_names: [
     "/sc/f_fser00.dat",
   ]},
-  {desc: "Event face portrait 16", no_sprite: true, palette: 0x021FFDA0, overlay: 0x04, gfx_file_names: [
+  {desc: "Face portrait 16 (Anna)", no_sprite: true, palette: 0x021FFDA0, overlay: 0x04, gfx_file_names: [
     "/sc/f_fann00.dat",
   ]},
-  {desc: "Event face portrait 17", no_sprite: true, palette: 0x021FFDA0, overlay: 0x0F, gfx_file_names: [
+  {desc: "Face portrait 17 (Monica)", no_sprite: true, palette: 0x021FFDA0, overlay: 0x0F, gfx_file_names: [
     "/sc/f_fmon00.dat",
   ]},
-  {desc: "Event face portrait 18", no_sprite: true, palette: 0x021FFDA0, overlay: 0x08, gfx_file_names: [
+  {desc: "Face portrait 18 (Irina)", no_sprite: true, palette: 0x021FFDA0, overlay: 0x08, gfx_file_names: [
     "/sc/f_fele00.dat",
   ]},
-  {desc: "Event face portrait 19", no_sprite: true, palette: 0x021FFDA0, overlay: 0x06, gfx_file_names: [
+  {desc: "Face portrait 19 (Daniela)", no_sprite: true, palette: 0x021FFDA0, overlay: 0x06, gfx_file_names: [
     "/sc/f_fdan00.dat",
   ]},
-  {desc: "Event face portraits 1A-1B", no_sprite: true, palette: 0x021FFDA0, overlay: 0x07, gfx_file_names: [
+  {desc: "Face portraits 1A-1B (Dracula)", no_sprite: true, palette: 0x021FFDA0, overlay: 0x07, gfx_file_names: [
     "/sc/f_fdra00.dat",
     "/sc/f_fdra01.dat",
   ]},

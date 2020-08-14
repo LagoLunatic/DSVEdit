@@ -500,82 +500,82 @@ OTHER_SPRITES = [
     "/sc/f_mix_e.dat",
   ]},
   
-  {desc: "Event face portraits 00-03", no_sprite: true, palette: 0x022C64D8, gfx_file_names: [
+  {desc: "Face portraits 00-03 (Soma)", no_sprite: true, palette: 0x022C64D8, gfx_file_names: [
     "/sc/f_fsoma0.dat",
     "/sc/f_fsoma1.dat",
     "/sc/f_fsoma2.dat",
     "/sc/f_fsoma3.dat",
   ]},
-  {desc: "Event face portraits 04-05", no_sprite: true, palette: 0x022C64FC, gfx_file_names: [
+  {desc: "Face portraits 04-05 (Soma)", no_sprite: true, palette: 0x022C64FC, gfx_file_names: [
     "/sc/f_fsoma4.dat",
     "/sc/f_fsoma5.dat",
   ]},
-  {desc: "Event face portrait 06", no_sprite: true, palette: 0x022C6520, gfx_file_names: [
+  {desc: "Face portrait 06 (Soma)", no_sprite: true, palette: 0x022C6520, gfx_file_names: [
     "/sc/f_fsoma6.dat",
   ]},
-  {desc: "Event face portraits 07-09", no_sprite: true, palette: 0x022C6544, gfx_file_names: [
+  {desc: "Face portraits 07-09 (Mina)", no_sprite: true, palette: 0x022C6544, gfx_file_names: [
     "/sc/f_fmina0.dat",
     "/sc/f_fmina1.dat",
     "/sc/f_fmina2.dat",
   ]},
-  {desc: "Event face portrait 0A", no_sprite: true, palette: 0x022C65B0, gfx_file_names: [
+  {desc: "Face portrait 0A (Mina)", no_sprite: true, palette: 0x022C65B0, gfx_file_names: [
     "/sc/f_fmina3.dat",
   ]},
-  {desc: "Event face portrait 0B", no_sprite: true, palette: 0x022C6568, gfx_file_names: [
+  {desc: "Face portrait 0B (Mina)", no_sprite: true, palette: 0x022C6568, gfx_file_names: [
     "/sc/f_fmina4.dat",
   ]},
-  {desc: "Event face portrait 0C", no_sprite: true, palette: 0x022C658C, gfx_file_names: [
+  {desc: "Face portrait 0C (Mina)", no_sprite: true, palette: 0x022C658C, gfx_file_names: [
     "/sc/f_fmina5.dat",
   ]},
-  {desc: "Event face portrait 0D", no_sprite: true, palette: 0x022C65D4, gfx_file_names: [
+  {desc: "Face portrait 0D (Arikado)", no_sprite: true, palette: 0x022C65D4, gfx_file_names: [
     "/sc/f_farik0.dat",
   ]},
-  {desc: "Event face portrait 0E", no_sprite: true, palette: 0x022C661C, gfx_file_names: [
+  {desc: "Face portrait 0E (Arikado)", no_sprite: true, palette: 0x022C661C, gfx_file_names: [
     "/sc/f_farik1.dat",
   ]},
-  {desc: "Event face portrait 0F", no_sprite: true, palette: 0x022C65F8, gfx_file_names: [
+  {desc: "Face portrait 0F (Alucard)", no_sprite: true, palette: 0x022C65F8, gfx_file_names: [
     "/sc/f_farik2.dat",
   ]},
-  {desc: "Event face portraits 10-14", no_sprite: true, palette: 0x022C6688, gfx_file_names: [
+  {desc: "Face portraits 10-14 (Yoko)", no_sprite: true, palette: 0x022C6688, gfx_file_names: [
     "/sc/f_fyoko0.dat",
     "/sc/f_fyoko1.dat",
     "/sc/f_fyoko2.dat",
     "/sc/f_fyoko3.dat",
     "/sc/f_fyoko4.dat",
   ]},
-  {desc: "Event face portraits 15-16", no_sprite: true, palette: 0x022C6640, gfx_file_names: [
+  {desc: "Face portraits 15-16 (Julius)", no_sprite: true, palette: 0x022C6640, gfx_file_names: [
     "/sc/f_fjuli0.dat",
     "/sc/f_fjuli1.dat",
   ]},
-  {desc: "Event face portrait 17", no_sprite: true, palette: 0x022C6664, gfx_file_names: [
+  {desc: "Face portrait 17 (Julius)", no_sprite: true, palette: 0x022C6664, gfx_file_names: [
     "/sc/f_fjuli2.dat",
   ]},
-  {desc: "Event face portraits 18-1A", no_sprite: true, palette: 0x022C66AC, gfx_file_names: [
+  {desc: "Face portraits 18-1A (Hammer)", no_sprite: true, palette: 0x022C66AC, gfx_file_names: [
     "/sc/f_fhume0.dat",
     "/sc/f_fhume1.dat",
     "/sc/f_fhume2.dat",
   ]},
-  {desc: "Event face portraits 1B-1E", no_sprite: true, palette: 0x022C66D0, gfx_file_names: [
+  {desc: "Face portraits 1B-1E (Celia)", no_sprite: true, palette: 0x022C66D0, gfx_file_names: [
     "/sc/f_fseri0.dat",
     "/sc/f_fseri1.dat",
     "/sc/f_fseri2.dat",
     "/sc/f_fseri3.dat",
   ]},
-  {desc: "Event face portraits 1F-22", no_sprite: true, palette: 0x022C66F4, gfx_file_names: [
+  {desc: "Face portraits 1F-22 (Dario)", no_sprite: true, palette: 0x022C66F4, gfx_file_names: [
     "/sc/f_fdari0.dat",
     "/sc/f_fdari1.dat",
     "/sc/f_fdari2.dat",
     "/sc/f_fdari3.dat",
   ]},
-  {desc: "Event face portraits 23-25", no_sprite: true, palette: 0x022C6718, gfx_file_names: [
+  {desc: "Face portraits 23-25 (Dmitrii)", no_sprite: true, palette: 0x022C6718, gfx_file_names: [
     "/sc/f_fdomi0.dat",
     "/sc/f_fdomi1.dat",
     "/sc/f_fdomi2.dat",
   ]},
-  {desc: "Event face portrait 26", no_sprite: true, palette: 0x022C673C, gfx_file_names: [
+  {desc: "Face portrait 26 (Dmitrii)", no_sprite: true, palette: 0x022C673C, gfx_file_names: [
     "/sc/f_fdomi3.dat",
   ]},
-  {desc: "Event face portrait 27-28", no_sprite: true, palette: 0x022C64D8, gfx_file_names: [
+  {desc: "Face portrait 27-28 (Soma)", no_sprite: true, palette: 0x022C64D8, gfx_file_names: [
     "/sc/f_fsoma7.dat",
     "/sc/f_fsoma8.dat",
   ]},
