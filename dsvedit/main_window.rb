@@ -1003,7 +1003,7 @@ class DSVEdit < Qt::MainWindow
   
   def open_menu_editor
     if REGION == :jp
-      Qt::MessageBox.warning(self, "Unsupported region", "This editor does not currently support the JP versions.")
+      Qt::MessageBox.warning(self, "Unsupported region", "The menu editor does not currently support the JP versions.")
       return
     end
     if GAME == "ooe"
