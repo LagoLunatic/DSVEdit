@@ -26,13 +26,15 @@ class TilesetEditorDialog < Qt::Dialog
   slots "toggle_display_collision(bool)"
   slots "button_box_clicked(QAbstractButton*)"
   
-  def initialize(main_window, fs, renderer, tileset_data)
+  def initialize(main_window, fs, renderer, tileset_data, menu_editor=nil)
     super(main_window, Qt::WindowTitleHint | Qt::WindowSystemMenuHint)
     @ui = Ui_TilesetEditor.new
     @ui.setup_ui(self)
     
     @fs = fs
     @renderer = renderer
+    
+    @menu_editor = menu_editor
     
     if SYSTEM == :gba
       @ui.one_dimensional_mode.checked = true
@@ -1280,7 +1282,11 @@ class TilesetEditorDialog < Qt::Dialog
     if @ui.buttonBox.standardButton(button) == Qt::DialogButtonBox::Ok
       success = save_tileset()
       if success
-        parent.load_room()
+        if @menu_editor && @menu_editor.isVisible
+          @menu_editor.load_menu()
+        else
+          parent.load_room()
+        end
         self.close()
       end
     elsif @ui.buttonBox.standardButton(button) == Qt::DialogButtonBox::Cancel
@@ -1288,7 +1294,11 @@ class TilesetEditorDialog < Qt::Dialog
     elsif @ui.buttonBox.standardButton(button) == Qt::DialogButtonBox::Apply
       success = save_tileset()
       if success
-        parent.load_room()
+        if @menu_editor && @menu_editor.isVisible
+          @menu_editor.load_menu()
+        else
+          parent.load_room()
+        end
       end
     end
   end

@@ -139,7 +139,7 @@ class MenuEditorDialog < Qt::Dialog
     
     tileset_data[:one_dimensional_mode] = true
     
-    parent.open_tileset_editor(tileset_data)
+    parent.open_tileset_editor(tileset_data, menu_editor=self)
   end
   
   def open_in_tiled

@@ -967,7 +967,7 @@ class DSVEdit < Qt::MainWindow
     end
   end
   
-  def open_tileset_editor(tileset_data=nil)
+  def open_tileset_editor(tileset_data=nil, menu_editor=nil)
     if tileset_data.nil?
       tileset_data = {}
       @room.sector.load_necessary_overlay()
@@ -992,7 +992,7 @@ class DSVEdit < Qt::MainWindow
       tileset_data[:one_dimensional_mode] = (SYSTEM == :gba)
     end
     
-    @open_dialogs << TilesetEditorDialog.new(self, game.fs, @renderer, tileset_data)
+    @open_dialogs << TilesetEditorDialog.new(self, game.fs, @renderer, tileset_data, menu_editor=menu_editor)
   end
   
   def open_menu_editor
