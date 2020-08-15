@@ -1139,6 +1139,24 @@ class Game
     end
   end
   
+  def print_all_assets
+    if SYSTEM != :nds
+      raise NotImplementedError.new
+    end
+    
+    game_name = GAME.dup
+    game_name[0] = game_name[0].upcase
+    game_name[2] = game_name[2].upcase
+    File.open("./docs/lists/#{game_name} Assets.txt", "w") do |f|
+      f.puts "%- 4s %- 4s %- 8s %s" % ["Idx", "Type", "Pointer", "Path"]
+      fs.assets.each_with_index do |asset, asset_index|
+        asset_pointer = asset[:asset_pointer] ? "%08X" % asset[:asset_pointer] : " "*8
+        asset_type = asset[:asset_type] ? "%04X" % asset[:asset_type] : " "*4
+        f.puts "%04X %s %s %s" % [asset_index, asset_type, asset_pointer, asset[:file_path]]
+      end
+    end
+  end
+  
   def print_unknown_asset_paths
     if SYSTEM != :nds
       raise NotImplementedError.new
