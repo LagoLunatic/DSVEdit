@@ -368,6 +368,24 @@
   ; Returns: 1 on success, 0 on failure?
 
 0202E328 LoadPalette
+  ; r0 - 
+  ; r1 - 
+  ; r2 - 
+0202E4A4 LoadPalette2?
+  ; r0 - Palette list pointer
+  ; r1 - 0?
+  ; r2 - 0?
+0202E644 LoadPalette3?
+  ; r0 - Palette list pointer
+  ; r1 - 0?
+0202DC3C LoadPalette4?
+  ; r0 - Palette list pointer
+  ; r1 - 0?
+0202DA84 LoadPalette5?
+  ; r0 - Palette list pointer
+  ; r1 - C?
+  ; r2 - 0?
+  ; r3 - 4?
 
 020331E4 AssetGetPointer
   ; r0 - Asset index
@@ -377,6 +395,7 @@
   ; Returns 020D8CEC+(r0*0x20)+4, where the asset's type is
 02033048 AssetLoad?
   ; r0 - Asset index
+  ; This might be specifically for GFX assets...?
 02033074 AssetGetFreeSpace
   ; r0 - Asset index
 02032940 AssetGetSize
@@ -394,6 +413,13 @@
 0202805C AssetGetLocationInAssetMemory
   ; r0 - Asset index
   ; Reads through the list of currently loaded assets (02100CCC) looking for the specified asset, if it's currently loaded it returns where in asset memory it is, otherwise it returns 0.
+0202E924 LoadGFXAsset??
+  ; r0 - GFX asset index
+  ; r1 - 0?
+  ; r2 - 0?
+  ; r3 - 1?
+0203302C LoadSpriteAsset
+  ; r0 - Sprite asset index
 
 02064F70 GetEntityAssetsListPointer
   ; r0 - Entity subtype
@@ -616,6 +642,11 @@
 0204160C LoadSpriteMultiGfx2?
   ; Arguments taken are the same as LoadSpriteMultiGfx.
   ; Unsure how this is different. This is called by Arthroverta for example.
+0204156C LoadSpecialSprite?
+  ; r0 - 
+  ; r1 - Sprite pointer
+  ; r2 - GFX list pointer
+  ; r3 - Palette list pointer
 0202ECF8 LoadGFX?
 
 0202BD8C GetSpriteInfo
@@ -667,7 +698,7 @@
 
 02028E90 InitializeVisibleEntity
   ; r0 - Entity
-  ; r1 - 
+  ; r1 - Sprite pointer
   ; r2 - ?
 
 0202BE2C EntityGetSpritePointer
