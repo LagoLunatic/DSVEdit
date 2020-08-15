@@ -61,7 +61,9 @@ class MenuEditorDialog < Qt::Dialog
       gfx_file_pointers = gfx_wrappers.map{|gfx| gfx.gfx_pointer}
     end
     
-    @fs.load_overlay(overlay_id)
+    unless overlay_id.nil?
+      @fs.load_overlay(overlay_id)
+    end
     
     @ui.bg_layer_pointer.text     = "%08X" % layer_metadata_pointer
     @ui.gfx_file_pointers.text    = gfx_file_pointers.map{|gfx_ptr| "%08X" % gfx_ptr}.join(", ")
