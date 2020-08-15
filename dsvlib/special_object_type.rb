@@ -18,6 +18,8 @@ class SpecialObjectType
   end
   
   def extract_gfx_and_palette_and_sprite_from_create_code
+    fs.load_overlay(AREAS_OVERLAY) if AREAS_OVERLAY # In OoE this overlay also has special object code
+    
     reused_info = REUSED_SPECIAL_OBJECT_INFO[special_object_id] || {}
     
     if SYSTEM == :nds

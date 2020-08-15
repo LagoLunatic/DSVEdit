@@ -16,6 +16,8 @@ class EnemyDNA < GenericEditable
   end
   
   def extract_gfx_and_palette_and_sprite_from_init_ai
+    fs.load_overlay(AREAS_OVERLAY) if AREAS_OVERLAY # In OoE this overlay also has enemy code
+    
     reused_info = REUSED_ENEMY_INFO[enemy_id] || {}
     
     if SYSTEM == :nds
