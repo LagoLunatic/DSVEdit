@@ -996,6 +996,11 @@ class DSVEdit < Qt::MainWindow
   end
   
   def open_menu_editor
+    if GAME == "ooe"
+      Qt::MessageBox.warning(self, "No menus to edit", "OoE's menus can be edited from the sprite editor instead of the menu editor.")
+      return
+    end
+    
     @open_dialogs << MenuEditorDialog.new(self, game.fs, @renderer)
   end
   
