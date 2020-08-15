@@ -6,6 +6,7 @@ class LayersEditorDialog < Qt::Dialog
   
   slots "layer_changed(int)"
   slots "copy_layer_pointer_to_clipboard()"
+  slots "open_in_tileset_editor()"
   slots "button_box_clicked(QAbstractButton*)"
   
   def initialize(main_window, room, renderer)
@@ -42,6 +43,7 @@ class LayersEditorDialog < Qt::Dialog
     
     connect(@ui.layer_index, SIGNAL("activated(int)"), self, SLOT("layer_changed(int)"))
     connect(@ui.copy_layer_pointer, SIGNAL("released()"), self, SLOT("copy_layer_pointer_to_clipboard()"))
+    connect(@ui.open_in_tileset_editor, SIGNAL("clicked()"), self, SLOT("open_in_tileset_editor()"))
     connect(@ui.buttonBox, SIGNAL("clicked(QAbstractButton*)"), self, SLOT("button_box_clicked(QAbstractButton*)"))
     
     if SYSTEM == :nds
@@ -164,6 +166,13 @@ class LayersEditorDialog < Qt::Dialog
     else
       $qApp.clipboard.setText("")
     end
+  end
+  
+  def open_in_tileset_editor
+    layer = @room.layers[@ui.layer_index.currentIndex]
+    return if layer.nil?
+    
+    parent.open_tileset_editor(room: @room, layer: layer)
   end
   
   def button_box_clicked(button)

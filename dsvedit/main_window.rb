@@ -967,21 +967,27 @@ class DSVEdit < Qt::MainWindow
     end
   end
   
-  def open_tileset_editor(tileset_data=nil, menu_editor=nil)
+  def open_tileset_editor(tileset_data=nil, menu_editor=nil, room: nil, layer: nil)
     if tileset_data.nil?
       tileset_data = {}
-      @room.sector.load_necessary_overlay()
       
-      if @room.palette_pages.empty?
+      if room.nil?
+        room = @room
+      end
+      room.sector.load_necessary_overlay()
+      
+      if room.palette_pages.empty?
         Qt::MessageBox.warning(self, "No palette", "The current room has no palette pages.")
         return
       end
       
-      tileset_data[:room_gfx_list_pointer]   = @room.gfx_list_pointer
-      tileset_data[:palette_wrapper_pointer] = @room.palette_wrapper_pointer
-      tileset_data[:palette_page_index]      = @room.palette_page_index
+      tileset_data[:room_gfx_list_pointer]   = room.gfx_list_pointer
+      tileset_data[:palette_wrapper_pointer] = room.palette_wrapper_pointer
+      tileset_data[:palette_page_index]      = room.palette_page_index
       
-      layer = @room.layers.first
+      if layer.nil?
+        layer = room.layers.first
+      end
       if layer
         tileset_data[:tileset_pointer]           = layer.tileset_pointer
         tileset_data[:collision_tileset_pointer] = layer.collision_tileset_pointer

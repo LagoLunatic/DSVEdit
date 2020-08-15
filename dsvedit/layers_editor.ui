@@ -26,13 +26,6 @@
      <item row="1" column="5">
       <widget class="QLineEdit" name="z_index"/>
      </item>
-     <item row="3" column="2">
-      <widget class="QLabel" name="label_7">
-       <property name="text">
-        <string>Tileset</string>
-       </property>
-      </widget>
-     </item>
      <item row="1" column="2">
       <widget class="QLabel" name="label_3">
        <property name="text">
@@ -97,29 +90,6 @@
        </property>
       </widget>
      </item>
-     <item row="3" column="0">
-      <widget class="QLabel" name="label_9">
-       <property name="text">
-        <string>Tileset Type</string>
-       </property>
-      </widget>
-     </item>
-     <item row="3" column="5">
-      <widget class="QLineEdit" name="collision_tileset"/>
-     </item>
-     <item row="3" column="4">
-      <widget class="QLabel" name="label_8">
-       <property name="text">
-        <string>Collision Tileset</string>
-       </property>
-      </widget>
-     </item>
-     <item row="3" column="3">
-      <widget class="QLineEdit" name="tileset"/>
-     </item>
-     <item row="3" column="1">
-      <widget class="QLineEdit" name="tileset_type"/>
-     </item>
      <item row="0" column="1" colspan="4">
       <widget class="QComboBox" name="layer_index"/>
      </item>
@@ -157,6 +127,54 @@
        </property>
       </widget>
      </item>
+     <item row="3" column="0">
+      <widget class="QLabel" name="label_7">
+       <property name="text">
+        <string>Tileset</string>
+       </property>
+      </widget>
+     </item>
+     <item row="3" column="1">
+      <widget class="QLineEdit" name="tileset"/>
+     </item>
+     <item row="3" column="2">
+      <widget class="QLabel" name="label_8">
+       <property name="text">
+        <string>Collision Tileset</string>
+       </property>
+      </widget>
+     </item>
+     <item row="3" column="3">
+      <widget class="QLineEdit" name="collision_tileset"/>
+     </item>
+     <item row="3" column="4">
+      <widget class="QLabel" name="label_9">
+       <property name="text">
+        <string>Tileset Type</string>
+       </property>
+      </widget>
+     </item>
+     <item row="3" column="5">
+      <layout class="QHBoxLayout" name="horizontalLayout">
+       <item>
+        <widget class="QLineEdit" name="tileset_type">
+         <property name="maximumSize">
+          <size>
+           <width>60</width>
+           <height>16777215</height>
+          </size>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="open_in_tileset_editor">
+         <property name="text">
+          <string>Open in Tileset Editor</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </item>
     </layout>
    </item>
    <item>
@@ -176,7 +194,7 @@
         <x>0</x>
         <y>0</y>
         <width>1000</width>
-        <height>534</height>
+        <height>529</height>
        </rect>
       </property>
       <layout class="QVBoxLayout" name="verticalLayout_2">
@@ -204,9 +222,6 @@
   <tabstop>scroll_mode</tabstop>
   <tabstop>opacity</tabstop>
   <tabstop>main_gfx_page_index</tabstop>
-  <tabstop>tileset_type</tabstop>
-  <tabstop>tileset</tabstop>
-  <tabstop>collision_tileset</tabstop>
   <tabstop>bg_control</tabstop>
   <tabstop>layer_graphics_view</tabstop>
   <tabstop>scrollArea</tabstop>
