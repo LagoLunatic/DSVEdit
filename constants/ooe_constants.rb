@@ -733,7 +733,13 @@ OTHER_SPRITES = [
   {pointer: 0x0221BBC8, desc: "Title screen 2 English", gfx_files: [0x020BED2C, 0x020BED38, 0x020BED44, 0x020BED50, 0x020BED5C, 0x020BED68, 0x020BED74, 0x020BED80, 0x020BEDD4, 0x020BEDE0], overlay: 20},
   {pointer: 0x0221BBE0, desc: "Title screen 3", overlay: 20},
   {desc: "Main menus", gfx_files: [0x020BA498, 0x020BA4A4, 0x020BA4B0, 0x020BA4EC, 0x020BA540, 0x020BA594, 0x020BA5E8, 0x020BA63C, 0x020BA660, 0x020BA66C], sprite: 0x021DCCFC, palette: 0x020D1B84},
+  
+  {desc: "HUD", sprite: 0x021DCD04, palette: 0x020D177C, gfx_file_names: ["/sc/f_gauge.dat"]},
   {desc: "Pause menus", gfx_files: [0x020BA408, 0x020BA414, 0x020BA420, 0x020BA42C, 0x020BA480, 0x020BA48C], sprite: 0x021DCD00, palette: 0x020D1980},
+  {desc: "Term list", sprite: 0x021DCCF0, palette: 0x020D1980, gfx_file_names: [
+    "/sc/f_gloss0.dat",
+    "/sc/f_gloss1_u.dat",
+  ]},
   
   {desc: "Map", sprite: 0x020C553C, palette: 0x020D23B0, gfx_files: [0x020BA78C], one_dimensional_mode: true},
   {desc: "Wygol Map", sprite: 0x020BFA2C, palette: 0x20D3C10, gfx_files: [0x020BEC90, 0x020BEC9C], one_dimensional_mode: true},
@@ -771,7 +777,19 @@ OTHER_SPRITES = [
     "/sc2/f_enr17.dat",
   ]},
   
-  {desc: "HUD", sprite: 0x021DCD04, palette: 0x020D177C, gfx_file_names: ["/sc/f_gauge.dat"]},
+  {desc: "Transition room hider 00", sprite: 0x021DCDE8, palette: 0x020CF540, gfx_file_names: ["/sc/f_dablo0.dat", "/sc/f_dablo1.dat"]},
+  {desc: "Transition room hider 01", sprite: 0x021DCDE4, palette: 0x020CF6A4, gfx_file_names: ["/sc/f_dbblo0.dat", "/sc/f_dbblo1.dat"]},
+  {desc: "Transition room hider 02", sprite: 0x021DCDE0, palette: 0x020CF808, gfx_file_names: ["/sc/f_eablo0.dat", "/sc/f_eablo1.dat"]},
+  {desc: "Transition room hider 03", sprite: 0x021DCDDC, palette: 0x020CF88C, gfx_file_names: ["/sc/f_gaalo0.dat", "/sc/f_gaalo1.dat"]},
+  {desc: "Transition room hider 04", sprite: 0x021DCDD8, palette: 0x020CF910, gfx_file_names: ["/sc/f_gbalo0.dat", "/sc/f_gbalo1.dat"]},
+  {desc: "Transition room hider 05", sprite: 0x021DCDD4, palette: 0x020CF994, gfx_file_names: ["/sc/f_iba010.dat", "/sc/f_iba011.dat", "/sc/f_iba012.dat", "/sc/f_iba013.dat"]},
+  {desc: "Transition room hider 06", sprite: 0x021DCDD0, palette: 0x020CFAB8, gfx_file_names: ["/sc/f_kbalo0.dat", "/sc/f_kbalo1.dat", "/sc/f_kbalo2.dat", "/sc/f_kbalo3.dat"]},
+  {desc: "Transition room hider 07", sprite: 0x021DCDCC, palette: 0x020CFCFC, gfx_file_names: ["/sc/f_kcalo0.dat", "/sc/f_kcalo1.dat", "/sc/f_kcalo2.dat"]},
+  {desc: "Transition room hider 08", sprite: 0x021DCDC8, palette: 0x020D0000, gfx_file_names: ["/sc/f_mbalo0.dat", "/sc/f_mbalo1.dat", "/sc/f_mbalo2.dat", "/sc/f_mbalo3.dat"]},
+  {desc: "Transition room hider 09", sprite: 0x021DCDC4, palette: 0x020D0304, gfx_file_names: ["/sc/f_oaalo0.dat", "/sc/f_oaalo1.dat", "/sc/f_oaalo2.dat", "/sc/f_oaalo3.dat"]},
+  {desc: "Transition room hider 0A", sprite: 0x021DCDC0, palette: 0x020D0348, gfx_file_names: ["/sc/f_paalo0.dat", "/sc/f_paalo1.dat"]},
+  {desc: "Transition room hider 0B", sprite: 0x021DCDBC, palette: 0x020D054C, gfx_file_names: ["/sc/f_sablo0.dat", "/sc/f_sablo1.dat", "/sc/f_sablo2.dat", "/sc/f_sablo3.dat", "/sc/f_sablo4.dat", "/sc/f_sablo5.dat"]},
+  {desc: "Transition room hider 0C", sprite: 0x021DCDB8, palette: 0x020D0790, gfx_file_names: ["/sc/f_lcast0.dat", "/sc/f_lcast1.dat"]},
   
   {desc: "Bestiary enemies 00-03", sprite: 0x020F4608, palette: 0x020D2B90, one_dimensional_mode: true, gfx_file_names: ["/sc/f_elist00.dat"]},
   {desc: "Bestiary enemies 04-07", sprite: 0x020F4608, palette: 0x020D2C14, one_dimensional_mode: true, gfx_file_names: ["/sc/f_elist01.dat"]},

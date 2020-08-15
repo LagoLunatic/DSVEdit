@@ -1351,6 +1351,13 @@ class Game
       sprite_pointer = skill.sprite_file_pointer
       skeleton_file = nil
       
+      if GAME == "ooe" && skill.gfx_file_pointer == 0x020B7858
+        # Dominus glyph union GFX pointer.
+        # Unlike other skills, this has a bunch of GFX files that get swapped out via code.
+        # The names are /sc2/f_rend00.dat through /sc2/f_rend3b.dat. The asset indexes are 82F-86A.
+        gfx_file_pointers = (0x082F..0x086A).map{|asset_index| fs.assets[asset_index][:asset_pointer]}
+      end
+      
       sprite_info = SpriteInfo.new(
         gfx_file_pointers, palette_pointer,
         palette_offset, sprite_pointer,

@@ -1069,6 +1069,7 @@ Sprite info for the pause menu:
 
 022B6FB4 - List of transition room sprites & effects.
   Each is 0x10 bytes long.
+  0xD entries in total.
   00,4: Pointer to a list of asset indexes for GFX files.
   04,8: Asset index of sprite file.
   08,4: Palette list pointer.

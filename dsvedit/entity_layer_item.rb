@@ -138,6 +138,21 @@ class EntityLayerItem < Qt::GraphicsRectItem
         best_frame_index = 0
       end
       add_sprite_item_for_entity(entity, sprite_info, best_frame_index)
+    elsif GAME == "ooe" && entity.is_special_object? && entity.subtype == 0x36 # Transition room hider
+      hider_index = entity.var_a
+      hider_info = OTHER_SPRITES.find{|other| other[:desc] == "Transition room hider %02X" % hider_index}
+      if hider_info
+        sprite_info = SpriteInfo.extract_gfx_and_palette_and_sprite_from_create_code(nil, @fs, nil, hider_info)
+        frames_to_use = (0...sprite_info.sprite.number_of_frames).to_a.reverse
+        if [0, 1].include?(hider_index)
+          # Don't use the water layer
+          frames_to_use.delete(1)
+        end
+        add_sprite_item_for_entity(entity, sprite_info, frames_to_use)
+      else
+        graphics_item = EntityRectItem.new(entity, @main_window)
+        graphics_item.setParentItem(self)
+      end
     elsif GAME == "aos" && entity.is_pickup? && (5..8).include?(entity.subtype) # soul candle
       soul_candle_sprite = COMMON_SPRITE.merge(palette_offset: 4)
       sprite_info = SpriteInfo.extract_gfx_and_palette_and_sprite_from_create_code(soul_candle_sprite[:pointer], @fs, soul_candle_sprite[:overlay], soul_candle_sprite)
@@ -415,64 +430,84 @@ class EntityLayerItem < Qt::GraphicsRectItem
     graphics_item.setParentItem(self)
   end
   
-  def add_sprite_item_for_entity(entity, sprite_info, frame_to_render, sprite_offset: nil, item_icon_image: nil, portrait_art: nil)
-    if frame_to_render == -1
+  def add_sprite_item_for_entity(entity, sprite_info, frames_to_render, sprite_offset: nil, item_icon_image: nil, portrait_art: nil)
+    if frames_to_render == -1
       # Don't show this entity's sprite in the editor.
       graphics_item = EntityRectItem.new(entity, @main_window)
       graphics_item.setParentItem(self)
       return
     end
     
-    frame_to_render ||= 0
+    sprite = sprite_info.sprite
     
-    if sprite_info.sprite.frames[frame_to_render].nil?
-      frame_to_render = 0
+    if frames_to_render.nil?
+      frames_to_render = [0]
+    elsif frames_to_render.is_a?(Integer)
+      frames_to_render = [frames_to_render]
     end
     
-    sprite_filename = @renderer.ensure_sprite_exists("cache/#{GAME}/sprites/", sprite_info, frame_to_render)
-    chunky_frame = ChunkyPNG::Image.from_file(sprite_filename)
+    chunky_image = ChunkyPNG::Image.new(sprite.full_width, sprite.full_height, ChunkyPNG::Color::TRANSPARENT)
+    frame_min_xs = []
+    frame_min_ys = []
+    frame_max_xs = []
+    frame_max_ys = []
+    frames_to_render.each do |frame_to_render|
+      frame = sprite.frames[frame_to_render]
+      if frame.nil?
+        frame_to_render = 0
+      end
+      
+      sprite_filename = @renderer.ensure_sprite_exists("cache/#{GAME}/sprites/", sprite_info, frame_to_render)
+      chunky_frame = ChunkyPNG::Image.from_file(sprite_filename)
+      
+      chunky_image.compose!(chunky_frame, 0, 0)
+      
+      frame_min_xs << frame.min_x
+      frame_min_ys << frame.min_y
+      frame_max_xs << frame.max_x
+      frame_max_ys << frame.max_y
+    end
     
-    offset_x = sprite_info.sprite.min_x
-    offset_y = sprite_info.sprite.min_y
-    
-    frame = sprite_info.sprite.frames[frame_to_render]
-    crop_left_x   = frame.min_x-sprite_info.sprite.min_x
-    crop_top_y    = frame.min_y-sprite_info.sprite.min_y
-    crop_right_x  = frame.max_x-sprite_info.sprite.min_x
-    crop_bottom_y = frame.max_y-sprite_info.sprite.min_y
+    crop_left_x   = frame_min_xs.min - sprite.min_x
+    crop_top_y    = frame_min_ys.min - sprite.min_y
+    crop_right_x  = frame_max_xs.max - sprite.min_x
+    crop_bottom_y = frame_max_ys.max - sprite.min_y
     
     if item_icon_image
-      chunky_frame.compose!(item_icon_image, 6, 0)
+      chunky_image.compose!(item_icon_image, 6, 0)
       crop_top_y = 0
     end
     
     if portrait_art
       portrait_art_image, x_offset, y_offset = portrait_art
-      chunky_frame.compose!(portrait_art_image, x_offset, y_offset)
+      chunky_image.compose!(portrait_art_image, x_offset, y_offset)
     end
     
     # Crop the image.
-    # This is so the giant blank space around the frame doesn't count as clickable.
+    # This is so the giant blank space around the image doesn't count as clickable.
     crop_x_offset = crop_left_x
     crop_y_offset = crop_top_y
     crop_width    = crop_right_x-crop_left_x
     crop_height   = crop_bottom_y-crop_top_y
-    chunky_frame.crop!(
+    chunky_image.crop!(
       crop_x_offset,
       crop_y_offset,
       crop_width,
       crop_height,
     )
-    offset_x += crop_x_offset
-    offset_y += crop_y_offset
     
-    graphics_item = EntityChunkyItem.new(chunky_frame, entity, @main_window)
+    qt_item_offset_x = sprite.min_x
+    qt_item_offset_y = sprite.min_y
+    qt_item_offset_x += crop_x_offset
+    qt_item_offset_y += crop_y_offset
+    
+    graphics_item = EntityChunkyItem.new(chunky_image, entity, @main_window)
     
     if sprite_offset
-      offset_x += sprite_offset[:x] || 0
-      offset_y += sprite_offset[:y] || 0
+      qt_item_offset_x += sprite_offset[:x] || 0
+      qt_item_offset_y += sprite_offset[:y] || 0
     end
-    graphics_item.setOffset(offset_x, offset_y)
+    graphics_item.setOffset(qt_item_offset_x, qt_item_offset_y)
     graphics_item.setPos(entity.x_pos, entity.y_pos)
     graphics_item.setParentItem(self)
   end
