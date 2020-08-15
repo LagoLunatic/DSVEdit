@@ -75,6 +75,8 @@ class ShopItemPool
   end
   
   def write_to_rom
+    fs.load_overlay(AREAS_OVERLAY) if AREAS_OVERLAY # In OoE this overlay also has shop data
+    
     case GAME
     when "hod"
       fs.write(@item_pool_pointer+1, @allowable_item_indexes.pack("C*"))
@@ -188,6 +190,8 @@ class OoEHardcodedShopItemPool
   end
   
   def read_from_rom
+    fs.load_overlay(AREAS_OVERLAY) if AREAS_OVERLAY # In OoE this overlay also has shop data
+    
     @item_ids = []
     @requirement = nil
     
@@ -209,6 +213,8 @@ class OoEHardcodedShopItemPool
   end
   
   def write_to_rom
+    fs.load_overlay(AREAS_OVERLAY) if AREAS_OVERLAY # In OoE this overlay also has shop data
+    
     hardcoded_pool_data = SHOP_HARDCODED_ITEM_POOLS[pool_id]
     
     hardcoded_pool_data[:items].each_with_index do |(item_id_pointer, type), i|
