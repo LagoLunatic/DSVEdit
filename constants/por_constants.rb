@@ -725,7 +725,20 @@ OTHER_SPRITES = [
   {pointer: 0x0203D52C, desc: "Pause menu", one_dimensional_mode: true},
   {pointer: 0x0203BCBC, desc: "Equip menu", one_dimensional_mode: true},
   
-  {sprite: 0x022B2A80, gfx_files: [0x022C91FC, 0x022C9208, 0x022C9214, 0x022C9220, 0x022C922C, 0x022C9238, 0x022C9244, 0x022C9250], palette: 0x022BCBFC, desc: "Area names"},
+  {desc: "Game over", sprite: 0x0213D700, palette: 0x022C3A34, gfx_file_names: [
+    "/sc/f_gover0.dat",
+    "/sc/f_gover1.dat",
+    "/sc/f_gover2.dat",
+    "/sc/f_gover3.dat",
+  ]},
+  {desc: "Game over (Sisters Mode)", sprite: 0x0213D6FC, palette: 0x022C3C38, gfx_file_names: [
+    "/sc/f_govera0.dat",
+    "/sc/f_govera1.dat",
+    "/sc/f_govera2.dat",
+    "/sc/f_govera3.dat",
+  ]},
+  
+  {desc: "Area names", sprite: 0x022B2A80, gfx_files: [0x022C91FC, 0x022C9208, 0x022C9214, 0x022C9220, 0x022C922C, 0x022C9238, 0x022C9244, 0x022C9250], palette: 0x022BCBFC},
   # Note: Which GFX wrapper to load for a particular area name is hardcoded in function 02065368.
   
   {pointer: 0x022D7CBC, desc: "Brauner inside mirror portrait", overlay: 55},

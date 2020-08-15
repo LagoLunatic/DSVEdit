@@ -129,14 +129,12 @@
 
 02016014 LoadGfxAsset?
   ; r0 - Gfx pointer
+0205B20C LoadAsset???
+  ; r0 - Menu entity
+  ; r1 - Asset index
 
 0201BA0C InitializeSpriteAssetFile
   ; Initializes the standalone sprite file format with pointers in place of file offsets so that it can be used by the game engine.
-
-02015AFC LoadPalette
-  ; r0 - Palette list pointer
-  ; r1 - Number of palettes
-  ; r2 - ?
 
 0204D5FC PlaySfxAtPos
   ; r0 - Sfx index
@@ -530,7 +528,11 @@
   ; For enemies with resistance bit 0x80000000 set, it does not load their GFX assets.
   ; Also calls LoadEnemyOverlay.
 
-0200E954 LoadPalette
+02015AFC LoadPalette
+  ; r0 - Palette list pointer
+  ; r1 - Number of palettes
+  ; r2 - ?
+0200E954 LoadPalette2
   ; r0 - Palette list pointer
   ; r1 - 0?
   ; r2 - Number of palettes to load (or 0 to load all palettes in the list)
@@ -855,9 +857,6 @@
   ; r1 - GFX asset pointer
   ; r2 - Palette list pointer
   ; r3 - Layer metadata pointer
-0205B20C LoadMenuGFXAsset
-  ; r0 - Menu entity to load the GFX for
-  ; r1 - Asset index
 
 020557C8 SetTopScreen
   ; r0 - Top screen type to change to
