@@ -259,7 +259,7 @@ class SpriteEditor < Qt::Dialog
     end
     
     begin
-      @sprite_info = @game.enemy_dnas[enemy_id].extract_gfx_and_palette_and_sprite_from_init_ai
+      @sprite_info = game.get_sprite_info_for_enemy(enemy_id)
     rescue StandardError => e
       Qt::MessageBox.warning(self,
         "Enemy sprite extraction failed",
@@ -283,7 +283,7 @@ class SpriteEditor < Qt::Dialog
     end
     
     begin
-      @sprite_info = @game.special_objects[special_object_id].extract_gfx_and_palette_and_sprite_from_create_code
+      @sprite_info = game.get_sprite_info_for_special_object(special_object_id)
     rescue StandardError => e
       Qt::MessageBox.warning(self,
         "Special object sprite extraction failed",
@@ -302,28 +302,7 @@ class SpriteEditor < Qt::Dialog
   
   def weapon_changed(weapon_gfx_index)
     begin
-      weapon = @weapons[weapon_gfx_index]
-      
-      gfx_file_pointers = [weapon.gfx_file_pointer]
-      palette_pointer = weapon.palette_pointer
-      palette_offset = 0
-      sprite_pointer = weapon.sprite_file_pointer
-      skeleton_file = nil
-      if GAME == "aos"
-        ignore_part_gfx_page = true
-      else
-        ignore_part_gfx_page = false
-      end
-      
-      @sprite_info = SpriteInfo.new(
-        gfx_file_pointers,
-        palette_pointer,
-        palette_offset,
-        sprite_pointer,
-        skeleton_file,
-        @fs,
-        ignore_part_gfx_page: ignore_part_gfx_page
-      )
+      @sprite_info = game.get_sprite_info_for_weapon(weapon_gfx_index)
     rescue StandardError => e
       Qt::MessageBox.warning(self,
         "Weapon sprite extraction failed",
@@ -353,30 +332,10 @@ class SpriteEditor < Qt::Dialog
   
   def skill_changed(skill_gfx_index)
     begin
-      if GAME == "aos" && skill_gfx_index >= SKILL_GFX_COUNT
-        # Blue souls in AoS work differently.
-        # Instead of having a skill GFX entry they have their pointers hardcoded into their update code, similar to enemies/objects.
-        blue_soul_type = 6
-        blue_soul_index = skill_gfx_index-SKILL_GFX_COUNT
-        
-        blue_soul_reused_sprite_info = BLUE_SOUL_REUSED_SPRITE_INFO[blue_soul_index] || {}
-        if blue_soul_reused_sprite_info[:init_code] == -1
-          load_blank_sprite()
-          return
-        end
-        
-        skill = game.get_item_by_type_and_index(blue_soul_type, blue_soul_index)
-        @sprite_info = SpriteInfo.extract_gfx_and_palette_and_sprite_from_create_code(skill["Code"], fs, nil, blue_soul_reused_sprite_info)
-      else
-        skill = @skills[skill_gfx_index]
-        
-        gfx_file_pointers = [skill.gfx_file_pointer]
-        palette_pointer = skill.palette_pointer
-        palette_offset = 0
-        sprite_pointer = skill.sprite_file_pointer
-        skeleton_file = nil
-        
-        @sprite_info = SpriteInfo.new(gfx_file_pointers, palette_pointer, palette_offset, sprite_pointer, skeleton_file, @fs)
+      @sprite_info = game.get_sprite_info_for_skill(skill_gfx_index)
+      if @sprite_info.nil?
+        load_blank_sprite()
+        return
       end
     rescue StandardError => e
       Qt::MessageBox.warning(self,
@@ -406,7 +365,7 @@ class SpriteEditor < Qt::Dialog
   def other_sprite_changed(id)
     other_sprite = OTHER_SPRITES[id]
     begin
-      @sprite_info = SpriteInfo.extract_gfx_and_palette_and_sprite_from_create_code(other_sprite[:pointer], @fs, other_sprite[:overlay], other_sprite)
+      @sprite_info = game.get_sprite_info_for_other_sprite(id)
     rescue StandardError => e
       Qt::MessageBox.warning(self,
         "Sprite extraction failed",

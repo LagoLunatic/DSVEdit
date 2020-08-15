@@ -1139,6 +1139,221 @@ class Game
     end
   end
   
+  def print_unknown_asset_paths
+    if SYSTEM != :nds
+      raise NotImplementedError.new
+    end
+    
+    unknown_assets = []
+    fs.assets.each do |asset|
+      unknown_assets << asset[:file_path]
+    end
+    
+    each_room do |room|
+      room.gfx_pages.each do |gfx_page|
+        asset = fs.assets_by_pointer[gfx_page.gfx_pointer]
+        if asset.nil?
+          puts "Fileless GFX: %08X" % gfx_page.gfx_pointer
+          next
+        end
+        unknown_assets.delete(asset[:file_path])
+      end
+    end
+    
+    ENEMY_IDS.each do |enemy_id|
+      if (REUSED_ENEMY_INFO[enemy_id] || {})[:init_code] == -1
+        next
+      end
+      
+      begin
+        sprite_info = get_sprite_info_for_enemy(enemy_id)
+      #rescue StandardError => e
+      #  puts "Error enemy %02X" % enemy_id
+      #  next
+      end
+      
+      mark_sprite_info_assets_as_known(sprite_info, unknown_assets)
+    end
+    SPECIAL_OBJECT_IDS.each do |special_object_id|
+      if (REUSED_SPECIAL_OBJECT_INFO[special_object_id] || {})[:init_code] == -1
+        next
+      end
+      
+      begin
+        sprite_info = get_sprite_info_for_special_object(special_object_id)
+      #rescue StandardError => e
+      #  puts "Error special object %02X" % special_object_id
+      #  next
+      end
+      
+      mark_sprite_info_assets_as_known(sprite_info, unknown_assets)
+    end
+    WEAPON_GFX_COUNT.times do |weapon_gfx_index|
+      begin
+        sprite_info = get_sprite_info_for_weapon(weapon_gfx_index)
+      #rescue StandardError => e
+      #  puts "Error weapon gfx %02X" % weapon_gfx_index
+      #  next
+      end
+      
+      mark_sprite_info_assets_as_known(sprite_info, unknown_assets)
+    end
+    SKILL_GFX_COUNT.times do |skill_gfx_index|
+      begin
+        sprite_info = get_sprite_info_for_skill(skill_gfx_index)
+      #rescue StandardError => e
+      #  puts "Error skill gfx %02X" % skill_gfx_index
+      #  next
+      end
+      
+      mark_sprite_info_assets_as_known(sprite_info, unknown_assets)
+    end
+    OTHER_SPRITES.each_index do |other_sprite_index|
+      begin
+        sprite_info = get_sprite_info_for_other_sprite(other_sprite_index)
+      #rescue StandardError => e
+      #  puts "Error other sprite %02X" % other_sprite_index
+      #  next
+      end
+      
+      mark_sprite_info_assets_as_known(sprite_info, unknown_assets)
+    end
+    
+    MENU_BG_LAYER_INFOS.each do |menu_info|
+      gfx_list_pointer  = menu_info[:gfx_list_pointer]
+      gfx_file_pointers = menu_info[:gfx_file_pointers]
+      
+      if gfx_list_pointer
+        gfx_wrappers = GfxWrapper.from_gfx_list_pointer(gfx_list_pointer, @fs)
+        gfx_file_pointers = gfx_wrappers.map{|gfx| gfx.gfx_pointer}
+      end
+      
+      gfx_file_pointers.each do |gfx_pointer|
+        asset = fs.assets_by_pointer[gfx_pointer]
+        if asset.nil?
+          puts "Fileless GFX: %08X" % gfx_pointer
+          next
+        end
+        unknown_assets.delete(asset[:file_path])
+      end
+    end
+    
+    File.open("unknown_assets.txt", "w") do |f|
+      unknown_assets.each do |file_path|
+        file = fs.files_by_path[file_path]
+        asset_pointer = file[:asset_pointer] || 0
+        asset_index = fs.assets.index(file) || 0
+        f.puts "%04X %08X %s" % [asset_index, asset_pointer, file_path]
+      end
+    end
+  end
+  
+  def mark_sprite_info_assets_as_known(sprite_info, unknown_assets)
+    if sprite_info.sprite_file_pointer
+      asset = fs.assets_by_pointer[sprite_info.sprite_file_pointer]
+      if asset.nil?
+        puts "Fileless sprite: %08X" % sprite_info.sprite_file_pointer
+      else
+        unknown_assets.delete(asset[:file_path])
+      end
+    end
+    
+    sprite_info.gfx_pages.each do |gfx_wrapper|
+      asset = fs.assets_by_pointer[gfx_wrapper.gfx_pointer]
+      if asset.nil?
+        puts "Fileless GFX: %08X" % gfx_wrapper.gfx_pointer
+        next
+      end
+      unknown_assets.delete(asset[:file_path])
+    end
+    
+    if GAME == "ooe" && sprite_info.skeleton_file
+      unknown_assets.delete(sprite_info.skeleton_file[:file_path])
+    end
+  end
+  
+  def get_sprite_info_for_enemy(enemy_id)
+    return enemy_dnas[enemy_id].extract_gfx_and_palette_and_sprite_from_init_ai
+  end
+  
+  def get_sprite_info_for_special_object(special_object_id)
+    return special_objects[special_object_id].extract_gfx_and_palette_and_sprite_from_create_code
+  end
+  
+  def get_sprite_info_for_weapon(weapon_gfx_index)
+    weapon = WeaponGfx.new(weapon_gfx_index, fs)
+    
+    gfx_file_pointers = [weapon.gfx_file_pointer]
+    palette_pointer = weapon.palette_pointer
+    palette_offset = 0
+    sprite_pointer = weapon.sprite_file_pointer
+    skeleton_file = nil
+    if GAME == "aos"
+      ignore_part_gfx_page = true
+    else
+      ignore_part_gfx_page = false
+    end
+    
+    sprite_info = SpriteInfo.new(
+      gfx_file_pointers,
+      palette_pointer,
+      palette_offset,
+      sprite_pointer,
+      skeleton_file,
+      fs,
+      ignore_part_gfx_page: ignore_part_gfx_page
+    )
+    
+    return sprite_info
+  end
+  
+  def get_sprite_info_for_skill(skill_gfx_index)
+    if GAME == "aos" && skill_gfx_index >= SKILL_GFX_COUNT
+      # Blue souls in AoS work differently.
+      # Instead of having a skill GFX entry they have their pointers hardcoded into their update code, similar to enemies/objects.
+      blue_soul_type = 6
+      blue_soul_index = skill_gfx_index-SKILL_GFX_COUNT
+      
+      blue_soul_reused_sprite_info = BLUE_SOUL_REUSED_SPRITE_INFO[blue_soul_index] || {}
+      if blue_soul_reused_sprite_info[:init_code] == -1
+        return nil
+      end
+      
+      skill = game.get_item_by_type_and_index(blue_soul_type, blue_soul_index)
+      sprite_info = SpriteInfo.extract_gfx_and_palette_and_sprite_from_create_code(
+        skill["Code"], fs,
+        nil, blue_soul_reused_sprite_info
+      )
+    else
+      skill = SkillGfx.new(skill_gfx_index, fs)
+      
+      gfx_file_pointers = [skill.gfx_file_pointer]
+      palette_pointer = skill.palette_pointer
+      palette_offset = 0
+      sprite_pointer = skill.sprite_file_pointer
+      skeleton_file = nil
+      
+      sprite_info = SpriteInfo.new(
+        gfx_file_pointers, palette_pointer,
+        palette_offset, sprite_pointer,
+        skeleton_file, fs
+      )
+    end
+    
+    return sprite_info
+  end
+  
+  def get_sprite_info_for_other_sprite(id)
+    other_sprite = OTHER_SPRITES[id]
+    
+    sprite_info = SpriteInfo.extract_gfx_and_palette_and_sprite_from_create_code(
+      other_sprite[:pointer], fs,
+      other_sprite[:overlay], other_sprite
+    )
+    
+    return sprite_info
+  end
+  
   def inspect; to_s; end
   
 private
