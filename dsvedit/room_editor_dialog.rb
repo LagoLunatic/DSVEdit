@@ -208,14 +208,23 @@ class RoomEditorDialog < Qt::Dialog
   end
   
   def set_tileset(tileset_name)
-    tileset_name =~ /^(\h{8})-(\h{8})_(\h{8})-(\h{2})_(\h{8})$/
+    tileset_name_match = /^(\h{8})-(\h{2})-(\h{8})_(\h{8})-(\h{2})_(\h{8})-(\h{2})$/.match(tileset_name)
+    if tileset_name_match.nil?
+      raise "Tileset name format is invalid: #{tileset_name}"
+    end
     
-    @ui.gfx_page_list.text = $5
-    @ui.palette_page_list.text = $3
-    @ui.palette_page_index.text = $4
+    tileset_pointer, tileset_type, collision_tileset_pointer,
+      palette_wrapper_pointer, palette_page_index,
+      gfx_list_pointer, gfx_base_block = tileset_name_match.captures
     
-    tileset_pointer = $1.to_i(16)
-    collision_tileset_pointer = $2.to_i(16)
+    @ui.gfx_page_list.text = gfx_list_pointer
+    @ui.palette_page_list.text = palette_wrapper_pointer
+    @ui.palette_page_index.text = palette_page_index
+    
+    tileset_pointer = tileset_pointer.to_i(16)
+    collision_tileset_pointer = collision_tileset_pointer.to_i(16)
+    tileset_type = tileset_type.to_i(16)
+    gfx_base_block = gfx_base_block.to_i(16)
     @room.layers.each do |layer|
       if layer.layer_metadata_ram_pointer == 0
         # No need to set the tileset pointers for empty layers. That'll just wastefully allocate free space for the empty tiles.
@@ -224,10 +233,19 @@ class RoomEditorDialog < Qt::Dialog
       
       layer.tileset_pointer = tileset_pointer
       layer.collision_tileset_pointer = collision_tileset_pointer
+      layer.tileset_type = tileset_type
+      layer.gfx_base_block = gfx_base_block
       layer.write_to_rom()
     end
     
     save_room()
+  rescue StandardError => e
+    msg = "Failed to set the room's tileset.\n"
+    msg += "#{e.message}\n\n#{e.backtrace.join("\n")}"
+    Qt::MessageBox.warning(self,
+      "Failed to set tileset",
+      msg
+    )
   rescue FreeSpaceManager::FreeSpaceFindError => e
     Qt::MessageBox.warning(self,
       "Failed to find free space",

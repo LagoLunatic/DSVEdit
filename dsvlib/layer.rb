@@ -473,13 +473,21 @@ class RoomLayer
     end
   end
   
+  def gfx_base_block=(val)
+    if SYSTEM == :nds
+      # Do nothing
+    else
+      @bg_control = (@bg_control & ~0x000C) | ((val << 2) & 0x000C)
+    end
+  end
+  
   def tileset_filename
     if tileset_pointer == 0
       # Has no tileset assigned.
       return nil
     end
     
-    "%08X-%08X_%08X-%02X_%08X-%02X" % [tileset_pointer, collision_tileset_pointer, room.palette_wrapper_pointer || 0, room.palette_page_index, @room.gfx_list_pointer, gfx_base_block]
+    "%08X-%02X-%08X_%08X-%02X_%08X-%02X" % [tileset_pointer, tileset_type, collision_tileset_pointer, room.palette_wrapper_pointer || 0, room.palette_page_index, @room.gfx_list_pointer, gfx_base_block]
   end
 end
 

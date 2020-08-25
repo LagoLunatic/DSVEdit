@@ -41,6 +41,14 @@ class TilesetChooserDialog < Qt::Dialog
       item = Qt::ListWidgetItem.new(Qt::Icon.new(file_path), filename)
       @ui.tileset_list.addItem(item)
     end
+  rescue StandardError => e
+    msg = "Failed to load tilesets.\n"
+    msg += "#{e.message}\n\n#{e.backtrace.join("\n")}"
+    Qt::MessageBox.warning(self,
+      "Failed to load tilesets",
+      msg
+    )
+    self.close()
   end
   
   def tileset_changed(tileset_index)
