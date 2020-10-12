@@ -375,6 +375,11 @@
 0801B0D8 PlayerSomaUpdate
 0801FEF8 PlayerJuliusUpdate
 
+08033DA4 InitializePlayerNewGameStats
+  ; Initializes the player's 6 base stats: Max HP, Max MP, STR, CON, INT, LCK
+  ; Base stats for Soma are: 0x140, 0x50, 0xA, 0xC, 0xB, 0x9
+  ; Base stats for Julius are: 0x320, 0x1F4, 0xF, 0xC, 0xA, 0x14
+
 080221CC WeaponOneHandedUse
 080224BC WeaponTwoHandedUse
 

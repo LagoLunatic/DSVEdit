@@ -266,7 +266,7 @@ D0-DF  02007024-02007863  ?
   020131F6,2 - INT
   020131F8,2 - LCK
   020131FA,2 - Bitfield of resistances.
-020131FC - Player's base stats.
+020131FC - Player's ??? stats.
   020131FC,2 - ATK
   020131FE,2 - DEF
   02013200,2 - STR
@@ -311,6 +311,10 @@ D0-DF  02007024-02007863  ?
 0201327C,2 - Current MP.
 0201327E,2 - Max HP.
 02013280,2 - Max MP.
+02013282,2 - Base STR.
+02013284,2 - Base CON.
+02013286,2 - Base INT.
+02013288,2 - Base LCK.
 0201328C,4 - Current experience.
 02013290,4 - Current gold.
 
