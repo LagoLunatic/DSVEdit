@@ -487,7 +487,11 @@ class RoomLayer
       return nil
     end
     
-    "%08X-%02X-%08X_%08X-%02X_%08X-%02X" % [tileset_pointer, tileset_type, collision_tileset_pointer, room.palette_wrapper_pointer || 0, room.palette_page_index, @room.gfx_list_pointer, gfx_base_block]
+    "%08X-%02X-%08X_%08X-%02X_%08X-%02X" % [
+      tileset_pointer, tileset_type, collision_tileset_pointer,
+      room.palette_wrapper_pointer || 0, room.palette_page_index,
+      @room.gfx_list_pointer, gfx_base_block
+    ]
   end
 end
 
