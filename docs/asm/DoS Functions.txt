@@ -616,6 +616,15 @@
   ; r1 - GFX asset pointer
   ; r2 - Palette list pointer
   ; r3 - GFX asset index
+0200750C LoadTopScreenBGLayer?
+  ; r0 - Layer metadata pointer
+  ; r1 - 
+  ; r2 - 
+
+0200789C LoadPalettesDirect?
+  ; r0 - Palette data pointer (not palette list pointer; this should not include the header)
+  ; r1 - Index of the first palette in the list to load
+  ; r2 - Number of paletes to load
 
 020125A4 MagicSealOrItemPickupUpdate?
 02215F5C MagicSealUpdate

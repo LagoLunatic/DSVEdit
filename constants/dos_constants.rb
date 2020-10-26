@@ -1161,10 +1161,16 @@ PLAYER_ANIM_STATE_NAMES = [
 
 MENU_BG_LAYER_INFOS = [
   {
-    name: "Main menu",
+    name: "Main menu (bottom screen)",
     gfx_list_pointer:       0x02079F64,
     palette_list_pointer:   0x022DA284,
     layer_metadata_pointer: 0x0207C8CC,
+  },
+  {
+    name: "Main menu (top screen)",
+    gfx_file_pointers:      [0x022D9F48, 0x022D9F54],
+    palette_list_pointer:   0x022DA390,
+    layer_metadata_pointer: 0x0207BE7C,
   },
   {
     name: "Sound config",
@@ -1189,6 +1195,12 @@ MENU_BG_LAYER_INFOS = [
     gfx_list_pointer:       0x02079EEC,
     palette_list_pointer:   0x022D9FE8,
     layer_metadata_pointer: 0x0207BA5C,
+  },
+  {
+    name: "Info screen",
+    gfx_file_pointers:      [0x022D7E40],
+    palette_list_pointer:   0x022DA30C,
+    layer_metadata_pointer: 0x0207C08C,
   },
   {
     name: "Pause screen",
