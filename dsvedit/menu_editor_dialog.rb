@@ -71,6 +71,13 @@ class MenuEditorDialog < Qt::Dialog
     @ui.first_palette_index.text  = "%02X" % first_palette_index
     
     load_menu()
+  rescue StandardError => e
+    load_blank_menu()
+    Qt::MessageBox.warning(self,
+      "Failed to render menu",
+      "Failed to render menu.\n#{e.message}\n\n#{e.backtrace.join("\n")}"
+    )
+    return
   end
   
   def load_menu
