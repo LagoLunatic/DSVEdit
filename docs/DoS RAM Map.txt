@@ -319,8 +319,10 @@ What each range of entity slots is for:
 020D36A8 - flying armor's hp.
 020D29D0 - dmitrii's memory position. (possibly)
   dmitrii keeps a list of the last 8 or souls that hit him. if you hit him with one of those again he won't take it again. but if you hit him with more than 8 souls he loses track of the first ones, and you can hit him with those again and he'll take it. this list starts at 020D2ABC. 020D2B00 has the integer of which soul in this list dmitrii should use, which increases whenever he gets a new soul, and resets to 0 when he loses track of the first soul. also, after the id of each soul he's keeping track of, 0 means red soul, 1 means blue soul.
-020D3E88-89 - menace's second form's bottom head hp
-020D6348-49 - menace's second form's top head hp
+020D3E88,2 - menace's second form's bottom head hp
+020D6348,2 - menace's second form's top head hp
+
+020F1C82,2 - In the bestiary list, this is the enemy index the cursor has highlighted.
 
 === 020F6DEF: End of entities currently loaded into memory.
 
