@@ -26,6 +26,7 @@ class TilesetChooserDialog < Qt::Dialog
   end
   
   def load_tilesets
+    @sector.load_necessary_overlay()
     @all_tileset_names = []
     @sector.rooms.each do |room|
       @renderer.ensure_tilesets_exist("cache/#{GAME}/rooms/", room)
