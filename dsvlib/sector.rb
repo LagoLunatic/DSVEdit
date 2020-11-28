@@ -71,7 +71,13 @@ class Sector
     new_room.layer_list_ram_pointer = fs.get_free_space(length_needed, overlay_id)
     fs.write(new_room.layer_list_ram_pointer, [0].pack("C")*length_needed)
     
-    other_room_in_sector = rooms.first
+    other_rooms = rooms.dup
+    if GAME == "dos" && sector_index == 0xB # The Abyss
+      # Move the first room to the end of the list since its tileset is nearly empty and not a very useful default.
+      other_rooms.rotate!(1)
+    end
+    
+    other_room_in_sector = other_rooms.first
     if other_room_in_sector
       new_room.gfx_list_pointer = other_room_in_sector.gfx_list_pointer
       new_room.palette_wrapper_pointer = other_room_in_sector.palette_wrapper_pointer
@@ -141,7 +147,7 @@ class Sector
     default_tileset_pointer = 0
     default_tileset_type = 0
     default_collision_tileset_pointer = 0
-    rooms.each do |other_room|
+    other_rooms.each do |other_room|
       other_room_main_layer = other_room.layers.first
       if other_room_main_layer.nil? || other_room_main_layer.layer_metadata_ram_pointer == 0
         # Empty layer.
