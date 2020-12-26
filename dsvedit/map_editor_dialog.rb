@@ -132,6 +132,10 @@ class MapEditorDialog < Qt::Dialog
       @ui.is_blank.hide()
       @ui.is_castle_b_warp.hide()
     end
+    if GAME == "dos" && REGION == :usa && game.fs.read(0x020220DC, 4).unpack("V").first == 0xE2101901
+      # Hack to detect if the dos_new_map_tile_color.asm has been applied and enable the entrance color checkbox if so.
+      @ui.is_entrance.show()
+    end
     
     @edit_warps_mode = false
     if GAME == "dos"
