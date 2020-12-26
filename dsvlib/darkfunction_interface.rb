@@ -247,6 +247,7 @@ class DarkFunctionInterface
                   part_z_index += 1
                 end
                 
+                hitbox_z_index = 1000 # We want hitboxes to appear below the graphics.
                 frame.hitbox_indexes.each do |hitbox_index|
                   dup_data = unique_hitboxes_by_index[hitbox_index]
                   hitbox = dup_data[:unique_hitbox]
@@ -256,8 +257,9 @@ class DarkFunctionInterface
                   xml.spr(:name => "/hitbox%02X" % unique_hitbox_index,
                           :x => x + hitbox.width/2,
                           :y => y + hitbox.height/2,
-                          :z => 999 # We want hitboxes to appear below the graphics.
+                          :z => hitbox_z_index
                   )
+                  hitbox_z_index += 1
                 end
               }
             end
@@ -454,6 +456,10 @@ class DarkFunctionInterface
     
     df_sprs = df_cell.css("spr")
     df_sprs_z_sorted = df_sprs.sort_by{|df_spr| df_spr["z"].to_i}
+    df_sprs_z_sorted = df_sprs.sort_by.with_index do |df_spr, index|
+      # Need to include the index as a secondary sort so that if the user gives two parts the same z-index, the order they're listed in is preserved instead.
+      [df_spr["z"].to_i, index]
+    end
     df_sprs_z_sorted.each do |df_spr|
       if df_spr["name"].start_with?("/hitbox")
         hitbox = Hitbox.new
