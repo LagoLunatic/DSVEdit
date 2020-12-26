@@ -499,6 +499,9 @@ OTHER_SPRITES = [
   {desc: "Weapon synthesis menu foreground", no_sprite: true, palette: 0x022C490C, one_dimensional_mode: true, gfx_file_names: [
     "/sc/f_mix_e.dat",
   ]},
+  {desc: "Yoko main menu and soul release menu foregrounds", no_sprite: true, palette: 0x022C490C, one_dimensional_mode: true, gfx_file_names: [
+    "/sc/f_scrap.dat",
+  ]},
   
   {desc: "Bestiary enemies 00-03", no_sprite: true, palette: 0x022C358C, one_dimensional_mode: true, gfx_file_names: ["/sc/f_rire00.dat"]},
   {desc: "Bestiary enemies 04-07", no_sprite: true, palette: 0x022C3610, one_dimensional_mode: true, gfx_file_names: ["/sc/f_rire01.dat"]},
