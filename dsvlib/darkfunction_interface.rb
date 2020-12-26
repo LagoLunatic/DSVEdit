@@ -276,7 +276,7 @@ class DarkFunctionInterface
   end
   
   def self.import(input_path, name, sprite_info, fs, renderer)
-    sprite = sprite_info.sprite
+    sprite = Sprite.new(sprite_info.sprite_file_pointer, fs)
     
     gfx_page_canvas_width = sprite_info.gfx_pages.first.canvas_width*8
     gfx_page_width = gfx_page_canvas_width
