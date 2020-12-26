@@ -112,7 +112,7 @@ class IconChooserDialog < Qt::Dialog
     else
       @gfx_file_graphics_scene.addItem(pixmap)
       gfx_page = @gfx_pages[i]
-      if SYSTEM == :nds
+      if gfx_page.file
         @ui.gfx_file_name.text = gfx_page.file[:file_path]
       else
         @ui.gfx_file_name.text = "%08X" % gfx_page.gfx_pointer

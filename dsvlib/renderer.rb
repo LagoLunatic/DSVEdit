@@ -945,7 +945,7 @@ class Renderer
       end
     end
     
-    fs.overwrite_file(gfx.file[:file_path], gfx_data_bytes.pack("C*"))
+    gfx.write_gfx_data(gfx_data_bytes.pack("C*"))
     
     gfx.canvas_width = input_image.width/8
     gfx.write_to_rom()

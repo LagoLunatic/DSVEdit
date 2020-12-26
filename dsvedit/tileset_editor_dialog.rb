@@ -664,7 +664,11 @@ class TilesetEditorDialog < Qt::Dialog
         palette = @palettes_256[@selected_tile.palette_index]
       end
       
-      @ui.gfx_file.text = gfx_wrapper.file[:file_path]
+      if gfx_wrapper.file
+        @ui.gfx_file.text = gfx_wrapper.file[:file_path]
+      else
+        @ui.gfx_file.text = "%08X" % gfx_wrapper.gfx_pointer
+      end
       
       if @one_dimensional_mode
         chunky_image = @renderer.render_gfx_1_dimensional_mode(gfx_wrapper, palette)
