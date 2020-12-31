@@ -8,6 +8,7 @@ class IconChooserDialog < Qt::Dialog
   slots "palette_changed(int)"
   slots "icon_changed(int)"
   slots "change_icon_by_page_x_and_y(int, int, const Qt::MouseButton&)"
+  slots "open_in_gfx_editor()"
   slots "button_pressed(QAbstractButton*)"
   
   def initialize(parent, fs, mode=:item, icon_data=0)
@@ -27,6 +28,7 @@ class IconChooserDialog < Qt::Dialog
     connect(@ui.palette_index, SIGNAL("activated(int)"), self, SLOT("palette_changed(int)"))
     connect(@ui.icon_index, SIGNAL("activated(int)"), self, SLOT("icon_changed(int)"))
     connect(@gfx_file_graphics_scene, SIGNAL("clicked(int, int, const Qt::MouseButton&)"), self, SLOT("change_icon_by_page_x_and_y(int, int, const Qt::MouseButton&)"))
+    connect(@ui.open_in_gfx_editor, SIGNAL("clicked()"), self, SLOT("open_in_gfx_editor()"))
     connect(@ui.buttonBox, SIGNAL("clicked(QAbstractButton*)"), self, SLOT("button_pressed(QAbstractButton*)"))
     
     if mode == :item
@@ -172,9 +174,29 @@ class IconChooserDialog < Qt::Dialog
     parent.set_icon(new_icon_data)
   end
   
+  def open_in_gfx_editor
+    gfx_and_palette_data = {}
+    gfx_and_palette_data[:gfx_file_names] = @gfx_pages.map{|gfx| "%08X" % gfx.gfx_pointer}.join(", ")
+    gfx_and_palette_data[:gfx_page_index] = @ui.gfx_page_index.currentIndex
+    gfx_and_palette_data[:palette_pointer] = @palette_pointer
+    gfx_and_palette_data[:palette_index] = @palette_index
+    if @mode == :item
+      gfx_and_palette_data[:one_dimensional_mode] = true
+    else
+      gfx_and_palette_data[:one_dimensional_mode] = false
+    end
+    
+    parent.parent.parent.parent.parent.open_gfx_editor(gfx_and_palette_data)
+  end
+  
   def button_pressed(button)
     if @ui.buttonBox.standardButton(button) == Qt::DialogButtonBox::Ok
       save_icon()
     end
+  end
+  
+  def done(result)
+    super(result)
+    parent.setEnabled(true)
   end
 end

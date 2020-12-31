@@ -163,6 +163,8 @@ class GenericEditorWidget < Qt::Widget
       mode = :item
     end
     @icon_chooser_dialog = IconChooserDialog.new(self, fs, mode, icon_data)
+    self.setEnabled(false)
+    @icon_chooser_dialog.setEnabled(true)
   end
   
   def open_color_chooser

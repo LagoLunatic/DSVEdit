@@ -2,9 +2,6 @@
 <ui version="4.0">
  <class>IconChooser</class>
  <widget class="QDialog" name="IconChooser">
-  <property name="windowModality">
-   <enum>Qt::WindowModal</enum>
-  </property>
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -73,6 +70,13 @@
       <widget class="QComboBox" name="icon_index"/>
      </item>
     </layout>
+   </item>
+   <item>
+    <widget class="QPushButton" name="open_in_gfx_editor">
+     <property name="text">
+      <string>Open in GFX Editor</string>
+     </property>
+    </widget>
    </item>
    <item>
     <widget class="QGraphicsView" name="gfx_file_graphics_view"/>
