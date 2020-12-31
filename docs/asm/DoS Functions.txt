@@ -1,6 +1,10 @@
 
 01FFE368 DMA
 01FFE2F4 DMA2
+  ; r0 - Which DMA channel to use (DMA0, DMA1, DMA2, or DMA3)
+  ; r1 - Source to copy from
+  ; r2 - Destination to copy to
+  ; r3 - Bitfield of word count to copy and DMA control bits
 
 02008690 LoadOverlay
 02010BC4 LoadSave
