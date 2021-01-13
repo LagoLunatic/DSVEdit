@@ -254,7 +254,7 @@ class RoomLayer
   end
   
   def write_to_rom
-    # Detect if the tile metadata is used by any other layers in the same sector.
+    # Detect if the tile metadata is used by any other layers in the game.
     # If so the BGLayer will need to assign itself new metadata in free space.
     layer_metadata_duplicated = false
     if layer_metadata_ram_pointer != 0
