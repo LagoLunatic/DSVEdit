@@ -127,6 +127,14 @@ class DoorEditorDialog < Qt::Dialog
   end
   
   def save_door
+    if @door.is_glitch_door
+      Qt::MessageBox.information(self,
+        "Cannot save glitch doors",
+        "You can only view glitch doors, not edit them."
+      )
+      return
+    end
+    
     @door.x_pos = @ui.x_pos.text.to_i(16)
     @door.y_pos = @ui.y_pos.text.to_i(16)
     @door.destination_room_metadata_ram_pointer = @ui.dest_room.text.to_i(16)

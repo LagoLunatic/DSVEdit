@@ -114,6 +114,10 @@ class Game
     end
   end
   
+  def check_room_exists_by_metadata_pointer(room_metadata_pointer)
+    return @sectors_by_room_metadata_pointer.include?(room_metadata_pointer)
+  end
+  
   def get_room_by_metadata_pointer(room_metadata_pointer)
     sector = @sectors_by_room_metadata_pointer[room_metadata_pointer]
     if sector.nil?

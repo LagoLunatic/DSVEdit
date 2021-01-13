@@ -238,6 +238,7 @@
     <addaction name="actionDoors"/>
     <addaction name="actionCollision"/>
     <addaction name="actionLayers"/>
+    <addaction name="actionGlitch_Doors"/>
    </widget>
    <widget class="QMenu" name="menuHelp">
     <property name="title">
@@ -563,6 +564,14 @@
   <action name="actionMenu_Editor">
    <property name="text">
     <string>Menu Editor</string>
+   </property>
+  </action>
+  <action name="actionGlitch_Doors">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Glitch Doors</string>
    </property>
   </action>
  </widget>

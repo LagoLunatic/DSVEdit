@@ -17,6 +17,7 @@ class Room
               :area_index,
               :sector_index,
               :room_index,
+              :glitch_doors,
               :fs,
               :game
   attr_accessor :lcd_control,
@@ -194,6 +195,65 @@ class Room
     # When door_list_ram_pointer points to nothing it indicates the room has no doors (e.g. Menace's room).
     @doors = []
     @original_number_of_doors = 0
+  end
+  
+  def read_glitch_doors_from_rom
+    if !["hod", "aos"].include?(GAME)
+      return
+    end
+    if !glitch_doors.nil?
+      return
+    end
+    
+    unfound_door_positions = []
+    (-1..width).each do |x|
+      x = 255 if x == -1
+      (-1..height).each do |y|
+        y = 255 if y == -1
+        unfound_door_positions << [x, y]
+      end
+    end
+    
+    doors.each do |door|
+      unfound_door_positions.delete([door.x_pos, door.y_pos])
+    end
+    
+    @glitch_doors = []
+    
+    i = 0
+    on_glitch_doors = false
+    while true
+      if door_list_ram_pointer == 0
+        break
+      end
+      
+      door_pointer = door_list_ram_pointer + i*Door.data_size
+      i += 1
+      
+      break if door_pointer > (0x08000000+fs.rom.size-Door.data_size)
+      
+      dest_room_pointer = fs.read(door_pointer, 4).unpack("V").first
+      if !on_glitch_doors && !fs.is_pointer?(dest_room_pointer)
+        on_glitch_doors = true
+      end
+      if !on_glitch_doors
+        next
+      end
+      
+      door = Door.new(self, game, is_glitch_door=true).read_from_rom(door_pointer)
+      
+      if !unfound_door_positions.include?([door.x_pos, door.y_pos])
+        # Only the first door on each screen can be triggered.
+        next
+      end
+      
+      @glitch_doors << door
+      
+      unfound_door_positions.delete([door.x_pos, door.y_pos])
+      if unfound_door_positions.empty?
+        break
+      end
+    end
   end
   
   def read_extra_data_from_rom(extra_data, extra_data_2=nil)

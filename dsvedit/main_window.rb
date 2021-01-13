@@ -148,6 +148,7 @@ class DSVEdit < Qt::MainWindow
     connect(@ui.actionDoors, SIGNAL("activated()"), self, SLOT("update_visible_view_items()"))
     connect(@ui.actionCollision, SIGNAL("activated()"), self, SLOT("update_visible_view_items()"))
     connect(@ui.actionLayers, SIGNAL("activated()"), self, SLOT("update_visible_view_items()"))
+    connect(@ui.actionGlitch_Doors, SIGNAL("activated()"), self, SLOT("update_visible_view_items()"))
     connect(@ui.actionEnemy_Editor, SIGNAL("activated()"), self, SLOT("open_enemy_dna_dialog()"))
     connect(@ui.actionText_Editor, SIGNAL("activated()"), self, SLOT("open_text_editor()"))
     connect(@ui.actionSprite_Editor, SIGNAL("activated()"), self, SLOT("open_sprite_editor()"))
@@ -225,6 +226,7 @@ class DSVEdit < Qt::MainWindow
     @ui.actionDoors.setEnabled(false);
     @ui.actionCollision.setEnabled(false);
     @ui.actionLayers.setEnabled(false);
+    @ui.actionGlitch_Doors.setEnabled(false);
     @ui.actionEnemy_Editor.setEnabled(false);
     @ui.actionText_Editor.setEnabled(false);
     @ui.actionSprite_Editor.setEnabled(false);
@@ -266,6 +268,7 @@ class DSVEdit < Qt::MainWindow
     @ui.actionDoors.setEnabled(true);
     @ui.actionCollision.setEnabled(true);
     @ui.actionLayers.setEnabled(true);
+    @ui.actionGlitch_Doors.setEnabled(true);
     @ui.actionEnemy_Editor.setEnabled(true);
     @ui.actionText_Editor.setEnabled(true);
     @ui.actionSprite_Editor.setEnabled(true);
@@ -726,11 +729,17 @@ class DSVEdit < Qt::MainWindow
     load_room_collision_tileset()
     
     @doors_view_item = Qt::GraphicsRectItem.new
+    @doors_view_item.setZValue(2)
     @room_graphics_scene.addItem(@doors_view_item)
     @room.doors.each_with_index do |door, i|
       door_item = DoorItem.new(door, i, self)
       door_item.setParentItem(@doors_view_item)
     end
+    
+    @glitch_doors_view_item = Qt::GraphicsRectItem.new
+    @glitch_doors_view_item.setZValue(1) # Must be positioned under the non-glitch doors so those take priority.
+    @room_graphics_scene.addItem(@glitch_doors_view_item)
+    try_load_glitch_doors()
     
     @entities_view_item = EntityLayerItem.new(@room.entities, self, game, @renderer)
     @room_graphics_scene.addItem(@entities_view_item)
@@ -747,6 +756,18 @@ class DSVEdit < Qt::MainWindow
       "Failed to load room",
       msg
     )
+  end
+  
+  def try_load_glitch_doors
+    if @room.glitch_doors.nil?
+      return
+    end
+    
+    @room.glitch_doors.each_with_index do |door, i|
+      door_item = DoorItem.new(door, i, self)
+      door_item.setParentItem(@glitch_doors_view_item)
+    end
+    update_room_bounding_rect()
   end
   
   def load_layers
@@ -898,10 +919,21 @@ class DSVEdit < Qt::MainWindow
   end
   
   def update_visible_view_items
+    if @ui.actionGlitch_Doors.checked && !["hod", "aos"].include?(GAME)
+      Qt::MessageBox.warning(self, "Can't view glitch doors", "Only HoD and AoS have glitch doors.")
+      @ui.actionGlitch_Doors.checked = false
+    end
+    
+    if @ui.actionGlitch_Doors.checked && @room.glitch_doors.nil?
+      @room.read_glitch_doors_from_rom()
+      try_load_glitch_doors()
+    end
+    
     @entities_view_item.setVisible(@ui.actionEntities.checked)
     @doors_view_item.setVisible(@ui.actionDoors.checked)
     @collision_view_item.setVisible(@ui.actionCollision.checked)
     @layers_view_item.setVisible(@ui.actionLayers.checked)
+    @glitch_doors_view_item.setVisible(@ui.actionGlitch_Doors.checked)
   end
   
   def load_map()
@@ -1167,11 +1199,16 @@ class DSVEdit < Qt::MainWindow
   end
   
   def open_door_editor(door = nil)
-    if @room.doors.empty?
+    if @room.doors.empty? && door.nil?
       Qt::MessageBox.warning(self, "No doors to edit", "This room has no doors.\nYou can add one by going to Edit -> Add Door or pressing D.")
       return
     end
-    @open_dialogs << DoorEditorDialog.new(self, @renderer, @room.doors, door)
+    
+    if door.is_glitch_door
+      @open_dialogs << DoorEditorDialog.new(self, @renderer, @room.glitch_doors, door)
+    else
+      @open_dialogs << DoorEditorDialog.new(self, @renderer, @room.doors, door)
+    end
   end
   
   def open_settings

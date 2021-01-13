@@ -149,6 +149,8 @@ end
 
 class DoorItem < Qt::GraphicsRectItem
   BRUSH = Qt::Brush.new(Qt::Color.new(200, 0, 200, 50))
+  GLITCH_DOOR_BRUSH = Qt::Brush.new(Qt::Color.new(0, 200, 50, 50))
+  CRASHING_GLITCH_DOOR_BRUSH = Qt::Brush.new(Qt::Color.new(200, 50, 50, 50))
   
   attr_reader :door
   
@@ -167,12 +169,19 @@ class DoorItem < Qt::GraphicsRectItem
     @door = door
     @door_index = door_index
     
-    setToolTip("Door %02X" % door_index)
-    
-    self.setBrush(BRUSH)
-    
-    setFlag(Qt::GraphicsItem::ItemIsMovable)
-    setFlag(Qt::GraphicsItem::ItemSendsGeometryChanges)
+    if door.is_glitch_door
+      setToolTip("Glitch door %02X" % door_index)
+      if door.game.check_room_exists_by_metadata_pointer(door.destination_room_metadata_ram_pointer)
+        self.setBrush(GLITCH_DOOR_BRUSH)
+      else
+        self.setBrush(CRASHING_GLITCH_DOOR_BRUSH)
+      end
+    else
+      setToolTip("Door %02X" % door_index)
+      self.setBrush(BRUSH)
+      setFlag(Qt::GraphicsItem::ItemIsMovable)
+      setFlag(Qt::GraphicsItem::ItemSendsGeometryChanges)
+    end
     
     setCursor(Qt::Cursor.new(Qt::SizeAllCursor))
   end

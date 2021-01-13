@@ -1,5 +1,6 @@
 class Door
   attr_reader :room,
+              :is_glitch_door,
               :fs,
               :game
   attr_accessor :door_ram_pointer,
@@ -12,12 +13,13 @@ class Door
                 :dest_y,
                 :unused
   
-  def initialize(room, game)
+  def initialize(room, game, is_glitch_door=false)
     @room = room
     @fs = game.fs
     @game = game
     @x_pos = @y_pos = @dest_x_2 = @dest_y_2 = @dest_x = @dest_y = @unused = 0
     @destination_room_metadata_ram_pointer = @room.room_metadata_ram_pointer
+    @is_glitch_door = is_glitch_door
   end
   
   def read_from_rom(door_ram_pointer)
@@ -112,7 +114,11 @@ class Door
   end
   
   def door_str
-    @door_str ||= "#{room.room_str}_%03X" % room.doors.index(self)
+    if is_glitch_door
+      @door_str ||= "#{room.room_str}_G%03X" % room.glitch_doors.index(self)
+    else
+      @door_str ||= "#{room.room_str}_%03X" % room.doors.index(self)
+    end
   end
   
   def to_s
