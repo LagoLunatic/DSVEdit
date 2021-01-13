@@ -1,11 +1,12 @@
 
 DEBUG = true
 
+require 'logger'
+
 begin
   require 'Qt'
   require 'fileutils'
   require 'yaml'
-  require 'logger'
   require 'pathname'
 
   require_relative 'dsvlib'
@@ -40,7 +41,7 @@ rescue ScriptError, StandardError => e
   logger = Logger.new("crashlog.txt")
   logger.error e
   
-  unless DEBUG
+  if !DEBUG && defined?(Qt::Application)
     $qApp = Qt::Application.new(ARGV)
     msg = "DSVEdit has crashed.\nPlease report this bug with a screenshot of this error:\n\n"
     msg << "Error: #{e.class.name}: #{e.message}\n\n"
