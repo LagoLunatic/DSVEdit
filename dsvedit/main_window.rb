@@ -499,8 +499,14 @@ class DSVEdit < Qt::MainWindow
   end
   
   def sector_index_changed(new_sector_index, force=false)
+    if GAME == "hod" && @sector_index && @room_index && (@sector_index/2 == new_sector_index/2)
+      # When switching between the Castle A and Castle B versions of a given sector, don't reset the room index to 0.
+      old_room_index = @room_index
+    else
+      old_room_index = 0
+    end
     change_sector(new_sector_index, force)
-    room_index_changed(0, force=true)
+    room_index_changed(old_room_index, force=true)
   end
   
   def room_index_changed(new_room_index, force=false)
