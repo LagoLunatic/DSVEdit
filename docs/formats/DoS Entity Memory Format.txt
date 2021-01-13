@@ -84,6 +84,7 @@ Memory used for entities in DoS is 020CA3F0 - 020F6DEF. Each entity is 0x2A0 byt
 0CC,4: On-get-hit callback function.
 0D4,4: Pointer to parent entity.
 0E4,4: Bitfield of ?
+  00000008 - For the player, this bit indicates they are sitting in a chair.
 250,4: Bitfield?
   00000001 - Immune to being unloaded when there are too many enemies on screen?
   00000020 - Horizontally flipped?
