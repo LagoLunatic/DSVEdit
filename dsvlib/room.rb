@@ -471,11 +471,12 @@ class Room
       end
       
       # Also, any nothing-type entities have to be at the end because the game will stop reading the list as soon as it sees one.
-      entities.sort_by! do |entity|
+      entities.sort_by!.with_index do |entity, index|
+        # Need to include the index as a secondary sort to preserve the position-based sort order we did above.
         if entity.type == NOTHING_ENTITY_TYPE
-          1
+          [1, index]
         else
-          0
+          [0, index]
         end
       end
       
