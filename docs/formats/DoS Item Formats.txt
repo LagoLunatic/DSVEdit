@@ -115,7 +115,7 @@ Soul format:
     3 - Grey soul.
   07,1: Bitfield:
     Least significant bit first.
-    Bit 1: ?
+    Bit 1: This soul can't be copied and used by Dmitrii.
     Bit 5: If set, must hold down R button to keep this soul active. Otherwise, R toggles this soul on/off.
     Bit 6: Must hold R (same as bit 5).
     Bit 7: Must hold R (same as bit 5).

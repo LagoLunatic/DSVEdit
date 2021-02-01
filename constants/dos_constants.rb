@@ -931,7 +931,7 @@ ITEM_BITFIELD_ATTRIBUTES = {
     "Unknown 16",
   ],
   "Input flags" => [
-    "Unknown 1",
+    "Can't be copied",
     "Unknown 2",
     "Unknown 3",
     "Unknown 4",
