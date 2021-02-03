@@ -165,7 +165,7 @@ class Text
         if str == "\\n"
           command = str
         else
-          str =~ /{([A-Z0-9]+)(?: (?:0x)?([^}]+))?}/
+          str =~ /{([A-Z0-9_]+)(?: (?:0x)?([^}]+))?}/
           command = $1
           data = $2
         end
