@@ -5,6 +5,8 @@ class TextEditor < Qt::Dialog
   slots "string_changed(int)"
   slots "save_button_pressed()"
   slots "button_pressed(QAbstractButton*)"
+  slots "export_to_csv()"
+  slots "import_from_csv()"
   
   def initialize(main_window, fs)
     super(main_window, Qt::WindowTitleHint | Qt::WindowSystemMenuHint)
@@ -34,6 +36,8 @@ class TextEditor < Qt::Dialog
     end
     
     connect(@ui.buttonBox, SIGNAL("clicked(QAbstractButton*)"), self, SLOT("button_pressed(QAbstractButton*)"))
+    connect(@ui.csv_export, SIGNAL("clicked()"), self, SLOT("export_to_csv()"))
+    connect(@ui.csv_import, SIGNAL("clicked()"), self, SLOT("import_from_csv()"))
     
     string_changed(0)
     
@@ -82,6 +86,30 @@ class TextEditor < Qt::Dialog
     @current_text_edit = text_edit
     
     text_edit.setPlainText(text.decoded_string)
+  end
+  
+  def export_to_csv
+    output_folder = File.join(".", "text_exports", GAME)
+    
+    @text_database.export_to_csv(output_folder)
+    
+    Qt::MessageBox.information(self, "Exported text", "Exported all text as CSV to %s" % output_folder)
+  end
+  
+  def import_from_csv
+    input_folder = File.join(".", "text_exports", GAME)
+    
+    @text_database.import_from_csv(input_folder)
+    @text_database.write_to_rom()
+    reload_all_text_lists()
+    
+    Qt::MessageBox.information(self, "Imported text", "Imported all text from %s" % input_folder)
+  rescue StandardError => e
+    msg = "Error: #{e.class.name}: #{e.message}\n\n"
+    msg << e.backtrace.join("\n")
+    Qt::MessageBox.warning(self, "Error importing text from CSV", msg)
+    # Reload from ROM
+    @text_database = TextDatabase.new(@fs)
   end
   
   def button_pressed(button)

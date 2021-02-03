@@ -1,4 +1,6 @@
 
+require 'csv'
+
 class TextDatabase
   attr_reader :fs,
               :text_list
@@ -94,6 +96,34 @@ class TextDatabase
       text_list_for_overlay = text_list.select{|text| text.overlay_id == overlay}
       text_list_for_overlay.each do |text|
         text.write_to_rom()
+      end
+    end
+  end
+  
+  def export_to_csv(output_folder)
+    FileUtils.mkdir_p(output_folder)
+    
+    TEXT_REGIONS.each do |region_name, text_index_range|
+      output_path = File.join(output_folder, "%s.csv" % region_name)
+      CSV.open(output_path, "wb") do |csv|
+        text_list[text_index_range].each do |text|
+          csv << ["0x%03X" % text.text_id, text.decoded_string]
+        end
+      end
+    end
+  end
+  
+  def import_from_csv(input_folder)
+    TEXT_REGIONS.each do |region_name, text_index_range|
+      input_path = File.join(input_folder, "%s.csv" % region_name)
+      rows = CSV.read(input_path)
+      rows.each do |text_id, string|
+        text_id = text_id.to_i(16)
+        if !text_index_range.include?(text_id)
+          raise "Text ID 0x%03X does not belong in text region \"%s\"" % [text_id, region_name]
+        end
+        text = text_list[text_id]
+        text.decoded_string = string
       end
     end
   end
