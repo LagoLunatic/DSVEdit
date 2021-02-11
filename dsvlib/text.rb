@@ -5,6 +5,8 @@ class Text
   class TextDecodeError < StandardError ; end
   class TextEncodeError < StandardError ; end
   
+  SPECIAL_CHARACTERS = "・¡¢£¨©®°±´¸¿ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖ×ØÙÚÛÜÝßàáâãäåæçèéêëìíîïðñòóôõö÷øùúûüýŒœˆ˜‐‗‘’‚“”„•…′″›※€™«»⁰"
+  
   attr_reader :text_id,
               :text_ram_pointer,
               :fs,
@@ -247,14 +249,8 @@ class Text
             char = "\\" + char
           end
           char
-        when 0x5F
-          "・"
-        when 0xAF
-          "’"
-        when 0xB1
-          '”'
-        #when 0x60..0xBF
-        #  "¡¢£¨©®°±´¸¿ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖ×ØÙÚÛÜÝßàáâãäåæçèéêëìíîïðñòóôõö÷øùúûüýŒœ"[byte-0x60]
+        when 0x5F..0xBE
+          SPECIAL_CHARACTERS[byte-0x5F]
         else
           "{RAW #{data_format_string}}" % byte
         end
@@ -544,10 +540,9 @@ class Text
   end
   
   def encode_char_usa(str)
-    if str == '’'
-      return [0xAF].pack("C")
-    elsif str == '”'
-      return [0xB1].pack("C")
+    if SPECIAL_CHARACTERS.include?(str)
+      index = SPECIAL_CHARACTERS.index(str)
+      return [index+0x5F].pack("C")
     end
     
     byte = str.unpack("C").first
