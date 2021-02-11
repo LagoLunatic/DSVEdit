@@ -291,7 +291,6 @@ class GfxEditorDialog < Qt::Dialog
   def export_file
     return if @palettes.nil? || @palette_index.nil?
     
-    palette = @palettes[@palette_index]
     palette_name = "palette_%08X-%02X" % [@palette_pointer, @palette_index]
     
     @gfx_pages.each do |gfx|
@@ -299,6 +298,12 @@ class GfxEditorDialog < Qt::Dialog
         gfx_name = gfx.file[:name]
       else
         gfx_name = "%08X" % gfx.gfx_pointer
+      end
+      
+      if gfx.colors_per_palette == 256
+        palette = @palettes_256[@palette_index]
+      else
+        palette = @palettes_16[@palette_index]
       end
       
       if @ui.one_dimensional_mode.checked
@@ -311,6 +316,11 @@ class GfxEditorDialog < Qt::Dialog
       chunky_image.save(gfx_file_path, :fast_rgba)
     end
     
+    if @gfx_pages.any?{|gfx| gfx.colors_per_palette == 256}
+      palette = @palettes_256[@palette_index]
+    else
+      palette = @palettes_16[@palette_index]
+    end
     palette_file_path = "#{@output_folder}/#{palette_name}.png"
     @renderer.export_palette_to_palette_swatches_file(palette, palette_file_path)
     
@@ -319,6 +329,8 @@ class GfxEditorDialog < Qt::Dialog
   
   def import_gfx
     return if @palettes.nil? || @palette_index.nil?
+    
+    palette_name = "palette_%08X-%02X" % [@palette_pointer, @palette_index]
     
     input_images = []
     has_colors_outside_palette = false
@@ -330,7 +342,6 @@ class GfxEditorDialog < Qt::Dialog
       end
       
       file_basename = File.basename(gfx_name, ".*")
-      palette_name = "palette_%08X-%02X" % [@palette_pointer, @palette_index]
       gfx_file_path = "#{@output_folder}/#{file_basename}_#{palette_name}.png"
       unless File.file?(gfx_file_path)
         Qt::MessageBox.warning(self, "No file", "Could not find file #{gfx_file_path} to import.")
@@ -340,7 +351,7 @@ class GfxEditorDialog < Qt::Dialog
       input_image = ChunkyPNG::Image.from_file(gfx_file_path)
       input_images << input_image
       
-      if !@renderer.check_image_uses_palette(input_image, @palette_pointer, @colors_per_palette, @palette_index)
+      if !@renderer.check_image_uses_palette(input_image, @palette_pointer, gfx.colors_per_palette, @palette_index)
         has_colors_outside_palette = true
       end
     end
@@ -362,9 +373,9 @@ class GfxEditorDialog < Qt::Dialog
       input_image = input_images[i]
       
       if @ui.one_dimensional_mode.checked
-        @renderer.save_gfx_page_1_dimensional_mode(input_image, gfx, @palette_pointer, @colors_per_palette, @palette_index, should_convert_image_to_palette: should_convert_image_to_palette)
+        @renderer.save_gfx_page_1_dimensional_mode(input_image, gfx, @palette_pointer, gfx.colors_per_palette, @palette_index, should_convert_image_to_palette: should_convert_image_to_palette)
       else
-        @renderer.save_gfx_page(input_image, gfx, @palette_pointer, @colors_per_palette, @palette_index, should_convert_image_to_palette: should_convert_image_to_palette)
+        @renderer.save_gfx_page(input_image, gfx, @palette_pointer, gfx.colors_per_palette, @palette_index, should_convert_image_to_palette: should_convert_image_to_palette)
       end
     end
     
@@ -390,9 +401,15 @@ class GfxEditorDialog < Qt::Dialog
       return
     end
     
+    if @gfx_pages.any?{|gfx| gfx.colors_per_palette == 256}
+      colors_per_palette = 256
+    else
+      colors_per_palette = 16
+    end
+    
     begin
-      colors = @renderer.import_palette_from_palette_swatches_file(palette_file_path, @colors_per_palette)
-      @renderer.save_palette(colors, @palette_pointer, @palette_index, @colors_per_palette)
+      colors = @renderer.import_palette_from_palette_swatches_file(palette_file_path, colors_per_palette)
+      @renderer.save_palette(colors, @palette_pointer, @palette_index, colors_per_palette)
     rescue Renderer::GFXImportError => e
       Qt::MessageBox.warning(self,
         "Palette generation error",
