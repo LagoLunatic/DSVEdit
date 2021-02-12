@@ -7,6 +7,45 @@ class Text
   
   SPECIAL_CHARACTERS = "・¡¢£¨©®°±´¸¿ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖ×ØÙÚÛÜÝßàáâãäåæçèéêëìíîïðñòóôõö÷øùúûüýŒœˆ˜‐‗‘’‚“”„•…′″›※€™«»⁰"
   
+  AOS_SPECIAL_CHARACTERS = {
+    0x90 => "Œ",
+    0x91 => "œ",
+    0xA7 => "§",
+    0xAA => "ᵃ",
+    0xAB => "«",
+    0xBA => "°",
+    0xBB => "»",
+    0xC0 => "À",
+    0xC1 => "Á",
+    0xC2 => "Â",
+    0xC4 => "Ä",
+    0xC7 => "Ç",
+    0xC8 => "È",
+    0xC9 => "É",
+    0xCA => "Ê",
+    0xCB => "Ë",
+    0xD6 => "Ö",
+    0xD8 => "Œ",
+    0xDB => "Û",
+    0xDC => "Ü",
+    0xDF => "ß",
+    0xE0 => "à",
+    0xE2 => "â",
+    0xE4 => "ä",
+    0xE7 => "ç",
+    0xE8 => "è",
+    0xE9 => "é",
+    0xEA => "ê",
+    0xEB => "ë",
+    0xEE => "î",
+    0xEF => "ï",
+    0xF4 => "ô",
+    0xF6 => "ö",
+    0xF9 => "ù",
+    0xFB => "û",
+    0xFC => "ü",
+  }
+  
   attr_reader :text_id,
               :text_ram_pointer,
               :fs,
@@ -363,21 +402,14 @@ class Text
       else
         curr_is_command = false
         
-        case byte
-        when 0x20..0x7E # Ascii text
+        if (0x20..0x7E).include?(byte) # Ascii text
           char = [byte].pack("C")
           if char == "{" || char == "}"
             char = "\\" + char
           end
           char
-        #when 0x5F
-        #  "・"
-        #when 0xAF
-        #  "’"
-        #when 0xB1
-        #  '”'
-        #when 0x60..0xBF
-        #  "¡¢£¨©®°±´¸¿ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖ×ØÙÚÛÜÝßàáâãäåæçèéêëìíîïðñòóôõö÷øùúûüýŒœ"[byte-0x60]
+        elsif AOS_SPECIAL_CHARACTERS.key?(byte)
+          AOS_SPECIAL_CHARACTERS[byte]
         else
           "{RAW #{data_format_string}}" % byte
         end
@@ -664,9 +696,13 @@ class Text
   end
   
   def encode_char_aos(str)
+    if AOS_SPECIAL_CHARACTERS.value?(str)
+      return [AOS_SPECIAL_CHARACTERS.invert[str]].pack("C")
+    end
+    
     byte = str.unpack("C").first
     char = case byte
-    when 0x20..0x7A # Ascii text
+    when 0x20..0x7E # Ascii text
       [byte].pack("C")
     when 0x0A # Newline
       # Ignore
