@@ -56,11 +56,17 @@ Starting stats (hardcoded):
   The animation's function index is the index in this list.
 
 080E2B4C - List of metadata about variable-width font characters.
-  Entry length 4.
+  Entry length 4. 0xDD entries in total?
   The index in this list is the index of the text character.
   00,01: ? (This is read, but is always just 0.)
   01,01: Width of this character in pixels.
   02,02: ? (This doesn't seem to be read, and is always just 0.)
+
+0850A136-0850AD75 - List of font pixel data.
+  Entry length 0xE. 0xE0 entries total.
+  The first entry is character 0x20.
+  00,0C: The pixels.
+  0C,02: The character number (big endian). Not sure if this is used for anything.
 
 080E9644 - List of enemy DNA.
 

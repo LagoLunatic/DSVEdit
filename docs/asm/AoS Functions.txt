@@ -52,6 +52,13 @@
 
 08040AB8 DrawTextCharacterVariableWidth
   ; r0 - The index of the character to draw.
+08040048 ???TextCharacter
+  ; r0 - The index of the character to draw.
+  ; r1 - ??? of this character. (Read from 00,01 in list 080E2B4C.)
+  ; r2 - Width of this character in pixels. (Read from 01,01 in list 080E2B4C.)
+0803FEA4 ???TextCharacter2
+  ; r0 - The index of the character to draw.
+  ; (more args)
 
 0802D284 GetRedSoulPointer
   ; r0 - Index of the red soul
