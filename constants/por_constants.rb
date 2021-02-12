@@ -1649,3 +1649,16 @@ MENU_BG_LAYER_INFOS = [
     # But the GFX inside the list are identical, as are the other properties here, so Wind's quests menu is not listed.
   },
 ]
+
+FONTS = [
+  {
+    font_path: "/font/LD_font_u8.DAT",
+    char_width: 8,
+    char_height: 8,
+  },
+  {
+    font_path: "/font/LD_font_u12.DAT",
+    char_width: 16,
+    char_height: 12,
+  },
+]

@@ -1556,5 +1556,111 @@ class Renderer
     gfx_pages
   end
   
+  def render_font_nds(font_path, char_width, char_height)
+    char_size_in_bytes = 2 + (char_width * char_height) / 8
+    if REGION == :jp
+      num_chars_wide = 16
+      num_chars_tall = 128
+    else
+      num_chars_wide = 16
+      num_chars_tall = 16
+    end
+    
+    font_image = ChunkyPNG::Image.new(char_width*num_chars_wide, char_height*num_chars_tall, ChunkyPNG::Color::TRANSPARENT)
+    
+    file_size = fs.files_by_path[font_path][:size]
+    offset = 0
+    seen_chars = []
+    index_in_file = 0
+    while offset <= file_size-char_size_in_bytes
+      char_number = fs.read_by_file(font_path, offset, 2).unpack("n").first # big endian
+      pixel_data = fs.read_by_file(font_path, offset+2, char_size_in_bytes-2).unpack("C*")
+      
+      puts "%02X" % char_number
+      if seen_chars.include?(char_number)
+        # TODO hack
+        puts "!%02X" % char_number
+        char_number += 0xC0
+      end
+      
+      index_on_image = index_in_file#char_number
+      char_x = (index_on_image % num_chars_wide)*char_width
+      char_y = (index_on_image / num_chars_wide)*char_height
+      x = 0
+      y = 0
+      pixel_data.each do |byte|
+        8.times do |i|
+          if byte & (0x80 >> i) != 0
+            font_image[char_x+x, char_y+y] = ChunkyPNG::Color::BLACK
+          end
+          x += 1
+          if x == char_width
+            x = 0
+            y += 1
+          end
+        end
+      end
+      seen_chars << char_number
+      
+      index_in_file += 1
+      offset += char_size_in_bytes
+    end
+    
+    font_image.resample_nearest_neighbor!(font_image.width*4, font_image.height*4)
+    
+    basename = File.basename(font_path, ".*")
+    font_image.save("%s.png" % basename, :fast_rgba)
+  end
+  
+  def render_font_gba(font_address, font_data_size, char_width, char_height)
+    char_size_in_bytes = 2 + (char_width * char_height) / 8
+    if REGION == :jp || GAME == "hod"
+      num_chars_wide = 16
+      num_chars_tall = 128
+    else
+      num_chars_wide = 16
+      num_chars_tall = 16
+    end
+    
+    font_image = ChunkyPNG::Image.new(char_width*num_chars_wide, char_height*num_chars_tall, ChunkyPNG::Color::TRANSPARENT)
+    
+    offset = 0
+    seen_chars = []
+    index_in_file = 0
+    while offset <= font_data_size-char_size_in_bytes
+      char_number = fs.read(font_address+offset+char_size_in_bytes-2, 2).unpack("n").first # big endian
+      pixel_data = fs.read(font_address+offset, char_size_in_bytes-2).unpack("C*")
+      
+      puts "%02X" % char_number
+      
+      index_on_image = index_in_file#char_number
+      char_x = (index_on_image % num_chars_wide)*char_width
+      char_y = (index_on_image / num_chars_wide)*char_height
+      x = 0
+      y = 0
+      pixel_data.each do |byte|
+        8.times do |i|
+          if byte & (0x80 >> i) != 0
+            font_image[char_x+x, char_y+y] = ChunkyPNG::Color::BLACK
+          end
+          x += 1
+          if x == char_width
+            x = 0
+            y += 1
+          end
+        end
+      end
+      seen_chars << char_number
+      
+      index_in_file += 1
+      offset += char_size_in_bytes
+    end
+    
+    font_image.resample_nearest_neighbor!(font_image.width*4, font_image.height*4)
+    
+    basename = "%08X" % font_address
+    font_image.save("%s.png" % basename, :fast_rgba)
+  end
+  
   def inspect; to_s; end
 end

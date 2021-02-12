@@ -1297,3 +1297,16 @@ MENU_BG_LAYER_INFOS = [
     layer_metadata_pointer: 0x0207B84C,
   },
 ]
+
+FONTS = [
+  {
+    font_path: "/font/LD_font_u8.DAT",
+    char_width: 8,
+    char_height: 8,
+  },
+  {
+    font_path: "/font/LD_font_u12.DAT",
+    char_width: 16,
+    char_height: 12,
+  },
+]

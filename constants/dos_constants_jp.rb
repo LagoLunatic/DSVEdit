@@ -179,3 +179,16 @@ MAGIC_SEAL_FOR_BOSS_LIST_START = 0x0222E340
 MENU_BG_LAYER_INFOS = [
   # TODO
 ]
+
+FONTS = [
+  {
+    font_path: "/font/LD937728.DAT",
+    char_width: 8,
+    char_height: 8,
+  },
+  {
+    font_path: "/font/LD937714.DAT",
+    char_width: 16,
+    char_height: 12,
+  },
+]
