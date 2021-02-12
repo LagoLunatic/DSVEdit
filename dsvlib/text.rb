@@ -151,7 +151,7 @@ class Text
     if GAME == "hod"
       decode_string_hod(string)
     elsif SYSTEM == :gba
-      decode_string_gba(string)
+      decode_string_aos(string)
     elsif REGION == :jp
       decode_string_jp(string)
     else
@@ -175,7 +175,7 @@ class Text
         if GAME == "hod"
           encode_command_hod(command, data)
         elsif SYSTEM == :gba
-          encode_command_gba(command, data)
+          encode_command_aos(command, data)
         elsif REGION == :jp
           encode_command_jp(command, data)
         else
@@ -185,7 +185,7 @@ class Text
         if GAME == "hod"
           encode_char_hod(str)
         elsif SYSTEM == :gba
-          encode_char_gba(str)
+          encode_char_aos(str)
         elsif REGION == :jp
           encode_char_jp(str)
         else
@@ -327,7 +327,7 @@ class Text
     return decoded_string
   end
   
-  def decode_string_gba(string)
+  def decode_string_aos(string)
     data_format_string = "0x%02X"
     previous_byte = nil
     multipart = false
@@ -663,13 +663,7 @@ class Text
     return [index].pack("v")
   end
   
-  def encode_char_gba(str)
-    #if str == '’'
-    #  return [0xAF].pack("C")
-    #elsif str == '”'
-    #  return [0xB1].pack("C")
-    #end
-    
+  def encode_char_aos(str)
     byte = str.unpack("C").first
     char = case byte
     when 0x20..0x7A # Ascii text
@@ -682,7 +676,7 @@ class Text
     char
   end
   
-  def encode_command_gba(command, data)
+  def encode_command_aos(command, data)
     case command
     when "RAW"
       byte = data.to_i(16)
