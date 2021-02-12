@@ -1341,7 +1341,7 @@ class Game
         return nil
       end
       
-      skill = game.get_item_by_type_and_index(blue_soul_type, blue_soul_index)
+      skill = get_item_by_type_and_index(blue_soul_type, blue_soul_index)
       sprite_info = SpriteInfo.extract_gfx_and_palette_and_sprite_from_create_code(
         skill["Code"], fs,
         nil, blue_soul_reused_sprite_info
