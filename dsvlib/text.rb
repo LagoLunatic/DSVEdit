@@ -5,7 +5,7 @@ class Text
   class TextDecodeError < StandardError ; end
   class TextEncodeError < StandardError ; end
   
-  SPECIAL_CHARACTERS = "・¡¢£¨©®°±´¸¿ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖ×ØÙÚÛÜÝßàáâãäåæçèéêëìíîïðñòóôõö÷øùúûüýŒœˆ˜‐‗‘’‚“”„•…′″›※€™«»⁰"
+  NDS_SPECIAL_CHARACTERS = "・¡¢£¨©®°±´¸¿ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖ×ØÙÚÛÜÝßàáâãäåæçèéêëìíîïðñòóôõö÷øùúûüýŒœˆ˜‐‗‘’‚“”„•…′″›※€™«»⁰"
   
   AOS_SPECIAL_CHARACTERS = {
     0x90 => "Œ",
@@ -289,7 +289,7 @@ class Text
           end
           char
         when 0x5F..0xBE
-          SPECIAL_CHARACTERS[byte-0x5F]
+          NDS_SPECIAL_CHARACTERS[byte-0x5F]
         else
           "{RAW #{data_format_string}}" % byte
         end
@@ -572,8 +572,8 @@ class Text
   end
   
   def encode_char_usa(str)
-    if SPECIAL_CHARACTERS.include?(str)
-      index = SPECIAL_CHARACTERS.index(str)
+    if NDS_SPECIAL_CHARACTERS.include?(str)
+      index = NDS_SPECIAL_CHARACTERS.index(str)
       return [index+0x5F].pack("C")
     end
     
