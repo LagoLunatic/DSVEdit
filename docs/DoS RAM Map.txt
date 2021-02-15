@@ -207,7 +207,7 @@ There are 41 entries in the list total.
   08,4: Affects GFX. Index in the list of currently loaded GFX files?
   0C,4: Sprite pointer.
 
-020C7464 - List of currently loaded GFX assets.
+020C7464-020C76E3 - List of currently loaded GFX assets.
   Entry length 0x14.
   0x20 entries in totals.
   The index in this list is argument r1 to func LoadGFX

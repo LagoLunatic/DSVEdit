@@ -146,8 +146,8 @@ You need to tell DSVEdit to consider the overlay as free space for it to use it.
 You can do this by modifying the file called _dsvedit_freespace.txt in the project directory. First close DSVEdit if it's open, then open _dsvedit_freespace.txt in a text editor and add a new line to the end of it.  
 The line you add should be the offset in the file in hexadecimal, followed by a space, then the length of the free space in in hexadecimal, then a space, then the file name. (To find out the lend of the free space, go to Tools -> Add Overlay again and it will tell you what the maximum size the overlay is allowed to be is.)  
 For example, in the US version of DoS, if you want to mark the entire overlay as free space this would be the line you add to it:  
-00000000 00016000 /ftc/overlay9_41  
-The 00000000 means the free space starts at the very start of the file. 00016000 means the free space can be a maximum of 0x16000 bytes long. /ftc/overlay9_41 is the new overlay file in DoS.  
+00000000 0000C000 /ftc/overlay9_41  
+The 00000000 means the free space starts at the very start of the file. 0000C000 means the free space can be a maximum of 0xC000 bytes long. /ftc/overlay9_41 is the new overlay file in DoS.  
 
 If you want to use the free space overlay for both custom ASM code AND for adding new entities/layers/etc:  
 This is more complicated. If you use the overlay for custom ASM code, and you also mark the entire thing as free space by modifying _dsvedit_freespace.txt, then adding entities/layers/etc can overwrite your ASM code and crash the game. If you use the overlay for entities/layers/etc and then apply an ASM patch afterwards, you need to pick where you apply the patch carefully to avoid overwriting the entities/layers with your ASM code.  
