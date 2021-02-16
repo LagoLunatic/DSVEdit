@@ -440,9 +440,16 @@
 02049C58 PlayerUpdate
 0204E854 PlayerTakeInput
 02049CE4 PlayerUpdate2
+02049708 PlayerDraw
+  ; This also handles swapping out the player's loaded GFX (by calling 0203C084)
+0203C084 PlayerUpdateSwapGFX
+  ; r0 - Player entity
 0204CDE0 PlayerSetStateAnim
   ; r0 - Player entity
   ; r1 - Index in the player's state->anim mapping list
+
+0204D870 PlayerUpdateVariousThings?
+  ; Among the things this does: scrolls the screen to the player
 
 0205CB14 DamagePlayer
   ; r0 - Enemy entity
@@ -692,6 +699,7 @@
 
 02030684 EntityInitializeSprite
   ; r0 - Entity
+  ; Returns r0 - Pointer to the loaded sprite data header
 
 020330C8 InitializeSpriteFile
   ; r0 - Pointer to the sprite file data in asset memory

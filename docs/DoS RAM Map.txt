@@ -185,7 +185,7 @@ There are 41 entries in the list total.
 020C07E8 - Game state.
   This is an index in list 0208ACC0.
   00 Loading a save
-  01 Loading a save
+  01 Loading a save / ingame init?
   02 Ingame
   03 
   04 Title screen
@@ -207,15 +207,26 @@ There are 41 entries in the list total.
   08,4: Affects GFX. Index in the list of currently loaded GFX files?
   0C,4: Sprite pointer.
 
-020C7464-020C76E3 - List of currently loaded GFX assets.
+020C7460-020C76DF - List of currently loaded GFX assets.
   Entry length 0x14.
   0x20 entries in totals.
   The index in this list is argument r1 to func LoadGFX
-  00,4: Index in this same list of the first entry for this asset.
+  00,2: Index of the previous entry in this list...?
+  02,2: Index of the next entry in this list...?
+  04,4: Index in this same list of the first entry for this asset.
     Assets can take up multiple slots in a row, so if an asset is using slots 0x11-0x14, all 4 of those will have 0x11 for this value.
     If this value is 0xFFFFFFFF this slot is empty.
-  09,1: Might be the total number of slots in this list used for this particular asset. (Only set for the first entry of each asset.)
-  0C,4: GFX asset pointer.
+  08,2: 
+  0A,1: 
+  0B,1: 
+  0C,1: 
+  0D,1: Might be the total number of slots in this list used for this particular asset. (Only set for the first entry of each asset.)
+  0E,2: Bitfield of flags.
+    & 01 - 
+    & 02 - Might mean the GFX shouldn't be automatically unloaded when no entities are using it?
+    & 04 - 
+    & 08 - 
+  10,4: GFX asset pointer.
 
 020C75C4 - pointer to list of gfx files for entities in this room? e.g. /sc/t_fm68_0.dat for merman
 020C75F4 - changes for each room. can be 10, 13, 14, FFFFFFFF
@@ -271,7 +282,7 @@ What each range of entity slots is for:
 0F0-0F1  020F19F0-020F1F2F  Menu entities?
 0F2-0F2  020F1F30-020F21CF  ?
 10E-10E  020F68B0-020F6B4F  ?
-10F-10F  020F6B50-020F6DEF  ?
+10F-10F  020F6B50-020F6DEF  ? Handles scrolling the screen and swapping out which GFX pages are loaded for the player?
 
 020CA930 - Start of the player entity.
 020CA95C,4 - Player's current X pos.
@@ -641,7 +652,7 @@ Player's current stats:
 === 020F740C - 020F746B: Third region that gets saved to the save file. 60 bytes long. Corresponds to 0464-04C3 in the save file data.
 
 020F740C,2 - Current level.
-020F740E - Current player character.
+020F740E,2 - Current player character index.
   0 Soma.
   1 Julius.
   2 Yoko.

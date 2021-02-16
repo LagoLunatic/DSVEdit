@@ -103,6 +103,9 @@ For players:
 138,4: Pointer to their state->anims mapping.
 144,4: Which player character index this player is. 1 is Julius, 3 is Alucard, etc.
 
+For the player trails:
+0E8,4: Pointer to the player entity this trail is for.
+
 For enemies:
 154,2: Max HP.
 258,2: Current HP.

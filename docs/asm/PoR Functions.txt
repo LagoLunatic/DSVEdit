@@ -413,6 +413,11 @@
 021F5004 SwitchPlayers
 021F5AC0 CheckCanSwitchPlayers
 
+021FDDD0 PlayerUpdateVariousThings?
+  ; Among the things this does: scrolls the screen to the player, swaps out which GFX pages are loaded for the player
+021F4628 PlayerUpdateSwapGFX
+  ; r0 - Player entity
+
 021DBF9C WhipDangleUpdate
   ; r0 - Some kind of entity pointer? (e.g. 020FF100 or 020FFD60)
   ; This function hardcodes the hand position that is the center of the whip dangle.
