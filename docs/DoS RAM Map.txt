@@ -217,10 +217,14 @@ There are 41 entries in the list total.
     Assets can take up multiple slots in a row, so if an asset is using slots 0x11-0x14, all 4 of those will have 0x11 for this value.
     If this value is 0xFFFFFFFF this slot is empty.
   08,2: 
-  0A,1: 
+  0A,1: The GFX load type.
+    0 - Single GFX page.
+    1 - Multiple GFX pages that are all loaded simultaneously.
+    2 - Multiple GFX pages, but only one is loaded at once, like for player characters.
   0B,1: 
   0C,1: 
-  0D,1: Might be the total number of slots in this list used for this particular asset. (Only set for the first entry of each asset.)
+  0D,1: Might be the total number of slots in this list used for this particular asset.
+    This value is only set for the first entry of each asset.
   0E,2: Bitfield of flags.
     & 01 - 
     & 02 - Might mean the GFX shouldn't be automatically unloaded when no entities are using it?
@@ -754,6 +758,8 @@ Player's current stats:
   if a weapon has more than 1 hitbox, then the other ones will be listed right after this.
 
 0210ECE0 - list of pointers to dynamic files loaded into ram?
+  first pointer points to the start of asset memory.
+  second pointer points to some struct that has +2C,4 pointing to the first asset entry in asset memory?
 
 0210ED04 - Has a pointer to the start of asset memory, 0230BD20.
 
@@ -1035,6 +1041,18 @@ Here's what each actor is (index, special object id, description):
 
 023FFDA0,4 - Has a pointer to 02308920, the start of asset memory
 023FFDC4,4 - Has a pointer to 023C0000, the end of asset memory.
+
+Asset memory format:
+??
+
+Asset entry format:
+00,2: ??
+  known values: 5544, 4652
+02,2: Bitfield?
+04,4: Length of the asset data in bytes.
+08,4: Pointer to the previous asset entry in memory.
+0C,4: Pointer to the next asset entry in memory.
+10,(varies): The asset data.
 
 === 02A00000 - 02A063BF: Rest of ARM9 (except missing 0x98 bytes at the end)
 

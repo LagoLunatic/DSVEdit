@@ -519,7 +519,7 @@ class NDSFileSystem
       raise "Already added a new overlay, overlay9_#{overlay_id}. DSVEdit can currently only add one new overlay. Use the existing one."
     end
     ram_pointer = NEW_OVERLAY_FREE_SPACE_START
-    file_size = 4
+    file_size = 4 # Change to NEW_OVERLAY_FREE_SPACE_MAX_SIZE in order to debug issues with the max size
     bss_size = 0
     static_initializer_start = 0 # No static initializer
     static_initializer_end = 0

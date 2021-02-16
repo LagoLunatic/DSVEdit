@@ -397,6 +397,7 @@
   ; r1 - Sprite ptr
   ; r2 - GFX list ptr
   ; r3 - Palette list ptr
+  ; [r13] - GFX load type, always 1 for multi-gfx? This is the value stored to +0A,1 in list 020C7460
 0201C2B8 LoadSpriteSingleGfx
   ; r0 - Entity ptr
   ; r1 - Sprite ptr
@@ -420,7 +421,7 @@
 0200E97C LoadGFXSpecial???
   ; r0 - GFX asset ptr
   ; r1 - 
-  ; r2 - 0?
+  ; r2 - GFX load type, this is the value stored to +0A,1 in list 020C7460
   ; r3 - 0?
   ; [r13] - Bitfield of flags related to how to load the GFX...? Stored to +0E,2 in the loaded GFX assets list (020C7460).
 0220FCA4 LoadSkillGFX???
