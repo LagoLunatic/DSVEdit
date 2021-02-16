@@ -271,6 +271,7 @@ class SpriteEditor < Qt::Dialog
     @override_part_palette_index = nil
     @one_dimensional_render_mode = false
     @transparent_trails = false
+    @is_player_sprite = false
     load_sprite()
     
     @ui.enemy_list.setCurrentRow(enemy_id)
@@ -295,6 +296,7 @@ class SpriteEditor < Qt::Dialog
     @override_part_palette_index = nil
     @one_dimensional_render_mode = false
     @transparent_trails = false
+    @is_player_sprite = false
     load_sprite()
     
     @ui.special_object_list.setCurrentRow(special_object_id)
@@ -325,6 +327,7 @@ class SpriteEditor < Qt::Dialog
     else
       @transparent_trails = false
     end
+    @is_player_sprite = false
     load_sprite()
     
     @ui.weapon_list.setCurrentRow(weapon_gfx_index)
@@ -357,6 +360,7 @@ class SpriteEditor < Qt::Dialog
     else
       @transparent_trails = false
     end
+    @is_player_sprite = false
     load_sprite()
     
     @ui.skill_list.setCurrentRow(skill_gfx_index)
@@ -377,6 +381,11 @@ class SpriteEditor < Qt::Dialog
     @override_part_palette_index = nil
     @one_dimensional_render_mode = other_sprite[:one_dimensional_mode]
     @transparent_trails = false
+    if other_sprite[:desc].end_with?(" player")
+      @is_player_sprite = true
+    else
+      @is_player_sprite = false
+    end
     load_sprite()
     
     @ui.other_sprites_list.setCurrentRow(id)
@@ -1032,11 +1041,34 @@ class SpriteEditor < Qt::Dialog
     DarkFunctionInterface.import(folder, sprite_name, @sprite_info, @fs, @renderer)
     
     reload_sprite()
+    
+    check_if_player_sprite_has_frames_spanning_multiple_gfx()
   rescue DarkFunctionInterface::ImportError, Sprite::SaveError, FreeSpaceManager::FreeSpaceFindError => e
     Qt::MessageBox.warning(self,
       "Failed to import from darkFunction",
       e.message
     )
+  end
+  
+  def check_if_player_sprite_has_frames_spanning_multiple_gfx
+    if !@is_player_sprite
+      return
+    end
+    
+    multi_gfx_frames = []
+    @sprite.frames.each_with_index do |frame, i|
+      unique_gfx_pages = frame.parts.map{|part| part.gfx_page_index}.uniq
+      if unique_gfx_pages.length > 1
+        multi_gfx_frames << i
+      end
+    end
+    if multi_gfx_frames.any?
+      Qt::MessageBox.warning(self,
+        "Player sprite has frames using multiple GFX pages",
+        "Warning: Player sprites must only make use of one GFX page per frame. Frames that have some parts on one GFX page and some on other may not properly render parts after the first one ingame.\n(This rule does not apply to Sisters Mode in PoR.)\n\nThe following frames in this sprite use multiple GFX pages: %s" % multi_gfx_frames.map{|frame_index| "%02X" % frame_index}.join(", ")
+      )
+      # Note: The Albus player sprite actually does have 2 frames that break this rule, but those frames are unused, and are part of a boss-Albus only animation.
+    end
   end
   
   def export_sprite_frames_as_png
