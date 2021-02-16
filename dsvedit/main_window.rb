@@ -1210,7 +1210,7 @@ class DSVEdit < Qt::MainWindow
       return
     end
     
-    if door.is_glitch_door
+    if door && door.is_glitch_door
       @open_dialogs << DoorEditorDialog.new(self, @renderer, @room.glitch_doors, door)
     else
       @open_dialogs << DoorEditorDialog.new(self, @renderer, @room.doors, door)
