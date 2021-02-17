@@ -380,6 +380,9 @@
   ; r3 - Soul index
 021E8F78 SoulUpdate
 
+0201ED3C WaterSplashUpdate?
+0201EDD0 WaterSplashDraw?
+
 021D7264 LoadRoomEntities
 021D7390 LoadRoomSpecialObjects
 021D7684 LoadRoomEnemies
