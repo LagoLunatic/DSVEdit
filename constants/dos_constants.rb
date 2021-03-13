@@ -491,6 +491,7 @@ OTHER_SPRITES = [
   {pointer: 0x02049078, desc: "Enemy set mode menu"},
   {pointer: 0x0204908C, desc: "Enemy set retry/complete"},
   {pointer: 0x020490A0, desc: "Wi-fi menu"},
+  {desc: "Zephyr's clock hands", sprite: 0x0229B3F4, gfx_file_names: ["/sc/f_ctobj0.dat"], palette: 0x022C22C4},
   
   
   {desc: "Equip menu foreground", no_sprite: true, palette: 0x022C46E8, one_dimensional_mode: true, gfx_file_names: [
