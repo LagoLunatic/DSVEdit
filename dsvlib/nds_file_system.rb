@@ -130,20 +130,33 @@ class NDSFileSystem
       update_header_checksum()
     end
     
-    # Update arm9, header, and tables
+    # Update arm9, header, tables, and icon/title
     [
       "arm9.bin",
       "ndsheader.bin",
       "arm9_overlay_table.bin",
       #"fat.bin", # Already handled by above code, don't overwrite
-      "fnt.bin"
+      "fnt.bin",
+      "banner.bin",
     ].each do |filename|
       file = @extra_files.find{|file| file[:name] == filename}
       file_data = get_file_data_from_opened_files_cache(file[:file_path])
       new_file_size = file_data.length
+      
       if filename == "arm9.bin" && @arm9_size != new_file_size
         raise "ARM9 changed size"
       end
+      if filename == "ndsheader.bin" && 0x4000 != new_file_size
+        raise "NDS header changed size"
+      end
+      if filename == "banner.bin" && @banner_size != new_file_size
+        raise "Banner changed size"
+      end
+      
+      if filename == "banner.bin"
+        update_banner_checksum()
+      end
+      
       new_rom[file[:start_offset], file[:size]] = file_data
     end
     
@@ -584,6 +597,12 @@ class NDSFileSystem
     write_by_file("/ftc/ndsheader.bin", 0x15E, [header_checksum].pack("v"))
   end
   
+  def update_banner_checksum
+    banner_data_to_crc = read_by_file("/ftc/banner.bin", 0x20, 0x820)
+    banner_checksum = CRC16.calc(banner_data_to_crc, 0xFFFF)
+    write_by_file("/ftc/banner.bin", 2, [banner_checksum].pack("v"))
+  end
+  
   def all_sprite_pointers
     # TODO: instead of using the filename, use the asset type to select these
     @all_sprite_pointers ||= files.select do |id, file|
@@ -651,7 +670,7 @@ private
     @arm7_overlay_table_offset, @arm7_overlay_table_size = header[0x58,8].unpack("VV")
     
     @banner_start_offset = header[0x68,4].unpack("V").first
-    @banner_end_offset = @banner_start_offset + 0x840 # ??
+    @banner_size = 0x840 # Only true for banner version 1, but all the DSVanias use that version so it's fine.
     
     @total_used_rom_size = header[0x80,4].unpack("V").first
     
@@ -873,7 +892,7 @@ private
     @extra_files << {:name => "arm7_overlay_table.bin", :type => :file, :start_offset => @arm7_overlay_table_offset, :end_offset => @arm7_overlay_table_offset + @arm7_overlay_table_size, :size => @arm7_overlay_table_size}
     @extra_files << {:name => "fnt.bin", :type => :file, :start_offset => @file_name_table_offset, :end_offset => @file_name_table_offset + @file_name_table_size, :size => @file_name_table_size}
     @extra_files << {:name => "fat.bin", :type => :file, :start_offset => @file_allocation_table_offset, :end_offset => @file_allocation_table_offset + @file_allocation_table_size, :size => @file_allocation_table_size}
-    @extra_files << {:name => "banner.bin", :type => :file, :start_offset => @banner_start_offset, :end_offset => @banner_end_offset}
+    @extra_files << {:name => "banner.bin", :type => :file, :start_offset => @banner_start_offset, :end_offset => @banner_start_offset + @banner_size, :size => @banner_size}
     @extra_files << {:name => "rom.nds", :type => :file, :start_offset => 0, :end_offset => @rom.length}
   end
   
