@@ -109,6 +109,52 @@ class DSVEdit < Qt::MainWindow
   slots "copy_room_pointer_to_clipboard()"
   slots "toggle_hide_map()"
   
+  WIDGETS_TO_DISABLE_WHEN_NO_GAME_LOADED = [
+    "actionSave",
+    
+    "actionEdit_Room_Props",
+    "actionEdit_Layers",
+    "actionEdit_Entities",
+    "actionEdit_Doors",
+    "actionAdd_Entity",
+    "actionAdd_Door",
+    "actionAdd_Room",
+    "actionClear_Room_Contents",
+    
+    "actionEntities",
+    "actionDoors",
+    "actionCollision",
+    "actionLayers",
+    "actionGlitch_Doors",
+    
+    "actionEnemy_Editor",
+    "actionText_Editor",
+    "actionSprite_Editor",
+    "actionItem_Editor",
+    "actionGFX_Editor",
+    "actionMusic_Editor",
+    "actionItem_Pool_Editor",
+    "actionTileset_Editor",
+    "actionMenu_Editor",
+    "actionMap_Editor",
+    "actionPlayer_Editor",
+    "actionPlayer_State_Anims_Editor",
+    "actionSpecial_Object_Editor",
+    "actionWeapon_Synth_Editor",
+    "actionShop_Editor",
+    "actionQuest_Editor",
+    "actionMagic_Seal_Editor",
+    "actionApply_ARMIPS_Patch",
+    "actionAdd_Overlay",
+    "actionEntity_Search",
+    "actionAddress_Converter",
+    "actionFix_Save_Files",
+    
+    "actionBuild",
+    "actionBuild_and_Run",
+    "actionBuild_and_Test",
+  ]
+  
   def initialize
     super()
     @ui = Ui_MainWindow.new
@@ -203,7 +249,7 @@ class DSVEdit < Qt::MainWindow
     self.setWindowState(Qt::WindowMaximized)
     self.setWindowTitle("DSVania Editor #{DSVEDIT_VERSION}")
     
-    disable_menu_actions()
+    disable_widgets_when_no_game_loaded()
     
     self.show()
     
@@ -212,88 +258,16 @@ class DSVEdit < Qt::MainWindow
     end
   end
   
-  def disable_menu_actions
-    @ui.actionSave.setEnabled(false);
-    @ui.actionEdit_Room_Props.setEnabled(false);
-    @ui.actionEdit_Layers.setEnabled(false);
-    @ui.actionEdit_Entities.setEnabled(false);
-    @ui.actionEdit_Doors.setEnabled(false);
-    @ui.actionAdd_Entity.setEnabled(false);
-    @ui.actionAdd_Door.setEnabled(false);
-    @ui.actionAdd_Room.setEnabled(false);
-    @ui.actionClear_Room_Contents.setEnabled(false);
-    @ui.actionEntities.setEnabled(false);
-    @ui.actionDoors.setEnabled(false);
-    @ui.actionCollision.setEnabled(false);
-    @ui.actionLayers.setEnabled(false);
-    @ui.actionGlitch_Doors.setEnabled(false);
-    @ui.actionEnemy_Editor.setEnabled(false);
-    @ui.actionText_Editor.setEnabled(false);
-    @ui.actionSprite_Editor.setEnabled(false);
-    @ui.actionItem_Editor.setEnabled(false);
-    @ui.actionGFX_Editor.setEnabled(false);
-    @ui.actionMusic_Editor.setEnabled(false);
-    @ui.actionItem_Pool_Editor.setEnabled(false);
-    @ui.actionTileset_Editor.setEnabled(false);
-    @ui.actionMenu_Editor.setEnabled(false);
-    @ui.actionMap_Editor.setEnabled(false);
-    @ui.actionPlayer_Editor.setEnabled(false);
-    @ui.actionPlayer_State_Anims_Editor.setEnabled(false);
-    @ui.actionSpecial_Object_Editor.setEnabled(false);
-    @ui.actionWeapon_Synth_Editor.setEnabled(false);
-    @ui.actionShop_Editor.setEnabled(false);
-    @ui.actionQuest_Editor.setEnabled(false);
-    @ui.actionMagic_Seal_Editor.setEnabled(false);
-    @ui.actionApply_ARMIPS_Patch.setEnabled(false);
-    @ui.actionAdd_Overlay.setEnabled(false);
-    @ui.actionEntity_Search.setEnabled(false);
-    @ui.actionAddress_Converter.setEnabled(false);
-    @ui.actionFix_Save_Files.setEnabled(false);
-    @ui.actionBuild.setEnabled(false);
-    @ui.actionBuild_and_Run.setEnabled(false);
-    @ui.actionBuild_and_Test.setEnabled(false);
+  def disable_widgets_when_no_game_loaded
+    WIDGETS_TO_DISABLE_WHEN_NO_GAME_LOADED.each do |widget_name|
+      @ui.send(widget_name).setEnabled(false)
+    end
   end
   
-  def enable_menu_actions
-    @ui.actionSave.setEnabled(true);
-    @ui.actionEdit_Room_Props.setEnabled(true);
-    @ui.actionEdit_Layers.setEnabled(true);
-    @ui.actionEdit_Entities.setEnabled(true);
-    @ui.actionEdit_Doors.setEnabled(true);
-    @ui.actionAdd_Entity.setEnabled(true);
-    @ui.actionAdd_Door.setEnabled(true);
-    @ui.actionAdd_Room.setEnabled(true);
-    @ui.actionClear_Room_Contents.setEnabled(true);
-    @ui.actionEntities.setEnabled(true);
-    @ui.actionDoors.setEnabled(true);
-    @ui.actionCollision.setEnabled(true);
-    @ui.actionLayers.setEnabled(true);
-    @ui.actionGlitch_Doors.setEnabled(true);
-    @ui.actionEnemy_Editor.setEnabled(true);
-    @ui.actionText_Editor.setEnabled(true);
-    @ui.actionSprite_Editor.setEnabled(true);
-    @ui.actionItem_Editor.setEnabled(true);
-    @ui.actionGFX_Editor.setEnabled(true);
-    @ui.actionMusic_Editor.setEnabled(true);
-    @ui.actionItem_Pool_Editor.setEnabled(true);
-    @ui.actionTileset_Editor.setEnabled(true);
-    @ui.actionMenu_Editor.setEnabled(true);
-    @ui.actionMap_Editor.setEnabled(true);
-    @ui.actionPlayer_Editor.setEnabled(true);
-    @ui.actionPlayer_State_Anims_Editor.setEnabled(true);
-    @ui.actionSpecial_Object_Editor.setEnabled(true);
-    @ui.actionWeapon_Synth_Editor.setEnabled(true);
-    @ui.actionShop_Editor.setEnabled(true);
-    @ui.actionQuest_Editor.setEnabled(true);
-    @ui.actionMagic_Seal_Editor.setEnabled(true);
-    @ui.actionApply_ARMIPS_Patch.setEnabled(true);
-    @ui.actionAdd_Overlay.setEnabled(true);
-    @ui.actionEntity_Search.setEnabled(true);
-    @ui.actionAddress_Converter.setEnabled(true);
-    @ui.actionFix_Save_Files.setEnabled(true);
-    @ui.actionBuild.setEnabled(true);
-    @ui.actionBuild_and_Run.setEnabled(true);
-    @ui.actionBuild_and_Test.setEnabled(true);
+  def enable_widgets_when_game_loaded
+    WIDGETS_TO_DISABLE_WHEN_NO_GAME_LOADED.each do |widget_name|
+      @ui.send(widget_name).setEnabled(true)
+    end
   end
   
   def close_open_dialogs
@@ -389,7 +363,7 @@ class DSVEdit < Qt::MainWindow
         
         update_filesystem_watcher()
         
-        enable_menu_actions()
+        enable_widgets_when_game_loaded()
         
         initialize_dropdowns()
         
@@ -424,7 +398,7 @@ class DSVEdit < Qt::MainWindow
     
     update_filesystem_watcher()
     
-    enable_menu_actions()
+    enable_widgets_when_game_loaded()
     
     initialize_dropdowns()
     
