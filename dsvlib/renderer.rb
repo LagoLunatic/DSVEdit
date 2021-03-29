@@ -781,6 +781,8 @@ class Renderer
       color_offsets_per_palette_index = 16
     end
     
+    colors = truncate_palette_to_fit_list(colors, palette_list_pointer, palette_index, colors_per_palette)
+    
     specific_palette_pointer = palette_list_pointer + 4 + (2*color_offsets_per_palette_index)*palette_index
     save_palette_by_specific_palette_pointer(specific_palette_pointer, colors)
   end
@@ -788,6 +790,30 @@ class Renderer
   def save_palette_by_specific_palette_pointer(specific_palette_pointer, colors)
     new_palette_data = convert_chunky_color_list_to_palette_data(colors)
     fs.write(specific_palette_pointer, new_palette_data)
+  end
+  
+  def truncate_palette_to_fit_list(colors, palette_list_pointer, palette_index, colors_per_palette)
+    if colors_per_palette == 256
+      color_offsets_per_palette_index = COLOR_OFFSETS_PER_256_PALETTE_INDEX
+    else
+      color_offsets_per_palette_index = 16
+    end
+  
+    number_of_palettes_rows = fs.read(palette_list_pointer+2,1).unpack("C*").first
+    number_of_colors_in_list = number_of_palettes_rows*16
+    first_color_index_in_list = palette_index*color_offsets_per_palette_index
+    max_allowed_colors = number_of_colors_in_list - first_color_index_in_list
+    if max_allowed_colors > color_offsets_per_palette_index
+      max_allowed_colors = color_offsets_per_palette_index
+    end
+    if max_allowed_colors < 16 || max_allowed_colors > 256
+      raise "Tried to truncate palette to invalid maximum size: #{max_allowed_colors}"
+    end
+    if colors.length > max_allowed_colors
+      colors = colors[0...max_allowed_colors]
+    end
+    
+    return colors
   end
   
   def convert_chunky_color_list_to_palette_data(chunky_colors)

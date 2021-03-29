@@ -291,6 +291,30 @@ class GfxEditorDialog < Qt::Dialog
   def export_file
     return if @palettes.nil? || @palette_index.nil?
     
+    if @gfx_pages.any?{|gfx| gfx.colors_per_palette == 256}
+      palette = @palettes_256[@palette_index]
+      colors_per_palette = 256
+    else
+      palette = @palettes_16[@palette_index]
+      colors_per_palette = 16
+    end
+    
+    palette = @renderer.truncate_palette_to_fit_list(palette, @palette_pointer, @palette_index, colors_per_palette)
+    
+    if palette.length != palette.uniq.length
+      response = Qt::MessageBox.question(
+        self,
+        "Duplicate colors detected",
+        "The palette you're about to export has duplicate colors in it. DSVEdit cannot properly export GFX that uses duplicate colors.\n\nWould you like DSVEdit to automatically change the duplicate color entries so that the image can be exported properly?",
+        Qt::MessageBox::Cancel | Qt::MessageBox::No | Qt::MessageBox::Yes, Qt::MessageBox::Cancel
+      )
+      if response == Qt::MessageBox::Cancel
+        return
+      elsif response == Qt::MessageBox::Yes
+        make_colors_in_current_palette_unique()
+      end
+    end
+    
     palette_name = "palette_%08X-%02X" % [@palette_pointer, @palette_index]
     
     @gfx_pages.each do |gfx|
@@ -409,10 +433,31 @@ class GfxEditorDialog < Qt::Dialog
     
     begin
       colors = @renderer.import_palette_from_palette_swatches_file(palette_file_path, colors_per_palette)
-      @renderer.save_palette(colors, @palette_pointer, @palette_index, colors_per_palette)
     rescue Renderer::GFXImportError => e
       Qt::MessageBox.warning(self,
         "Palette generation error",
+        e.message
+      )
+      return
+    end
+    
+    save_palette(colors)
+  end
+  
+  def save_palette(colors)
+    return if @palettes.nil? || @palette_index.nil?
+    
+    if @gfx_pages.any?{|gfx| gfx.colors_per_palette == 256}
+      colors_per_palette = 256
+    else
+      colors_per_palette = 16
+    end
+    
+    begin
+      @renderer.save_palette(colors, @palette_pointer, @palette_index, colors_per_palette)
+    rescue Renderer::GFXImportError => e
+      Qt::MessageBox.warning(self,
+        "Error saving palette",
         e.message
       )
       return
@@ -445,5 +490,42 @@ class GfxEditorDialog < Qt::Dialog
     load_palettes()
     load_gfx()
     load_palette_image()
+  end
+  
+  def make_colors_in_current_palette_unique
+    if @gfx_pages.any?{|gfx| gfx.colors_per_palette == 256}
+      palette = @palettes_256[@palette_index]
+      colors_per_palette = 256
+    else
+      palette = @palettes_16[@palette_index]
+      colors_per_palette = 16
+    end
+    
+    new_palette = []
+    
+    palette = @renderer.truncate_palette_to_fit_list(palette, @palette_pointer, @palette_index, colors_per_palette)
+    
+    palette.each do |color|
+      if new_palette.include?(color)
+        while true
+          new_color = ChunkyPNG::Color.rgba(
+            rand(0x00..0x1F) << 3,
+            rand(0x00..0x1F) << 3,
+            rand(0x00..0x1F) << 3,
+            255,
+          )
+          
+          if !palette.include?(new_color) && !new_palette.include?(new_color)
+            break
+          end
+        end
+        
+        color = new_color
+      end
+      
+      new_palette << color
+    end
+    
+    save_palette(new_palette)
   end
 end
