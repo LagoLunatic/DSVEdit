@@ -153,6 +153,14 @@ class DSVEdit < Qt::MainWindow
     "actionBuild",
     "actionBuild_and_Run",
     "actionBuild_and_Test",
+    
+    "tiled_export",
+    "tiled_import",
+    "set_as_starting_room",
+    "copy_room_pointer",
+    "edit_map",
+    "toggle_hide_map",
+    "map_graphics_view",
   ]
   
   def initialize
