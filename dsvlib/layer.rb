@@ -183,7 +183,7 @@ class BGLayer
     fs.write(layer_tiledata_ram_start_offset, tile_data)
   end
   
-  def clear_contents
+  def clear_contents(should_empty_layer=false)
     # Clear out all the tiles.
     (@height*SCREEN_HEIGHT_IN_TILES*@width*SCREEN_WIDTH_IN_TILES).times do |i|
       tiles[i].index_on_tileset = 0
@@ -191,10 +191,22 @@ class BGLayer
       tiles[i].vertical_flip = false
     end
     
+    if should_empty_layer
+      @tileset_pointer = 0
+      @collision_tileset_pointer = 0
+      
+      unless @layer_tiledata_ram_start_offset.nil?
+        # Make this an empty layer.
+        tiledata_length = @width * @height * SIZE_OF_A_SCREEN_IN_BYTES
+        fs.free_unused_space(@layer_tiledata_ram_start_offset, tiledata_length)
+        fs.free_unused_space(@layer_metadata_ram_pointer, 16)
+        @layer_tiledata_ram_start_offset = nil
+        @layer_metadata_ram_pointer = 0
+      end
+    end
+    
     @width = 1
     @height = 1
-    
-    # We don't clear the tileset that this layer uses, just leave that as it was so it's not blank.
     
     write_to_rom()
   end
@@ -350,7 +362,8 @@ class RoomLayer
     @main_gfx_page_index = 0
     @palette_offset = 0
     
-    @bg_layer.clear_contents()
+    should_empty_layer = (layer_index != 0)
+    @bg_layer.clear_contents(should_empty_layer)
     write_to_rom()
   end
   
