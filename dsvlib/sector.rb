@@ -245,7 +245,12 @@ private
       offset = sector_ram_pointer + room_index*4
       break if offset == @next_sector_pointer
       
-      room_metadata_ram_pointer = fs.read(offset, 4).unpack("V*").first
+      begin
+        room_metadata_ram_pointer = fs.read(offset, 4).unpack("V*").first
+      rescue NDSFileSystem::ConversionError => e
+        # Hit the end of the file.
+        break
+      end
       
       break if room_metadata_ram_pointer == 0
       break if room_metadata_ram_pointer == 0xDEADBEEF && GAME == "aos" # Used by DSVEdit to signify the end of the rooms list if a new room has been added in AoS.
