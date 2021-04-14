@@ -738,7 +738,7 @@ OTHER_SPRITES = [
     "/sc/f_govera3.dat",
   ]},
   
-  {desc: "Area names", sprite: 0x022B2A80, gfx_files: [0x022C91FC, 0x022C9208, 0x022C9214, 0x022C9220, 0x022C922C, 0x022C9238, 0x022C9244, 0x022C9250], palette: 0x022BCBFC},
+  {desc: "Area names", sprite: 0x022B2A80, gfx_files: [0x022C91FC, 0x022C9208, 0x022C9214, 0x022C9220, 0x022C922C, 0x022C9238, 0x022C9244, 0x022C9250, 0x022C925C], palette: 0x022BCBFC},
   # Note: Which GFX wrapper to load for a particular area name is hardcoded in function 02065368.
   
   {pointer: 0x022D7CBC, desc: "Brauner inside mirror portrait", overlay: 55},
