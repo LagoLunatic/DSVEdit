@@ -528,8 +528,15 @@ More misc flags (020F7184):
   1D 20000000 - Event 73? except 73 doesn't have it set
   1E 40000000 - Event 74
   1F 80000000 - Event 75
-020F7190-020F719F - Bitfield of pickup flags.
-020F71A8-020F71A9 - Bitfield of flags for what warp rooms you've visited.
+020F7190-020F71A7 - Bitfield of pickup flags.
+  Valid pickup flags range from 00 to BF.
+  020F7190-020F719F (flags 00-7F) are definitely reserved for pickup flags.
+  020F71A0-020F71A7 (flags 80-BF) are most likely for pickup flags as nothing else seems to read or write these bytes. However, the vanilla game didn't have any flags that went into these bytes, so it's not 100% verifiable if they're really for flags or not.
+  Hardcoded flags:
+    0A - Strongman puzzle first reward
+    0E - Strongman puzzle second reward
+    11 - Strongman puzzle third reward
+020F71A8,4 - Bitfield of flags for what warp rooms you've visited.
   0001 - Lost Village, automatically unlocked.
   0002 - Demon Guest House.
   0004 - Wizardry Lab.
@@ -542,8 +549,9 @@ More misc flags (020F7184):
   0200 - Cursed Clock Tower
   0400 - The Pinnacle
   0800 - The Abyss
-020F71B4-020F71B5 - Bitfield relating to the number of times you've visited Hammer's shop. TODO
-020F71B6-020F71B7 - Bitfield relating to the number of times you've visited Yoko's shop. TODO
+020F71AC,4 - ? Bitfield
+020F71B0,4 - ? Bitfield
+020F71B4,4 - Bitfield relating to the number of times you've visited Hammer's and Yoko's shops. TODO
 
 020F71BC-020F7227 - List of which items you own and how many. (Owned item info.)
   Each item takes up a nibble (half a byte). So you can have up to 15 of each item (though it only correctly displays up to 9).

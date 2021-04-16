@@ -517,16 +517,16 @@ A 200% attack boost (triple) takes 0xFFFF (0d65535) AP.
   57 00800000 - Rescued Daniela
 
 02100398-021003CB - Bitfield of pickup flags.
-  Valid pickup flags range from 0 to 19F.
-  Hardcoded bit indexes:
-  021 - Lapiste puzzle
-  024 - Vol Ignis puzzle
-  028 - Vol Fulgur puzzle
-  0B2 - Justice Ring blue chest spawned by clearing out all the falling blocks in Monastery.
-  0B5 - Strength Ring blue chest spawned by the Tin Man in Minera.
-  160-16D - Whether you've successfully beaten the boss for a given no-damage blue chest without taking damage.
-  170-17D - Whether you've taken the medal from a no-damage blue chest.
-  180-18B - For wooden chests in each area to temporarily use.
+  Valid pickup flags range from 000 to 19F.
+  Hardcoded flags:
+    021 - Lapiste puzzle
+    024 - Vol Ignis puzzle
+    028 - Vol Fulgur puzzle
+    0B2 - Justice Ring blue chest spawned by clearing out all the falling blocks in Monastery.
+    0B5 - Strength Ring blue chest spawned by the Tin Man in Minera.
+    160-16D - Whether you've successfully beaten the boss for a given no-damage blue chest without taking damage.
+    170-17D - Whether you've taken the medal from a no-damage blue chest.
+    180-18B - For wooden chests in each area to temporarily use.
 
 021003CC-021003D3 - Bitfield of areas unlocked on the world map.
   Each area takes up 2 bits.
