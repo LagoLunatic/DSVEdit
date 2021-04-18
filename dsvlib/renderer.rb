@@ -644,7 +644,10 @@ class Renderer
       color_offsets_per_palette_index = 16
     end
     
-    number_of_palettes_rows = fs.read(palette_data_start_offset+2,1).unpack("C*").first
+    dummy1, unknown, number_of_palettes_rows, dummy2 = fs.read(palette_data_start_offset, 4).unpack("C*")
+    if dummy1 != 0 || dummy2 != 0
+      raise "Invalid palette list pointer: %08X" % palette_data_start_offset
+    end
     if color_offsets_per_palette_index == 256
       number_of_palettes = (number_of_palettes_rows+15) / 16 # +15 to round upwards
     else
