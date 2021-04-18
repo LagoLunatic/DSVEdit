@@ -1,10 +1,39 @@
 
--- currently supports: US DoS
+-- currently supports: US DoS, US PoR
 
-ASSET_LIST_START = 0x0208CC6C
-ASSET_LIST_END = 0x0209A0C3
-LOADED_GFX_ASSETS_LIST_START = 0x020C7460
-LOADED_GFX_ASSETS_LIST_END = 0x020C76DF
+identifier = memory.readword(0x0200000E)
+if identifier == 0xFDE3 then -- US DoS
+  ASSET_LIST_START = 0x0208CC6C
+  ASSET_LIST_END = 0x0209A0C3
+  ASSET_LIST_ENTRY_SIZE = 0x28
+  
+  LOADED_GFX_ASSETS_LIST_START = 0x020C7460
+  LOADED_GFX_ASSETS_LIST_END = 0x020C76DF
+  
+  LOADED_GFX_ASSET_OFFSET_TO_INDEX_OF_PARENT = 0x04
+  LOADED_GFX_ASSET_OFFSET_TO_GFX_LOAD_TYPE = 0x0A
+  LOADED_GFX_ASSET_OFFSET_TO_UNK_NUM = 0x0D
+  LOADED_GFX_ASSET_OFFSET_TO_DATA_PTR = 0x10
+elseif identifier == 0x94BA then -- US PoR
+  ASSET_LIST_START = 0x020CDAFC
+  ASSET_LIST_END = 0x020DF15B
+  ASSET_LIST_ENTRY_SIZE = 0x20
+  
+  LOADED_GFX_ASSETS_LIST_START = 0x020FB204
+  LOADED_GFX_ASSETS_LIST_END = 0x020FB483
+  
+  LOADED_GFX_ASSET_OFFSET_TO_INDEX_OF_PARENT = 0x00
+  LOADED_GFX_ASSET_OFFSET_TO_GFX_LOAD_TYPE = 0x06 -- unsure
+  LOADED_GFX_ASSET_OFFSET_TO_UNK_NUM = 0x09
+  LOADED_GFX_ASSET_OFFSET_TO_DATA_PTR = 0x0C
+else
+  -- C73B for US OoE
+  -- 62F2 for JP DoS
+  -- 446B for JP PoR
+  -- EC90 for JP OoE
+  print("Error: Unsupported game")
+  return
+end
 
 asset_ptr_to_asset_filename = {}
 entry_ptr = ASSET_LIST_START
@@ -24,7 +53,7 @@ while entry_ptr < ASSET_LIST_END do
     asset_ptr_to_asset_filename[asset_ptr] = asset_filename
   end
   
-  entry_ptr = entry_ptr + 0x28
+  entry_ptr = entry_ptr + ASSET_LIST_ENTRY_SIZE
   i = i + 1
 end
 
@@ -33,10 +62,10 @@ local function display_hitboxes()
   i = 0
   gfx_lists_by_index = {}
   while entry_ptr < LOADED_GFX_ASSETS_LIST_END do
-    index_of_parent_entry = memory.readdwordsigned(entry_ptr+0x04)
-    gfx_load_type = memory.readbytesigned(entry_ptr+0x0A)
-    unk_0d = memory.readbytesigned(entry_ptr+0x0D)
-    data_ptr = memory.readdwordsigned(entry_ptr+0x10)
+    index_of_parent_entry = memory.readdwordsigned(entry_ptr+LOADED_GFX_ASSET_OFFSET_TO_INDEX_OF_PARENT)
+    gfx_load_type = memory.readbytesigned(entry_ptr+LOADED_GFX_ASSET_OFFSET_TO_GFX_LOAD_TYPE)
+    unk_num = memory.readbytesigned(entry_ptr+LOADED_GFX_ASSET_OFFSET_TO_UNK_NUM)
+    data_ptr = memory.readdwordsigned(entry_ptr+LOADED_GFX_ASSET_OFFSET_TO_DATA_PTR)
     
     if index_of_parent_entry == -1 then
       display_str = "(empty)"
@@ -69,7 +98,7 @@ local function display_hitboxes()
       -- todo handle player gfx that swap out somehow
       display_str = string.format("Unknown: %08X", data_ptr)
     end
-    display_str = display_str .. " " .. unk_0d -- string.format(" %d", unk_0d)
+    display_str = display_str .. " " .. unk_num -- string.format(" %d", unk_num)
     
     x = math.floor(i / 16) * 126
     y = 1 + (i%16)*10
