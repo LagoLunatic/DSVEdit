@@ -612,10 +612,15 @@ class SpriteEditor < Qt::Dialog
         nil
       else
         canvas_width = gfx.canvas_width
+        palette = @palettes[palette_index]
+        if palette.nil?
+          # Invalid palette, use a dummy palette instead.
+          palette = @renderer.generate_palettes(nil, @palettes[0].size).first
+        end
         if @one_dimensional_render_mode || SYSTEM == :gba
-          chunky_image = @renderer.render_gfx_1_dimensional_mode(gfx, @palettes[palette_index])
+          chunky_image = @renderer.render_gfx_1_dimensional_mode(gfx, palette)
         else
-          chunky_image = @renderer.render_gfx(gfx, @palettes[palette_index], 0, 0, canvas_width*8, canvas_width*8, canvas_width=canvas_width*8)
+          chunky_image = @renderer.render_gfx(gfx, palette, 0, 0, canvas_width*8, canvas_width*8, canvas_width=canvas_width*8)
         end
         
         chunky_image
@@ -731,9 +736,6 @@ class SpriteEditor < Qt::Dialog
     end
     if palette_index == @palette_index && !force
       return
-    end
-    if palette_index >= @palettes.length
-      palette_index = 0
     end
     @palette_index = palette_index
     
