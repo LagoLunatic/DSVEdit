@@ -439,3 +439,7 @@ BB Death event actor.
 BC Dracula event actor.
 BD Eric event actor.
 BE Vampiric Vincent event actor.
+BF Stella's locket
+C0 Spinning portrait with Brauner and the sisters
+C1 The castle in the background during the epilogue
+C2 Loretta's giant icicle attack during cutscenes

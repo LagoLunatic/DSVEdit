@@ -217,7 +217,7 @@
   08,4: The GFX for this sprite info. This is an index in list 020FB204.
   0C,4: Sprite pointer.
 
-020FB204 - List of currently loaded GFX assets.
+020FB204-020FB483 - List of currently loaded GFX assets.
   Entry length 0x14.
   0x20 entries in totals.
   The index in this list is argument r1 to func LoadGFX
@@ -949,6 +949,14 @@ Format of extra entity memory used for portrait paintings:
   02,2: Top Y offset.
   04,2: Right X offset.
   06,2: Bottom Y offset.
+
+0221B960-0221B99F - List of sprite info for special objects BF-C2.
+  Entry length 0x10.
+  4 entries in total.
+  00,04: Sprite pointer.
+  04,04: GFX pointer.
+  08,04: Palette list pointer.
+  0C,04: Subtype of the special object to create.
 
 0221D7A0 - List of enemies that need a certain enemy overlay and which overlay they need.
   Each entry is 8 bytes long.
