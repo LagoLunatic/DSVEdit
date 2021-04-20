@@ -1206,7 +1206,16 @@ class DSVEdit < Qt::MainWindow
   def load_settings
     @settings_path = "settings.yml"
     if File.exist?(@settings_path)
-      @settings = YAML::load_file(@settings_path)
+      begin
+        @settings = YAML::load_file(@settings_path)
+      rescue Psych::SyntaxError => e
+        @settings = {}
+        FileUtils.move(@settings_path, "settings.yml.bak")
+        Qt::MessageBox.warning(
+          self, "Setting corrupted",
+          "The settings.yml file containing your preferences for DSVEdit has been corrupted, so DSVEdit has reset all settings to default.\nThe corrupted file has been moved to settings.yml.bak if you want to examine it."
+        )
+      end
     else
       @settings = {}
     end
