@@ -641,6 +641,9 @@ OTHER_SPRITES = [
   {desc: "Somacula event actor", pointer: 0x08118760},
   
   {desc: "Giant Bat", pointer: 0x080B5C38, gfx_wrapper: 0x0811940C},
+  {desc: "Graham transformation", gfx_wrapper: 0x0811954C, palette: 0x0820C158, sprite: 0x082563DC},
+  {desc: "Graham 2 body", gfx_files: [0x081FD2C0, 0x081FF2C4], palette: 0x0820C158, sprite: 0x08254D84},
+  {desc: "Graham 2 hands", gfx_files: [0x081FD2C0, 0x081FF2C4], palette: 0x0820C158, sprite: 0x082553CC},
   {desc: "Chaos 2", gfx_wrapper: 0x08119224, palette: 0x0820AD70, sprite: 0x08226B58},
   
   {desc: "HUD", gfx_wrapper: 0x0827B208, palette: 0x0820C428, no_sprite: true},
