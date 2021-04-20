@@ -20,14 +20,14 @@ class SaveFileFixerDialog < Qt::Dialog
   
   def select_save_file_dialog
     default_dir = nil
-    if parent.settings["last_used_folder_for_save_files"] && Dir.exist?(parent.settings["last_used_folder_for_save_files"])
-      default_dir = parent.settings["last_used_folder_for_save_files"]
+    if parent.settings[:last_used_folder_for_save_files] && Dir.exist?(parent.settings[:last_used_folder_for_save_files])
+      default_dir = parent.settings[:last_used_folder_for_save_files]
     end
     filter = "NDS Save Files (*.sav *.dsv);;All Files (*)"
     save_path = Qt::FileDialog.getOpenFileName(self, "Select save", default_dir, filter)
     return if save_path.nil?
     
-    parent.settings["last_used_folder_for_save_files"] = File.dirname(save_path)
+    parent.settings[:last_used_folder_for_save_files] = File.dirname(save_path)
     
     game.fix_save_file_hashes(save_path)
     
