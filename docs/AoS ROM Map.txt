@@ -85,6 +85,9 @@ Starting stats (hardcoded):
   02,2: Height.
   These aren't perfect representations of every entity's size, just generic sizes like 8x8, 16x16, 48x48, etc, used to estimate the size.
 
+081183F4-08118437 - A palette list, probably for several things?
+  Palette 01 has the text colors used in the bestiary list.
+
 082097D4 - Soma's palette.
   0801462E - Has it hardcoded.
 
