@@ -350,3 +350,6 @@ Player's button config:
   However, simply setting this value by itself doesn't do anything.
 
 02025553,1 - On the pause screen, this is the index of which submenu you have highlighted with the cursor.
+
+03000058-03000457 - List of sprites in the OAM.
+03000C58-03001057 - List of sprites in the OAM (copy?).

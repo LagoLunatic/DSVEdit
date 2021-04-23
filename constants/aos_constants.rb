@@ -647,6 +647,8 @@ OTHER_SPRITES = [
   {desc: "Chaos 2", gfx_wrapper: 0x08119224, palette: 0x0820AD70, sprite: 0x08226B58},
   
   {desc: "HUD", gfx_wrapper: 0x0827B208, palette: 0x0820C428, no_sprite: true},
+  
+  {desc: "Pause menu foreground objects", gfx_files: [0x082052D8], palette: 0x0820C2C0, sprite: 0x08256EF8, palette_offset: 1},
 ]
 
 CANDLE_FRAME_IN_COMMON_SPRITE = 0x1E
