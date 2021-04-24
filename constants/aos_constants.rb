@@ -640,6 +640,8 @@ OTHER_SPRITES = [
   {desc: "Graham event actor", pointer: 0x08118718},
   {desc: "Somacula event actor", pointer: 0x08118760},
   
+  {desc: "Prologue floating castle", gfx_files: [0x08160490], palette: 0x0820972C, sprite: 0x0820CB60},
+  {desc: "Prologue foreground objects", gfx_files: [0x08160498], palette: 0x0820972C, sprite: 0x0820CD00, palette_offset: 2},
   {desc: "Giant Bat", pointer: 0x080B5C38, gfx_wrapper: 0x0811940C},
   {desc: "Graham transformation", gfx_wrapper: 0x0811954C, palette: 0x0820C158, sprite: 0x082563DC},
   {desc: "Graham 2 body", gfx_files: [0x081FD2C0, 0x081FF2C4], palette: 0x0820C158, sprite: 0x08254D84},
@@ -647,7 +649,6 @@ OTHER_SPRITES = [
   {desc: "Chaos 2", gfx_wrapper: 0x08119224, palette: 0x0820AD70, sprite: 0x08226B58},
   
   {desc: "HUD", gfx_wrapper: 0x0827B208, palette: 0x0820C428, no_sprite: true},
-  
   {desc: "Pause menu foreground objects", gfx_files: [0x082052D8], palette: 0x0820C2C0, sprite: 0x08256EF8, palette_offset: 1},
 ]
 
