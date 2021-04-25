@@ -236,7 +236,12 @@
   ; r2 - 
   ; r3 - 
 
-0806E0D0 LoadSprite
+0803B924 LoadSprite
+  ; r0 - Entity ptr
+  ; r1 - Sprite ptr
+  ; r2 - The VRAM index the GFX is loaded at, in terms of 128x32px chunks
+  ; r3 - The OBJ palette index the palette is loaded at
+0806E0D0 LoadSpriteAndAssets
   ; r0 - Entity ptr
   ; r1 - GFX asset ptr
   ; r2 - Palette list pointer
@@ -245,10 +250,11 @@
 0804DF3C LoadCommonSprite
   ; r0 - Entity
 
-0803B800 LoadObjectTilesGfx
+0803B800 LoadOBJTilesGfx
   ; r0 - GFX wrapper or list pointer
   ; r1 - ?
-08039E90 LoadObjectTilesGfx2
+  ; Returns r0 - ?
+08039E90 LoadOBJTilesGfx2
   ; Run for GFX types 0 and 1 (uncompressed and compressed)
   ; r0 - GFX wrapper pointer
   ; r1 - ?
@@ -268,11 +274,18 @@
   ; This mapping is stored in ROM at 080E2B04.
   ; Returns - The first free offset in VRAM. This is in terms of 8x8px tiles, so the return value must be multiplied by 0x20 to get the offset in bytes.
 
-0803C7B4 LoadObjectPalette
+0803C7B4 LoadOBJPalette
   ; r0 - Palette list pointer
   ; r1 - Palette index of the first palette in the list to load
   ; r2 - Number of palettes to load
   ; r3 - Index to load the palettes at in palette RAM (e.g. 9 to replace the 9th object palette)
+080681D8 LoadRoomEntityOBJPalette
+  ; r0 - Palette list pointer
+  ; Returns r0 - The OBJ palette index the palette got loaded at (or -1 if it failed to load the palette)
+  ; This function only loads the first palette in the given palette list.
+  ; It will first check if the given palette is already loaded in list 020003E0.
+  ; If not, it will load the palette into one of OBJ palette slots 0A, 0B, 0C, or 0D.
+  ; Then it will return the palette slot index it got loaded into.
 0803C918 LoadBGPalette
   ; r0 - Palette list pointer
   ; r1 - Palette index of the first palette in the list to load

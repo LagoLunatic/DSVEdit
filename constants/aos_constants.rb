@@ -642,6 +642,9 @@ OTHER_SPRITES = [
   
   {desc: "Prologue floating castle", gfx_files: [0x08160490], palette: 0x0820972C, sprite: 0x0820CB60},
   {desc: "Prologue foreground objects", gfx_files: [0x08160498], palette: 0x0820972C, sprite: 0x0820CD00, palette_offset: 2},
+  
+  {desc: "Castle Corridor background bats and clouds", gfx_files: [0x081CBE5C], palette: 0x08209EE8, sprite: 0x0820FE44},
+  
   {desc: "Giant Bat", pointer: 0x080B5C38, gfx_wrapper: 0x0811940C},
   {desc: "Graham transformation", gfx_wrapper: 0x0811954C, palette: 0x0820C158, sprite: 0x082563DC},
   {desc: "Graham 2 body", gfx_files: [0x081FD2C0, 0x081FF2C4], palette: 0x0820C158, sprite: 0x08254D84},

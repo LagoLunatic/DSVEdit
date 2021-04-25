@@ -123,6 +123,12 @@ Variables related to delayed loading room entities:
   Unlike the DSVanias, a unique ID of 0 must also be unique, and doesn't make an entity exempt.
 020003DC,4 - Pointer to the room's entity list.
 
+020003E0-020003EF - List of currently loaded room entity palettes.
+  4 entries in total. Each entry is a pointer to a palette list.
+  This list is used to know which room entity palettes are already loaded so they can be reused.
+  These palettes use up OBJ palette slots 0A-0D.
+020003F1,1 - ???
+
 020003F4 - Currently selected warp room on the warp select screen.
 
 020003F8,4 - Destination room for TeleportPlayer
