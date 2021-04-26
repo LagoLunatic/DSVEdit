@@ -747,9 +747,9 @@ OTHER_SPRITES = [
     0x020BA678, 0x020BA684, 0x020BA690, 0x020BA69C, 0x020BA6A8, 0x020BA6B4, 0x020BA6C0
   ]},
   
-  {desc: "Prologue background", sprite: 0x021DCAE4, palette: 0x020D6D38, gfx_wrapper: 0x02217D90},
+  {desc: "Prologue background", sprite: 0x021DCAE4, palette: 0x020D6D38, gfx_wrapper: 0x02217D90, overlay: 20},
   
-  {desc: "Credits background", sprite: 0x021DCAD8, palette: 0x020D6F60, gfx_wrapper: 0x02217D4C},
+  {desc: "Credits background", sprite: 0x021DCAD8, palette: 0x020D6F60, gfx_wrapper: 0x02217D4C, overlay: 20},
   {desc: "Credits text", sprite: 0x021DCAE0, palette: 0x020D6F3C, gfx_file_names: [
     "/sc2/f_enr00.dat",
     "/sc2/f_enr01.dat",
