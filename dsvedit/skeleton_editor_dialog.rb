@@ -152,22 +152,11 @@ class SkeletonEditorDialog < Qt::Dialog
   
   def initialize_joint_states(pose)
     joint_states_for_pose = []
-    joint_states_to_initialize = []
     
-    @skeleton.joints.each_with_index do |joint, joint_index|
+    for joint_index in 0...pose.joint_changes.count
       joint_state = JointState.new
-      joint_states_for_pose << joint_state
-      
-      if joint.parent_id == 0xFF
-        joint_states_to_initialize << joint_state
-      end
-    end
-    
-    while joint_states_to_initialize.any?
-      joint_state = joint_states_to_initialize.shift()
-      joint_index = joint_states_for_pose.index(joint_state)
-      joint_change = pose.joint_changes[joint_index]
       joint = @skeleton.joints[joint_index]
+      joint_change = pose.joint_changes[joint_index]
       
       if joint.parent_id == 0xFF
         joint_state.x_pos = 0
@@ -182,11 +171,12 @@ class SkeletonEditorDialog < Qt::Dialog
         joint_state.y_pos = parent_joint_state.y_pos
         joint_state.inherited_rotation = parent_joint_change.rotation
         
-        if parent_joint.copy_parent_visual_rotation && parent_joint.parent_id != 0xFF
+        if parent_joint.copy_parent_visual_rotation
           joint_state.inherited_rotation += parent_joint_state.inherited_rotation
         end
-        connected_rotation_in_degrees = joint_state.inherited_rotation / 182.0
         
+        connected_rotation_in_degrees = joint_state.inherited_rotation / 182.0
+         
         offset_angle = connected_rotation_in_degrees
         offset_angle += 90 * joint.positional_rotation
         
@@ -194,14 +184,13 @@ class SkeletonEditorDialog < Qt::Dialog
         
         joint_state.x_pos += joint_change.distance*Math.cos(offset_angle_in_radians)
         joint_state.y_pos += joint_change.distance*Math.sin(offset_angle_in_radians)
+        
       end
-      
-      child_joints = @skeleton.joints.select{|joint| joint.parent_id == joint_index}
-      child_joint_indexes = child_joints.map{|joint| @skeleton.joints.index(joint)}
-      joint_states_to_initialize += child_joint_indexes.map{|joint_index| joint_states_for_pose[joint_index]}
+      joint_states_for_pose << joint_state
     end
     
     joint_states_for_pose
+    
   end
   
   def tween_poses(previous_pose, next_pose, tweening_progress)
