@@ -1397,6 +1397,7 @@ class PartItem < Qt::GraphicsPixmapItem
     
     setFlag(Qt::GraphicsItem::ItemIsMovable)
     setFlag(Qt::GraphicsItem::ItemSendsGeometryChanges)
+    setFlag(Qt::GraphicsItem::ItemIsSelectable)
     setFlag(Qt::GraphicsItem::ItemIsFocusable)
   end
   
