@@ -3,6 +3,7 @@ require_relative 'ui_sprite_editor'
 
 class SpriteEditor < Qt::Dialog
   RED_PEN_COLOR = Qt::Pen.new(Qt::Color.new(255, 0, 0))
+  GREY_PEN_COLOR = Qt::Pen.new(Qt::Color.new(128, 128, 128))
   
   attr_reader :game, :fs
   
@@ -73,6 +74,12 @@ class SpriteEditor < Qt::Dialog
     @part_graphics_scene = Qt::GraphicsScene.new
     @part_graphics_scene.setBackgroundBrush(ClickableGraphicsScene::BACKGROUND_BRUSH)
     @ui.part_graphics_view.setScene(@part_graphics_scene)
+    
+    # Add the X/Y axis lines in the background to show where the scene origin is.
+    @frame_graphics_scene.addLine(-0x8000, 0, 0x8000, 0, GREY_PEN_COLOR)
+    @frame_graphics_scene.addLine(0, -0x8000, 0, 0x8000, GREY_PEN_COLOR)
+    @part_graphics_scene.addLine(-0x8000, 0, 0x8000, 0, GREY_PEN_COLOR)
+    @part_graphics_scene.addLine(0, -0x8000, 0, 0x8000, GREY_PEN_COLOR)
     
     @animation_timer = Qt::Timer.new()
     @animation_timer.setSingleShot(true)
@@ -435,9 +442,9 @@ class SpriteEditor < Qt::Dialog
     @part_pixmaps_for_part_view = []
     @part_pixmaps_for_frame_view = []
     @ui.animation_index.clear()
-    @frame_graphics_scene.clear()
-    @part_graphics_scene.clear()
-    @gfx_file_graphics_scene.clear()
+    clear_scene_leaving_lines(@frame_graphics_scene)
+    clear_scene_leaving_lines(@part_graphics_scene)
+    clear_scene_leaving_lines(@gfx_file_graphics_scene)
     
     @current_frame_index = nil
     @current_part_index = nil
@@ -649,9 +656,7 @@ class SpriteEditor < Qt::Dialog
   
   def frame_changed(i, do_not_change_current_part: false)
     @current_frame_index = i
-    @frame_graphics_scene.items.each do |item|
-      @frame_graphics_scene.removeItem(item)
-    end
+    clear_scene_leaving_lines(@frame_graphics_scene)
     
     if i == nil || @sprite.frames[i] == nil
       @current_frame_index = nil
@@ -700,9 +705,7 @@ class SpriteEditor < Qt::Dialog
     if @sprite_info.ignore_part_gfx_page
       gfx_page_index = 0
     end
-    @gfx_file_graphics_scene.items.each do |item|
-      @gfx_file_graphics_scene.removeItem(item)
-    end
+    clear_scene_leaving_lines(@gfx_file_graphics_scene)
     @gfx_page_index = gfx_page_index
     
     gfx_page_pixmap_item = @gfx_page_pixmap_items_by_palette[@palette_index][gfx_page_index]
@@ -749,9 +752,7 @@ class SpriteEditor < Qt::Dialog
   
   def part_changed(i)
     @current_part_index = i
-    @part_graphics_scene.items.each do |item|
-      @part_graphics_scene.removeItem(item)
-    end
+    clear_scene_leaving_lines(@part_graphics_scene)
     
     if i == nil || @sprite.parts[i] == nil
       @current_part_index = nil
@@ -926,6 +927,13 @@ class SpriteEditor < Qt::Dialog
       self.close()
     elsif @ui.buttonBox.standardButton(button) == Qt::DialogButtonBox::Apply
       save_sprite()
+    end
+  end
+  
+  def clear_scene_leaving_lines(graphics_scene)
+    graphics_scene.items.each do |item|
+      next if item.is_a?(Qt::GraphicsLineItem)
+      graphics_scene.removeItem(item)
     end
   end
   
