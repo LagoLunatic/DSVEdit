@@ -1283,41 +1283,81 @@ class SpriteEditor < Qt::Dialog
     
     return unless @selection_rectangle
     
-    max_w = @gfx_file_graphics_scene.width
-    max_h = @gfx_file_graphics_scene.height
+    max_w = @gfx_file_graphics_scene.width.to_i
+    max_h = @gfx_file_graphics_scene.height.to_i
     mouse_x = [mouse_x, 0].max
     mouse_y = [mouse_y, 0].max
     mouse_x = [mouse_x, max_w].min
     mouse_y = [mouse_y, max_h].min
     
-    x = [mouse_x, @selection_origin.x].min
-    y = [mouse_y, @selection_origin.y].min
-    w = [mouse_x, @selection_origin.x].max - x
-    h = [mouse_y, @selection_origin.y].max - y
+    x1 = @selection_origin.x.to_i
+    y1 = @selection_origin.y.to_i
+    x2 = mouse_x.to_i
+    y2 = mouse_y.to_i
     
     if SYSTEM == :gba
       # Round X/Y to nearest multiple of 8, since the GBA works in terms of 8x8 tiles.
-      x = (x.to_i / 8) * 8
-      y = (y.to_i / 8) * 8
-      x = [x, max_w-8].min
-      y = [y, max_h-8].min
+      x1 = (x1.to_i / 8) * 8
+      y1 = (y1.to_i / 8) * 8
+      x2 = (x2.to_i / 8) * 8
+      y2 = (y2.to_i / 8) * 8
       
       # Get all OBJ sizes that are valid on GBA.
       obj_sizes = Part::OBJ_SIZES.values.flatten(1)
       
-      # Limit to sizes that don't go off the canvas.
-      obj_sizes.select! do |other_w, other_h|
-        x+other_w <= max_w && y+other_h <= max_h
-      end
+      w = (x2 - x1).abs
+      h = (y2 - y1).abs
       
       # Then select whichever size is overall closest to what the user has selected.
       obj_sizes_by_diff = obj_sizes.map do |other_w, other_h|
         diff = (w - other_w).abs + (h - other_h).abs
         [[other_w, other_h], diff]
       end
-      best_obj_size = obj_sizes_by_diff.min_by{|size, diff| diff}[0]
+      obj_sizes_sorted_by_min_diff = obj_sizes_by_diff.sort_by{|size, diff| diff}
+      best_obj_size, best_size_diff = obj_sizes_sorted_by_min_diff.find do |(other_w, other_h), diff|
+        # Limit to sizes that don't go off the canvas.
+        if x1 == max_w && x2 == max_w
+          next if x1 - 8 + other_w > max_w
+        elsif x2 >= x1
+          next if x1 + other_w > max_w
+        else
+          next if x1 - other_w < 0
+        end
+        if y1 == max_h && y2 == max_h
+          next if y1 - 8 + other_h > max_h
+        elsif y2 >= y1
+          next if y1 + other_h > max_h
+        else
+          next if y1 - other_h < 0
+        end
+        true
+      end
+      
       w, h = best_obj_size
+      
+      if x1 == max_w && x2 == max_w
+        x1 -= 8
+        x2 = x1 + w
+      elsif x2 >= x1
+        x2 = x1 + w
+      else
+        x2 = x1 - w
+      end
+      if y1 == max_h && y2 == max_h
+        y1 -= 8
+        y2 = y1 + h
+      elsif y2 >= y1
+        y2 = y1 + h
+      else
+        y2 = y1 - h
+      end
+      puts
     end
+    
+    x = [x2, x1].min
+    y = [y2, y1].min
+    w = [x2, x1].max - x
+    h = [y2, y1].max - y
     
     @selection_rectangle.setRect(x, y, w, h)
   end
