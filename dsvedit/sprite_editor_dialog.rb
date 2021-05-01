@@ -1355,7 +1355,8 @@ class SpriteEditor < Qt::Dialog
     part.height       = h.to_i
     
     part.gfx_page_index = @gfx_page_index
-    part.palette_index = @palette_index
+    part.palette_index = @palette_index - @sprite_info.palette_offset
+    part.palette_index = 0 if part.palette_index < 0
     
     part.horizontal_flip = @ui.part_horizontal_flip.checked
     part.vertical_flip = @ui.part_vertical_flip.checked
