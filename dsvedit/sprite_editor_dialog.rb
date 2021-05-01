@@ -1294,6 +1294,31 @@ class SpriteEditor < Qt::Dialog
     y = [mouse_y, @selection_origin.y].min
     w = [mouse_x, @selection_origin.x].max - x
     h = [mouse_y, @selection_origin.y].max - y
+    
+    if SYSTEM == :gba
+      # Round X/Y to nearest multiple of 8, since the GBA works in terms of 8x8 tiles.
+      x = (x.to_i / 8) * 8
+      y = (y.to_i / 8) * 8
+      x = [x, max_w-8].min
+      y = [y, max_h-8].min
+      
+      # Get all OBJ sizes that are valid on GBA.
+      obj_sizes = Part::OBJ_SIZES.values.flatten(1)
+      
+      # Limit to sizes that don't go off the canvas.
+      obj_sizes.select! do |other_w, other_h|
+        x+other_w <= max_w && y+other_h <= max_h
+      end
+      
+      # Then select whichever size is overall closest to what the user has selected.
+      obj_sizes_by_diff = obj_sizes.map do |other_w, other_h|
+        diff = (w - other_w).abs + (h - other_h).abs
+        [[other_w, other_h], diff]
+      end
+      best_obj_size = obj_sizes_by_diff.min_by{|size, diff| diff}[0]
+      w, h = best_obj_size
+    end
+    
     @selection_rectangle.setRect(x, y, w, h)
   end
   
