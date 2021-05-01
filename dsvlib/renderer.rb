@@ -1500,10 +1500,21 @@ class Renderer
   end
   
   def render_sprite_part(part, rendered_gfx_file)
+    gfx_x_offset = part.gfx_x_offset
+    gfx_y_offset = part.gfx_y_offset
+    width = part.width
+    height = part.height
+    
+    if SYSTEM == :gba
+      gfx_x_offset = (gfx_x_offset / 8) * 8
+      gfx_y_offset = (gfx_y_offset / 8) * 8
+    end
+    
     # Clamp the part width/height so it doesn't go past the bounds of a GFX page.
-    width = [part.width, rendered_gfx_file.width-part.gfx_x_offset].min
-    height = [part.height, rendered_gfx_file.height-part.gfx_y_offset].min
-    part_gfx = rendered_gfx_file.crop(part.gfx_x_offset, part.gfx_y_offset, width, height)
+    width = [width, rendered_gfx_file.width-gfx_x_offset].min
+    height = [height, rendered_gfx_file.height-gfx_y_offset].min
+    
+    part_gfx = rendered_gfx_file.crop(gfx_x_offset, gfx_y_offset, width, height)
     if part.horizontal_flip
       part_gfx.mirror!
     end
