@@ -328,12 +328,6 @@ class SpriterInterface
           joint_state.y_pos = 0
       end
       
-      # workaround for functions that need absolute positions
-      if joint.parent_id != 0xFF
-        joint_state.x_pos += parent_joint_state.x_pos
-        joint_state.y_pos += parent_joint_state.y_pos
-      end
-      
       joint_states_for_pose << joint_state
     end
 
