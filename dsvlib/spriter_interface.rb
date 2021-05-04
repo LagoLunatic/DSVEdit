@@ -297,7 +297,7 @@ class SpriterInterface
       joint_change = pose.joint_changes[joint_index]
       
       joint_state.inherited_rotation = joint_change.rotation
-      joint_state.connected_rotation = joint_change.rotation
+      joint_state.relative_rotation = joint_change.rotation
       
       if joint.parent_id != 0xFF
         parent_joint = skeleton.joints[joint.parent_id]
@@ -306,7 +306,7 @@ class SpriterInterface
         if joint.copy_parent_visual_rotation # maybe this variable should be called something like "is_mobile" or "is_turning"
           joint_state.inherited_rotation += parent_joint_state.inherited_rotation
         else
-          joint_state.connected_rotation -= parent_joint_state.inherited_rotation
+          joint_state.relative_rotation -= parent_joint_state.inherited_rotation
         end
       end
       
