@@ -287,4 +287,51 @@ class SpriterInterface
     
     return joint_states_for_pose
   end
+  
+  def self.initialize_joint_states_new(pose, skeleton)
+    joint_states_for_pose = []
+    
+    for joint_index in 0...pose.joint_changes.count
+      joint_state = JointState.new
+      joint = skeleton.joints[joint_index]
+      joint_change = pose.joint_changes[joint_index]
+      
+      joint_state.inherited_rotation = joint_change.rotation
+      joint_state.relative_rotation = joint_change.rotation
+      
+      if joint.parent_id != 0xFF
+        parent_joint = skeleton.joints[joint.parent_id]
+        parent_joint_state = joint_states_for_pose[joint.parent_id]
+        
+        if joint.copy_parent_visual_rotation # maybe this variable should be called something like "is_mobile" or "is_turning"
+          joint_state.inherited_rotation += parent_joint_state.inherited_rotation
+        else
+          joint_state.relative_rotation -= parent_joint_state.inherited_rotation
+        end
+      end
+      
+      case joint.positional_rotation
+        when 0
+          joint_state.x_pos = joint_change.distance
+          joint_state.y_pos = 0
+        when 1
+          joint_state.x_pos = 0
+          joint_state.y_pos = joint_change.distance
+        when 2
+          joint_state.x_pos = joint_change.distance * -1
+          joint_state.y_pos = 0
+        when 3
+          joint_state.x_pos = 0
+          joint_state.y_pos = joint_change.distance * -1
+        else # just to be safe
+          joint_state.x_pos = 0
+          joint_state.y_pos = 0
+      end
+      
+      joint_states_for_pose << joint_state
+    end
+
+    return joint_states_for_pose
+  end
+  
 end
