@@ -305,8 +305,10 @@ class SpriterInterface
         
         if joint.copy_parent_visual_rotation # maybe this variable should be called something like "is_mobile" or "is_turning"
           joint_state.inherited_rotation += parent_joint_state.inherited_rotation
+          joint_state.inherited_rotation &= 0xFFFF
         else
           joint_state.relative_rotation -= parent_joint_state.inherited_rotation
+          joint_state.relative_rotation &= 0xFFFF
         end
       end
       
