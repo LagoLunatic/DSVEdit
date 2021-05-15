@@ -80,6 +80,10 @@ class GenericEditable
         # Enemies not in the bestiary.
         if game.enemy_docs[index]
           @name = game.enemy_docs[index].split("\n").first
+        elsif index-0x7D <= 0x63
+          @name = game.enemy_docs[index-0x7D].split("\n").first + " (Maxim Mode)"
+        elsif game.enemy_docs[index-0x7D]
+          @name = game.enemy_docs[index-0x7D].split("\n").first + " (Maxim Mode)"
         else
           @name = ""
         end

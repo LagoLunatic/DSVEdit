@@ -158,8 +158,8 @@ Enemies:
 79 Revenge Armor
 7A Red Skeleton (drips down)
 7B Unused slime man.
-7C bat?
-7D Bat? Everything from here on out is the same enemies just duplicated, but with higher stats
+7C Glitchy Bat?
+7D 
 7E 
 7F 
 80 

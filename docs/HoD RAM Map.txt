@@ -54,6 +54,7 @@
 02000314-0200031F - Bitfield of event flags and miscellaneous flags.
   Includes which ceilings the player has destroyed with the Crush Boots.
   Bits 0, 1, 2, and 3 are for the walls you lower by pressing a button.
+  Bit 30 indicates hard mode, which doubles damage taken.
 
 02000330-02000353 - Bitfield of pickup flags.
 
@@ -183,7 +184,10 @@ Extra memory used for rendering special effects:
 02018494 - List of pointers to all subweapon entities.
   This is used to make sure you don't go over a subweapon's "Max at once".
 
-020184F8,4 - ?
+020184F8,4 - Current player character.
+  0 - Juste.
+  1 - Simon.
+  2 - Maxim.
 
 02018528,4 - Bitfield of damage types the player currently deals?
 

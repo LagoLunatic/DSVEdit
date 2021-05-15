@@ -489,6 +489,12 @@ BEST_SPRITE_FRAME_FOR_ENEMY = {
 BEST_SPRITE_OFFSET_FOR_ENEMY = {
   0x71 => {y: -0x20},
 }
+# Need to copy the data for the normal Juste mode enemy IDs over to the Maxim mode enemy IDs.
+(0x00..0x7C).each do |enemy_id|
+  REUSED_ENEMY_INFO[enemy_id+0x7D] = REUSED_ENEMY_INFO[enemy_id]
+  BEST_SPRITE_FRAME_FOR_ENEMY[enemy_id+0x7D] = BEST_SPRITE_FRAME_FOR_ENEMY[enemy_id]
+  BEST_SPRITE_OFFSET_FOR_ENEMY[enemy_id+0x7D] = BEST_SPRITE_OFFSET_FOR_ENEMY[enemy_id]
+end
 
 COMMON_SPRITE = {desc: "Common", sprite: 0x0812CE34, gfx_files: [0x080E89FC], palette: 0x08124104, palette_offset: 1}
 
