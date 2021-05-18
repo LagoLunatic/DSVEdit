@@ -22,6 +22,8 @@ DoS Enemy DNA:
     The Soul Eater Ring basically doubles the drop chance, the formula is:
       (this_number*2 + 0.125) / (512 - luck/8)
     On hard mode, luck has 4x the effect on soul/item chances.
+    Visually in the bestiary, 00 here shows as no rarity stars, 01-08 shows as 3 rarity stars, 09-1E shows as 2 rarity stars, and 1F-FF shows as 1 rarity star.
+    Luck has no impact on rarity stars.
   15,1: Attack stat.
   16,1: Defense stat.
     Doubles as both physical and magical defense.
