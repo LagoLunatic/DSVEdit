@@ -550,6 +550,7 @@ OTHER_SPRITES = [
   COMMON_SPRITE,
   
   {desc: "Juste player", init_code: 0x080E1FFC},
+  {desc: "Simon player", init_code: 0x080E202C, palette_offset: 1},
   {desc: "Maxim player", init_code: 0x080E205C},
   
   {desc: "Candle 0", gfx_files: [0x0811BD98], palette: 0x08125BB0, palette_offset: 0, sprite: 0x081548B4},
