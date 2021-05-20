@@ -749,6 +749,66 @@ HOD_UNIQUE_SECTOR_NAMES_FOR_MUSIC = [
   "Chapel of Dissonance B",
 ]
 
+PLAYER_LIST_POINTER = 0x080E1FFC
+PLAYER_COUNT = 3
+PLAYER_NAMES = [
+  "Juste",
+  "Simon",
+  "Maxim",
+]
+PLAYER_LIST_FORMAT = [
+  # length: 0x30
+  [4, "GFX list pointer"],
+  [4, "Palette pointer"],
+  [2, "Palette index"],
+  [2, "Unknown 2"],
+  [4, "Sprite pointer"],
+  [4, "Animations pointer"],
+  [4, "Banned moves pointer"],
+  [4, "Movement params pointer"],
+  [4, "Unknown 6"],
+  [4, "Unknown 7"],
+  [4, "Sound effects pointer"],
+  [4, "??? bitfield", :bitfield],
+  [4, "Starting subweapon"],
+]
+PLAYER_BITFIELD_ATTRIBUTES = {
+  "??? bitfield" => [
+    "Unknown 1",
+    "Unknown 2",
+    "Unknown 3",
+    "Unknown 4",
+    "Unknown 5",
+    "Unknown 6",
+    "Unknown 7",
+    "Unknown 8",
+    "Unknown 9",
+    "Unknown 10",
+    "Unknown 11",
+    "Unknown 12",
+    "Unknown 13",
+    "Unknown 14",
+    "Unknown 15",
+    "Unknown 16",
+    "Unknown 17",
+    "Unknown 18",
+    "Can turn in mid-air",
+    "Unknown 20",
+    "Unknown 21",
+    "Unknown 22",
+    "Unknown 23",
+    "Unknown 24",
+    "Unknown 25",
+    "Unknown 26",
+    "Unknown 27",
+    "Unknown 28",
+    "Unknown 29",
+    "Unknown 30",
+    "Unknown 31",
+    "Unknown 32",
+  ]
+}
+
 NEW_OVERLAY_ID = nil
 NEW_OVERLAY_FREE_SPACE_START = nil
 NEW_OVERLAY_FREE_SPACE_MAX_SIZE = nil
