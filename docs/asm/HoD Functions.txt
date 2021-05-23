@@ -41,6 +41,9 @@
 
 08072888 PlayerUpdate
 
+0807272C CreatePlayer
+  ; r0 - Character index to create
+
 08000DE8 DummyUpdate
   ; Does nothing, immediately returns.
 
@@ -63,16 +66,20 @@
   ; r0 - Sprite pointer
   ; r1 - Index in object VRAM of the GFX to use
 
-080134F4 EntityInitAnimations??
+080134F4 EntitySetAnimation
   ; r0 - Entity
-  ; r1 - Pointer to animation list??
+  ; r1 - Pointer to the animation to change to
   ; r2 - 0?
   ; r3 - 1?
+0801359C SpriteAnimate
+
+080130A4 AnimationFunc0
+08013130 AnimationFunc1
+080131BC AnimationFunc2
+08013268 AnimationFunc3
 
 0800EB48 InitializeSpriteInfoList
   ; Called when the game boots up.
-
-0801359C SpriteAnimate
 
 080BA570 CandleDraw
   ; Draw function for some types of candles

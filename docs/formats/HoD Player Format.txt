@@ -14,6 +14,8 @@ Player format:
     pointer to a struct of movement speed stuff?
   1C,4: ??? pointer.
   20,4: ??? pointer.
+    points to a list of bytes.
+    the byte at index 8, if changed to any value besides 00 or 01, will cause the jumpkick hitbox to persist even after jumpkicking when you're just walking around.
   24,4: ??? pointer.
     Pointer to list of sound effects for this character?
   28,4: ??? bitfield.

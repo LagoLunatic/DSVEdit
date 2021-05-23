@@ -18,6 +18,14 @@
     [    B    ] [    F    ]
   So e.g. E means the player's spot in VRAM, 0 means the common sprite's spot, C means the player's spell's spot, etc.
 
+080C5458-080C5467 - List of animation functions.
+  The animation's function index is the index in this list.
+  4 entries in total.
+    0 - 080130A4
+    1 - 08013130
+    2 - 080131BC
+    3 - 08013268
+
 080C5508 - Font character mapping.
 
 080C7E38-080CA15F - Enemy DNA list.

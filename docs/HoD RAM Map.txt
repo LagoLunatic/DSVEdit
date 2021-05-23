@@ -140,6 +140,8 @@ Extra memory used for rendering special effects:
     03 0200A470 - BG3 (room layer 02).
   Format:
   00,4: Pointer to layer metadata.
+  06,2: Layer scrolling X pos.
+  0A,2: Layer scrolling Y pos.
   14,1: Visual effect.
     List of visual effects:
     FF - The screen will not scroll more than 1.5 screens to the right, making the room appear to be 1.5 screens wide. This only works correctly on layer 0, if another layer has this it causes bugs where the player will warp around the room.
@@ -189,12 +191,16 @@ Extra memory used for rendering special effects:
   1 - Simon.
   2 - Maxim.
 
+02018510,4 - ??? bitfield copied from the current player data.
+
 02018528,4 - Bitfield of damage types the player currently deals?
 
 0201852E,2 - Bitfield of status effects on the player.
   0x1 - Poison
   0x2 - Curse
   0x4 - Petrify
+
+02018534,2 - 
 
 0201853C,2 - Number of subweapon entity slots currently available to use.
   This is 8 when there are no subweapons in use.
@@ -208,6 +214,12 @@ Current stats:
 02018554,2 - DEF
 02018556,2 - INT
 02018558,2 - LCK
+
+02018568-02018767 - List of player trail positions.
+  Each entry is 8 bytes long. 0x40 trail entries in total.
+  00,2: X pos of this trail in the room.
+  02,2: X pos of this trail in the room.
+  04,1: Whether this trail should be horizontally flipped (facing left).
 
 02018770 - Bitfield of ?
 

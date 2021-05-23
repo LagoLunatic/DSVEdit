@@ -5,7 +5,9 @@ Sprite header format:
 04,4: Pointer to the start of the list of the sprite's frames.
 08,4: Pointer to the start of the this sprite's first animation.
   If this sprite has no animations, this is just a pointer back to this sprite header instead.
+  In HoD, it always points back to this sprite header.
 0C,4: Pointer to the start of the list of pointers to each of the sprite's animations.
+  Only exists in AoS. In HoD, the sprite header is only 0xC bytes long.
 
 Sprite parts:
 Each part is 0xC bytes long.
@@ -48,9 +50,32 @@ Animations:
 Each animation is 4 bytes long.
   00,2: Number of frames in this animation.
   02,2: Function index. Index in list 080E2B34, which is a list of pointers to functions to call.
+  04,?: List of keyframes in this animation. See below for the format.
+    For type 0, this is a pointer to the list of keyframes.
+    For types 1, 2, and 3, this is just the list itself directly.
 
-List of frame delays:
-Each frame delay is 4 bytes long.
+List of keyframes for function index 0:
+Each keyframe is 0x10 bytes long.
+  00,1: Frame index to use.
+  01,1: Delay (in frames) for this frame to be displayed.
+  02,?
+
+List of keyframes for function index 1:
+Each keyframe is 4 bytes long.
   00,1: Frame index to use.
   01,1: Delay (in frames) for this frame to be displayed.
   02,2: ?
+
+List of keyframes for function index 2:
+Each keyframe is 8 bytes long.
+  00,2: Frame index to use.
+  02,2: Delay (in frames) for this frame to be displayed.
+  04,4: Hitbox data. See the hitbox format above.
+
+List of keyframes for function index 3:
+Each keyframe is 0xC bytes long.
+  00,2: Frame index to use.
+  02,2: Delay (in frames) for this frame to be displayed.
+  04,4: ???
+    This is argument r1 to func 08042884
+  08,4: Hitbox data. See the hitbox format above.
