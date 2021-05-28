@@ -1131,15 +1131,30 @@ class Game
       end
       f.puts
       
-      items[SKILL_GLOBAL_ID_RANGE].each_with_index do |item, i|
-        name = "Skill#{item.name.tr(" ", "")}"
-        name << "%02X" % i if name == "Skill"
-        name << "DUPLICATE" if used_names.include?(name)
-        used_names << name
-        next if item["Code"] == 0
-        f.puts "%08X #{name}Use" % (item["Code"] & 0xFFFFFFFC)
+      if GAME == "hod"
+        items[0xD5..0xE4].each_with_index do |item, i|
+          name = "Subweapon#{item.name.tr(" ", "")}"
+          f.puts "%08X #{name}Create" % (item["Create Code"] & 0xFFFFFFFC) unless item["Create Code"] == 0
+          f.puts "%08X #{name}Update" % (item["Update Code"] & 0xFFFFFFFC) unless item["Update Code"] == 0
+        end
+        f.puts
+        
+        items[0xE5..0x114].each_with_index do |item, i|
+          name = "Spell#{item.name.tr(" ", "")}"
+          f.puts "%08X #{name}Use" % (item["Code"] & 0xFFFFFFFC) unless item["Code"] == 0
+        end
+        f.puts
+      else
+        items[SKILL_GLOBAL_ID_RANGE].each_with_index do |item, i|
+          name = "Skill#{item.name.tr(" ", "")}"
+          name << "%02X" % i if name == "Skill"
+          name << "DUPLICATE" if used_names.include?(name)
+          used_names << name
+          next if item["Code"] == 0
+          f.puts "%08X #{name}Use" % (item["Code"] & 0xFFFFFFFC)
+        end
+        f.puts
       end
-      f.puts
     end
   end
   
