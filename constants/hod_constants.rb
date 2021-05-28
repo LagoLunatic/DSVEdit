@@ -322,7 +322,7 @@ ITEM_TYPES = [
   {
     name: "Relics",
     list_pointer: 0x084B2C74,
-    count: 0x20,
+    count: 0xC,
     format: RELIC_FORMAT # length 4
   },
   {
