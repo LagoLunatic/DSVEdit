@@ -191,7 +191,7 @@ Extra memory used for rendering special effects:
   1 - Simon.
   2 - Maxim.
 
-02018510,4 - ??? bitfield copied from the current player data.
+02018510,4 - Misc bitfield copied from the current player data.
 
 02018528,4 - Bitfield of damage types the player currently deals?
 

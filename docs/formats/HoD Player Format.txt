@@ -18,7 +18,7 @@ Player format:
     the byte at index 8, if changed to any value besides 00 or 01, will cause the jumpkick hitbox to persist even after jumpkicking when you're just walking around.
   24,4: ??? pointer.
     Pointer to list of sound effects for this character?
-  28,4: ??? bitfield.
+  28,4: Misc bitfield.
   2C,4: Starting subweapon.
     00 - None
     01 - Knife
