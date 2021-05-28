@@ -102,7 +102,7 @@ COLOR_OFFSETS_PER_256_PALETTE_INDEX = 16
 
 ENEMY_DNA_RAM_START_OFFSET = 0x080C7E38
 ENEMY_DNA_FORMAT = [
-  # length: 36
+  # length: 0x24
   [4, "Create Code"],
   [4, "Update Code"],
   [1, "Drop 1"],
@@ -230,7 +230,7 @@ GLYPH_ICONS_PALETTE_POINTER = nil
 ITEM_ICONS_GFX_POINTERS = [0x080E8A04, 0x080EAA08, 0x080ECA0C, 0x080EEA10]
 
 CONSUMABLE_FORMAT = [
-  # length: 12
+  # length: 0xC
   [2, "Item ID"],
   [2, "Icon"],
   [1, "Type"],
@@ -239,7 +239,7 @@ CONSUMABLE_FORMAT = [
   [4, "Unknown 2"],
 ]
 WEAPON_FORMAT = [
-  # length: 12
+  # length: 0xC
   [2, "Item ID"],
   [2, "Icon"],
   [2, "special effects?"],
@@ -250,7 +250,7 @@ WEAPON_FORMAT = [
   [2, "Effects", :bitfield],
 ]
 ARMOR_FORMAT = [
-  # length: 12
+  # length: 0xC
   [2, "Item ID"],
   [2, "Icon"],
   [1, "Type"],
@@ -299,19 +299,19 @@ ITEM_TYPES = [
     name: "Consumables",
     list_pointer: 0x084B24A4,
     count: 0x1C,
-    format: CONSUMABLE_FORMAT # length 12
+    format: CONSUMABLE_FORMAT # length 0xC
   },
   {
     name: "Weapons",
     list_pointer: 0x084B25F4,
     count: 0x9,
-    format: WEAPON_FORMAT # length 12
+    format: WEAPON_FORMAT # length 0xC
   },
   {
     name: "Armor",
     list_pointer: 0x084B2660,
     count: 0x80,
-    format: ARMOR_FORMAT # length 12
+    format: ARMOR_FORMAT # length 0xC
   },
   {
     name: "Spellbooks",
