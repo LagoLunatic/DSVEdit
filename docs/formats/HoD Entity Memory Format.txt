@@ -13,6 +13,7 @@ Memory used for entities in HoD is 02000418 - 02007C17. Each entity is 0x80 byte
   & 00000002 - 
 12,1: Index in object palette VRAM where this entity's palette is loaded.
 17,1: Index in object VRAM where this entity's GFX are loaded.
+22,1: 
 38,2: Var A.
 3A,2: Var B.
 3E,1: Subtype.
@@ -30,6 +31,8 @@ Memory used for entities in HoD is 02000418 - 02007C17. Each entity is 0x80 byte
   Sometimes only the upper halfword of the X/Y pos is read.
 50,4: X velocity in subpixels.
 54,4: X velocity in subpixels.
+58,4: X acceleration.
+5C,4: Y acceleration.
 60,1: Bitfield of drawing related flags?
   & 40 - Horizontal flip.
 61,1: Bitfield of ?
