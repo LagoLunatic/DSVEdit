@@ -809,6 +809,54 @@ PLAYER_BITFIELD_ATTRIBUTES = {
   ]
 }
 
+PLAYER_MOVEMENT_PARAMS_LIST_POINTER = 0x080E1C00
+PLAYER_MOVEMENT_PARAMS_FORMAT = [
+  # length: 0xAC
+  [4, "Walking X Velocity"],
+  [4, "Unknown 2"],
+  [4, "Quick Dash X Force"],
+  [4, "Unknown 4"],
+  [4, "Unknown 5"], # 0806E132 0806E262 x vel
+  [4, "Unknown 6"],
+  [4, "Unknown 7"], # 0806E8BA x vel
+  [4, "Unknown 8"], # 0806E8E8 y vel
+  [4, "Unknown 9"], # 0806E8EE y accel
+  [4, "Sliding Horizontally X Velocity"],
+  [4, "Sliding Sloped X Velocity"],
+  [4, "Unknown 12"],
+  [4, "Unknown 13"],
+  [4, "Damaged on Ground X Velocity"],
+  [4, "Damaged on Ground X Deceleration"],
+  [4, "Unknown 16"], # 0806DC2E x vel
+  [4, "Unknown 17"], # 0806DC36 x accel
+  [4, "Damaged in Air X Velocity"],
+  [4, "Damaged in Air Y Velocity"],
+  [4, "Unknown 20"], # 0806DE38 0806DF98 x accel
+  [4, "Unknown 21"], # 0806DDBA 0806DF7E y vel
+  [4, "Unknown 22"], # 0806DFC8 y accel
+  [4, "X Velocity During Ascent"],
+  [4, "X Velocity During Descent"],
+  [4, "Walking X Deceleration"],
+  [4, "X Deceleration in Air"],
+  [4, "Unknown 27"],
+  [4, "High Jump Y Force"],
+  [4, "Unknown 29"],
+  [4, "Unknown 30"],
+  [4, "First Jump Y Force"],
+  [4, "Extra Jumps Y Force"],
+  [4, "Unknown 33"], # 08071FC6 y accel
+  [4, "Unknown 34"], # 0806F49E y vel
+  [4, "Unknown 35"], # 0806DE46 y accel during a jump? (gravity?)
+  [4, "Unknown 36"], # 0806C71A 0806E47A falling y accel? ONLY falling off an edge or smth though, not descending from a jump?
+  [4, "Maximum Y Velocity"],
+  [4, "Jumpkicking X Velocity"],
+  [4, "Jumpkicking Y Velocity"],
+  [4, "Unknown 40"], # 080714A0 y vel
+  [4, "Unknown 41"], # 080714A8 y accel
+  [4, "Unknown 42"], # 080714FE y vel
+  [4, "Maximum Number of Jumps"],
+]
+
 NEW_OVERLAY_ID = nil
 NEW_OVERLAY_FREE_SPACE_START = nil
 NEW_OVERLAY_FREE_SPACE_MAX_SIZE = nil

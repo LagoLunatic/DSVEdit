@@ -21,7 +21,8 @@
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
-    <layout class="QHBoxLayout" name="horizontalLayout"/>
+    <widget class="QTabWidget" name="tabWidget">
+    </widget>
    </item>
    <item>
     <widget class="QDialogButtonBox" name="buttonBox">

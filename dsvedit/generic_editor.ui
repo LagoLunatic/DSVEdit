@@ -20,8 +20,14 @@
       <widget class="QListWidget" name="item_list">
        <property name="minimumSize">
         <size>
-         <width>0</width>
+         <width>234</width>
          <height>420</height>
+        </size>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>234</width>
+         <height>16777215</height>
         </size>
        </property>
       </widget>

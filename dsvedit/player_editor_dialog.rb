@@ -19,8 +19,20 @@ class PlayerEditor < Qt::Dialog
       kind: :player,
       format: PLAYER_LIST_FORMAT
     }
-    @editor_widget = GenericEditorWidget.new(game.fs, game, player_type, main_window.game.player_format_doc, custom_editable_class: Player)
-    @ui.horizontalLayout.addWidget(@editor_widget)
+    tab = GenericEditorWidget.new(game.fs, game, player_type, main_window.game.player_format_doc, custom_editable_class: Player)
+    @ui.tabWidget.addTab(tab, player_type[:name])
+    
+    if GAME == "hod"
+      movement_params_type = {
+        name: "Player Movement Params",
+        list_pointer: PLAYER_MOVEMENT_PARAMS_LIST_POINTER,
+        count: PLAYER_COUNT,
+        kind: :player,
+        format: PLAYER_MOVEMENT_PARAMS_FORMAT
+      }
+      tab = GenericEditorWidget.new(game.fs, game, movement_params_type, "", hide_bitfields_tree: true)
+      @ui.tabWidget.addTab(tab, movement_params_type[:name])
+    end
     
     connect(@ui.buttonBox, SIGNAL("clicked(QAbstractButton*)"), self, SLOT("button_pressed(QAbstractButton*)"))
     
@@ -29,12 +41,12 @@ class PlayerEditor < Qt::Dialog
   
   def button_pressed(button)
     if @ui.buttonBox.standardButton(button) == Qt::DialogButtonBox::Ok
-      @editor_widget.save_current_item()
+      @ui.tabWidget.currentWidget.save_current_item()
       self.close()
     elsif @ui.buttonBox.standardButton(button) == Qt::DialogButtonBox::Cancel
       self.close()
     elsif @ui.buttonBox.standardButton(button) == Qt::DialogButtonBox::Apply
-      @editor_widget.save_current_item()
+      @ui.tabWidget.currentWidget.save_current_item()
     end
   end
 end

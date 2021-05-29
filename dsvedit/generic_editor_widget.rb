@@ -8,7 +8,7 @@ class GenericEditorWidget < Qt::Widget
   slots "open_icon_chooser()"
   slots "open_color_chooser()"
   
-  def initialize(fs, game, item_type, format_doc, custom_editable_class: nil)
+  def initialize(fs, game, item_type, format_doc, custom_editable_class: nil, hide_bitfields_tree: false)
     super()
     @ui = Ui_GenericEditorWidget.new
     @ui.setup_ui(self)
@@ -20,6 +20,29 @@ class GenericEditorWidget < Qt::Widget
     
     @fs = fs
     @game = game
+    
+    if hide_bitfields_tree
+      @num_columns = 4
+      @ui.treeWidget.hide()
+    else
+      @num_columns = 2
+    end
+    
+    @ui.horizontalLayout_2.takeAt(0)
+    @ui.horizontalLayout_2.takeAt(0)
+    @attribute_column_layouts = []
+    @num_columns.times do |col|
+      form_layout = Qt::FormLayout.new()
+      form_layout.fieldGrowthPolicy = Qt::FormLayout::AllNonFixedFieldsGrow
+      form_layout.labelAlignment = Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter
+      @attribute_column_layouts << form_layout
+      
+      vertical_layout = Qt::VBoxLayout.new()
+      vertical_layout.addLayout(form_layout)
+      vertical_spacer = Qt::SpacerItem.new(20, 40, Qt::SizePolicy::Minimum, Qt::SizePolicy::Expanding)
+      vertical_layout.addItem(vertical_spacer)
+      @ui.horizontalLayout_2.addLayout(vertical_layout)
+    end
     
     @item_type_name = item_type[:name]
     
@@ -37,15 +60,11 @@ class GenericEditorWidget < Qt::Widget
     
     @attribute_text_fields = {}
     @items.first.attribute_integers.keys.each_with_index do |attribute_name, i|
-      if i.even?
-        form_layout = @ui.attribute_layout_left
-      else
-        form_layout = @ui.attribute_layout_right
-      end
+      form_layout = @attribute_column_layouts[i % @num_columns]
       
       label = Qt::Label.new(self)
       label.text = attribute_name
-      form_layout.setWidget(i/2, Qt::FormLayout::LabelRole, label)
+      form_layout.setWidget(i/@num_columns, Qt::FormLayout::LabelRole, label)
       
       if attribute_name == "Icon"
         field = Qt::PushButton.new(self)
@@ -58,7 +77,7 @@ class GenericEditorWidget < Qt::Widget
         field = Qt::LineEdit.new(self)
       end
       field.setMaximumSize(80, 16777215)
-      form_layout.setWidget(i/2, Qt::FormLayout::FieldRole, field)
+      form_layout.setWidget(i/@num_columns, Qt::FormLayout::FieldRole, field)
       
       @attribute_text_fields[attribute_name] = field
     end
@@ -97,16 +116,12 @@ class GenericEditorWidget < Qt::Widget
     @ui.item_desc.setPlainText(item.description)
     
     item.attribute_integers.values.each_with_index do |value, i|
-      if i.even?
-        form_layout = @ui.attribute_layout_left
-      else
-        form_layout = @ui.attribute_layout_right
-      end
+      form_layout = @attribute_column_layouts[i % @num_columns]
       
       attribute_length = item.attribute_integer_lengths[i]
       string_length = attribute_length*2
       
-      field = form_layout.itemAt(i/2, Qt::FormLayout::FieldRole).widget
+      field = form_layout.itemAt(i/@num_columns, Qt::FormLayout::FieldRole).widget
       field.text = "%0#{string_length}X" % value
     end
     
