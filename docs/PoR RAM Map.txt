@@ -52,6 +52,8 @@
 020CD88C - List of enemy files to load.
 020E19DC - List of special object files to load.
 
+020DF1FC,2 - The color to use for the blood particle effect when the player or an enemy made of flesh is damaged.
+
 020DF294-020DF2A1 - List of number of sectors that show up on the map there are in each area.
   Each entry is a byte.
   This list is used by map rendering code to read the bitfield of map items you own (021119D0).

@@ -94,6 +94,8 @@ Each list of assets has this format:
   04,4: 2?
   The list is terminated by FFFFFFFF.
 
+0209A154,2 - The color to use for the blood particle effect when the player or an enemy made of flesh is damaged.
+
 0209A188-0209A19F - List of the x and y positions (in map tiles) of each the icon of each warp room on the map.
   This list is only for the position of the square icon on top of each warp room when you're using a warp point.
   The list of warp rooms (0222C478) has the locations of the warp rooms themselves, not just the icon.
