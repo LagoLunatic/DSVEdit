@@ -595,6 +595,7 @@ OTHER_SPRITES = [
   
   # Soma's sprite pointer isn't normal. Using it here wouldn't show any correct frames or animations, because of the unusual way that Soma is animated by swapping the GFX in VRAM out on the fly while keeping the sprite animation still.
   # So instead we make this a no-sprite sprite so only the GFX and palette show up.
+  # Note: 0x0822AEE4 is a sprite pointer that may have been been an old sprite for Soma in an earlier version. But it's not used in the final game and the animations in it look very buggy.
   # Soma's GFX list is at 080E11D4.
   {desc: "Soma player", sprite: 0x080E11C4, palette: 0x082097D4, gfx_files: [0x081604A8, 0x081624AC, 0x081644B0, 0x081664B4, 0x081684B8, 0x0816A4BC, 0x0816C4C0, 0x0816E4C4, 0x081704C8, 0x081724CC, 0x081744D0, 0x081764D4, 0x081784D8, 0x0817A4DC, 0x0817C4E0, 0x0817E4E4, 0x081804E8, 0x081824EC, 0x081844F0, 0x081864F4, 0x081884F8, 0x0818A4FC, 0x0818C500, 0x0818E504, 0x08190508, 0x0819250C, 0x08194510, 0x08196514, 0x08198518, 0x0819A51C, 0x0819C520, 0x0819E524, 0x081A0528, 0x081A252C, 0x081A4530, 0x081A6534, 0x081A8538], no_sprite: true},
   # Julius's GFX list is at 080E12C8.

@@ -31,8 +31,8 @@ Memory used for entities in HoD is 02000418 - 02007C17. Each entity is 0x80 byte
   Sometimes only the upper halfword of the X/Y pos is read.
 50,4: X velocity in subpixels.
 54,4: X velocity in subpixels.
-58,4: X acceleration.
-5C,4: Y acceleration.
+58,4: X acceleration in subpixels.
+5C,4: Y acceleration in subpixels.
 60,1: Bitfield of drawing related flags?
   & 40 - Horizontal flip.
 61,1: Bitfield of ?

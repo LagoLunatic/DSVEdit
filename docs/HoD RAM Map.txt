@@ -191,7 +191,8 @@ Extra memory used for rendering special effects:
   1 - Simon.
   2 - Maxim.
 
-02018500,4 - Pointer to movement params copied from the current player data.
+020184FC,4 - Pointer to the animations list copied from the current player data.
+02018500,4 - Pointer to the movement params copied from the current player data.
 02018510,4 - Misc bitfield copied from the current player data.
 
 02018528,4 - Bitfield of damage types the player currently deals?
