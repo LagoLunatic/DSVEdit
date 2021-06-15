@@ -596,6 +596,9 @@ class Text
       [byte].pack("C")
     when "BUTTON"
       button_index = %w(L R A B X Y LEFT RIGHT UP DOWN).index(data)
+      if button_index.nil?
+        raise TextEncodeError.new("Failed to encode command: #{command} #{data}")
+      end
       [0xEB + button_index].pack("C")
     when "PORTRAIT"
       byte = data.to_i(16)
@@ -719,6 +722,9 @@ class Text
       [byte].pack("C")
     when "BUTTON"
       button_index = %w(B A L R UP DOWN RIGHT LEFT).index(data)
+      if button_index.nil?
+        raise TextEncodeError.new("Failed to encode command: #{command} #{data}")
+      end
       [0xB + button_index].pack("C")
     when "CURRENT_SAVE_FILE"
       [0x13].pack("C")
@@ -776,6 +782,9 @@ class Text
       [halfword].pack("v")
     when "BUTTON"
       button_index = %w(L R A B X Y LEFT RIGHT UP DOWN).index(data)
+      if button_index.nil?
+        raise TextEncodeError.new("Failed to encode command: #{command} #{data}")
+      end
       if button_index
         [0xF00B + button_index].pack("v")
       elsif (0x15..0x1A).include?(data.to_i(16))
