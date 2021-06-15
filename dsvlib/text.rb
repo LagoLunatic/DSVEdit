@@ -531,9 +531,8 @@ class Text
         button = %w(L R A B X Y LEFT RIGHT UP DOWN)[command_number-0x0B]
         "{BUTTON #{button}}"
       end
-    when 0x15..0x1A
-      "{BUTTON #{data_format_string}}" % command_number
     else
+      # Note: For AoS, commands 0x15-0x1A won't render anything at all.
       "{RAW #{data_format_string}}" % command_number
     end
   end
