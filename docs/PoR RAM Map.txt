@@ -165,6 +165,8 @@
 
 020F6270 - Number of frames since the game was booted up.
 
+020F6270,4 - Number of frames that have passed since the game was booted up (or reset).
+  This is used to affect the initial RNG seed when loading a save file.
 020F6278,4 - Current RNG seed.
   The most recent random number generated is stored here.
   It is used to affect the next random number generated.

@@ -94,6 +94,20 @@ Memory used for entities in DoS is 020CA3F0 - 020F6DEF. Each entity is 0x2A0 byt
 270,2: Var B.
 
 For players:
+00D,1: Player's state.
+  01 - Normal
+  03 - Starting to walk
+  04 - Walking
+  06 - Backdashing
+  07 - Sliding
+  09 - Hitting the ground and after a long fall or jumpkick
+  0A - Hippogryph jumping
+  0B - Jumpkicking or using Succubus soul
+  0C - Super attacking
+  0E - Transforming into bat form
+  0F - In bat form
+  11 - Transforming out of bat form
+  12 - Taking damage
 0D0,4: Bitfield of player state booleans.
 0E0,4: Bitfield of what actions the player can do.
   Copied from the player data.

@@ -960,7 +960,7 @@ ITEM_BITFIELD_ATTRIBUTES = {
     "Super attacking",
     "Unknown 17",
     "Using R-button soul",
-    "Unknown 19",
+    "Backdashing",
     "Unknown 20",
     "Jumpkicking",
     "Taking damage",

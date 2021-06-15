@@ -1167,6 +1167,10 @@
 022FFB78 EnemyAbaddonUpdate ; Overlay 39
 022FF9C0 EnemyMenaceCreate ; Overlay 38
 022FFEE0 EnemyMenaceUpdate ; Overlay 38
+02303BF4 EnemyMenaceSpawnStomachSpike ; Overlay 38
+02303D30 EnemyMenaceStomachSpikeUpdate ; Overlay 38
+02304510 EnemyMenaceSpawnLangolier ; Overlay 38
+02304660 EnemyMenaceLangolierUpdate ; Overlay 38
 02237D08 EnemySomaCreate
 02237F2C EnemySomaUpdate
 022370AC EnemyDraculaCreate

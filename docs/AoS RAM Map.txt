@@ -1,4 +1,5 @@
 
+02000000,4 - Number of frames that have passed since the game was booted up (or reset).
 02000008,4 - Current RNG seed.
   The most recent random number generated is stored here.
   It is used to affect the next random number generated.

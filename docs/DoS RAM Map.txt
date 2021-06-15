@@ -180,6 +180,8 @@ There are 41 entries in the list total.
 
 020C07E0 - Start of game object.
 
+020C07E0,4 - Number of frames that have passed since the game was booted up (or reset).
+  This is used to affect the initial RNG seed when loading a save file.
 020C07E4,4 - Current RNG seed.
   The most recent random number generated is stored here.
   It is used to affect the next random number generated.
@@ -603,9 +605,9 @@ More misc flags (020F7184):
 
 === 020F732B: End of second region that gets saved to the save file. Corresponds to 0463 in the save file data.
 
-020F7348 - Normally 0, when 1 it prevents Soma from entering doors. This is used when Soma is using the cutall/axe super so he doesn't enter the door. Events set this to 0, which is what allows the seal warp glitch to work. can also be 3 for events?
-020F7350 - Pointer to the player entity.
-020F7354 - Another pointer to the player entity?
+020F7348,4 - Normally 0, when 1 it prevents Soma from entering doors. This is used when Soma is using the cutall/axe super so he doesn't enter the door. Events set this to 0, which is what allows the seal warp glitch to work. can also be 3 for events?
+020F7350,4 - Pointer to the player entity.
+020F7354,4 - Another pointer to the player entity?
 
 Player's current stats:
 020F735C-6B - Player's natural stats (base stats + level up stats).
@@ -955,6 +957,11 @@ Here's what each actor is (index, special object id, description):
     r1 - 02,2
     r2 - 04,2
     r3 - 01,1
+
+0222EDAC - List of super attacks.
+  Entry length 8.
+  00,4: The update code for the super attack.
+  04,4: MP cost of the super attack.
 
 0222DFA8-0222DFE8 - List of which player sprite animation corresponds to a type of weapon swing animation.
   Entry length 5.
