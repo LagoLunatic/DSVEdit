@@ -105,7 +105,7 @@ class TextDatabase
     
     TEXT_REGIONS.each do |region_name, text_index_range|
       output_path = File.join(output_folder, "%s.csv" % region_name)
-      CSV.open(output_path, "wb") do |csv|
+      CSV.open(output_path, "wb", encoding: "UTF-8") do |csv|
         text_list[text_index_range].each do |text|
           csv << ["0x%03X" % text.text_id, text.decoded_string]
         end
@@ -116,7 +116,7 @@ class TextDatabase
   def import_from_csv(input_folder)
     TEXT_REGIONS.each do |region_name, text_index_range|
       input_path = File.join(input_folder, "%s.csv" % region_name)
-      rows = CSV.read(input_path)
+      rows = CSV.read(input_path, encoding: "UTF-8")
       rows.each do |text_id, string|
         text_id = text_id.to_i(16)
         if !text_index_range.include?(text_id)
