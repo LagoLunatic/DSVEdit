@@ -959,7 +959,7 @@ Here's what each actor is (index, special object id, description):
     r3 - 01,1
 
 0222EDAC - List of super attacks.
-  Entry length 8.
+  Entry length 8. 0xF entries in total.
   00,4: The update code for the super attack.
   04,4: MP cost of the super attack.
 

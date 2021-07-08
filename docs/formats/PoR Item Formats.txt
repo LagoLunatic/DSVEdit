@@ -120,7 +120,7 @@ Weapon format:
       03 Backstab (Katar/Cinquedea).
       04 Axe warp jump up and smash down.
       05 Three attacks.
-      06 ???
+      06 Unused stationary crit.
       07 Ice breath.
       08 Fire breath.
       09 Nebula crit.

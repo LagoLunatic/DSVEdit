@@ -809,6 +809,11 @@ SOUL_EXTRA_DATA_FORMAT = [
   [1, "Max at once"],
   [1, "Bonus max at once"],
 ]
+SUPER_ATTACK_DATA_FORMAT = [
+  # length: 8
+  [4, "Code"],
+  [4, "Mana cost"],
+]
 ITEM_TYPES = [
   {
     name: "Consumables",
@@ -841,6 +846,13 @@ ITEM_TYPES = [
     count: 53,
     kind: :skill,
     format: SOUL_EXTRA_DATA_FORMAT # length: 2
+  },
+  {
+    name: "Super attacks",
+    list_pointer: 0x0222EDAC,
+    count: 15,
+    kind: :special_attack,
+    format: SUPER_ATTACK_DATA_FORMAT # length: 8
   },
 ]
 

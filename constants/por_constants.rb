@@ -1062,6 +1062,13 @@ SKILL_EXTRA_DATA_FORMAT = [
   [2, "SP to Master"],
   [2, "Price (1000G)"],
 ]
+CRITICAL_AND_COMBO_DATA_FORMAT = [
+  # length: 8
+  [4, "Code"],
+  [1, "Mana cost"],
+  [1, "Can use in air"],
+  [2, "Unused"],
+]
 ITEM_TYPES = [
   {
     name: "Consumables",
@@ -1112,6 +1119,13 @@ ITEM_TYPES = [
     count: 81,
     kind: :skill,
     format: SKILL_EXTRA_DATA_FORMAT # length: 6
+  },
+  {
+    name: "Criticals and combos",
+    list_pointer: 0x0221F070,
+    count: 20,
+    kind: :special_attack,
+    format: CRITICAL_AND_COMBO_DATA_FORMAT # length: 8
   },
 ]
 

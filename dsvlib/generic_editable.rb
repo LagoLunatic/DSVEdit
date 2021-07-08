@@ -198,6 +198,55 @@ class GenericEditable
           @description_text_id = TEXT_REGIONS["Quest Descriptions"].begin + index - 1
         end
       end
+    when :special_attack
+      case GAME
+      when "dos"
+        super_attack_name = [
+          "None",
+          "Lunge",
+          "Fast lunge",
+          "Backstab",
+          "Axe warp up",
+          "Three attacks",
+          "Japanese sword fast attack",
+          "Three fast attacks",
+          "Uppercut",
+          "Stationary",
+          "Death Scythe skull",
+          "Throw",
+          "Ice breath",
+          "Fire breath",
+          "Claimh Solais swing",
+        ][index]
+        @name = super_attack_name
+        @description = ""
+      when "por"
+        special_attack_name = [
+          "None",
+          "Lunge",
+          "Fast lunge",
+          "Backstab",
+          "Axe warp up",
+          "Three attacks",
+          "Unused stationary critical",
+          "Ice breath",
+          "Fire breath",
+          "Nebula critical",
+          "Fiery double damage critical",
+          "Five fast attacks",
+          "Alucard's Spear warp up",
+          "Stellar Sword warp",
+          "Tackle/Guardian Knuckle",
+          "Spin Kick/Smash",
+          "Richter Combo/Deadly Axe",
+          "Martial Art/Knee Strike",
+          "Spinning Art",
+          "Running Axe",
+        ][index]
+        special_attack_name = special_attack_name
+        @name = special_attack_name
+        @description = ""
+      end
     else # item
       @name_text_id = TEXT_REGIONS["Item Names"].begin + self["Item ID"]
       @description_text_id = TEXT_REGIONS["Item Descriptions"].begin + self["Item ID"]

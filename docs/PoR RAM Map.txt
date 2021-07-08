@@ -1136,7 +1136,7 @@ Format of extra entity memory used for portrait paintings:
   06,2: signed. stored to weapon entity+BE,2 after some modification?
 
 0221F070-0221F10F - List of criticals and combo moves.
-  Entry length 8.
+  Entry length 8. 0x14 entries in total.
   00,4: Pointer to code for this move.
   04,1: Mana cost.
   05,1: If 0, you must be on the ground to do this combo move. Otherwise you can be in the air.
