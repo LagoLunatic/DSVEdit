@@ -731,6 +731,9 @@ OTHER_SPRITES = [
   {pointer: 0x02052FC8, desc: "Info screen", one_dimensional_mode: true},
   {pointer: 0x0203D52C, desc: "Pause menu", one_dimensional_mode: true},
   {pointer: 0x0203BCBC, desc: "Equip menu", one_dimensional_mode: true},
+  {pointer: 0x022E0DB8, desc: "Credits", overlay: 37},
+  {pointer: 0x022E10E8, desc: "Credits portraits", overlay: 37},
+  {pointer: 0x022E0BD0, desc: "Richter & Old Axe Armor modes credits characters", overlay: 37},
   
   {desc: "Game over", sprite: 0x0213D700, palette: 0x022C3A34, gfx_file_names: [
     "/sc/f_gover0.dat",
