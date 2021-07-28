@@ -763,7 +763,7 @@ Player's current stats:
 0210A9E8,2 - ? maybe a boolean related to palettes?
 
 0210AF18 - Start of list of hitboxes. Each entry 0x14 bytes long. The index in this list is located at offset +0xA7 within the entity's memory.
-  the first 0xA bytes are the first hitbox, the second 0xA bytes are the second hitbox.
+  The first 0xA bytes are the first hitbox, the second 0xA bytes are the second hitbox.
 0210B24C - has stuff related to weapon hitboxes.
   0210B24E,0210B250 - left x pos, top y pos
   0210B252,0210B254 - right x pos, bottom y pos
@@ -921,6 +921,14 @@ Here's what each actor is (index, special object id, description):
   07 55 Dmitrii
   08 5B Alucard (missing gfx pages)
   09 52 Julius NPC (missing gfx page)
+
+0222DED4-0222DEEB - List of subweapon info for Julius mode character.
+  Entry length 8. The index in the list is 0 for Julius, 1 for Yoko, 2 for Alucard.
+  00,2: Number of subweapons this character has.
+  02,2: Frame index in the common sprite of the icon for the first subweapon.
+    The other subweapon icons for this character should come directly after this one in the common sprite.
+  04,4: Pointer to list of subweapons.
+    The list is composed of halfwords, each halfword is a soul index.
 
 0222DF68-0222DFA7 - List of character swap voices.
   Entry length 0x10.
