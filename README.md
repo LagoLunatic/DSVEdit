@@ -161,7 +161,7 @@ To this:
 
 If you want to run the latest development version of DSVEdit from source, follow these instructions:  
 
-* Download and install Ruby 2.4 from here: https://web.archive.org/web/20201111202701/https://rubyinstaller.org/downloads/
+* Download and install Ruby+Devkit 2.4 from here: https://web.archive.org/web/20201111202701/https://rubyinstaller.org/downloads/
 * Download and install Qt 4.8.6 from here: https://web.archive.org/web/20200128090117/https://download.qt.io/archive/qt/4.8/4.8.6/
 * Obtain DSVEdit's source code from GitHub: https://github.com/LagoLunatic/DSVEdit
 * Open the DSVEdit folder in a command prompt and run `gem install bundler` followed by `bundle install`.
