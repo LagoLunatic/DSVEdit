@@ -7,10 +7,10 @@ class DarkFunctionInterface
   
   PADDING = 4
   
-  def self.export(output_path, name, sprite_info, fs, renderer, transparent_trails: false, one_dimensional_mode: false)
+  def self.export(output_path, name, sprite_info, fs, renderer, transparent_trails: false, one_dimensional_mode: false, colors_per_palette: 16)
     sprite = sprite_info.sprite
     
-    palettes = renderer.generate_palettes(sprite_info.palette_pointer, 16)
+    palettes = renderer.generate_palettes(sprite_info.palette_pointer, colors_per_palette)
     
     if transparent_trails
       # Transparent trails treat palette 0 as normal, and palette 1 as being palette 0 with 0xC/0x1F opacity.
