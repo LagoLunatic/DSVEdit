@@ -815,7 +815,7 @@ PLAYER_MOVEMENT_PARAMS_FORMAT = [
   [4, "Walking X Velocity"],
   [4, "Unknown 2"],
   [4, "Quick Dash X Force"],
-  [4, "Unknown 4"],
+  [4, "Quick Dash X Deceleration"],
   [4, "Unknown 5"], # 0806E132 0806E262 x vel
   [4, "Unknown 6"],
   [4, "Unknown 7"], # 0806E8BA x vel
@@ -838,16 +838,16 @@ PLAYER_MOVEMENT_PARAMS_FORMAT = [
   [4, "X Velocity During Descent"],
   [4, "Walking X Deceleration"],
   [4, "X Deceleration in Air"],
-  [4, "Unknown 27"],
+  [4, "Unknown 27"], # 0806C35E x vel
   [4, "High Jump Y Force"],
-  [4, "Unknown 29"],
+  [4, "High Jump Y Acceleration"],
   [4, "Unknown 30"],
   [4, "First Jump Y Force"],
-  [4, "Extra Jumps Y Force"],
+  [4, "Air Jump Y Force"],
   [4, "Unknown 33"], # 08071FC6 y accel
   [4, "Unknown 34"], # 0806F49E y vel
-  [4, "Unknown 35"], # 0806DE46 y accel during a jump? (gravity?)
-  [4, "Unknown 36"], # 0806C71A 0806E47A falling y accel? ONLY falling off an edge or smth though, not descending from a jump?
+  [4, "Y Acceleration During Ascent"], # 0806DE46 y accel during a jump? (gravity?)
+  [4, "Y Acceleration During Descent"], # 0806C71A 0806E47A falling y accel? ONLY falling off an edge or smth though, not descending from a jump?
   [4, "Maximum Y Velocity"],
   [4, "Jumpkicking X Velocity"],
   [4, "Jumpkicking Y Velocity"],
