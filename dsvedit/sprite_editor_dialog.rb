@@ -782,10 +782,14 @@ class SpriteEditor < Qt::Dialog
     @ui.seek_slider.value = 0
     @current_animation_frame_index = 0
     
-    if i == nil || @sprite.animations[i] == nil
+    if i == nil
       @current_animation_index = nil
       @current_animation = nil
       @ui.animation_index.setCurrentIndex(-1)
+    elsif @sprite.animations[i] == nil
+      frame_changed(nil) # Blank out the frame display
+      part_changed(nil) # Blank out the part display
+      return
     else
       @ui.animation_index.setCurrentIndex(i)
       @current_animation = @sprite.animations[i]

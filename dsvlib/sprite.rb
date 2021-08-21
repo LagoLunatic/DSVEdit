@@ -102,8 +102,10 @@ class Sprite
   def read_from_rom_by_pointer(sprite_pointer)
     if SYSTEM == :nds
       @number_of_frames, @number_of_animations, @frame_list_offset, @animation_list_offset = fs.read(sprite_pointer, 12).unpack("vvVV")
-    else
+    elsif GAME == "aos"
       @number_of_frames, @number_of_animations, @frame_list_offset, @first_animation_offset, @animation_list_offset = fs.read(sprite_pointer, 16).unpack("vvVVV")
+    else # hod
+      @number_of_frames, _, @frame_list_offset, @first_animation_offset = fs.read(sprite_pointer, 12).unpack("vvVV")
     end
     
     @frames_by_offset = {}
@@ -160,8 +162,12 @@ class Sprite
           @animations_by_offset[offset] = animation
         else
           animation_pointer = fs.read(offset, 4).unpack("V").first
-          animation_data = fs.read(animation_pointer, Animation.data_size)
-          animation = Animation.new.from_data(animation_data, animation_pointer)
+          if animation_pointer == 0
+            animation = nil
+          else
+            animation_data = fs.read(animation_pointer, Animation.data_size)
+            animation = Animation.new.from_data(animation_data, animation_pointer)
+          end
           @animations_by_offset[animation_pointer] = animation
         end
         
@@ -171,6 +177,7 @@ class Sprite
       end
       
       animations.each do |animation|
+        next if animation.nil?
         offset = animation.first_frame_delay_offset
         animation.number_of_frames.times do
           frame_delay_data = fs.read(offset, FrameDelay.data_size)
@@ -184,6 +191,7 @@ class Sprite
     end
     
     @animations.each do |animation|
+      next if animation.nil?
       animation.initialize_frame_delays_from_pointer(frame_delays, @frame_delays_by_offset)
     end
   end
