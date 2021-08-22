@@ -121,15 +121,15 @@ Enemies:
 63 Dracula Wraith
 64 Fleamen (fall from ceiling)
 65 Tiny Devil (fly down from ceiling)
-66 Spawner timer.
+66 Spawner Timer
   Var A: ?
   Var B: Delay in frames between spawning each enemy.
-67 Spawner timer.
+67 Spawner Timer
   Var A: ?
   Var B: Delay in frames between spawning each enemy.
 68 Unused, nothing
 69 Unused, nothing
-6A Spawner.
+6A Spawner
   Var A: ?
   Var B: Enemy ID to spawn.
 6B Floating Corpse
@@ -157,7 +157,7 @@ Enemies:
     1 Behind window.
 79 Revenge Armor
 7A Red Skeleton (drips down)
-7B Unused slime man.
+7B Unused Slime Man
 7C Glitchy Bat?
 7D 
 7E 

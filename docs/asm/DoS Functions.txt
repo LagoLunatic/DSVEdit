@@ -584,6 +584,10 @@
 021FCC9C PlayerDraw
 021FEE28 PlayerUpdateYAccel
 0201B79C PlayerTrailDraw
+021FE808 PlayerHandleJumpingAndFalling
+  ; 021FE8A0 - Hardcoded check for if the current player number is Julius, for if performing extra jumps when falling after a superjump should be disabled.
+021FEA28 PlayerHandleJumping
+  ; 021FEB18 - Hardcoded check for if the current player number is Julius, for if the superjump height should be reduced.
 
 021FF6DC PlayerLoadGFX?
   ; r0 - Player entity
