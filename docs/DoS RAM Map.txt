@@ -1070,6 +1070,12 @@ Here's what each actor is (index, special object id, description):
   06,2: Unused. 0.
   08,4: Code pointer.
 
+=== 022D7900: Overlay 40
+
+022FFB4C,1 - Hardcoded default red soul index for Dmitrii to start the fight with.
+
+=== 022E881F: End of Overlay 40
+
 02308920 - Start of asset memory.
 
 02348C00 - when drawing your name, the pixel data is here. changing this doesn't change what's on screen, but does affect whether you can press the OK button or not. also, if you start a new game and then save, it will actually be the displayed signature.
