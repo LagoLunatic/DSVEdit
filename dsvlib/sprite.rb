@@ -23,8 +23,13 @@ class Sprite
               :frame_delays_by_offset,
               :animations
   
-  def initialize(sprite_pointer, fs)
+  def initialize(sprite_pointer, fs, hod_anim_list_ptr: nil, hod_anim_list_count: nil)
     @fs = fs
+    
+    if GAME == "hod" && hod_anim_list_ptr != nil && hod_anim_list_count != nil
+      @number_of_animations = hod_anim_list_count
+      @animation_list_offset = hod_anim_list_ptr
+    end
     
     @sprite_pointer = sprite_pointer
     @sprite_file = fs.assets_by_pointer[sprite_pointer]

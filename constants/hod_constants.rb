@@ -549,9 +549,9 @@ BEST_SPRITE_OFFSET_FOR_SPECIAL_OBJECT = {}
 OTHER_SPRITES = [
   COMMON_SPRITE,
   
-  {desc: "Juste player", init_code: 0x080E1FFC},
-  {desc: "Simon player", init_code: 0x080E202C, palette_offset: 1},
-  {desc: "Maxim player", init_code: 0x080E205C},
+  {desc: "Juste player", init_code: 0x080E1FFC, hod_anim_list_ptr: 0x084B1AD0, hod_anim_list_count: 0x34},
+  {desc: "Simon player", init_code: 0x080E202C, hod_anim_list_ptr: 0x084B1BA0, hod_anim_list_count: 0x34, palette_offset: 1},
+  {desc: "Maxim player", init_code: 0x080E205C, hod_anim_list_ptr: 0x084B1C70, hod_anim_list_count: 0x34},
   
   {desc: "Candle 0", gfx_files: [0x0811BD98], palette: 0x08125BB0, palette_offset: 0, sprite: 0x081548B4},
   {desc: "Candle 1", gfx_files: [0x0811BDA0], palette: 0x08125BB0, palette_offset: 1, sprite: 0x08154A88},

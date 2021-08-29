@@ -12,7 +12,7 @@ class SpriteInfo
               :gfx_pages,
               :ignore_part_gfx_page
   
-  def initialize(gfx_file_pointers, palette_pointer, palette_offset, sprite_file_pointer, skeleton_file, fs, gfx_list_pointer: nil, ignore_part_gfx_page: false)
+  def initialize(gfx_file_pointers, palette_pointer, palette_offset, sprite_file_pointer, skeleton_file, fs, gfx_list_pointer: nil, ignore_part_gfx_page: false, hod_anim_list_ptr: nil, hod_anim_list_count: nil)
     if gfx_list_pointer
       @gfx_list_pointer = gfx_list_pointer
       @gfx_file_pointers = SpriteInfo.unpack_gfx_pointer_list(gfx_list_pointer, fs)
@@ -28,7 +28,10 @@ class SpriteInfo
     if @sprite_file_pointer.nil?
       @sprite = nil
     else
-      @sprite = Sprite.new(sprite_file_pointer, fs)
+      @sprite = Sprite.new(
+        sprite_file_pointer, fs,
+        hod_anim_list_ptr: hod_anim_list_ptr, hod_anim_list_count: hod_anim_list_count
+      )
     end
     
     @gfx_pages = @gfx_file_pointers.map do |gfx_pointer|
@@ -77,6 +80,8 @@ class SpriteInfo
     gfx_list_pointer       = reused_info[:gfx_wrapper] || nil
     palette_pointer        = reused_info[:palette] || nil
     ignore_part_gfx_page   = reused_info[:ignore_part_gfx_page] || false
+    hod_anim_list_ptr      = reused_info[:hod_anim_list_ptr] || nil
+    hod_anim_list_count    = reused_info[:hod_anim_list_count] || nil
     
     if gfx_file_pointers.nil? && gfx_file_names
       gfx_file_pointers = gfx_file_names.map do |gfx_file_name|
@@ -87,18 +92,34 @@ class SpriteInfo
     if reused_info[:no_sprite]
       sprite_file_pointer = nil
       if gfx_file_pointers && palette_pointer
-        return SpriteInfo.new(gfx_file_pointers, palette_pointer, palette_offset, sprite_file_pointer, nil, fs)
+        return SpriteInfo.new(
+          gfx_file_pointers, palette_pointer, palette_offset,
+          sprite_file_pointer, nil, fs
+        )
       elsif gfx_list_pointer && palette_pointer
         gfx_file_pointers = unpack_gfx_pointer_list(gfx_list_pointer, fs)
-        return SpriteInfo.new(gfx_file_pointers, palette_pointer, palette_offset, sprite_file_pointer, nil, fs)
+        return SpriteInfo.new(
+          gfx_file_pointers, palette_pointer, palette_offset,
+          sprite_file_pointer, nil, fs
+        )
       end
     end
     
     if sprite_file_pointer && gfx_file_pointers && palette_pointer
-      return SpriteInfo.new(gfx_file_pointers, palette_pointer, palette_offset, sprite_file_pointer, nil, fs, ignore_part_gfx_page: ignore_part_gfx_page)
+      return SpriteInfo.new(
+        gfx_file_pointers, palette_pointer, palette_offset,
+        sprite_file_pointer, nil, fs,
+        ignore_part_gfx_page: ignore_part_gfx_page,
+        hod_anim_list_ptr: hod_anim_list_ptr, hod_anim_list_count: hod_anim_list_count
+      )
     elsif sprite_file_pointer && gfx_list_pointer && palette_pointer
       gfx_file_pointers = unpack_gfx_pointer_list(gfx_list_pointer, fs)
-      return SpriteInfo.new(gfx_file_pointers, palette_pointer, palette_offset, sprite_file_pointer, nil, fs, ignore_part_gfx_page: ignore_part_gfx_page)
+      return SpriteInfo.new(
+        gfx_file_pointers, palette_pointer, palette_offset,
+        sprite_file_pointer, nil, fs,
+        ignore_part_gfx_page: ignore_part_gfx_page,
+        hod_anim_list_ptr: hod_anim_list_ptr, hod_anim_list_count: hod_anim_list_count
+      )
     end
     
     if init_code_pointer == -1
@@ -168,7 +189,12 @@ class SpriteInfo
         gfx_file_pointers = gfx_files_to_load.map{|gfx| gfx.file[:asset_pointer]}
         sprite_file_pointer = sprite_files_to_load.first[:asset_pointer]
         
-        return SpriteInfo.new(gfx_file_pointers, palette_pointer_to_load, palette_offset, sprite_file_pointer, skeleton_files_to_load.first, fs, ignore_part_gfx_page: ignore_part_gfx_page)
+        return SpriteInfo.new(
+          gfx_file_pointers, palette_pointer_to_load, palette_offset,
+          sprite_file_pointer, skeleton_files_to_load.first, fs,
+          ignore_part_gfx_page: ignore_part_gfx_page,
+        hod_anim_list_ptr: hod_anim_list_ptr, hod_anim_list_count: hod_anim_list_count
+        )
       end
     end
     
@@ -278,7 +304,13 @@ class SpriteInfo
       end
     end
     
-    return SpriteInfo.new(gfx_file_pointers, palette_pointer, palette_offset, sprite_file_pointer, skeleton_file, fs, gfx_list_pointer: gfx_list_pointer, ignore_part_gfx_page: ignore_part_gfx_page)
+    return SpriteInfo.new(
+      gfx_file_pointers, palette_pointer, palette_offset,
+      sprite_file_pointer, skeleton_file, fs,
+      gfx_list_pointer: gfx_list_pointer,
+      ignore_part_gfx_page: ignore_part_gfx_page,
+      hod_anim_list_ptr: hod_anim_list_ptr, hod_anim_list_count: hod_anim_list_count
+    )
   end
   
   def self.unpack_gfx_pointer_list(gfx_list_pointer, fs)
