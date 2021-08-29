@@ -126,7 +126,12 @@ Enemies:
     1 Spawns yellow Medusa Heads that can petrify the player.
   If var A is 0, it's not a spawner, instead it's just a single blue Medusa Head.
 41 Ukoback
-  var a/b: speed or something? TODO
+  Var A: Speed.
+    If this is 0, it will default to 0x1000 speed, or on Hard Mode 0x1400 speed.
+    Furthermore, this being 0 causes Var B to be ignored, and rotation is set to a completely random value.
+  Var B: Rotation.
+    e.g. 0x0000 moves to the right, 0x4000 moves upwards, 0x6000 moves up and left.
+  In vanilla, Var A is always 0.
 42 Killer Fish
 43 Mimic
 44 Dead Pirate

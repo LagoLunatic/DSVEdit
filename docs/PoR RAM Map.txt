@@ -554,6 +554,8 @@ F5-F5  021115E0-0211173F  ?
   0C - Flame wall from Tower of Death disabled.
   1A - 13th Street area name seen.
   22 - Sand Worm killed.
+  23 - Sandy Grave button pressed and wall lowered.
+  24 - Forgotten City button pressed and wall lowered.
   2B - Behemoth has chased you.
   3A - Breakable wall 04 from 13th Street physically destroyed.
   43 - Nest of Evil unlocked.

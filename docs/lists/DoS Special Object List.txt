@@ -14,7 +14,7 @@ Special objects:
   Var A: Width in pixels.
   Var B: Height in pixels.
 04 Large water splashing visual and sound effects, used at the bottom of the large waterfall.
-05 Used in rooms with quicksand. TODO
+05 Quicksand. Changes the behavior of all water tiles in this room to quicksand instead.
 06 Area name shown the first time you enter an area.
   Var A controls which area it is:
     0 The Lost Village
@@ -150,8 +150,11 @@ Special objects:
   Var A is is how the door acts:
     00 Door outside the boss room that you need a magic seal to open.
     01 Door inside the boss room that opens when the boss is killed.
-    02 Used in Gergoth's tower? TODO
+    02 Door inside Gergoth's boss room.
+      This acts like type 03 if the player enters the room on the topmost screen of the room.
+      Otherwise, this door just deletes itself.
     03 Door inside the boss room that doesn't open when the boss is killed (e.g. the right door in mini Paranoia's room).
+      This automatically sets the flag for being in a boss fight (disables suspending, keeps boss doors shut, and turns mirrors into boss mirrors).
   Var B is the boss this door is for:
     00 N/A (Never permanently disappears)
     01 Flying Armor
@@ -190,9 +193,9 @@ Special objects:
   Var A is the color of the chandelier:
     00 Blue.
     01 Pink.
-2D Hanging spikes, disappear when you get near them?
-  Var A: 18
-  Var B: B1
+2D Hanging spikes.
+  Var A: Y position for the spikes to stop at when going back up.
+  Var B: Y position for the spikes to stop at when falling down.
 2E Iron maiden used in Puppet Master fight.
   Requires enemy overlay 25.
   Cannot be placed normally, the game will crash. Must be spawned by Puppet Master.

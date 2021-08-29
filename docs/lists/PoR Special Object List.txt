@@ -116,15 +116,16 @@ Special objects:
 34 Very large cog.
 35 Cog.
 36 The wall and button that opens it from Sandy Grave/Forgotten City.
-  Var A:
-    0 For Sandy Grave?
-    1 For Forgotten City?
+  Var A: Which miscellaneous flag to check and set.
+    0 Misc flag 23 (Sandy Grave)
+    1 Misc flag 24 (Forgotten City)
+    If you set this value higher than 1, it will check/set other misc flags, or even overflow into other unrelated memory.
 37 The ceiling/floor and button that opens them from the Entrance.
   Var A:
     0 For the button and floor.
     1 For the ceiling.
 38 Wall and bell that lowers it.
-  Var A: ?
+  Var A: ? TODO
 39 Large windmill blades spinning in the background.
   Requires sector overlay 86.
 3A Various objects from corridor where Behemoth chases you.
@@ -185,7 +186,7 @@ Special objects:
   Requires sector overlay 85.
 47 Ghosts from Dark Academy.
   Var A:
-    0 Stairs?
+    0 Stairs.
     1 Pianist.
     2 Bathroom door.
     3 Anatomical model.
@@ -214,7 +215,7 @@ Special objects:
   Var A:
     0 - Animates thunder lighting up certain backgrounds.
     1 - Animates rain droplets on certain roofs.
-  Var B: Affects what colors the thunder lights up if var A is 0?
+  Var B: Affects what colors the thunder lights up if var A is 0? TODO
 51 Thunder and rain visual effects from Dark Academy.
   Requires sector overlay 110.
   Var A:

@@ -101,7 +101,11 @@ Special Objects:
     1 Large candles.
 20 The ring of flaming heads with a magnes point in the center.
   Var B: The speed it rotates at.
-21 foreground pillar used in arms depot?
+21 Foreground pillars from Arms Depot.
+  Var A:
+    0 In the foreground, very close to the camera and transparent
+    1 In the foreground
+    2 In the background
 22 Area that slows the player's movement significantly.
   Var A: Width in pixels for the area to extend.
 23 Volaticus blocker.
@@ -189,7 +193,8 @@ Special Objects:
   Requires sector overlay 46.
 3B Pneuma glyph and the wind puzzle around it.
   Requires sector overlay 55.
-3C Something in Kalidus channel?
+3C Water splashes around the 3D boat in the background of Kalidus channel.
+  No effect unless object 3A is also placed in the room.
 3D Pages that fly out whenever you land on the ground.
   Requires sector overlay 69.
 3E Searchlights.
