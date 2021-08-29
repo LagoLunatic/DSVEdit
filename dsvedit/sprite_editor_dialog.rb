@@ -604,7 +604,7 @@ class SpriteEditor < Qt::Dialog
     @sprite.animations.each_with_index do |animation, i|
       @ui.animation_index.addItem("%02X" % i)
     end
-    animation_changed(0)
+    animation_changed(0) if @sprite.animations.length > 0
   rescue StandardError => e
     Qt::MessageBox.warning(self,
       "Failed to load sprite",
