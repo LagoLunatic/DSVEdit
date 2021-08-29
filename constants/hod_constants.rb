@@ -563,11 +563,13 @@ OTHER_SPRITES = [
   {desc: "Candle 7", gfx_files: [0x0811BDD0], palette: 0x08125BB0, palette_offset: 7, sprite: 0x08155484},
   {desc: "Candle 8", gfx_files: [0x0811BDD8], palette: 0x08125D40, palette_offset: 0, sprite: 0x081556AC},
   
+  {desc: "Area names", gfx_files: [0x0811BBC0, 0x0811BB90, 0x0811BB68, 0x0811BBB0, 0x0811BB70, 0x0811BB78, 0x0811BB60, 0x0811BB88, 0x0811BBA8, 0x0811BBA0, 0x0811BB98, 0x0811BBB8, 0x0811BB80], palette: 0x08124D14, no_sprite: true},
   {desc: "Skull door", init_code: 0x0801C980},
   {desc: "Clock tower in BG", init_code: 0x08026B34},
   {desc: "Giant Merman spin", init_code: 0x0804B220},
   {desc: "Lift to center of castle", init_code: 0x08022134},
   
+  {desc: "Prologue Moon", sprite: 0x0815A698, gfx_wrapper: 0x080C4168, palette: 0x081272F4, palette_offset: 1},
   {desc: "Game over screen text", sprite: 0x08149508, gfx_wrapper: 0x0811BCB8, palette: 0x0815D7E8, palette_offset: 4},
   
   {desc: "Event 00", init_code: 0x0802D0E0},

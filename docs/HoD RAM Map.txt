@@ -262,3 +262,6 @@ List of which items you own and how many (owned item info):
 020187BC,2 - Bitfield of weapons you own.
 
 0200A46C,1 - visual effect?
+
+03000000-030003FF - List of sprites in the OAM.
+03000C00-03000BFF - List of sprites in the OAM (copy?).
