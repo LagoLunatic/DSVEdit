@@ -172,8 +172,8 @@ class Sprite
           else
             animation_data = fs.read(animation_pointer, Animation.data_size)
             animation = Animation.new.from_data(animation_data, animation_pointer)
+            @animations_by_offset[animation_pointer] = animation
           end
-          @animations_by_offset[animation_pointer] = animation
         end
         
         @animations << animation
@@ -427,6 +427,7 @@ class Sprite
       if @animations.length > 0
         if SYSTEM == :gba
           @animations.each do |anim|
+            next if anim.nil?
             anim_offset = fs.get_free_space(Animation.data_size + anim.frame_delays.length*FrameDelay.data_size, overlay_id)
             @animations_by_offset[anim_offset] = anim
             offset = anim_offset+Animation.data_size
@@ -441,6 +442,7 @@ class Sprite
           anim_list_offset = fs.get_free_space(@animations.length*Animation.data_size, overlay_id)
           offset = anim_list_offset
           @animations.each do |anim|
+            next if anim.nil?
             @animations_by_offset[offset] = anim
             offset += Animation.data_size
           end
@@ -479,6 +481,7 @@ class Sprite
     offset = @animation_list_offset
     @number_of_animations = @animations.length
     @animations.each do |animation|
+      next if animation.nil?
       animation.number_of_frames = animation.frame_delays.length
       
       if animation.frame_delays.length == 0
