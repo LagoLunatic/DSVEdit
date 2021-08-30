@@ -86,7 +86,7 @@ class Sprite
     unless frame_delay_list_offset == 0
       (frame_delay_list_offset..animation_list_offset-1).step(8) do |offset|
         frame_delay_data = fs.read_by_file(sprite_file[:file_path], offset, 8)
-        frame_delay = FrameDelay.new.from_data(frame_delay_data)
+        frame_delay = FrameDelayNDS.new.from_data(frame_delay_data)
         @frame_delays << frame_delay
         @frame_delays_by_offset[offset-frame_delay_list_offset] = frame_delay
       end
@@ -185,12 +185,12 @@ class Sprite
         next if animation.nil?
         offset = animation.first_frame_delay_offset
         animation.number_of_frames.times do
-          frame_delay_data = fs.read(offset, FrameDelay.data_size)
-          frame_delay = FrameDelay.new.from_data(frame_delay_data)
+          frame_delay_data = fs.read(offset, animation.frame_delay_class.data_size)
+          frame_delay = animation.frame_delay_class.new.from_data(frame_delay_data)
           @frame_delays_by_offset[offset] ||= frame_delay
           @frame_delays << frame_delay
           
-          offset += FrameDelay.data_size
+          offset += animation.frame_delay_class.data_size
         end
       end
     end
@@ -266,7 +266,7 @@ class Sprite
       else
         first_frame_delay = animation.frame_delays[0]
         first_frame_delay_index = @frame_delays.index(first_frame_delay)
-        animation.first_frame_delay_offset = first_frame_delay_index*FrameDelay.data_size
+        animation.first_frame_delay_offset = first_frame_delay_index*FrameDelayNDS.data_size
       end
       
       new_data << animation.to_data
@@ -315,6 +315,7 @@ class Sprite
   end
   
   def write_to_rom_by_pointer
+    # TODO: HoD player sprites get corrupted after saving...
     fs.start_free_space_batch()
     
     if GAME == "dos"
@@ -415,7 +416,7 @@ class Sprite
       
       if SYSTEM == :gba
         @frame_delays_by_offset.each do |offset, frame_delay|
-          fs.free_unused_space(offset, FrameDelay.data_size)
+          fs.free_unused_space(offset, frame_delay.class.data_size)
         end
         @frame_delays_by_offset = {}
         
@@ -428,12 +429,12 @@ class Sprite
         if SYSTEM == :gba
           @animations.each do |anim|
             next if anim.nil?
-            anim_offset = fs.get_free_space(Animation.data_size + anim.frame_delays.length*FrameDelay.data_size, overlay_id)
+            anim_offset = fs.get_free_space(Animation.data_size + anim.frame_delays.length*anim.frame_delay_class.data_size, overlay_id)
             @animations_by_offset[anim_offset] = anim
             offset = anim_offset+Animation.data_size
             anim.frame_delays.each do |frame_delay|
               @frame_delays_by_offset[offset] = frame_delay
-              offset += FrameDelay.data_size
+              offset += anim.frame_delay_class.data_size
             end
           end
           
@@ -461,15 +462,20 @@ class Sprite
       # If frame delays were added/removed, we need to free the space used by the original frame delays, then get new free space for the new frame delays.
       # (This code is only run for NDS because GBA frame delays are stored together with the animation, so they're handled above with animations.)
       @frame_delays_by_offset.each do |offset, frame_delay|
-        fs.free_unused_space(offset, FrameDelay.data_size)
+        fs.free_unused_space(offset, frame_delay.class.data_size)
       end
       @frame_delays_by_offset = {}
       if @frame_delays.length > 0
-        frame_delay_list_offset = fs.get_free_space(@frame_delays.length*FrameDelay.data_size, overlay_id)
+        total_length_needed = 0
+        @frame_delays.each do |frame_delay|
+          total_length_needed += frame_delay.class.data_size
+        end
+        frame_delay_list_offset = fs.get_free_space(total_length_needed, overlay_id)
+        
         offset = frame_delay_list_offset
         @frame_delays.each do |frame_delay|
           @frame_delays_by_offset[offset] = frame_delay
-          offset += FrameDelay.data_size
+          offset += frame_delay.class.data_size
         end
       end
     end
@@ -911,42 +917,117 @@ end
 class FrameDelay
   attr_accessor :frame_index,
                 :delay,
-                :unknown
+                :unknown,
+                :hitbox
   
   def initialize
     @frame_index = @delay = @unknown = 0
+    @hitbox = nil
   end
   
   def from_data(frame_delay_data)
-    if SYSTEM == :nds
-      @frame_index, @delay, @unknown = frame_delay_data.unpack("vvV")
-    else
-      @frame_index, @delay, @unknown = frame_delay_data.unpack("CCv")
-    end
+    raise NotImplementedError.new
+  end
+  
+  def to_data
+    raise NotImplementedError.new
+  end
+  
+  def self.data_size
+    raise NotImplementedError.new
+  end
+end
+
+class FrameDelayNDS < FrameDelay
+  def from_data(frame_delay_data)
+    @frame_index, @delay, @unknown = frame_delay_data.unpack("vvV")
     
     return self
   end
   
   def to_data
-    if SYSTEM == :nds
-      [@frame_index, @delay, @unknown].pack("vvV")
-    else
-      [@frame_index, @delay, @unknown].pack("CCv")
-    end
+    [@frame_index, @delay, @unknown].pack("vvV")
   end
   
   def self.data_size
-    if SYSTEM == :nds
-      8
-    else
-      4
-    end
+    8
+  end
+end
+
+class FrameDelayGBAType0 < FrameDelay
+  # TODO figure out this format
+  
+  #def from_data(frame_delay_data)
+  #  @frame_index, @delay, @unknown = frame_delay_data.unpack("CCv")
+  #  
+  #  return self
+  #end
+  #
+  #def to_data
+  #  [@frame_index, @delay, @unknown].pack("CCv")
+  #end
+  
+  def self.data_size
+    16
+  end
+end
+
+class FrameDelayGBAType1 < FrameDelay
+  def from_data(frame_delay_data)
+    @frame_index, @delay, @unknown = frame_delay_data.unpack("CCv")
+    
+    return self
+  end
+  
+  def to_data
+    [@frame_index, @delay, @unknown].pack("CCv")
+  end
+  
+  def self.data_size
+    4
+  end
+end
+
+class FrameDelayGBAType2 < FrameDelay
+  def from_data(frame_delay_data)
+    @frame_index, @delay = frame_delay_data[0,4].unpack("vv")
+    hitbox_data = frame_delay_data[4,4]
+    @hitbox = Hitbox.new.from_data(hitbox_data)
+    
+    return self
+  end
+  
+  def to_data
+    [@frame_index, @delay].pack("vv") + @hitbox.to_data
+  end
+  
+  def self.data_size
+    8
+  end
+end
+
+class FrameDelayGBAType3 < FrameDelay
+  def from_data(frame_delay_data)
+    @frame_index, @delay, @unknown = frame_delay_data[0,8].unpack("vvV")
+    hitbox_data = frame_delay_data[8,4]
+    @hitbox = Hitbox.new.from_data(hitbox_data)
+    
+    return self
+  end
+  
+  def to_data
+    [@frame_index, @delay, @unknown].pack("vvV") + @hitbox.to_data
+  end
+  
+  def self.data_size
+    12
   end
 end
 
 class Animation
   attr_reader :frame_delay_indexes,
-              :frame_delays
+              :frame_delays,
+              :function_index
   attr_accessor :number_of_frames,
                 :first_frame_delay_offset
   
@@ -963,7 +1044,15 @@ class Animation
       @number_of_frames, @first_frame_delay_offset = animation_data.unpack("VV")
     else
       @number_of_frames, @function_index = animation_data.unpack("vv")
-      @first_frame_delay_offset = offset + 4
+      
+      case @function_index
+      #when 0
+      # TODO need to read from FS to get the first_frame_delay_offset pointer
+      when 1..3
+        @first_frame_delay_offset = offset + 4
+      else
+        raise "Invalid animation function index: %X" % @function_index
+      end
     end
     
     return self
@@ -978,7 +1067,7 @@ class Animation
   end
   
   def initialize_frame_delays_from_pointer(all_frame_delays, all_frame_delays_by_offset)
-    @frame_delay_offsets = (@first_frame_delay_offset..@first_frame_delay_offset+@number_of_frames*FrameDelay.data_size-1).step(FrameDelay.data_size).to_a
+    @frame_delay_offsets = (@first_frame_delay_offset..@first_frame_delay_offset+@number_of_frames*frame_delay_class.data_size-1).step(frame_delay_class.data_size).to_a
     @frame_delays = @frame_delay_offsets.map{|offset| all_frame_delays_by_offset[offset]}
     @frame_delay_indexes = @frame_delays.map{|frame_delay| all_frame_delays.index(frame_delay)}
   end
@@ -996,6 +1085,25 @@ class Animation
       8
     else
       4
+    end
+  end
+  
+  def frame_delay_class
+    if SYSTEM == :nds
+      FrameDelayNDS
+    else
+      case @function_index
+      when 0
+        FrameDelayGBAType0
+      when 1
+        FrameDelayGBAType1
+      when 2
+        FrameDelayGBAType2
+      when 3
+        FrameDelayGBAType3
+      else
+        raise "Invalid animation function index: %X" % @function_index
+      end
     end
   end
 end

@@ -694,6 +694,18 @@ class SpriteEditor < Qt::Dialog
         hitbox_item.setRect(hitbox.x_pos, hitbox.y_pos, hitbox.width, hitbox.height)
         @frame_graphics_scene.addItem(hitbox_item)
       end
+      
+      # Also handle hitboxes stored in the animation itself (used by HoD).
+      if SYSTEM == :gba && !@current_animation.nil?
+        frame_delay = @current_animation.frame_delays[@current_animation_frame_index]
+        if frame_delay.frame_index == @current_frame_index && !frame_delay.hitbox.nil?
+          hitbox = frame_delay.hitbox
+          hitbox_item = Qt::GraphicsRectItem.new
+          hitbox_item.setPen(RED_PEN_COLOR)
+          hitbox_item.setRect(hitbox.x_pos, hitbox.y_pos, hitbox.width, hitbox.height)
+          @frame_graphics_scene.addItem(hitbox_item)
+        end
+      end
     end
   end
   
@@ -1223,7 +1235,7 @@ class SpriteEditor < Qt::Dialog
     
     return if @current_animation.nil?
     
-    frame_delay = FrameDelay.new
+    frame_delay = @current_animation.frame_delay_class.new
     @sprite.frame_delays << frame_delay
     next_frame_delay_offset = @sprite.frame_delays_by_offset.keys.max + 8
     @sprite.frame_delays_by_offset[next_frame_delay_offset] = frame_delay

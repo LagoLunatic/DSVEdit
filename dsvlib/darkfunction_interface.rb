@@ -187,7 +187,7 @@ class DarkFunctionInterface
       end
       
       unanimated_frame_indexes_to_insert.each do |unanimated_frame_index|
-        dummy_frame_delay = FrameDelay.new
+        dummy_frame_delay = animation.frame_delay_class.new
         dummy_frame_delay.frame_index = unanimated_frame_index
         
         animations_plus_unanimated_frames << {name: "unanimated frame %02X" % unanimated_frame_index, frame_delays: [dummy_frame_delay]}
@@ -208,7 +208,7 @@ class DarkFunctionInterface
     
     if max_seen_frame_index < sprite.frames.size-1
       (max_seen_frame_index+1..sprite.frames.size-1).each do |unanimated_frame_index|
-        dummy_frame_delay = FrameDelay.new
+        dummy_frame_delay = FrameDelayNDS.new
         dummy_frame_delay.frame_index = unanimated_frame_index
         
         animations_plus_unanimated_frames << {name: "unanimated frame %02X" % unanimated_frame_index, frame_delays: [dummy_frame_delay]}
@@ -221,6 +221,7 @@ class DarkFunctionInterface
         animations_plus_unanimated_frames.each do |hash|
           xml.anim(:name => hash[:name], :loops => 0) {
             hash[:frame_delays].each_with_index do |frame_delay, i|
+              # TODO: save animation's GBA function index
               xml.cell(:index => "%02X" % i,
                        :delay => frame_delay.delay
               ) {
@@ -359,7 +360,7 @@ class DarkFunctionInterface
         animation = Animation.new
         sprite.animations[unanimated_anim_index] = animation
         
-        frame_delay = FrameDelay.new
+        frame_delay = animation.frame_delay_class.new
         frame_delay.delay = df_cell["delay"].to_i
         frame_delay.frame_index = unanimated_frame_index
         animation.frame_delays << frame_delay
@@ -383,10 +384,11 @@ class DarkFunctionInterface
       end
       animation = Animation.new
       sprite.animations[anim_index] = animation
+      # TODO: load animation's GBA function index
       
       df_cells = df_anim.css("cell")
       df_cells.each do |df_cell|
-        frame_delay = FrameDelay.new
+        frame_delay = animation.frame_delay_class.new
         frame_delay.delay = df_cell["delay"].to_i
         animation.frame_delays << frame_delay
         
