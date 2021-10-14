@@ -981,7 +981,7 @@ ITEM_BITFIELD_ATTRIBUTES = {
     "Unknown 25",
     "Unknown 26",
     "Unknown 27",
-    "Unknown 28",
+    "Floating in water",
     "Unknown 29",
     "Unknown 30",
     "Unknown 31",
@@ -1033,7 +1033,7 @@ PLAYER_BITFIELD_ATTRIBUTES = {
   "Actions" => [
     "Can slide",
     "Can use weapons",
-    "Unknown 3",
+    "Can float in water",
     "Can sit",
     "Unknown 5",
     "Can jumpkick",

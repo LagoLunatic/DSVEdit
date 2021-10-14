@@ -91,7 +91,7 @@
   ; Call this after SetDestinationRoomSectorAndRoomIndexes so the room actually changes.
 
 02012D78 Rand
-02012D38 RandMax
+02012D38 RandBelow
   ; Max random number is r0-1. Min is 0.
 02012D18 RandMinMax
   ; r0 - Minimum value
@@ -588,6 +588,14 @@
   ; 021FE8A0 - Hardcoded check for if the current player number is Julius, for if performing extra jumps when falling after a superjump should be disabled.
 021FEA28 PlayerHandleJumping
   ; 021FEB18 - Hardcoded check for if the current player number is Julius, for if the superjump height should be reduced.
+
+021FB214 ???CheckPointUnderwater?
+  ; r0 - X pos
+  ; r1 - Y pos
+0201C7CC MultiplyVelocity?
+  ; r0 - Pointer to Y velocity?
+  ; r1 - Multiplier (out of 0x1000)
+021FECE8 UpdatePlayerInWater?
 
 021FF6DC PlayerLoadGFX?
   ; r0 - Player entity

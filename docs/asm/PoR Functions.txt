@@ -469,12 +469,12 @@
   ; Returns -1 if this player isn't afflicted by any status effect.
 
 02012F68 Rand
-02012F30 RandMax
+02012F30 RandBelow
   ; Max random number is r0-1. Min is 0.
-02013008 RandMax2
+02013008 RandBelow2
   ; Max random number is r0-1. Min is 0.
-  ; How does this differ from RandMax??
-02013024 RandMaxRandSign
+  ; How does this differ from RandBelow??
+02013024 RandBelowRandSign
   ; Min random number is -r0. Max is r0-1.
 
 020216B0 LoadSpriteMultiGfx

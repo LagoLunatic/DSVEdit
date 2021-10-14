@@ -909,17 +909,22 @@ Format of extra entity memory used for portrait paintings:
 0213226C - List of hardcoded free spaces??
   List of pointers to entries in asset memory.
   Each entry:
-    1 
-    2 
-    6 Subweapon
-    8 Dual crush sprite
-    9 Spell
-    A Richter
-    B Maria / Charlotte?
-    C Jonathan?
-    D 
-  The space between each entry here seems to be hardcoded around 02011FC0. 0x8700 is the difference between Richter and Maria's sprite file space for example.
-  (The last one is found first via the normal means. Then the others are spaced out before it by subtracting hardcoded values from that.)
+    0 ? (size: ?) (This starts at the very start of asset memory, at 02308EC0.)
+    1 ? (size: 0x3800)
+    2 ? (size: 0x2000)
+    3 ? (size: 0x2000)
+    4 ? (size: 0x2000)
+    5 ? (size: 0x2000)
+    6 Subweapon (size: 0x2000)
+    7 ? (size: 0x2000)
+    8 Dual crush (size: 0x1600)
+    9 Spell (size: 0x1600)
+    A Player 1 (size: 0x8700)
+    B Player 2 (size: 0x8700)
+    C ? (size: 0x2E000)
+    D ? (size: 0x2E000) (This ends at the very end of asset memory, at 23C0000.)
+  The space between each entry here is hardcoded in function 02011F8C.
+  Excluding entry 0, the locations of all the other entries are calculated in reverse order, with entry D ending at the end of asset memory, entry C ending where entry D begins, etc, down to entry 1.
 
 021368AF,1 - Area index of the map you're currently viewing on the map screen.
 021368B0,2 - Bitfield of which areas you have the map unlocked for. This is used by the map menu.

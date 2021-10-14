@@ -71,8 +71,17 @@ Special objects:
     12: The 3 "out arrows" in the puzzle room that show you where you can go.
     13+: The 1 "in arrow".
 0E Snow effect.
-0F Car with snow on it.
+  Var A: Affects the Z-index of the snow. (TODO read at 021B885C, 021B8AC4)
+    0 Renders at Z-index 0D.
+    1 Renders at Z-index 1D. (Behind foreground layers, but in front of background layers.)
+    2 Renders at Z-index 09. (In front of the player and most foreground layers.)
+    TODO: huh, it seems like both 0 and 2 sometimes are in front of the player and sometimes behind it? confusing. maybe it's random for each snowflake.
+0F Car/minivan with snow on it.
+  Var A:
+    0 Car
+    1 Minivan
 10 Platform moving up and down.
+  Var A: TODO
 11 Fog effect (like in the lost village).
 12 Cog.
   Var A:
@@ -83,7 +92,9 @@ Special objects:
       03 Small dark background cog.
     High byte: Z-index of the cog.
   Var B: Spinning speed. Positive is clockwise, negative is counterclockwise.
-13 Locks the screen scrolling at the top left screen and doesn't follow Soma.
+13 Locks the screen scrolling near the top left of the room.
+  With this object in the room, the screen will not scroll down at all.
+  It will scroll left and right, but only a tiny bit: a minimum of X pos 0x70 and a maximum of X pos 0x90.
 14 Moving platform.
   Var A: Type of platform.
     00 From Cursed Clock Tower. Starts one screen down, one screen to the right. Moves down, then back.
@@ -98,6 +109,7 @@ Special objects:
     11 From Demon Guest House. Starts in the top-left screen. Moves down, then back.
 15 Rapidly moving clouds background effect used in the very large room in the Dark Chapel.
 16 Moving clouds background effect used in the Condemned Tower & Pinnacle.
+  Var A: TODO
 17 Invisible block that becomes visible when a Ghost hovers over it.
   Var A: Which tile graphics to use.
   Var B: Flip bits for the tile graphics.
@@ -107,10 +119,12 @@ Special objects:
   Vertically positions itself to the odd-numbered screen closest to where Soma is when he enters the room.
   Horizontally positions itself at the left of the room.
   Also locks the screen scrolling.
-19 Bloody spike that spins around.
+19 Spinning spike.
   Var A: Starting angle. 0000 being right, 4000 being down, etc.
   Var B: Spinning speed. Positive is clockwise, negative is counterclockwise.
-1A Like 19, but the actual spike is broken off so it can't hurt you.
+1A Spinning spike with the blade broken off.
+  Var A: Starting angle. 0000 being right, 4000 being down, etc.
+  Var B: Spinning speed. Positive is clockwise, negative is counterclockwise.
 1B Swinging pendulum.
   Var A: 
     Least significant byte is the type of weight on the pendulum:
@@ -176,6 +190,7 @@ Special objects:
   Var A: Which version of the door to use - 0 is 573, 1 is 777, 2 is 666.
   Var B: The misc flag for the door being opened.
 27 Gate in Condemned Tower that only opens with the Tower Key.
+  Var B: TODO
 28 The button in the Dark Chapel that lowers the wall blocking the path.
   Var B: The misc flag for the wall being down. Set to the same as the wall's Var B.
 29 The wall that blocks the path in the Dark Chapel.
@@ -199,9 +214,18 @@ Special objects:
 2E Iron maiden used in Puppet Master fight.
   Requires enemy overlay 25.
   Cannot be placed normally, the game will crash. Must be spawned by Puppet Master.
-2F Applies a visual effect to a layer.
-  Var A: The layer to apply the effect to.
-  Var B: Which effect to use. TODO
+2F Applies a visual effect to one of the room's layers.
+  Var A: Which layer to apply the effect to.
+  Var B: Which effect to use.
+    0 ???
+    1 sewer?
+    2 sewer?
+    3 unused?
+    4 Fiery effect?
+    5 unused?
+    6 Abyss wavy ice effect?
+    7 ???
+  Byte 8: ??? one of the vanilla ones has this set...
 30 Save room.
   Not just the save point like in PoR and OoE, this is the whole room's graphics, and locks itself to the upper left screen.
   You can't collide with its tiles though, so you still have to place collision tiles for this room.
@@ -209,6 +233,7 @@ Special objects:
     0 has a door on the left.
     1 has a door on the right.
 31 Warp room, works just like save room.
+  Var A: TODO
 32 Abyss teleporter.
   Var A: Affects which sprite frame to use for the teleporter, and which teleport destination to use:
     0 Teleports you to the first room of the Abyss.
@@ -218,6 +243,7 @@ Special objects:
 33 The 3D background model for either the Lost Village or the Pinnacle.
   The model is chosen automatically depending on what sector you're in.
   Var A: Which camera angle to view the model from. 0 to 4.
+  Var B: TODO
 34 The 3D background in Condemned Tower.
 35 The 3D background in Mine of Judgement.
 36 Cycles through palettes? Used in rooms that have tiles with changing colors.
@@ -225,7 +251,9 @@ Special objects:
   Var B: ???
   TODO
 37 The ceiling hatch and button to open it from Demon Guest House.
-  Var A: 0 for the button and the hatch and the bottom of the room. 1 for the hatch at the top of the room.
+  Var A:
+    0 The button and the hatch and the bottom of the room.
+    1 The hatch at the top of the room.
 38 Fades the music out to nothing. The music comes back when you leave the room.
   This is used in transition rooms.
 39 Keys of the piano you can play from the Demon Guest House.
@@ -247,8 +275,8 @@ Special objects:
   Automatically positions itself.
 44 A breakable wall (for hiding secret rooms).
   Var A:
-    0 for the ceiling in Demon Guest House.
-    1 for the ceiling in the Pinnacle.
+    0 The ceiling in Demon Guest House.
+    1 The ceiling in the Pinnacle.
 45 A button and a gate opened by the button.
   Var A: Type of gate.
     00 - Double gate with button to the right.
@@ -257,13 +285,13 @@ Special objects:
     03 - Double gate with button to the left.
     04+ - Gate only, no button.
   Var B: The misc flag for the gate being opened.
-46 More breakable walls like 44.
+46 More breakable walls like object 44.
   Var A:
-    0 for the left wall in the underground portion of Lost Village.
-    1 for the floor in the Lost Village.
-    2 for the ceiling in the Garden of Madness.
-    3 for the left wall in the Pinnacle.
-    4 for the floor in the Pinnacle.
+    0 The left wall in the underground portion of Lost Village.
+    1 The floor in the Lost Village.
+    2 The ceiling in the Garden of Madness.
+    3 The left wall in the Pinnacle.
+    4 The floor in the Pinnacle.
 47 Hammer shopkeeper.
 48 Yoko shopkeeper.
 49 Red wall with an enemy on it that opens up when you use that enemy's soul against the wall.

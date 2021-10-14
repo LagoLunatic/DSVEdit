@@ -3,15 +3,20 @@ Enemies:
   Spawner.
   Spawns a Zombie once every 0x40 frames up to the max.
   Var A: Maximum number of Zombies this spawner can have in the room at once.
-  If var A is 0, it's not a spawner, instead it's just a single Zombie.
+  If Var A is 0, it's not a spawner, instead it's just a single Zombie.
 01 Bat
-  Var A: When 0, it's a single bat that hangs on the ceiling. When greater than 0, it's a spawner for bats that flying from the sides of the screen. Var a controls the delay in frames between each bat spawning, so lower values cause bats to spawn more quickly.
+  Var A: When 0, it's a single bat that hangs on the ceiling. When nonzero, it's a spawner for bats that fly in from the sides of the screen. Var A controls the delay in frames between each bat spawning, so lower values cause bats to spawn more quickly.
 02 Ghost
+  Var A: TODO
+  Var B: TODO
 03 Skeleton
-  Var B: If nonzero, this is the cutscene Skeleton used during the prologue fight. This should not be set manually; the prologue cutscene object sets it automatically when creating the Skeleton.
+  Var A: TODO
+  Var B: If nonzero, this is the cutscene Skeleton used during the prologue fight.
+    This should not be set manually; the prologue cutscene object sets it automatically when creating the Skeleton.
 04 Ouija Table
 05 Peeping Eye
 06 Axe Armor
+  Var B: TODO
 07 Skull Archer
   Var A: Speed for his arrow to fly at in pixels per frame.
     If 0, will use the default value of 2 instead.
@@ -65,6 +70,7 @@ Enemies:
     3+ Buggy palettes.
 1F Flying Humanoid
 20 Mini Devil
+  Var A: Unused.
 21 Quetzalcoatl
 22 Treant
   Requires enemy overlay 28.
@@ -81,12 +87,22 @@ Enemies:
 29 Witch
 2A Buer
 2B Lilith
+  Var B: TODO
 2C Killer Clown
   Var B: 0 or 1, but seems unused?
 2D Skelerang
+  Var A:
+    0 Normal behavior.
+      It can lean back against nearby walls, regardless of whether they are left or right walls.
+      It takes longer for it to notice the player when leaning.
+      If not placed near a wall, it will spawn facing left. If the player approachs from the left, it notices the player faster than leaning Skelerangs do. But if approached from the right, it will cower in fear.
+    1 Always spawns facing left.
+      If Var B is nonzero, it can lean against nearby right walls but not left ones.
+    2 Always spawns facing right.
+      If Var B is nonzero, it can lean against nearby left walls but not right ones.
 2E Fleaman
   Var A: Number of fleamen to spawn. (They only spawn once when you enter the room, not infinitely.)
-  If var A is 0, then 1 fleaman spawns instead.
+  If Var A is 0, then 1 fleaman spawns instead.
 2F Devil
   Requires enemy overlay 31.
   Var A:
@@ -94,9 +110,11 @@ Enemies:
     1 Appears instantly.
   Var B: 0 or 1, but seems unused?
 30 Guillotiner
+  Var A: TODO
 31 Draghignazzo
 32 Needles
 33 Hell Boar
+  Var A: TODO
 34 Bone Pillar
   Var A: Number of them stacked on top of each other.
 35 White Dragon
@@ -116,6 +134,8 @@ Enemies:
 3C Larva
 3D Heart Eater
 3E Merman
+  Var A: TODO
+  Var B: TODO
 3F Fish Head
   Var A: Number of them stacked on top of each other.
 40 Medusa Head
@@ -133,15 +153,20 @@ Enemies:
     e.g. 0x0000 moves to the right, 0x4000 moves upwards, 0x6000 moves up and left.
   In vanilla, Var A is always 0.
 42 Killer Fish
+  Var A: TODO
 43 Mimic
 44 Dead Pirate
+  Var A: TODO
 45 Frozen Shade
 46 Homunculus
 47 Disc Armor
+  Var A: TODO
 48 Decarabia
 49 Dead Mate
 4A Bugbear
+  Var A: TODO
 4B Procel
+  TODO: check if the same var a/b as mud demon
 4C Bone Ark
 4D Gorgon
   Requires enemy overlay 32.
@@ -154,15 +179,21 @@ Enemies:
 53 Dead Warrior
 54 Erinys
 55 Succubus
+  Var A: If nonzero, this succubus will disguise herself as Yoko.
 56 Ripper
+  Var A: TODO
+  Var B: TODO
 57 Black Panther
 58 Mud Demon
-  Var A: If not 0, then ???
+  Var A: If not 0, then ??? TODO
   Var B: Maximum horizontal distance in pixels this Mud Demon can randomly spawn away from where you place it.
 59 Giant Slug
+  Var A: TODO
 5A Werewolf
+  Var B: TODO
 5B Flame Demon
   Requires enemy overlay 31.
+  Var B: TODO
 5C Tanjelly
   Var A:
     0 On floor.
@@ -173,6 +204,8 @@ Enemies:
   Requires enemy overlay 31.
 5E Gaibon
 5F Slogra
+  Var A: TODO
+  Var B: TODO
 60 Stolas
   Var A:
     Low byte: First enemy ID this Stolas can summon.
@@ -212,7 +245,10 @@ Enemies:
   Requires enemy overlay 28.
 65 Flying Armor
   Requires enemy overlay 30.
-  Var A & B are 1 for normal, 0 for boss rush.
+  Var A:
+    0 Boss rush Flying Armor.
+    1 Normal Flying Armor.
+  Var B: Unused.
 66 Balore
   Requires enemy overlay 23.
   Var A:
@@ -271,7 +307,8 @@ Enemies:
     1 Normal Abaddon.
 73 Menace
   Requires enemy overlay 38.
-  Var A & B are 1.
+  Var A: TODO (1?)
+  Var B: TODO (1?)
   For the first phase, Menace locks the camera to the bottom edge of the room, one screen away from the left edge of the room. However, Menace himself appears where you set his x/y positions.
   For the second phase, Menace needs a very large room to fit in and move around correctly.
 74 Soma

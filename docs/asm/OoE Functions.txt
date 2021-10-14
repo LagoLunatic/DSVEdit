@@ -38,7 +38,7 @@
   ; It also returns that pointer to the start of the free memory.
 
 02033298 Rand
-020332E0 RandMax
+020332E0 RandBelow
   ; Max random number is r0-1. Min is 0.
 02024074 RandClampToMax
   ; r0 - Random number

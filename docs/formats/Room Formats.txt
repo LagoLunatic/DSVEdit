@@ -35,7 +35,7 @@ Whichever layer is first in the layer list will be used for collision.
 Layer list entry format:
   0x10 bytes long.
   00,1: Z-Index to draw the layer at.
-    Lower values are closer to the screen. 00 is in front of everything.
+    Lower values are closer to the screen. 00 is in front of everything. 0E is what the player renders at, so settings this to 0D or below causes the layer to render on top of the player.
     The actual z-axis position is calculated as:
     0x7000-(this_number*0x180)
   01,1: How the layer scrolls.

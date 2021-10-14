@@ -388,6 +388,7 @@ What each range of entity slots is for:
   0x10000000 - Makes all enemy souls drops have a 100% chance. Used during the prologue.
   0x40000000 - Set when you haven't saved the game once yet. Disables suspending.
 
+020F6E04,4 - used by the snow effect? the snow will fail to spawn if the low byte of this variable is greater than 0x40
 020F6E08,1 - Next available polygon ID to use. Increments from 0x16 to 0x3F then back to 0x16 as entities use these up.
 020F6E09,1 - Current magic seal index being drawn.
 020F6E0B,1 - Seems to be 1 when a magic seal was just drawn successfuly by the player, 0 otherwise?
@@ -655,12 +656,16 @@ Player's current stats:
   00001000 - Treant.
   00002000 - Ouija Table.
   00004000 - Dead Crusader.
-  00010000 - ?
+  00008000 - ?
+  00010000 - ? final guard?
   00020000 - Werewolf dashing.
   00040000 - Medusa Head floating.
-  00080000 - ?
-  00200000 - ?
-  00400000 - Water acts as quicksand. This bit gets set every frame by object 05.
+  00080000 - ? imp?
+  00100000 - ? paranoia?
+  00200000 - Player is under a waterfall, so gravity is quadrupled.
+    This bit gets set every frame the player is in object 03 (waterfall).
+  00400000 - Water acts as quicksand.
+    This bit gets set every frame by object 05.
 
 020F7408,1 - Number of enemies/entities on screen the previous frame?
 020F7409,1 - Number of enemies/entities currently on screen?
