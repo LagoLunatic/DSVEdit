@@ -288,6 +288,10 @@ class Game
       special_object_docs_arr.each do |desc|
         id = desc.first[0..1].to_i(16)
         special_object_docs[id] = desc.first[3..-1]
+        if special_object_docs[id].start_with?("Event - ") && SYSTEM == :nds
+         special_object_docs[id] += "  Var A is the event flag set upon completing this event.\r\n"
+         special_object_docs[id] += "  Var B is the prerequisite event flag before this event will appear.\r\n"
+       end
       end
       
       special_object_docs
