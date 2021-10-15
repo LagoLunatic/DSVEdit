@@ -94,6 +94,14 @@ Enemies:
 4C Blaze Master
 4D Arthro Skeleton
 4E Rare Ghost
+  The base chance of the Rare Ghost appearing is 1/64 (about 1.56%).
+  Luck increases the chances of its appearance (this is the only effect that luck has in HoD).
+  The first 79 points of luck do nothing.
+  Starting at 80, every 10 points of luck adds an extra 1/64 chance roll.
+  So the chance the Rare Ghost will appear at a given luck stat can be calculated as follows, assuming you have at least 70 luck:
+    chance = 1 - (1 - 1/64)^(1 + floor((LCK-70)/10))
+  e.g. 0 luck is a 1.56% chance, 80 is a 3.10% chance, 90 is a 4.61% chance, 999 is a 76.52% chance, etc.
+  However, note that the Rare Ghost will only appear if you enter the room on a frame number that is divisible by 4. So if you're not able to enter the room consistently on valid frames, you can effectively consider the real chance of it appearing to be a quarter of the percentages shown above.
 4F Skeleton Glass
 50 Victory Armor
 51 Hammer-Hammer
