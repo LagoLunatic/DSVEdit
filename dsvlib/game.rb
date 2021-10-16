@@ -1279,6 +1279,29 @@ class Game
       end
     end
     
+    item_icon_gfx_basenames = ["item"]
+    if GAME == "ooe"
+      item_icon_gfx_basenames << "rune"
+    end
+    item_icon_gfx_basenames.each do |basename|
+      gfx_files = fs.files.values.select do |file|
+        file[:file_path] =~ /\/sc\/f_#{basename}\d+\.dat/
+      end
+      gfx_files.each do |asset|
+        unknown_assets.delete(asset[:file_path])
+      end
+    end
+    
+    # For GBA:
+    #ITEM_ICONS_GFX_POINTERS.each do |gfx_pointer|
+    #  asset = fs.assets_by_pointer[gfx_pointer]
+    #  if asset.nil?
+    #    puts "Fileless GFX: %08X" % gfx_pointer
+    #    next
+    #  end
+    #  unknown_assets.delete(asset[:file_path])
+    #end
+    
     File.open("unknown_assets.txt", "w") do |f|
       unknown_assets.each do |file_path|
         file = fs.files_by_path[file_path]
