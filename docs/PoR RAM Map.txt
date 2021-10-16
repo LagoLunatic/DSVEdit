@@ -78,6 +78,19 @@
 020DF420-020DF457 - List of pointers to map line data for each area.
 020DF45C-020DF493 - List of map row widths.
 
+020DF630-020DF94F - List of OAM OBJs in a custom format for the background OAM sprite of the map top screen.
+  Entry length 0x14. 0x28 entries in total.
+  00,1: X pos.
+  01,1: Y pos.
+  02,1: X offset on the GFX page.
+  03,1: Y offset on the GFX page.
+  04,1: BG priority.
+  08,4: Bitfield of extra bits to set in OAM attributes 0 and 1 (lower halfword is attribute 0, upper is attribute 1).
+    & C0000000 - OBJ size
+  0C,1: Palette index.
+  10,4: Unused...?
+    There's a different code branch that is taken if this is equal to 0x100 or 0x300, but that branch does the same thing as the normal branch.
+
 020DFD40 - List of quests.
   Entry length 0x10.
   00,2 Global ID+1 of the item to give as a reward. Skills start at 151.
@@ -130,6 +143,9 @@
 
 020E3B14-020E3CF9 - List of extra data for each skill. Only for subweapons and spells.
 020E3CFC-020E471B - Skill data.
+
+020E4914 - List of initialization function pointers for the top screen.
+  The next top screen type at 0211AB31,1 is the index in this list.
 
 020F49E8 - List of breakable walls for each area.
   0,2: Sprite frame index to use.
@@ -210,8 +226,10 @@
 
 020F6294 - Large bitfield of fake block collisions set by SetFakeBlockCollision. Each bit corresponds to one block.
 
-020F88E4 - Tile mapping for BG2s layer.
+020F88E4 - Tile mapping for BG2 layer.
   Used for the dynamic parts of menus like numbers and descriptions.
+
+020F99E0 - Tile mapping for the top screen BG3 layer.
 
 020FA200 - List of sprite info for currently loaded entities.
   Each entry is 0x10 bytes long.

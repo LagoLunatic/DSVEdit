@@ -132,6 +132,18 @@
 0205B20C LoadAsset???
   ; r0 - Menu entity
   ; r1 - Asset index
+0205B1BC ???Asset?
+  ; r0 - ?
+  ; r1 - Asset index
+020063FC LoadBGTilesGFX
+  ; r0 - GFX asset pointer
+  ; r1 - Offset to load the GFX at into VRAM, in terms of groups of 0x2000 bytes/0x100 tiles
+  ; r2 - 0?
+  ; r3 - 0?
+  ; [r13,0] - 0?
+  ; [r13,4] - 1?
+  ; [r13,8] - 8?
+  ; [r13,C] - 1?
 
 0201BA0C InitializeSpriteAssetFile
   ; Initializes the standalone sprite file format with pointers in place of file offsets so that it can be used by the game engine.
@@ -501,6 +513,18 @@
   ; r1 - 0x14? index in list 020FB204
   ; r2 - Number of GFX pages to load
   ; r3 - Size of each GFX page. 1 for 128x128 pages. 4 for 256x256 pages.
+02016610 LoadSpriteSingleGfxNoEntity
+  ; r0 - Sprite pointer
+  ; r1 - GFX asset pointer
+  ; r2 - Palette list pointer
+  ; r3 - 1?
+  ; [r13] - 0 or 1?
+  ; [r13,4] - 0 or 1?
+0203EA48 LoadSpriteSingleGfxNoEntity2?
+  ; r0 - Sprite pointer
+  ; r1 - GFX asset pointer
+  ; r2 - Palette list pointer
+  ; Calls LoadSpriteSingleGfxNoEntity with r3 = 1, [r13] = 0, [r13,4] = 1
 
 020165D4 GetOAMAttributesBySpritePartSize
   ; r0 - Part width in pixels
@@ -542,6 +566,13 @@
   ; r1 - 0?
   ; r2 - Number of palettes to load (or 0 to load all palettes in the list)
   ; Returns the index in the globally loaded palette list that this palette got loaded into. (This index then gets stored at entity+86 and entity+88.)
+02006170 LoadBGPalette?
+  ; r0 - Palette *entry* pointer (without the list header)
+  ; r1 - ?
+  ; r2 - Number of palettes to load
+  ; r3 - 0?
+  ; [r13] - 0?
+  ; Returns r0 - ?
 0200EA44 GetFreeRoomEntityPaletteSlot
   ; r0 - Palette list pointer
   ; r1 - Number of palettes to load
@@ -862,6 +893,11 @@
   ; r1 - GFX asset pointer
   ; r2 - Palette list pointer
   ; r3 - Layer metadata pointer
+
+02005E00 InitializeMenuBG3TopScreen?
+  ; r0 - Layer metadata pointer
+  ; r1 - ?
+  ; r2 - ?
 
 020557C8 SetTopScreen
   ; r0 - Top screen type to change to

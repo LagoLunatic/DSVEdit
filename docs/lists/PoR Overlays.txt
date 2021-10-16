@@ -6,7 +6,7 @@
 5       022B2A80-022B2ADF  Sprite data that isn't stored in individual files. (Unused?)
 6       022B2AE0-022B765F  Sprite data that isn't stored in individual files.
 7       022B7660-022D0F3F  Various data including palettes, GFX wrappers, some icon GFX data.
-8       022D0F40-022D74FF  
+8       022D0F40-022D74FF  shop gfx?
 9-24    022D7500-022D78FF  12 seems to have something related to the pause menu's BG1 layer.
 25      022D7900-022E881F  Menu code and enemy code for Whip's Memory.
 26-39   022E01A0-022E4F5F  

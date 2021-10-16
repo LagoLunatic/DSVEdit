@@ -731,6 +731,15 @@ OTHER_SPRITES = [
   {pointer: 0x02052FC8, desc: "Info screen", one_dimensional_mode: true},
   {pointer: 0x0203D52C, desc: "Pause menu", one_dimensional_mode: true},
   {pointer: 0x0203BCBC, desc: "Equip menu", one_dimensional_mode: true},
+  {pointer: 0x0203A6FC, desc: "Use item menu", one_dimensional_mode: true},
+  {pointer: 0x02039918, desc: "Config menu", one_dimensional_mode: true},
+  {pointer: 0x02038818, desc: "Relics menu", one_dimensional_mode: true},
+  {pointer: 0x02037E10, desc: "Enemies guide menu", one_dimensional_mode: true},
+  {pointer: 0x02036BF4, desc: "Items guide menu", one_dimensional_mode: true},
+  {pointer: 0x02035DC0, desc: "Skills guide menu", one_dimensional_mode: true},
+  {pointer: 0x0203561C, desc: "Quests guide menu", one_dimensional_mode: true},
+  {desc: "Map background", no_sprite: true, palette: 0x022C1490, gfx_files: [0x022CBA90], one_dimensional_mode: true},
+  {pointer: 0x02056AB0, desc: "Wireless mode"},
   {pointer: 0x022E0DB8, desc: "Credits", overlay: 37},
   {pointer: 0x022E10E8, desc: "Credits portraits", overlay: 37},
   {pointer: 0x022E0BD0, desc: "Richter & Old Axe Armor modes credits characters", overlay: 37},
@@ -1671,6 +1680,34 @@ MENU_BG_LAYER_INFOS = [
     overlay: 14,
     # Note: Wind's quests menu uses GFX list 0x020BFD80 instead of the 0x020BFC2C used by the pause screen.
     # But the GFX inside the list are identical, as are the other properties here, so Wind's quests menu is not listed.
+  },
+  
+  {
+    name: "Title screen top screen",
+    gfx_file_pointers:      [0x022D2B00, 0x022D2B0C],
+    palette_list_pointer:   0x022D6F74,
+    layer_metadata_pointer: 0x020C4444,
+    overlay: 16,
+  },
+  {
+    name: "Info screen top screen",
+    gfx_file_pointers:      [0x022D2B18, 0x022D4B24],
+    palette_list_pointer:   0x022D6EF0,
+    layer_metadata_pointer: 0x020C4654,
+  },
+  {
+    name: "Warp room top screen",
+    gfx_file_pointers:      [0x022D25CC, 0x022D25D8],
+    palette_list_pointer:   0x022D7488,
+    layer_metadata_pointer: 0x020C3A74,
+    overlay: 24,
+  },
+  {
+    name: "Wireless mode top screen",
+    gfx_file_pointers:      [0x022D25FC, 0x022D2608],
+    palette_list_pointer:   0x022C3EA0,
+    layer_metadata_pointer: 0x020C3E14,
+    overlay: 3, # The code at 0205698C loads overlay 13, but in reality overlay 3 is required
   },
 ]
 
