@@ -14,4 +14,7 @@
   mov r4,0h        ; Load the room index into r4.
   b 02051F94h      ; Return to where we came from.
 
+.org 0x02051F80 ; The case statement for Old Axe Armor mode's starting room initialization.
+  b 0x02051F88 ; Change it to take the same branch as the other three modes.
+
 .close
