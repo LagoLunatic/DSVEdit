@@ -83,7 +83,7 @@
   Var B:
     If var A is 0, var B has no effect.
     If var A is 1, var B is the event flag to set when the wall is destroyed to indicate that it's gone.
-      Note that Bronze Guarder is hardcoded to check event flag 24, so he will not stay dead if this is changed to something else (but the wall itself will stay detroyed).
+      Note that Bronze Guarder is hardcoded to check event flag 24, so he will not stay dead if this is changed to something else (but the wall itself will stay destroyed).
 14 Iron gate.
   Var A: Event flag that opens this gate.
 15 Machine with cogs you can hit.
