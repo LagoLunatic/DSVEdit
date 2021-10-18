@@ -596,8 +596,10 @@ class Room
     write_extra_data_to_rom() if GAME != "hod"
   end
   
-  def update_entity_gfx_list
-    @entity_gfx_list = []
+  def get_sprite_infos_for_all_entites_in_room
+    return unless GAME == "hod"
+    
+    sprite_infos = []
     
     enemies = entities.select{|e| e.is_enemy?}
     enemies.each do |enemy|
@@ -611,34 +613,27 @@ class Room
         next
       elsif enemy_id == 0x16 && enemy.var_a == 2
         # Peeping Eye that spawns Peeping Big
-        sprite_info = game.enemy_dnas[0x42].extract_gfx_and_palette_and_sprite_from_init_ai
-        @entity_gfx_list += sprite_info.gfx_list_pointer_or_gfx_file_pointers
+        sprite_infos << game.enemy_dnas[0x42].extract_gfx_and_palette_and_sprite_from_init_ai
       elsif enemy_id == 0x3D # "O"
         # O needs Rare Ghost's exclamation point bubble, so load Rare Ghost's GFX too.
-        sprite_info = game.enemy_dnas[0x4E].extract_gfx_and_palette_and_sprite_from_init_ai
-        @entity_gfx_list += sprite_info.gfx_list_pointer_or_gfx_file_pointers
+        sprite_infos << game.enemy_dnas[0x4E].extract_gfx_and_palette_and_sprite_from_init_ai
       elsif enemy_id == 0x6E # Skeleton Mirror (in mirror)
         # Need to load Skeleton Mirror's GFX too.
-        sprite_info = game.enemy_dnas[0x3C].extract_gfx_and_palette_and_sprite_from_init_ai
-        @entity_gfx_list += sprite_info.gfx_list_pointer_or_gfx_file_pointers
+        sprite_infos << game.enemy_dnas[0x3C].extract_gfx_and_palette_and_sprite_from_init_ai
       elsif enemy_id == 0x71 # Skeleton Glass (in glass)
         # Need to load Skeleton Glass's GFX too.
-        sprite_info = game.enemy_dnas[0x4F].extract_gfx_and_palette_and_sprite_from_init_ai
-        @entity_gfx_list += sprite_info.gfx_list_pointer_or_gfx_file_pointers
+        sprite_infos << game.enemy_dnas[0x4F].extract_gfx_and_palette_and_sprite_from_init_ai
       elsif enemy_id == 0x36 # Giant Merman
         # His spin has a separate GFX (and sprite).
         other_sprite = OTHER_SPRITES.find{|spr| spr[:desc] == "Giant Merman spin"}
-        sprite_info = SpriteInfo.extract_gfx_and_palette_and_sprite_from_create_code(other_sprite[:init_code], fs, nil, other_sprite)
-        @entity_gfx_list += sprite_info.gfx_list_pointer_or_gfx_file_pointers
+        sprite_infos << SpriteInfo.extract_gfx_and_palette_and_sprite_from_create_code(other_sprite[:init_code], fs, nil, other_sprite)
         
         # Also need to load Merman's GFX too.
-        sprite_info = game.enemy_dnas[0x2F].extract_gfx_and_palette_and_sprite_from_init_ai
-        @entity_gfx_list += sprite_info.gfx_list_pointer_or_gfx_file_pointers
+        sprite_infos << game.enemy_dnas[0x2F].extract_gfx_and_palette_and_sprite_from_init_ai
       end
       
       if ENEMY_IDS.include?(enemy_id)
-        sprite_info = game.enemy_dnas[enemy_id].extract_gfx_and_palette_and_sprite_from_init_ai
-        @entity_gfx_list += sprite_info.gfx_list_pointer_or_gfx_file_pointers
+        sprite_infos << game.enemy_dnas[enemy_id].extract_gfx_and_palette_and_sprite_from_init_ai
       end
     rescue SpriteInfo::CreateCodeReadError => e
       puts e.message
@@ -678,11 +673,11 @@ class Room
           # Need to load the lift's GFX too.
           other_sprite = OTHER_SPRITES.find{|spr| spr[:desc] == "Lift to center of castle"}
           lift_sprite_info = SpriteInfo.extract_gfx_and_palette_and_sprite_from_create_code(other_sprite[:init_code], fs, nil, other_sprite)
-          @entity_gfx_list += lift_sprite_info.gfx_list_pointer_or_gfx_file_pointers
+          sprite_infos << lift_sprite_info
         end
         
         if sprite_info
-          @entity_gfx_list += sprite_info.gfx_list_pointer_or_gfx_file_pointers
+          sprite_infos << sprite_info
         end
       rescue SpriteInfo::CreateCodeReadError, GBADummyFilesystem::ReadError => e
         puts e.message
@@ -693,8 +688,7 @@ class Room
     candles.each do |candle|
       begin
         sprite_info, _ = candle.get_hod_candle_sprite_info()
-        
-        @entity_gfx_list += sprite_info.gfx_list_pointer_or_gfx_file_pointers
+        sprite_infos << sprite_info
       rescue SpriteInfo::CreateCodeReadError, GBADummyFilesystem::ReadError => e
         puts e.message
       end
@@ -704,12 +698,23 @@ class Room
       begin
         # Has the fake 3D clock tower
         other_sprite = OTHER_SPRITES.find{|spr| spr[:desc] == "Clock tower in BG"}
-        sprite_info = SpriteInfo.extract_gfx_and_palette_and_sprite_from_create_code(other_sprite[:init_code], fs, nil, other_sprite)
-        
-        @entity_gfx_list += sprite_info.gfx_list_pointer_or_gfx_file_pointers
+        sprite_infos << SpriteInfo.extract_gfx_and_palette_and_sprite_from_create_code(other_sprite[:init_code], fs, nil, other_sprite)
       rescue SpriteInfo::CreateCodeReadError, GBADummyFilesystem::ReadError => e
         puts e.message
       end
+    end
+    
+    return sprite_infos
+  end
+  
+  def update_entity_gfx_list
+    return unless GAME == "hod"
+    
+    @entity_gfx_list = []
+    
+    sprite_infos = get_sprite_infos_for_all_entites_in_room()
+    sprite_infos.each do |sprite_info|
+      @entity_gfx_list += sprite_info.gfx_list_pointer_or_gfx_file_pointers
     end
     
     @entity_gfx_list -= COMMON_SPRITE[:gfx_files]
@@ -720,6 +725,8 @@ class Room
   end
   
   def write_entity_gfx_list_to_rom
+    return unless GAME == "hod"
+    
     list_ptr_duplicated = !!(room_states - [self]).find{|room_state| room_state.entity_gfx_list_pointer == @entity_gfx_list_pointer}
     if list_ptr_duplicated
       # Need to move this list to free space so it doesn't conflict with other room states that use the same list pointer.
