@@ -660,7 +660,9 @@ class Room
         elsif object_id == 0x26 # Event
           event_id = object.var_a
           other_sprite = OTHER_SPRITES.find{|spr| spr[:desc] == "Event %02X" % event_id}
-          sprite_info = SpriteInfo.extract_gfx_and_palette_and_sprite_from_create_code(other_sprite[:init_code], fs, nil, other_sprite)
+          if other_sprite
+            sprite_info = SpriteInfo.extract_gfx_and_palette_and_sprite_from_create_code(other_sprite[:init_code], fs, nil, other_sprite)
+          end
         elsif object_id == 0x28 # Lydie
           if objects.find{|o| o.subtype == 0x26 && [0xA, 0xB, 0x12].include?(o.var_a)}
             # If the room has one of the events at the center of the castle that includes Lydie, that loads both Lydie and Maxim's GFX.
