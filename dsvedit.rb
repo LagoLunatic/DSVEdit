@@ -37,7 +37,9 @@ begin
     
     raise e
   end
-rescue ScriptError, StandardError => e
+rescue SystemExit, Interrupt
+  raise
+rescue Exception => e
   logger = Logger.new("crashlog.txt")
   logger.error e
   
