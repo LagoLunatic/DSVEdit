@@ -189,8 +189,7 @@ class SkeletonEditorDialog < Qt::Dialog
       joint_states_for_pose << joint_state
     end
     
-    joint_states_for_pose
-    
+    return joint_states_for_pose
   end
   
   def initialize_joint_states_new(pose)
@@ -237,6 +236,8 @@ class SkeletonEditorDialog < Qt::Dialog
       
       joint_states_for_pose << joint_state
     end
+    
+    return joint_states_for_pose
   end
   
   def tween_poses(previous_pose, next_pose, tweening_progress)

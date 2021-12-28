@@ -332,7 +332,7 @@ class SpriterInterface
       
       joint_states_for_pose << joint_state
     end
-
+    
     return joint_states_for_pose
   end
   
