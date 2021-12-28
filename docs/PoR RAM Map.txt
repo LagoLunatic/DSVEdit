@@ -24,6 +24,23 @@
     1 - Autoscrolling.
       Word 00 is the speed of horizontal scrolling.
       Word 04 is the speed of vertical scrolling.
+  Known scroll modes:
+    00 
+    01 
+    02 
+    05 
+    06 
+    07 
+    0B 
+    0C 
+    0D 
+    0E 
+    11 
+    12 
+    13 
+    14 
+    17 
+    19 
 
 020C5C24-020C9C23 - List of sine and cosine values.
   Entry length 4.
@@ -609,6 +626,8 @@ F5-F5  021115E0-0211173F  ?
   02 - Quest taken.
   04 - Met requirements to complete quest.
   08 - Completed quest (cashed in reward).
+
+02111F4C,1 - 0 or 1 for whether the map screen or info screen are on the top screen.
 
 02111F51 - Current game mode.
   0 - Jonathan/Charlotte mode.

@@ -196,6 +196,11 @@
   ; Calling TeleportPlayer without TriggerRoomTransition will just bug out the game.
 02032CF4 TriggerRoomTransition
 
+0202DB24 GetRoomPointerByIndexes
+  ; r0 - Area index
+  ; r1 - Sector index
+  ; r2 - Room index
+
 02054784 SetOAMDataForElementalSymbols
   ; r2 - X
   ; r3 - Y
