@@ -168,7 +168,30 @@
     6 - 500G
     7 - 1000G
 0F Flame.
-  Var A: ?
+  Var A: Bitfield.
+    & 0x00FF - What type of pickup to drop when the flame is destroyed.
+      0 - Random amount of money.
+        Var B: Affects the possible amounts of money.
+          0 - $1 or $10
+          1 - $10 or $50
+          2 - $50 or $100
+          3 - $100 or $500
+          4 - $500 or $1000
+          5 - $1000 or $2000
+      1 - Exact amount of money.
+        Var B: The amount of money.
+          0 - $1
+          1 - $10
+          2 - $50
+          3 - $100
+          4 - $500
+          5 - $1000
+          6 - $2000
+      2 - Item: consumable.
+        Var B: The local ID of the consumable.
+      Note: In Julius mode, flames where this drop type is anything besides 0 will have it reset to 0 with a Var B of 0 as well.
+    & 0xFF00 - OBJ palette index in VRAM for the flame's graphics.
+      0 - Defaults to palette index 7 instead.
 10 Boss rush clear reward.
 11 Starts boss rush.
 12 Various background visuals.
@@ -194,6 +217,10 @@
     0 Full of money.
     1 Full of Rippers.
 19 Skull that moves around in a rectangular path.
+  Var A: Width in pixels of the path it moves around on.
+  Var B: Direction.
+    0 Clockwise
+    1 Counterclockwise
 1A Nothing, unused.
 1B Button that reverses conveyor belts.
 1C Save point.
@@ -278,6 +305,15 @@
     0 Button.
     1 Metal gate.
 36 Cog.
-  Var A: ?
+  Var A: Affects the size, rotation direction, and speed.
+    0 Large counterclockwise, 90 speed
+    1 Large clockwise, 60 speed
+    2 Large counterclockwise, 90 speed
+    3 Medium clockwise, 90 speed
+    4 Large counterclockwise, 120 speed
+    5 Large counterclockwise, 90 speed
+    6 Large clockwise, 90 speed
+    7 Large counterclockwise, 90 speed
+    8 Medium clockwise, 60 speed
 37 Demon head gate.
   Must face away from it for its mouth to open.

@@ -49,7 +49,8 @@ Each frame is 0x10 bytes long.
 Animations:
 Each animation is 4 bytes long.
   00,2: Number of frames in this animation.
-  02,2: Function index. Index in list 080E2B34, which is a list of pointers to functions to call.
+  02,2: Function index.
+    Index in list 080E2B34 (for AoS) or list 080C5458 (for HoD), which is a list of pointers to functions to call.
   04,?: List of keyframes in this animation. See below for the format.
     For type 0, this is a pointer to the list of keyframes.
     For types 1, 2, and 3, this is just the list itself directly.

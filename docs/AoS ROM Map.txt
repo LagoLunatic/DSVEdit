@@ -51,9 +51,13 @@ Starting stats (hardcoded):
     [    B    ] [    F    ]
   So e.g. F means the player's spot in VRAM, 0 means the common sprite's spot, E means the player's weapon's spot, etc.
 
-080E2B34-080E2B43 - List of animation function pointers?
-  4 entries in total.
+080E2B34-080E2B43 - List of animation functions.
   The animation's function index is the index in this list.
+  4 entries in total.
+    0 - 0803EBA8
+    1 - 0803EC34
+    2 - 0803ECC0
+    3 - 0803ED6C
 
 080E2B4C - List of metadata about variable-width font characters.
   Entry length 4. 0xDD entries in total?

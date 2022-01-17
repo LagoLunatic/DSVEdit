@@ -95,6 +95,12 @@
 
 080683BC EnemyCheckDrops
 
+; flame drop related functions:
+; 08045F9C
+; 08043C10
+; 08043F70
+; 08044054
+
 080326B8 GetNumOwnedSoul
   ; r0 - Soul type
   ; r1 - Soul index-1
@@ -152,7 +158,14 @@
 080421AC CheckCollisions
   ; r0 - Entity
 
-080428F0 SetHitbox
+08042884 SetHitbox
+  ; r0 - Entity
+  ; r1 - Bitfield.
+  ;   & 000000FF - X offset (signed).
+  ;   & 0000FF00 - Y offset (signed).
+  ;   & 00FF0000 - Width.
+  ;   & FF000000 - Height.
+080428F0 SetHurtbox
   ; r0 - Entity
   ; r1 - Bitfield.
   ;   & 000000FF - X offset (signed).
@@ -326,11 +339,16 @@
   ; r2 - 
   ; r3 - 
 
-0803F2C8 EntityChangeAnimation
+0803F2C8 EntitySetAnimation
   ; r0 - Entity
   ; r1 - 
   ; r2 - 
   ; r3 - 
+
+0803EBA8 AnimationFunc0
+0803EC34 AnimationFunc1
+0803ECC0 AnimationFunc2
+0803ED6C AnimationFunc3
 
 080427B8 SetCallbacksAndIframesIndex
   ; r0 - Entity
