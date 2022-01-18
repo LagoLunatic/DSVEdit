@@ -270,7 +270,7 @@ class SpriteEditor < Qt::Dialog
     rescue StandardError => e
       Qt::MessageBox.warning(self,
         "Enemy sprite extraction failed",
-        "Failed to extract gfx or palette data for enemy #{enemy_id}.\n#{e.message}\n\n#{e.backtrace.join("\n")}"
+        "Failed to extract gfx or palette data for enemy #{"%02X" % enemy_id}.\n#{e.message}\n\n#{e.backtrace.join("\n")}"
       )
       return
     end
@@ -295,7 +295,7 @@ class SpriteEditor < Qt::Dialog
     rescue StandardError => e
       Qt::MessageBox.warning(self,
         "Special object sprite extraction failed",
-        "Failed to extract gfx or palette data for special object #{special_object_id}.\n#{e.message}\n\n#{e.backtrace.join("\n")}"
+        "Failed to extract gfx or palette data for special object #{"%02X" % special_object_id}.\n#{e.message}\n\n#{e.backtrace.join("\n")}"
       )
       return
     end
@@ -315,7 +315,7 @@ class SpriteEditor < Qt::Dialog
     rescue StandardError => e
       Qt::MessageBox.warning(self,
         "Weapon sprite extraction failed",
-        "Failed to extract gfx or palette data for weapon #{weapon_gfx_index}.\n#{e.message}\n\n#{e.backtrace.join("\n")}"
+        "Failed to extract gfx or palette data for weapon #{"%02X" % weapon_gfx_index}.\n#{e.message}\n\n#{e.backtrace.join("\n")}"
       )
       return
     end
@@ -350,7 +350,7 @@ class SpriteEditor < Qt::Dialog
     rescue StandardError => e
       Qt::MessageBox.warning(self,
         "Skill sprite extraction failed",
-        "Failed to extract gfx or palette data for skill #{skill_gfx_index}.\n#{e.message}\n\n#{e.backtrace.join("\n")}"
+        "Failed to extract gfx or palette data for skill #{"%02X" % skill_gfx_index}.\n#{e.message}\n\n#{e.backtrace.join("\n")}"
       )
       return
     end
@@ -380,7 +380,7 @@ class SpriteEditor < Qt::Dialog
     rescue StandardError => e
       Qt::MessageBox.warning(self,
         "Sprite extraction failed",
-        "Failed to extract gfx or palette data for other sprite #{id}.\n#{e.message}\n\n#{e.backtrace.join("\n")}"
+        "Failed to extract gfx or palette data for other sprite #{"%02X" % id}.\n#{e.message}\n\n#{e.backtrace.join("\n")}"
       )
       return
     end
@@ -490,6 +490,8 @@ class SpriteEditor < Qt::Dialog
       load_no_sprite_with_gfx_and_palette()
       return
     end
+    
+    clear_sprite()
     
     @ui.frame_first_part.enabled = true
     @ui.frame_number_of_parts.enabled = true
@@ -796,7 +798,6 @@ class SpriteEditor < Qt::Dialog
   def animation_changed(i)
     @animation_timer.stop()
     @current_animation_index = i
-    @ui.seek_slider.value = 0
     @current_animation_frame_index = 0
     
     if i == nil
@@ -811,6 +812,8 @@ class SpriteEditor < Qt::Dialog
       @ui.animation_index.setCurrentIndex(i)
       @current_animation = @sprite.animations[i]
     end
+    
+    @ui.seek_slider.value = 0
     
     if @current_animation.nil?
       @ui.seek_slider.enabled = false
