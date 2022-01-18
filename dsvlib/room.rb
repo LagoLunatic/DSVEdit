@@ -636,7 +636,7 @@ class Room
         sprite_infos << game.enemy_dnas[enemy_id].extract_gfx_and_palette_and_sprite_from_init_ai
       end
     rescue SpriteInfo::CreateCodeReadError => e
-      puts e.message
+      puts e.message unless e.message == "This entity has no sprite."
     end
     end
     
@@ -680,7 +680,7 @@ class Room
           sprite_infos << sprite_info
         end
       rescue SpriteInfo::CreateCodeReadError, GBADummyFilesystem::ReadError => e
-        puts e.message
+        puts e.message unless e.message == "This entity has no sprite."
       end
     end
     
@@ -690,7 +690,7 @@ class Room
         sprite_info, _ = candle.get_hod_candle_sprite_info()
         sprite_infos << sprite_info
       rescue SpriteInfo::CreateCodeReadError, GBADummyFilesystem::ReadError => e
-        puts e.message
+        puts e.message unless e.message == "This entity has no sprite."
       end
     end
     
@@ -700,7 +700,7 @@ class Room
         other_sprite = OTHER_SPRITES.find{|spr| spr[:desc] == "Clock tower in BG"}
         sprite_infos << SpriteInfo.extract_gfx_and_palette_and_sprite_from_create_code(other_sprite[:init_code], fs, nil, other_sprite)
       rescue SpriteInfo::CreateCodeReadError, GBADummyFilesystem::ReadError => e
-        puts e.message
+        puts e.message unless e.message == "This entity has no sprite."
       end
     end
     
