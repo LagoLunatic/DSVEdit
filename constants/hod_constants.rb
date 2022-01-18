@@ -768,7 +768,7 @@ PLAYER_LIST_FORMAT = [
   [4, "Animations pointer"],
   [4, "Banned moves pointer"],
   [4, "Movement params pointer"],
-  [4, "Unknown 6"],
+  [4, "Anim palette indexes ptr"],
   [4, "Unknown 7"],
   [4, "Sound effects pointer"],
   [4, "Misc bitfield", :bitfield],

@@ -77,6 +77,7 @@ List of keyframes for function index 3:
 Each keyframe is 0xC bytes long.
   00,2: Frame index to use.
   02,2: Delay (in frames) for this frame to be displayed.
-  04,4: ???
-    This is argument r1 to func 08042884
-  08,4: Hitbox data. See the hitbox format above.
+  04,4: Hitbox data?
+    This is argument r1 to func 08042884 (for AoS) or func 080164F8 (for HoD).
+  08,4: Hurtbox data? See the hitbox format above.
+    This is argument r1 to func 080428F0 (for AoS) or func 0801655C (for HoD).

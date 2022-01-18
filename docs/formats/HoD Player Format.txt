@@ -6,16 +6,55 @@ Player format:
   0A,
   0C,4: Sprite pointer.
   10,4: Animation list pointer.
-  14,4: ??? pointer.
-    Pointer to a list of movement abilities to DISABLE for this character?
+  14,4: Banned moves list pointer.
+    Pointer to a list of movement abilities to disable for this character.
     Each ability to disable is one byte.
     0xFF represents the end of the list.
-  18,4: ??? pointer.
-    pointer to a struct of movement speed stuff?
-  1C,4: ??? pointer.
+  18,4: Movement params pointer.
+    A giant struct of various movement speed values.
+  1C,4: Animation palette indexes list pointer.
+    Pointer to a list of bytes.
+    Each byte is an OBJ palette index. Each one controls which of the loaded OBJ palettes will be used for some animation.
+    For example, 00 means the animation will use the player's normal palette, 03 will use the flashing damage palette, and 04 will use a shadowy palette.
+    TODO: how to tell which index in this list corresponds to which animation? seems hardcoded?
+    anim index -> index in this list
+    13 -> 09
+    2F -> 14
   20,4: ??? pointer.
-    points to a list of bytes.
+    Pointer to a list of bytes.
+    Each byte affects some animation's hitboxes in some way.
+    If the byte is 00 or 01, the animation can not deal damage (but can still take it).
+    If the byte is 02 or greater, the animation can deal damage, and the exact value changes the iframes it gives and the damage it deals.
+      00 - Can't do damage.
+      01 - Can't do damage.
+      02 - Normal damage?
+      03 - Normal damage?
+      04 - Extra damage?
+      05 - Can't do damage. (has some special hardcoded behavior?)
+      06 - Normal damage?
+      07 - Half damage, but can hit every frame?
+      08 - Can't do damage, but can create a spark effect when hitting an enemy.
+      09 - Less damage?
+      0A - Less damage, but slightly less iframes?
+      44 - Way more damage
+    080C55EC seems to be a list of iframes
+      Entry length 1.
+      0x34 entries in total
+      the index in the list is the unknown 7 value?
+      the game adds +1 to this to get the actual iframes
+    080E2504 - list of ?
+      Entry length 4.
+      0x34 entries in total
+      00,1: damage multiplier...?
+        it seems to do (base_value*this)//8
+      01,1: 
+        0 - 
+        1 - 
+        2 - 
+      02,1: 
+      03,1: boolean? reduces damage somewhat?
     the byte at index 8, if changed to any value besides 00 or 01, will cause the jumpkick hitbox to persist even after jumpkicking when you're just walking around.
+    The indexes in this list seem to match the ones for the palette indexes list.
   24,4: ??? pointer.
     Pointer to list of sound effects for this character?
   28,4: Misc bitfield.

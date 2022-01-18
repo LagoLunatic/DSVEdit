@@ -14,6 +14,7 @@ Memory used for entities in HoD is 02000418 - 02007C17. Each entity is 0x80 byte
 12,1: Index in object palette VRAM where this entity's palette is loaded.
 17,1: Index in object VRAM where this entity's GFX are loaded.
 22,1: 
+2A,2: damage?
 38,2: Var A.
 3A,2: Var B.
 3E,1: Subtype.
@@ -36,11 +37,27 @@ Memory used for entities in HoD is 02000418 - 02007C17. Each entity is 0x80 byte
 60,1: Bitfield of drawing related flags?
   & 40 - Horizontal flip.
 61,1: Bitfield of ?
-62,1: Bitfield of ?
+  & 08 - Queues the entity to be deleted?
+62,1: Affects the rendering mode and palette to draw this entity's sprite with.
+  & 03 - OBJ mode to render this entity with.
+    0 - Normal
+    1 - Semi-transparent
+    2 - OBJ window
+    3 - Prohibited
+  & 3C - The OBJ palette index for this entity.
 66,1: Sprite info index.
   This is an index in the currently loaded sprite info list, 020154FC.
 67,1: Current sprite frame.
 68,4: Pointer to animation list?
 6C,1: Bitfield related to sprite?
 6E,1: Current animation index?
-70,1: 
+70,1: from "Unknown 7" list in player data?
+  1 - 
+  2 - 
+  3 - 
+  4?
+  5 - 
+  6 - 
+74,1: ?
+75,1: ?
+76,1: Remaining iframes this entity has before it can take damage again?

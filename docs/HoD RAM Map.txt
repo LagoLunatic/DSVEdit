@@ -1,4 +1,6 @@
 
+02000000,4 - ? frames passed since boot up?
+
 02000008,4 - Current RNG seed.
   The most recent random number generated is stored here.
   It is used to affect the next random number generated.
@@ -78,18 +80,24 @@
   11 00020000 Talos (chase)
   12 00040000 Pazuzu
 
-020003A8,1 - ? music related
+=== 0200035B: End of section that gets saved to the save file.
+
+020003A8,1 - ???
+  Bits 3-5: Index in list 080E2120 to get the position the player should be in when loading a save file.
+  some of the bits may be music related?
 
 020003B0-020003B7 - Bitfield of entity used unique IDs in the current room.
   The unique ID must be unique for all entities in the room.
   Unlike the DSVanias, a unique ID of 0 must also be unique, and doesn't make an entity exempt.
 
-=== 0200035B: End of section that gets saved to the save file.
-
-020003A8,1 - ???
-  Bits 3-5: Index in list 080E2120 to get the position the player should be in when loading a save file.
-
 020003B8,4 - Current room's entity list pointer.
+
+020003BC,4 - Palette list pointer of the room entity palette currently loaded in OBJ palette slot A.
+020003C0,4 - Palette list pointer of the room entity palette currently loaded in OBJ palette slot B.
+020003C4,4 - Palette list pointer of the room entity palette currently loaded in OBJ palette slot C.
+020003C8,4 - Palette list pointer of the room entity palette currently loaded in OBJ palette slot D.
+
+020003D0,1 - (palette related?)
 
 02000404,4 - Bitfield of global game flags.
   00000001 - Disables controls. Used while going through doors, warping, etc.
@@ -193,6 +201,8 @@ Extra memory used for rendering special effects:
 
 020184FC,4 - Pointer to the animations list copied from the current player data.
 02018500,4 - Pointer to the movement params copied from the current player data.
+02018504,4 - Pointer to the animation palette indexes list copied from the current player data.
+02018508,4 - Pointer to the "Unknown 7" copied from the current player data.
 02018510,4 - Misc bitfield copied from the current player data.
 
 02018528,4 - Bitfield of damage types the player currently deals?
@@ -260,6 +270,9 @@ List of which items you own and how many (owned item info):
   Each item takes up 1 byte.
 
 020187BC,2 - Bitfield of weapons you own.
+
+02018854 - Bitfield of which enemies you have killed.
+  Bits here are set by the EnemyDie function.
 
 0200A46C,1 - visual effect?
 

@@ -35,6 +35,11 @@
   ; For when the player uses a Medicine Jar.
   ; r0 - Number of frames to be invincible.
 
+08077BD4 CalculatePlayerDamage
+  ; r0 - ? the value from the player's "Unknown 7" list for the current animation
+08077C84 GetDamageMultiplierFromUnknown7
+  ; r0 - ? the value from the player's "Unknown 7" list for the current animation
+
 08010638 GenericDraw
   ; Used by enemies, the player, and parts of the UI.
 0800F9C0 GenericDraw2
@@ -78,6 +83,21 @@
 080131BC AnimationFunc2
 08013268 AnimationFunc3
 
+080164F8 SetHitbox
+  ; r0 - Entity
+  ; r1 - Bitfield.
+  ;   & 000000FF - X offset (signed).
+  ;   & 0000FF00 - Y offset (signed).
+  ;   & 00FF0000 - Width.
+  ;   & FF000000 - Height.
+0801655C SetHurtbox
+  ; r0 - Entity
+  ; r1 - Bitfield.
+  ;   & 000000FF - X offset (signed).
+  ;   & 0000FF00 - Y offset (signed).
+  ;   & 00FF0000 - Width.
+  ;   & FF000000 - Height.
+
 0800EB48 InitializeSpriteInfoList
   ; Called when the game boots up.
 
@@ -108,6 +128,8 @@
 
 080BD748 Divide
   ; Returns r0 / r1
+080BDD0C Divide2?
+  ; Returns r0 / r1
 080BD74C Modulo
   ; Returns r0 % r1
 
@@ -125,13 +147,10 @@
   ; r1 - Palette index of the first palette in the list to load
   ; r2 - Number of palettes to load
   ; r3 - Index to load the palettes at in palette RAM (e.g. 9 to replace the 9th object palette)
-
-08044A52 Load???Palette
+0803118C LoadObjectPaletteAutoForRoomEntity
   ; r0 - Palette list pointer
-  ; r1 - 0?
-0803118C Load???Palette2
-  ; r0 - Palette list pointer
-  ; r1 - Palette index?
+  ; r1 - Palette index of the first palette in the list to load
+  ; Automatically determines what object palette slot (of A, B, C, or D) to load into based on list 020003BC.
   ; Returns: The index in object palette VRAM this palette was loaded at.
 
 080110F0 LoadBGPalette
