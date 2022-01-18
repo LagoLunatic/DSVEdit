@@ -213,7 +213,14 @@
           </widget>
          </item>
          <item>
-          <widget class="QComboBox" name="animation_index"/>
+          <widget class="QComboBox" name="animation_index">
+           <property name="minimumSize">
+            <size>
+             <width>110</width>
+             <height>0</height>
+            </size>
+           </property>
+          </widget>
          </item>
          <item>
           <widget class="QPushButton" name="animation_add">

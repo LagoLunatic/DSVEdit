@@ -601,8 +601,13 @@ class SpriteEditor < Qt::Dialog
     frame_changed(0)
     
     @ui.animation_index.clear()
-    @sprite.animations.each_with_index do |animation, i|
-      @ui.animation_index.addItem("%02X" % i)
+    @sprite.animations.each_with_index do |animation, animation_index|
+      anim_text = "%02X" % animation_index
+      if !@sprite.sprite_file
+        offset = @sprite.animations_by_offset.key(animation)
+        anim_text << " (%08X)" % offset
+      end
+      @ui.animation_index.addItem(anim_text)
     end
     animation_changed(0) if @sprite.animations.length > 0
   rescue StandardError => e
