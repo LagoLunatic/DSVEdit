@@ -278,3 +278,7 @@ List of which items you own and how many (owned item info):
 
 03000000-030003FF - List of sprites in the OAM.
 03000C00-03000BFF - List of sprites in the OAM (copy?).
+
+03001900-0300197F - List of ? (related to sprites)
+  Entry length 4. 0x20 entries in total.
+  02,2: Index in list 03000000.

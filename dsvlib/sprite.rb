@@ -21,14 +21,21 @@ class Sprite
               :frames,
               :frame_delays,
               :frame_delays_by_offset,
-              :animations
+              :animations,
+              :animations_by_offset,
+              :hod_anim_ptrs
   
-  def initialize(sprite_pointer, fs, hod_anim_list_ptr: nil, hod_anim_list_count: nil)
+  def initialize(sprite_pointer, fs, hod_anim_list_ptr: nil, hod_anim_list_count: nil, hod_anim_ptrs: nil)
     @fs = fs
     
-    if GAME == "hod" && hod_anim_list_ptr != nil && hod_anim_list_count != nil
-      @number_of_animations = hod_anim_list_count
-      @animation_list_offset = hod_anim_list_ptr
+    if GAME == "hod"
+      if hod_anim_list_ptr != nil && hod_anim_list_count != nil
+        @number_of_animations = hod_anim_list_count
+        @animation_list_offset = hod_anim_list_ptr
+      elsif hod_anim_ptrs != nil
+        @number_of_animations = hod_anim_ptrs.count
+        @hod_anim_ptrs = hod_anim_ptrs
+      end
     end
     
     @sprite_pointer = sprite_pointer
@@ -158,18 +165,29 @@ class Sprite
     @animations = []
     @frame_delays_by_offset = {}
     @frame_delays = []
-    if animation_list_offset && animation_list_offset != 0
-      offset = animation_list_offset
-      number_of_animations.times do
+    if number_of_animations
+      offset = animation_list_offset if animation_list_offset
+      
+      number_of_animations.times do |i|
+        if GAME == "hod" && animation_list_offset.nil?
+          animation_pointer = hod_anim_ptrs[i]
+        end
+        
         if SYSTEM == :nds
           animation_data = fs.read(offset, Animation.data_size)
           animation = Animation.new.from_data(animation_data, offset)
           @animations_by_offset[offset] = animation
         else
-          animation_pointer = fs.read(offset, 4).unpack("V").first
+          if !animation_list_offset.nil?
+            animation_pointer = fs.read(offset, 4).unpack("V").first
+          end
           if animation_pointer == 0
             animation = nil
+          elsif @animations_by_offset.include?(animation_pointer)
+            # Don't create a new animation instance for duplicates, just insert the existing instance into the list again.
+            animation = @animations_by_offset[animation_pointer]
           else
+            puts "%02X %08X" % [i, animation_pointer]
             animation_data = fs.read(animation_pointer, Animation.data_size)
             animation = Animation.new.from_data(animation_data, animation_pointer)
             @animations_by_offset[animation_pointer] = animation
@@ -178,7 +196,7 @@ class Sprite
         
         @animations << animation
         
-        offset += Animation.data_size
+        offset += Animation.data_size if animation_list_offset
       end
       
       animations.each do |animation|
@@ -194,6 +212,7 @@ class Sprite
         end
       end
     end
+    puts "Read #{animations.length} animations"
     
     @animations.each do |animation|
       next if animation.nil?
@@ -316,6 +335,7 @@ class Sprite
   
   def write_to_rom_by_pointer
     # TODO: HoD player sprites get corrupted after saving...
+    # TODO: add support for saving sprites with hod_anim_ptrs instead of animation_list_offset
     fs.start_free_space_batch()
     
     if GAME == "dos"

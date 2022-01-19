@@ -12,7 +12,7 @@ class SpriteInfo
               :gfx_pages,
               :ignore_part_gfx_page
   
-  def initialize(gfx_file_pointers, palette_pointer, palette_offset, sprite_file_pointer, skeleton_file, fs, gfx_list_pointer: nil, ignore_part_gfx_page: false, hod_anim_list_ptr: nil, hod_anim_list_count: nil)
+  def initialize(gfx_file_pointers, palette_pointer, palette_offset, sprite_file_pointer, skeleton_file, fs, gfx_list_pointer: nil, ignore_part_gfx_page: false, hod_anim_list_ptr: nil, hod_anim_list_count: nil, hod_anim_ptrs: nil)
     if gfx_list_pointer
       @gfx_list_pointer = gfx_list_pointer
       @gfx_file_pointers = SpriteInfo.unpack_gfx_pointer_list(gfx_list_pointer, fs)
@@ -30,7 +30,7 @@ class SpriteInfo
     else
       @sprite = Sprite.new(
         sprite_file_pointer, fs,
-        hod_anim_list_ptr: hod_anim_list_ptr, hod_anim_list_count: hod_anim_list_count
+        hod_anim_list_ptr: hod_anim_list_ptr, hod_anim_list_count: hod_anim_list_count, hod_anim_ptrs: hod_anim_ptrs
       )
     end
     
@@ -216,6 +216,65 @@ class SpriteInfo
       end
     end
     
+    if GAME == "hod"
+      # Try to automatically extract individual HoD animation pointers from the code.
+      # Specifically, this detects cases where the game loads a single hardcoded animation pointer into r1, then calls EntitySetAnimation.
+      # Note: A number of entities (e.g. Skeleton) instead will load a list pointer into r1, then load the one of the several animation pointers from that list with an index. These are not detected properly by this function (as the number of entries in the list can't be detected automatically).
+      # TODO: We currently assume that the update function is right after the create function. For some entities (such as enemy 6D), this is not true, and the create and update functions are far apart. We'll need to separately check both the create and update function pointers, and stop when we hit a return.
+      # TODO: This doesn't work with things like special object 28. It has multiple branches all leading to a single EntitySetAnimation call, but with different r1 values, so it misses some.
+      
+      hod_anim_ptrs = []
+      data_halfwords = data.unpack("v*")
+      last_seen_ldr_r1_value = nil
+      sprite_animate_calls_seen = 0
+      data_halfwords.each_with_index do |this_halfword, i|
+        break if i == data_halfwords.length-1
+        
+        this_halfword_address = init_code_pointer + i*2
+        next_halfword = data_halfwords[i+1]
+        
+        if (this_halfword & 0xFF00) == 0x4900
+          # ldr r1, =(address)h
+          offset = (this_halfword & 0x00FF) << 2
+          dest_word_address = (this_halfword_address & ~3) + 4 + offset
+          last_seen_ldr_r1_value = fs.read(dest_word_address, 4, allow_length_to_exceed_end_of_file: true).unpack("V").first
+        elsif (this_halfword & 0xF800) == 0xF000 && (next_halfword & 0xF800) == 0xF800
+          # Function call.
+          high_offset = this_halfword & 0x07FF
+          low_offset  = next_halfword & 0x07FF
+          offset = (high_offset << 12) | (low_offset << 1)
+          signed_offset = offset
+          if signed_offset & (1 << 22) != 0
+            signed_offset = -(~offset & ((1 << 23) - 1)) # 23-bit signed integer
+          end
+          
+          dest_function_address = this_halfword_address + 4 + signed_offset
+          dest_function_address &= ~1 # Clear the lowest bit, which indicates this is a THUMB function being called.
+          
+          if dest_function_address == SPRITE_ANIMATE_FUNC_PTR
+            sprite_animate_calls_seen += 1
+            if sprite_animate_calls_seen >= 2
+              # We can expect there to be one call to SpriteAnimate near the start of each enemy's update function.
+              # Therefore we stop looking for animation pointers after the second SpriteAnimate call we see, as we probably entered into the next enemy down's update function.
+              break
+            end
+          end
+          
+          #puts "%08X %X %X %08X" % [this_halfword_address, offset, signed_offset, dest_function_address]
+          if dest_function_address == ENTITY_SET_ANIMATION_FUNC_PTR
+            if last_seen_ldr_r1_value.nil?
+              puts "Unknown r1 value for EntitySetAnimation call at %08X" % this_halfword_address
+              next
+            end
+            puts "%08X %08X" % [this_halfword_address, last_seen_ldr_r1_value]
+            hod_anim_ptrs << last_seen_ldr_r1_value
+          else
+            last_seen_ldr_r1_value = nil
+          end
+        end
+      end
+    end
+    
     
     
     if possible_gfx_pointers.empty? && gfx_files_to_load.empty?
@@ -309,7 +368,8 @@ class SpriteInfo
       sprite_file_pointer, skeleton_file, fs,
       gfx_list_pointer: gfx_list_pointer,
       ignore_part_gfx_page: ignore_part_gfx_page,
-      hod_anim_list_ptr: hod_anim_list_ptr, hod_anim_list_count: hod_anim_list_count
+      hod_anim_list_ptr: hod_anim_list_ptr, hod_anim_list_count: hod_anim_list_count,
+      hod_anim_ptrs: hod_anim_ptrs
     )
   end
   

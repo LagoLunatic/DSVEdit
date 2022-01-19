@@ -45,6 +45,13 @@ Memory used for entities in HoD is 02000418 - 02007C17. Each entity is 0x80 byte
     2 - OBJ window
     3 - Prohibited
   & 3C - The OBJ palette index for this entity.
+63,1: (sprite/animation related bitfield?)
+  & 07 - ? affects animation mode maybe?
+    0 
+    1 
+    2 
+  & F8 - ?
+    This is an index in list 03001900
 66,1: Sprite info index.
   This is an index in the currently loaded sprite info list, 020154FC.
 67,1: Current sprite frame.
