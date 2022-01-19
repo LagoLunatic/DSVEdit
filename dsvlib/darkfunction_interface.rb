@@ -222,6 +222,7 @@ class DarkFunctionInterface
           xml.anim(:name => hash[:name], :loops => 0) {
             hash[:frame_delays].each_with_index do |frame_delay, i|
               # TODO: save animation's GBA function index
+              # TODO: save animation's GBA hitboxes
               xml.cell(:index => "%02X" % i,
                        :delay => frame_delay.delay
               ) {

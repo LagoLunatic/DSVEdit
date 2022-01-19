@@ -3,6 +3,7 @@ require_relative 'ui_sprite_editor'
 
 class SpriteEditor < Qt::Dialog
   RED_PEN_COLOR = Qt::Pen.new(Qt::Color.new(255, 0, 0))
+  GREEN_PEN_COLOR = Qt::Pen.new(Qt::Color.new(0, 255, 0))
   GREY_PEN_COLOR = Qt::Pen.new(Qt::Color.new(128, 128, 128))
   
   attr_reader :game, :fs
@@ -695,7 +696,7 @@ class SpriteEditor < Qt::Dialog
     @ui.frame_number_of_parts.text = "%02X" % frame.part_indexes.length
     
     if @ui.show_hitbox.checked
-      frame.hitboxes.each do |hitbox|
+      frame.hitboxes.each_with_index do |hitbox, i|
         hitbox_item = Qt::GraphicsRectItem.new
         hitbox_item.setPen(RED_PEN_COLOR)
         hitbox_item.setRect(hitbox.x_pos, hitbox.y_pos, hitbox.width, hitbox.height)
@@ -705,12 +706,14 @@ class SpriteEditor < Qt::Dialog
       # Also handle hitboxes stored in the animation itself (used by HoD).
       if SYSTEM == :gba && !@current_animation.nil?
         frame_delay = @current_animation.frame_delays[@current_animation_frame_index]
-        if frame_delay.frame_index == @current_frame_index && !frame_delay.hitbox.nil?
-          hitbox = frame_delay.hitbox
-          hitbox_item = Qt::GraphicsRectItem.new
-          hitbox_item.setPen(RED_PEN_COLOR)
-          hitbox_item.setRect(hitbox.x_pos, hitbox.y_pos, hitbox.width, hitbox.height)
-          @frame_graphics_scene.addItem(hitbox_item)
+        if frame_delay.frame_index == @current_frame_index
+          frame_delay.hitboxes.each_with_index do |hitbox, i|
+            hitbox_item = Qt::GraphicsRectItem.new
+            hitbox_item.setPen(RED_PEN_COLOR) if i == 0
+            hitbox_item.setPen(GREEN_PEN_COLOR) if i == 1
+            hitbox_item.setRect(hitbox.x_pos, hitbox.y_pos, hitbox.width, hitbox.height)
+            @frame_graphics_scene.addItem(hitbox_item)
+          end
         end
       end
     end

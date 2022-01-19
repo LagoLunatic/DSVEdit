@@ -918,11 +918,11 @@ class FrameDelay
   attr_accessor :frame_index,
                 :delay,
                 :unknown,
-                :hitbox
+                :hitboxes
   
   def initialize
     @frame_index = @delay = @unknown = 0
-    @hitbox = nil
+    @hitboxes = []
   end
   
   def from_data(frame_delay_data)
@@ -991,14 +991,16 @@ end
 class FrameDelayGBAType2 < FrameDelay
   def from_data(frame_delay_data)
     @frame_index, @delay = frame_delay_data[0,4].unpack("vv")
+    
+    @hitboxes = []
     hitbox_data = frame_delay_data[4,4]
-    @hitbox = Hitbox.new.from_data(hitbox_data)
+    @hitboxes << Hitbox.new.from_data(hitbox_data)
     
     return self
   end
   
   def to_data
-    [@frame_index, @delay].pack("vv") + @hitbox.to_data
+    [@frame_index, @delay].pack("vv") + @hitboxes.first.to_data
   end
   
   def self.data_size
@@ -1008,15 +1010,19 @@ end
 
 class FrameDelayGBAType3 < FrameDelay
   def from_data(frame_delay_data)
-    @frame_index, @delay, @unknown = frame_delay_data[0,8].unpack("vvV")
-    hitbox_data = frame_delay_data[8,4]
-    @hitbox = Hitbox.new.from_data(hitbox_data)
+    @frame_index, @delay, @unknown = frame_delay_data[0,4].unpack("vv")
+    
+    @hitboxes = []
+    hitbox_data = frame_delay_data[4,4]
+    hurtbox_data = frame_delay_data[8,4]
+    @hitboxes << Hitbox.new.from_data(hitbox_data)
+    @hitboxes << Hitbox.new.from_data(hurtbox_data)
     
     return self
   end
   
   def to_data
-    [@frame_index, @delay, @unknown].pack("vvV") + @hitbox.to_data
+    [@frame_index, @delay].pack("vv") + @hitboxes[0].to_data + @hitboxes[1].to_data
   end
   
   def self.data_size
@@ -1048,6 +1054,7 @@ class Animation
       case @function_index
       #when 0
       # TODO need to read from FS to get the first_frame_delay_offset pointer
+      #  @first_frame_delay_offset = fs.read(offset + 4, 4).unpack("V").first
       when 1..3
         @first_frame_delay_offset = offset + 4
       else
