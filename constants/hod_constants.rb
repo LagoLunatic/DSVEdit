@@ -396,7 +396,9 @@ REUSED_ENEMY_INFO = {
   0x1C => {hod_anim_list_ptr: 0x084B2294, hod_anim_list_count: 6}, # skeleton ape
   0x1D => {init_code: 0x08096DD0, palette_offset: 6}, # gate guarder -> living armor
   0x1E => {hod_anim_list_ptr: 0x084B1910, hod_anim_list_count: 7}, # golem
+  0x1F => {hod_anim_list_ptr: 0x084B1A30, hod_anim_list_count: 0x21}, # skull knight
   0x20 => {init_code: 0x080596FC}, # tiny devil, use solo GFX instead of pazuzu GFX
+  0x21 => {update_code: 0x080AD368}, # scarecrow
   0x24 => {hod_anim_list_ptr: 0x084B1894, hod_anim_list_count: 18}, # axe armor
   0x25 => {gfx_files: [0x0811BCD0], sprite: 0x08149C94}, # witch
   0x27 => {init_code: 0x08092A04, palette_offset: 1, hod_anim_list_ptr: 0x084B1FFC, hod_anim_list_count: 6}, # bomber armor -> rock armor
@@ -405,7 +407,6 @@ REUSED_ENEMY_INFO = {
   0x2F => {hod_anim_list_ptr: 0x084B193C, hod_anim_list_count: 4}, # merman
   0x30 => {hod_anim_list_ptr: 0x084B194C, hod_anim_list_count: 6}, # fishman
   # TODO: fix animations for enemies 0x31+
-  # TODO: 0x31 arabaki detects animations but I don't think they're supposed to be for him.
   0x32 => {init_code: 0x0805A8DC}, # ruler sword lv2
   0x34 => {init_code: 0x08096DD0}, # guardian armor -> living armor
   0x35 => {init_code: 0x08096EF0}, # boomerang armor -> living armor
@@ -1252,4 +1253,3 @@ FONTS = [
 ]
 
 ENTITY_SET_ANIMATION_FUNC_PTR = 0x080134F4
-SPRITE_ANIMATE_FUNC_PTR = 0x0801359C

@@ -49,7 +49,7 @@ class SpriteInfo
     end
   end
   
-  def self.extract_gfx_and_palette_and_sprite_from_create_code(create_code_pointer, fs, overlay_to_load, reused_info, ptr_to_ptr_to_files_to_load=nil)
+  def self.extract_gfx_and_palette_and_sprite_from_create_code(create_code_pointer, fs, overlay_to_load, reused_info, ptr_to_ptr_to_files_to_load=nil, update_code_pointer: nil)
     # This function attempts to find the enemy/object's gfx files, palette pointer, and sprite file.
     # It first looks in the list of files to load for that enemy/object (if given).
     # If any are missing after looking there, it then looks in the create code for pointers that look like they could be the pointers we want.
@@ -69,6 +69,7 @@ class SpriteInfo
     end
     
     init_code_pointer      = reused_info[:init_code] || create_code_pointer
+    update_code_pointer    = reused_info[:update_code] || update_code_pointer
     gfx_sheet_ptr_index    = reused_info[:gfx_sheet_ptr_index] || 0
     palette_offset         = reused_info[:palette_offset] || 0
     palette_list_ptr_index = reused_info[:palette_list_ptr_index] || 0
@@ -82,6 +83,7 @@ class SpriteInfo
     ignore_part_gfx_page   = reused_info[:ignore_part_gfx_page] || false
     hod_anim_list_ptr      = reused_info[:hod_anim_list_ptr] || nil
     hod_anim_list_count    = reused_info[:hod_anim_list_count] || nil
+    hod_anim_ptrs          = reused_info[:hod_anim_ptrs] || nil
     
     if gfx_file_pointers.nil? && gfx_file_names
       gfx_file_pointers = gfx_file_names.map do |gfx_file_name|
@@ -216,60 +218,56 @@ class SpriteInfo
       end
     end
     
-    if GAME == "hod"
+    if GAME == "hod" && hod_anim_ptrs.nil?
       # Try to automatically extract individual HoD animation pointers from the code.
       # Specifically, this detects cases where the game loads a single hardcoded animation pointer into r1, then calls EntitySetAnimation.
       # Note: A number of entities (e.g. Skeleton) instead will load a list pointer into r1, then load the one of the several animation pointers from that list with an index. These are not detected properly by this function (as the number of entries in the list can't be detected automatically).
-      # TODO: We currently assume that the update function is right after the create function. For some entities (such as enemy 6D), this is not true, and the create and update functions are far apart. We'll need to separately check both the create and update function pointers, and stop when we hit a return.
       # TODO: This doesn't work with things like special object 28. It has multiple branches all leading to a single EntitySetAnimation call, but with different r1 values, so it misses some.
       
+      update_code_pointer &= 0xFFFFFFFC
+      
       hod_anim_ptrs = []
-      data_halfwords = data.unpack("v*")
-      last_seen_ldr_r1_value = nil
-      sprite_animate_calls_seen = 0
-      data_halfwords.each_with_index do |this_halfword, i|
-        break if i == data_halfwords.length-1
-        
-        this_halfword_address = init_code_pointer + i*2
-        next_halfword = data_halfwords[i+1]
-        
-        if (this_halfword & 0xFF00) == 0x4900
-          # ldr r1, =(address)h
-          offset = (this_halfword & 0x00FF) << 2
-          dest_word_address = (this_halfword_address & ~3) + 4 + offset
-          last_seen_ldr_r1_value = fs.read(dest_word_address, 4, allow_length_to_exceed_end_of_file: true).unpack("V").first
-        elsif (this_halfword & 0xF800) == 0xF000 && (next_halfword & 0xF800) == 0xF800
-          # Function call.
-          high_offset = this_halfword & 0x07FF
-          low_offset  = next_halfword & 0x07FF
-          offset = (high_offset << 12) | (low_offset << 1)
-          signed_offset = offset
-          if signed_offset & (1 << 22) != 0
-            signed_offset = -(~offset & ((1 << 23) - 1)) # 23-bit signed integer
-          end
+      funcs_to_check = [init_code_pointer, update_code_pointer]
+      funcs_to_check.each do |func_pointer|
+        last_seen_ldr_r1_value = nil
+        sprite_animate_calls_seen = 0
+        (func_pointer...func_pointer+2*1000).step(2) do |this_halfword_address|
+          #puts "  %08X" % this_halfword_address
+          this_halfword, next_halfword = fs.read(this_halfword_address, 4).unpack("vv")
           
-          dest_function_address = this_halfword_address + 4 + signed_offset
-          dest_function_address &= ~1 # Clear the lowest bit, which indicates this is a THUMB function being called.
-          
-          if dest_function_address == SPRITE_ANIMATE_FUNC_PTR
-            sprite_animate_calls_seen += 1
-            if sprite_animate_calls_seen >= 2
-              # We can expect there to be one call to SpriteAnimate near the start of each enemy's update function.
-              # Therefore we stop looking for animation pointers after the second SpriteAnimate call we see, as we probably entered into the next enemy down's update function.
-              break
+          if (this_halfword & 0xFF00) == 0x4900
+            # ldr r1, =(address)h
+            offset = (this_halfword & 0x00FF) << 2
+            dest_word_address = (this_halfword_address & ~3) + 4 + offset
+            last_seen_ldr_r1_value = fs.read(dest_word_address, 4, allow_length_to_exceed_end_of_file: true).unpack("V").first
+          elsif this_halfword == 0x4700
+            # bx r0
+            # Return. We reached the end of this function, so go on to the next function.
+            break
+          elsif (this_halfword & 0xF800) == 0xF000 && (next_halfword & 0xF800) == 0xF800
+            # Function call.
+            high_offset = this_halfword & 0x07FF
+            low_offset  = next_halfword & 0x07FF
+            offset = (high_offset << 12) | (low_offset << 1)
+            signed_offset = offset
+            if signed_offset & (1 << 22) != 0
+              signed_offset = -(~offset & ((1 << 23) - 1)) # 23-bit signed integer
             end
-          end
-          
-          #puts "%08X %X %X %08X" % [this_halfword_address, offset, signed_offset, dest_function_address]
-          if dest_function_address == ENTITY_SET_ANIMATION_FUNC_PTR
-            if last_seen_ldr_r1_value.nil?
-              puts "Unknown r1 value for EntitySetAnimation call at %08X" % this_halfword_address
-              next
+            
+            dest_function_address = this_halfword_address + 4 + signed_offset
+            dest_function_address &= ~1 # Clear the lowest bit, which indicates this is a THUMB function being called.
+            
+            #puts "%08X %X %X %08X" % [this_halfword_address, offset, signed_offset, dest_function_address]
+            if dest_function_address == ENTITY_SET_ANIMATION_FUNC_PTR
+              if last_seen_ldr_r1_value.nil?
+                puts "Unknown r1 value for EntitySetAnimation call at %08X" % this_halfword_address
+                next
+              end
+              puts "%08X %08X" % [this_halfword_address, last_seen_ldr_r1_value]
+              hod_anim_ptrs << last_seen_ldr_r1_value
+            else
+              last_seen_ldr_r1_value = nil
             end
-            puts "%08X %08X" % [this_halfword_address, last_seen_ldr_r1_value]
-            hod_anim_ptrs << last_seen_ldr_r1_value
-          else
-            last_seen_ldr_r1_value = nil
           end
         end
       end

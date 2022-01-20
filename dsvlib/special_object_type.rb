@@ -26,9 +26,9 @@ class SpecialObjectType
       overlay_to_load = OVERLAY_FILE_FOR_SPECIAL_OBJECT[special_object_id]
       ptr_to_ptr_to_files_to_load = SPECIAL_OBJECT_FILES_TO_LOAD_LIST + special_object_id*4
       
-      return SpriteInfo.extract_gfx_and_palette_and_sprite_from_create_code(create_code_pointer, fs, overlay_to_load, reused_info, ptr_to_ptr_to_files_to_load)
+      return SpriteInfo.extract_gfx_and_palette_and_sprite_from_create_code(create_code_pointer, fs, overlay_to_load, reused_info, ptr_to_ptr_to_files_to_load, update_code_pointer: update_code_pointer)
     else
-      return SpriteInfo.extract_gfx_and_palette_and_sprite_from_create_code(create_code_pointer, fs, nil, reused_info)
+      return SpriteInfo.extract_gfx_and_palette_and_sprite_from_create_code(create_code_pointer, fs, nil, reused_info, update_code_pointer: update_code_pointer)
     end
   end
   
