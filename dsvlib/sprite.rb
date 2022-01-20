@@ -183,6 +183,7 @@ class Sprite
           end
           if animation_pointer == 0
             animation = nil
+            @animations_by_offset[animation_pointer] = animation
           elsif @animations_by_offset.include?(animation_pointer)
             # Don't create a new animation instance for duplicates, just insert the existing instance into the list again.
             animation = @animations_by_offset[animation_pointer]
