@@ -1243,7 +1243,7 @@ Format of extra entity memory used for portrait paintings:
 /sc/f_item00-05.dat - Item icons. GFX mode is 1-dimensional.
 Subweapons/dual crushes/spells/relics use icons 40-43.
 
-/sc/f_fjona_w.dat - Dual Crush cutin of Jonathan's face.
+/sc/f_fjona_w.dat - Dual Crush cut-in of Jonathan's face.
   Uses palette 022C5B10.
-/sc/f_fchlt_w.dat - Dual Crush cutin of Charlotte's face.
+/sc/f_fchlt_w.dat - Dual Crush cut-in of Charlotte's face.
   Uses palette 022C5B34.

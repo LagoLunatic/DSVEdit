@@ -743,6 +743,8 @@ OTHER_SPRITES = [
   {pointer: 0x022E0DB8, desc: "Credits", overlay: 37},
   {pointer: 0x022E10E8, desc: "Credits portraits", overlay: 37},
   {pointer: 0x022E0BD0, desc: "Richter & Old Axe Armor modes credits characters", overlay: 37},
+  {desc: "Jonathan Dual Crush cut-in", no_sprite: true, palette: 0x022C5B10, gfx_file_names: ["/sc/f_fjona_w.dat"]},
+  {desc: "Charlotte Dual Crush cut-in", no_sprite: true, palette: 0x022C5B34, gfx_file_names: ["/sc/f_fchlt_w.dat"]},
   
   {desc: "Game over", sprite: 0x0213D700, palette: 0x022C3A34, gfx_file_names: [
     "/sc/f_gover0.dat",
