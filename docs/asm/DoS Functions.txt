@@ -444,10 +444,14 @@
   ; r0 - Index in the currently loaded sprite info list, 020C6260. This is from +68 in the entity.
   ; Returns r0 - Pointer to the entry in that list.
 
-0201B340 EntityInitSpriteAndPaletteFromParent
+0200ED10 EntityInitSpriteAndPreloadedGfx
+  ; r0 - Child entity
+  ; r1 - Sprite pointer
+  ; r2 - Pointer to an index in the list of currently loaded GFX assets (list 020C7460)
+0201B340 EntityInitSpriteAndPreloadedGfxFromParent
   ; r0 - Parent entity
   ; r1 - Child entity
-  ; Initializes the child with the sprite and palette of the parent.
+  ; Initializes the child with the sprite and GFX of the parent.
 
 0203BC00 RenderOneDimensionalSpriteFrame?
   ; r0 - Sprite pointer (e.g. 022A9C60 for the info screen)

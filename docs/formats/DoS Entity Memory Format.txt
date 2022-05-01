@@ -32,6 +32,7 @@ Memory used for entities in DoS is 020CA3F0 - 020F6DEF. Each entity is 0x2A0 byt
   00000080 - Direction. Set if facing left, clear if facing right. (Horizontal flip.)
 074,2: Current sprite frame index.
 076,2: Palette index in the list of globally loaded palettes.
+078,2: Palette index in the list of globally loaded palettes. (How is this different from 76,2? Both are used.)
 07A,1: Palette offset for this entity. Gets added to the value at 076,2.
 07C,2: Polygon mode for drawing this entity.
 07E,2: Other polygon attribute bits to enable for drawing this entity.

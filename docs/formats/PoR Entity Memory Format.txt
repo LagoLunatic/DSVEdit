@@ -46,7 +46,7 @@ Memory used for entities in PoR is 020FC500 - 0211173F. Each entity is 0x160 byt
   08 - Do not animate, just freeze on whatever the current keyframe is
 084,2: Current sprite frame index.
 086,2: Palette index in the list of globally loaded palettes.
-088,2: Palette index in the list of globally loaded palettes. Unused?
+088,2: Palette index in the list of globally loaded palettes. (How is this different from 86,2? Both are used.)
 08A,2: Palette offset for this entity. Gets added to the value at 086,2.
 08C,2: Affects how this entity is rendered.
   0 - Normal.

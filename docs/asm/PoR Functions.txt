@@ -518,6 +518,7 @@
   ; r1 - 0x14? index in list 020FB204
   ; r2 - Number of GFX pages to load
   ; r3 - Size of each GFX page. 1 for 128x128 pages. 4 for 256x256 pages.
+  ; Returns r0 - The index the first GFX page was placed at in the list of currently loaded GFX assets (020FB204).
 02016610 LoadSpriteSingleGfxNoEntity
   ; r0 - Sprite pointer
   ; r1 - GFX asset pointer
@@ -530,6 +531,17 @@
   ; r1 - GFX asset pointer
   ; r2 - Palette list pointer
   ; Calls LoadSpriteSingleGfxNoEntity with r3 = 1, [r13] = 0, [r13,4] = 1
+0205B334 LoadSpriteMultiGfxMenuEntity
+  ; r0 - Menu entity pointer
+  ; r1 - GFX list pointer
+  ; r2 - Pointer to a list of asset indexes to load
+  ;   The first is the sprite asset index, the rest are GFX asset indexes.
+  ;   The number of GFX asset indexes must match the length of the GFX list.
+  ; r3 - Sprite pointer
+  ; [r13] - Palette list pointer
+022E1B7C LoadSpriteMultiGfxMenuEntity2?
+  ; Takes the same arguments as LoadSpriteMultiGfxMenuEntity.
+  ; However, before calling LoadSpriteMultiGfxMenuEntity it also calls 0x022E1BEC and then stores the GFX pointer somewhere.
 
 020165D4 GetOAMAttributesBySpritePartSize
   ; r0 - Part width in pixels
@@ -921,15 +933,14 @@
 02079980 PortraitDraw
   ; r0 - Portrait entity
 
-02010788 EntityInitSpriteAndPalette
+02010788 EntityInitSpriteAndPreloadedGfx
   ; r0 - Child entity
   ; r1 - Sprite pointer
-  ; r2 - Palette list pointer
-
-02020858 EntityInitSpriteAndPaletteFromParent
+  ; r2 - Pointer to an index in the list of currently loaded GFX assets (list 020FB204)
+02020858 EntityInitSpriteAndPreloadedGfxFromParent
   ; r0 - Parent entity
   ; r1 - Child entity
-  ; Initializes the child with the sprite and palette of the parent.
+  ; Initializes the child with the sprite and GFX of the parent.
 
 020F6270 GameObject
 020CA580 PointerToGameObject
