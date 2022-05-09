@@ -201,7 +201,6 @@ Enemies:
   If var B is 0, it uses the default values of var A being 0x168 and var B being 0x78.
   If var A is 0, it's not a spawner, instead it's just a single Winged Guard (but it has the stats and drops of a Winged Skeleton).
 66 Final Knight
-  Requires enemy overlay 36.
 67 Jiang Shi
   Requires enemy overlay 29.
   Since Jiang Shi doesn't die, boss doors don't open themselves up when you defeat him. You need to add special object 24 with var A = 1 into the same room as Jiang Shi for the doors to open when he dies.
