@@ -1123,11 +1123,26 @@ class SpriteEditor < Qt::Dialog
     output_folder = "./gfx/exported_sprites/#{sprite_name}"
     FileUtils.mkdir_p(output_folder)
     
+    if @ui.hex_exports.checked
+      num_format = "X"
+    else
+      num_format = "d"
+    end
+    
     chunky_frames, _ = @renderer.render_sprite(@sprite_info, override_part_palette_index: @override_part_palette_index, one_dimensional_mode: @one_dimensional_render_mode, transparent_trails: @transparent_trails)
     chunky_frames.each_with_index do |chunky_frame, i|
-      type_name = ""
-      filename = "%s/frame%03X.png" % [output_folder, i]
+      filename = "%s/frame%03#{num_format}.png" % [output_folder, i]
       chunky_frame.save(filename, :fast_rgba)
+    end
+    
+    @sprite.animations.each_with_index do |animation, animation_index|
+      anim_output_folder = "#{output_folder}/anim%03#{num_format}" % animation_index
+      FileUtils.mkdir_p(anim_output_folder)
+      animation.frame_delays.each_with_index do |keyframe, i|
+        filename = "%s/keyframe%03#{num_format}_delay%03#{num_format}.png" % [anim_output_folder, i, keyframe.delay]
+        chunky_frame = chunky_frames[keyframe.frame_index]
+        chunky_frame.save(filename, :fast_rgba)
+      end
     end
     
     Qt::MessageBox.warning(self,

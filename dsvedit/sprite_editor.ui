@@ -185,6 +185,13 @@
           </spacer>
          </item>
          <item>
+          <widget class="QCheckBox" name="hex_exports">
+           <property name="text">
+            <string>Hex Exports</string>
+           </property>
+          </widget>
+         </item>
+         <item>
           <widget class="QPushButton" name="export_as_png_button">
            <property name="text">
             <string>Export frames as PNG</string>
