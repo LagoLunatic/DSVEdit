@@ -128,6 +128,10 @@ class SpriteInfo
       raise CreateCodeReadError.new("This entity has no sprite.")
     end
     
+    if init_code_pointer.nil?
+      raise CreateCodeReadError.new("No create code pointer.")
+    end
+    
     # Clear lowest two bits of init code pointer so it's aligned to 4 bytes.
     init_code_pointer = init_code_pointer & 0xFFFFFFFC
     
@@ -224,11 +228,11 @@ class SpriteInfo
       # Note: A number of entities (e.g. Skeleton) instead will load a list pointer into r1, then load the one of the several animation pointers from that list with an index. These are not detected properly by this function (as the number of entries in the list can't be detected automatically).
       # TODO: This doesn't work with things like special object 28. It has multiple branches all leading to a single EntitySetAnimation call, but with different r1 values, so it misses some.
       
-      update_code_pointer &= 0xFFFFFFFC
-      
       hod_anim_ptrs = []
-      funcs_to_check = [init_code_pointer, update_code_pointer]
+      funcs_to_check = [init_code_pointer, update_code_pointer].compact
       funcs_to_check.each do |func_pointer|
+        func_pointer &= 0xFFFFFFFC
+        #puts "Func: %08X" % func_pointer
         last_seen_ldr_r1_value = nil
         sprite_animate_calls_seen = 0
         (func_pointer...func_pointer+2*1000).step(2) do |this_halfword_address|
@@ -263,7 +267,7 @@ class SpriteInfo
                 puts "Unknown r1 value for EntitySetAnimation call at %08X" % this_halfword_address
                 next
               end
-              puts "%08X %08X" % [this_halfword_address, last_seen_ldr_r1_value]
+              puts "Found: %08X %08X" % [this_halfword_address, last_seen_ldr_r1_value]
               hod_anim_ptrs << last_seen_ldr_r1_value
             else
               last_seen_ldr_r1_value = nil
