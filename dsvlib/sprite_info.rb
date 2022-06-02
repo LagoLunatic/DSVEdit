@@ -12,7 +12,7 @@ class SpriteInfo
               :gfx_pages,
               :ignore_part_gfx_page
   
-  def initialize(gfx_file_pointers, palette_pointer, palette_offset, sprite_file_pointer, skeleton_file, fs, gfx_list_pointer: nil, ignore_part_gfx_page: false, hod_anim_list_ptr: nil, hod_anim_list_count: nil, hod_anim_ptrs: nil)
+  def initialize(gfx_file_pointers, palette_pointer, palette_offset, sprite_file_pointer, skeleton_file, fs, gfx_list_pointer: nil, ignore_part_gfx_page: false, hod_anims: nil)
     if gfx_list_pointer
       @gfx_list_pointer = gfx_list_pointer
       @gfx_file_pointers = SpriteInfo.unpack_gfx_pointer_list(gfx_list_pointer, fs)
@@ -30,7 +30,7 @@ class SpriteInfo
     else
       @sprite = Sprite.new(
         sprite_file_pointer, fs,
-        hod_anim_list_ptr: hod_anim_list_ptr, hod_anim_list_count: hod_anim_list_count, hod_anim_ptrs: hod_anim_ptrs
+        hod_anims: hod_anims
       )
     end
     
@@ -85,6 +85,14 @@ class SpriteInfo
     hod_anim_list_count    = reused_info[:hod_anim_list_count] || nil
     hod_anim_ptrs          = reused_info[:hod_anim_ptrs] || nil
     
+    hod_anims = []
+    if hod_anim_list_ptr && hod_anim_list_count
+      hod_anims << [hod_anim_list_ptr, hod_anim_list_count]
+    end
+    if hod_anim_ptrs
+      hod_anims += hod_anim_ptrs
+    end
+    
     if gfx_file_pointers.nil? && gfx_file_names
       gfx_file_pointers = gfx_file_names.map do |gfx_file_name|
         fs.files_by_path[gfx_file_name][:asset_pointer]
@@ -112,7 +120,7 @@ class SpriteInfo
         gfx_file_pointers, palette_pointer, palette_offset,
         sprite_file_pointer, nil, fs,
         ignore_part_gfx_page: ignore_part_gfx_page,
-        hod_anim_list_ptr: hod_anim_list_ptr, hod_anim_list_count: hod_anim_list_count
+        hod_anims: hod_anims
       )
     elsif sprite_file_pointer && gfx_list_pointer && palette_pointer
       gfx_file_pointers = unpack_gfx_pointer_list(gfx_list_pointer, fs)
@@ -120,7 +128,7 @@ class SpriteInfo
         gfx_file_pointers, palette_pointer, palette_offset,
         sprite_file_pointer, nil, fs,
         ignore_part_gfx_page: ignore_part_gfx_page,
-        hod_anim_list_ptr: hod_anim_list_ptr, hod_anim_list_count: hod_anim_list_count
+        hod_anims: hod_anims
       )
     end
     
@@ -199,7 +207,7 @@ class SpriteInfo
           gfx_file_pointers, palette_pointer_to_load, palette_offset,
           sprite_file_pointer, skeleton_files_to_load.first, fs,
           ignore_part_gfx_page: ignore_part_gfx_page,
-        hod_anim_list_ptr: hod_anim_list_ptr, hod_anim_list_count: hod_anim_list_count
+          hod_anims: hod_anims
         )
       end
     end
@@ -222,13 +230,12 @@ class SpriteInfo
       end
     end
     
-    if GAME == "hod" && hod_anim_ptrs.nil?
+    if GAME == "hod"
       # Try to automatically extract individual HoD animation pointers from the code.
       # Specifically, this detects cases where the game loads a single hardcoded animation pointer into r1, then calls EntitySetAnimation.
       # Note: A number of entities (e.g. Skeleton) instead will load a list pointer into r1, then load the one of the several animation pointers from that list with an index. These are not detected properly by this function (as the number of entries in the list can't be detected automatically).
       # TODO: This doesn't work with things like special object 28. It has multiple branches all leading to a single EntitySetAnimation call, but with different r1 values, so it misses some.
       
-      hod_anim_ptrs = []
       funcs_to_check = [init_code_pointer, update_code_pointer].compact
       funcs_to_check.each do |func_pointer|
         func_pointer &= 0xFFFFFFFC
@@ -244,6 +251,12 @@ class SpriteInfo
             offset = (this_halfword & 0x00FF) << 2
             dest_word_address = (this_halfword_address & ~3) + 4 + offset
             last_seen_ldr_r1_value = fs.read(dest_word_address, 4, allow_length_to_exceed_end_of_file: true).unpack("V").first
+          elsif [0x6801, 0x7801, 0x8801].include?(this_halfword & 0xF807)
+            # ldr r1, [rX, Xh]
+            # ldrb r1, [rX, Xh]
+            # ldrh r1, [rX, Xh]
+            # Read r1 from memory, we no longer know what value is in there.
+            last_seen_ldr_r1_value = nil
           elsif this_halfword == 0x4700
             # bx r0
             # Return. We reached the end of this function, so go on to the next function.
@@ -268,7 +281,10 @@ class SpriteInfo
                 next
               end
               puts "Found: %08X %08X" % [this_halfword_address, last_seen_ldr_r1_value]
-              hod_anim_ptrs << last_seen_ldr_r1_value
+              if hod_anims.include?(last_seen_ldr_r1_value)
+                next
+              end
+              hod_anims << last_seen_ldr_r1_value
             else
               last_seen_ldr_r1_value = nil
             end
@@ -370,8 +386,7 @@ class SpriteInfo
       sprite_file_pointer, skeleton_file, fs,
       gfx_list_pointer: gfx_list_pointer,
       ignore_part_gfx_page: ignore_part_gfx_page,
-      hod_anim_list_ptr: hod_anim_list_ptr, hod_anim_list_count: hod_anim_list_count,
-      hod_anim_ptrs: hod_anim_ptrs
+      hod_anims: hod_anims
     )
   end
   

@@ -23,19 +23,16 @@ class Sprite
               :frame_delays_by_offset,
               :animations,
               :animations_by_offset,
-              :hod_anim_ptrs
+              :hod_anims
   
-  def initialize(sprite_pointer, fs, hod_anim_list_ptr: nil, hod_anim_list_count: nil, hod_anim_ptrs: nil)
+  def initialize(sprite_pointer, fs, hod_anims: nil)
     @fs = fs
     
     if GAME == "hod"
-      if hod_anim_list_ptr != nil && hod_anim_list_count != nil
-        @number_of_animations = hod_anim_list_count
-        @animation_list_offset = hod_anim_list_ptr
-      elsif hod_anim_ptrs != nil
-        @number_of_animations = hod_anim_ptrs.count
-        @hod_anim_ptrs = hod_anim_ptrs
-      end
+      # hod_anims is an array where each entry is either:
+      # 1. A pointer to a single animation
+      # 2. An array of length two, containing pointer to a list of animations plus the number of animations in that list
+      @hod_anims = hod_anims
     end
     
     @sprite_pointer = sprite_pointer
@@ -161,6 +158,22 @@ class Sprite
       frame.initialize_hitboxes_from_pointer(hitboxes, @hitboxes_by_offset)
     end
     
+    hod_anim_ptrs = nil
+    if hod_anims && number_of_animations.nil?
+      hod_anim_ptrs = []
+      hod_anims.each do |hod_anim_ptr_or_list|
+        if hod_anim_ptr_or_list.is_a?(Integer)
+          hod_anim_ptrs << hod_anim_ptr_or_list
+        elsif hod_anim_ptr_or_list.is_a?(Array)
+          hod_anim_list_ptr, hod_anim_list_count = hod_anim_ptr_or_list
+          hod_anim_ptrs += fs.read(hod_anim_list_ptr, 4*hod_anim_list_count).unpack("V"*hod_anim_list_count)
+        else
+          raise "Invalid entry in HoD animations list"
+        end
+      end
+      @number_of_animations = hod_anim_ptrs.length
+    end
+    
     @animations_by_offset = {}
     @animations = []
     @frame_delays_by_offset = {}
@@ -197,7 +210,7 @@ class Sprite
         
         @animations << animation
         
-        offset += Animation.data_size if animation_list_offset
+        offset += Animation.data_size if !animation_list_offset.nil?
       end
       
       animations.each do |animation|
