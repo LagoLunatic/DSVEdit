@@ -406,13 +406,40 @@ REUSED_ENEMY_INFO = {
   0x2E => {hod_anim_list_ptr: 0x084B1810, hod_anim_list_count: 9}, # devil
   0x2F => {hod_anim_list_ptr: 0x084B193C, hod_anim_list_count: 4}, # merman
   0x30 => {hod_anim_list_ptr: 0x084B194C, hod_anim_list_count: 6}, # fishman
-  # TODO: fix animations for enemies 0x31+
   0x32 => {init_code: 0x0805A8DC}, # ruler sword lv2
+  0x33 => {hod_anim_ptrs: [ # feather demon (animations are hardcoded across a bunch of different state functions)
+    # Animations for Feather Demon hardcoded across 0xB different functions in list 0x080DF934.
+    0x080DF960,
+    0x080DF96C,
+    0x080DF998,
+    0x080DF9A8,
+    0x080DF9B8,
+    0x080DF9F0,
+    0x080DFA04,
+    0x080DFA10,
+    0x080DFA20,
+    # Animations for Feather Demon's feathers in list 0x084B1A20 (4 entries in the list but the first is a duplicate).
+    0x080DFA9C,
+    0x080DFAB0,
+    0x080DFAC4,
+  ]},
   0x34 => {init_code: 0x08096DD0}, # guardian armor -> living armor
   0x35 => {init_code: 0x08096EF0}, # boomerang armor -> living armor
+  0x36 => {hod_anim_list_ptr: 0x084B1964, hod_anim_list_count: 8}, # giant merman
+  0x39 => {update_code: 0x080AB318}, # gold medusa -> medusa
+  0x3A => {hod_anim_list_ptr: 0x084B19DC, hod_anim_list_count: 8}, # mimic
+  0x3B => {hod_anim_ptrs: [ # white dragon lv3
+    0x080DF4C0,
+    0x080DF4D4,
+    0x080DF4E8,
+    0x080DF4FC,
+    0x080DF510,
+  ]},
+  0x3C => {update_code: 0x080A8504}, # skeleton mirror -> bone soldier
   0x3D => {palette_offset: 1}, # O
-  0x3E => {hod_anim_list_ptr: 0x084B184C, hod_anim_list_count: 5}, #  harpy
-  0x3F => {init_code: 0x080417AC, palette_offset: 1}, #  axe armor lv2 -> axe armor
+  0x3E => {hod_anim_list_ptr: 0x084B184C, hod_anim_list_count: 5}, # harpy (note: first entry is a duplicate)
+  0x3F => {init_code: 0x080417AC, update_code: 0x08041988, palette_offset: 1, hod_anim_list_ptr: 0x084B1894, hod_anim_list_count: 0x12}, # axe armor lv2 -> axe armor
+  # TODO: fix animations for enemies 0x40+
   0x41 => {init_code: 0x08096DD0, palette_offset: 8}, # bronze guarder -> living armor
   0x43 => {gfx_files: [0x08123680, 0x08123688]}, # legion (saint)
   0x46 => {palette_offset: 2}, # bone liquid
@@ -511,7 +538,11 @@ BEST_SPRITE_OFFSET_FOR_ENEMY = {
   BEST_SPRITE_OFFSET_FOR_ENEMY[enemy_id+0x7D] = BEST_SPRITE_OFFSET_FOR_ENEMY[enemy_id]
 end
 
-COMMON_SPRITE = {desc: "Common", sprite: 0x0812CE34, gfx_files: [0x080E89FC], palette: 0x08124104, palette_offset: 1}
+COMMON_SPRITE = {desc: "Common",
+  sprite: 0x0812CE34,
+  gfx_files: [0x080E89FC], palette: 0x08124104, palette_offset: 1,
+  hod_anim_ptrs: [0x080DF52C]
+}
 
 OVERLAY_FILE_FOR_SPECIAL_OBJECT = {}
 REUSED_SPECIAL_OBJECT_INFO = {

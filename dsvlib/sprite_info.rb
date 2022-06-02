@@ -84,8 +84,8 @@ class SpriteInfo
     hod_anim_list_ptr      = reused_info[:hod_anim_list_ptr] || nil
     hod_anim_list_count    = reused_info[:hod_anim_list_count] || nil
     hod_anim_ptrs          = reused_info[:hod_anim_ptrs] || nil
+    hod_anims              = reused_info[:hod_anims] || []
     
-    hod_anims = []
     if hod_anim_list_ptr && hod_anim_list_count
       hod_anims << [hod_anim_list_ptr, hod_anim_list_count]
     end
