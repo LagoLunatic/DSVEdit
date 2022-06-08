@@ -142,6 +142,7 @@ class SpriteInfo
     
     # Clear lowest two bits of init code pointer so it's aligned to 4 bytes.
     init_code_pointer = init_code_pointer & 0xFFFFFFFC
+    update_code_pointer = update_code_pointer & 0xFFFFFFFC
     
     gfx_files_to_load = []
     sprite_files_to_load = []
@@ -237,26 +238,41 @@ class SpriteInfo
       # TODO: This doesn't work with things like special object 28. It has multiple branches all leading to a single EntitySetAnimation call, but with different r1 values, so it misses some.
       
       funcs_to_check = [init_code_pointer, update_code_pointer].compact
+      orig_funcs_to_check = funcs_to_check.dup
       funcs_to_check.each do |func_pointer|
         func_pointer &= 0xFFFFFFFC
         #puts "Func: %08X" % func_pointer
         last_seen_ldr_r1_value = nil
+        last_seen_ldr_r2_value = nil
         sprite_animate_calls_seen = 0
-        (func_pointer...func_pointer+2*1000).step(2) do |this_halfword_address|
+        (func_pointer...func_pointer+2*2000).step(2) do |this_halfword_address|
           #puts "  %08X" % this_halfword_address
           this_halfword, next_halfword = fs.read(this_halfword_address, 4).unpack("vv")
           
-          if (this_halfword & 0xFF00) == 0x4900
+          if [0x4900, 0x4A00].include?(this_halfword & 0xFF00)
             # ldr r1, =(address)h
+            # ldr r2, =(address)h
             offset = (this_halfword & 0x00FF) << 2
             dest_word_address = (this_halfword_address & ~3) + 4 + offset
-            last_seen_ldr_r1_value = fs.read(dest_word_address, 4, allow_length_to_exceed_end_of_file: true).unpack("V").first
+            value = fs.read(dest_word_address, 4, allow_length_to_exceed_end_of_file: true).unpack("V").first
+            target_register = (this_halfword >> 8) & 0x07
+            if target_register == 1
+              last_seen_ldr_r1_value = value
+            elsif target_register == 2
+              last_seen_ldr_r2_value = value
+            end
           elsif [0x6801, 0x7801, 0x8801].include?(this_halfword & 0xF807)
             # ldr r1, [rX, Xh]
             # ldrb r1, [rX, Xh]
             # ldrh r1, [rX, Xh]
             # Read r1 from memory, we no longer know what value is in there.
             last_seen_ldr_r1_value = nil
+          elsif [0x6802, 0x7802, 0x8802].include?(this_halfword & 0xF807)
+            # ldr r2, [rX, Xh]
+            # ldrb r2, [rX, Xh]
+            # ldrh r2, [rX, Xh]
+            # Read r2 from memory, we no longer know what value is in there.
+            last_seen_ldr_r2_value = nil
           elsif this_halfword == 0x4700
             # bx r0
             # Return. We reached the end of this function, so go on to the next function.
@@ -274,19 +290,38 @@ class SpriteInfo
             dest_function_address = this_halfword_address + 4 + signed_offset
             dest_function_address &= ~1 # Clear the lowest bit, which indicates this is a THUMB function being called.
             
+            r1_value = last_seen_ldr_r1_value
+            r2_value = last_seen_ldr_r2_value
+            last_seen_ldr_r1_value = nil
+            last_seen_ldr_r2_value = nil
+            
             #puts "%08X %X %X %08X" % [this_halfword_address, offset, signed_offset, dest_function_address]
             if dest_function_address == ENTITY_SET_ANIMATION_FUNC_PTR
-              if last_seen_ldr_r1_value.nil?
+              if r1_value.nil?
                 puts "Unknown r1 value for EntitySetAnimation call at %08X" % this_halfword_address
                 next
               end
-              puts "Found: %08X %08X" % [this_halfword_address, last_seen_ldr_r1_value]
-              if hod_anims.include?(last_seen_ldr_r1_value)
+              puts "Found: %08X %08X" % [this_halfword_address, r1_value]
+              if hod_anims.include?(r1_value)
                 next
               end
-              hod_anims << last_seen_ldr_r1_value
-            else
-              last_seen_ldr_r1_value = nil
+              hod_anims << r1_value
+            elsif dest_function_address == GET_ENTITY_SLOT_FUNC_PTR
+              next # Disabled for now, comment this out to enable
+              # Try to automatically detect child entities spawned and check their code.
+              #if !orig_funcs_to_check.include?(func_pointer)
+              #  # We don't want to recursively the functions, just the entities directly spanwed by this enemy.
+              #  next
+              #end
+              if r2_value.nil?
+                puts "Unknown r2 value for GetEntitySlot call at %08X" % this_halfword_address
+                next
+              end
+              puts "GetEntitySlot: %08X %08X" % [this_halfword_address, r2_value]
+              if funcs_to_check.include?(r2_value)
+                next
+              end
+              funcs_to_check << r2_value
             end
           end
         end

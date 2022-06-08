@@ -457,13 +457,51 @@ REUSED_ENEMY_INFO = {
   0x3D => {palette_offset: 1}, # O
   0x3E => {hod_anim_list_ptr: 0x084B184C, hod_anim_list_count: 5}, # harpy (note: first entry is a duplicate)
   0x3F => {init_code: 0x080417AC, update_code: 0x08041988, palette_offset: 1, hod_anim_list_ptr: 0x084B1894, hod_anim_list_count: 0x12}, # axe armor lv2 -> axe armor
-  # TODO: fix animations for enemies 0x40+
   0x41 => {init_code: 0x08096DD0, palette_offset: 8}, # bronze guarder -> living armor
-  0x43 => {gfx_files: [0x08123680, 0x08123688]}, # legion (saint)
+  0x43 => {gfx_files: [0x08123680, 0x08123688], hod_anim_ptrs: [ # legion (saint)
+    0x080E8474,
+    0x080E8488,
+    0x080E849C,
+    0x080E84A4,
+    0x080E84B0,
+  ]},
+  0x44 => {hod_anim_ptrs: [ # shadow
+    0x080E4D34,
+    0x080E4D44,
+    0x080E4F10,
+    0x080E4F28,
+    0x080E4E24,
+    0x080E4E4C,
+    0x080E4E38,
+    0x080E4EA0,
+    0x080E4EB0,
+    0x080E4EB8,
+    0x080E4EFC,
+    0x080E4F60,
+    0x080E4F6C,
+    0x080E501C,
+    0x080E5004,
+    0x080E4FF4,
+    0x080E50E4,
+    0x080E50DC,
+    0x080E5100,
+    0x080E504C,
+    0x080E8898,
+  ]},
+  0x45 => {hod_anim_ptrs: [ # melty zombie
+    0x080DEA20,
+    0x080DEA58,
+    0x080DEA78,
+    0x080DEAAC,
+  ]},
   0x46 => {palette_offset: 2}, # bone liquid
   0x47 => {init_code: 0x0805A8DC}, # ruler sword lv3
-  0x48 => {init_code: 0x08051DE0, palette_offset: 1}, # poison lizard -> master lizard
+  0x48 => {init_code: 0x08051DE0, palette_offset: 1, # poison lizard -> master lizard
+           update_code: 0x08051FA8,
+           hod_anim_list_ptr: 0x084B19AC, hod_anim_list_count: 0xC
+  },
   0x49 => {palette_offset: 1, gfx_files: [0x0811BE10, 0x0811BE18]}, # pazuzu
+  # TODO: fix animations for enemies 0x4A+
   0x4C => {init_code: 0x08043EB0, palette: 0x08125250, gfx_sheet_ptr_index: 1, sprite_ptr_index: 1}, # blaze master -> skeleton blaze
   0x4F => {init_code: 0x0809B1AC}, # skeleton glass -> skeleton
   0x51 => {init_code: 0x08096EB8}, # hammer-hammer -> living armor
@@ -529,8 +567,8 @@ BEST_SPRITE_FRAME_FOR_ENEMY = {
   0x3C => 0x0B, # skeleton mirror
   0x3D => 0x03, # O
   0x3F => 0x06, # axe armor lv2
-  0x41 => 0x10, # bronze guarder
   0x40 => 0x0A, # specter
+  0x41 => 0x10, # bronze guarder
   0x43 => 0x29, # legion (saint)
   0x49 => 0x0C, # pazuzu
   0x4D => 0x1F, # arthro skeleton
@@ -1302,3 +1340,4 @@ FONTS = [
 ]
 
 ENTITY_SET_ANIMATION_FUNC_PTR = 0x080134F4
+GET_ENTITY_SLOT_FUNC_PTR = 0x08000C5C
