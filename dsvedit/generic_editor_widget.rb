@@ -190,9 +190,7 @@ class GenericEditorWidget < Qt::Widget
     
     if attribute_name == "Outline color"
       a = 255
-      b = ((color_value & 0b0111_1100_0000_0000) >> 10) << 3
-      g = ((color_value & 0b0000_0011_1110_0000) >>  5) << 3
-      r = ((color_value & 0b0000_0000_0001_1111) >>  0) << 3
+      r, g, b = Renderer.read_16_bit_rgb_color(color_value)
     else
       a = ((color_value & 0xFF000000) >> 24) / 31.0 * 255
       b = ((color_value & 0x00FF0000) >> 16) / 31.0 * 255

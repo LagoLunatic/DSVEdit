@@ -686,21 +686,29 @@ class Renderer
     palette_data = fs.read(specific_palette_pointer, num_colors_to_read*2)
     
     palette = palette_data.unpack("v*").map do |color|
-      # These two bytes hold the rgb data for the color in this format:
-      # Xbbbbbgggggrrrrr
-      # the X is unused.
-      blue_bits   = (color & 0b0111_1100_0000_0000) >> 10
-      green_bits  = (color & 0b0000_0011_1110_0000) >> 5
-      red_bits    =  color & 0b0000_0000_0001_1111
-      
-      red = red_bits << 3
-      green = green_bits << 3
-      blue = blue_bits << 3
+      red, green, blue = Renderer.read_16_bit_rgb_color(color)
       alpha = 255
       ChunkyPNG::Color.rgba(red, green, blue, alpha)
     end
     
     return palette
+  end
+  
+  def self.read_16_bit_rgb_color(color)
+    # These two bytes hold the rgb data for the color in this format:
+    # Xbbbbbgggggrrrrr
+    # the X is unused.
+    blue_bits   = (color & 0b0111_1100_0000_0000) >> 10
+    green_bits  = (color & 0b0000_0011_1110_0000) >> 5
+    red_bits    =  color & 0b0000_0000_0001_1111
+    
+    # The bottom 3 bits should be filled with a copy of the upper three bits, swizzled.
+    # So e.g. a value of 31 will produce 255 instead of 248.
+    red   = (red_bits   << 3) | (red_bits   >> 2)
+    green = (green_bits << 3) | (green_bits >> 2)
+    blue  = (blue_bits  << 3) | (blue_bits  >> 2)
+    
+    return [red, green, blue]
   end
   
   def export_palette_to_palette_swatches_file(palette, file_path)
