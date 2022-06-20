@@ -57,13 +57,15 @@ class SettingsDialog < Qt::Dialog
   end
   
   def browse_for_nds_emulator_path
-    emulator_path = Qt::FileDialog.getOpenFileName()
+    default_dir = File.dirname(@ui.nds_emulator_path.text)
+    emulator_path = Qt::FileDialog.getOpenFileName(self, "Select NDS emulator", default_dir, "Program Files (*.exe)")
     return if emulator_path.nil?
     @ui.nds_emulator_path.text = emulator_path
   end
   
   def browse_for_gba_emulator_path
-    emulator_path = Qt::FileDialog.getOpenFileName()
+    default_dir = File.dirname(@ui.gba_emulator_path.text)
+    emulator_path = Qt::FileDialog.getOpenFileName(self, "Select GBA emulator", default_dir, "Program Files (*.exe)")
     return if emulator_path.nil?
     @ui.gba_emulator_path.text = emulator_path
   end
