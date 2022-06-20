@@ -29,12 +29,12 @@ class TextDatabase
     # Clear all text that is currently using free space beforehand.
     text_list.each do |text|
       if GAME == "por"
-        allowable_end = STRING_DATABASE_ALLOWABLE_END_OFFSET_FOR_OVERLAY[text.overlay_id]
+        overlay_allowable_end = STRING_DATABASE_ALLOWABLE_END_OFFSET_FOR_OVERLAY[text.overlay_id]
       else
-        allowable_end = STRING_DATABASE_ALLOWABLE_END_OFFSET
+        overlay_allowable_end = STRING_DATABASE_ALLOWABLE_END_OFFSET
       end
       
-      if text.string_ram_pointer < STRING_DATABASE_START_OFFSET || text.string_ram_pointer >= allowable_end
+      if text.string_ram_pointer < STRING_DATABASE_START_OFFSET || text.string_ram_pointer >= overlay_allowable_end
         # This text isn't currently in the original string database. It's in free space.
         # Therefore, we tell the free space manager to clear it, so this space can be used again.
         string_length = text.original_encoded_string_length + header_footer_length
@@ -51,9 +51,11 @@ class TextDatabase
       fs.load_overlay(overlay) if overlay
       
       if GAME == "por"
-        allowable_end = STRING_DATABASE_ALLOWABLE_END_OFFSET_FOR_OVERLAY[overlay]
+        overlay_original_end = STRING_DATABASE_ORIGINAL_END_OFFSET_FOR_OVERLAY[overlay]
+        overlay_allowable_end = STRING_DATABASE_ALLOWABLE_END_OFFSET_FOR_OVERLAY[overlay]
       else
-        allowable_end = STRING_DATABASE_ALLOWABLE_END_OFFSET
+        overlay_original_end = STRING_DATABASE_ORIGINAL_END_OFFSET
+        overlay_allowable_end = STRING_DATABASE_ALLOWABLE_END_OFFSET
       end
       
       # Remove nonzero free spaces just once for each overlay, instead of once for each string.
@@ -67,7 +69,7 @@ class TextDatabase
       text_list_for_overlay.each do |text|
         string_length = text.encoded_string.length + header_footer_length
 
-        if next_string_ram_pointer + string_length >= allowable_end
+        if next_string_ram_pointer + string_length >= overlay_allowable_end
           # Writing strings past this point would result in something being overwritten, so start using the free space manager instead.
           using_free_space_manager = true
         end
@@ -80,7 +82,7 @@ class TextDatabase
           # Write null bytes to where the string will take up so the free space manager doesn't consider this space free.
           fs.write(next_string_ram_pointer, "\0"*string_length)
         else
-          if !writing_to_end_of_file && GAME == "ooe" && next_string_ram_pointer + string_length >= STRING_DATABASE_ORIGINAL_END_OFFSET
+          if !writing_to_end_of_file && GAME == "ooe" && next_string_ram_pointer + string_length >= overlay_original_end
             # Reached the end of where strings were in the original game, but in OoE we can expand the file.
             writing_to_end_of_file = true
           end
