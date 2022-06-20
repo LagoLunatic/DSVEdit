@@ -53,7 +53,9 @@ class TextDatabase
       writing_to_end_of_file = false
       using_free_space_manager = false
       text_list_for_overlay.each do |text|
-        if next_string_ram_pointer + text.encoded_string.length + header_footer_length >= STRING_DATABASE_ALLOWABLE_END_OFFSET
+        string_length = text.encoded_string.length + header_footer_length
+
+        if next_string_ram_pointer + string_length >= STRING_DATABASE_ALLOWABLE_END_OFFSET
           # Writing strings past this point would result in something being overwritten, so start using the free space manager instead.
           using_free_space_manager = true
         end
@@ -61,18 +63,17 @@ class TextDatabase
         region_name = TEXT_REGIONS.find{|name, range| range.include?(text.text_id)}[0]
         
         if using_free_space_manager
-          next_string_ram_pointer = fs.get_free_space(text.encoded_string.length + header_footer_length, overlay, remove_nonzero_spaces = false)
+          next_string_ram_pointer = fs.get_free_space(string_length, overlay, remove_nonzero_spaces = false)
           
           # Write null bytes to where the string will take up so the free space manager doesn't consider this space free.
-          string_length = text.encoded_string.length + header_footer_length
           fs.write(next_string_ram_pointer, "\0"*string_length)
         else
-          if !writing_to_end_of_file && GAME == "ooe" && next_string_ram_pointer + text.encoded_string.length + header_footer_length >= STRING_DATABASE_ORIGINAL_END_OFFSET
+          if !writing_to_end_of_file && GAME == "ooe" && next_string_ram_pointer + string_length >= STRING_DATABASE_ORIGINAL_END_OFFSET
             # Reached the end of where strings were in the original game, but in OoE we can expand the file.
             writing_to_end_of_file = true
           end
           if writing_to_end_of_file
-            next_string_ram_pointer = fs.expand_overlay_and_get_end(overlay, text.encoded_string.length + header_footer_length)
+            next_string_ram_pointer = fs.expand_overlay_and_get_end(overlay, string_length)
           end
           
           # System strings and AoS strings must be aligned to the nearest 4 bytes or they won't be displayed.
@@ -85,7 +86,7 @@ class TextDatabase
         text.string_ram_pointer = next_string_ram_pointer
         
         if !writing_to_end_of_file && !using_free_space_manager
-          next_string_ram_pointer += text.encoded_string.length + header_footer_length
+          next_string_ram_pointer += string_length
         end
       end
     end
