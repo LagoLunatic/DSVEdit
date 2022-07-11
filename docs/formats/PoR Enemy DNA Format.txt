@@ -15,6 +15,7 @@ PoR Enemy DNA:
   16,1: Base chance to drop item 1.
     This is on a scale from 0 to 0x100 (decimal 256), so 0x40 is a 25% chance, 0x80 is a 50% chance, etc.
     Note that drop chance caps out at 50%, after the bonus from luck.
+    TODO: work out exact formula. the base chance changes how effective luck is, it's not linear.
   17,1: Base chance to drop item 2.
     Same as above.
   18,4: Weaknesses

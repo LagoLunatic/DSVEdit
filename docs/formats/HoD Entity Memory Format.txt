@@ -68,3 +68,5 @@ Memory used for entities in HoD is 02000418 - 02007C17. Each entity is 0x80 byte
 74,1: ?
 75,1: ?
 76,1: Remaining iframes this entity has before it can take damage again?
+78,4: On-hit-other callback function.
+7C,4: On-get-hit callback function.

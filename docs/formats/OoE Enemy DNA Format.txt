@@ -26,6 +26,7 @@ OoE Enemy DNA:
   14,2: Glyph drop. Global ID of the glyph + 1.
     The enemy can only drop a glyph on death if its AI is coded to drop a glyph.
   16,1: Chance to drop glyph
+    TODO: figure out formula
   17,1: Attack.
   18,1: Defense.
   19,1: Magical defense.

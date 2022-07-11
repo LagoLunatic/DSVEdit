@@ -172,6 +172,11 @@
   ; Sets the number of a certain item you own to a specified value.
   ; r0 - Global ID+1 of the item
   ; r1 - Number to set
+0206ED58 RemoveAllOfOwnedItem???
+  ; r0 - Global ID+1 of the item
+  ; Sets the number of the item that you own to zero.
+  ; Might also do some other stuff?
+  ; Unsure if this works for literally all items, but it definitely works for glyphs at least.
 02063750 CheckItemAvailableInShop
   ; Checks bit 0x20 of the owned item info (see above).
   ; r0 - Global ID+1 of the item
@@ -450,6 +455,35 @@
 
 0204D870 PlayerUpdateVariousThings?
   ; Among the things this does: scrolls the screen to the player
+02047DC0 PlayerUpdateCrouched?
+
+020499B4 PlayerCalculateContactDamage
+  ; Calculates how much damage the player should do to enemies when contacting them.
+  ; It will store this damage value to player+0xA8,2.
+  ; r0 - Player entity
+  ; Disassembly of most of the formula:
+    ; r2 = player+0x146,2     # 4
+    ; r1 = r2                 # 4
+    ; r1 = r1 >> 2            # 1
+    ; r1 += 1                 # 2
+    ; r2 = STR                # from 020FFD60,2 (19 in this example)
+    ; r12 = r1 * r2           # 32
+    ; r9 = r2 + 1             # 1A
+    ; r2 = r9 >> 1            # D
+    ; r14 = r12 / 6           # 8
+    ; r2 = r9                 # 1A
+    ; r14 = r14 >> 2          # 2
+    ; r2 = r14 + r2 >> 2      # 8
+    ; r4 = r1 + r2            # A
+    ; if player == Albus:
+    ;   r4 = r4 << 1          # 14
+    ;   if player.state == C: # Quadruple Ignis (fire kick) state
+    ;     r0 = r4*5           # 64
+    ;     r4 = r0             # 64
+    ; if player.sliding:
+    ;   r0 = r4               # 14
+    ;   r4 = r0 >> 1          # A
+    ; (r4 is the final value stored to player+0xA8,2.)
 
 0205CB14 DamagePlayer
   ; r0 - Enemy entity

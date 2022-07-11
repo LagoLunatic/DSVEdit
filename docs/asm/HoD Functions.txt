@@ -40,6 +40,12 @@
 08077C84 GetDamageMultiplierFromUnknown7
   ; r0 - ? the value from the player's "Unknown 7" list for the current animation
 
+08011030 SetPlayerOutlineColor??
+  ; r0 - Palette index(?)
+  ; r1 - Color index(?)
+  ; r2 - The color to set
+  ; 08069D82 - Where it hardcodes the outline color for juste
+
 08010638 GenericDraw
   ; Used by enemies, the player, and parts of the UI.
 0800F9C0 GenericDraw2
@@ -188,6 +194,13 @@
   ; r1 - Y pos
   ; r2 - 0 or 1 for small heart/big heart
   ; r3 - 0 to spawn at the exact pos given, 1 to spawn a little above that so it falls down?
+
+080163F0 SetCallbacksAndIframesIndex
+  ; r0 - Entity
+  ; r1 - Iframes(?) index to store at entity+70
+  ; r2 - On-hurt-player callback to store at +78
+  ; r3 - On-damaged callback to store at +7C
+  ; Also initializes the entity's hitbox(?).
 
 0802C600 InitializeShopItemList
   ; r0 - 

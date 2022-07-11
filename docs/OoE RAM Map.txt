@@ -4,6 +4,8 @@
 02007354,4 - Hardcodes 022EB1A0, the start of asset memory.
 020072A8,4 - Hardcodes 023E0000, the end of asset memory.
 
+02047930 - Hardcodes the heart cost of Albus's Quadruple Ignis (fire kick) attack (3 hearts).
+
 0206D994,1 - Hardcodes the number of attribute points (1) to give to all attributes when the player absorbs a glyph.
 
 020B0854-020B4853 - List of sine and cosine values.
@@ -489,7 +491,7 @@ A 200% attack boost (triple) takes 0xFFFF (0d65535) AP.
   10 00010000 - (barlowe related, set by event 70)
   11 00020000 - Saw the event before the room with Albus in Oblivion Ridge.
   12 00040000 - Met Albus in Oblivion Ridge.
-  13 00080000 - (barlowe related, set by event 73)
+  13 00080000 - Talking to Barlowe after completing Oblivion Ridge. (Event 73.)
   14 00100000 - Saw the event in the first room of Mystery Manor.
   15 00200000 - (albus in mystery manor related, set by event 75)
   16 00400000 - (albus in mystery manor related, set by event 76)
@@ -579,6 +581,8 @@ A 200% attack boost (triple) takes 0xFFFF (0d65535) AP.
 02100688,1 - Number of Black Crows (enemy 17) killed.
 02100689,1 - Number of Werewolves (enemy 3D) killed.
 0210068A,1 - Number of Jiang Shi (enemy 67) killed.
+
+02100690 - maybe button config?
 
 021006C0,4 - X pos to save to the save file.
 021006C4,4 - Y pos to save to the save file.

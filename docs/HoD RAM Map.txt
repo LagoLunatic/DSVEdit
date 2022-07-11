@@ -183,6 +183,10 @@ Extra memory used for rendering special effects:
 020163FE,2 - Something related to initializing a new sprite info entry?
   This is an index in list 02015250
 
+02017160,? - Player's palette list?
+02017760,2 - ? bitfield related to player palette list?
+02017765,1 - ?
+
 020181E4 - List of currently active palette shifters.
   Entry length 0xC.
   00,4: Palette list pointer.
