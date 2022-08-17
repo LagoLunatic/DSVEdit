@@ -928,7 +928,7 @@ ITEM_BITFIELD_ATTRIBUTES = {
   "Swing Modifiers" => [
     "No interrupt on land",
     "Weapon floats in place",
-    "Unknown 3",
+    "No flip on player turn",
     "Player can move",
     "No trail gradual fadeout",
     "Unknown 6",

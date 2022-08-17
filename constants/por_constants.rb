@@ -1455,7 +1455,7 @@ PLAYER_BITFIELD_ATTRIBUTES = {
     "Unknown 22",
     "Unknown 23",
     "Unknown 24",
-    "Unknown 25",
+    "Can activate switches with body",
     "Unknown 26",
     "Unknown 27",
     "Unknown 28",

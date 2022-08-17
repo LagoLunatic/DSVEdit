@@ -41,6 +41,8 @@ Player format:
       Most projectiles will be destroyed on contact with you, dealing no damage. Projectiles that can't be destroyed will simply pass through you. However, Dracula's projectiles will still do damage to you.
       This bit is set when using Stonewall or Maria's turtle (Gnebu).
     Bit 19: If this bit is off, the player can't be hit at all. Can still hit enemies.
+    Bit 25: Allows the damage-dealing hitboxes of the player's body to activate environmental objects such as switches, without the need for weapons.
+      This is used for Old Axe Armor.
   3C,4: Pointer to list of which combo techs this player can do.
     This list is 4 bytes long. Each byte is which technique for a given button combo, with 00 meaning no technique.
   40,2: Sprite Y offset in pixels.
