@@ -225,7 +225,7 @@ class TilesetEditorDialog < Qt::Dialog
     else
       @tile_width = @tile_height = 8
       @tileset_width = 16*4
-      @tileset_height = 64
+      @tileset_height = 32*4
       @tiles_per_gfx_page_row = 16
     end
     @tileset_graphics_scene.setSceneRect(0, 0, @tileset_width*@tile_width, @tileset_height*@tile_height)
