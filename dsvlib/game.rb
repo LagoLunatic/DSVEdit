@@ -205,9 +205,9 @@ class Game
     
     case GAME
     when "dos"
-      state_anims = fs.read(state_anims_list_ptr, NUM_PLAYER_ANIM_STATES*2).unpack("v*")
+      state_anims = fs.read(state_anims_list_ptr, NUM_PLAYER_ANIM_STATES*2).unpack("s*")
     when "por", "ooe"
-      state_anims = fs.read(state_anims_list_ptr, NUM_PLAYER_ANIM_STATES).unpack("C*")
+      state_anims = fs.read(state_anims_list_ptr, NUM_PLAYER_ANIM_STATES).unpack("c*")
     else
       raise "AoS/HoD don't have player anim states"
     end
@@ -221,9 +221,9 @@ class Game
     
     case GAME
     when "dos"
-      fs.write(state_anims_list_ptr, state_anims.pack("v*"))
+      fs.write(state_anims_list_ptr, state_anims.pack("s*"))
     when "por", "ooe"
-      fs.write(state_anims_list_ptr, state_anims.pack("C*"))
+      fs.write(state_anims_list_ptr, state_anims.pack("c*"))
     else
       raise "AoS/HoD don't have player anim states"
     end

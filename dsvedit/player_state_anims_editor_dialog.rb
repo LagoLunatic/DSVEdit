@@ -36,7 +36,12 @@ class PlayerStateAnimsEditor < Qt::Dialog
     PLAYER_ANIM_STATE_NAMES.each_with_index do |name, i|
       @ui.states.addItem("%02X %s" % [i, name])
     end
-    (0..0xFF).each do |i|
+    @ui.anim_index.addItem("")
+    max_value = 0x7F
+    if GAME == "dos"
+      max_value = 0xFF
+    end
+    (0..max_value).each do |i|
       @ui.anim_index.addItem("%02X" % i)
     end
     
@@ -71,21 +76,26 @@ class PlayerStateAnimsEditor < Qt::Dialog
     @ui.states.setCurrentRow(state_index)
     
     anim_index = @state_anims[state_index]
-    anim_changed(anim_index)
+    anim_changed(anim_index+1)
   end
   
-  def anim_changed(anim_index)
+  def anim_changed(combobox_index)
     @animation_timer.stop()
     @anim_graphics_scene.items.each do |item|
       @anim_graphics_scene.removeItem(item)
     end
     @current_anim_keyframe_index = 0
     
-    @ui.anim_index.setCurrentIndex(anim_index)
+    @ui.anim_index.setCurrentIndex(combobox_index)
+    anim_index = combobox_index-1
     
     @state_anims[@state_index] = anim_index
     
-    @current_anim = @sprite.animations[anim_index]
+    if anim_index < 0
+      @current_anim = nil
+    else
+      @current_anim = @sprite.animations[anim_index]
+    end
     if @current_anim.nil?
       return
     end
