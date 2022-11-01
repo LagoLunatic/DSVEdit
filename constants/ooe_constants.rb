@@ -746,6 +746,8 @@ OTHER_SPRITES = [
   {desc: "Breakable walls 7", sprite: 0x021DCD38, gfx_files: [0x020BA2F4], palette: 0x020D1458},
   {desc: "Breakable walls 8", sprite: 0x021DCD34, gfx_files: [0x020BA300], palette: 0x020D151C},
   
+  {desc: "Rusalka's stone pillars", sprite: 0x021DCED4, gfx_file_names: ["/sc/f_moai00.dat"], palette: 0x022BB814, overlay: 27},
+  
   {pointer: 0x0221BBB0, desc: "Title screen 1", overlay: 20},
   {pointer: 0x0221BBC8, desc: "Title screen 2 Japanese", overlay: 20},
   {pointer: 0x0221BBC8, desc: "Title screen 2 English", gfx_files: [0x020BED2C, 0x020BED38, 0x020BED44, 0x020BED50, 0x020BED5C, 0x020BED68, 0x020BED74, 0x020BED80, 0x020BEDD4, 0x020BEDE0], overlay: 20},
@@ -757,6 +759,24 @@ OTHER_SPRITES = [
   {desc: "Term list", sprite: 0x021DCCF0, palette: 0x020D1980, gfx_file_names: [
     "/sc/f_gloss0.dat",
     "/sc/f_gloss1_u.dat",
+  ]},
+  {desc: "Game over", sprite: 0x021DCCE8, palette: 0x020D2560, gfx_file_names: [
+    "/sc/f_gam00.dat",
+    "/sc/f_gam01.dat",
+    "/sc/f_gam02.dat",
+    "/sc/f_gam03.dat",
+  ]},
+  {desc: "Game over (Dracula)", sprite: 0x021DCCE8, palette: 0x020D2764, gfx_file_names: [
+    "/sc/f_gam10.dat",
+    "/sc/f_gam11.dat",
+    "/sc/f_gam12.dat",
+    "/sc/f_gam13.dat",
+  ]},
+  {desc: "Game over (Albus mode)", sprite: 0x021DCCE8, palette: 0x020D2968, gfx_file_names: [
+    "/sc/f_gam20.dat",
+    "/sc/f_gam21.dat",
+    "/sc/f_gam22.dat",
+    "/sc/f_gam23.dat",
   ]},
   
   {desc: "Map", sprite: 0x020C553C, palette: 0x020D23B0, gfx_files: [0x020BA78C], one_dimensional_mode: true},
