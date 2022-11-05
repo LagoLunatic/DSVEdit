@@ -233,7 +233,7 @@ ITEM_TYPES = [
   },
   {
     name: "Accessories",
-    list_pointer: 0x020D6528,
+    list_pointer: 0x020D6B70,
     count: 42,
     format: ARMOR_FORMAT # length: 24
   },
