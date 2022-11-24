@@ -1034,14 +1034,6 @@ class SpriteEditor < Qt::Dialog
     output_folder = "./darkfunction_sprites/#{sprite_name}"
     FileUtils.mkdir_p(output_folder)
     
-    if @sprite_info.gfx_pages.first.render_mode == 1
-      colors_per_palette = 16
-    elsif @sprite_info.gfx_pages.first.render_mode == 2
-      colors_per_palette = 256
-    else
-      raise "Unknown render mode: #{@sprite_info.gfx_pages.first.render_mode}"
-    end
-    
     DarkFunctionInterface.export(
       output_folder,
       sprite_name,
@@ -1049,7 +1041,7 @@ class SpriteEditor < Qt::Dialog
       @fs, @renderer,
       transparent_trails: @transparent_trails,
       one_dimensional_mode: @one_dimensional_render_mode || SYSTEM == :gba,
-      colors_per_palette: colors_per_palette,
+      colors_per_palette: @sprite_info.gfx_pages.first.colors_per_palette,
     )
     
     Qt::MessageBox.warning(self,
@@ -1084,7 +1076,13 @@ class SpriteEditor < Qt::Dialog
       return
     end
     
-    DarkFunctionInterface.import(folder, sprite_name, @sprite_info, @fs, @renderer)
+    DarkFunctionInterface.import(
+      folder,
+      sprite_name,
+      @sprite_info,
+      @fs, @renderer,
+      colors_per_palette: @sprite_info.gfx_pages.first.colors_per_palette,
+    )
     
     reload_sprite()
     
