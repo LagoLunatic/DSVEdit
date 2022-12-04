@@ -2,8 +2,8 @@ OoE Enemy DNA:
   0x24 bytes long.
   00,4: Enemy create code.
   04,4: Enemy update code.
-  08,2: Item 1. Global ID of the item + 1.
-  0A,2: Item 2
+  08,2: Item 1. Global ID+1 of the item.
+  0A,2: Item 2. Global ID+1 of the item.
   0C,1: Palette offset to use when this enemy is petrified.
   0D,1: Attribute points given when killed.
     Each Master Ring you have equipped doubles this number.
@@ -22,11 +22,13 @@ OoE Enemy DNA:
     7 Grey
     8 Black
     Etc.
-  13,1: ??? Unused?
-  14,2: Glyph drop. Global ID of the glyph + 1.
+  13,1: Unused?
+  14,2: Glyph drop. Global ID+1 of the glyph.
     The enemy can only drop a glyph on death if its AI is coded to drop a glyph.
-  16,1: Chance to drop glyph
-    TODO: figure out formula
+  16,1: Chance to drop glyph.
+    This is a regular percentage. 0 means it never drops, 100 (decimal) means it always drops.
+    Luck linearly increases the chance by plus 0.1% per point of luck.
+    Glyphs only drop in Shanoa mode.
   17,1: Attack.
   18,1: Defense.
   19,1: Magical defense.
