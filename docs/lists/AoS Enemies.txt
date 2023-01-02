@@ -1,8 +1,10 @@
 Enemies:
 00 Bat
 01 Zombie
-  Var A: ?
-  Var B: ?
+  Var A: Number of Zombies to spawn (if VarB is set)
+  Var B:
+    0 Single Zombie
+    1 Zombie Spawner
 02 Skeleton
 03 Merman
   For a single Merman on the ground, set both var A and B to 0.
@@ -10,20 +12,26 @@ Enemies:
   Other combinations of var A and B will result in buggy Mermen.
 04 Axe Armor
 05 Skull Archer
-  Var A: ?
+  Var A:
+    0 Stationary.
+    1 Will roam back and forth, and will back away from the player if the player is too close.
 06 Peeping Eye
   Var A:
     0 Normal.
     1 In the background, cannot hit or be hit by the player.
 07 Killer Fish
-  Var B: ?
+  Var B: Number of smaller fish to spawn around Killer fish.
 08 Bone Pillar
   Var A: Number of them stacked on top of each other.
 09 Blue Crow
 0A Buer
-  Var A: ?
+  Var A:
+    0 Continues to roll off of ledges until it gets to a bottom ledge, then it can chase player.
+    1 Immediately chases player, stays grounded and won't roll off of ledges.
 0B White Dragon
-  Var A: ?
+  Var A: Direction
+    0 Left
+    1 Right
 0C Zombie Soldier
 0D Skeleton Knight
 0E Ghost
@@ -37,16 +45,24 @@ Enemies:
 12 Rock Armor
 13 Giant Ghost
 14 Winged Skeleton
-  Var A: ?
-  Var B: ?
+  Var A: Number of Winged Skeletons to spawn (if VarB is set)
+  Var B:
+    0 For Single
+    1 For Spawner
 15 Minotaur
+  Var A: If set to 1, Minotaur will trigger boss music.
+    However, it doesn't seem to be fully implemented as a boss.
+    It will set boss flag 0x100 after being defeated, but it won't spawn healing like
+    other bosses, and Minotaur will still be there if you revisit the room.
 16 Student Witch
 17 Arachne
 18 Fleaman
   Var A: ?
   Var B: ?
 19 Evil Butcher
-  Var B: ?
+  Var B: Palette
+    0 Purple, Grey skin
+    1 Orange, Green skin
 1A Quezlcoatl
 1B Ectoplasm
 1C Catoblepas
@@ -76,8 +92,12 @@ Enemies:
 2A Witch
 2B Curly
 2C Altair
-  Var A: ?
-  Var B: ?
+  Spawner, Always spawns two.
+  Var A: Must be set to 0.
+  Var B: Enemy to Carry
+    0 Nothing
+    1 Fleaman
+    2 Ripper
 2D Red Crow
 2E Cockatrice
 2F Dead Warrior
@@ -106,7 +126,9 @@ Enemies:
 3A Bomber Armor
 3B Lightning Doll
 3C Great Armor
-  Var A: ?
+  Var A:
+    0 Common enemy.
+    F Boss. (disappears after killing). This actually corresponds to which boss flag to clear. 0xF is for Great Armor.
 3D Une
   Var B: ?
 3E Giant Worm
@@ -122,10 +144,16 @@ Enemies:
   Var A: ?
 43 Triton
 44 Slime
-  Var A: ?
-  Var B: ?
+  Var A: Placement
+    0 Placed on Floor
+    1 Placed on Ceiling
+  Var B: Color
+    0 Blue
+    1 Purple
 45 Big Golem
-  Var A: ?
+  Var A:
+    0 Common enemy.
+    1 Boss (disappears after being killed once).
 46 Dryad
 47 Poison Worm
 48 Arc Demon
@@ -153,7 +181,10 @@ Enemies:
 5C Giant Skeleton
 5D Gladiator
 5E Bael
-  Var A: ?
+  Var A:
+    0 Continues to roll off of ledges until it gets to a bottom ledge, then it can chase player.
+    1 Immediately starts chasing the player, but it can still go off ledges.
+    This can also cause some glitchy behavior based on the terrain.
 5F Succubus
   Var A:
     0 Succubus pretending to be Mina.

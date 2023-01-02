@@ -102,7 +102,7 @@
   05 0020 Legion
   06 0040 Balore
   07 0080 Chaos
-  08 0100 (Unused)
+  08 0100 Minotaur (Not fully implemented, Minotaur will still spawn after defeat)
   09 0200 (Unused)
   0A 0400 Manticore
   0B 0800 Creaking Skull
@@ -313,6 +313,14 @@ D0-DF  02007024-02007863  ?
 0201326B,1 - Currently equipped yellow soul.
 0201326C,1 - Currently equipped body armor.
 0201326D,1 - Currently equipped accessory.
+
+02013270, 1 - Player status flag. Bitfield of current player status.
+  01 - Poison
+  02 - Cursed
+  04 - Stone
+02013272, 2 - Poison status timer
+02013274, 2 - Cursed status timer
+02013276, 2 - Stone remaing inputs (each player input subtracts one)
 
 0201327A,2 - Current HP.
 0201327C,2 - Current MP.

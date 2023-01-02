@@ -1,16 +1,34 @@
 
 Starting stats (hardcoded):
+08033DB8,1 - 1/2 Starting HP (this value gets doubled)
 08033DC2,1 - Starting STR
 08033DC6,1 - Starting CON
 08033DCA,1 - Starting INT
 08033DCE,1 - Starting LCK
 
+Level up stats (hardcoded):
+08033CEA,1 - HP per level
+080E1E08,20 (0x14) - List of MP gained per level. Each byte is used for 5 levels.
+080E1DCC,20 (0x14) - List of STR gained per level. Each byte is used for 5 levels.
+080E1DE0,20 (0x14) - List of CON gained per level. Each byte is used for 5 levels.
+080E1DF4,20 (0x14) - List of INT gained per level. Each byte is used for 5 levels.
+08033D5E,1 - Every 3rd level uses this for INT gain rather than the list.
+08033D64,1 - Luck gained per level
 0804BA26,1 - Number of ability souls in the game (hardcoded).
 
 080E0DF8 - List of songs->text indexes for sound test mode.
   Entry length 4.
   00,2: Song index.
   02,2: Text index.
+
+080E1338 - List of player status timers / sounds when the player gains a status.
+  Entry length 4.
+    00,2: Time that Poison/Cursed will last, or the number of inputs to break out of Stone
+    02,1: Index of sound to play.
+  Indexes:
+    0 (080E1338) - Poison
+    4 (080E133C) - Cursed
+    8 (080E1340) - Stone
 
 080E1320 - List of damage multipliers for the player's jumpkick/weapon/slide attacks.
   Each entry is a halfword.
