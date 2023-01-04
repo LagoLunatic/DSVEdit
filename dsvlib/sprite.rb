@@ -201,7 +201,7 @@ class Sprite
             # Don't create a new animation instance for duplicates, just insert the existing instance into the list again.
             animation = @animations_by_offset[animation_pointer]
           else
-            puts "%02X %08X" % [i, animation_pointer]
+            #puts "%02X %08X" % [i, animation_pointer]
             animation_data = fs.read(animation_pointer, Animation.data_size)
             animation = Animation.new.from_data(animation_data, animation_pointer)
             @animations_by_offset[animation_pointer] = animation
@@ -226,7 +226,7 @@ class Sprite
         end
       end
     end
-    puts "Read #{animations.length} animations"
+    #puts "Read #{animations.length} animations"
     
     @animations.each do |animation|
       next if animation.nil?
