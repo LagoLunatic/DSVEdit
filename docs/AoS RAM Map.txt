@@ -320,7 +320,7 @@ D0-DF  02007024-02007863  ?
   04 - Stone
 02013272, 2 - Poison status timer
 02013274, 2 - Cursed status timer
-02013276, 2 - Stone remaing inputs (each player input subtracts one)
+02013276, 2 - Stone remaining inputs (each player input subtracts one)
 
 0201327A,2 - Current HP.
 0201327C,2 - Current MP.
