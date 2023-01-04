@@ -1311,6 +1311,7 @@ class SpriteEditor < Qt::Dialog
     # Start selecting part on gfx page.
     
     return unless @selection_rectangle
+    return unless button == Qt::LeftButton
     
     max_w = @gfx_file_graphics_scene.width
     max_h = @gfx_file_graphics_scene.height
@@ -1325,12 +1326,15 @@ class SpriteEditor < Qt::Dialog
     w = 0
     h = 0
     @selection_rectangle.setRect(x, y, w, h)
+    
+    @is_dragging_gfx_selection = true
   end
   
   def drag_gfx_scene(mouse_x, mouse_y, button)
     # Resize part selection on gfx page.
     
     return unless @selection_rectangle
+    return unless @is_dragging_gfx_selection
     
     max_w = @gfx_file_graphics_scene.width.to_i
     max_h = @gfx_file_graphics_scene.height.to_i
@@ -1412,6 +1416,10 @@ class SpriteEditor < Qt::Dialog
   end
   
   def stop_dragging_gfx_scene(mouse_x, mouse_y, button)
+    if button == Qt::LeftButton
+      @is_dragging_gfx_selection = false
+    end
+    
     update_current_part()
   end
   

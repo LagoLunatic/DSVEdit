@@ -1,6 +1,6 @@
 
 require_relative 'clickable_graphics_scene'
-require_relative 'room_view'
+require_relative 'custom_graphics_views'
 require_relative 'custom_graphics_items'
 require_relative 'layer_item'
 require_relative 'entity_layer_item'

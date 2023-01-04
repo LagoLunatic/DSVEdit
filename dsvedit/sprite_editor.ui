@@ -526,13 +526,13 @@
        <item>
         <layout class="QHBoxLayout" name="horizontalLayout_5" stretch="1,1,1">
          <item>
-          <widget class="QGraphicsView" name="frame_graphics_view"/>
+          <widget class="PannableZoomableView" name="frame_graphics_view"/>
          </item>
          <item>
-          <widget class="QGraphicsView" name="part_graphics_view"/>
+          <widget class="PannableZoomableView" name="part_graphics_view"/>
          </item>
          <item>
-          <widget class="QGraphicsView" name="gfx_file_graphics_view"/>
+          <widget class="PannableZoomableView" name="gfx_file_graphics_view"/>
          </item>
         </layout>
        </item>
@@ -552,6 +552,13 @@
    </item>
   </layout>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>PannableZoomableView</class>
+   <extends>QGraphicsView</extends>
+   <header>custom_graphics_views.h</header>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections>
   <connection>

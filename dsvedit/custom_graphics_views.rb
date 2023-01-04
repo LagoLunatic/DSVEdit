@@ -1,5 +1,5 @@
 
-class RoomView < Qt::GraphicsView
+class PannableZoomableView < Qt::GraphicsView
   ZOOM_SCALES = [
     0.25,
     0.5,

@@ -168,7 +168,7 @@
        </property>
        <layout class="QVBoxLayout" name="verticalLayout_2">
         <item>
-         <widget class="RoomView" name="room_graphics_view"/>
+         <widget class="PannableZoomableView" name="room_graphics_view"/>
         </item>
        </layout>
       </widget>
@@ -577,9 +577,9 @@
  </widget>
  <customwidgets>
   <customwidget>
-   <class>RoomView</class>
+   <class>PannableZoomableView</class>
    <extends>QGraphicsView</extends>
-   <header>roomview.h</header>
+   <header>custom_graphics_views.h</header>
   </customwidget>
  </customwidgets>
  <resources/>
