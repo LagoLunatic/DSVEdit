@@ -6,6 +6,8 @@ class RoomEditorDialog < Qt::Dialog
   
   attr_reader :game
   
+  slots "map_scene_clicked(int, int, const Qt::MouseButton&)"
+  slots "map_scene_released(int, int, const Qt::MouseButton&)"
   slots "reposition_room_on_map(int, int, const Qt::MouseButton&)"
   slots "open_tileset_chooser()"
   slots "open_color_effects_editor()"
@@ -25,7 +27,8 @@ class RoomEditorDialog < Qt::Dialog
     @ui.map_graphics_view.scale(2, 2)
     @ui.map_graphics_view.setScene(@map_graphics_scene)
     @map_graphics_scene.setBackgroundBrush(MAP_BACKGROUND_BRUSH)
-    connect(@map_graphics_scene, SIGNAL("clicked(int, int, const Qt::MouseButton&)"), self, SLOT("reposition_room_on_map(int, int, const Qt::MouseButton&)"))
+    connect(@map_graphics_scene, SIGNAL("clicked(int, int, const Qt::MouseButton&)"), self, SLOT("map_scene_clicked(int, int, const Qt::MouseButton&)"))
+    connect(@map_graphics_scene, SIGNAL("released(int, int, const Qt::MouseButton&)"), self, SLOT("map_scene_released(int, int, const Qt::MouseButton&)"))
     connect(@map_graphics_scene, SIGNAL("moved(int, int, const Qt::MouseButton&)"), self, SLOT("reposition_room_on_map(int, int, const Qt::MouseButton&)"))
     
     connect(@ui.select_tileset_button, SIGNAL("clicked()"), self, SLOT("open_tileset_chooser()"))
@@ -136,7 +139,19 @@ class RoomEditorDialog < Qt::Dialog
     end
   end
   
+  def map_scene_clicked(x, y, button)
+    return unless button == Qt::LeftButton
+    @is_repositioning_room = true
+    reposition_room_on_map(x, y, button)
+  end
+  
+  def map_scene_released(x, y, button)
+    return unless button == Qt::LeftButton
+    @is_repositioning_room = false
+  end
+  
   def reposition_room_on_map(x, y, button)
+    return unless @is_repositioning_room
     return unless (0..@map_graphics_scene.width-1-5).include?(x) && (0..@map_graphics_scene.height-1-5).include?(y)
     
     x = x / 4

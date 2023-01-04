@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>640</width>
+    <width>668</width>
     <height>735</height>
    </rect>
   </property>
@@ -352,7 +352,7 @@
     </layout>
    </item>
    <item>
-    <widget class="QGraphicsView" name="map_graphics_view">
+    <widget class="PannableZoomableView" name="map_graphics_view">
      <property name="minimumSize">
       <size>
        <width>520</width>
@@ -370,6 +370,13 @@
    </item>
   </layout>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>PannableZoomableView</class>
+   <extends>QGraphicsView</extends>
+   <header>custom_graphics_views.h</header>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections/>
 </ui>

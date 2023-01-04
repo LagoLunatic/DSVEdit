@@ -199,7 +199,7 @@
       </property>
       <layout class="QVBoxLayout" name="verticalLayout_2">
        <item>
-        <widget class="QGraphicsView" name="layer_graphics_view"/>
+        <widget class="PannableZoomableView" name="layer_graphics_view"/>
        </item>
       </layout>
      </widget>
@@ -214,6 +214,13 @@
    </item>
   </layout>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>PannableZoomableView</class>
+   <extends>QGraphicsView</extends>
+   <header>custom_graphics_views.h</header>
+  </customwidget>
+ </customwidgets>
  <tabstops>
   <tabstop>layer_index</tabstop>
   <tabstop>width</tabstop>
