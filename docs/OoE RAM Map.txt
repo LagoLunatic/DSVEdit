@@ -4,7 +4,16 @@
 02007354,4 - Hardcodes 022EB1A0, the start of asset memory.
 020072A8,4 - Hardcodes 023E0000, the end of asset memory.
 
-02047930 - Hardcodes the heart cost of Albus's Quadruple Ignis (fire kick) attack (3 hearts).
+Albus's Quadruple Ignis (fire kick) attack hardcoded information:
+02047930 - Hardcodes the heart cost of the attack (3 hearts).
+02049ABC - Hardcoded multiplication of the damage the attack should do (5x multiplier).
+02049A78 - Hardcodes which of Albus's damage type bits to clear during the attack (01 - Strike).
+02049A7C - Hardcodes which of Albus's damage type bits to set during the attack (04 - Fire).
+
+02051BC0,1 - Hardcodes Albus's starting R-button arm glyph ID (1E, Torpor).
+02051BE0,1 - Hardcodes Albus's starting up+Y/X-button arm glyph ID (2D, Acerbatus/"Max Shot").
+02051BF0,1 - Hardcodes Albus's starting Y-button back glyph ID (18, Agartha).
+02051C08,1 - Hardcodes Albus's starting X-button glyph union ID (1A, "Optical Shot").
 
 0206D994,1 - Hardcodes the number of attribute points (1) to give to all attributes when the player absorbs a glyph.
 
