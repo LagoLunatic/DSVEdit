@@ -336,7 +336,15 @@
   ; [r13,0] - ?
 0206DEE0 EnemyDropGlyph
   ; Spawns a glyph based on the glyph ID in a given enemy's enemy DNA.
-  ; Same arguments as EnemyCheckGlyphDrop.
+  ; r0 - x pos in subpixels
+  ; r1 - y pos in subpixels
+  ; r2 - z-index. (e.g. 5680.)
+  ; r3 - Enemy ID.
+  ; [r13,0] - ?
+  ; [r13,4] - Bitfield affecting how to spawn the glyph.
+  ;   & 01 - Create the glyph's gradually appearing animation.
+  ;   & 02 - Create the glyph itself.
+  ;   You would pass 01 for a failed glyph spawn or 03 for a successful spawn, but can also pass 02 for an instant glyph spawn.
 
 0222FFD4 GlyphSpawn4
   ; ??? used by events where Albus gives you Dominus glyphs

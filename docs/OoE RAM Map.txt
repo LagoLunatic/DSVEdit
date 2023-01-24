@@ -14,6 +14,7 @@ Albus's Quadruple Ignis (fire kick) attack hardcoded information:
 02051BE0,1 - Hardcodes Albus's starting up+Y/X-button arm glyph ID (2D, Acerbatus/"Max Shot").
 02051BF0,1 - Hardcodes Albus's starting Y-button back glyph ID (18, Agartha).
 02051C08,1 - Hardcodes Albus's starting X-button glyph union ID (1A, "Optical Shot").
+0206E64C,1 - Hardcodes Albus's X-button glyph union ID (overrides the starting ID).
 
 0206D994,1 - Hardcodes the number of attribute points (1) to give to all attributes when the player absorbs a glyph.
 
