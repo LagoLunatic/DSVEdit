@@ -722,6 +722,8 @@ OTHER_SPRITES = [
   {pointer: 0x0206E4C8, desc: "Breakable walls 7", gfx_sheet_ptr_index: 7, palette_list_ptr_index: 7, sprite_ptr_index: 7},
   {pointer: 0x0206E4C8, desc: "Breakable walls 8", gfx_sheet_ptr_index: 3, palette_list_ptr_index: 3, sprite_ptr_index: 3},
   
+  {desc: "HUD", no_sprite: true, palette: 0x022C1554, gfx_wrapper: 0x022CDA9C},
+  
   # Game startup and main menus
   {pointer: 0x022E0580, desc: "Nintendo/Konami/Actimagine/ESRB splash screens", overlay: 27},
   {pointer: 0x022E0700, desc: "Title screen graphics", overlay: 26},
