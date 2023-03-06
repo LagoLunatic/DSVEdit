@@ -93,7 +93,7 @@ OTHER_SPRITES = [
   {pointer: 0x0203F430, desc: "Game over screen"},
   {pointer: 0x02046734, desc: "Name signing screen"},
   {pointer: 0x02046AEC, desc: "File select menu"},
-  {pointer: 0x020489C4, desc: "Choose course - unused?"},
+  {pointer: 0x020489C4, desc: "VS Mode - Choose course"},
   {pointer: 0x02049098, desc: "Enemy set mode menu"},
   {pointer: 0x020490AC, desc: "Enemy set retry/complete"},
   {pointer: 0x020490C0, desc: "Wi-fi menu"},
