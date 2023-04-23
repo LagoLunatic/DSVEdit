@@ -61,7 +61,7 @@
         </layout>
        </item>
        <item>
-        <widget class="QGraphicsView" name="anim_graphics_view"/>
+        <widget class="PannableZoomableView" name="anim_graphics_view"/>
        </item>
        <item>
         <spacer name="verticalSpacer">
@@ -92,6 +92,13 @@
    </item>
   </layout>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>PannableZoomableView</class>
+   <extends>QGraphicsView</extends>
+   <header>custom_graphics_views.h</header>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections>
   <connection>

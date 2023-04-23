@@ -163,7 +163,7 @@
     </layout>
    </item>
    <item>
-    <widget class="QGraphicsView" name="skeleton_graphics_view"/>
+    <widget class="PannableZoomableView" name="skeleton_graphics_view"/>
    </item>
    <item>
     <widget class="QDialogButtonBox" name="buttonBox">
@@ -177,6 +177,13 @@
    </item>
   </layout>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>PannableZoomableView</class>
+   <extends>QGraphicsView</extends>
+   <header>custom_graphics_views.h</header>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections>
   <connection>
