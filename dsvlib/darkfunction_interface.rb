@@ -277,7 +277,7 @@ class DarkFunctionInterface
     end
   end
   
-  def self.import(input_path, name, sprite_info, fs, renderer, colors_per_palette: 16)
+  def self.import(input_path, name, sprite_info, fs, renderer, transparent_trails: false, colors_per_palette: 16)
     sprite = Sprite.new(sprite_info.sprite_file_pointer, fs)
     
     palettes = renderer.generate_palettes(sprite_info.palette_pointer, colors_per_palette)
@@ -325,7 +325,8 @@ class DarkFunctionInterface
         df_cell = df_anim.css("cell").first
         frame, this_frames_unique_part_and_hitbox_strs = import_frame(
           df_cell, df_unique_parts,
-          gfx_page_width_with_padding, big_gfx_page_width, num_gfx_pages, gfx_page_canvas_width, num_palettes
+          gfx_page_width_with_padding, big_gfx_page_width, num_gfx_pages, gfx_page_canvas_width, num_palettes,
+          transparent_trails: transparent_trails
         )
         sprite.frames[unanimated_frame_index] = frame
         all_created_frames[unanimated_frame_index] = frame
@@ -346,7 +347,8 @@ class DarkFunctionInterface
         df_cell = df_anim.css("cell").first
         frame, this_frames_unique_part_and_hitbox_strs = import_frame(
           df_cell, df_unique_parts,
-          gfx_page_width_with_padding, big_gfx_page_width, num_gfx_pages, gfx_page_canvas_width, num_palettes
+          gfx_page_width_with_padding, big_gfx_page_width, num_gfx_pages, gfx_page_canvas_width, num_palettes,
+          transparent_trails: transparent_trails
         )
         
         if !sprite.frames[unanimated_frame_index].nil?
@@ -400,7 +402,8 @@ class DarkFunctionInterface
         
         frame, this_frames_unique_part_and_hitbox_strs = import_frame(
           df_cell, df_unique_parts,
-          gfx_page_width_with_padding, big_gfx_page_width, num_gfx_pages, gfx_page_canvas_width, num_palettes
+          gfx_page_width_with_padding, big_gfx_page_width, num_gfx_pages, gfx_page_canvas_width, num_palettes,
+          transparent_trails: transparent_trails
         )
         
         duplicated_frame_and_part_names = each_frames_unique_part_and_hitbox_strs.find do |frame_index, other_frames_unique_part_and_hitbox_strs|
@@ -458,7 +461,7 @@ class DarkFunctionInterface
     sprite.write_to_rom()
   end
   
-  def self.import_frame(df_cell, df_unique_parts, gfx_page_width_with_padding, big_gfx_page_width, num_gfx_pages, gfx_page_canvas_width, num_palettes)
+  def self.import_frame(df_cell, df_unique_parts, gfx_page_width_with_padding, big_gfx_page_width, num_gfx_pages, gfx_page_canvas_width, num_palettes, transparent_trails: false)
     frame = Frame.new
     
     this_frames_unique_part_and_hitbox_strs = []
@@ -513,7 +516,7 @@ class DarkFunctionInterface
           gfx_page_index = gfx_page_index * 4
         end
         palette_index = gfx_page_index_on_big_gfx_page / big_gfx_page_width
-        if palette_index >= num_palettes
+        if palette_index >= num_palettes && !transparent_trails
           raise ImportError.new("Part %s appears to have palette index %02X, which is more palettes than are in the current palette list.\n\nPerhaps this part is actually a hitbox, and you forgot to make its name start with 'hitbox'?" % [df_spr["name"], palette_index])
         end
         part.gfx_page_index = gfx_page_index

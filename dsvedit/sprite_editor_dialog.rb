@@ -1081,6 +1081,7 @@ class SpriteEditor < Qt::Dialog
       sprite_name,
       @sprite_info,
       @fs, @renderer,
+      transparent_trails: @transparent_trails,
       colors_per_palette: @sprite_info.gfx_pages.first.colors_per_palette,
     )
     
