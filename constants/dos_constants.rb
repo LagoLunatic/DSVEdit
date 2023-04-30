@@ -494,6 +494,7 @@ OTHER_SPRITES = [
   {desc: "Zephyr's clock hands", sprite: 0x0229B3F4, gfx_file_names: ["/sc/f_ctobj0.dat"], palette: 0x022C22C4},
   
   
+  {desc: "HUD", no_sprite: true, palette: 0x022C33E8, gfx_wrapper: 0x022CE95C},
   {desc: "Equip menu foreground", no_sprite: true, palette: 0x022C46E8, one_dimensional_mode: true, gfx_file_names: [
     "/sc/f_mainob.dat",
   ]},
