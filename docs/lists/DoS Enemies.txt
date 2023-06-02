@@ -10,7 +10,7 @@ Enemies:
   Var A: TODO
   Var B: TODO
 03 Skeleton
-  Var A: TODO
+  Var A: If bit 0x1 is set this Skeleton can jump back away from the player.
   Var B: If nonzero, this is the cutscene Skeleton used during the prologue fight.
     This should not be set manually; the prologue cutscene object sets it automatically when creating the Skeleton.
 04 Ouija Table
