@@ -809,6 +809,9 @@ Stuff related to currently loaded tilesets:
 
 === 0219E3E0 - 0223073F: Overlay 0
 
+021FDE88,4 - Hardcoded player slide speed. Float.
+  Vanilla value is 0x46400000 or 12288.0, which when converted to a hexadecimal integer is 0x3000.
+
 021FE0EC,4 - Hardcoded bitfield for what the unwanted states are for using a super attack.
   Same format as the unwanted states bitfield for souls.
   All super attacks share this one bitfield.

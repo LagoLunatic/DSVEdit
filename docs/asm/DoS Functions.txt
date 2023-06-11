@@ -199,6 +199,10 @@
 02074F20 FloatConvertFromInt
   ; r0 - Integer
   ; Returns r0 - The integer converted to a float
+020754D8 FloatSubtract
+  ; r0 - Float number
+  ; r1 - Float number to subtract from r0
+  ; Return r0 minus r1 - Result
 02074FEC FloatMultiply
   ; r0 - First float number to multiply
   ; r1 - Second float number to multiply
