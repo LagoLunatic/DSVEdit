@@ -22,6 +22,7 @@ class NavigationSearchDialog < Qt::Dialog
     door_pointer = @ui.door_pointer.text =~ /^\h+$/ ? @ui.door_pointer.text.to_i(16) : nil
 
     if !room_pointer && !door_pointer
+      Qt::MessageBox.warning(self, "Invalid Input", "Please input a room or door pointer")
       return
     end
 
@@ -32,10 +33,12 @@ class NavigationSearchDialog < Qt::Dialog
       end
       room.doors.each do |door|
         if door.door_ram_pointer == door_pointer
-          parent.change_room_by_metadata(door.destination_room_metadata_ram_pointer)
+          parent.change_room_by_room_object(door.room)
+          parent.open_door_editor(door)
           return
         end
       end
     end
+    Qt::MessageBox.warning(self, "Room or Door not found", "Unable to find Door or Room with the provided pointer")
   end
 end
