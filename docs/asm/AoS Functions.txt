@@ -375,6 +375,10 @@
   ; Then, if bit 02 of the counter is set, it sets the draw-white sprite drawing flag.
   ; Returns 0 if the counter reached 0, or 1 otherwise. Some enemies use this to freeze their AI to flinch when damaged.
 
+0806AF98 GroundEntity
+  ; r0 - Entity
+  ; Used in many Entity create functions, this will move an entity until it contacts the ground.
+
 08001994 GetMinitileData
   ; r0 - 
   ; r1 - 
@@ -384,8 +388,13 @@
 0800F92C PreloadRoomEnemies
   ; r0 - Room's entity list pointer
   ; Loads all enemies in the room, then deletes them all. This is so the enemy assets can all be loaded at once when entering the room.
-0800F4F8 LoadRoomEntities
+0800F678 LoadRoomEntities
+  ; Calls different functions for loading room entities based on room dimensions
   ; Loads room entities immediately when you enter the room
+0800F4F8 LoadWideOrSquareRoomEntities
+  ; Loads entities for wider or square dimension rooms.
+0800F5BC LoadTallRoomEntities
+  ; Loads entities for taller dimension rooms.
 0800F750 CheckDelayedLoadRoomEntities
 0800F1FC LoadRoomEntity
   ; r0 - Pointer to the entity in the room's entity list.
@@ -413,10 +422,16 @@
 0801B0D8 PlayerSomaUpdate
 0801FEF8 PlayerJuliusUpdate
 
+080441F8 PickupItem
+  ; r0 - Entity pointer to the item being picked up.
+
 08033DA4 InitializePlayerNewGameStats
   ; Initializes the player's 6 base stats: Max HP, Max MP, STR, CON, INT, LCK
   ; Base stats for Soma are: 0x140, 0x50, 0xA, 0xC, 0xB, 0x9
   ; Base stats for Julius are: 0x320, 0x1F4, 0xF, 0xC, 0xA, 0x14
+
+08033CAC PlayerLevelUp
+  ; Updates Soma's stats when leveling up
 
 080221CC WeaponOneHandedUse
 080224BC WeaponTwoHandedUse
