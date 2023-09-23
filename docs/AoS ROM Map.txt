@@ -6,14 +6,15 @@ Starting stats (hardcoded):
 08033DCA,1 - Starting INT
 08033DCE,1 - Starting LCK
 
-Level up stats (hardcoded):
-08033CEA,1 - HP per level
-080E1E08,20 (0x14) - List of MP gained per level. Each byte is used for 5 levels.
-080E1DCC,20 (0x14) - List of STR gained per level. Each byte is used for 5 levels.
-080E1DE0,20 (0x14) - List of CON gained per level. Each byte is used for 5 levels.
-080E1DF4,20 (0x14) - List of INT gained per level. Each byte is used for 5 levels.
-08033D5E,1 - Every 3rd level uses this for INT gain rather than the list.
-08033D64,1 - Luck gained per level
+Level up stats:
+08033CEA,1 - HP per level (hardcoded).
+080E1E08 - List of MP gained per level.
+080E1DCC - List of STR gained per level.
+080E1DE0 - List of CON gained per level.
+080E1DF4 - List of INT gained per level.
+  Each of the above 4 lists is 0x14/0d20 bytes long, with each byte being used for a period of 5 levels.
+08033D5E,1 - Every 3rd level uses this for INT gain rather than the above list (hardcoded).
+08033D64,1 - Luck gained per level (hardcoded).
 0804BA26,1 - Number of ability souls in the game (hardcoded).
 
 080E0DF8 - List of songs->text indexes for sound test mode.
