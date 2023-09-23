@@ -11,6 +11,7 @@ require_relative 'settings_dialog'
 require_relative 'sprite_editor_dialog'
 require_relative 'item_editor_dialog'
 require_relative 'entity_search_dialog'
+require_relative 'navigation_search_dialog'
 require_relative 'address_converter_dialog'
 require_relative 'save_file_fixer_dialog'
 require_relative 'icon_chooser_dialog'
@@ -73,6 +74,7 @@ class DSVEdit < Qt::MainWindow
   slots "open_tileset_editor()"
   slots "open_menu_editor()"
   slots "open_entity_search()"
+  slots "open_navigation_search()"
   slots "open_address_converter()"
   slots "open_save_file_fixer()"
   slots "open_map_editor()"
@@ -223,6 +225,7 @@ class DSVEdit < Qt::MainWindow
     connect(@ui.actionApply_ARMIPS_Patch, SIGNAL("activated()"), self, SLOT("open_armips_patcher()"))
     connect(@ui.actionAdd_Overlay, SIGNAL("activated()"), self, SLOT("add_new_overlay()"))
     connect(@ui.actionEntity_Search, SIGNAL("activated()"), self, SLOT("open_entity_search()"))
+    connect(@ui.actionNavigation_Search, SIGNAL("activated()"), self, SLOT("open_navigation_search()"))
     connect(@ui.actionAddress_Converter, SIGNAL("activated()"), self, SLOT("open_address_converter()"))
     connect(@ui.actionFix_Save_Files, SIGNAL("activated()"), self, SLOT("open_save_file_fixer()"))
     connect(@ui.actionSettings, SIGNAL("activated()"), self, SLOT("open_settings()"))
@@ -1036,6 +1039,10 @@ class DSVEdit < Qt::MainWindow
   
   def open_entity_search
     @open_dialogs << EntitySearchDialog.new(self)
+  end
+
+  def open_navigation_search
+    @open_dialogs << NavigationSearchDialog.new(self)
   end
   
   def open_address_converter

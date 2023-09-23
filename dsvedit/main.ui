@@ -218,6 +218,7 @@
     <addaction name="actionApply_ARMIPS_Patch"/>
     <addaction name="actionAdd_Overlay"/>
     <addaction name="actionEntity_Search"/>
+    <addaction name="actionNavigation_Search"/>
     <addaction name="actionAddress_Converter"/>
     <addaction name="actionFix_Save_Files"/>
     <addaction name="actionSettings"/>
@@ -358,6 +359,17 @@
    </property>
    <property name="shortcut">
     <string>Ctrl+F</string>
+   </property>
+  </action>
+  <action name="actionNavigation_Search">
+   <property name="text">
+    <string>Navigation Search</string>
+   </property>
+   <property name="toolTip">
+    <string>Navigation Search</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+N</string>
    </property>
   </action>
   <action name="actionEntities">
