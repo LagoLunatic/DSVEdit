@@ -15,6 +15,7 @@ Level up stats:
   Each of the above 4 lists is 0x14/0d20 bytes long, with each byte being used for a period of 5 levels.
 08033D5E,1 - Every 3rd level uses this for INT gain rather than the above list (hardcoded).
 08033D64,1 - Luck gained per level (hardcoded).
+
 0804BA26,1 - Number of ability souls in the game (hardcoded).
 
 080E0DF8 - List of songs->text indexes for sound test mode.
@@ -85,11 +86,17 @@ Level up stats:
   01,01: Width of this character in pixels.
   02,02: ? (This doesn't seem to be read, and is always just 0.)
 
-0850A136-0850AD75 - List of font pixel data.
-  Entry length 0xE. 0xE0 entries total.
+080E2EC0 - List of metadata about small font characters.
+  Entry length 4. 0xDD entries in total?
+  The index in this list is the index of the text character.
+  01,01: Width of this character in pixels.
+
+0850A134 - List of font pixel data.
+  Entry length 0xE. 0xE0 entries in total?
+  The index in this list is the index of the text character.
   The first entry is character 0x20.
-  00,0C: The pixels.
-  0C,02: The character number (big endian). Not sure if this is used for anything.
+  00,02: The character number (big endian). Probably has no effect ingame.
+  02,0C: The pixels.
 
 080E9644 - List of enemy DNA.
 
