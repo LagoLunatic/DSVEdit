@@ -1032,6 +1032,19 @@ class SpriteEditor < Qt::Dialog
     end
     
     output_folder = "./darkfunction_sprites/#{sprite_name}"
+    
+    if File.directory?(output_folder) && !Dir.empty?(output_folder)
+      response = Qt::MessageBox.question(
+        self,
+        "Confirm overwrite",
+        "A sprite already exists at #{output_folder}.\nAre you sure you want to overwrite it?",
+        Qt::MessageBox::No | Qt::MessageBox::Yes, Qt::MessageBox::No
+      )
+      if response == Qt::MessageBox::No
+        return
+      end
+    end
+    
     FileUtils.mkdir_p(output_folder)
     
     DarkFunctionInterface.export(
