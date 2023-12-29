@@ -336,6 +336,13 @@ class RoomLayer
         
         @width_in_pixels = width*SCREEN_WIDTH_IN_PIXELS
         @height_in_pixels = height*SCREEN_HEIGHT_IN_PIXELS
+        # Layers with these scroll modes will have issues with full height in pixels set
+        if @scroll_mode == 0xC
+          @height_in_pixels -= 0x50
+        end
+        if @scroll_mode == 0xD
+          @height_in_pixels -= 0x20
+        end
         fs.write(layer_list_entry_ram_pointer+4, [@width_in_pixels].pack("v"))
         fs.write(layer_list_entry_ram_pointer+6, [@height_in_pixels].pack("v")) # Unlike in DoS this doesn't seem necessary for jumpthrough platforms to work, but do it anyway to be safe.
         
