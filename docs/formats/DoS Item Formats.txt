@@ -49,7 +49,7 @@ Weapon format:
     0D: Fire breath.
     0E: Claimh Solais' huge sword overhead swing.
     0F+: Crash.
-  16,1: Which sprite animation to use.
+  16,1: Which weapon sprite animation to use.
     This value only gets used by throwing weapons (weapons with swing anim 0A).
   17,1: IFrames. An enemy hit by this weapon will be invulnerable to weapons for this number of frames.
   18,2: Bitfield affecting the attack animation and super attack animation.

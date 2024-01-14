@@ -341,9 +341,9 @@
 
 0803F2C8 EntitySetAnimation
   ; r0 - Entity
-  ; r1 - 
-  ; r2 - 
-  ; r3 - 
+  ; r1 - Animation index
+  ; r2 - 0?
+  ; r3 - 0?
 
 0803EBA8 AnimationFunc0
 0803EC34 AnimationFunc1

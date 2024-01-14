@@ -301,7 +301,7 @@ WEAPON_FORMAT = [
   [2, "Effects & Modifiers", :bitfield],
   [1, "GFX Index"],
   [1, "Sprite Index"],
-  [1, "Unknown 2"],
+  [1, "Weapon Anim"],
   [1, "Palette"],
   [1, "Swing Anim"],
   [1, "IFrames"],

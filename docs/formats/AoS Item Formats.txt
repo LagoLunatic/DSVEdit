@@ -44,10 +44,11 @@ Weapon format:
     Bit 13: Do not interrupt this weapon's swing when the player lands.
   12,1: Weapon GFX index.
   13,1: Weapon sprite index.
-  14,1: ?
+  14,1: Weapon sprite animation index.
+    Which animation this weapon should use when swung, out of this weapon sprite's list of animations.
   15,1: Palette index.
-  16,1: Swing animation index.
-    Which specific animation to use, out of the list of swing animations for this attack type.
+  16,1: Soma swing animation index.
+    Affects which animation Soma should use when swinging this weapon, out of the list of possible swing animations for this particular attack type.
   17,1: IFrames. An enemy hit by this weapon will be invulnerable to weapons for this number of frames.
   18,2: Swing sound.
   1A,2: ?
