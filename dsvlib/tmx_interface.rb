@@ -23,6 +23,9 @@ class TMXInterface
     tiled_layers.each do |tmx_layer|
       props = extract_properties(tmx_layer)
       validate_properties(props, "Layer", %w(layer_width layer_height tileset collision_tileset z_index scroll_mode main_gfx_page_index))
+      if GAME == "aos"
+        validate_properties(props, "Layer", %w(layer_width_in_pixels layer_height_in_pixels))
+      end
       
       if tmx_layer.attr("name") =~ /^layer (\h{8})$/
         layer_list_entry_ram_pointer = $1.to_i(16)
@@ -45,6 +48,10 @@ class TMXInterface
       
       game_layer.width  = props["layer_width"]
       game_layer.height = props["layer_height"]
+      if GAME == "aos"
+        game_layer.width_in_pixels  = props["layer_width_in_pixels"]
+        game_layer.height_in_pixels = props["layer_height_in_pixels"]
+      end
       game_layer.tileset_pointer = props["tileset"]
       game_layer.collision_tileset_pointer = props["collision_tileset"]
       game_layer.z_index = props["z_index"]
@@ -156,6 +163,10 @@ class TMXInterface
             xml.properties {
               xml.property(:name => "layer_width",         :value => "%02X" % layer.width)
               xml.property(:name => "layer_height",        :value => "%02X" % layer.height)
+              if GAME == "aos"
+                xml.property(:name => "layer_width_in_pixels",  :value => "%02X" % layer.width_in_pixels)
+                xml.property(:name => "layer_height_in_pixels", :value => "%02X" % layer.height_in_pixels)
+              end
               xml.property(:name => "z_index",             :value => "%02X" % layer.z_index)
               xml.property(:name => "colors_per_palette",  :value => "%02X" % layer.colors_per_palette)
               xml.property(:name => "main_gfx_page_index", :value => "%02X" % layer.main_gfx_page_index)

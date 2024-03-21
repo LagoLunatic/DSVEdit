@@ -224,7 +224,9 @@ class RoomLayer
                 :main_gfx_page_index,
                 :palette_offset, # NOTE: Palette offset is not implemented into DSVEdit's GUI, neither for editing nor displaying.
                 :bg_control,
-                :visual_effect
+                :visual_effect,
+                :width_in_pixels,
+                :height_in_pixels
   
   def initialize(room, layer_list_entry_ram_pointer, game)
     @room = room
@@ -334,10 +336,12 @@ class RoomLayer
         fs.write(layer_list_entry_ram_pointer+1, [scroll_mode].pack("C"))
         fs.write(layer_list_entry_ram_pointer+2, [bg_control].pack("v"))
         
-        @width_in_pixels = width*SCREEN_WIDTH_IN_PIXELS
-        @height_in_pixels = height*SCREEN_HEIGHT_IN_PIXELS
+        if ![0x0C, 0x0D].include?(scroll_mode)
+          @width_in_pixels = width*SCREEN_WIDTH_IN_PIXELS
+          @height_in_pixels = height*SCREEN_HEIGHT_IN_PIXELS
+        end
         fs.write(layer_list_entry_ram_pointer+4, [@width_in_pixels].pack("v"))
-        fs.write(layer_list_entry_ram_pointer+6, [@height_in_pixels].pack("v")) # Unlike in DoS this doesn't seem necessary for jumpthrough platforms to work, but do it anyway to be safe.
+        fs.write(layer_list_entry_ram_pointer+6, [@height_in_pixels].pack("v"))
         
         fs.write(layer_list_entry_ram_pointer+8, [layer_metadata_ram_pointer].pack("V"))
       else # HoD
