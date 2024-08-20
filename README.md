@@ -122,7 +122,7 @@ A "sprite" in DSVEdit terms is a combination of one or more images, palettes, an
 Enemies, objects, weapons, skills, players, menus, etc, all use sprites.  
 
 In order to edit a sprite, first open Tools -> Sprite Editor, and locate the sprite you want to edit.  
-Although the sprite editor itself has limited editing abilities, it's better to use an external program called darkFunction Editor: http://darkfunction.com/editor/  
+Although the sprite editor itself has limited editing abilities, it's better to use an external program called darkFunction Editor: [http://darkfunction.com/editor/](https://web.archive.org/web/20221218150224/http://darkfunction.com/editor/)  
 Once you have installed darkFunction, click "Export to darkFunction" in the sprite editor and DSVEdit will convert the selected sprite to darkFunction's format and save them to the ./darkfunction_sprites folder. You can then open the sprite up in darkFunction to edit it.  
 
 DSVEdit will have exported two different files:  
