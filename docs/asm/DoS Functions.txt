@@ -14,10 +14,10 @@
   ; r0 - Minimum entity index to check
   ; r1 - Maximum entity index to check
   ; r2 - Update function pointer for the new entity
-02012AE0 DeleteAndUnloadEntity
+02012AE0 DeleteAndUnloadEntity ; ObjClearWork
   ; r0 - Entity
   ; Calls UnloadSpriteInfo and DeleteEntity.
-0200EF54 UnloadSpriteInfo
+0200EF54 UnloadSpriteInfo ; OPDWorkClr
   ; r0 - Sprite info index
 02012C38 DeleteEntity
   ; r0 - Entity
@@ -26,7 +26,7 @@
   ; r0 - Source pointer to copy from
   ; r1 - Destination pointer to copy to
   ; r2 - Number of bytes to copy
-02012C84 FillAreaWith0s
+02012C84 FillAreaWith0s ; DmaClr16
   ; r0 - Start of area to fill
   ; r1 - Number of bytes to fill.
   ; This fills with halfword 0s, so the number of bytes to fill should be divisible by 2.
@@ -405,12 +405,12 @@
   ; r2 - GFX list ptr
   ; r3 - Palette list ptr
   ; [r13] - GFX load type, always 1 for multi-gfx? This is the value stored to +0A,1 in list 020C7460
-0201C2B8 LoadSpriteSingleGfx
+0201C2B8 LoadSpriteSingleGfx ; DrSetObjOpdCmnFree
   ; r0 - Entity ptr
   ; r1 - Sprite ptr
   ; r2 - GFX asset ptr
   ; r3 - Palette list ptr
-0201C2D8 LoadSpriteSingleGfx2
+0201C2D8 LoadSpriteSingleGfx2 ; DrSetObjOpdCmnFreeFlag
   ; r0 - Entity ptr
   ; r1 - Sprite ptr
   ; r2 - GFX asset ptr
@@ -418,14 +418,14 @@
   ; [r13] - ? 0?
 0201A990 LoadCommonSprite
   ; r0 - Entity
-0200EC6C LoadGFX
+0200EC6C LoadGFX ; DrGetVram
   ; r0 - GFX asset ptr
   ; r1 - 0x10? index in list 020C7464
   ; r2 - Number of GFX pages to load
   ; r3 - Size of each GFX page. 1 for 128x128 pages. 4 for 256x256 pages.
   ; Returns r0 - ? Index somewhere...
 
-0200E97C LoadGFXSpecial???
+0200E97C LoadGFXSpecial??? ; DrVramCharaEntry
   ; r0 - GFX asset ptr
   ; r1 - 
   ; r2 - GFX load type, this is the value stored to +0A,1 in list 020C7460
@@ -448,7 +448,7 @@
   ; r0 - Index in the currently loaded sprite info list, 020C6260. This is from +68 in the entity.
   ; Returns r0 - Pointer to the entry in that list.
 
-0200ED10 EntityInitSpriteAndPreloadedGfx
+0200ED10 EntityInitSpriteAndPreloadedGfx ; DrObjSetOPD
   ; r0 - Child entity
   ; r1 - Sprite pointer
   ; r2 - Pointer to an index in the list of currently loaded GFX assets (list 020C7460)
@@ -840,7 +840,7 @@
 021C3278 GetPlayerXPos
   ; r0 - Entity calling this function
 
-021C23E0 EntityMoveToFloor
+021C23E0 EntityMoveToFloor ; esEnemyYukaOrosu
   ; Teleports entity downwards to the nearest floor.
   ; r0 - Pointer to entity
   ; r1 - Pointer to ??. May have the physical size of this entity?
@@ -891,7 +891,7 @@
   ; r0 - Player entity
   ; r1 - Anim index
 
-021C34A8 InitializeEnemy
+021C34A8 InitializeEnemy ; esParamSet
   ; r0 - Entity pointer
   ; Copies current HP, current MP, attack, and defense from the enemy DNA to the enemy entity.
   ; Also adds the enemy's palette offset to the current palette used by this enemy entity.

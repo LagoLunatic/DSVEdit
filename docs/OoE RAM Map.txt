@@ -331,6 +331,9 @@ Player's current bonus elemental attribute points (AP):
 020FFE0E,2 - Bonus holy AP. Set to 0x1800 by Diamond Ring.
 020FFE10,2 - Bonus dark AP. Set to 0x1800 by Onyx Ring.
 
+020FFE14,4 - Bitfield of effects on the player?
+  00800000 - Player is capable of breaking spikes by touching them. (Arma Machina)
+
 020FFE9C,2 - Bitfield of buttons the player is currently pressing.
   0001 - A
   0002 - B
