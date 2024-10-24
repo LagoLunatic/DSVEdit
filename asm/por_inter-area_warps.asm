@@ -20,6 +20,9 @@
 .org 0x02082C90 ; Warp point update code, specifically the part where it's just about to open the warp select screen
   b @SetAreaIndexOnWarpScreenOpen
 
+.org 0x0202E1C4 ; Fixes a bug in the original ASM where the area index for the warp screen would always load as 00
+  b @SetAreaIndexForProperLoading
+
 ; Make the code that detects what warp point you touched on the touch screen use the correct map draw offsets.
 ; Read the area index from 0211AA71 instead of 02111785.
 .org 0x0208259C
@@ -216,7 +219,19 @@
   ldrb r0, [r0, 515h] ; Read the current area index from 02111785 (this also replaces the line we overwrote to jump here)
   ldr r1, =021368AFh
   strb r0, [r1]
+  bl 0202F138h ; MapDraw???ForArea
+  bl 02004000h ; MapShowChanges1??
+  bl 0202E854h ; MapShowChanges2??
   b 0x02082C94 ; Return to normal code
+
+@SetAreaIndexForProperLoading:
+  push r2
+  ldr r2, =02111785h ; Area index the player is actually in
+  ldrb r0, [r2]
+  strb r0, [r1,1h] ; Stores the area index that the player's in so the warp box icons load correctly
+  pop r2
+  mov r0, 0h
+  b 0x0202E1C8 ; Return to normal code
 
 @CheckSelectedWarpInCurrentAreaForButtons:
   cmp r1, r0 ; Replace the line we overwrote to jump here which checks if the warp index selected is the warp index the player is physically at already
