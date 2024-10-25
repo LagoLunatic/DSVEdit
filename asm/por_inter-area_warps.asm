@@ -17,8 +17,8 @@
 .org 0x0202E038 ; In the function for rendering OAM objects to the bottom screen on the warp screen
   b @DrawArrowsOnBottomScreen
 
-.org 0x02082C90 ; Warp point update code, specifically the part where it's just about to open the warp select screen
-  b @SetAreaIndexOnWarpScreenOpen
+.org 0x02082C7C ; Warp point update code, specifically the part where it's just about to open the warp select screen
+  b @SetAreaIndexAndRedrawMapOnWarpScreenOpen
 
 ; Make the code that detects what warp point you touched on the touch screen use the correct map draw offsets.
 ; Read the area index from 0211AA71 instead of 02111785.
@@ -212,11 +212,18 @@
 
 ; Need to initialize the area index when the player opens the warp screen.
 ; This is so pressing L or R takes you to the previous or next area from the area you're actually in, as opposed to the area index last placed in 021368AF (e.g. the last area you viewed in the map menu).
-@SetAreaIndexOnWarpScreenOpen:
-  ldrb r0, [r0, 515h] ; Read the current area index from 02111785 (this also replaces the line we overwrote to jump here)
+@SetAreaIndexAndRedrawMapOnWarpScreenOpen:
+  ldrb r0, [r0, 515h] ; Read the current area index from 02111785
   ldr r1, =021368AFh
   strb r0, [r1]
-  b 0x02082C94 ; Return to normal code
+  
+  ; Also redraw the map for the current area.
+  ; This is to fix a bug in the case where the player has the info screen on the top screen and backs out of the warp menu when an area that isn't the current area is selected, and then re-opened the warp select menu.
+  ; In that situation, the most recently drawn map would be an area that isn't the current area, which could cause the warp points shown on screen to not be properly offset.
+  bl 0202F138h ; MapDraw???ForArea
+  
+  bl 02004000h ; MapShowChanges1?? ; Replace the line we overwrote to jump here
+  b 0x02082C80 ; Return to normal code
 
 @CheckSelectedWarpInCurrentAreaForButtons:
   cmp r1, r0 ; Replace the line we overwrote to jump here which checks if the warp index selected is the warp index the player is physically at already
