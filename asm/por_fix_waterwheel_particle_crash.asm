@@ -13,6 +13,16 @@
 .org 0x022EAE08
   b @CheckWaterParticleIsNull
 
+; Also, three more checks in a different function.
+; These don't cause crashes on DeSmuME or no$gba, but do on melonDS.
+; These already have null checks, they just don't cover all of the code. So instead of adding a new check we just extend the branches for the existing null checks.
+.org 0x022EAA30
+  beq 0x022EAA9C
+.org 0x022EAAD0
+  beq 0x022EAB54
+.org 0x022EAB90
+  beq 0x022EAC98
+
 .close
 
 
